@@ -1,15 +1,6 @@
 local gc=love.graphics
 local kb=love.keyboard
 
-local keySounds={
-    ['1']='C5',['2']='D5',['3']='E5',
-    ['4']='F5',['5']='G5',['6']='A5',
-    ['7']='B5',['8']='C6',['9']='D6',
-    ['0']='E6',['.']='F6',['e']='G6',
-    ['+']='C#5',['-']='D#5',['*']='F#5',['/']='G#5',
-    ['backspace']='A#5',['return']='C#6',
-}
-
 local scene={}
 
 local reg-- register
@@ -46,9 +37,6 @@ function scene.keyDown(key)
     elseif key:sub(1,2)=='kp' then
         scene.keyDown(key:sub(3))
         return
-    end
-    if keySounds[key] then
-        Snd('bell',keySounds[key])
     end
     if key=='.' then
         if sym=="=" then

@@ -15,10 +15,8 @@ function BP:release(act)
         self.releaseEventList[i](self,act)
     end
 end
-function BP:update(dt)
-    for i=1,#self.updateEventList do
-        self.updateEventList[i](self,dt)
-    end
+function BP:update(dt)-- This thing can be so complex that we cannot use the eventList model.
+    NI('update')
 end
 function BP:draw()
     gc.push('transform')
@@ -40,7 +38,6 @@ function BP.new(data)
 
     p.pressEventList={}
     p.releaseEventList={}
-    p.updateEventList={}
     p.drawEventList={}
 
     return p

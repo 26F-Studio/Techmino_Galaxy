@@ -1,5 +1,9 @@
 local gc=love.graphics
 
+local max,min=math.max,math.min
+local int,abs=math.floor,math.abs
+local sin,cos=math.sin,math.cos
+
 local ins,rem=table.insert,table.remove
 
 local MP={}
@@ -116,10 +120,135 @@ local actionPacks={
     },
 }
 --------------------------------------------------------------
--- Updates
-local updateFuncs={
-    _=function(self,dt)
+-- Events
+function MP:gameover(reason)
+    error(reason)
+    if reason=='AC' then-- Win
         -- TODO
+    elseif reason=='WA' then-- Block out
+        -- TODO
+    elseif reason=='CE' then-- Lock out
+        -- TODO
+    elseif reason=='MLE' then-- Top out
+        -- TODO
+    elseif reason=='TLE' then-- Time out
+        -- TODO
+    elseif reason=='OLE' then-- Finesse fault
+        -- TODO
+    elseif reason=='ILE' then-- Ran out pieces
+        -- TODO
+    elseif reason=='PE' then-- Mission failed
+        -- TODO
+    elseif reason=='RE' then-- Other reason
+        -- TODO
+    end
+end
+function MP:popNext()
+    if self.nextQueue[1]then-- Most cases there is pieces in next queue
+        self.hand=rem(self.nextQueue,1)
+    elseif self.holdQueue[1]then-- If no nexts, force using hold
+        self:hold(true,true)
+    else-- If no piece to use, Next queue is empty, game over...?
+        self:gameover('ILE')
+    end
+end
+function MP:lock()
+    local M=self.hand.matrix
+    local F=self.field.array
+    for y=1,#M do
+        for x=1,#M[1] do
+            F[self.handY+y-1][self.handX+x-1]=M[y][x]
+        end
+    end
+end
+function MP:checkField()
+    local lineClear={}
+    local w=self.width
+    local F=self.field.array
+    for y=#F,1,-1 do
+        local hasHole
+        for x=1,w do
+            if not F[y][x] then
+                hasHole=true
+                break
+            end
+        end
+        if not hasHole then
+            rem(F,y)
+            ins(lineClear,y)
+        end
+    end
+    if #lineClear>0 then
+        ins(self.clearHistory,{
+            lines=lineClear,
+        })
+    end
+end
+function MP:minoDropped()
+    self.spawnTimer=self.settings.spawnDelay
+end
+--------------------------------------------------------------
+-- Updates
+function MP:update(dt)
+    local df=int(self.curTime+dt*1000)-int(self.curTime)
+    self.curTime=self.curTime+dt*1000
+
+    local l=self.task
+    while df>0 do
+        -- local closestTime=1e99
+        -- for i=1,#l do
+        --     closestTime=min(l[i].wait(self),closestTime)
+        --     if closestTime<=0 then
+        --         error(('Invalid counter in task "$1"'):repD(l[i].name))
+        --     end
+        -- end
+        -- if closestTime<=df then
+        --     self.timer=self.timer+closestTime-1
+        --     for i=1,#l do l[i].func(self,closestTime-1) end
+        --     self.timer=self.timer+1
+        --     for i=1,#l do l[i].func(self,1) end
+        --     df=df-closestTime
+        -- else
+        --     self.timer=self.timer+dt
+        --     for i=1,#l do l[i].func(self,df) end
+        --     break-- df=0
+        -- end
+        for i=1,#l do l[i].func(self,1) end
+        df=df-1
+    end
+end
+local updTasks={}
+updTasks.dropTimer={
+    name='dropTimer',
+    wait=function(self)
+        -- TODO
+    end,
+    func=function(self,df)
+        if self.spawnTimer>0 then
+            self.spawnTimer=self.spawnTimer-df
+            if self.spawnTimer==0 then
+                self:popNext()
+                self.genNext()
+                return
+            end
+        end
+        if self.handY==self.ghostY then
+            self.lockTimer=self.lockTimer-1
+            if self.lockTimer==0 then
+                self:lock()
+                self:minoDropped()
+                self:checkField()
+                print('lock')
+            end
+            return
+        else
+            self.dropTimer=self.dropTimer-1
+            if self.dropTimer==0 then
+                self.handY=self.handY-1
+                self.dropTimer=self.settings.dropDelay
+                print('drop')
+            end
+        end
     end
 }
 --------------------------------------------------------------
@@ -134,7 +263,7 @@ function drawEvents.board(self)
     gc.setColor(1,1,1)
     gc.setLineWidth(2)
     gc.rectangle('line',-202,-402,404,804)
-    local f=self.field
+    local f=self.field.array
     for y=1,#f do
         for x=1,#f[y] do
             if f[y][x] then
@@ -142,9 +271,6 @@ function drawEvents.board(self)
             end
         end
     end
-end
-function drawEvents.field(self)
-    --TODO
 end
 function drawEvents.ghost(self)
     --TODO
@@ -180,6 +306,18 @@ function MP.new(data)
     assert(type(data)=='table',"function PLAYER.new(data): data must be table")
     local p=require'assets.player.basePlayer'.new(data)
 
+    p.settings={-- Generate from template in future
+        nextCount=6,
+        holdCount=1,
+        dropDelay=1000,
+        lockDelay=1000,
+        spawnDelay=1000,
+        clearDelay=1000,
+        das=70,
+        arr=0,
+        seqData={},
+    }
+
     p.pos={
         x=0,y=0,
         kx=1,ky=1,
@@ -189,7 +327,30 @@ function MP.new(data)
     p.field=require'assets.player.minoField'.new(data.field or NONE)
     p.holdQueue={}
     p.nextQueue={}
+    p.genNext=coroutine.wrap(function()
+        while true do
+            coroutine.yield(1)
+        end
+    end)
 
+    p.dropTimer=1000
+    p.lockTimer=1000
+    p.spawnTimer=1000
+
+    p.hand={}
+    p.handX=false
+    p.handY=false
+    p.ghostY=false
+    p.handDir=false
+
+    p.moveCharge=0
+
+    p.curTime=0-- Real time, [double] ms
+    p.timer=0-- Inside timer for player, [int] ms
+    p.timing=false-- Are we timing?
+    p.playing=false-- Did we start?
+
+    p.clearHistory={}
     p.actionHistory={}
 
     do-- Generate available actions
@@ -225,7 +386,6 @@ function MP.new(data)
     ins(p.pressEventList,_defaultPressEvent)
     ins(p.releaseEventList,_defaultPeleaseEvent)
 
-    -- ins(p.updateEventList,updateFuncs[?])
     ins(p.drawEventList,drawEvents.applyPos)
     ins(p.drawEventList,drawEvents.board)
     ins(p.drawEventList,drawEvents.field)
@@ -233,6 +393,9 @@ function MP.new(data)
     ins(p.drawEventList,drawEvents.block)
     ins(p.drawEventList,drawEvents.hold)
     ins(p.drawEventList,drawEvents.next)
+
+    p.task={}
+    ins(p.task,updTasks.dropTimer)
 
     setmetatable(p,{__index=MP})
     return p

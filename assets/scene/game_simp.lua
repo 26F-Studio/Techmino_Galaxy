@@ -64,14 +64,15 @@ local P1
 local scene={}
 
 function scene.enter()
-    P1=require'assets.player.minoPlayer'.new{
+    local _
+    _,P1=pcall(require'assets.player.minoPlayer'.new,{
         id=1,
-    }
+    })
     P1:setPosition(800,500)
     for y=1,10 do
-        P1.field[y]={}
+        P1.field.array[y]={}
         for x=1,10 do
-            P1.field[y][x]=MATH.roll()
+            P1.field.array[y][x]=MATH.roll()
         end
     end
 end
@@ -100,7 +101,7 @@ function scene.keyUp(key)
 end
 
 function scene.update(dt)
-    P1:update()
+    P1:update(dt)
 end
 
 function scene.draw()
