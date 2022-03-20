@@ -49,6 +49,8 @@ end
 -- Load modules
 CHAR=require'assets.char'
 require'assets.gamefunc'
+require'assets.gametable'
+require'assets.rot_sys'
 DEBUG.checkLoadTime("Load Assets")
 --------------------------------------------------------------
 -- Config Zenitha

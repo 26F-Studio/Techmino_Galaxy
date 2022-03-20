@@ -11,10 +11,10 @@ end
 function F:export_string_simp()
     local str=''
 
-    for y=1,#self.array do
+    for y=1,#self.matrix do
         local buf=''
         for x=1,#self.width do
-            buf=buf..(self.array[y][x] and 'x' or '_')
+            buf=buf..(self.matrix[y][x] and 'x' or '_')
         end
         str=str..buf..'/'
     end
@@ -24,10 +24,10 @@ end
 function F:export_string_color()
     local str=''
 
-    for y=1,#self.array do
+    for y=1,#self.matrix do
         local buf=''
         for x=1,#self.width do
-            buf=buf..STRING.base64(self.array[y][x].color)
+            buf=buf..STRING.base64(self.matrix[y][x].color)
         end
         str=str..buf..'/'
     end
@@ -45,7 +45,7 @@ end
 function F:drawThumbnail_simp(step,size)
     if not step then step=40 end
     if not size then size=step end
-    local f=self.array
+    local f=self.matrix
     for y=1,#f do
         for x=1,self.width do
             local c=f[y][x]
@@ -58,7 +58,7 @@ end
 function F:drawThumbnail_color(step,size)
     if not step then step=40 end
     if not size then size=step end
-    local f=self.array
+    local f=self.matrix
     for y=1,#f do
         for x=1,self.width do
             local c=f[y][x]
@@ -75,8 +75,9 @@ local _fieldMeta={__index=function(self,k)
     if type(k)=='number' then
         if k<=626 then
             for i=#self+1,k do
-                self[i]=self:getNewLine(false)
+                self[i]=self._f:getNewLine(false)
             end
+            return self[k]
         else
             error('Too high!')
         end
@@ -84,13 +85,14 @@ local _fieldMeta={__index=function(self,k)
         error(STRING.repD("Invalid field index type '$1'",type(k)))
     end
 end}
-function F.new(data)
-    assert(type(data)=='table','[Field].new(data): data must be table')
+function F.new(width,height)
+    assert(type(width)=='number' and type(height)=='number','[Field].new(width,height): width and height must be number')
     local f={
-        width=data.width or 10,
-        height=data.height or 20,-- Attention: this height is not the limit of actual field's height
-        array=setmetatable({},_fieldMeta),
+        width=width,
+        height=height,-- Attention: this height is not the limit of actual field's height
+        matrix=setmetatable({},_fieldMeta),
     }
+    f.matrix._f=f
     setmetatable(f,{__index=F})
 
     return f

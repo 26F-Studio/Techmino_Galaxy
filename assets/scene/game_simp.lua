@@ -1,11 +1,14 @@
 local gc=love.graphics
 
 local KEYMAP={
+    {act='game_restart',   keys={'r','`'}},
+    {act='game_pause',     keys={'escape'}},
+
     {act='act_moveLeft',   keys={'left'}},
     {act='act_moveRight',  keys={'right'}},
     {act='act_rotateCW',   keys={'up'}},
     {act='act_rotateCCW',  keys={'down'}},
-    {act='act_rotate180',  keys={'np0'}},
+    {act='act_rotate180',  keys={'kp0'}},
     {act='act_softDrop',   keys={'c'}},
     {act='act_sonicDrop',  keys={'x'}},
     {act='act_hardDrop',   keys={'z'}},
@@ -27,9 +30,6 @@ local KEYMAP={
     {act='act_dropRight',  keys={}},
     {act='act_zangiLeft',  keys={}},
     {act='act_zangiRight', keys={}},
-
-    {act='game_restart',   keys={'r','`'}},
-    {act='game_pause',     keys={'escape'}},
 
     {act='menu_up',        keys={'up'}},
     {act='menu_down',      keys={'down'}},
@@ -64,15 +64,14 @@ local P1
 local scene={}
 
 function scene.enter()
-    local _
-    _,P1=pcall(require'assets.player.minoPlayer'.new,{
+    P1=require'assets.player.minoPlayer'.new{
         id=1,
-    })
+    }
     P1:setPosition(800,500)
-    for y=1,10 do
-        P1.field.array[y]={}
+    for y=1,2 do
+        P1.field.matrix[y]={}
         for x=1,10 do
-            P1.field.array[y][x]=MATH.roll()
+            P1.field.matrix[y][x]=MATH.roll() and {}
         end
     end
 end
