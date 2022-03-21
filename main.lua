@@ -143,6 +143,8 @@ IMG.init{
         'assets/image/lanterns/5.png',
         'assets/image/lanterns/6.png',
     },
+
+    cover='assets/image/db cover.png',
 }
 SFX.init((function()
     local L={}

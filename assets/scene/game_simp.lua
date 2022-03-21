@@ -4,11 +4,11 @@ local KEYMAP={
     {act='game_restart',   keys={'r','`'}},
     {act='game_pause',     keys={'escape'}},
 
-    {act='act_moveLeft',   keys={'left'}},
-    {act='act_moveRight',  keys={'right'}},
-    {act='act_rotateCW',   keys={'up'}},
-    {act='act_rotateCCW',  keys={'down'}},
-    {act='act_rotate180',  keys={'kp0'}},
+    {act='act_moveLeft',   keys={'kp1'}},
+    {act='act_moveRight',  keys={'kp3'}},
+    {act='act_rotateCW',   keys={'kp5'}},
+    {act='act_rotateCCW',  keys={'kp2'}},
+    {act='act_rotate180',  keys={'kp6'}},
     {act='act_softDrop',   keys={'x'}},
     {act='act_sonicDrop',  keys={'c'}},
     {act='act_hardDrop',   keys={'z'}},
@@ -74,6 +74,8 @@ function scene.enter()
             P1.field.matrix[y][x]=MATH.roll() and {}
         end
     end
+    BG.set('image')
+    BG.send(.12,IMG.cover)
 end
 
 function scene.keyDown(key,isRep)
