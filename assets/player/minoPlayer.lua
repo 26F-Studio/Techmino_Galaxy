@@ -185,7 +185,7 @@ function MP:freshBlock(mode)
             self.ghostY=self.ghostY-1
         end
 
-        if false and self.ghostY<self.handY then-- TODO: if (temp) 20G on
+        if (self.settings.dropDelay==0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then-- TODO: if (temp) 20G on
             self.handY=self.ghostY
         end
     end
@@ -481,7 +481,7 @@ updTasks.control={
                 local c1=c0+df
                 self.downCharge=c1
 
-                local dist=int(c1/self.settings.sdarr)-int(c0/self.settings.sdarr)
+                local dist=self.settings.sdarr==0 and 1e99 or int(c1/self.settings.sdarr)-int(c0/self.settings.sdarr)
                 while self.hand and dist>0 and not self:ifoverlap(self.field.matrix,self.hand.matrix,self.handX,self.handY-1) do
                     self.handY=self.handY-1
                     self:freshBlock('fresh')
@@ -510,15 +510,17 @@ updTasks.normal={
             self.lockTimer=self.lockTimer-1
             if self.lockTimer==0 then
                 self:dropMino()
-                print('lock')
             end
             return
         else
-            self.dropTimer=self.dropTimer-1
-            if self.dropTimer==0 then
-                self.dropTimer=self.settings.dropDelay
-                self.handY=self.handY-1
-                print('drop  handY=',self.handY)
+            if self.dropDelay~=0 then
+                self.dropTimer=self.dropTimer-1
+                if self.dropTimer==0 then
+                    self.dropTimer=self.settings.dropDelay
+                    self.handY=self.handY-1
+                end
+            elseif self.handY~=self.ghostY then-- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
+                self:freshBlock('fresh')
             end
         end
     end
@@ -661,7 +663,7 @@ function MP.new(data)
 
         das=70,
         arr=0,
-        sdarr=20,
+        sdarr=0,
 
         seqData={},
         rotSys='TRS',
