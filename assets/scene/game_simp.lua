@@ -9,8 +9,8 @@ local KEYMAP={
     {act='act_rotateCW',   keys={'up'}},
     {act='act_rotateCCW',  keys={'down'}},
     {act='act_rotate180',  keys={'kp0'}},
-    {act='act_softDrop',   keys={'c'}},
-    {act='act_sonicDrop',  keys={'x'}},
+    {act='act_softDrop',   keys={'x'}},
+    {act='act_sonicDrop',  keys={'c'}},
     {act='act_hardDrop',   keys={'z'}},
     {act='act_holdPiece',  keys={'space'}},
 

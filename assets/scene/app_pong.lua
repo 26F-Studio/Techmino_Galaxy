@@ -83,7 +83,7 @@ function scene.update()
                 P.y=min(P.y+8,P.y0,650)
                 P.vy=10
             else
-                P.vy=P.vy*.5
+                P.vy=P.vy/2
             end
         else
             if kb.isDown(P==p1 and 'w' or 'up') then
@@ -95,10 +95,10 @@ function scene.update()
             P.y=P.y+P.vy
             P.vy=P.vy*.9
             if P.y>650 then
-                P.vy=-P.vy*.5
+                P.vy=-P.vy/2
                 P.y=650
             elseif P.y<70 then
-                P.vy=-P.vy*.5
+                P.vy=-P.vy/2
                 P.y=70
             end
         end

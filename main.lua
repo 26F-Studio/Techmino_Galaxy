@@ -58,6 +58,9 @@ STRING.install()
 Zenitha.setAppName('Techmino')
 Zenitha.setVersionText(VERSION.appVer)
 Zenitha.setFirstScene('game_simp')
+Zenitha.setMaxFPS(260)
+Zenitha.setUpdateFreq(100)
+Zenitha.setDrawFreq(60/260*100)
 Zenitha.setDrawCursor(NULL)
 Zenitha.setOnFnKeys({
     function() MES.new('info',("System:%s[%s]\nLuaVer:%s\nJitVer:%s\nJitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,

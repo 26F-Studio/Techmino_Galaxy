@@ -168,7 +168,7 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
     return mino
 end
 function MP:restoreHandPos()-- Move hand piece to the normal spawn position
-    self.handX=int(self.settings.fieldW*.5+1-#self.hand.matrix[1]/2)
+    self.handX=int((self.settings.fieldW+1)/2-RotationSys[self.settings.rotSys].centerPos[self.hand.shape][self.hand.direction][2])
     self.handY=self.settings.fieldH+1
     self.minY=self.handY
     self:freshBlock('spawn')
@@ -345,6 +345,9 @@ function MP:dropMino()
     self:lock()
     self:minoDropped()
     self:checkField()
+    if self.settings.spawnDelay==0 then
+        self:popNext()
+    end
 end
 function MP:lock()
     local CB=self.hand.matrix
@@ -468,6 +471,7 @@ updTasks.control={
             end
         else
             self.moveDir=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
+            self.moveCharge=0
         end
 
         -- Auto drop
@@ -484,7 +488,7 @@ updTasks.control={
                     dist=dist-1
                 end
             else
-                self.downCharge=0
+                self.downCharge=false
             end
         end
     end,
@@ -650,14 +654,14 @@ function MP.new(data)
         holdMode='hold',
         holdKeepState=false,
 
-        dropDelay=500,
-        lockDelay=500,
-        spawnDelay=100,
+        dropDelay=420,
+        lockDelay=1000,
+        spawnDelay=0,
         clearDelay=1000,
 
         das=70,
-        arr=10,
-        sdarr=10,
+        arr=0,
+        sdarr=20,
 
         seqData={},
         rotSys='TRS',
@@ -705,7 +709,7 @@ function MP.new(data)
 
     p.moveDir=false
     p.moveCharge=0
-    p.downCharge=0
+    p.downCharge=false
 
     p.curTime=0-- Real time, [double] ms
     p.timer=0-- Inside timer for player, [int] ms
