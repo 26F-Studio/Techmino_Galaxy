@@ -11,7 +11,7 @@ setmetatable(MP,{__index=require'assets.player.basePlayer'})
 
 --------------------------------------------------------------
 -- Actions
-local function _defaultPressEvent(self,act)print(act)
+local function _defaultPressEvent(self,act)
     if self.keyState[act] then return end
     self.keyState[act]=true
     ins(self.actionHistory,{0,act})
@@ -29,7 +29,7 @@ function actions.moveLeft(self)
     if not self.hand then return end
     self.moveDir=-1
     self.moveCharge=0
-    if not self:ifoverlap(self.field.matrix,self.hand.matrix,self.handX-1,self.handY) then
+    if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
         self.handX=self.handX-1
         self:freshBlock('move')
     end
@@ -38,7 +38,7 @@ function actions.moveRight(self)
     if not self.hand then return end
     self.moveDir=1
     self.moveCharge=0
-    if not self:ifoverlap(self.field.matrix,self.hand.matrix,self.handX+1,self.handY) then
+    if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
         self.handX=self.handX+1
         self:freshBlock('move')
     end
@@ -181,7 +181,7 @@ function MP:freshBlock(mode)
         self.ghostY=min(#self.field.matrix+1,self.handY)
 
         --Move ghost to bottom
-        while not self:ifoverlap(self.field.matrix,self.hand.matrix,self.handX,self.ghostY-1)do
+        while not self:ifoverlap(self.hand.matrix,self.handX,self.ghostY-1)do
             self.ghostY=self.ghostY-1
         end
 
@@ -228,7 +228,7 @@ function MP:popNext()
     elseif self.holdQueue[1]then-- If no nexts, force using hold
         ins(self.nextQueue,rem(self.holdQueue,1))
         self:popNext()
-    else-- If no piece to use, Next queue is empty, game over...?
+    else-- If no piece to use, both Next and Hold queue are empty, game over
         self:gameover('ILE')
     end
 end
@@ -253,7 +253,8 @@ function MP:getMino(shapeID)
     mino._origin=TABLE.copy(mino,0)
     ins(self.nextQueue,mino)
 end
-function MP:ifoverlap(F,CB,cx,cy)
+function MP:ifoverlap(CB,cx,cy)
+    local F=self.field.matrix
     if cx<=0 or cx+#CB[1]>self.field.width+1 or cy<=0 then
         return true
     end
@@ -304,7 +305,7 @@ function MP:rotate(dir)
         local kickList=kickData[self.hand.direction*10+(self.hand.direction+dir)%4]
         for test=1,#kickList do
             local ix,iy=baseX+kickList[test][1],baseY+kickList[test][2]
-            if not self:ifoverlap(self.field.matrix,icb,ix,iy)then
+            if not self:ifoverlap(icb,ix,iy)then
                 self.hand.matrix=icb
                 self.handX,self.handY=ix,iy
                 self.hand.direction=(self.hand.direction+dir)%4
@@ -343,8 +344,8 @@ function MP:hold_float()
 end
 function MP:dropMino()
     self:lock()
-    self:minoDropped()
     self:checkField()
+    self:minoDropped()
     if self.settings.spawnDelay==0 then
         self:popNext()
     end
@@ -361,6 +362,7 @@ function MP:lock()
     end
 end
 function MP:minoDropped()
+
     self.hand=false
     self.spawnTimer=self.settings.spawnDelay
 end
@@ -384,10 +386,15 @@ function MP:checkField()
         ins(self.clearHistory,{
             lines=lineClear,
         })
+    else
+        if self.handY>self.settings.fieldTop then
+            self:gameover('MLE')
+        end
     end
 end
 function MP:gameover(reason)
-    error(reason)
+    if self.finished then return end
+    self.finished=true
     if reason=='AC' then-- Win
         -- TODO
     elseif reason=='WA' then-- Block out
@@ -410,33 +417,41 @@ function MP:gameover(reason)
 end
 --------------------------------------------------------------
 -- Updates
+local function step(self,d)
+    if self.timer<=self.settings.readyDelay then
+        local t0=self.settings.readyDelay-self.timer
+        local t1=int((t0-1)/1000)
+        t0=int(t0/1000)
+        if t0~=t1 then
+            MES.new('info',t0)
+        end
+    end
+
+    self.timer=self.timer+d
+    for i=1,#self.task do self.task[i].func(self,d) end
+end
 function MP:update(dt)
-    local df=int(self.curTime+dt*1000)-int(self.curTime)
-    self.curTime=self.curTime+dt*1000
+    local df=int((self.curTime+dt)*1000)-int(self.curTime*1000)
+    self.curTime=self.curTime+dt
 
     local l=self.task
     while df>0 do
-        -- local closestTime=1e99
-        -- for i=1,#l do
-        --     closestTime=min(l[i].wait(self),closestTime)
-        --     if closestTime<=0 then
-        --         error(('Invalid counter in task "$1"'):repD(l[i].name))
-        --     end
-        -- end
-        -- if closestTime<=df then
-        --     self.timer=self.timer+closestTime-1
-        --     for i=1,#l do l[i].func(self,closestTime-1) end
-        --     self.timer=self.timer+1
-        --     for i=1,#l do l[i].func(self,1) end
-        --     df=df-closestTime
-        -- else
-        --     self.timer=self.timer+df
-        --     for i=1,#l do l[i].func(self,df) end
-        --     break-- df=0
-        -- end
-        self.timer=self.timer+1
-        for i=1,#l do l[i].func(self,1) end
-        df=df-1
+        local closestTime=df
+        for i=1,#l do
+            local waitFunc=l[i].wait
+            closestTime=min(waitFunc and waitFunc(self) or 1,closestTime)
+            if closestTime<=0 then
+                error(STRING.repD('Invalid counter in task "$1"',l[i].name))
+            end
+        end
+        if closestTime>1 then
+            step(self,closestTime-1)
+            step(self,1)
+            df=df-closestTime
+        else
+            step(self,1)
+            df=df-1
+        end
     end
 end
 local updTasks={}
@@ -464,7 +479,7 @@ updTasks.control={
             elseif c1>=self.settings.das then
                 dist=1
             end
-            while self.hand and dist>0 and not self:ifoverlap(self.field.matrix,self.hand.matrix,self.handX+self.moveDir,self.handY) do
+            while self.hand and dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
                 self.handX=self.handX+self.moveDir
                 self:freshBlock('move')
                 dist=dist-1
@@ -482,7 +497,7 @@ updTasks.control={
                 self.downCharge=c1
 
                 local dist=self.settings.sdarr==0 and 1e99 or int(c1/self.settings.sdarr)-int(c0/self.settings.sdarr)
-                while self.hand and dist>0 and not self:ifoverlap(self.field.matrix,self.hand.matrix,self.handX,self.handY-1) do
+                while self.hand and dist>0 and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) do
                     self.handY=self.handY-1
                     self:freshBlock('fresh')
                     dist=dist-1
@@ -507,14 +522,14 @@ updTasks.normal={
             return
         end
         if self.handY==self.ghostY then
-            self.lockTimer=self.lockTimer-1
+            self.lockTimer=self.lockTimer-df
             if self.lockTimer==0 then
                 self:dropMino()
             end
             return
         else
             if self.dropDelay~=0 then
-                self.dropTimer=self.dropTimer-1
+                self.dropTimer=self.dropTimer-df
                 if self.dropTimer==0 then
                     self.dropTimer=self.settings.dropDelay
                     self.handY=self.handY-1
@@ -551,18 +566,16 @@ function drawEvents.board(self)
     gc.setColor(1,1,1)
     gc.setLineWidth(2)
     gc.rectangle('line',-202,402,404,13)
-    local v
+    local color,value
     if not self.hand then
-        gc.setColor(COLOR.R)
-        v=self.spawnTimer/self.settings.spawnDelay
+        color,value=COLOR.lR,self.spawnTimer/self.settings.spawnDelay
     elseif self.handY~=self.ghostY then
-        gc.setColor(COLOR.B)
-        v=self.dropTimer/self.settings.dropDelay
+        color,value=COLOR.lG,self.dropTimer/self.settings.dropDelay
     else
-        gc.setColor(COLOR.G)
-        v=self.lockTimer/self.settings.lockDelay
+        color,value=COLOR.L,self.lockTimer/self.settings.lockDelay
     end
-    gc.rectangle('fill',-200,404,400*math.min(v,1),8)
+    gc.setColor(color)
+    gc.rectangle('fill',-200,404,400*math.min(value,1),8)
 end
 function drawEvents.ghost(self)
     if not self.hand then return end
@@ -584,17 +597,17 @@ function drawEvents.block(self)
         end
     end end
 end
-function drawEvents.hold(self)
+function drawEvents.next(self)-- Almost same as drawEvents.hold, don't forget to change both
     gc.push('transform')
-    gc.translate(-300,-400+50)
+    gc.translate(300,-400+50)
     gc.setColor(1,1,1)
-    for n=1,#self.holdQueue do
-        local NB=self.holdQueue[n].matrix
-        local k=min(2.3/#NB,3/#NB[1],.85)
+    for n=1,#self.nextQueue do
+        local NB=self.nextQueue[n].matrix
+        local k=min(2.3/#NB,3/#NB[1],.86)
         gc.scale(k)
         for y=1,#NB do for x=1,#NB[1]do
             if NB[y][x]then
-                gc.rectangle('fill',(x-#NB[1]/2)*40,(y-#NB/2)*-40,40,40)
+                gc.rectangle('fill',(x-#NB[1]/2-1)*40,(y-#NB/2)*-40,40,40)
             end
         end end
         gc.scale(1/k)
@@ -602,17 +615,17 @@ function drawEvents.hold(self)
     end
     gc.pop()
 end
-function drawEvents.next(self)
+function drawEvents.hold(self)-- Almost same as drawEvents.next, don't forget to change both
     gc.push('transform')
-    gc.translate(300,-400+50)
+    gc.translate(-300,-400+50)
     gc.setColor(1,1,1)
-    for n=1,#self.nextQueue do
-        local NB=self.nextQueue[n].matrix
-        local k=min(2.3/#NB,3/#NB[1],.85)
+    for n=1,#self.holdQueue do
+        local NB=self.holdQueue[n].matrix
+        local k=min(2.3/#NB,3/#NB[1],.86)
         gc.scale(k)
         for y=1,#NB do for x=1,#NB[1]do
             if NB[y][x]then
-                gc.rectangle('fill',(x-#NB[1]/2)*40,(y-#NB/2)*-40,40,40)
+                gc.rectangle('fill',(x-#NB[1]/2-1)*40,(y-#NB/2)*-40,40,40)
             end
         end end
         gc.scale(1/k)
@@ -656,6 +669,7 @@ function MP.new(data)
         holdMode='hold',
         holdKeepState=false,
 
+        readyDelay=3000,
         dropDelay=420,
         lockDelay=1000,
         spawnDelay=0,
@@ -666,7 +680,7 @@ function MP.new(data)
         sdarr=0,
 
         seqData={},
-        rotSys='TRS',
+        rotSys='SRS',
 
         freshCondition='any',
     }
@@ -680,7 +694,7 @@ function MP.new(data)
     p.field=require'assets.player.minoField'.new(p.settings.fieldW,p.settings.fieldH)
     p.fieldBeneath=0
 
-    p.minoCount=0
+    p.garbageBuffer={}
 
     p.holdQueue={}
     p.holdChance=0
@@ -696,12 +710,15 @@ function MP.new(data)
             coroutine.yield()
         end
     end)
-    p.genNext()
+
+    p.minoCount=0
+
+    p.energy=0
+    p.energyShow=0
 
     p.dropTimer=0
     p.lockTimer=0
-    -- p.spawnTimer=p.settings.readyTime
-    p.spawnTimer=626-- TODO: test
+    p.spawnTimer=p.settings.readyDelay
 
     p.hand=false
     p.handX=false
@@ -716,7 +733,6 @@ function MP.new(data)
     p.curTime=0-- Real time, [double] ms
     p.timer=0-- Inside timer for player, [int] ms
     p.timing=false-- Are we timing?
-    p.playing=false-- Did we start?
 
     p.clearHistory={}
     p.actionHistory={}
@@ -750,6 +766,8 @@ function MP.new(data)
             p.keyState[k]=false
         end
     end
+
+    p.genNext()
 
     ins(p.pressEventList,_defaultPressEvent)
     ins(p.releaseEventList,_defaultPeleaseEvent)

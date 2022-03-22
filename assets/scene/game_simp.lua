@@ -68,12 +68,6 @@ function scene.enter()
         id=1,
     }
     P1:setPosition(800,500)
-    for y=1,2 do
-        P1.field.matrix[y]={}
-        for x=1,10 do
-            P1.field.matrix[y][x]=MATH.roll() and {}
-        end
-    end
     BG.set('image')
     BG.send(.12,IMG.cover)
 end
