@@ -14,7 +14,7 @@ local C2_sym={
         {'dRect',1,1,8,8},
         {'fRect',3,3,4,4},
     },
-    kickTable={
+    data={
         Z,S,--Z,S
         Z,S,--J,L
         Z,--T

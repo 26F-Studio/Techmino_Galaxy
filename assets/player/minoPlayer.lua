@@ -44,13 +44,13 @@ function actions.moveRight(self)
     end
 end
 function actions.rotateCW(self)
-    self:rotate(1)
+    self:rotate('R')
 end
 function actions.rotateCCW(self)
-    self:rotate(3)
+    self:rotate('L')
 end
 function actions.rotate180(self)
-    self:rotate(2)
+    self:rotate('F')
 end
 function actions.softDrop(self)
     self.downCharge=0
@@ -85,8 +85,9 @@ function actions.holdPiece(self)
     elseif self.settings.holdMode=='float' then
         self:hold_float()
     else
-        error('wtf why holdMode is '..tostring(self.settings.holdMode))
+        error("wtf why holdMode is "..tostring(self.settings.holdMode))
     end
+    self.holdChance=self.holdChance-1
 end
 
 actions.function1=NULL
@@ -168,7 +169,7 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
     return mino
 end
 function MP:restoreHandPos()-- Move hand piece to the normal spawn position
-    self.handX=int((self.settings.fieldW+1)/2-RotationSys[self.settings.rotSys].centerPos[self.hand.shape][self.hand.direction][2])
+    self.handX=int(self.settings.fieldW/2-#self.hand.matrix[1]/2+1)
     self.handY=self.settings.fieldH+1
     self.minY=self.handY
     self:freshBlock('spawn')
@@ -193,7 +194,6 @@ function MP:freshBlock(mode)
     --Fresh delays
     if mode=='move'or mode=='spawn'or mode=='fresh'then
         local C=self.hand
-        local sch=RotationSys[self.settings.rotSys].centerPos[C.shape][self.hand.direction][1]
         if self.settings.freshCondition=='any' then
             if self.lockTimer<self.settings.lockDelay then
                 -- if mode~='spawn'then
@@ -202,14 +202,14 @@ function MP:freshBlock(mode)
                 self.dropTimer=self.settings.dropDelay
                 self.lockTimer=self.settings.lockDelay
             end
-            if self.handY+sch<self.minY then
-                self.minY=self.handY+sch
+            if self.handY<self.minY then
+                self.minY=self.handY
                 self.dropTimer=self.settings.dropDelay
                 self.lockTimer=self.settings.lockDelay
             end
         elseif self.settings.freshCondition=='fall' then
-            if self.handY+sch<self.minY then
-                self.minY=self.handY+sch
+            if self.handY<self.minY then
+                self.minY=self.handY
                 if self.lockTimer<self.settings.lockDelay then
                     -- self.freshTime=self.freshTime-1
                     self.dropTimer=self.settings.dropDelay
@@ -248,7 +248,6 @@ function MP:getMino(shapeID)
         direction=0,
         name=Blocks[shapeID].name,
         matrix=shape,
-        center=RotationSys[self.settings.rotSys].centerPos[shapeID],
     }
     mino._origin=TABLE.copy(mino,0)
     ins(self.nextQueue,mino)
@@ -272,49 +271,71 @@ function MP:ifoverlap(CB,cx,cy)
 end
 function MP:rotate(dir)
     if not self.hand then return end
-    local kickData=RotationSys[self.settings.rotSys].kickTable[self.hand.shape]
-    if type(kickData)=='table'then
-        local cb=self.hand.matrix
-        local icb={}
-        if dir==1 then-- Rotate CW
+    local minoData=RotationSys[self.settings.rotSys].data[self.hand.shape]
+    local preState=minoData[self.hand.direction]
+    if type(preState)=='table'then
+        -- Rotate matrix
+        local cb,icb=self.hand.matrix,{}
+        if dir=='R' then-- Rotate CW
             for y=1,#cb[1] do
                 icb[y]={}
                 for x=1,#cb do
                     icb[y][x]=cb[x][#cb[1]-y+1]
                 end
             end
-        elseif dir==3 then-- Rotate CCW
+        elseif dir=='L' then-- Rotate CCW
             for y=1,#cb[1] do
                 icb[y]={}
                 for x=1,#cb do
                     icb[y][x]=cb[#cb-x+1][y]
                 end
             end
-        elseif dir==2 then-- Rotate 180
+        elseif dir=='F' then-- Rotate 180
             for y=1,#cb do
                 icb[y]={}
                 for x=1,#cb[1] do
                     icb[y][x]=cb[#cb-y+1][#cb[1]-x+1]
                 end
             end
+        else
+            error("wtf why dir isn't R/L/F")
         end
-        local sc=RotationSys[self.settings.rotSys].centerPos[self.hand.shape][self.hand.direction]
-        local isc=RotationSys[self.settings.rotSys].centerPos[self.hand.shape][(self.hand.direction+dir)%4]
-        local baseX,baseY=self.handX+sc[2]-isc[2],self.handY+sc[1]-isc[1]
 
-        local kickList=kickData[self.hand.direction*10+(self.hand.direction+dir)%4]
-        for test=1,#kickList do
-            local ix,iy=baseX+kickList[test][1],baseY+kickList[test][2]
+        local baseX,baseY
+        local kick=preState[dir]
+        if kick then
+            local afterState=minoData[kick.target]
+            if preState.center and afterState.center then
+                print(preState.center[1],preState.center[2])
+                print(afterState.center[1],afterState.center[2])
+                baseX=preState.center[1]-afterState.center[1]
+                baseY=preState.center[2]-afterState.center[2]
+            elseif kick.base then
+                baseX=kick.base[2]
+                baseY=kick.base[1]
+            else
+                error('cannot get baseX/Y')
+            end
+        else
+            return-- This RS doesn't define this rotation
+        end
+
+        print('base',baseX,baseY)
+
+        for n=1,#kick.test do
+            local ix,iy=self.handX+baseX+kick.test[n][1],self.handY+baseY+kick.test[n][2]
             if not self:ifoverlap(icb,ix,iy)then
                 self.hand.matrix=icb
                 self.handX,self.handY=ix,iy
-                self.hand.direction=(self.hand.direction+dir)%4
+                self.hand.direction=kick.target
                 self:freshBlock('move')
                 return
             end
         end
+    elseif type(preState)=='function'then
+        preState(self)
     else
-        kickData(self,dir)
+        error("wtf why preState is "..type(preState))
     end
 end
 function MP:hold_hold()
@@ -441,7 +462,7 @@ function MP:update(dt)
             local waitFunc=l[i].wait
             closestTime=min(waitFunc and waitFunc(self) or 1,closestTime)
             if closestTime<=0 then
-                error(STRING.repD('Invalid counter in task "$1"',l[i].name))
+                error(STRING.repD("Invalid counter in task '$1'",l[i].name))
             end
         end
         if closestTime>1 then
@@ -680,7 +701,7 @@ function MP.new(data)
         sdarr=0,
 
         seqData={},
-        rotSys='SRS',
+        rotSys='TRS',
 
         freshCondition='any',
     }
@@ -704,7 +725,7 @@ function MP.new(data)
         local l={}
         while true do
             while #p.nextQueue<p.settings.nextCount do
-                if not l[1] then for i=1,7 do l[i]=i end end
+                if not l[1] then for i=1,25 do l[i]=i end end
                 p:getMino(rem(l,math.random(#l)))
             end
             coroutine.yield()
