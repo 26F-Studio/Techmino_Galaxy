@@ -52,7 +52,7 @@ local BiRS={
         {'fRect',4,1,2,8},
         {'fRect',3,3,4,4},
     },
-    kickTable=TABLE.new(function(P,d,ifpre)
+    data=TABLE.new(function(P,d,ifpre)
         local C=P.cur
         local idir=(C.dir+d)%4
         local kickList=list[C.id][C.dir*10+idir]

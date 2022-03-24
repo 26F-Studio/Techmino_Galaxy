@@ -216,6 +216,8 @@ function MP:freshBlock(mode)
                     self.lockTimer=self.settings.lockDelay
                 end
             end
+        else
+            error("Wtf why settings.freshCondition is "..tostring(self.settings.freshCondition))
         end
     end
 end
@@ -271,8 +273,8 @@ function MP:ifoverlap(CB,cx,cy)
 end
 function MP:rotate(dir)
     if not self.hand then return end
-    local minoData=RotationSys[self.settings.rotSys].data[self.hand.shape]
-    local preState=minoData[self.hand.direction]
+    local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
+    local preState=type(minoData)=='table' and minoData[self.hand.direction]
     if type(preState)=='table'then
         -- Rotate matrix
         local cb,icb=self.hand.matrix,{}
@@ -305,22 +307,19 @@ function MP:rotate(dir)
         local kick=preState[dir]
         if kick then
             local afterState=minoData[kick.target]
-            if preState.center and afterState.center then
-                print(preState.center[1],preState.center[2])
-                print(afterState.center[1],afterState.center[2])
+            for k,v in next,kick do print(k,v)end
+            if kick.base then
+                baseX=kick.base[1]
+                baseY=kick.base[2]
+            elseif preState.center and afterState.center then
                 baseX=preState.center[1]-afterState.center[1]
                 baseY=preState.center[2]-afterState.center[2]
-            elseif kick.base then
-                baseX=kick.base[2]
-                baseY=kick.base[1]
             else
                 error('cannot get baseX/Y')
             end
         else
             return-- This RS doesn't define this rotation
         end
-
-        print('base',baseX,baseY)
 
         for n=1,#kick.test do
             local ix,iy=self.handX+baseX+kick.test[n][1],self.handY+baseY+kick.test[n][2]
@@ -617,6 +616,15 @@ function drawEvents.block(self)
             gc.rectangle('fill',-200+(self.handX+x-2)*40,400-(self.handY+y-1)*40,40,40)
         end
     end end
+    local RS=RotationSys[self.settings.rotSys]
+    local minoData=RS[self.hand.shape]
+    if type(minoData)=='table' then
+        local center=minoData[self.hand.direction].center
+        if center then
+            gc.setColor(1,0,0)
+            GC.draw(RS.centerTex,-200+(self.handX+center[1]-1)*40,400-(self.handY+center[2]-1)*40)
+        end
+    end
 end
 function drawEvents.next(self)-- Almost same as drawEvents.hold, don't forget to change both
     gc.push('transform')
@@ -725,7 +733,7 @@ function MP.new(data)
         local l={}
         while true do
             while #p.nextQueue<p.settings.nextCount do
-                if not l[1] then for i=1,25 do l[i]=i end end
+                if not l[1] then for i=1,29 do l[i]=i end end
                 p:getMino(rem(l,math.random(#l)))
             end
             coroutine.yield()

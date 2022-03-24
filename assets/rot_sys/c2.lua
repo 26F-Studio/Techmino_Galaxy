@@ -1,13 +1,11 @@
-local L={'+0+0','-1+0','+1+0','+0-1','-1-1','+1-1','-2+0','+2+0'}
-local C2={
-    centerTex=GC.load{10,10,
-        {'setLW',2},
-        {'dRect',2,2,6,6},
-    },
-    kickTable=TABLE.new({
-        [01]=L,[10]=L,[12]=L,[21]=L,
-        [23]=L,[32]=L,[30]=L,[03]=L,
-        [02]=L,[20]=L,[13]=L,[31]=L,
-    },29)
+
+local C2={}
+C2.centerPreset='common'
+C2.centerTex=GC.load{10,10,
+    {'setLW',2},
+    {'dRect',2,2,6,6},
 }
+local kicks={'+0+0','-1+0','+1+0','+0-1','-1-1','+1-1','-2+0','+2+0'}
+local state={R={test=kicks},L={test=kicks},F={test=kicks}}
+for i=1,29 do C2[i]={[0]=state,[1]=state,[2]=state,[3]=state} end
 return C2
