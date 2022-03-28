@@ -307,7 +307,6 @@ function MP:rotate(dir)
         local kick=preState[dir]
         if kick then
             local afterState=minoData[kick.target]
-            for k,v in next,kick do print(k,v)end
             if kick.base then
                 baseX=kick.base[1]
                 baseY=kick.base[2]
@@ -709,7 +708,7 @@ function MP.new(data)
         sdarr=0,
 
         seqData={},
-        rotSys='TRS',
+        rotSys='SRS',
 
         freshCondition='any',
     }
@@ -733,7 +732,7 @@ function MP.new(data)
         local l={}
         while true do
             while #p.nextQueue<p.settings.nextCount do
-                if not l[1] then for i=1,29 do l[i]=i end end
+                if not l[1] then for i=1,7 do l[i]=i end end
                 p:getMino(rem(l,math.random(#l)))
             end
             coroutine.yield()
