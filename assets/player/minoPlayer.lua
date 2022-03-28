@@ -178,11 +178,11 @@ function MP:restoreHandPos()-- Move hand piece to the normal spawn position
 end
 function MP:freshBlock(mode)
     --Fresh ghost
-    if(mode=='move'or mode=='spawn'or mode=='garbageup')and self.hand then
+    if (mode=='move' or mode=='spawn' or mode=='garbageup') and self.hand then
         self.ghostY=min(#self.field.matrix+1,self.handY)
 
         --Move ghost to bottom
-        while not self:ifoverlap(self.hand.matrix,self.handX,self.ghostY-1)do
+        while not self:ifoverlap(self.hand.matrix,self.handX,self.ghostY-1) do
             self.ghostY=self.ghostY-1
         end
 
@@ -192,11 +192,10 @@ function MP:freshBlock(mode)
     end
 
     --Fresh delays
-    if mode=='move'or mode=='spawn'or mode=='fresh'then
-        local C=self.hand
+    if mode=='move' or mode=='spawn' or mode=='fresh' then
         if self.settings.freshCondition=='any' then
             if self.lockTimer<self.settings.lockDelay then
-                -- if mode~='spawn'then
+                -- if mode~='spawn' then
                 --     self.freshTime=self.freshTime-1
                 -- end
                 self.dropTimer=self.settings.dropDelay
@@ -222,12 +221,12 @@ function MP:freshBlock(mode)
     end
 end
 function MP:popNext()
-    if self.nextQueue[1]then-- Most cases there is pieces in next queue
+    if self.nextQueue[1] then-- Most cases there is pieces in next queue
         self.hand=rem(self.nextQueue,1)
         self:restoreHandPos()
         self.genNext()
         self.holdChance=min(self.holdChance+1,self.settings.holdCount)
-    elseif self.holdQueue[1]then-- If no nexts, force using hold
+    elseif self.holdQueue[1] then-- If no nexts, force using hold
         ins(self.nextQueue,rem(self.holdQueue,1))
         self:popNext()
     else-- If no piece to use, both Next and Hold queue are empty, game over
@@ -263,9 +262,9 @@ function MP:ifoverlap(CB,cx,cy)
         return
     end
     for y=1,#CB do
-        if not F[cy+y-1]then return end
+        if not F[cy+y-1] then return end
         for x=1,#CB[1] do
-            if CB[y][x]and F[cy+y-1][cx+x-1] then
+            if CB[y][x] and F[cy+y-1][cx+x-1] then
                 return true
             end
         end
@@ -275,7 +274,7 @@ function MP:rotate(dir)
     if not self.hand then return end
     local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
     local preState=type(minoData)=='table' and minoData[self.hand.direction]
-    if type(preState)=='table'then
+    if type(preState)=='table' then
         -- Rotate matrix
         local cb,icb=self.hand.matrix,{}
         if dir=='R' then-- Rotate CW
@@ -322,7 +321,7 @@ function MP:rotate(dir)
 
         for n=1,#kick.test do
             local ix,iy=self.handX+baseX+kick.test[n][1],self.handY+baseY+kick.test[n][2]
-            if not self:ifoverlap(icb,ix,iy)then
+            if not self:ifoverlap(icb,ix,iy) then
                 self.hand.matrix=icb
                 self.handX,self.handY=ix,iy
                 self.hand.direction=kick.target
@@ -330,7 +329,7 @@ function MP:rotate(dir)
                 return
             end
         end
-    elseif type(preState)=='function'then
+    elseif type(preState)=='function' then
         preState(self)
     else
         error("wtf why preState is "..type(preState))
@@ -600,8 +599,8 @@ function drawEvents.ghost(self)
     if not self.hand then return end
     gc.setColor(1,1,1,.26)
     local CB=self.hand.matrix
-    for y=1,#CB do for x=1,#CB[1]do
-        if CB[y][x]then
+    for y=1,#CB do for x=1,#CB[1] do
+        if CB[y][x] then
             gc.rectangle('fill',-200+(self.handX+x-2)*40,400-(self.ghostY+y-1)*40,40,40)
         end
     end end
@@ -610,8 +609,8 @@ function drawEvents.block(self)
     if not self.hand then return end
     gc.setColor(1,1,1)
     local CB=self.hand.matrix
-    for y=1,#CB do for x=1,#CB[1]do
-        if CB[y][x]then
+    for y=1,#CB do for x=1,#CB[1] do
+        if CB[y][x] then
             gc.rectangle('fill',-200+(self.handX+x-2)*40,400-(self.handY+y-1)*40,40,40)
         end
     end end
@@ -633,8 +632,8 @@ function drawEvents.next(self)-- Almost same as drawEvents.hold, don't forget to
         local NB=self.nextQueue[n].matrix
         local k=min(2.3/#NB,3/#NB[1],.86)
         gc.scale(k)
-        for y=1,#NB do for x=1,#NB[1]do
-            if NB[y][x]then
+        for y=1,#NB do for x=1,#NB[1] do
+            if NB[y][x] then
                 gc.rectangle('fill',(x-#NB[1]/2-1)*40,(y-#NB/2)*-40,40,40)
             end
         end end
@@ -651,8 +650,8 @@ function drawEvents.hold(self)-- Almost same as drawEvents.next, don't forget to
         local NB=self.holdQueue[n].matrix
         local k=min(2.3/#NB,3/#NB[1],.86)
         gc.scale(k)
-        for y=1,#NB do for x=1,#NB[1]do
-            if NB[y][x]then
+        for y=1,#NB do for x=1,#NB[1] do
+            if NB[y][x] then
                 gc.rectangle('fill',(x-#NB[1]/2-1)*40,(y-#NB/2)*-40,40,40)
             end
         end end

@@ -64,9 +64,9 @@ local BiRS={
         end
         local dx,dy=0,0 do
             local pressing=P.keyPressing
-            if pressing[1]and P:ifoverlap(C.bk,P.curX-1,P.curY)then dx=dx-1 end
-            if pressing[2]and P:ifoverlap(C.bk,P.curX+1,P.curY)then dx=dx+1 end
-            if pressing[7]and P:ifoverlap(C.bk,P.curX,P.curY-1)then dy=  -1 end
+            if pressing[1] and P:ifoverlap(C.bk,P.curX-1,P.curY) then dx=dx-1 end
+            if pressing[2] and P:ifoverlap(C.bk,P.curX+1,P.curY) then dx=dx+1 end
+            if pressing[7] and P:ifoverlap(C.bk,P.curX,P.curY-1) then dy=  -1 end
         end
         while true do
             for test=1,#kickList do
@@ -77,7 +77,7 @@ local BiRS={
                     (P.freshTime>0 or fdy<=0)
                 then
                     local x,y=ix+fdx,iy+fdy
-                    if not P:ifoverlap(icb,x,y)then
+                    if not P:ifoverlap(icb,x,y) then
                         if P.gameEnv.moveFX and P.gameEnv.block then
                             P:createMoveFX()
                         end
@@ -96,7 +96,7 @@ local BiRS={
                         local sfx
                         if ifpre then
                             sfx='prerotate'
-                        elseif P:ifoverlap(icb,x,y+1)and P:ifoverlap(icb,x-1,y)and P:ifoverlap(icb,x+1,y)then
+                        elseif P:ifoverlap(icb,x,y+1) and P:ifoverlap(icb,x-1,y) and P:ifoverlap(icb,x+1,y) then
                             sfx='rotatekick'
                             P:_rotateField(d)
                         else

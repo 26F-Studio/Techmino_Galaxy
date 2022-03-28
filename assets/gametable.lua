@@ -1,5 +1,5 @@
 -- Global color table for minoes
-ColorTable={}for i=1,64 do ColorTable[i]=COLOR.hsv((i-1)/64,.9,.9) end
+ColorTable={} for i=1,64 do ColorTable[i]=COLOR.hsv((i-1)/64,.9,.9) end
 
 do--Blocks
     local O,_=true,false
@@ -42,5 +42,5 @@ do--Blocks
 
         --Dot
         {name='O1',id=29,shape={{O}}},
-    }for i=1,#Blocks do Blocks[Blocks[i].name]=Blocks[i] end
+    } for i=1,#Blocks do Blocks[Blocks[i].name]=Blocks[i] end
 end

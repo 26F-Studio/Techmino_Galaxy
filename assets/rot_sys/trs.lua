@@ -95,28 +95,25 @@ TRS[5]={
     },
 }--T
 TRS[6]=function(P,d)
-    if P.gameEnv.easyFresh then
-        P:freshBlock('fresh')
-    end
-    if P.gameEnv.ospin then
+    if P.settings.ospin then
         local x,y=P.handX,P.handY
         local C=P.hand
-        if y==P.ghoY and((P:solid(x-1,y)or P:solid(x-1,y+1)))and(P:solid(x+2,y)or P:solid(x+2,y+1))then
+        if y==P.ghoY and((P:solid(x-1,y) or P:solid(x-1,y+1))) and (P:solid(x+2,y) or P:solid(x+2,y+1)) then
             --[Warning] Field spinSeq is a dirty data, TRS put this var into the block.
             C.spinSeq=(C.spinSeq or 0)%100*10+d
             if C.spinSeq<100 then
                 return end
             for i=1,#OspinList do
                 local L=OspinList[i]
-                if C.spinSeq==L[1]then
+                if C.spinSeq==L[1] then
                     local id,dir=L[2],L[3]
                     local bk=Blocks[id][dir]
                     x,y=P.handX+L[4],P.handY+L[5]
                     if
-                        not P:ifoverlap(bk,x,y)and(
-                            L[6]>0 or(P:ifoverlap(bk,x-1,y)and P:ifoverlap(bk,x+1,y))
-                        )and(
-                            L[6]==2 or(P:ifoverlap(bk,x,y-1)and P:ifoverlap(bk,x,y+1))
+                        not P:ifoverlap(bk,x,y) and (
+                            L[6]>0 or(P:ifoverlap(bk,x-1,y) and P:ifoverlap(bk,x+1,y))
+                        ) and (
+                            L[6]==2 or(P:ifoverlap(bk,x,y-1) and P:ifoverlap(bk,x,y+1))
                         )
                     then
                         C.id=id

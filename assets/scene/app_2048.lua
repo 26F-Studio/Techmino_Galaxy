@@ -243,10 +243,10 @@ function scene.mouseDown(x,y,k)
             skip()
         else
             local dx,dy=x-(field.mx),y-(field.my)
-            if abs(dx)<field.w/2 and abs(dy)<field.w/2 and (abs(dx)>field.w*.1 or abs(dy)>field.w*.1)then
+            if abs(dx)<field.w/2 and abs(dy)<field.w/2 and (abs(dx)>field.w*.1 or abs(dy)>field.w*.1) then
                 scene.keyDown(abs(dx)-abs(dy)>0 and
-                    (dx>0 and'right'or'left')or
-                    (dy>0 and'down'or'up')
+                    (dx>0 and 'right' or 'left') or
+                    (dy>0 and 'down' or 'up')
                 )
             end
         end

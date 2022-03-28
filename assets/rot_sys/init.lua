@@ -148,7 +148,7 @@ for name,rs in next,RotationSys do
 
         -- Make all string vec to the same table vec
         for shapeID,minoData in next,rs do
-            if type(shapeID)=='number' and type(minoData)=='table'then
+            if type(shapeID)=='number' and type(minoData)=='table' then
                 for dir in next,minoData do
                     RotationSys._normalizeKick(minoData,dir,'R')
                     RotationSys._normalizeKick(minoData,dir,'L')
