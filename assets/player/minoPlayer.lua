@@ -12,13 +12,13 @@ setmetatable(MP,{__index=require'assets.player.basePlayer'})
 --------------------------------------------------------------
 -- Actions
 local function _defaultPressEvent(self,act)
-    if self.keyState[act] then return end
+    if not self.actions[act] or self.keyState[act] then return end
     self.keyState[act]=true
     ins(self.actionHistory,{0,act})
     self.actions[act].press(self)
 end
 local function _defaultPeleaseEvent(self,act)
-    if not self.keyState[act] then return end
+    if not self.actions[act] or not self.keyState[act] then return end
     self.keyState[act]=false
     ins(self.actionHistory,{1,act})
     self.actions[act].release(self)
@@ -695,7 +695,7 @@ function MP.new(data)
         sdarr=0,
 
         seqData={},
-        rotSys='TRS',
+        rotSys='BiRS',
 
         freshCondition='any',
     }
