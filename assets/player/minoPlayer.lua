@@ -239,7 +239,7 @@ function MP:getMino(shapeID)
     for y=1,#shape do
         for x=1,#shape[1] do
             if shape[y][x] then
-                shape[y][x]={color=(c+math.random(-5,5))%64+1}-- Should be player's color setting
+                shape[y][x]={color=(c+math.random(-2,2))%64+1}-- Should be player's color setting
             end
         end
     end
@@ -281,28 +281,28 @@ end
 function MP:rotate(dir)
     if not self.hand then return end
     local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
-    if type(minoData)=='table' then
-        local preState=minoData[self.hand.direction]
+    if type(minoData)~='table' then error("wtf why minoData is "..type(minoData)) end
+
+    local preState=minoData[self.hand.direction]
+    if preState then
         -- Rotate matrix
         if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F") end
+        local kick=preState[dir]
+        if not kick then return end-- This RS doesn't define this rotation
+
         local cb=self.hand.matrix
         local icb=TABLE.rotate(cb,dir)
-
         local baseX,baseY
-        local kick=preState[dir]
-        if kick then
-            local afterState=minoData[kick.target]
-            if kick.base then
-                baseX=kick.base[1]
-                baseY=kick.base[2]
-            elseif preState.center and afterState.center then
-                baseX=preState.center[1]-afterState.center[1]
-                baseY=preState.center[2]-afterState.center[2]
-            else
-                error('cannot get baseX/Y')
-            end
+
+        local afterState=minoData[kick.target]
+        if kick.base then
+            baseX=kick.base[1]
+            baseY=kick.base[2]
+        elseif preState.center and afterState.center then
+            baseX=preState.center[1]-afterState.center[1]
+            baseY=preState.center[2]-afterState.center[2]
         else
-            return-- This RS doesn't define this rotation
+            error('cannot get baseX/Y')
         end
 
         for n=1,#kick.test do
@@ -315,10 +315,10 @@ function MP:rotate(dir)
                 return
             end
         end
-    elseif type(minoData)=='function' then
-        minoData(self,dir)
+    elseif type(minoData.rotate)=='function' then
+        minoData.rotate(self,dir)
     else
-        error("wtf why minoData is "..type(minoData))
+        error("wtf why no state in minoData")
     end
 end
 function MP:hold_hold()
@@ -604,12 +604,11 @@ function drawEvents.block(self)
     end end
     local RS=RotationSys[self.settings.rotSys]
     local minoData=RS[self.hand.shape]
-    if type(minoData)=='table' then
-        local center=minoData[self.hand.direction].center
-        if center then
-            gc.setColor(1,0,0)
-            GC.draw(RS.centerTex,-200+(self.handX+center[1]-1)*40,400-(self.handY+center[2]-1)*40)
-        end
+    local state=minoData[self.hand.direction]
+    local center=state and state.center or type(minoData.center)=='function' and minoData.center(self)
+    if center then
+        gc.setColor(1,0,0)
+        GC.draw(RS.centerTex,-200+(self.handX+center[1]-1)*40,400-(self.handY+center[2]-1)*40)
     end
 end
 function drawEvents.next(self)-- Almost same as drawEvents.hold, don't forget to change both

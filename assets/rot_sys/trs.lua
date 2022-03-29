@@ -96,58 +96,65 @@ local OspinList={
     {seq='RFR',shape=6,direcion=0,bias={ 1,-1},free='ANY',target={2,4,1,3}}, {seq='RRF',shape=6,direcion=0,bias={ 2,-1},free='ANY',target={2,4,1,3}}, {seq='RFF',shape=6,direcion=0,bias={ 1,-2},free='ANY',target={2,4,1,3}}, --O
     {seq='LFL',shape=6,direcion=0,bias={-1,-1},free='ANY',target={3,1,4,2}}, {seq='LLF',shape=6,direcion=0,bias={-2,-1},free='ANY',target={3,1,4,2}}, {seq='LFF',shape=6,direcion=0,bias={-1,-2},free='ANY',target={3,1,4,2}}, --O
 }--{keys, ID, dir, dx, dy, freeLevel
-TRS[6]=function(P,dir)
-    local C=P.hand
-    local baseX,baseY=P.handX,P.handY
-    if baseY==P.ghostY and ((P:getCell(baseX-1,baseY) or P:getCell(baseX-1,baseY+1))) and (P:getCell(baseX+2,baseY) or P:getCell(baseX+2,baseY+1)) then
-        if not P.settings.noOspin then
-            -- [Warning] field 'spinSeq' is a dirty data, TRS put this var into the block.
-            C.spinSeq=(C.spinSeq or '')..dir
-            if #C.spinSeq<3 then
-                P:freshBlock('move')
-                return
-            end
+TRS[6]={
+    center=(function(P)
+        local oCenter={1,1}
+        return function()
+            return oCenter
+        end
+    end)(),
+    rotate=function(P,dir)
+        local C=P.hand
+        local baseX,baseY=P.handX,P.handY
+        if baseY==P.ghostY and ((P:getCell(baseX-1,baseY) or P:getCell(baseX-1,baseY+1))) and (P:getCell(baseX+2,baseY) or P:getCell(baseX+2,baseY+1)) then
+            if not P.settings.noOspin then
+                -- [Warning] field 'spinSeq' is a dirty data, TRS put this var into the block.
+                C.spinSeq=(C.spinSeq or '')..dir
+                if #C.spinSeq<3 then
+                    P:freshBlock('move')
+                    return
+                end
 
-            for i=1,#OspinList do
-                local test=OspinList[i]
-                if C.spinSeq==test.seq then
-                    local newMatrix=TABLE.shift(Blocks[test.shape].shape)
-                    if test.direcion==2 then newMatrix=TABLE.rotate(newMatrix,'F') end
-                    print("MATCH",i)
-                    local c=0
-                    for y=1,#newMatrix do
-                        for x=1,#newMatrix[1] do
-                            if newMatrix[y][x] then
-                                c=c+1
-                                newMatrix[y][x]=C.matrix[Ocells[test.target[c]][1]][Ocells[test.target[c]][2]]
+                for i=1,#OspinList do
+                    local test=OspinList[i]
+                    if C.spinSeq==test.seq then
+                        local newMatrix=TABLE.shift(Blocks[test.shape].shape)
+                        if test.direcion==2 then newMatrix=TABLE.rotate(newMatrix,'F') end
+                        local c=0
+                        for y=1,#newMatrix do
+                            for x=1,#newMatrix[1] do
+                                if newMatrix[y][x] then
+                                    c=c+1
+                                    newMatrix[y][x]=C.matrix[Ocells[test.target[c]][1]][Ocells[test.target[c]][2]]
+                                end
                             end
                         end
-                    end
-                    local x,y=P.handX+test.bias[1],P.handY+test.bias[2]
-                    if
-                        not P:ifoverlap(newMatrix,x,y) and (
-                            test.free~='FIX' or (P:ifoverlap(newMatrix,x-1,y) and P:ifoverlap(newMatrix,x+1,y))
-                        ) and (
-                            test.free=='ANY' or (P:ifoverlap(newMatrix,x,y-1) and P:ifoverlap(newMatrix,x,y+1))
-                        )
-                    then
-                        C.shape=test.shape
-                        C.matrix=newMatrix
-                        C.direction=test.direcion
-                        C.spinSeq=''
-                        P.handX,P.handY=x,y
-                        P:freshBlock('move')
-                        print("REP",i)
-                        return
+                        local x,y=P.handX+test.bias[1],P.handY+test.bias[2]
+                        if
+                            not P:ifoverlap(newMatrix,x,y) and (
+                                test.free~='FIX' or (P:ifoverlap(newMatrix,x-1,y) and P:ifoverlap(newMatrix,x+1,y))
+                            ) and (
+                                test.free=='ANY' or (P:ifoverlap(newMatrix,x,y-1) and P:ifoverlap(newMatrix,x,y+1))
+                            )
+                        then
+                            C.shape=test.shape
+                            C.matrix=newMatrix
+                            C.direction=test.direcion
+                            C.spinSeq=''
+                            P.handX,P.handY=x,y
+                            P:freshBlock('move')
+                            return
+                        end
                     end
                 end
             end
+        else
+            P:freshBlock('move')
+            C.matrix=TABLE.rotate(C.matrix,dir)
+            C.direction=(C.direction+(dir=='R' and 1 or dir=='L' and 3 or dir=='F' and 2 or error("wtf why dir is not R/L/F")))%4
         end
-    else
-        P:freshBlock('move')
-        C.matrix=TABLE.rotate(C.matrix,dir)
-    end
-end--O
+    end,
+}--O
 TRS[7]={
     [0]={
         R={test={'+0+0','+0+1','+1+0','-2+0','-2-1','+1+2'}},

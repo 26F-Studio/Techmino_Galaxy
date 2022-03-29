@@ -135,7 +135,7 @@ for name,rs in next,RotationSys do
                 if type(rs[i])=='table' then
                     local minoData=rs[i]
                     for dir,state in next,minoData do
-                        if state.center==nil then
+                        if type(state)=='table' and state.center==nil then
                             if not set[i][dir] then
                                 error("Preset '"..rs.centerPreset.."' has no center for RS '"..name.."', mino "..i..", dir "..dir)
                             end
@@ -149,10 +149,16 @@ for name,rs in next,RotationSys do
         -- Make all string vec to the same table vec
         for shapeID,minoData in next,rs do
             if type(shapeID)=='number' and type(minoData)=='table' then
-                for dir in next,minoData do
-                    RotationSys._normalizeKick(minoData,dir,'R')
-                    RotationSys._normalizeKick(minoData,dir,'L')
-                    RotationSys._normalizeKick(minoData,dir,'F')
+                assert(type(minoData)=='table','minoData must be table')
+                if minoData.rotate then
+                    assert(type(minoData.rotate)=='function',"if minoData.rotate exist, it must be function")
+                    assert(minoData.center==nil or type(minoData.center)=='function',"if minoData.center exist, it must be function")
+                else
+                    for dir in next,minoData do
+                        RotationSys._normalizeKick(minoData,dir,'R')
+                        RotationSys._normalizeKick(minoData,dir,'L')
+                        RotationSys._normalizeKick(minoData,dir,'F')
+                    end
                 end
             end
         end

@@ -52,74 +52,75 @@ local BiRS={
         {'fRect',4,1,2,8},
         {'fRect',3,3,4,4},
     },
-    data=TABLE.new(function(P,d,ifpre)
-        local C=P.cur
-        local idir=(C.dir+d)%4
-        local kickList=list[C.id][C.dir*10+idir]
-        local icb=Blocks[C.id][idir]
-        local ix,iy do
-            local oldSC=C.RS.centerPos[C.id][C.dir]
-            local newSC=RotationSys._defaultCenterPos[C.id][idir]
-            ix,iy=P.curX+oldSC[2]-newSC[2],P.curY+oldSC[1]-newSC[1]
-        end
-        local dx,dy=0,0 do
-            local pressing=P.keyPressing
-            if pressing[1] and P:ifoverlap(C.bk,P.curX-1,P.curY) then dx=dx-1 end
-            if pressing[2] and P:ifoverlap(C.bk,P.curX+1,P.curY) then dx=dx+1 end
-            if pressing[7] and P:ifoverlap(C.bk,P.curX,P.curY-1) then dy=  -1 end
-        end
-        while true do
-            for test=1,#kickList do
-                local fdx,fdy=kickList[test][1]+dx,kickList[test][2]+dy
-                if
-                    dx*fdx>=0 and
-                    fdx^2+fdy^2<=5 and
-                    (P.freshTime>0 or fdy<=0)
-                then
-                    local x,y=ix+fdx,iy+fdy
-                    if not P:ifoverlap(icb,x,y) then
-                        if P.gameEnv.moveFX and P.gameEnv.block then
-                            P:createMoveFX()
-                        end
-                        P.curX,P.curY,C.dir=x,y,idir
-                        C.bk=icb
-                        P.spinLast=test==2 and 0 or 1
-
-                        local t=P.freshTime
-                        if not ifpre then
-                            P:freshBlock('move')
-                        end
-                        if fdy>0 and P.freshTime==t and P.curY~=P.imgY then
-                            P.freshTime=P.freshTime-1
-                        end
-
-                        local sfx
-                        if ifpre then
-                            sfx='prerotate'
-                        elseif P:ifoverlap(icb,x,y+1) and P:ifoverlap(icb,x-1,y) and P:ifoverlap(icb,x+1,y) then
-                            sfx='rotatekick'
-                            P:_rotateField(d)
-                        else
-                            sfx='rotate'
-                        end
-                        if P.sound then
-                            SFX.play(sfx,nil,P:getCenterX()*.15)
-                        end
-                        P.stat.rotate=P.stat.rotate+1
-                        return
+}
+function r(P,d,ifpre)
+    local C=P.cur
+    local idir=(C.dir+d)%4
+    local kickList=list[C.id][C.dir*10+idir]
+    local icb=Blocks[C.id][idir]
+    local ix,iy do
+        local oldSC=C.RS.centerPos[C.id][C.dir]
+        local newSC=RotationSys._defaultCenterPos[C.id][idir]
+        ix,iy=P.curX+oldSC[2]-newSC[2],P.curY+oldSC[1]-newSC[1]
+    end
+    local dx,dy=0,0 do
+        local pressing=P.keyPressing
+        if pressing[1] and P:ifoverlap(C.bk,P.curX-1,P.curY) then dx=dx-1 end
+        if pressing[2] and P:ifoverlap(C.bk,P.curX+1,P.curY) then dx=dx+1 end
+        if pressing[7] and P:ifoverlap(C.bk,P.curX,P.curY-1) then dy=  -1 end
+    end
+    while true do
+        for test=1,#kickList do
+            local fdx,fdy=kickList[test][1]+dx,kickList[test][2]+dy
+            if
+                dx*fdx>=0 and
+                fdx^2+fdy^2<=5 and
+                (P.freshTime>0 or fdy<=0)
+            then
+                local x,y=ix+fdx,iy+fdy
+                if not P:ifoverlap(icb,x,y) then
+                    if P.gameEnv.moveFX and P.gameEnv.block then
+                        P:createMoveFX()
                     end
+                    P.curX,P.curY,C.dir=x,y,idir
+                    C.bk=icb
+                    P.spinLast=test==2 and 0 or 1
+
+                    local t=P.freshTime
+                    if not ifpre then
+                        P:freshBlock('move')
+                    end
+                    if fdy>0 and P.freshTime==t and P.curY~=P.imgY then
+                        P.freshTime=P.freshTime-1
+                    end
+
+                    local sfx
+                    if ifpre then
+                        sfx='prerotate'
+                    elseif P:ifoverlap(icb,x,y+1) and P:ifoverlap(icb,x-1,y) and P:ifoverlap(icb,x+1,y) then
+                        sfx='rotatekick'
+                        P:_rotateField(d)
+                    else
+                        sfx='rotate'
+                    end
+                    if P.sound then
+                        SFX.play(sfx,nil,P:getCenterX()*.15)
+                    end
+                    P.stat.rotate=P.stat.rotate+1
+                    return
                 end
             end
-
-            --Try release left/right, then softdrop, failed to rotate otherwise
-            if dx~=0 then
-                dx=0
-            elseif dy~=0 then
-                dy=0
-            else
-                return
-            end
         end
-    end,29)
-}
+
+        --Try release left/right, then softdrop, failed to rotate otherwise
+        if dx~=0 then
+            dx=0
+        elseif dy~=0 then
+            dy=0
+        else
+            return
+        end
+    end
+end
+for i=1,29 do BiRS[i]=r end
 return BiRS
