@@ -109,13 +109,13 @@ RotationSys.None=     require'assets.rot_sys.none'
 RotationSys.TRS=      require'assets.rot_sys.trs'
 RotationSys.SRS=      require'assets.rot_sys.srs'
 RotationSys.SRS_plus= require'assets.rot_sys.srs_plus'
+-- RotationSys.BiRS=     require'assets.rot_sys.birs'
 RotationSys.C2=       require'assets.rot_sys.c2'
 RotationSys.C2_sym=   require'assets.rot_sys.c2_sym'
 RotationSys.Classic=  require'assets.rot_sys.classic'
 RotationSys.ASC_plus= require'assets.rot_sys.asc_plus'
 RotationSys.ARS_plus= require'assets.rot_sys.ars_plus'
--- RotationSys.BiRS=     require'assets.rot_sys.birs'
--- RotationSys.DRS_weak= require'assets.rot_sys.drs_weak'
+RotationSys.DRS_weak= require'assets.rot_sys.drs_weak'
 love.graphics.setDefaultFilter('linear','linear')
 
 for name,rs in next,RotationSys do

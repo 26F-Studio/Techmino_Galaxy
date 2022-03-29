@@ -21,12 +21,13 @@ local upSet={
     [2]={R={test=upOnly},L={test=upOnly},F={test=upOnly}},
     [3]={R={test=upOnly},L={test=upOnly},F={test=upOnly}},
 }
-for i=1,29 do ARS_plus[i]=TABLE.copy(lrSet) end
-ARS_plus[7]=TABLE.copy(upSet)
-ARS_plus[25]=TABLE.copy(upSet)
+for i=1,29 do ARS_plus[i]=lrSet end
+ARS_plus[7]=upSet
+ARS_plus[25]=upSet
 
 local function _fillCenter(id,list)
     for k,v in next,list do
+        ARS_plus[id]=TABLE.copy(ARS_plus[id])
         ARS_plus[id][k].center=v
     end
 end
