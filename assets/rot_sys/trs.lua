@@ -128,6 +128,8 @@ TRS[6]={
                             end
                         end
 
+                        C._origin.shape=test.shape
+                        C._origin.direction=test.direcion
                         if test.direcion==0 then
                             C._origin.matrix=newMatrix
                         elseif test.direcion==2 then
