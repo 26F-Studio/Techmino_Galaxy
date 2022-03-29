@@ -107,7 +107,7 @@ TRS[6]={
         if baseY==P.ghostY and ((P:getCell(baseX-1,baseY) or P:getCell(baseX-1,baseY+1))) and (P:getCell(baseX+2,baseY) or P:getCell(baseX+2,baseY+1)) then
             if not P.settings.noOspin then
                 -- [Warning] field 'spinSeq' is a dirty data, TRS put this var into the block.
-                C.spinSeq=(C.spinSeq or '')..dir
+                C.spinSeq=((C.spinSeq or '')..dir):sub(-3)
                 if #C.spinSeq<3 then
                     P:freshBlock('move')
                     return
@@ -128,16 +128,6 @@ TRS[6]={
                             end
                         end
 
-                        C._origin.shape=test.shape
-                        C._origin.direction=test.direcion
-                        if test.direcion==0 then
-                            C._origin.matrix=newMatrix
-                        elseif test.direcion==2 then
-                            C._origin.matrix=TABLE.rotate(newMatrix,'F')
-                        else
-                            error("Oh I forgot this")
-                        end
-
                         local x,y=P.handX+test.bias[1],P.handY+test.bias[2]
                         if
                             not P:ifoverlap(newMatrix,x,y) and (
@@ -150,6 +140,11 @@ TRS[6]={
                             C.matrix=newMatrix
                             C.direction=test.direcion
                             C.spinSeq=''
+
+                            C._origin.shape=test.shape
+                            C._origin.direction=test.direcion
+                            C._origin.matrix=test.direcion==0 and newMatrix or test.direcion==2 and TABLE.rotate(newMatrix,'F') or error("Oh I forgot this")
+
                             P.handX,P.handY=x,y
                             P:freshBlock('move')
                             return
