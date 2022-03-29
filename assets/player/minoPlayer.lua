@@ -235,10 +235,11 @@ function MP:popNext()
 end
 function MP:getMino(shapeID)
     local shape=TABLE.shift(Blocks[shapeID].shape)
+    local c=math.random(64)
     for y=1,#shape do
         for x=1,#shape[1] do
             if shape[y][x] then
-                shape[y][x]={color=1}-- Should be player's color setting
+                shape[y][x]={color=(c+math.random(-5,5))%64+1}-- Should be player's color setting
             end
         end
     end
@@ -253,9 +254,16 @@ function MP:getMino(shapeID)
     mino._origin=TABLE.copy(mino,0)
     ins(self.nextQueue,mino)
 end
+local wallCell=setmetatable({},{__newIndex=NULL})
+function MP:getCell(x,y)
+    if x<=0 or x>self.field.width or y<=0 then return wallCell end
+    if y>self.field.width then return false end
+    return self.field.matrix[y][x]
+end
+
 function MP:ifoverlap(CB,cx,cy)
     local F=self.field.matrix
-    if cx<=0 or cx+#CB[1]>self.field.width+1 or cy<=0 then
+    if cx<=0 or cx+#CB[1]-1>self.field.width or cy<=0 then
         return true
     end
     if cy>#F then
@@ -273,34 +281,12 @@ end
 function MP:rotate(dir)
     if not self.hand then return end
     local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
-    local preState=type(minoData)=='table' and minoData[self.hand.direction]
-    if type(preState)=='table' then
+    if type(minoData)=='table' then
+        local preState=minoData[self.hand.direction]
         -- Rotate matrix
-        local cb,icb=self.hand.matrix,{}
-        if dir=='R' then-- Rotate CW
-            for y=1,#cb[1] do
-                icb[y]={}
-                for x=1,#cb do
-                    icb[y][x]=cb[x][#cb[1]-y+1]
-                end
-            end
-        elseif dir=='L' then-- Rotate CCW
-            for y=1,#cb[1] do
-                icb[y]={}
-                for x=1,#cb do
-                    icb[y][x]=cb[#cb-x+1][y]
-                end
-            end
-        elseif dir=='F' then-- Rotate 180
-            for y=1,#cb do
-                icb[y]={}
-                for x=1,#cb[1] do
-                    icb[y][x]=cb[#cb-y+1][#cb[1]-x+1]
-                end
-            end
-        else
-            error("wtf why dir isn't R/L/F")
-        end
+        if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F") end
+        local cb=self.hand.matrix
+        local icb=TABLE.rotate(cb,dir)
 
         local baseX,baseY
         local kick=preState[dir]
@@ -329,10 +315,10 @@ function MP:rotate(dir)
                 return
             end
         end
-    elseif type(preState)=='function' then
-        preState(self)
+    elseif type(minoData)=='function' then
+        minoData(self,dir)
     else
-        error("wtf why preState is "..type(preState))
+        error("wtf why minoData is "..type(minoData))
     end
 end
 function MP:hold_hold()
@@ -575,6 +561,7 @@ function drawEvents.board(self)
     for y=1,#f do
         for x=1,#f[y] do
             if f[y][x] then
+                gc.setColor(ColorTable[f[y][x].color])
                 gc.rectangle('fill',-200+(x-1)*40,400-y*40,40,40)
             end
         end
@@ -611,6 +598,7 @@ function drawEvents.block(self)
     local CB=self.hand.matrix
     for y=1,#CB do for x=1,#CB[1] do
         if CB[y][x] then
+            gc.setColor(ColorTable[CB[y][x].color])
             gc.rectangle('fill',-200+(self.handX+x-2)*40,400-(self.handY+y-1)*40,40,40)
         end
     end end
@@ -634,6 +622,7 @@ function drawEvents.next(self)-- Almost same as drawEvents.hold, don't forget to
         gc.scale(k)
         for y=1,#NB do for x=1,#NB[1] do
             if NB[y][x] then
+                gc.setColor(ColorTable[NB[y][x].color])
                 gc.rectangle('fill',(x-#NB[1]/2-1)*40,(y-#NB/2)*-40,40,40)
             end
         end end
@@ -652,6 +641,7 @@ function drawEvents.hold(self)-- Almost same as drawEvents.next, don't forget to
         gc.scale(k)
         for y=1,#NB do for x=1,#NB[1] do
             if NB[y][x] then
+                gc.setColor(ColorTable[NB[y][x].color])
                 gc.rectangle('fill',(x-#NB[1]/2-1)*40,(y-#NB/2)*-40,40,40)
             end
         end end
@@ -707,7 +697,7 @@ function MP.new(data)
         sdarr=0,
 
         seqData={},
-        rotSys='SRS',
+        rotSys='TRS',
 
         freshCondition='any',
     }

@@ -92,7 +92,7 @@ function player:reset()
         local x,y
         repeat
             x,y=rnd(6),rnd(6)
-        until not(x==1 and y==1) and self.board[y][x]==0
+        until not (x==1 and y==1) and self.board[y][x]==0
         self.board[y][x]=n
     end
 end

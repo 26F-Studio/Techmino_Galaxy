@@ -151,7 +151,7 @@ function scene.draw()
     for i=1,rank do
         for j=1,rank do
             local N=board[rank*(i-1)+j]
-            if not(state==1 and disappear and N<=progress) then
+            if not (state==1 and disappear and N<=progress) then
                 gc.setColor(.4,.5,.6)
                 gc.rectangle('fill',320+(j-1)*width,(i-1)*width+40,width,width)
                 gc.setColor(COLOR.L)

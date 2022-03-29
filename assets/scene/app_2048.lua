@@ -321,7 +321,7 @@ function scene.keyDown(key,isRep)
     elseif key=='r' then reset()
     elseif key=='q' then if state==0 then invis=not invis end
     elseif key=='w' then if state==0 then tapControl=not tapControl end
-    elseif key=='1' or key=='2' then(kb.isDown('lshift','lctrl','lalt') and playRep or setFocus)(key=='1' and 1 or 2)
+    elseif key=='1' or key=='2' then (kb.isDown('lshift','lctrl','lalt') and playRep or setFocus)(key=='1' and 1 or 2)
     elseif key=='c1' then playRep(1)
     elseif key=='c2' then playRep(2)
     elseif key=='return' then
@@ -443,10 +443,10 @@ function scene.draw()
     setFont(30)
     for i=1,2 do
         setColor(COLOR[
-            repeater.focus==i and(
+            repeater.focus==i and (
                 love.timer.getTime()%.5>.25 and
                 'R' or 'Y'
-            ) or(
+            ) or (
                 repeater.seq[i]==repeater.last[i] and
                 'DL' or 'L'
             )

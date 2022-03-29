@@ -75,7 +75,7 @@ local function get2(prev)
         local i=rnd(4)
         local r=rnd(3)
         if r>=i then r=r+1 end
-        if not(string.find(prev,r) or string.find(prev,i)) then
+        if not (string.find(prev,r) or string.find(prev,i)) then
             return 10*i+r
         end
     end

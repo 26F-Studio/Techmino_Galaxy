@@ -172,7 +172,7 @@ local function tap(x,y)
             state=1
             startTime=love.timer.getTime()
         elseif state==1 then
-            if selX and(x~=selX or y~=selY) and field[y][x]==field[selY][selX] then
+            if selX and (x~=selX or y~=selY) and field[y][x]==field[selY][selX] then
                 local line=checkLink(x,y,selX,selY)
                 if line then
                     ins(lines,{time=0,line=line})
@@ -232,7 +232,7 @@ local function tap(x,y)
                     SFX.play('lock',.9)
                 end
             else
-                if field[y][x] and(x~=selX or y~=selY) then
+                if field[y][x] and (x~=selX or y~=selY) then
                     selX,selY=x,y
                     SFX.play('lock',.8)
                 end
@@ -273,7 +273,7 @@ local function touch(x,y)
     tap(x,y)
 end
 function scene.mouseDown(x,y,k) if k==1 or k==2 or not k then touch(x,y) end end
-function scene.mouseMove(x,y) if(msIsDown(1) or kbIsDown('z','x')) then touch(x,y) end end
+function scene.mouseMove(x,y) if (msIsDown(1) or kbIsDown('z','x')) then touch(x,y) end end
 function scene.touchDown(x,y)touch(x,y) end
 function scene.touchMove(x,y)touch(x,y) end
 

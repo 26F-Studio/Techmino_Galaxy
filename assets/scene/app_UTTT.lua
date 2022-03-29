@@ -109,7 +109,7 @@ function scene.mouseMove(x,y)
         curX<1 or curX>9 or
         curx<1 or curx>9 or
         score[curX] or
-        not(target==curX or not target) or
+        not (target==curX or not target) or
         board[curX][curx] or
         gameover
     then

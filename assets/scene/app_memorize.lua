@@ -46,7 +46,7 @@ function scene.keyDown(key,isRep)
         _reset()
     elseif state==0 then
         if key:sub(1,2)=="kp" then key=key:sub(3) end
-        if #key==1 and("0123456789"):find(key,nil,true) then
+        if #key==1 and ("0123456789"):find(key,nil,true) then
             input=input..key
             showTime=math.min(showTime,0)
             if input==showNum then

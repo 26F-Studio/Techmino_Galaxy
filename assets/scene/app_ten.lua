@@ -214,7 +214,7 @@ function scene.update()
                     SFX.play('touch')
                 end
             end
-        elseif fast and(
+        elseif fast and (
             msIsDown(1) or
             #tcTouches()>0 or
             kbIsDown('space')
@@ -258,7 +258,7 @@ function scene.draw()
     end
     gc.setLineWidth(10)
     setColor(COLOR[
-        state==1 and(fast and 'R' or 'W') or
+        state==1 and (fast and 'R' or 'W') or
         state==0 and 'G' or
         state==2 and 'Y'
     ])

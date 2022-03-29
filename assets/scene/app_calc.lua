@@ -42,7 +42,7 @@ function scene.keyDown(key)
         if sym=="=" then
             sym,reg=false,false
             val="0."
-        elseif not(val:find(".",nil,true) or val:find("e")) then
+        elseif not (val:find(".",nil,true) or val:find("e")) then
             if sym and not reg then
                 reg=val
                 val="0."

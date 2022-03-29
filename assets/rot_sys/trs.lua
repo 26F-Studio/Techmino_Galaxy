@@ -1,19 +1,3 @@
-local OspinList={
-    {111,5,2, 0,-1,0},{111,5,2,-1,-1,0},{111,5,0,-1, 0,0},--T
-    {333,5,2,-1,-1,0},{333,5,2, 0,-1,0},{333,5,0, 0, 0,0},--T
-    {313,1,2,-1, 0,0},{313,1,2, 0,-1,0},{313,1,2, 0, 0,0},--Z
-    {131,2,2, 0, 0,0},{131,2,2,-1,-1,0},{131,2,2,-1, 0,0},--S
-    {131,1,2,-1, 0,0},{131,1,2, 0,-1,0},{131,1,2, 0, 0,0},--Z(misOrder)
-    {313,2,2, 0, 0,0},{313,2,2,-1,-1,0},{313,2,2,-1, 0,0},--S(misOrder)
-    {331,3,2, 0,-1,1},--J(farDown)
-    {113,4,2,-1,-1,1},--L(farDown)
-    {113,3,2,-1,-1,0},{113,3,0, 0, 0,0},--J
-    {331,4,2, 0,-1,0},{331,4,0,-1, 0,0},--L
-    {222,7,0,-1, 1,1},{222,7,0,-2, 1,1},{222,7,0, 0, 1,1},--I(high)
-    {222,7,2,-1, 0,2},{222,7,2,-2, 0,2},{222,7,2, 0, 0,2},--I(low)
-    {121,6,0, 1,-1,2},{112,6,0, 2,-1,2},{122,6,0, 1,-2,2},--O
-    {323,6,0,-1,-1,2},{332,6,0,-2,-1,2},{322,6,0,-1,-2,2},--O
-}--{keys, ID, dir, dx, dy, freeLevel (0=immovable, 1=U/D-immovable, 2=free)}
 local TRS={}
 TRS.centerPreset='common'
 TRS.centerTex=GC.load{10,10,
@@ -94,41 +78,74 @@ TRS[5]={
         F={test={'+0+0','+0-1','+0+1','-1+0','+0-2','+0+2'}},
     },
 }--T
-TRS[6]=function(P,d)
-    if P.settings.ospin then
-        local x,y=P.handX,P.handY
-        local C=P.hand
-        if y==P.ghoY and((P:solid(x-1,y) or P:solid(x-1,y+1))) and (P:solid(x+2,y) or P:solid(x+2,y+1)) then
-            --[Warning] Field spinSeq is a dirty data, TRS put this var into the block.
-            C.spinSeq=(C.spinSeq or 0)%100*10+d
-            if C.spinSeq<100 then
-                return end
+local Ocells={{1,1},{1,2},{2,1},{2,2}}
+local OspinList={
+    {seq='RRR',shape=5,direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, {seq='RRR',shape=5,direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, --T
+    {seq='LLL',shape=5,direcion=2,bias={-1,-1},free='FIX',target={1,3,4,2}}, {seq='LLL',shape=5,direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, --T
+    {seq='RRR',shape=5,direcion=0,bias={-1, 0},free='FIX',target={1,2,4,3}}, --T(mini)
+    {seq='LLL',shape=5,direcion=0,bias={ 0, 0},free='FIX',target={3,1,2,4}}, --T(mini)
+    {seq='LRL',shape=1,direcion=2,bias={-1, 0},free='FIX',target={1,2,3,4}}, {seq='LRL',shape=1,direcion=2,bias={ 0,-1},free='FIX',target={1,2,3,4}}, {seq='LRL',shape=1,direcion=2,bias={ 0, 0},free='FIX',target={1,2,3,4}}, --Z
+    {seq='RLR',shape=2,direcion=2,bias={ 0, 0},free='FIX',target={1,2,3,4}}, {seq='RLR',shape=2,direcion=2,bias={-1,-1},free='FIX',target={1,2,3,4}}, {seq='RLR',shape=2,direcion=2,bias={-1, 0},free='FIX',target={1,2,3,4}}, --S
+    {seq='LLR',shape=3,direcion=2,bias={ 0,-1},free='MOV',target={2,1,3,4}}, --J(farDown) --2,3,1,4?
+    {seq='RRL',shape=4,direcion=2,bias={-1,-1},free='MOV',target={1,3,4,2}}, --L(farDown) --1,3,2,4?
+    {seq='RRL',shape=3,direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, {seq='RRL',shape=3,direcion=0,bias={ 0, 0},free='FIX',target={1,2,4,3}}, --J
+    {seq='LLR',shape=4,direcion=2,bias={ 0,-1},free='FIX',target={1,3,4,2}}, {seq='LLR',shape=4,direcion=0,bias={-1, 0},free='FIX',target={3,1,2,4}}, --L
+
+    {seq='FFF',shape=7,direcion=0,bias={-1, 1},free='MOV',target={3,1,2,4}}, {seq='FFF',shape=7,direcion=0,bias={-2, 1},free='MOV',target={3,1,2,4}}, {seq='FFF',shape=7,direcion=0,bias={ 0, 1},free='MOV',target={3,1,2,4}}, --I(high)
+    {seq='FFF',shape=7,direcion=2,bias={-1, 0},free='ANY',target={1,3,4,2}}, {seq='FFF',shape=7,direcion=2,bias={-2, 0},free='ANY',target={1,3,4,2}}, {seq='FFF',shape=7,direcion=2,bias={ 0, 0},free='ANY',target={1,3,4,2}}, --I(low)
+    {seq='RFR',shape=6,direcion=0,bias={ 1,-1},free='ANY',target={2,4,1,3}}, {seq='RRF',shape=6,direcion=0,bias={ 2,-1},free='ANY',target={2,4,1,3}}, {seq='RFF',shape=6,direcion=0,bias={ 1,-2},free='ANY',target={2,4,1,3}}, --O
+    {seq='LFL',shape=6,direcion=0,bias={-1,-1},free='ANY',target={3,1,4,2}}, {seq='LLF',shape=6,direcion=0,bias={-2,-1},free='ANY',target={3,1,4,2}}, {seq='LFF',shape=6,direcion=0,bias={-1,-2},free='ANY',target={3,1,4,2}}, --O
+}--{keys, ID, dir, dx, dy, freeLevel
+TRS[6]=function(P,dir)
+    local C=P.hand
+    local baseX,baseY=P.handX,P.handY
+    if baseY==P.ghostY and ((P:getCell(baseX-1,baseY) or P:getCell(baseX-1,baseY+1))) and (P:getCell(baseX+2,baseY) or P:getCell(baseX+2,baseY+1)) then
+        if not P.settings.noOspin then
+            -- [Warning] field 'spinSeq' is a dirty data, TRS put this var into the block.
+            C.spinSeq=(C.spinSeq or '')..dir
+            if #C.spinSeq<3 then
+                P:freshBlock('move')
+                return
+            end
+
             for i=1,#OspinList do
-                local L=OspinList[i]
-                if C.spinSeq==L[1] then
-                    local id,dir=L[2],L[3]
-                    local bk=Blocks[id][dir]
-                    x,y=P.handX+L[4],P.handY+L[5]
+                local test=OspinList[i]
+                if C.spinSeq==test.seq then
+                    local newMatrix=TABLE.shift(Blocks[test.shape].shape)
+                    if test.direcion==2 then newMatrix=TABLE.rotate(newMatrix,'F') end
+                    print("MATCH",i)
+                    local c=0
+                    for y=1,#newMatrix do
+                        for x=1,#newMatrix[1] do
+                            if newMatrix[y][x] then
+                                c=c+1
+                                newMatrix[y][x]=C.matrix[Ocells[test.target[c]][1]][Ocells[test.target[c]][2]]
+                            end
+                        end
+                    end
+                    local x,y=P.handX+test.bias[1],P.handY+test.bias[2]
                     if
-                        not P:ifoverlap(bk,x,y) and (
-                            L[6]>0 or(P:ifoverlap(bk,x-1,y) and P:ifoverlap(bk,x+1,y))
+                        not P:ifoverlap(newMatrix,x,y) and (
+                            test.free~='FIX' or (P:ifoverlap(newMatrix,x-1,y) and P:ifoverlap(newMatrix,x+1,y))
                         ) and (
-                            L[6]==2 or(P:ifoverlap(bk,x,y-1) and P:ifoverlap(bk,x,y+1))
+                            test.free=='ANY' or (P:ifoverlap(newMatrix,x,y-1) and P:ifoverlap(newMatrix,x,y+1))
                         )
                     then
-                        C.id=id
-                        C.matrix=bk
+                        C.shape=test.shape
+                        C.matrix=newMatrix
+                        C.direction=test.direcion
+                        C.spinSeq=''
                         P.handX,P.handY=x,y
-                        C.dir=dir
                         P:freshBlock('move')
-                        C.spinSeq=nil
+                        print("REP",i)
                         return
                     end
                 end
             end
-        else
-            C.spinSeq=nil
         end
+    else
+        P:freshBlock('move')
+        C.matrix=TABLE.rotate(C.matrix,dir)
     end
 end--O
 TRS[7]={
