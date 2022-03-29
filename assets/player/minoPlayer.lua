@@ -162,9 +162,7 @@ local actionPacks={
 function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside, like shape, name, direction)
     if not mino._origin then return end
     for k,v in next,mino._origin do
-        if k~='_origin' then
-            mino[k]=v
-        end
+        mino[k]=v
     end
     return mino
 end
@@ -281,44 +279,45 @@ end
 function MP:rotate(dir)
     if not self.hand then return end
     local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
-    if type(minoData)~='table' then error("wtf why minoData is "..type(minoData)) end
 
-    local preState=minoData[self.hand.direction]
-    if preState then
-        -- Rotate matrix
-        if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F") end
-        local kick=preState[dir]
-        if not kick then return end-- This RS doesn't define this rotation
-
-        local cb=self.hand.matrix
-        local icb=TABLE.rotate(cb,dir)
-        local baseX,baseY
-
-        local afterState=minoData[kick.target]
-        if kick.base then
-            baseX=kick.base[1]
-            baseY=kick.base[2]
-        elseif preState.center and afterState.center then
-            baseX=preState.center[1]-afterState.center[1]
-            baseY=preState.center[2]-afterState.center[2]
-        else
-            error('cannot get baseX/Y')
-        end
-
-        for n=1,#kick.test do
-            local ix,iy=self.handX+baseX+kick.test[n][1],self.handY+baseY+kick.test[n][2]
-            if not self:ifoverlap(icb,ix,iy) then
-                self.hand.matrix=icb
-                self.handX,self.handY=ix,iy
-                self.hand.direction=kick.target
-                self:freshBlock('move')
-                return
-            end
-        end
-    elseif type(minoData.rotate)=='function' then
+    if minoData.rotate then-- Custom rotate function
         minoData.rotate(self,dir)
-    else
-        error("wtf why no state in minoData")
+    else-- Normal rotate procedure
+        local preState=minoData[self.hand.direction]
+        if preState then
+            -- Rotate matrix
+            if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F") end
+            local kick=preState[dir]
+            if not kick then return end-- This RS doesn't define this rotation
+
+            local cb=self.hand.matrix
+            local icb=TABLE.rotate(cb,dir)
+            local baseX,baseY
+
+            local afterState=minoData[kick.target]
+            if kick.base then
+                baseX=kick.base[1]
+                baseY=kick.base[2]
+            elseif preState.center and afterState.center then
+                baseX=preState.center[1]-afterState.center[1]
+                baseY=preState.center[2]-afterState.center[2]
+            else
+                error('cannot get baseX/Y')
+            end
+
+            for n=1,#kick.test do
+                local ix,iy=self.handX+baseX+kick.test[n][1],self.handY+baseY+kick.test[n][2]
+                if not self:ifoverlap(icb,ix,iy) then
+                    self.hand.matrix=icb
+                    self.handX,self.handY=ix,iy
+                    self.hand.direction=kick.target
+                    self:freshBlock('move')
+                    return
+                end
+            end
+        else
+            error("wtf why no state in minoData")
+        end
     end
 end
 function MP:hold_hold()

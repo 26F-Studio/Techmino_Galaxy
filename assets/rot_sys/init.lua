@@ -109,7 +109,7 @@ RotationSys.None=     require'assets.rot_sys.none'
 RotationSys.TRS=      require'assets.rot_sys.trs'
 RotationSys.SRS=      require'assets.rot_sys.srs'
 RotationSys.SRS_plus= require'assets.rot_sys.srs_plus'
--- RotationSys.BiRS=     require'assets.rot_sys.birs'
+RotationSys.BiRS=     require'assets.rot_sys.birs'
 RotationSys.C2=       require'assets.rot_sys.c2'
 RotationSys.C2_sym=   require'assets.rot_sys.c2_sym'
 RotationSys.Classic=  require'assets.rot_sys.classic'
@@ -148,13 +148,14 @@ for name,rs in next,RotationSys do
 
         -- Make all string vec to the same table vec
         for shapeID,minoData in next,rs do
-            if type(shapeID)=='number' and type(minoData)=='table' then
+            if type(shapeID)=='number' then
                 assert(type(minoData)=='table','minoData must be table')
                 if minoData.rotate then
-                    assert(type(minoData.rotate)=='function',"if minoData.rotate exist, it must be function")
-                    assert(minoData.center==nil or type(minoData.center)=='function',"if minoData.center exist, it must be function")
-                else
-                    for dir in next,minoData do
+                    assert(type(minoData.rotate)=='function',"minoData.rotate must be function if exist")
+                    assert(minoData.center==nil or type(minoData.center)=='function',"minoData.center must be function if exist")
+                end
+                for dir in next,minoData do
+                    if type(dir)=='number' then
                         RotationSys._normalizeKick(minoData,dir,'R')
                         RotationSys._normalizeKick(minoData,dir,'L')
                         RotationSys._normalizeKick(minoData,dir,'F')

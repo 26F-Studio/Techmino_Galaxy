@@ -97,12 +97,10 @@ local OspinList={
     {seq='LFL',shape=6,direcion=0,bias={-1,-1},free='ANY',target={3,1,4,2}}, {seq='LLF',shape=6,direcion=0,bias={-2,-1},free='ANY',target={3,1,4,2}}, {seq='LFF',shape=6,direcion=0,bias={-1,-2},free='ANY',target={3,1,4,2}}, --O
 }--{keys, ID, dir, dx, dy, freeLevel
 TRS[6]={
-    center=(function(P)
-        local oCenter={1,1}
-        return function()
-            return oCenter
-        end
-    end)(),
+    [0]={center={1,1}},
+    [1]={center={1,1}},
+    [2]={center={1,1}},
+    [3]={center={1,1}},
     rotate=function(P,dir)
         local C=P.hand
         local baseX,baseY=P.handX,P.handY
@@ -129,6 +127,15 @@ TRS[6]={
                                 end
                             end
                         end
+
+                        if test.direcion==0 then
+                            C._origin.matrix=newMatrix
+                        elseif test.direcion==2 then
+                            C._origin.matrix=TABLE.rotate(newMatrix,'F')
+                        else
+                            error("Oh I forgot this")
+                        end
+
                         local x,y=P.handX+test.bias[1],P.handY+test.bias[2]
                         if
                             not P:ifoverlap(newMatrix,x,y) and (
@@ -149,6 +156,7 @@ TRS[6]={
                 end
             end
         else
+            C.spinSeq=nil
             P:freshBlock('move')
             C.matrix=TABLE.rotate(C.matrix,dir)
             C.direction=(C.direction+(dir=='R' and 1 or dir=='L' and 3 or dir=='F' and 2 or error("wtf why dir is not R/L/F")))%4
