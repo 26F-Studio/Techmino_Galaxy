@@ -279,6 +279,7 @@ end
 function MP:rotate(dir)
     if not self.hand then return end
     local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
+    if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F") end
 
     if minoData.rotate then-- Custom rotate function
         minoData.rotate(self,dir)
@@ -286,7 +287,6 @@ function MP:rotate(dir)
         local preState=minoData[self.hand.direction]
         if preState then
             -- Rotate matrix
-            if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F") end
             local kick=preState[dir]
             if not kick then return end-- This RS doesn't define this rotation
 
@@ -695,7 +695,7 @@ function MP.new(data)
         sdarr=0,
 
         seqData={},
-        rotSys='BiRS',
+        rotSys='TRS',
 
         freshCondition='any',
     }
