@@ -31,7 +31,7 @@ function actions.moveLeft(self)
     self.moveCharge=0
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
         self.handX=self.handX-1
-        self:freshBlock('move')
+        self:freshGhost()
     end
 end
 function actions.moveRight(self)
@@ -40,7 +40,7 @@ function actions.moveRight(self)
     self.moveCharge=0
     if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
         self.handX=self.handX+1
-        self:freshBlock('move')
+        self:freshGhost()
     end
 end
 function actions.rotateCW(self)
@@ -57,7 +57,7 @@ function actions.softDrop(self)
     if not self.hand then return end
     if self.handY>self.ghostY then
         self.handY=self.handY-1
-        self:freshBlock('fresh')
+        self:freshDelay('drop')
     end
 end
 function actions.sonicDrop(self)
@@ -65,7 +65,7 @@ function actions.sonicDrop(self)
     if not self.hand then return end
     if self.handY>self.ghostY then
         self.handY=self.ghostY
-        self:freshBlock('fresh')
+        self:freshDelay('drop')
     end
 end
 function actions.hardDrop(self)
@@ -103,13 +103,13 @@ actions.target4=NULL
 function actions.sonicLeft(self)
     while self.hand and not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) do
         self.handX=self.handX-1
-        self:freshBlock('move')
+        self:freshGhost()
     end
 end
 function actions.sonicRight(self)
     while self.hand and not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) do
         self.handX=self.handX+1
-        self:freshBlock('move')
+        self:freshGhost()
     end
 end
 function actions.dropLeft(self)
@@ -192,54 +192,63 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
 end
 function MP:restoreHandPos()-- Move hand piece to the normal spawn position
     self.handX=int(self.field.width/2-#self.hand.matrix[1]/2+1)
-    self.handY=self.settings.fieldH+1
+    self.handY=self.settings.spawnH+1
+    if self:ifoverlap(self.hand.matrix,self.handX,self.handY) then
+        self:lock()
+        self:gameover('WA')
+        return
+    end
     self.minY=self.handY
-    self:freshBlock('spawn')
-    self.dropTimer=self.settings.dropDelay
-    self.lockTimer=self.settings.lockDelay
+    self:freshGhost()
+    self:freshDelay('spawn')
 end
-function MP:freshBlock(mode)
-    --Fresh ghost
-    if (mode=='move' or mode=='spawn' or mode=='garbageup') and self.hand then
+function MP:freshGhost()
+    if self.hand then
         self.ghostY=min(#self.field.matrix+1,self.handY)
 
-        --Move ghost to bottom
+        -- Move ghost to bottom
         while not self:ifoverlap(self.hand.matrix,self.handX,self.ghostY-1) do
             self.ghostY=self.ghostY-1
         end
 
         if (self.settings.dropDelay==0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then-- TODO: if (temp) 20G on
             self.handY=self.ghostY
+            self:freshDelay('drop')
+        else
+            self:freshDelay('move')
         end
     end
-
-    --Fresh delays
-    if mode=='move' or mode=='spawn' or mode=='fresh' then
-        if self.settings.freshCondition=='any' then
+end
+function MP:freshDelay(reason)-- reason can be 'move' or 'drop' or 'spawn'
+    if self.handY<self.minY then self.minY=self.handY end
+    if self.settings.freshCondition=='any' then
+        if reason=='move' then
             if self.lockTimer<self.settings.lockDelay then
-                -- if mode~='spawn' then
-                --     self.freshTime=self.freshTime-1
-                -- end
-                self.dropTimer=self.settings.dropDelay
                 self.lockTimer=self.settings.lockDelay
+                -- TODO: self.freshTime-=1
             end
-            if self.handY<self.minY then
-                self.minY=self.handY
-                self.dropTimer=self.settings.dropDelay
-                self.lockTimer=self.settings.lockDelay
-            end
-        elseif self.settings.freshCondition=='fall' then
-            if self.handY<self.minY then
-                self.minY=self.handY
-                if self.lockTimer<self.settings.lockDelay then
-                    -- self.freshTime=self.freshTime-1
-                    self.dropTimer=self.settings.dropDelay
-                    self.lockTimer=self.settings.lockDelay
-                end
-            end
-        else
-            error("Wtf why settings.freshCondition is "..tostring(self.settings.freshCondition))
+        elseif reason=='drop' or reason=='spawn' then
+            self.dropTimer=self.settings.dropDelay
+            self.lockTimer=self.settings.lockDelay
         end
+    elseif self.settings.freshCondition=='fall' then
+        if reason=='drop' then
+            self.dropTimer=self.settings.dropDelay
+            if self.lockTimer<self.settings.lockDelay then
+                self.lockTimer=self.settings.lockDelay
+                -- TODO: self.freshTime-=1
+            end
+        elseif reason=='spawn' then
+            self.dropTimer=self.settings.dropDelay
+            self.lockTimer=self.settings.lockDelay
+        end
+    elseif self.settings.freshCondition=='never' then
+        if reason=='spawn' then
+            self.dropTimer=self.settings.dropDelay
+            self.lockTimer=self.settings.lockDelay
+        end
+    else
+        error("wtf why settings.freshCondition is "..tostring(self.settings.freshCondition))
     end
 end
 function MP:popNext()
@@ -335,7 +344,7 @@ function MP:rotate(dir)
                     self.hand.matrix=icb
                     self.handX,self.handY=ix,iy
                     self.hand.direction=kick.target
-                    self:freshBlock('move')
+                    self:freshGhost()
                     return
                 end
             end
@@ -372,6 +381,7 @@ end
 function MP:dropMino()
     self:lock()
     self:checkField()
+    if self.finished then return end
     self:minoDropped()
     if self.settings.spawnDelay==0 then
         self:popNext()
@@ -413,7 +423,7 @@ function MP:checkField()
             lines=lineClear,
         })
     else
-        if self.handY>self.settings.fieldTop then
+        if self.handY>self.settings.deathH then
             self:gameover('MLE')
         end
     end
@@ -421,6 +431,9 @@ end
 function MP:gameover(reason)
     if self.finished then return end
     self.finished=true
+    self.hand=false
+    self.spawnTimer=1e99
+    MES.new('error',reason,626)
     if reason=='AC' then-- Win
         -- TODO
     elseif reason=='WA' then-- Block out
@@ -507,7 +520,7 @@ updTasks.control={
             end
             while self.hand and dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
                 self.handX=self.handX+self.moveDir
-                self:freshBlock('move')
+                self:freshGhost()
                 dist=dist-1
             end
         else
@@ -525,7 +538,7 @@ updTasks.control={
                 local dist=self.settings.sdarr==0 and 1e99 or int(c1/self.settings.sdarr)-int(c0/self.settings.sdarr)
                 while self.hand and dist>0 and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) do
                     self.handY=self.handY-1
-                    self:freshBlock('fresh')
+                    self:freshDelay('drop')
                     dist=dist-1
                 end
             else
@@ -561,29 +574,51 @@ updTasks.normal={
                     self.handY=self.handY-1
                 end
             elseif self.handY~=self.ghostY then-- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
-                self:freshBlock('fresh')
+                self:freshDelay('drop')
             end
         end
     end
 }
 --------------------------------------------------------------
 -- Draws
+local _fieldCanvas=Zenitha.getBigCanvas(1)
 local drawEvents={}
-function drawEvents.applyPos(self)
+function drawEvents.applyPlayerTransform(self)
+    gc.setCanvas({_fieldCanvas,stencil=true})
+    gc.clear(1,1,1,0)
+    gc.push('transform')
     gc.translate(self.pos.x,self.pos.y)
     gc.scale(self.pos.kx,self.pos.ky)
     gc.rotate(self.pos.angle)
 end
-function drawEvents.board(self)
-    -- Field border
-    gc.setColor(1,1,1)
-    gc.setLineWidth(2)
-    gc.rectangle('line',-202,-402,404,804)
-
-    -- Field cells
+function drawEvents.applyFieldTransform(self)
     gc.push('transform')
     gc.translate(-200,400)
+    GC.stc_setComp('equal',1)
+    GC.stc_rect(0,0,400,-820)
     gc.scale(10/self.settings.fieldW)
+end
+function drawEvents.field(self)
+    -- Grid
+    gc.setColor(1,1,1,.26)
+    local r,l=1,6-- Line width/length
+    local gridHeight=min(max(self.settings.spawnH,self.settings.deathH),2*self.settings.fieldW)
+    for x=1,self.settings.fieldW do
+        x=(x-1)*40
+        for y=1,gridHeight do
+            y=-y*40
+            gc.rectangle('fill',x,y,l,r)
+            gc.rectangle('fill',x,y+r,r,l-r)
+            gc.rectangle('fill',x+40,y,-l,r)
+            gc.rectangle('fill',x+40,y+r,-r,l-r)
+            gc.rectangle('fill',x,y+40,l,-r)
+            gc.rectangle('fill',x,y+40-r,r,r-l)
+            gc.rectangle('fill',x+40,y+40,-l,-r)
+            gc.rectangle('fill',x+40,y+40-r,-r,r-l)
+        end
+    end
+
+    -- Cells
     local f=self.field.matrix
     for y=1,#f do
         for x=1,#f[y] do
@@ -593,28 +628,9 @@ function drawEvents.board(self)
             end
         end
     end
-    gc.pop()
-
-    -- Delay indicator
-    gc.setColor(1,1,1)
-    gc.setLineWidth(2)
-    gc.rectangle('line',-202,402,404,13)
-    local color,value
-    if not self.hand then
-        color,value=COLOR.lR,self.spawnTimer/self.settings.spawnDelay
-    elseif self.handY~=self.ghostY then
-        color,value=COLOR.lG,self.dropTimer/self.settings.dropDelay
-    else
-        color,value=COLOR.L,self.lockTimer/self.settings.lockDelay
-    end
-    gc.setColor(color)
-    gc.rectangle('fill',-200,404,400*math.min(value,1),8)
 end
 function drawEvents.ghost(self)
     if not self.hand then return end
-    gc.push('transform')
-    gc.translate(-200,400)
-    gc.scale(10/self.settings.fieldW)
     gc.setColor(1,1,1,.26)
     local CB=self.hand.matrix
     for y=1,#CB do for x=1,#CB[1] do
@@ -622,13 +638,13 @@ function drawEvents.ghost(self)
             gc.rectangle('fill',(self.handX+x-2)*40,-(self.ghostY+y-1)*40,40,40)
         end
     end end
-    gc.pop()
 end
 function drawEvents.block(self)
     if not self.hand then return end
     gc.push('transform')
-    gc.translate(-200,400)
-    gc.scale(10/self.settings.fieldW)
+    if self.handY>self.ghostY then
+        gc.translate(0,40-self.dropTimer/self.settings.dropDelay*40)
+    end
     gc.setColor(1,1,1)
     local CB=self.hand.matrix
     for y=1,#CB do for x=1,#CB[1] do
@@ -647,7 +663,46 @@ function drawEvents.block(self)
     end
     gc.pop()
 end
+function drawEvents.heightLines(self)
+    local width=self.settings.fieldW*40
 
+    -- Spawning height
+    gc.setColor(0,.4,1,.8)
+    gc.rectangle('fill',0,-self.settings.spawnH*40-2,width,4)
+
+    -- Death height
+    gc.setColor(1,0,0,.6)
+    gc.rectangle('fill',0,-self.settings.deathH*40-2,width,4)
+
+    -- Void height
+    gc.setColor(0,0,0,.5)
+    gc.rectangle('fill',0,-1260*40-40,width,40)
+end
+function drawEvents.popFieldTransform(self)
+    GC.stc_stop()
+    gc.pop()
+end
+function drawEvents.board(self)
+    -- Field border
+    gc.setColor(1,1,1)
+    gc.setLineWidth(2)
+    gc.rectangle('line',-201,-401,402,802)
+
+    -- Delay indicator
+    gc.setColor(1,1,1)
+    gc.setLineWidth(2)
+    gc.rectangle('line',-201,401,402,12)
+    local color,value
+    if not self.hand then
+        color,value=COLOR.lR,self.spawnTimer/self.settings.spawnDelay
+    elseif self.handY~=self.ghostY then
+        color,value=COLOR.lG,self.dropTimer/self.settings.dropDelay
+    else
+        color,value=COLOR.L,self.lockTimer/self.settings.lockDelay
+    end
+    gc.setColor(color)
+    gc.rectangle('fill',-199,403,398*math.min(value,1),8)
+end
 function drawEvents.next(self)-- Almost same as drawEvents.hold, don't forget to change both
     gc.push('transform')
     gc.translate(300,-400+50)
@@ -686,6 +741,16 @@ function drawEvents.hold(self)-- Almost same as drawEvents.next, don't forget to
     end
     gc.pop()
 end
+function drawEvents.popPlayerTransform()
+    gc.setCanvas()
+    gc.pop()
+
+    gc.push('transform')
+    gc.replaceTransform(SCR.origin)
+    gc.setColor(1,1,1)
+    gc.draw(_fieldCanvas)
+    gc.pop()
+end
 --------------------------------------------------------------
 -- Useful methods
 function MP:setPosition(x,y,kx,ky,angle)
@@ -711,10 +776,10 @@ function MP.new(data)
 
     p.settings={-- Generate from template in future
         fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. If really want change it, you need change both 'self.field.width' and 'self.field.matrix'
-        fieldH=20,-- [WARNING] This can be changed anytime. Field object actually do not contain height information
-        fieldTop=100,
-        fieldBarrierL=18,
-        fieldBarrierH=21,
+        spawnH=20,-- [WARNING] This can be changed anytime. Field object actually do not contain height information
+        deathH=21,
+        barrierL=18,
+        barrierH=21,
 
         nextCount=6,
 
@@ -723,7 +788,7 @@ function MP.new(data)
         holdKeepState=false,
 
         readyDelay=3000,
-        dropDelay=420,
+        dropDelay=1000,
         lockDelay=1000,
         spawnDelay=0,
         clearDelay=1000,
@@ -744,7 +809,7 @@ function MP.new(data)
         angle=0,
     }
 
-    p.field=require'assets.player.minoField'.new(p.settings.fieldW,p.settings.fieldH)
+    p.field=require'assets.player.minoField'.new(p.settings.fieldW,p.settings.spawnH)
     p.fieldBeneath=0
 
     p.garbageBuffer={}
@@ -825,13 +890,17 @@ function MP.new(data)
     ins(p.pressEventList,_defaultPressEvent)
     ins(p.releaseEventList,_defaultPeleaseEvent)
 
-    ins(p.drawEventList,drawEvents.applyPos)
-    ins(p.drawEventList,drawEvents.board)
+    ins(p.drawEventList,drawEvents.applyPlayerTransform)
+    ins(p.drawEventList,drawEvents.applyFieldTransform)
     ins(p.drawEventList,drawEvents.field)
     ins(p.drawEventList,drawEvents.ghost)
     ins(p.drawEventList,drawEvents.block)
-    ins(p.drawEventList,drawEvents.hold)
+    ins(p.drawEventList,drawEvents.heightLines)
+    ins(p.drawEventList,drawEvents.popFieldTransform)
+    ins(p.drawEventList,drawEvents.board)
     ins(p.drawEventList,drawEvents.next)
+    ins(p.drawEventList,drawEvents.hold)
+    ins(p.drawEventList,drawEvents.popPlayerTransform)
 
     p.task={}
     ins(p.task,updTasks.control)

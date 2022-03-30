@@ -86,6 +86,12 @@ function scene.keyDown(key,isRep)
         -- elseif action=='menu_quit' then
         --     quitGame()
         -- end
+    elseif action:sub(1,5)=='game_' then
+        if action=='game_restart' then
+            scene.enter()
+        elseif action=='game_pause' then
+            MES.new('info',"No pausing now lol")
+        end
     end
 end
 

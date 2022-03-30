@@ -19,7 +19,7 @@ function love.conf(t)
     W.vsync=0-- Unlimited FPS
     W.msaa=0-- Multi-sampled antialiasing
     W.depth=0-- Bits/samp of depth buffer
-    W.stencil=1-- Bits/samp of stencil buffer
+    W.stencil=true-- Bits/samp of stencil buffer
     W.display=1-- Monitor ID
     W.highdpi=true-- High-dpi mode for the window on a Retina display
     W.x,W.y=nil

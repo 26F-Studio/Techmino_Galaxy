@@ -109,7 +109,7 @@ TRS[6]={
                 -- [Warning] field 'spinSeq' is a dirty data, TRS put this var into the block.
                 C.spinSeq=((C.spinSeq or '')..dir):sub(-3)
                 if #C.spinSeq<3 then
-                    P:freshBlock('move')
+                    P:freshGhost()
                     return
                 end
 
@@ -146,7 +146,7 @@ TRS[6]={
                             C._origin.matrix=test.direcion==0 and newMatrix or test.direcion==2 and TABLE.rotate(newMatrix,'F') or error("Oh I forgot this")
 
                             P.handX,P.handY=x,y
-                            P:freshBlock('move')
+                            P:freshGhost()
                             return
                         end
                     end
@@ -154,7 +154,7 @@ TRS[6]={
             end
         else
             C.spinSeq=nil
-            P:freshBlock('move')
+            P:freshGhost()
             C.matrix=TABLE.rotate(C.matrix,dir)
             C.direction=(C.direction+(dir=='R' and 1 or dir=='L' and 3 or dir=='F' and 2 or error("wtf why dir is not R/L/F")))%4
         end

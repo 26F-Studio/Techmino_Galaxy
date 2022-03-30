@@ -87,8 +87,7 @@ local function r(P,dir)
                     P.handX,P.handY,C.direction=x,y,idir
                     C.matrix=icb
                     P.spinLast=test==2 and 0 or 1
-
-                    P:freshBlock('move')
+                    P:freshGhost()
                     return
                 end
             end
