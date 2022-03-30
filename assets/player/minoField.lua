@@ -71,15 +71,16 @@ function F:drawThumbnail_color(step,size)
 end
 --------------------------------------------------------------
 -- Builder
+local voidLine=setmetatable({},{__index=function() return false end,__newindex=NULL})
 local _fieldMeta={__index=function(self,k)
     if type(k)=='number' then
-        if k<=626 then
+        if k<=1260 then
             for i=#self+1,k do
                 self[i]=self._f:getNewLine(false)
             end
             return self[k]
         else
-            error('Too high!')
+            return voidLine
         end
     else
         error(STRING.repD("Invalid field index type '$1'",type(k)))
