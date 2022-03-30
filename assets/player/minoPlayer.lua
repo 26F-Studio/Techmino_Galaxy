@@ -191,7 +191,7 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
     return mino
 end
 function MP:restoreHandPos()-- Move hand piece to the normal spawn position
-    self.handX=int(self.settings.fieldW/2-#self.hand.matrix[1]/2+1)
+    self.handX=int(self.field.width/2-#self.hand.matrix[1]/2+1)
     self.handY=self.settings.fieldH+1
     self.minY=self.handY
     self:freshBlock('spawn')
@@ -579,15 +579,21 @@ function drawEvents.board(self)
     gc.setColor(1,1,1)
     gc.setLineWidth(2)
     gc.rectangle('line',-202,-402,404,804)
+
+    -- Field cells
+    gc.push('transform')
+    gc.translate(-200,400)
+    gc.scale(10/self.settings.fieldW)
     local f=self.field.matrix
     for y=1,#f do
         for x=1,#f[y] do
             if f[y][x] then
                 gc.setColor(ColorTable[f[y][x].color])
-                gc.rectangle('fill',-200+(x-1)*40,400-y*40,40,40)
+                gc.rectangle('fill',(x-1)*40,-y*40,40,40)
             end
         end
     end
+    gc.pop()
 
     -- Delay indicator
     gc.setColor(1,1,1)
@@ -606,22 +612,29 @@ function drawEvents.board(self)
 end
 function drawEvents.ghost(self)
     if not self.hand then return end
+    gc.push('transform')
+    gc.translate(-200,400)
+    gc.scale(10/self.settings.fieldW)
     gc.setColor(1,1,1,.26)
     local CB=self.hand.matrix
     for y=1,#CB do for x=1,#CB[1] do
         if CB[y][x] then
-            gc.rectangle('fill',-200+(self.handX+x-2)*40,400-(self.ghostY+y-1)*40,40,40)
+            gc.rectangle('fill',(self.handX+x-2)*40,-(self.ghostY+y-1)*40,40,40)
         end
     end end
+    gc.pop()
 end
 function drawEvents.block(self)
     if not self.hand then return end
+    gc.push('transform')
+    gc.translate(-200,400)
+    gc.scale(10/self.settings.fieldW)
     gc.setColor(1,1,1)
     local CB=self.hand.matrix
     for y=1,#CB do for x=1,#CB[1] do
         if CB[y][x] then
             gc.setColor(ColorTable[CB[y][x].color])
-            gc.rectangle('fill',-200+(self.handX+x-2)*40,400-(self.handY+y-1)*40,40,40)
+            gc.rectangle('fill',(self.handX+x-2)*40,-(self.handY+y-1)*40,40,40)
         end
     end end
     local RS=RotationSys[self.settings.rotSys]
@@ -630,9 +643,11 @@ function drawEvents.block(self)
     local center=state and state.center or type(minoData.center)=='function' and minoData.center(self)
     if center then
         gc.setColor(1,0,0)
-        GC.draw(RS.centerTex,-200+(self.handX+center[1]-1)*40,400-(self.handY+center[2]-1)*40)
+        GC.draw(RS.centerTex,(self.handX+center[1]-1)*40,-(self.handY+center[2]-1)*40)
     end
+    gc.pop()
 end
+
 function drawEvents.next(self)-- Almost same as drawEvents.hold, don't forget to change both
     gc.push('transform')
     gc.translate(300,-400+50)
@@ -695,8 +710,8 @@ function MP.new(data)
     setmetatable(p,{__index=MP})
 
     p.settings={-- Generate from template in future
-        fieldW=10,
-        fieldH=20,
+        fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. If really want change it, you need change both 'self.field.width' and 'self.field.matrix'
+        fieldH=20,-- [WARNING] This can be changed anytime. Field object actually do not contain height information
         fieldTop=100,
         fieldBarrierL=18,
         fieldBarrierH=21,
