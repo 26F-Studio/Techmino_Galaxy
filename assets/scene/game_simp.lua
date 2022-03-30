@@ -24,8 +24,8 @@ local KEYMAP={
     {act='act_target3',    keys={'e'}},
     {act='act_target4',    keys={'r'}},
 
-    {act='act_fastLeft',   keys={}},
-    {act='act_fastRight',  keys={}},
+    {act='act_sonicLeft',  keys={}},
+    {act='act_sonicRight', keys={}},
     {act='act_dropLeft',   keys={}},
     {act='act_dropRight',  keys={}},
     {act='act_zangiLeft',  keys={}},
@@ -38,15 +38,17 @@ local KEYMAP={
     {act='menu_pause',     keys={'return'}},
     {act='menu_quit',      keys={'escape'}},
 
-    {act='rep_pause',      keys={}},
-    {act='rep_nextFrame',  keys={}},
-    {act='rep_speed1/16x', keys={}},
-    {act='rep_speed1/6x',  keys={}},
-    {act='rep_speed1/2x',  keys={}},
-    {act='rep_speed1x',    keys={}},
-    {act='rep_speed2x',    keys={}},
-    {act='rep_speed6x',    keys={}},
-    {act='rep_speed16x',   keys={}},
+    {act='rep_pause',      keys={'space'}},
+    {act='rep_nextFrame',  keys={'n'}},
+    {act='rep_speedDown',  keys={'left'}},
+    {act='rep_speedUp',    keys={'right'}},
+    {act='rep_speed1/16x', keys={'1'}},
+    {act='rep_speed1/6x',  keys={'2'}},
+    {act='rep_speed1/2x',  keys={'3'}},
+    {act='rep_speed1x',    keys={'4'}},
+    {act='rep_speed2x',    keys={'5'}},
+    {act='rep_speed6x',    keys={'6'}},
+    {act='rep_speed16x',   keys={'7'}},
 }
 local function _getKey(k)
     for i=1,#KEYMAP do

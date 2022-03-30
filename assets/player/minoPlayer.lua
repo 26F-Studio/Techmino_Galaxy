@@ -14,13 +14,13 @@ setmetatable(MP,{__index=require'assets.player.basePlayer'})
 local function _defaultPressEvent(self,act)
     if not self.actions[act] or self.keyState[act] then return end
     self.keyState[act]=true
-    ins(self.actionHistory,{0,act})
+    ins(self.actionHistory,{0,self.timer,act})
     self.actions[act].press(self)
 end
 local function _defaultPeleaseEvent(self,act)
     if not self.actions[act] or not self.keyState[act] then return end
     self.keyState[act]=false
-    ins(self.actionHistory,{1,act})
+    ins(self.actionHistory,{1,self.timer,act})
     self.actions[act].release(self)
 end
 
@@ -61,7 +61,7 @@ function actions.softDrop(self)
     end
 end
 function actions.sonicDrop(self)
-    self.downCharge=0
+    self.downCharge=false
     if not self.hand then return end
     if self.handY>self.ghostY then
         self.handY=self.ghostY
@@ -100,38 +100,58 @@ actions.target2=NULL
 actions.target3=NULL
 actions.target4=NULL
 
-function actions.fastLeft(self)
-    -- TODO
+function actions.sonicLeft(self)
+    while self.hand and not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) do
+        self.handX=self.handX-1
+        self:freshBlock('move')
+    end
 end
-function actions.fastRight(self)
-    -- TODO
+function actions.sonicRight(self)
+    while self.hand and not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) do
+        self.handX=self.handX+1
+        self:freshBlock('move')
+    end
 end
 function actions.dropLeft(self)
-    -- TODO
+    actions.sonicLeft(self)
+    actions.hardDrop(self)
 end
 function actions.dropRight(self)
-    -- TODO
+    actions.sonicRight(self)
+    actions.hardDrop(self)
 end
 function actions.zangiLeft(self)
-    -- TODO
+    actions.sonicLeft(self)
+    actions.sonicDrop(self)
+    actions.sonicRight(self)
+    actions.hardDrop(self)
 end
 function actions.zangiRight(self)
-    -- TODO
+    actions.sonicRight(self)
+    actions.sonicDrop(self)
+    actions.sonicLeft(self)
+    actions.hardDrop(self)
 end
 
 local function _getActionObj(a)
     if type(a)=='string' then
         return actions[a]
     elseif type(a)=='function' then
-        return {
+        return setmetatable({
             press=a,
             release=NULL,
-        }
+        },{__call=function(self,P)
+            self.press(P)
+        end})
     elseif type(a)=='table' then
-        return {
+        assert(type(a.press)=='function' and type(a.release)=='function',"wtf why action do not contain func press() & func release()")
+        return setmetatable({
             press=a.press,
             release=a.release,
-        }
+        },{__call=function(self,P)
+            self.press(P)
+            self.release(P)
+        end})
     else
         error("Invalid action: should be function or table contain 'press' and 'release' fields")
     end
@@ -146,6 +166,10 @@ local actionPacks={
         'softDrop',
     },
     modern={
+        'dropLeft',
+        'dropRight',
+        'zangiLeft',
+        'zangiRight',
         'moveLeft',
         'moveRight',
         'rotateCW',
@@ -365,7 +389,6 @@ function MP:lock()
     end
 end
 function MP:minoDropped()
-
     self.hand=false
     self.spawnTimer=self.settings.spawnDelay
 end
