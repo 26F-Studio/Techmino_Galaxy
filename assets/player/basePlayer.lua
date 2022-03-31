@@ -18,7 +18,7 @@ end
 function BP:update(dt)-- This thing can be so complex that we cannot use the eventList model.
     NI('update')
 end
-function BP:draw()
+function BP:render()
     gc.push('transform')
     for i=1,#self.drawEventList do
         self.drawEventList[i](self)

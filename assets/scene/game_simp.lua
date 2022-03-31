@@ -108,7 +108,11 @@ function scene.update(dt)
 end
 
 function scene.draw()
-    P1:draw()
+    P1:render()
+
+    gc.replaceTransform(SCR.origin)
+    gc.setColor(1,1,1)
+    gc.draw(Zenitha.getBigCanvas('player'))
 end
 
 scene.widgetList={

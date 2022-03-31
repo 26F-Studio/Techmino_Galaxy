@@ -581,12 +581,10 @@ updTasks.normal={
 }
 --------------------------------------------------------------
 -- Draws
-local _fieldCanvas=Zenitha.getBigCanvas(1)
 local drawEvents={}
 function drawEvents.applyPlayerTransform(self)
-    gc.setCanvas({_fieldCanvas,stencil=true})
+    gc.setCanvas({Zenitha.getBigCanvas('player'),stencil=true})
     gc.clear(1,1,1,0)
-    gc.push('transform')
     gc.translate(self.pos.x,self.pos.y)
     gc.scale(self.pos.kx,self.pos.ky)
     gc.rotate(self.pos.angle)
@@ -684,9 +682,11 @@ function drawEvents.popFieldTransform(self)
 end
 function drawEvents.board(self)
     -- Field border
-    gc.setColor(1,1,1)
     gc.setLineWidth(2)
-    gc.rectangle('line',-201,-401,402,802)
+    gc.setColor(1,1,1)
+    gc.line(-201,-401,-201, 401,201, 401,201,-401)
+    gc.setColor(1,1,1,.626)
+    gc.line(-201,-401,201,-401)
 
     -- Delay indicator
     gc.setColor(1,1,1)
@@ -751,15 +751,7 @@ function drawEvents.popPlayerTransform()
     end
     gc.setBlendMode('alpha')
     gc.setColorMask()
-
     gc.setCanvas()
-    gc.pop()
-
-    gc.push('transform')
-    gc.replaceTransform(SCR.origin)
-    gc.setColor(1,1,1)
-    gc.draw(_fieldCanvas)
-    gc.pop()
 end
 --------------------------------------------------------------
 -- Useful methods
