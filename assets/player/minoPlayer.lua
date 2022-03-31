@@ -595,7 +595,7 @@ function drawEvents.applyFieldTransform(self)
     gc.push('transform')
     gc.translate(-200,400)
     GC.stc_setComp('equal',1)
-    GC.stc_rect(0,0,400,-820)
+    GC.stc_rect(0,0,400,-840)
     gc.scale(10/self.settings.fieldW)
 end
 function drawEvents.field(self)
@@ -742,6 +742,16 @@ function drawEvents.hold(self)-- Almost same as drawEvents.next, don't forget to
     gc.pop()
 end
 function drawEvents.popPlayerTransform()
+    -- Upside fade out
+    gc.setBlendMode('multiply','premultiplied')
+    gc.setColorMask(false,false,false,true)
+    for i=0,39 do
+        gc.setColor(0,0,0,(1-i/40)^2)
+        gc.rectangle('fill',-200,-402-i,400,-1)
+    end
+    gc.setBlendMode('alpha')
+    gc.setColorMask()
+
     gc.setCanvas()
     gc.pop()
 
