@@ -4,14 +4,14 @@
 -- #  / / /  __/ /__/ / / / / / / / / / / / / /_/ /  _    / /_/ / /_/ / / /_/ />  </ /_/ /  #
 -- # /_/  \___/\___/_/ /_/_/ /_/ /_/_/_/ /_/\____/  (_)   \____/\__,_/_/\__,_/_/|_|\__, /   #
 -- #                                                                              /____/    #
--- Techmino: Galaxy is a improved version of Techmino.
--- Creating issue on github is welcomed if you also love tetromino stacking game
+-- Techmino: Galaxy is an improved version of Techmino.
+-- Creating issues on GitHub is welcomed if you also love tetromino stacking game
 
--- Some coding style:
--- 1. I made a framework called Zenitha, *most* code in Zenitha are not directly relevant to game;
--- 2. "xxx" are texts for reading by player, 'xxx' are string values just used in program;
--- 3. Some goto statement are used for better performance. All goto-labes have detailed names so don't be afraid;
--- 4. Except "gcinfo" function of lua itself, other "gc" are short for "graphics";
+-- Some coding styles:
+-- 1. I made a framework called Zenitha, *most* codes in Zenitha are not directly relevant to the game;
+-- 2. "xxx" are texts for reading by the player, 'xxx' are string values just used in the program;
+-- 3. Some goto statements are used for better performance. All goto-labels have detailed names so don't be afraid;
+-- 4. Except "gcinfo" function of Lua itself, other "gc"s are short for "graphics";
 
 -------------------------------------------------------------
 -- Load Zenitha
