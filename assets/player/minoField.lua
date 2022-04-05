@@ -1,0 +1,112 @@
+local gc=love.graphics
+
+local F={}
+setmetatable(F,{__index=require'assets.player.basePlayer'})
+
+--------------------------------------------------------------
+-- Methods
+function F:removeLine(h)
+    table.remove(self._matrix,h)
+end
+function F:export_string_simp()
+    local str=''
+
+    for y=1,#self._matrix do
+        local buf=''
+        for x=1,#self._width do
+            buf=buf..(self._matrix[y][x] and 'x' or '_')
+        end
+        str=str..buf..'/'
+    end
+
+    return str
+end
+function F:export_string_color()
+    local str=''
+
+    for y=1,#self._matrix do
+        local buf=''
+        for x=1,#self._width do
+            buf=buf..STRING.base64[self._matrix[y][x].color]
+        end
+        str=str..buf..'/'
+    end
+
+    return str
+end
+function F:export_fumen()
+    local str=''
+
+    -- TODO, but anyone interested? I won't
+    error('Not implemented yet')
+
+    return str
+end
+function F:drawThumbnail_simp(step,size)
+    if not step then step=40 end
+    if not size then size=step end
+    local f=self._matrix
+    for y=1,#f do
+        for x=1,self._width do
+            local c=f[y][x]
+            if c then
+                gc.rectangle('fill',(x-1)*step,-y*step,size,size)
+            end
+        end
+    end
+end
+function F:drawThumbnail_color(step,size)
+    if not step then step=40 end
+    if not size then size=step end
+    local f=self._matrix
+    for y=1,#f do
+        for x=1,self._width do
+            local c=f[y][x]
+            if c then
+                gc.setColor(ColorTable[c.color])
+                gc.rectangle('fill',(x-1)*step,-y*step,size,size)
+            end
+        end
+    end
+end
+function F:getWidth()
+    return self._width
+end
+function F:getHeight()
+    return #self._matrix
+end
+local wallCell=setmetatable({},{__newIndex=NULL})
+function F:getCell(x,y)
+    if x<=0 or x>self._width or y<=0 then return wallCell end
+    if y>#self._matrix then return false end
+    local line=rawget(self._matrix,y)
+    return line and line[x] or false
+end
+function F:setCell(cell,x,y)
+    if not self._matrix[y] then
+        if y<=1260 then
+            for i=#self._matrix+1,y do
+                self._matrix[i]=TABLE.new(false,self._width)
+            end
+        else
+            return-- Too high, do nothing
+        end
+    end
+    self._matrix[y][x]=cell
+end
+--------------------------------------------------------------
+-- Builder
+function F.new(width)
+    assert(type(width)=='number','[Field].new(width): width must be number')
+    local f={
+        _width=width,
+        _matrix={},
+    }
+    f._matrix._f=f
+    setmetatable(f,{__index=F})
+
+    return f
+end
+--------------------------------------------------------------
+
+return F
