@@ -61,9 +61,9 @@ local function _getKey(k)
     end
 end
 
-local P1
-
 local scene={}
+
+local P1
 
 function scene.enter()
     P1=require'assets.player.minoPlayer'.new{
@@ -72,7 +72,7 @@ function scene.enter()
     P1:setPosition(800,500)
     BG.set('image')
     BG.send('image',.12,IMG.cover)
-    BGM.play(bgmList['xmas'].simp)
+    BGM.play(bgmList['race'].simp)
 end
 
 function scene.keyDown(key,isRep)
@@ -93,6 +93,8 @@ function scene.keyDown(key,isRep)
         elseif action=='game_pause' then
             MES.new('info',"No pausing now lol")
         end
+    elseif action:sub(1,4)=='rep_' then
+        -- TODO
     end
 end
 

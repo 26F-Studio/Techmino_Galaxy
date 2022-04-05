@@ -379,7 +379,7 @@ function MP:dropMino()-- Lock mino and trigger a lot of things
     self:checkField()
     if self.finished then return end
     self:minoDropped()
-    if self.settings.spawnDelay==0 then
+    if self.clearTimer==0 and self.spawnTimer==0 then
         self:popNext()
     end
 end
@@ -411,6 +411,7 @@ function MP:checkField()-- Check line clear, top out checking, etc.
         end
     end
     if #lineClear>0 then
+        self.clearTimer=self.settings.clearDelay
         ins(self.clearHistory,{
             lines=lineClear,
             -- TODO
@@ -539,6 +540,12 @@ updTasks[2]={-- normal
         -- TODO
     end,
     func=function(self,df)
+        -- Wait clearing animation
+        if self.clearTimer>0 then
+            self.clearTimer=self.clearTimer-df
+            return
+        end
+
         -- Try spawn mino if don't have one
         if self.spawnTimer>0 then
             self.spawnTimer=self.spawnTimer-df
@@ -546,6 +553,8 @@ updTasks[2]={-- normal
                 self:popNext()
             end
             return
+        elseif not self.hand then
+            self:popNext()
         end
 
         -- Try lock/drop mino
@@ -818,7 +827,7 @@ function MP.new(data)
         dropDelay=1000,
         lockDelay=1000,
         spawnDelay=0,
-        clearDelay=1000,
+        clearDelay=126,
 
         das=70,
         arr=0,
@@ -864,6 +873,7 @@ function MP.new(data)
     p.dropTimer=0
     p.lockTimer=0
     p.spawnTimer=p.settings.readyDelay
+    p.clearTimer=0
 
     p.hand=false
     p.handX=false
