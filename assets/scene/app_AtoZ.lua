@@ -116,7 +116,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='selector',x=640,y=640,w=200,list={'A_Z','Z_A','Tech1','Tech2','KeyTest1','KeyTest2','Hello','Roll1','Roll2','Roll3','ZZZ','ZXZX','ZMZM','Stair','Stair2','Stair3','BPW'},disp=function() return levelName end,code=function(i) levelName=i;targetString=levels[i] end,visibleFunc=function() return state==0 end},
+    WIDGET.new{type='selector',x=640,y=640,w=200,list={'A_Z','Z_A','Tech1','Tech2','KeyTest1','KeyTest2','Hello','Roll1','Roll2','Roll3','ZZZ','ZXZX','ZMZM','Stair','Stair2','Stair3','BPW'},disp=function() return levelName end,code=function(i) levelName=i; targetString=levels[i] end,visibleFunc=function() return state==0 end},
     WIDGET.new{type='button',  x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry_spin,code=WIDGET.c_pressKey'space'},
     WIDGET.new{type='button',  x=160,y=210,w=180,h=100,code=function() love.keyboard.setTextInput(true,0,select(2,SCR.xOy:transformPoint(0,500)),1,1) end,visibleFunc=function() return MOBILE end},
     WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},

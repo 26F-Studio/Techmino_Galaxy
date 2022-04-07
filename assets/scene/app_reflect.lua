@@ -38,9 +38,9 @@ function scene.keyDown(key,isRep)
 
             --(early && P2-key || not early && [P1-key]==[target is up]) = P1 win, else P2 win
             if ct>6 and key>2 or ct<=6 and key%4<2==up then
-                winner=1;s1=s1+1
+                winner=1; s1=s1+1
             else
-                winner=2;s2=s2+1
+                winner=2; s2=s2+1
             end
             state=3
             ct=60

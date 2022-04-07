@@ -748,13 +748,13 @@ drawEvents[11]=function(self)-- startCounter
         local d=1-self.timer%1000/1000-- d from 999 to 0
         if num==3 then
             r,g,b=.7,.8,.98
-            if d>.75 then gc.rotate((d-.75)^3*40)end
+            if d>.75 then gc.rotate((d-.75)^3*40) end
         elseif num==2 then
             r,g,b=.98,.85,.75
-            if d>.75 then gc.scale(1+(d/.25-3)^2,1)end
+            if d>.75 then gc.scale(1+(d/.25-3)^2,1) end
         elseif num==1 then
             r,g,b=1,.7,.7
-            if d>.75 then gc.scale(1,1+(d/.25-3)^2)end
+            if d>.75 then gc.scale(1,1+(d/.25-3)^2) end
         end
 
         FONT.set(100)

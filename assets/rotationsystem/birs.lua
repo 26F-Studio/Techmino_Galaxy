@@ -54,8 +54,8 @@ for i=1,29 do
     if i==6 or i==18 then
         a,b=b,a
     end
-    list[i][01]=a;list[i][10]=b;list[i][03]=b;list[i][30]=a
-    list[i][12]=a;list[i][21]=b;list[i][32]=b;list[i][23]=a
+    list[i][01]=a; list[i][10]=b; list[i][03]=b; list[i][30]=a
+    list[i][12]=a; list[i][21]=b; list[i][32]=b; list[i][23]=a
 end
 local function r(P,dir)
     local C=P.hand
