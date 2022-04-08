@@ -68,11 +68,12 @@ local P1
 function scene.enter()
     P1=require'assets.player.minoPlayer'.new{
         id=1,
+        mode=MODE.get('sprint'),
     }
     P1:setPosition(800,500)
     BG.set('image')
     BG.send('image',.12,IMG.cover)
-    BGM.play(bgmList['race'].simp)
+    BGM.play(bgmList['push'].full)
 end
 
 function scene.keyDown(key,isRep)

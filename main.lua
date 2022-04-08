@@ -46,6 +46,7 @@ for _,v in next,{'conf','progress','record','replay','cache','lib'} do
 end
 --------------------------------------------------------------
 -- Load modules
+MODE=require"assets.mode"
 CHAR=require'assets.char'
 require'assets.gamefunc'
 require'assets.gametable'
@@ -77,27 +78,27 @@ Zenitha.setDebugInfo{
     {"Audios",love.audio.getSourceCount},
 }
 do-- Zenitha.setOnFocus
-    local function task_autoSoundOff()
-        repeat
-            local v=math.max(love.audio.getVolume()-coroutine.yield(),0)
-            love.audio.setVolume(v)
-        until v==0
-    end
-    local function task_autoSoundOn()
-        repeat
-            local v=math.min(love.audio.getVolume()+coroutine.yield(),1)
-            love.audio.setVolume(v)
-        until v==1
-    end
-    Zenitha.setOnFocus(function(f)
-        if f then
-            TASK.removeTask_code(task_autoSoundOff)
-            TASK.new(task_autoSoundOn)
-        else
-            TASK.removeTask_code(task_autoSoundOn)
-            TASK.new(task_autoSoundOff)
-        end
-    end)
+    -- local function task_autoSoundOff()
+    --     repeat
+    --         local v=math.max(love.audio.getVolume()-coroutine.yield(),0)
+    --         love.audio.setVolume(v)
+    --     until v==0
+    -- end
+    -- local function task_autoSoundOn()
+    --     repeat
+    --         local v=math.min(love.audio.getVolume()+coroutine.yield(),1)
+    --         love.audio.setVolume(v)
+    --     until v==1
+    -- end
+    -- Zenitha.setOnFocus(function(f)
+    --     if f then
+    --         TASK.removeTask_code(task_autoSoundOff)
+    --         TASK.new(task_autoSoundOn)
+    --     else
+    --         TASK.removeTask_code(task_autoSoundOn)
+    --         TASK.new(task_autoSoundOff)
+    --     end
+    -- end)
 end
 FONT.load{
     norm='assets/fonts/proportional.otf',

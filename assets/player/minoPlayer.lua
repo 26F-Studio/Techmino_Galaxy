@@ -455,7 +455,15 @@ end
 --------------------------------------------------------------
 -- Updates
 local function step(self,d)
-    self.timer=self.timer+d
+    if self.timing then self.time=self.time+d end
+    if self.timer<self.settings.readyDelay then
+        self.timer=self.timer+d
+        if self.timer==self.settings.readyDelay then
+            self.timing=true
+        end
+    else
+        self.timer=self.timer+d
+    end
     for i=1,#self.task do self.task[i].func(self,d) end
 end
 function MP:update(dt)
@@ -775,7 +783,12 @@ drawEvents[11]=function(self)-- startCounter
         gc.pop()
     end
 end
-drawEvents[12]=function()-- popPlayerTransform
+drawEvents[12]=function(self)-- info
+    gc.setColor(COLOR.dL)
+    FONT.set(30)
+    gc.printf(("%.3f"):format(self.time/1000),-210-260,380,260,'right')
+end
+drawEvents[13]=function()-- popPlayerTransform
     -- Upside fade out
     gc.setBlendMode('multiply','premultiplied')
     gc.setColorMask(false,false,false,true)
@@ -805,45 +818,64 @@ function MP:movePosition(dx,dy,kx,ky,da)
 end
 --------------------------------------------------------------
 -- Builder
+local baseEnv={-- Generate from template in future
+    fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. If really want change it, you need change both 'self.field._width' and 'self.field._matrix'
+    spawnH=20,-- [WARNING] This can be changed anytime. Field object actually do not contain height information
+    deathH=21,
+    barrierL=18,
+    barrierH=21,
+
+    nextCount=6,
+
+    holdCount=1,
+    holdMode='hold',
+    holdKeepState=false,
+
+    readyDelay=3000,
+    dropDelay=1000,
+    lockDelay=1000,
+    spawnDelay=0,
+    clearDelay=126,
+
+    das=70,
+    arr=0,
+    sdarr=0,
+
+    actionPack='modern',
+    seqType='bag7',
+    rotSys='TRS',
+
+    freshCondition='any',
+}
+local seqGenerators={
+    bag7=function(p)
+        local l={}
+        while true do
+            while #p.nextQueue<p.settings.nextCount do
+                if not l[1] then for i=1,7 do l[i]=i end end
+                p:getMino(rem(l,math.random(#l)))
+            end
+            coroutine.yield()
+        end
+    end,
+}
 function MP.new(data)
     assert(type(data)=='table',"function PLAYER.new(data): data must be table")
     local p=require'assets.player.basePlayer'.new(data)
     setmetatable(p,{__index=MP})
 
-    p.settings={-- Generate from template in future
-        fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. If really want change it, you need change both 'self.field._width' and 'self.field._matrix'
-        spawnH=20,-- [WARNING] This can be changed anytime. Field object actually do not contain height information
-        deathH=21,
-        barrierL=18,
-        barrierH=21,
-
-        nextCount=6,
-
-        holdCount=1,
-        holdMode='hold',
-        holdKeepState=false,
-
-        readyDelay=3000,
-        dropDelay=1000,
-        lockDelay=1000,
-        spawnDelay=0,
-        clearDelay=126,
-
-        das=70,
-        arr=0,
-        sdarr=0,
-
-        seqData={},
-        rotSys='TRS',
-
-        freshCondition='any',
-    }
+    p.settings=TABLE.copy(baseEnv)
 
     p.pos={
         x=0,y=0,
         kx=1,ky=1,
         angle=0,
     }
+
+    p.curTime=0-- Real time, [float] s
+    p.timer=0-- Inside timer for player, [int] ms
+    p.time=0-- Game time of player, [int] ms
+    p.timing=false-- Are we timing?
 
     p.field=require'assets.player.minoField'.new(p.settings.fieldW,p.settings.spawnH)
     p.fieldBeneath=0
@@ -854,16 +886,7 @@ function MP.new(data)
     p.holdChance=0
 
     p.nextQueue={}
-    p.genNext=coroutine.wrap(function()
-        local l={}
-        while true do
-            while #p.nextQueue<p.settings.nextCount do
-                if not l[1] then for i=1,7 do l[i]=i end end
-                p:getMino(rem(l,math.random(#l)))
-            end
-            coroutine.yield()
-        end
-    end)
+    p.genNext=coroutine.wrap(seqGenerators[p.settings.seqType])
 
     p.minoCount=0
 
@@ -885,16 +908,12 @@ function MP.new(data)
     p.moveCharge=0
     p.downCharge=false
 
-    p.curTime=0-- Real time, [double] ms
-    p.timer=0-- Inside timer for player, [int] ms
-    p.timing=false-- Are we timing?
-
     p.clearHistory={}
     p.actionHistory={}
 
     do-- Generate available actions
         p.actions={}
-        local pack=data.actionPack or 'modern'
+        local pack=p.settings.actionPack
         if type(pack)=='string' then
             pack=actionPacks[pack]
             assert(pack,STRING.repD("Invalid actionPack '$1'",pack))
@@ -909,11 +928,11 @@ function MP.new(data)
                     assert(actions[k],STRING.repD("function PLAYER.new(data): no action called '$1'",k))
                     p.actions[k]=_getActionObj(v)
                 else
-                    error(STRING.repD("Invalid actionPack table's key type ($1)",type(k)))
+                    error(STRING.repD("function PLAYER.new(data): wrong actionPack table format (type $1)",type(k)))
                 end
             end
         else
-            error("function PLAYER.new(data): data.actionPack must be string or table")
+            error("function PLAYER.new(data): actionPack must be string or table")
         end
 
         p.keyState={}
@@ -922,7 +941,7 @@ function MP.new(data)
         end
     end
 
-    p.genNext()
+    p:genNext()
 
     ins(p.pressEventList,_defaultPressEvent)
     ins(p.releaseEventList,_defaultPeleaseEvent)

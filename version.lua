@@ -1,4 +1,4 @@
-return{
+return {
     ["appName"]="Techmino: Galaxy",
     ["apkCode"]=1,
     ["verCode"]=010000,
