@@ -196,7 +196,7 @@ local actionPacks={
     },
 }
 --------------------------------------------------------------
--- Events
+-- Game methods
 function MP:triggerEvent(name,...)
     local L=self.event[name]
     if L then
@@ -422,7 +422,7 @@ end
 function MP:hold_float()
     -- TODO
 end
-function MP:minoDropped()-- Lock mino and trigger a lot of things
+function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     self.handY=min(self.handY,self.ghostY)-- IHdS need this
     self:triggerEvent('afterDrop')
     self:lock()
@@ -509,6 +509,7 @@ function MP:gameover(reason)
     elseif reason=='RE' then-- Other reason
         -- TODO
     end
+    self:triggerEvent('gameOver',reason)
 end
 --------------------------------------------------------------
 -- Press & Release
@@ -531,17 +532,17 @@ function MP:release(act)
     self:triggerEvent('afterRelease',act)
 end
 --------------------------------------------------------------
--- Update
+-- Update & Render
 function MP:update(dt)
     local df=int((self.realTime+dt)*1000)-int(self.realTime*1000)
     self.realTime=self.realTime+dt
     local SET=self.settings
 
     for _=1,df do
-        -- Step main time
+        -- Step game time
         if self.timing then self.gameTime=self.gameTime+1--[[df]] end
 
-        -- Starting counter
+        -- Step main time & Starting counter
         if self.time<SET.readyDelay then
             self.time=self.time+1--[[df]]
             if self.time==SET.readyDelay then
@@ -634,10 +635,10 @@ function MP:update(dt)
                 end
             end
         until true
+
+        self:triggerEvent('always',1--[[df]])
     end
 end
---------------------------------------------------------------
--- Render
 function MP:render()
     gc.push('transform')
 
@@ -862,7 +863,7 @@ function MP:render()
     gc.pop()
 end
 --------------------------------------------------------------
--- Useful methods
+-- Other methods
 function MP:setPosition(x,y,kx,ky,angle)
     self.pos.x=x or self.pos.x
     self.pos.y=y or self.pos.y
@@ -996,13 +997,19 @@ function MP.new(data)
         beforeRelease={},
         afterRelease={},
 
-        -- Game events
+        -- Start & End
         playerInit={},
         gameStart={},
+        gameOver={},
+
+        -- Drop
         afterSpawn={},
         afterDrop={},
         afterLock={},
         afterClear={},
+
+        -- Update
+        always={},
 
         -- Graphics
         drawBelowField={},

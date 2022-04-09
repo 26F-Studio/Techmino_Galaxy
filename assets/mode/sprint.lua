@@ -7,12 +7,9 @@ return {
         event={
             afterClear=function(P)
                 P.modeData.line=P.modeData.line+P.clearHistory[#P.clearHistory].line
-                if P.modeData.line>=40 then
-                    P:gameover('AC')
-                end
+                if P.modeData.line>=40 then P:gameover('AC') end
             end,
             drawInField=function(P)
-                -- Countdown line
                 gc.setColor(1,1,1,.26)
                 gc.rectangle('fill',0,(P.modeData.line-40)*40-2,P.settings.fieldW*40,4)
             end,
@@ -21,15 +18,12 @@ return {
                 FONT.set(80)
                 GC.mStr(math.max(40-P.modeData.line,0),-300,-55)
             end,
+            gameOver=function(P)
+                -- TODO
+            end
         },
     },
-    score=function(P)
-        -- TODO
-    end,
-    record=function(P)
-        -- TODO
-    end,
-    getRank=function(P)
+    scorePage=function(data)
         -- TODO
     end,
 }
