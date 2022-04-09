@@ -28,18 +28,42 @@ function actions.moveRight(self)
         self:freshGhost()
     end
 end
-function actions.rotateCW(self)
-    if not self.hand then return end
-    self:rotate('R')
-end
-function actions.rotateCCW(self)
-    if not self.hand then return end
-    self:rotate('L')
-end
-function actions.rotate180(self)
-    if not self.hand then return end
-    self:rotate('F')
-end
+actions.rotateCW={
+    press=function(self)
+        if self.hand then
+            self:rotate('R')
+        else
+            self.keyBuffer.rotate='R'
+        end
+    end,
+    release=function(self)
+        if self.keyBuffer.rotate=='R' then self.keyBuffer.rotate=false end
+    end
+}
+actions.rotateCCW={
+    press=function(self)
+        if self.hand then
+            self:rotate('L')
+        else
+            self.keyBuffer.rotate='L'
+        end
+    end,
+    release=function(self)
+        if self.keyBuffer.rotate=='L' then self.keyBuffer.rotate=false end
+    end
+}
+actions.rotate180={
+    press=function(self)
+        if self.hand then
+            self:rotate('F')
+        else
+            self.keyBuffer.rotate='F'
+        end
+    end,
+    release=function(self)
+        if self.keyBuffer.rotate=='F' then self.keyBuffer.rotate=false end
+    end
+}
 function actions.softDrop(self)
     self.downCharge=0
     if not self.hand then return end
@@ -55,26 +79,30 @@ function actions.sonicDrop(self)
         self:freshDelay('drop')
     end
 end
-function actions.hardDrop(self)
-    if not self.hand then return end
-    self.handY=min(self.handY,self.ghostY)
-    self:minoDropped()
-end
-function actions.holdPiece(self)
-    if not self.hand then return end
-    if self.holdChance<=0 then return end
-    if self.settings.holdMode=='hold' then
-        self:hold_hold()
-    elseif self.settings.holdMode=='swap' then
-        self:hold_swap()
-    elseif self.settings.holdMode=='float' then
-        self:hold_float()
-    else
-        error("wtf why holdMode is "..tostring(self.settings.holdMode))
+actions.hardDrop={
+    press=function(self)
+        if self.hand then
+            self:minoDropped()
+        else
+            self.keyBuffer.hardDrop=true
+        end
+    end,
+    release=function(self)
+        self.keyBuffer.hardDrop=false
     end
-    self.holdChance=self.holdChance-1
-    self:triggerEvent('afterHold')
-end
+}
+actions.holdPiece={
+    press=function(self)
+        if self.hand then
+            self:hold()
+        else
+            self.keyBuffer.hold=true
+        end
+    end,
+    release=function(self)
+        self.keyBuffer.hold=false
+    end
+}
 
 actions.function1=NULL
 actions.function2=NULL
@@ -254,6 +282,20 @@ function MP:popNext()
         self:popNext()
     else-- If no piece to use, both Next and Hold queue are empty, game over
         self:gameover('ILE')
+        return
+    end
+    if self.keyBuffer.hold then
+        self.keyBuffer.hold=false
+        self:hold()
+    end
+    if self.keyBuffer.rotate then
+        local r=self.keyBuffer.rotate
+        self.keyBuffer.rotate=false
+        self:rotate(r)
+    end
+    if self.keyBuffer.hardDrop then
+        self.keyBuffer.hardDrop=false
+        self:minoDropped()
     end
     self:triggerEvent('afterSpawn')
 end
@@ -297,8 +339,9 @@ function MP:ifoverlap(CB,cx,cy)
     return false
 end
 function MP:rotate(dir)
+    if not self.hand then return end
     local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
-    if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F") end
+    if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F ("..tostring(dir)..")") end
 
     if minoData.rotate then-- Custom rotate function
         minoData.rotate(self,dir)
@@ -340,6 +383,20 @@ function MP:rotate(dir)
         end
     end
 end
+function MP:hold()
+    if self.holdChance<=0 then return end
+    local mode=self.settings.holdMode
+    if mode=='hold' then
+        self:hold_hold()
+    elseif mode=='swap' then
+        self:hold_swap()
+    elseif mode=='float' then
+        self:hold_float()
+    else
+        error("wtf why hold mode is "..tostring(mode))
+    end
+    self.holdChance=self.holdChance-1
+end
 function MP:hold_hold()
     if not self.settings.holdKeepState then
         self.hand=self:restoreMinoState(self.hand)
@@ -366,6 +423,7 @@ function MP:hold_float()
     -- TODO
 end
 function MP:minoDropped()-- Lock mino and trigger a lot of things
+    self.handY=min(self.handY,self.ghostY)-- IHdS need this
     self:triggerEvent('afterDrop')
     self:lock()
     self:triggerEvent('afterLock')
@@ -473,7 +531,7 @@ function MP:release(act)
     self:triggerEvent('afterRelease',act)
 end
 --------------------------------------------------------------
--- Updates
+-- Update
 function MP:update(dt)
     local df=int((self.realTime+dt)*1000)-int(self.realTime*1000)
     self.realTime=self.realTime+dt
@@ -579,7 +637,7 @@ function MP:update(dt)
     end
 end
 --------------------------------------------------------------
--- Draws
+-- Render
 function MP:render()
     gc.push('transform')
 
@@ -921,8 +979,13 @@ function MP.new(data)
     P.moveCharge=0
     P.downCharge=false
 
-    P.dropHistory={}
     P.actionHistory={}
+    P.keyBuffer={
+        rotate=false,
+        hold=false,
+        hardDrop=false,
+    }
+    P.dropHistory={}
     P.clearHistory={}
 
     P.modeData=setmetatable({},modeDataMeta)
