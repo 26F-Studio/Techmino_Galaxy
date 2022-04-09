@@ -1,5 +1,6 @@
 -- Global color table for minoes
 ColorTable={} for i=1,64 do ColorTable[i]={COLOR.hsv((i-1)/64,.9,.9)} end
+defaultMinoColor=setmetatable({2,22,42,6,52,12,32},{__index=function() return math.random(64) end})
 
 do-- Minos
     local O,_=true,false

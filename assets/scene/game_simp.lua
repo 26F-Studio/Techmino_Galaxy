@@ -73,7 +73,7 @@ function scene.enter()
     P1:setPosition(800,500)
     BG.set('image')
     BG.send('image',.12,IMG.cover)
-    BGM.play(bgmList['push'].full)
+    BGM.play(bgmList['pressure'].simp)
 end
 
 function scene.keyDown(key,isRep)

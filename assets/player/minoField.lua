@@ -1,7 +1,6 @@
 local gc=love.graphics
 
 local F={}
-setmetatable(F,{__index=require'assets.player.basePlayer'})
 
 --------------------------------------------------------------
 -- Methods

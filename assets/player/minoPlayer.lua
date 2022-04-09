@@ -2,12 +2,10 @@ local gc=love.graphics
 
 local max,min=math.max,math.min
 local int,ceil=math.floor,math.ceil
-local sin,cos=math.sin,math.cos
 
 local ins,rem=table.insert,table.remove
 
 local MP={}
-setmetatable(MP,{__index=require'assets.player.basePlayer'})
 
 --------------------------------------------------------------
 -- Actions
@@ -71,9 +69,10 @@ end
 function actions.hardDrop(self)
     if not self.hand then return end
     self.handY=min(self.handY,self.ghostY)
-    self:dropMino()
+    self:minoDropped()
 end
 function actions.holdPiece(self)
+    self:triggerEvent('beforeHold')
     if not self.hand then return end
     if self.holdChance<=0 then return end
     if self.settings.holdMode=='hold' then
@@ -86,6 +85,7 @@ function actions.holdPiece(self)
         error("wtf why holdMode is "..tostring(self.settings.holdMode))
     end
     self.holdChance=self.holdChance-1
+    self:triggerEvent('afterHold')
 end
 
 actions.function1=NULL
@@ -181,6 +181,12 @@ local actionPacks={
 }
 --------------------------------------------------------------
 -- Events
+function MP:triggerEvent(name,...)
+    local L=self.event[name]
+    if L then
+        for i=1,#L do L[i](self,...) end
+    end
+end
 function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside, like shape, name, direction)
     if not mino._origin then return end
     for k,v in next,mino._origin do
@@ -261,17 +267,16 @@ function MP:popNext()
     else-- If no piece to use, both Next and Hold queue are empty, game over
         self:gameover('ILE')
     end
+    self:triggerEvent('afterSpawn')
 end
 function MP:getMino(shapeID)
     local shape=TABLE.shift(Minos[shapeID].shape)
     local c=math.random(64)
-    for y=1,#shape do
-        for x=1,#shape[1] do
-            if shape[y][x] then
-                shape[y][x]={color=(c+math.random(-2,2))%64+1}-- Should be player's color setting
-            end
+    for y=1,#shape do for x=1,#shape[1] do
+        if shape[y][x] then
+            shape[y][x]={color=defaultMinoColor[shapeID]}-- Should be player's color setting
         end
-    end
+    end end
     self.minoCount=self.minoCount+1
     local mino={
         id=self.minoCount,
@@ -294,13 +299,11 @@ function MP:ifoverlap(CB,cx,cy)
     if cy>F:getHeight() then return false end
 
     -- Check field
-    for y=1,#CB do
-        for x=1,#CB[1] do
-            if CB[y][x] and F:getCell(cx+x-1,cy+y-1) then
-                return true
-            end
+    for y=1,#CB do for x=1,#CB[1] do
+        if CB[y][x] and F:getCell(cx+x-1,cy+y-1) then
+            return true
         end
-    end
+    end end
 
     -- No collision
     return false
@@ -344,6 +347,7 @@ function MP:rotate(dir)
                     return
                 end
             end
+            self:freshDelay('move')
         else
             error("wtf why no state in minoData")
         end
@@ -374,11 +378,13 @@ end
 function MP:hold_float()
     -- TODO
 end
-function MP:dropMino()-- Lock mino and trigger a lot of things
+function MP:minoDropped()-- Lock mino and trigger a lot of things
+    self:triggerEvent('afterDrop')
     self:lock()
-    self:checkField()
+    self:triggerEvent('afterLock')
+    self:checkField(self.hand)
     if self.finished then return end
-    self:minoDropped()
+    self:discardMino()
     if self.clearTimer==0 and self.spawnTimer==0 then
         self:popNext()
     end
@@ -386,15 +392,18 @@ end
 function MP:lock()-- Put mino into field
     local CB=self.hand.matrix
     local F=self.field
-    for y=1,#CB do
-        for x=1,#CB[1] do
-            if CB[y][x] then
-                F:setCell(CB[y][x],self.handX+x-1,self.handY+y-1)
-            end
+    for y=1,#CB do for x=1,#CB[1] do
+        if CB[y][x] then
+            F:setCell(CB[y][x],self.handX+x-1,self.handY+y-1)
         end
-    end
+    end end
+    ins(self.dropHistory,{
+        id=self.hand.id,
+        x=self.handX,
+        y=self.handY,
+    })
 end
-function MP:checkField()-- Check line clear, top out checking, etc.
+function MP:checkField(mino)-- Check line clear, top out checking, etc.
     local lineClear={}
     local F=self.field
     for y=F:getHeight(),1,-1 do
@@ -412,26 +421,30 @@ function MP:checkField()-- Check line clear, top out checking, etc.
     end
     if #lineClear>0 then
         self.clearTimer=self.settings.clearDelay
-        ins(self.clearHistory,{
+        local h={
+            mino=mino,
+            line=#lineClear,
             lines=lineClear,
-            -- TODO
-        })
+        }
+        ins(self.clearHistory,h)
+        self:triggerEvent('afterClear',h)
     else
         if self.handY>self.settings.deathH then
             self:gameover('MLE')
         end
     end
 end
-function MP:minoDropped()
+function MP:discardMino()
     self.hand=false
     self.spawnTimer=self.settings.spawnDelay
 end
 function MP:gameover(reason)
     if self.finished then return end
+    self.timing=false
     self.finished=true
     self.hand=false
     self.spawnTimer=1e99
-    MES.new('error',reason,626)
+    MES.new(reason=='AC' and 'check' or 'error',reason,6.26)
     if reason=='AC' then-- Win
         -- TODO
     elseif reason=='WA' then-- Block out
@@ -453,30 +466,40 @@ function MP:gameover(reason)
     end
 end
 --------------------------------------------------------------
+-- Press & Release
+function MP:press(act)
+    self:triggerEvent('press',act)
+end
+function MP:release(act)
+    self:triggerEvent('release',act)
+end
+--------------------------------------------------------------
 -- Updates
 local function step(self,d)
     if self.timing then self.time=self.time+d end
     if self.timer<self.settings.readyDelay then
         self.timer=self.timer+d
         if self.timer==self.settings.readyDelay then
+            self:triggerEvent('gameStart')
             self.timing=true
         end
     else
         self.timer=self.timer+d
     end
-    for i=1,#self.task do self.task[i].func(self,d) end
+    self:triggerEvent('update',d)
 end
 function MP:update(dt)
     local df=int((self.curTime+dt)*1000)-int(self.curTime*1000)
     self.curTime=self.curTime+dt
 
-    local l=self.task
+    local L=self.event.update
     while df>0 do
         local closestTime=df
-        for i=1,#l do
-            local waitFunc=l[i].wait
-            closestTime=min(waitFunc and waitFunc(self) or 1,closestTime)
-            if closestTime<=0 then error(STRING.repD("Invalid counter in task '$1'",l[i].name)) end
+        for i=1,#L do
+            local wait=L[i]('wait')
+            if wait==1 then closestTime=1; break end
+            closestTime=min(wait(self),closestTime)
+            if closestTime<=0 then error(STRING.repD("Invalid counter in task '$1'",i)) end
         end
         if closestTime>1 then
             step(self,closestTime-1)
@@ -488,121 +511,123 @@ function MP:update(dt)
         end
     end
 end
-local updTasks={}
-updTasks[1]={-- control
-    name='control',
-    wait=function(self)
+local updateEvents={}
+updateEvents[1]=function(self,df)-- Control
+    if self=='wait' then
         -- TODO
-    end,
-    func=function(self,df)
-        -- Auto shift
-        -- Magic, I think it should work
-        if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then
-            local c0=self.moveCharge
-            local c1=c0+df
-            self.moveCharge=c1
-            local dist=0
-            if c0>=self.settings.das then
-                c0=c0-self.settings.das
-                c1=c1-self.settings.das
-                if self.settings.arr==0 then
-                    dist=1e99
-                else
-                    dist=int(c1/self.settings.arr)-int(c0/self.settings.arr)
-                end
-            elseif c1>=self.settings.das then
-                dist=1
+        return 1
+    end
+
+    -- Auto shift (Magic, I think it should work)
+    if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then
+        local c0=self.moveCharge
+        local c1=c0+df
+        self.moveCharge=c1
+        local dist=0
+        if c0>=self.settings.das then
+            c0=c0-self.settings.das
+            c1=c1-self.settings.das
+            if self.settings.arr==0 then
+                dist=1e99
+            else
+                dist=int(c1/self.settings.arr)-int(c0/self.settings.arr)
             end
-            while self.hand and dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
-                self.handX=self.handX+self.moveDir
-                self:freshGhost()
+        elseif c1>=self.settings.das then
+            dist=1
+        end
+        while self.hand and dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
+            self.handX=self.handX+self.moveDir
+            self:freshGhost()
+            dist=dist-1
+        end
+    else
+        self.moveDir=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
+        self.moveCharge=0
+    end
+
+    -- Auto drop
+    if self.downCharge then
+        if self.keyState.softDrop then
+            local c0=self.downCharge
+            local c1=c0+df
+            self.downCharge=c1
+
+            local dist=self.settings.sdarr==0 and 1e99 or int(c1/self.settings.sdarr)-int(c0/self.settings.sdarr)
+            while self.hand and dist>0 and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) do
+                self.handY=self.handY-1
+                self:freshDelay('drop')
                 dist=dist-1
             end
         else
-            self.moveDir=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
-            self.moveCharge=0
-        end
-
-        -- Auto drop
-        if self.downCharge then
-            if self.keyState.softDrop then
-                local c0=self.downCharge
-                local c1=c0+df
-                self.downCharge=c1
-
-                local dist=self.settings.sdarr==0 and 1e99 or int(c1/self.settings.sdarr)-int(c0/self.settings.sdarr)
-                while self.hand and dist>0 and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) do
-                    self.handY=self.handY-1
-                    self:freshDelay('drop')
-                    dist=dist-1
-                end
-            else
-                self.downCharge=false
-            end
-        end
-    end,
-}
-updTasks[2]={-- normal
-    name='normal',
-    wait=function(self)
-        -- TODO
-    end,
-    func=function(self,df)
-        -- Wait clearing animation
-        if self.clearTimer>0 then
-            self.clearTimer=self.clearTimer-df
-            return
-        end
-
-        -- Try spawn mino if don't have one
-        if self.spawnTimer>0 then
-            self.spawnTimer=self.spawnTimer-df
-            if self.spawnTimer==0 then
-                self:popNext()
-            end
-            return
-        elseif not self.hand then
-            self:popNext()
-        end
-
-        -- Try lock/drop mino
-        if self.handY==self.ghostY then
-            self.lockTimer=self.lockTimer-df
-            if self.lockTimer==0 then
-                self:dropMino()
-            end
-            return
-        else
-            if self.dropDelay~=0 then
-                self.dropTimer=self.dropTimer-df
-                if self.dropTimer==0 then
-                    self.dropTimer=self.settings.dropDelay
-                    self.handY=self.handY-1
-                end
-            elseif self.handY~=self.ghostY then-- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
-                self:freshDelay('drop')
-            end
+            self.downCharge=false
         end
     end
-}
+end
+updateEvents[2]=function(self,df)
+    if self=='wait' then
+        -- TODO
+        return 1
+    end
+
+    -- Wait clearing animation
+    if self.clearTimer>0 then
+        self.clearTimer=self.clearTimer-df
+        return
+    end
+
+    -- Try spawn mino if don't have one
+    if self.spawnTimer>0 then
+        self.spawnTimer=self.spawnTimer-df
+        if self.spawnTimer==0 then
+            self:popNext()
+        end
+        return
+    elseif not self.hand then
+        self:popNext()
+    end
+
+    -- Try lock/drop mino
+    if self.handY==self.ghostY then
+        self.lockTimer=self.lockTimer-df
+        if self.lockTimer==0 then
+            self:minoDropped()
+        end
+        return
+    else
+        if self.dropDelay~=0 then
+            self.dropTimer=self.dropTimer-df
+            if self.dropTimer==0 then
+                self.dropTimer=self.settings.dropDelay
+                self.handY=self.handY-1
+            end
+        elseif self.handY~=self.ghostY then-- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
+            self:freshDelay('drop')
+        end
+    end
+end
 --------------------------------------------------------------
 -- Draws
-local drawEvents={}
-drawEvents[1]=function(self)-- applyPlayerTransform
+function MP:render()
+    gc.push('transform')
+
+    -- applyPlayerTransform
     gc.setCanvas({Zenitha.getBigCanvas('player'),stencil=true})
     gc.clear(1,1,1,0)
     gc.translate(self.pos.x,self.pos.y)
     gc.scale(self.pos.kx,self.pos.ky)
     gc.rotate(self.pos.angle)
-end
-drawEvents[2]=function(self)-- applyFieldTransform
+
+    -- applyFieldTransform
     gc.push('transform')
     gc.translate(-200,400)
     GC.stc_setComp('equal',1)
     GC.stc_rect(0,0,400,-840)
     gc.scale(10/self.settings.fieldW)
-end
-drawEvents[3]=function(self)-- field
+
+
+    self:triggerEvent('drawBelowField')
+
+
     -- Grid
     gc.setColor(1,1,1,.26)
     local r,l=1,6-- Line width/length
@@ -624,70 +649,70 @@ drawEvents[3]=function(self)-- field
 
     -- Cells
     local F=self.field
-    for y=1,F:getHeight() do
-        for x=1,F:getWidth() do
-            local C=F:getCell(x,y)
-            if C then
-                gc.setColor(ColorTable[C.color])
-                gc.rectangle('fill',(x-1)*40,-y*40,40,40)
+    for y=1,F:getHeight() do for x=1,F:getWidth() do
+        local C=F:getCell(x,y)
+        if C then
+            gc.setColor(ColorTable[C.color])
+            gc.rectangle('fill',(x-1)*40,-y*40,40,40)
+        end
+    end end
+
+
+    self:triggerEvent('drawBelowBlock')
+
+
+    if self.hand then
+        -- Ghost
+        gc.setColor(1,1,1,.26)
+        local CB=self.hand.matrix
+        for y=1,#CB do for x=1,#CB[1] do
+            if CB[y][x] then
+                gc.rectangle('fill',(self.handX+x-2)*40,-(self.ghostY+y-1)*40,40,40)
             end
+        end end
+
+        -- Mino
+        gc.push('transform')
+        if self.handY>self.ghostY then
+            gc.translate(0,40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6)
         end
-    end
-end
-drawEvents[4]=function(self)-- ghost
-    if not self.hand then return end
-    gc.setColor(1,1,1,.26)
-    local CB=self.hand.matrix
-    for y=1,#CB do for x=1,#CB[1] do
-        if CB[y][x] then
-            gc.rectangle('fill',(self.handX+x-2)*40,-(self.ghostY+y-1)*40,40,40)
-        end
-    end end
-end
-drawEvents[5]=function(self)-- mino
-    if not self.hand then return end
-    gc.push('transform')
-    if self.handY>self.ghostY then
-        gc.translate(0,40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6)
-    end
-    gc.setColor(1,1,1)
-    local CB=self.hand.matrix
-    for y=1,#CB do for x=1,#CB[1] do
-        if CB[y][x] then
-            gc.setColor(ColorTable[CB[y][x].color])
-            gc.rectangle('fill',(self.handX+x-2)*40,-(self.handY+y-1)*40,40,40)
-        end
-    end end
-    local RS=RotationSys[self.settings.rotSys]
-    local minoData=RS[self.hand.shape]
-    local state=minoData[self.hand.direction]
-    local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
-    if centerPos then
         gc.setColor(1,1,1)
-        GC.draw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40)
+        local CB=self.hand.matrix
+        for y=1,#CB do for x=1,#CB[1] do
+            if CB[y][x] then
+                gc.setColor(ColorTable[CB[y][x].color])
+                gc.rectangle('fill',(self.handX+x-2)*40,-(self.handY+y-1)*40,40,40)
+            end
+        end end
+        local RS=RotationSys[self.settings.rotSys]
+        local minoData=RS[self.hand.shape]
+        local state=minoData[self.hand.direction]
+        local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
+        if centerPos then
+            gc.setColor(1,1,1)
+            GC.draw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40)
+        end
+        gc.pop()
     end
-    gc.pop()
-end
-drawEvents[6]=function(self)-- heightLines
+
+
+    self:triggerEvent('drawBelowMarks')
+
+
+    -- Height lines
     local width=self.settings.fieldW*40
+    gc.setColor(0,.4,1,.8)gc.rectangle('fill',0,-self.settings.spawnH*40-2,width,4)-- Spawning height
+    gc.setColor(1,0,0,.6)gc.rectangle('fill',0,-self.settings.deathH*40-2,width,4)-- Death height
+    gc.setColor(0,0,0,.5)gc.rectangle('fill',0,-1260*40-40,width,40)-- Void height
 
-    -- Spawning height
-    gc.setColor(0,.4,1,.8)
-    gc.rectangle('fill',0,-self.settings.spawnH*40-2,width,4)
 
-    -- Death height
-    gc.setColor(1,0,0,.6)
-    gc.rectangle('fill',0,-self.settings.deathH*40-2,width,4)
+    self:triggerEvent('drawInField')
 
-    -- Void height
-    gc.setColor(0,0,0,.5)
-    gc.rectangle('fill',0,-1260*40-40,width,40)
-end
-drawEvents[7]=function(self)-- popFieldTransform
+
+    -- popFieldTransform
     GC.stc_stop()
     gc.pop()
-end
-drawEvents[8]=function(self)-- board
+
     -- Field border
     gc.setLineWidth(2)
     gc.setColor(1,1,1)
@@ -709,8 +734,8 @@ drawEvents[8]=function(self)-- board
     end
     gc.setColor(color)
     gc.rectangle('fill',-199,403,398*math.min(value,1),8)
-end
-drawEvents[9]=function(self)-- next -- Almost same as drawEvents.hold, don't forget to change both
+
+    -- Next (Almost same as drawing hold(s), don't forget to change both)
     gc.push('transform')
     gc.translate(300,-400+50)
     gc.setColor(1,1,1)
@@ -728,8 +753,8 @@ drawEvents[9]=function(self)-- next -- Almost same as drawEvents.hold, don't for
         gc.translate(0,100)
     end
     gc.pop()
-end
-drawEvents[10]=function(self)-- hold -- Almost same as drawEvents.next, don't forget to change both
+
+    -- Hold (Almost same as drawing next(s), don't forget to change both)
     gc.push('transform')
     gc.translate(-300,-400+50)
     gc.setColor(1,1,1)
@@ -747,8 +772,17 @@ drawEvents[10]=function(self)-- hold -- Almost same as drawEvents.next, don't fo
         gc.translate(0,100)
     end
     gc.pop()
-end
-drawEvents[11]=function(self)-- startCounter
+
+    -- Info
+    gc.setColor(COLOR.dL)
+    FONT.set(30)
+    gc.printf(("%.3f"):format(self.time/1000),-210-260,380,260,'right')
+
+
+    self:triggerEvent('drawOnPlayer')
+
+
+    -- Starting counter
     if self.timer<self.settings.readyDelay then
         gc.push('transform')
         local r,g,b
@@ -782,13 +816,7 @@ drawEvents[11]=function(self)-- startCounter
         GC.mStr(num,0,-70)
         gc.pop()
     end
-end
-drawEvents[12]=function(self)-- info
-    gc.setColor(COLOR.dL)
-    FONT.set(30)
-    gc.printf(("%.3f"):format(self.time/1000),-210-260,380,260,'right')
-end
-drawEvents[13]=function()-- popPlayerTransform
+
     -- Upside fade out
     gc.setBlendMode('multiply','premultiplied')
     gc.setColorMask(false,false,false,true)
@@ -799,6 +827,8 @@ drawEvents[13]=function()-- popPlayerTransform
     gc.setBlendMode('alpha')
     gc.setColorMask()
     gc.setCanvas()
+
+    gc.pop()
 end
 --------------------------------------------------------------
 -- Useful methods
@@ -835,9 +865,9 @@ local baseEnv={-- Generate from template in future
     dropDelay=1000,
     lockDelay=1000,
     spawnDelay=0,
-    clearDelay=126,
+    clearDelay=0,
 
-    das=70,
+    das=77,
     arr=0,
     sdarr=0,
 
@@ -859,74 +889,119 @@ local seqGenerators={
         end
     end,
 }
+local modeDataMeta={
+    __index=function(self,k)rawset(self,k,0)return 0 end,
+    __newindex=function(self,k,v)rawset(self,k,v)end,
+    __metatable=true,
+}
 function MP.new(data)
     assert(type(data)=='table',"function PLAYER.new(data): data must be table")
-    local p=require'assets.player.basePlayer'.new(data)
-    setmetatable(p,{__index=MP})
+    local P=setmetatable({},{__index=MP})
 
-    p.settings=TABLE.copy(baseEnv)
+    assert(type(data.id)=='number',"function PLAYER.new(data): need data.id")
+    P.id=data.id
 
-    p.pos={
+    if not mode then mode=NONE end
+
+    P.settings=TABLE.copy(baseEnv)
+
+    P.pos={
         x=0,y=0,
         kx=1,ky=1,
         angle=0,
     }
 
-    p.curTime=0-- Real time, [float] s
-    p.timer=0-- Inside timer for player, [int] ms
-    p.time=0-- Game time of player, [int] ms
-    p.timing=false-- Are we timing?
+    P.curTime=0-- Real time, [float] s
+    P.timer=0-- Inside timer for player, [int] ms
+    P.time=0-- Game time of player, [int] ms
+    P.timing=false-- Are we timing?
 
-    p.field=require'assets.player.minoField'.new(p.settings.fieldW,p.settings.spawnH)
-    p.fieldBeneath=0
+    P.field=require'assets.player.minoField'.new(P.settings.fieldW,P.settings.spawnH)
+    P.fieldBeneath=0
 
-    p.garbageBuffer={}
+    P.minoCount=0
 
-    p.holdQueue={}
-    p.holdChance=0
+    P.garbageBuffer={}
 
-    p.nextQueue={}
-    p.genNext=coroutine.wrap(seqGenerators[p.settings.seqType])
+    P.nextQueue={}
+    P.genNext=coroutine.wrap(seqGenerators[P.settings.seqType])
+    P:genNext()
 
-    p.minoCount=0
+    P.holdQueue={}
+    P.holdChance=0
 
-    p.energy=0
-    p.energyShow=0
+    P.energy=0
+    P.energyShow=0
 
-    p.dropTimer=0
-    p.lockTimer=0
-    p.spawnTimer=p.settings.readyDelay
-    p.clearTimer=0
+    P.dropTimer=0
+    P.lockTimer=0
+    P.spawnTimer=P.settings.readyDelay
+    P.clearTimer=0
 
-    p.hand=false
-    p.handX=false
-    p.handY=false
-    p.ghostY=false
-    p.minY=false
+    P.hand=false
+    P.handX=false
+    P.handY=false
+    P.ghostY=false
+    P.minY=false
 
-    p.moveDir=false
-    p.moveCharge=0
-    p.downCharge=false
+    P.moveDir=false
+    P.moveCharge=0
+    P.downCharge=false
 
-    p.clearHistory={}
-    p.actionHistory={}
+    P.dropHistory={}
+    P.actionHistory={}
+    P.clearHistory={}
+
+    P.modeData=setmetatable({},modeDataMeta)
+    P.event={
+        press={_defaultPressEvent},
+        release={_defaultPeleaseEvent},
+        update=TABLE.shift(updateEvents,0),
+
+        drawBelowField={},
+        drawBelowBlock={},
+        drawBelowMarks={},
+        drawInField={},
+        drawOnPlayer={},
+
+        playerInit={},
+        gameStart={},
+        afterSpawn={},
+        beforeHold={},
+        afterHold={},
+        afterDrop={},
+        afterLock={},
+        afterClear={},
+    }
+
+    -- Load events from mode
+    for k,L in next,P.event do
+        local E=data.mode.settings.event[k]
+        if type(E)=='table' then
+            for _,E in next,data.mode.settings.event[k] do
+                ins(L,E)
+            end
+        elseif type(E)=='function' then
+            ins(L,E)
+        end
+    end
 
     do-- Generate available actions
-        p.actions={}
-        local pack=p.settings.actionPack
+        P.actions={}
+        local pack=P.settings.actionPack
         if type(pack)=='string' then
             pack=actionPacks[pack]
             assert(pack,STRING.repD("Invalid actionPack '$1'",pack))
             for i=1,#pack do
-                p.actions[pack[i]]=_getActionObj(pack[i])
+                P.actions[pack[i]]=_getActionObj(pack[i])
             end
         elseif type(pack)=='table' then
             for k,v in next,pack do
                 if type(k)=='number' then
-                    p.actions[v]=_getActionObj(v)
+                    P.actions[v]=_getActionObj(v)
                 elseif type(k)=='string' then
                     assert(actions[k],STRING.repD("function PLAYER.new(data): no action called '$1'",k))
-                    p.actions[k]=_getActionObj(v)
+                    P.actions[k]=_getActionObj(v)
                 else
                     error(STRING.repD("function PLAYER.new(data): wrong actionPack table format (type $1)",type(k)))
                 end
@@ -935,22 +1010,15 @@ function MP.new(data)
             error("function PLAYER.new(data): actionPack must be string or table")
         end
 
-        p.keyState={}
-        for k in next,p.actions do
-            p.keyState[k]=false
+        P.keyState={}
+        for k in next,P.actions do
+            P.keyState[k]=false
         end
     end
 
-    p:genNext()
+    P:triggerEvent('playerInit')
 
-    ins(p.pressEventList,_defaultPressEvent)
-    ins(p.releaseEventList,_defaultPeleaseEvent)
-    TABLE.connect(p.drawEventList,drawEvents)
-
-    p.task={}
-    TABLE.connect(p.task,updTasks)
-
-    return p
+    return P
 end
 --------------------------------------------------------------
 
