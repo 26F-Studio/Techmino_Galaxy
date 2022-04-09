@@ -9,45 +9,35 @@ local MP={}
 
 --------------------------------------------------------------
 -- Actions
-local function _defaultPressEvent(self,act)
-    if not self.actions[act] or self.keyState[act] then return end
-    self.keyState[act]=true
-    ins(self.actionHistory,{0,self.timer,act})
-    self.actions[act].press(self)
-end
-local function _defaultPeleaseEvent(self,act)
-    if not self.actions[act] or not self.keyState[act] then return end
-    self.keyState[act]=false
-    ins(self.actionHistory,{1,self.timer,act})
-    self.actions[act].release(self)
-end
-
 local actions={}
 function actions.moveLeft(self)
-    if not self.hand then return end
     self.moveDir=-1
     self.moveCharge=0
+    if not self.hand then return end
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
         self.handX=self.handX-1
         self:freshGhost()
     end
 end
 function actions.moveRight(self)
-    if not self.hand then return end
     self.moveDir=1
     self.moveCharge=0
+    if not self.hand then return end
     if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
         self.handX=self.handX+1
         self:freshGhost()
     end
 end
 function actions.rotateCW(self)
+    if not self.hand then return end
     self:rotate('R')
 end
 function actions.rotateCCW(self)
+    if not self.hand then return end
     self:rotate('L')
 end
 function actions.rotate180(self)
+    if not self.hand then return end
     self:rotate('F')
 end
 function actions.softDrop(self)
@@ -59,7 +49,6 @@ function actions.softDrop(self)
     end
 end
 function actions.sonicDrop(self)
-    self.downCharge=false
     if not self.hand then return end
     if self.handY>self.ghostY then
         self.handY=self.ghostY
@@ -72,7 +61,6 @@ function actions.hardDrop(self)
     self:minoDropped()
 end
 function actions.holdPiece(self)
-    self:triggerEvent('beforeHold')
     if not self.hand then return end
     if self.holdChance<=0 then return end
     if self.settings.holdMode=='hold' then
@@ -309,7 +297,6 @@ function MP:ifoverlap(CB,cx,cy)
     return false
 end
 function MP:rotate(dir)
-    if not self.hand then return end
     local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
     if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F") end
 
@@ -468,141 +455,127 @@ end
 --------------------------------------------------------------
 -- Press & Release
 function MP:press(act)
-    self:triggerEvent('press',act)
+    self:triggerEvent('beforePress',act)
+
+    if not self.actions[act] or self.keyState[act] then return end
+    self.keyState[act]=true
+    ins(self.actionHistory,{0,self.time,act})
+    self.actions[act].press(self)
+
+    self:triggerEvent('afterPress',act)
 end
 function MP:release(act)
-    self:triggerEvent('release',act)
+    self:triggerEvent('beforeRelease',act)
+    if not self.actions[act] or not self.keyState[act] then return end
+    self.keyState[act]=false
+    ins(self.actionHistory,{1,self.time,act})
+    self.actions[act].release(self)
+    self:triggerEvent('afterRelease',act)
 end
 --------------------------------------------------------------
 -- Updates
-local function step(self,d)
-    if self.timing then self.time=self.time+d end
-    if self.timer<self.settings.readyDelay then
-        self.timer=self.timer+d
-        if self.timer==self.settings.readyDelay then
-            self:triggerEvent('gameStart')
-            self.timing=true
-        end
-    else
-        self.timer=self.timer+d
-    end
-    self:triggerEvent('update',d)
-end
 function MP:update(dt)
-    local df=int((self.curTime+dt)*1000)-int(self.curTime*1000)
-    self.curTime=self.curTime+dt
+    local df=int((self.realTime+dt)*1000)-int(self.realTime*1000)
+    self.realTime=self.realTime+dt
+    local SET=self.settings
 
-    local L=self.event.update
-    while df>0 do
-        local closestTime=df
-        for i=1,#L do
-            local wait=L[i]('wait')
-            if wait==1 then closestTime=1; break end
-            closestTime=min(wait(self),closestTime)
-            if closestTime<=0 then error(STRING.repD("Invalid counter in task '$1'",i)) end
-        end
-        if closestTime>1 then
-            step(self,closestTime-1)
-            step(self,1)
-            df=df-closestTime
-        else
-            step(self,1)
-            df=df-1
-        end
-    end
-end
-local updateEvents={}
-updateEvents[1]=function(self,df)-- Control
-    if self=='wait' then
-        -- TODO
-        return 1
-    end
+    for _=1,df do
+        -- Step main time
+        if self.timing then self.gameTime=self.gameTime+1--[[df]] end
 
-    -- Auto shift (Magic, I think it should work)
-    if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then
-        local c0=self.moveCharge
-        local c1=c0+df
-        self.moveCharge=c1
-        local dist=0
-        if c0>=self.settings.das then
-            c0=c0-self.settings.das
-            c1=c1-self.settings.das
-            if self.settings.arr==0 then
-                dist=1e99
-            else
-                dist=int(c1/self.settings.arr)-int(c0/self.settings.arr)
+        -- Starting counter
+        if self.time<SET.readyDelay then
+            self.time=self.time+1--[[df]]
+            if self.time==SET.readyDelay then
+                self:triggerEvent('gameStart')
+                self.timing=true
             end
-        elseif c1>=self.settings.das then
-            dist=1
+        else
+            self.time=self.time+1--[[df]]
         end
-        while self.hand and dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
-            self.handX=self.handX+self.moveDir
-            self:freshGhost()
-            dist=dist-1
-        end
-    else
-        self.moveDir=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
-        self.moveCharge=0
-    end
 
-    -- Auto drop
-    if self.downCharge then
-        if self.keyState.softDrop then
-            local c0=self.downCharge
-            local c1=c0+df
-            self.downCharge=c1
-
-            local dist=self.settings.sdarr==0 and 1e99 or int(c1/self.settings.sdarr)-int(c0/self.settings.sdarr)
-            while self.hand and dist>0 and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) do
-                self.handY=self.handY-1
-                self:freshDelay('drop')
+        -- Auto shift
+        if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then-- Magic IF-statemant. I don't know why it works perfectly
+            local c0=self.moveCharge
+            local c1=c0+1--[[df]]
+            self.moveCharge=c1
+            local dist=0
+            if c0>=SET.das then
+                c0=c0-SET.das
+                c1=c1-SET.das
+                if SET.arr==0 then
+                    dist=1e99
+                else
+                    dist=int(c1/SET.arr)-int(c0/SET.arr)
+                end
+            elseif c1>=SET.das then
+                dist=1
+            end
+            while self.hand and dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
+                self.handX=self.handX+self.moveDir
+                self:freshGhost()
                 dist=dist-1
             end
         else
-            self.downCharge=false
+            self.moveDir=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
+            self.moveCharge=0
         end
-    end
-end
-updateEvents[2]=function(self,df)
-    if self=='wait' then
-        -- TODO
-        return 1
-    end
 
-    -- Wait clearing animation
-    if self.clearTimer>0 then
-        self.clearTimer=self.clearTimer-df
-        return
-    end
+        -- Auto drop
+        if self.downCharge then
+            if self.keyState.softDrop then
+                local c0=self.downCharge
+                local c1=c0+1--[[df]]
+                self.downCharge=c1
 
-    -- Try spawn mino if don't have one
-    if self.spawnTimer>0 then
-        self.spawnTimer=self.spawnTimer-df
-        if self.spawnTimer==0 then
-            self:popNext()
-        end
-        return
-    elseif not self.hand then
-        self:popNext()
-    end
-
-    -- Try lock/drop mino
-    if self.handY==self.ghostY then
-        self.lockTimer=self.lockTimer-df
-        if self.lockTimer==0 then
-            self:minoDropped()
-        end
-        return
-    else
-        if self.dropDelay~=0 then
-            self.dropTimer=self.dropTimer-df
-            if self.dropTimer==0 then
-                self.dropTimer=self.settings.dropDelay
-                self.handY=self.handY-1
+                local dist=SET.sdarr==0 and 1e99 or int(c1/SET.sdarr)-int(c0/SET.sdarr)
+                while self.hand and dist>0 and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) do
+                    self.handY=self.handY-1
+                    self:freshDelay('drop')
+                    dist=dist-1
+                end
+            else
+                self.downCharge=false
             end
-        elseif self.handY~=self.ghostY then-- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
-            self:freshDelay('drop')
         end
+
+        repeat-- Update hand
+            -- Wait clearing animation
+            if self.clearTimer>0 then
+                self.clearTimer=self.clearTimer-1--[[df]]
+                break
+            end
+
+            -- Try spawn mino if don't have one
+            if self.spawnTimer>0 then
+                self.spawnTimer=self.spawnTimer-1--[[df]]
+                if self.spawnTimer==0 then
+                    self:popNext()
+                end
+                break
+            elseif not self.hand then
+                self:popNext()
+            end
+
+            -- Try lock/drop mino
+            if self.handY==self.ghostY then
+                self.lockTimer=self.lockTimer-1--[[df]]
+                if self.lockTimer==0 then
+                    self:minoDropped()
+                end
+                break
+            else
+                if self.dropDelay~=0 then
+                    self.dropTimer=self.dropTimer-1--[[df]]
+                    if self.dropTimer==0 then
+                        self.dropTimer=SET.dropDelay
+                        self.handY=self.handY-1
+                    end
+                elseif self.handY~=self.ghostY then-- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
+                    self:freshDelay('drop')
+                end
+            end
+        until true
     end
 end
 --------------------------------------------------------------
@@ -776,18 +749,18 @@ function MP:render()
     -- Info
     gc.setColor(COLOR.dL)
     FONT.set(30)
-    gc.printf(("%.3f"):format(self.time/1000),-210-260,380,260,'right')
+    gc.printf(("%.3f"):format(self.gameTime/1000),-210-260,380,260,'right')
 
 
     self:triggerEvent('drawOnPlayer')
 
 
     -- Starting counter
-    if self.timer<self.settings.readyDelay then
+    if self.time<self.settings.readyDelay then
         gc.push('transform')
         local r,g,b
-        local num=int((self.settings.readyDelay-self.timer)/1000)+1
-        local d=1-self.timer%1000/1000-- d from 999 to 0
+        local num=int((self.settings.readyDelay-self.time)/1000)+1
+        local d=1-self.time%1000/1000-- d from 999 to 0
         if num==3 then
             r,g,b=.7,.8,.98
             if d>.75 then gc.rotate((d-.75)^3*40) end
@@ -911,10 +884,10 @@ function MP.new(data)
         angle=0,
     }
 
-    P.curTime=0-- Real time, [float] s
-    P.timer=0-- Inside timer for player, [int] ms
-    P.time=0-- Game time of player, [int] ms
-    P.timing=false-- Are we timing?
+    P.realTime=0-- Real time, [float] s
+    P.time=0-- Inside timer for player, [int] ms
+    P.gameTime=0-- Game time of player, [int] ms
+    P.timing=false-- Is gameTime running?
 
     P.field=require'assets.player.minoField'.new(P.settings.fieldW,P.settings.spawnH)
     P.fieldBeneath=0
@@ -954,24 +927,26 @@ function MP.new(data)
 
     P.modeData=setmetatable({},modeDataMeta)
     P.event={
-        press={_defaultPressEvent},
-        release={_defaultPeleaseEvent},
-        update=TABLE.shift(updateEvents,0),
+        -- Press & Release
+        beforePress={},
+        afterPress={},
+        beforeRelease={},
+        afterRelease={},
 
+        -- Game events
+        playerInit={},
+        gameStart={},
+        afterSpawn={},
+        afterDrop={},
+        afterLock={},
+        afterClear={},
+
+        -- Graphics
         drawBelowField={},
         drawBelowBlock={},
         drawBelowMarks={},
         drawInField={},
         drawOnPlayer={},
-
-        playerInit={},
-        gameStart={},
-        afterSpawn={},
-        beforeHold={},
-        afterHold={},
-        afterDrop={},
-        afterLock={},
-        afterClear={},
     }
 
     -- Load events from mode
