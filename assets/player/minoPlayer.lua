@@ -1019,19 +1019,30 @@ function MP.new(data)
         drawOnPlayer={},
     }
 
-    -- Load events from mode
-    for k,L in next,P.event do
-        local E=data.mode.settings.event[k]
-        if type(E)=='table' then
-            for _,E in next,data.mode.settings.event[k] do
-                ins(L,E)
+    -- Load data & events from mode settings
+    for k,v in next,data.mode.settings do
+        if k~='event' then
+            if type(v)=='table' then
+                P.settings[k]=TABLE.copy(v)
+            elseif v~=nil then
+                P.settings[k]=v
             end
-        elseif type(E)=='function' then
-            ins(L,E)
+        else
+            for k,L in next,P.event do
+                local E=v[k]
+                if type(E)=='table' then
+                    for _,E in next,v[k] do
+                        ins(L,E)
+                    end
+                elseif type(E)=='function' then
+                    ins(L,E)
+                end
+            end
         end
     end
 
-    do-- Generate available actions
+    -- Generate available actions
+    do
         P.actions={}
         local pack=P.settings.actionPack
         if type(pack)=='string' then

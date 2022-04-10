@@ -2,8 +2,8 @@ local gc=love.graphics
 
 return {
     settings={
-        dropDelay=60,
-        lockDelay=60,
+        dropDelay=1000,
+        lockDelay=1000,
         event={
             afterClear=function(P)
                 P.modeData.line=P.modeData.line+P.clearHistory[#P.clearHistory].line
