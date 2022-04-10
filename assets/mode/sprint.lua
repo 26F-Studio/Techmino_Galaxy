@@ -20,9 +20,15 @@ return {
             end,
             gameOver=function(P)
                 -- TODO
-            end
+            end,
         },
     },
+    checkFinish=function(P)
+        -- TODO
+    end,
+    result=function(P)
+        -- TODO
+    end,
     scorePage=function(data)
         -- TODO
     end,

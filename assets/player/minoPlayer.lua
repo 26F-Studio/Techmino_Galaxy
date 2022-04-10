@@ -10,97 +10,97 @@ local MP={}
 --------------------------------------------------------------
 -- Actions
 local actions={}
-function actions.moveLeft(self)
-    self.moveDir=-1
-    self.moveCharge=0
-    if not self.hand then return end
-    if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
-        self.handX=self.handX-1
-        self:freshGhost()
+function actions.moveLeft(P)
+    P.moveDir=-1
+    P.moveCharge=0
+    if not P.hand then return end
+    if not P:ifoverlap(P.hand.matrix,P.handX-1,P.handY) then
+        P.handX=P.handX-1
+        P:freshGhost()
     end
 end
-function actions.moveRight(self)
-    self.moveDir=1
-    self.moveCharge=0
-    if not self.hand then return end
-    if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
-        self.handX=self.handX+1
-        self:freshGhost()
+function actions.moveRight(P)
+    P.moveDir=1
+    P.moveCharge=0
+    if not P.hand then return end
+    if not P:ifoverlap(P.hand.matrix,P.handX+1,P.handY) then
+        P.handX=P.handX+1
+        P:freshGhost()
     end
 end
 actions.rotateCW={
-    press=function(self)
-        if self.hand then
-            self:rotate('R')
+    press=function(P)
+        if P.hand then
+            P:rotate('R')
         else
-            self.keyBuffer.rotate='R'
+            P.keyBuffer.rotate='R'
         end
     end,
-    release=function(self)
-        if self.keyBuffer.rotate=='R' then self.keyBuffer.rotate=false end
+    release=function(P)
+        if P.keyBuffer.rotate=='R' then P.keyBuffer.rotate=false end
     end
 }
 actions.rotateCCW={
-    press=function(self)
-        if self.hand then
-            self:rotate('L')
+    press=function(P)
+        if P.hand then
+            P:rotate('L')
         else
-            self.keyBuffer.rotate='L'
+            P.keyBuffer.rotate='L'
         end
     end,
-    release=function(self)
-        if self.keyBuffer.rotate=='L' then self.keyBuffer.rotate=false end
+    release=function(P)
+        if P.keyBuffer.rotate=='L' then P.keyBuffer.rotate=false end
     end
 }
 actions.rotate180={
-    press=function(self)
-        if self.hand then
-            self:rotate('F')
+    press=function(P)
+        if P.hand then
+            P:rotate('F')
         else
-            self.keyBuffer.rotate='F'
+            P.keyBuffer.rotate='F'
         end
     end,
-    release=function(self)
-        if self.keyBuffer.rotate=='F' then self.keyBuffer.rotate=false end
+    release=function(P)
+        if P.keyBuffer.rotate=='F' then P.keyBuffer.rotate=false end
     end
 }
-function actions.softDrop(self)
-    self.downCharge=0
-    if not self.hand then return end
-    if self.handY>self.ghostY then
-        self.handY=self.handY-1
-        self:freshDelay('drop')
+function actions.softDrop(P)
+    P.downCharge=0
+    if not P.hand then return end
+    if P.handY>P.ghostY then
+        P.handY=P.handY-1
+        P:freshDelay('drop')
     end
 end
-function actions.sonicDrop(self)
-    if not self.hand then return end
-    if self.handY>self.ghostY then
-        self.handY=self.ghostY
-        self:freshDelay('drop')
+function actions.sonicDrop(P)
+    if not P.hand then return end
+    if P.handY>P.ghostY then
+        P.handY=P.ghostY
+        P:freshDelay('drop')
     end
 end
 actions.hardDrop={
-    press=function(self)
-        if self.hand then
-            self:minoDropped()
+    press=function(P)
+        if P.hand then
+            P:minoDropped()
         else
-            self.keyBuffer.hardDrop=true
+            P.keyBuffer.hardDrop=true
         end
     end,
-    release=function(self)
-        self.keyBuffer.hardDrop=false
+    release=function(P)
+        P.keyBuffer.hardDrop=false
     end
 }
 actions.holdPiece={
-    press=function(self)
-        if self.hand then
-            self:hold()
+    press=function(P)
+        if P.hand then
+            P:hold()
         else
-            self.keyBuffer.hold=true
+            P.keyBuffer.hold=true
         end
     end,
-    release=function(self)
-        self.keyBuffer.hold=false
+    release=function(P)
+        P.keyBuffer.hold=false
     end
 }
 
@@ -114,37 +114,37 @@ actions.target2=NULL
 actions.target3=NULL
 actions.target4=NULL
 
-function actions.sonicLeft(self)
-    while self.hand and not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) do
-        self.handX=self.handX-1
-        self:freshGhost()
+function actions.sonicLeft(P)
+    while P.hand and not P:ifoverlap(P.hand.matrix,P.handX-1,P.handY) do
+        P.handX=P.handX-1
+        P:freshGhost()
     end
 end
-function actions.sonicRight(self)
-    while self.hand and not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) do
-        self.handX=self.handX+1
-        self:freshGhost()
+function actions.sonicRight(P)
+    while P.hand and not P:ifoverlap(P.hand.matrix,P.handX+1,P.handY) do
+        P.handX=P.handX+1
+        P:freshGhost()
     end
 end
-function actions.dropLeft(self)
-    actions.sonicLeft(self)
-    actions.hardDrop(self)
+function actions.dropLeft(P)
+    actions.sonicLeft(P)
+    actions.hardDrop(P)
 end
-function actions.dropRight(self)
-    actions.sonicRight(self)
-    actions.hardDrop(self)
+function actions.dropRight(P)
+    actions.sonicRight(P)
+    actions.hardDrop(P)
 end
-function actions.zangiLeft(self)
-    actions.sonicLeft(self)
-    actions.sonicDrop(self)
-    actions.sonicRight(self)
-    actions.hardDrop(self)
+function actions.zangiLeft(P)
+    actions.sonicLeft(P)
+    actions.sonicDrop(P)
+    actions.sonicRight(P)
+    actions.hardDrop(P)
 end
-function actions.zangiRight(self)
-    actions.sonicRight(self)
-    actions.sonicDrop(self)
-    actions.sonicLeft(self)
-    actions.hardDrop(self)
+function actions.zangiRight(P)
+    actions.sonicRight(P)
+    actions.sonicDrop(P)
+    actions.sonicLeft(P)
+    actions.hardDrop(P)
 end
 
 local function _getActionObj(a)
@@ -301,7 +301,6 @@ function MP:popNext()
 end
 function MP:getMino(shapeID)
     local shape=TABLE.shift(Minos[shapeID].shape)
-    local c=math.random(64)
     for y=1,#shape do for x=1,#shape[1] do
         if shape[y][x] then
             shape[y][x]={color=defaultMinoColor[shapeID]}-- Should be player's color setting
@@ -662,20 +661,20 @@ function MP:render()
 
     -- Grid
     gc.setColor(1,1,1,.26)
-    local r,l=1,6-- Line width/length
+    local rad,len=1,6-- Line width/length
     local gridHeight=min(max(self.settings.spawnH,self.settings.deathH),2*self.settings.fieldW)
     for x=1,self.settings.fieldW do
         x=(x-1)*40
         for y=1,gridHeight do
             y=-y*40
-            gc.rectangle('fill',x,y,l,r)
-            gc.rectangle('fill',x,y+r,r,l-r)
-            gc.rectangle('fill',x+40,y,-l,r)
-            gc.rectangle('fill',x+40,y+r,-r,l-r)
-            gc.rectangle('fill',x,y+40,l,-r)
-            gc.rectangle('fill',x,y+40-r,r,r-l)
-            gc.rectangle('fill',x+40,y+40,-l,-r)
-            gc.rectangle('fill',x+40,y+40-r,-r,r-l)
+            gc.rectangle('fill',x,y,len,rad)
+            gc.rectangle('fill',x,y+rad,rad,len-rad)
+            gc.rectangle('fill',x+40,y,-len,rad)
+            gc.rectangle('fill',x+40,y+rad,-rad,len-rad)
+            gc.rectangle('fill',x,y+40,len,-rad)
+            gc.rectangle('fill',x,y+40-rad,rad,rad-len)
+            gc.rectangle('fill',x+40,y+40,-len,-rad)
+            gc.rectangle('fill',x+40,y+40-rad,-rad,rad-len)
         end
     end
 
@@ -694,9 +693,10 @@ function MP:render()
 
 
     if self.hand then
+        local CB=self.hand.matrix
+
         -- Ghost
         gc.setColor(1,1,1,.26)
-        local CB=self.hand.matrix
         for y=1,#CB do for x=1,#CB[1] do
             if CB[y][x] then
                 gc.rectangle('fill',(self.handX+x-2)*40,-(self.ghostY+y-1)*40,40,40)
@@ -709,7 +709,6 @@ function MP:render()
             gc.translate(0,40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6)
         end
         gc.setColor(1,1,1)
-        local CB=self.hand.matrix
         for y=1,#CB do for x=1,#CB[1] do
             if CB[y][x] then
                 gc.setColor(ColorTable[CB[y][x].color])
@@ -927,10 +926,10 @@ local modeDataMeta={
     __metatable=true,
 }
 function MP.new(data)
-    assert(type(data)=='table',"function PLAYER.new(data): data must be table")
+    assert(type(data)=='table',"newMinoPlayer: data must be table")
     local P=setmetatable({},{__index=MP})
 
-    assert(type(data.id)=='number',"function PLAYER.new(data): need data.id")
+    assert(type(data.id)=='number',"newMinoPlayer: wrong data.id")
     P.id=data.id
 
     if not mode then mode=NONE end
@@ -1028,11 +1027,11 @@ function MP.new(data)
                 P.settings[k]=v
             end
         else
-            for k,L in next,P.event do
-                local E=v[k]
+            for name,L in next,P.event do
+                local E=v[name]
                 if type(E)=='table' then
-                    for _,E in next,v[k] do
-                        ins(L,E)
+                    for _,func in next,v[name] do
+                        ins(L,func)
                     end
                 elseif type(E)=='function' then
                     ins(L,E)
@@ -1056,14 +1055,14 @@ function MP.new(data)
                 if type(k)=='number' then
                     P.actions[v]=_getActionObj(v)
                 elseif type(k)=='string' then
-                    assert(actions[k],STRING.repD("function PLAYER.new(data): no action called '$1'",k))
+                    assert(actions[k],STRING.repD("newMinoPlayer: no action called '$1'",k))
                     P.actions[k]=_getActionObj(v)
                 else
-                    error(STRING.repD("function PLAYER.new(data): wrong actionPack table format (type $1)",type(k)))
+                    error(STRING.repD("newMinoPlayer: wrong actionPack table format (type $1)",type(k)))
                 end
             end
         else
-            error("function PLAYER.new(data): actionPack must be string or table")
+            error("newMinoPlayer: actionPack must be string or table")
         end
 
         P.keyState={}
