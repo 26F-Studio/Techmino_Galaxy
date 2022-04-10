@@ -10,24 +10,34 @@ local MP={}
 --------------------------------------------------------------
 -- Actions
 local actions={}
-function actions.moveLeft(P)
-    P.moveDir=-1
-    P.moveCharge=0
-    if not P.hand then return end
-    if not P:ifoverlap(P.hand.matrix,P.handX-1,P.handY) then
-        P.handX=P.handX-1
-        P:freshGhost()
+actions.moveLeft={
+    press=function(P)
+        P.moveDir=-1
+        P.moveCharge=0
+        if P.hand then
+            P:moveLeft()
+        else
+            P.keyBuffer.move='L'
+        end
+    end,
+    release=function(P)
+        if P.keyBuffer.move=='L' then P.keyBuffer.move=false end
     end
-end
-function actions.moveRight(P)
-    P.moveDir=1
-    P.moveCharge=0
-    if not P.hand then return end
-    if not P:ifoverlap(P.hand.matrix,P.handX+1,P.handY) then
-        P.handX=P.handX+1
-        P:freshGhost()
+}
+actions.moveRight={
+    press=function(P)
+        P.moveDir=1
+        P.moveCharge=0
+        if P.hand then
+            P:moveRight()
+        else
+            P.keyBuffer.move='R'
+        end
+    end,
+    release=function(P)
+        if P.keyBuffer.move=='R' then P.keyBuffer.move=false end
     end
-end
+}
 actions.rotateCW={
     press=function(P)
         if P.hand then
@@ -210,15 +220,39 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
     end
     return mino
 end
-function MP:restoreHandPos()-- Move hand piece to the normal spawn position
+function MP:resetPos()-- Move hand piece to the normal spawn position
     self.handX=int(self.field:getWidth()/2-#self.hand.matrix[1]/2+1)
     self.handY=self.settings.spawnH+1
-    if self:ifoverlap(self.hand.matrix,self.handX,self.handY) then
-        self:lock()
-        self:gameover('WA')
-        return
-    end
     self.minY=self.handY
+    if self.keyBuffer.move then-- IMS
+        if self.keyBuffer.move=='L' then
+            self:moveLeft()
+        elseif self.keyBuffer.move=='R' then
+            self:moveRight()
+        end
+        self.keyBuffer.move=false
+    end
+    if self.keyBuffer.rotate then-- IRS
+        local r=self.keyBuffer.rotate
+        self.keyBuffer.rotate=false
+        self:rotate(r)
+    end
+end
+function MP:checkHand()-- Reset hand position and check death
+    if self:ifoverlap(self.hand.matrix,self.handX,self.handY) then
+        -- Struggle IMS
+        if self.moveDir==-1 then
+            self:moveLeft()
+        elseif self.moveDir==1 then
+            self:moveRight()
+        end
+
+        if self:ifoverlap(self.hand.matrix,self.handX,self.handY) then
+            self:lock()
+            self:gameover('WA')
+            return
+        end
+    end
     self:freshGhost()
     self:freshDelay('spawn')
 end
@@ -274,7 +308,6 @@ end
 function MP:popNext()
     if self.nextQueue[1] then-- Most cases there is pieces in next queue
         self.hand=rem(self.nextQueue,1)
-        self:restoreHandPos()
         self.genNext()
         self.holdChance=min(self.holdChance+1,self.settings.holdCount)
     elseif self.holdQueue[1] then-- If no nexts, force using hold
@@ -284,19 +317,21 @@ function MP:popNext()
         self:gameover('ILE')
         return
     end
-    if self.keyBuffer.hold then
+
+    if self.keyBuffer.hold then-- IHS
         self.keyBuffer.hold=false
         self:hold()
+    else
+        self:resetPos()
     end
-    if self.keyBuffer.rotate then
-        local r=self.keyBuffer.rotate
-        self.keyBuffer.rotate=false
-        self:rotate(r)
-    end
-    if self.keyBuffer.hardDrop then
+
+    self:checkHand()
+
+    if self.keyBuffer.hardDrop then-- IHdS
         self.keyBuffer.hardDrop=false
         self:minoDropped()
     end
+
     self:triggerEvent('afterSpawn')
 end
 function MP:getMino(shapeID)
@@ -336,6 +371,18 @@ function MP:ifoverlap(CB,cx,cy)
 
     -- No collision
     return false
+end
+function MP:moveLeft()
+    if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
+        self.handX=self.handX-1
+        self:freshGhost()
+    end
+end
+function MP:moveRight()
+    if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
+        self.handX=self.handX+1
+        self:freshGhost()
+    end
 end
 function MP:rotate(dir)
     if not self.hand then return end
@@ -402,7 +449,8 @@ function MP:hold_hold()
     end
     if self.holdQueue[1] then
         self.hand,self.holdQueue[1]=self.holdQueue[1],self.hand
-        self:restoreHandPos()
+        self:resetPos()
+        self:checkHand()
     else
         self.holdQueue[1]=self.hand
         self.hand=false
@@ -415,7 +463,8 @@ function MP:hold_swap()
             self.hand=self:restoreMinoState(self.hand)
         end
         self.hand,self.nextQueue[1]=self.nextQueue[1],self.hand
-        self:restoreHandPos()
+        self:resetPos()
+        self:checkHand()
     end
 end
 function MP:hold_float()
@@ -898,7 +947,7 @@ local baseEnv={-- Generate from template in future
     spawnDelay=0,
     clearDelay=0,
 
-    das=77,
+    das=75,
     arr=0,
     sdarr=0,
 
@@ -1026,6 +1075,7 @@ function MP.new(id,mode)
 
     P.actionHistory={}
     P.keyBuffer={
+        move=false,
         rotate=false,
         hold=false,
         hardDrop=false,
