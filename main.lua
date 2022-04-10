@@ -46,7 +46,7 @@ for _,v in next,{'conf','progress','record','replay','cache','lib'} do
 end
 --------------------------------------------------------------
 -- Load modules
-MODE=require"assets.mode"
+GAME=require'assets.game'
 CHAR=require'assets.char'
 require'assets.gamefunc'
 require'assets.gametable'

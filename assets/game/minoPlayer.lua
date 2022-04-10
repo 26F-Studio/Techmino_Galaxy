@@ -925,16 +925,61 @@ local modeDataMeta={
     __newindex=function(self,k,v)rawset(self,k,v)end,
     __metatable=true,
 }
-function MP.new(data)
-    assert(type(data)=='table',"newMinoPlayer: data must be table")
-    local P=setmetatable({},{__index=MP})
-
-    assert(type(data.id)=='number',"newMinoPlayer: wrong data.id")
-    P.id=data.id
-
-    if not mode then mode=NONE end
+function MP.new(id,mode)
+    local P=setmetatable({id=id},{__index=MP})
 
     P.settings=TABLE.copy(baseEnv)
+    P.event={
+        -- Press & Release
+        beforePress={},
+        afterPress={},
+        beforeRelease={},
+        afterRelease={},
+
+        -- Start & End
+        playerInit={},
+        gameStart={},
+        gameOver={},
+
+        -- Drop
+        afterSpawn={},
+        afterDrop={},
+        afterLock={},
+        afterClear={},
+
+        -- Update
+        always={},
+
+        -- Graphics
+        drawBelowField={},
+        drawBelowBlock={},
+        drawBelowMarks={},
+        drawInField={},
+        drawOnPlayer={},
+    }
+    P.modeData=setmetatable({},modeDataMeta)
+
+    -- Load data & events from mode settings
+    for k,v in next,mode.settings do
+        if k~='event' then
+            if type(v)=='table' then
+                P.settings[k]=TABLE.copy(v)
+            elseif v~=nil then
+                P.settings[k]=v
+            end
+        else
+            for name,L in next,P.event do
+                local E=v[name]
+                if type(E)=='table' then
+                    for _,func in next,v[name] do
+                        ins(L,func)
+                    end
+                elseif type(E)=='function' then
+                    ins(L,E)
+                end
+            end
+        end
+    end
 
     P.pos={
         x=0,y=0,
@@ -947,7 +992,7 @@ function MP.new(data)
     P.gameTime=0-- Game time of player, [int] ms
     P.timing=false-- Is gameTime running?
 
-    P.field=require'assets.player.minoField'.new(P.settings.fieldW,P.settings.spawnH)
+    P.field=require'assets.game.minoField'.new(P.settings.fieldW,P.settings.spawnH)
     P.fieldBeneath=0
 
     P.minoCount=0
@@ -987,58 +1032,6 @@ function MP.new(data)
     }
     P.dropHistory={}
     P.clearHistory={}
-
-    P.modeData=setmetatable({},modeDataMeta)
-    P.event={
-        -- Press & Release
-        beforePress={},
-        afterPress={},
-        beforeRelease={},
-        afterRelease={},
-
-        -- Start & End
-        playerInit={},
-        gameStart={},
-        gameOver={},
-
-        -- Drop
-        afterSpawn={},
-        afterDrop={},
-        afterLock={},
-        afterClear={},
-
-        -- Update
-        always={},
-
-        -- Graphics
-        drawBelowField={},
-        drawBelowBlock={},
-        drawBelowMarks={},
-        drawInField={},
-        drawOnPlayer={},
-    }
-
-    -- Load data & events from mode settings
-    for k,v in next,data.mode.settings do
-        if k~='event' then
-            if type(v)=='table' then
-                P.settings[k]=TABLE.copy(v)
-            elseif v~=nil then
-                P.settings[k]=v
-            end
-        else
-            for name,L in next,P.event do
-                local E=v[name]
-                if type(E)=='table' then
-                    for _,func in next,v[name] do
-                        ins(L,func)
-                    end
-                elseif type(E)=='function' then
-                    ins(L,E)
-                end
-            end
-        end
-    end
 
     -- Generate available actions
     do

@@ -63,14 +63,12 @@ end
 
 local scene={}
 
-local P1
-
 function scene.enter()
-    P1=require'assets.player.minoPlayer'.new{
-        id=1,
-        mode=MODE.get('sprint'),
-    }
-    P1:setPosition(800,500)
+    GAME.reset('sprint')
+    GAME.newPlayer(1,'mino')
+    GAME.setMain(1)
+    GAME.resetPosition()
+
     BG.set('image')
     BG.send('image',.12,IMG.cover)
     BGM.play(bgmList['pressure'].simp)
@@ -81,7 +79,7 @@ function scene.keyDown(key,isRep)
     local action=_getKey(key)
     if not action then return end
     if action:sub(1,4)=='act_' then
-        P1:press(action:sub(5))
+        GAME.press(action:sub(5))
     elseif action:sub(1,5)=='menu_' then
         -- if action=='menu_pause' then
         --     pauseGame()
@@ -103,21 +101,16 @@ function scene.keyUp(key)
     local action=_getKey(key)
     if not action then return end
     if action:sub(1,4)=='act_' then
-        P1:release(action:sub(5))
+        GAME.release(action:sub(5))
     end
 end
 
 function scene.update(dt)
-    P1:update(dt)
+    GAME.update(dt)
 end
 
 function scene.draw()
-    P1:render()
-
-    gc.replaceTransform(SCR.origin)
-    gc.setShader(SHADER.none)-- Directly draw the content, don't consider color, for better performance
-    gc.draw(Zenitha.getBigCanvas('player'))
-    gc.setShader()
+    GAME.render()
 end
 
 scene.widgetList={
