@@ -23,9 +23,6 @@ return {
             end,
         },
     },
-    checkFinish=function(P)
-        -- TODO
-    end,
     result=function(P)
         -- TODO
     end,

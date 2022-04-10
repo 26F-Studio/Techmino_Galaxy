@@ -5,7 +5,7 @@ local function getMode(name)
     if modeLib[name] then
         return modeLib[name]
     else
-        local path='assets/mode/'..name..'.lua'
+        local path='assets/game/mode/'..name..'.lua'
         if FILE.isSafe(path) then
             modeLib[name]=FILE.load(path,'-lua')
             return modeLib[name]
@@ -58,7 +58,7 @@ function GAME.release(action,id)
     GAME.players[id or GAME.mainPID]:release(action)
 end
 
-function GAME.resetPosition()
+function GAME.start()
     for id,P in next,GAME.players do P:setPosition(800,500) end
 end
 

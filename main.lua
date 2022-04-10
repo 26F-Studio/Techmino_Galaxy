@@ -50,7 +50,7 @@ GAME=require'assets.game'
 CHAR=require'assets.char'
 require'assets.gamefunc'
 require'assets.gametable'
-require'assets.rotationsystem'
+require'assets.game.rotationsystem'
 DEBUG.checkLoadTime("Load Assets")
 --------------------------------------------------------------
 -- Config Zenitha

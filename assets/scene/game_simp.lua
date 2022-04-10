@@ -67,7 +67,7 @@ function scene.enter()
     GAME.reset('sprint')
     GAME.newPlayer(1,'mino')
     GAME.setMain(1)
-    GAME.resetPosition()
+    GAME.start()
 
     BG.set('image')
     BG.send('image',.12,IMG.cover)

@@ -105,17 +105,17 @@ function RotationSys._reflect(m)-- Only available for 4/2/1 state minoes
 end
 
 love.graphics.setDefaultFilter('nearest','nearest')
-RotationSys.None=     require'assets.rotationsystem.none'
-RotationSys.TRS=      require'assets.rotationsystem.trs'
-RotationSys.SRS=      require'assets.rotationsystem.srs'
-RotationSys.SRS_plus= require'assets.rotationsystem.srs_plus'
-RotationSys.BiRS=     require'assets.rotationsystem.birs'
-RotationSys.C2=       require'assets.rotationsystem.c2'
-RotationSys.C2_sym=   require'assets.rotationsystem.c2_sym'
-RotationSys.Classic=  require'assets.rotationsystem.classic'
-RotationSys.ASC_plus= require'assets.rotationsystem.asc_plus'
-RotationSys.ARS_plus= require'assets.rotationsystem.ars_plus'
-RotationSys.DRS_weak= require'assets.rotationsystem.drs_weak'
+RotationSys.None=     require'assets.game.rotationsystem.none'
+RotationSys.TRS=      require'assets.game.rotationsystem.trs'
+RotationSys.SRS=      require'assets.game.rotationsystem.srs'
+RotationSys.SRS_plus= require'assets.game.rotationsystem.srs_plus'
+RotationSys.BiRS=     require'assets.game.rotationsystem.birs'
+RotationSys.C2=       require'assets.game.rotationsystem.c2'
+RotationSys.C2_sym=   require'assets.game.rotationsystem.c2_sym'
+RotationSys.Classic=  require'assets.game.rotationsystem.classic'
+RotationSys.ASC_plus= require'assets.game.rotationsystem.asc_plus'
+RotationSys.ARS_plus= require'assets.game.rotationsystem.ars_plus'
+RotationSys.DRS_weak= require'assets.game.rotationsystem.drs_weak'
 love.graphics.setDefaultFilter('linear','linear')
 
 for name,rs in next,RotationSys do
