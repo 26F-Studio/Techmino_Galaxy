@@ -71,7 +71,6 @@ function scene.enter()
 
     BG.set('image')
     BG.send('image',.12,IMG.cover)
-    BGM.play(bgmList['pressure'].simp)
 end
 
 function scene.keyDown(key,isRep)

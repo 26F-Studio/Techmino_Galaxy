@@ -5,9 +5,17 @@ return {
         dropDelay=1000,
         lockDelay=1000,
         event={
+            playerInit=function(P)
+                if P.isMain then
+                    playBgm('race','-base')
+                end
+            end,
             afterClear=function(P)
                 P.modeData.line=P.modeData.line+P.clearHistory[#P.clearHistory].line
                 if P.modeData.line>=40 then P:gameover('AC') end
+                if P.isMain and P.modeData.line>10 then
+                    BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-10)/20,1),2.6)
+                end
             end,
             drawInField=function(P)
                 gc.setColor(1,1,1,.26)

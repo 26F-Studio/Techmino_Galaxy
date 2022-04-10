@@ -17,3 +17,20 @@ function tryReset()
     end
     lastResetTime=love.timer.getTime()
 end
+
+function playBgm(name,args)
+    if args:sArg('-simp') then
+        BGM.play(bgmList[name].base)
+    elseif args:sArg('-base') then
+        if not TABLE.compare(BGM.getPlaying(),bgmList[name].full) then
+            BGM.play(bgmList[name].full)
+            BGM.set(bgmList[name].add,'volume',0,0)
+        else
+            BGM.set(bgmList[name].add,'volume',0,1)
+        end
+    elseif args:sArg('-full') then
+        BGM.play(bgmList[name].full)
+    else
+        error("Wrong bgm args: "..tostring(args))
+    end
+end

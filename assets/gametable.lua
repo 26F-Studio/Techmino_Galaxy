@@ -49,176 +49,180 @@ end
 do
     bgmList={
         ['8-bit happiness']={
-            simp={'melody','bass'},
+            base={'melody','bass'},
             full={'melody','accompany','bass','drum','sfx'}
         },
         ['8-bit sadness']={
-            simp={'melody','bass'},
+            base={'melody','bass'},
             full={'melody','decoration','bass','sfx'}
         },
         ['battle']={
-            simp={'melody','bass','drum'},
+            base={'melody','bass','drum'},
             full={'melody','decoration1','decoration2','bass','drum','sfx'},
         },
         ['blank']={
-            simp={'melody','bass'},
+            base={'melody','bass'},
             full={'melody','decoration','bass','drum'},
         },
         ['blox']={
-            simp={'melody','decoration1','bass'},
+            base={'melody','decoration1','bass'},
             full={'melody','decoration1','decoration2','bass','drum','sfx'},
         },
         ['distortion']={
-            simp={'melody','bass','sfx1','sfx2'},
+            base={'melody','bass','sfx1'},
             full={'melody','accompany1','accompany2','decoration','bass','sfx1','sfx2'},
         },
         ['down']={
-            simp={'melody','accompany','bass1'},
+            base={'melody','accompany','bass1'},
             full={'melody','accompany','bass1','bass2','drum','sfx'},
         },
         ['dream']={
-            simp={'melody','bass','drum'},
+            base={'melody','bass','drum'},
             full={'melody','accompany','decoration','bass','drum','sfx'},
         },
         ['echo']={
-            simp={'melody1','melody2','bass1'},
+            base={'melody1','melody2','bass1'},
             full={'melody1','melody2','bass1','bass2','drum','sfx'},
         },
         ['exploration']={
-            simp={'melody2','decoration','bass2','sfx'},
+            base={'melody2','decoration','bass2','sfx'},
             full={'melody1','melody2','accompany','decoration','bass1','bass2','sfx'},
         },
         ['far']={
-            simp={'melody','bass','drum1','drum2'},
+            base={'melody','bass','drum1','drum2'},
             full={'melody','accompany','decoration','bass','drum1','drum2','sfx'},
         },
         ['hope']={
-            simp={'melody1','melody2','bass'},
+            base={'melody1','melody2','bass'},
             full={'melody1','melody2','decoration','bass','drum','sfx'},
         },
         ['infinite']={
-            simp={'melody1','bass','drum'},
+            base={'melody1','bass','drum'},
             full={'melody1','melody2','decoration','bass','drum'},
         },
         ['lounge']={
-            simp={'bass','drum','sfx'},
+            base={'bass','drum','sfx'},
             full={'melody','accompany','bass','drum','sfx'},
         },
         ['minoes']={
-            simp={'melody','bass','drum'},
+            base={'melody','bass','drum'},
             full={'melody','accompany','decoration','bass','drum','sfx'},
         },
         ['moonbeam']={
-            simp={'melody','bass'},
+            base={'melody','bass'},
             full={'melody','accompany','bass','drum'},
         },
         ['new era']={
-            simp={'melody','bass','drum'},
+            base={'melody','bass','drum'},
             full={'melody','accompany','decoration','bass','drum'},
         },
         ['overzero']={
-            simp={'accompany','bass','sfx'},
+            base={'accompany','bass','sfx'},
             full={'melody','accompany','decoration','bass','drum','sfx'},
         },
         ['oxygen']={
-            simp={'melody','accompany','bass','drum'},
+            base={'melody','accompany','bass'},
             full={'melody','accompany','decoration','bass','drum','sfx'},
         },
         ['peak']={
-            simp={'melody','bass','drum'},
+            base={'melody','bass','drum'},
             full={'melody','decoration','bass','drum','sfx'},
         },
         ['pressure']={
-            simp={'melody1','accompany','decoration','bass','drum1'},
+            base={'melody1','decoration','bass'},
             full={'melody1','melody2','accompany','decoration','bass','drum1','drum2'},
         },
         ['push']={
-            simp={'accompany','decoration','bass'},
+            base={'accompany','decoration','bass'},
             full={'melody','accompany','decoration','bass','sfx'},
         },
         ['race']={
-            simp={'melody','accompany1','drum'},
+            base={'melody','accompany1'},
             full={'melody','accompany1','accompany2','decoration','drum'},
         },
         ['reason']={
-            simp={'melody2','bass'},
+            base={'melody2','bass'},
             full={'melody1','melody2','bass','drum'},
         },
         ['rectification']={
-            simp={'melody','bass','drum'},
+            base={'melody','bass','drum'},
             full={'melody','accompany1','accompany2','decoration','bass','drum'},
         },
         ['reminiscence']={
-            simp={'melody2','bass','drum'},
+            base={'melody2','bass','drum'},
             full={'melody1','melody2','melody3','bass','drum'},
         },
         ['secret7th']={
-            simp={'melody1','melody2','bass','drum'},
+            base={'melody1','bass','drum'},
             full={'melody1','melody2','accompany','bass','drum','sfx'},
         },
         ['secret8th']={
-            simp={'melody1','melody2','bass','drum1'},
+            base={'melody1','bass','drum1'},
             full={'melody1','melody2','melody3','bass','drum1','drum2'},
         },
         ['shining terminal']={
-            simp={'melody1','melody2','bass1','drum2'},
+            base={'melody1','bass1','drum2'},
             full={'melody1','melody2','decoration','bass1','bass2','drum1','drum2','sfx'},
         },
         ['sine']={
-            simp={'melody1','bass','drum'},
+            base={'melody1','bass','drum'},
             full={'melody1','melody2','accompany','bass','drum'},
         },
         ['space']={
-            simp={'melody1','melody2','bass'},
+            base={'melody1','melody2','bass'},
             full={'melody1','melody2','accompany','decoration','bass'},
         },
         ['spring festival']={
-            simp={'melody','accompany','drum1'},
+            base={'melody','accompany','drum1'},
             full={'melody','accompany','bass','drum1','drum2'},
         },
         ['storm']={
-            simp={'melody','bass','drum1','sfx'},
+            base={'accompany','bass','drum1','sfx'},
             full={'melody','accompany','bass','drum1','drum2','sfx'},
         },
         ['sugar fairy']={
-            simp={'melody','bass'},
+            base={'melody','accompany'},
             full={'melody','accompany','bass','drum'},
         },
         ['supercritical']={
-            simp={'melody','accompany','bass','drum1'},
+            base={'melody','bass','drum1'},
             full={'melody','accompany','decoration','bass','drum1','drum2'},
         },
         ['truth']={
-            simp={'melody1','melody2','bass','drum'},
+            base={'melody2','bass','drum'},
             full={'melody1','melody2','accompany','bass','drum','sfx1','sfx2'},
         },
         ['vapor']={
-            simp={'melody','bass','drum'},
+            base={'melody','bass','sfx'},
             full={'melody','accompany','bass','drum','sfx'},
         },
         ['venus']={
-            simp={'melody','accompany','bass'},
+            base={'melody','accompany'},
             full={'melody','accompany','bass','drum','sfx'},
         },
         ['warped']={
-            simp={'melody1','accompany','bass','drum'},
+            base={'melody1','bass','drum'},
             full={'melody1','melody2','accompany','bass','drum','sfx'},
         },
         ['waterfall']={
-            simp={'melody1','bass','drum'},
+            base={'accompany','bass','drum'},
             full={'melody1','melody2','accompany','bass','drum','sfx'},
         },
         ['way']={
-            simp={'melody1','bass','drum'},
+            base={'melody1','bass','drum'},
             full={'melody1','melody2','bass','drum'},
         },
         ['xmas']={
-            simp={'melody','bass','drum'},
+            base={'melody','bass','drum'},
             full={'melody','accompany1','accompany2','bass','drum'},
         },
     }
-    for name,list in next,bgmList do
-        for mode,channels in next,list do
+    for name,song in next,bgmList do
+        if song.base and song.full then
+            song.add=TABLE.shift(song.full)
+            TABLE.subtract(song.add,song.base)
+        end
+        for mode,channels in next,song do
             for i=1,#channels do
                 channels[i]=name..'/'..channels[i]
             end

@@ -926,7 +926,7 @@ local modeDataMeta={
     __metatable=true,
 }
 function MP.new(id,mode)
-    local P=setmetatable({id=id},{__index=MP})
+    local P=setmetatable({},{__index=MP})
 
     P.settings=TABLE.copy(baseEnv)
     P.event={
@@ -968,14 +968,14 @@ function MP.new(id,mode)
                 P.settings[k]=v
             end
         else
-            for name,L in next,P.event do
-                local E=v[name]
+            for name,E in next,v do
+                assert(P.event[name],"Wrong event key: '"..tostring(name).."'")
                 if type(E)=='table' then
-                    for _,func in next,v[name] do
-                        ins(L,func)
+                    for i=1,#E do
+                        ins(P.event[name],E[i])
                     end
                 elseif type(E)=='function' then
-                    ins(L,E)
+                    ins(P.event[name],E)
                 end
             end
         end
@@ -1063,8 +1063,6 @@ function MP.new(id,mode)
             P.keyState[k]=false
         end
     end
-
-    P:triggerEvent('playerInit')
 
     return P
 end

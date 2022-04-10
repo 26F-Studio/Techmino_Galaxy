@@ -26,8 +26,12 @@ local GAME={
 function GAME.reset(mode)
     GAME.players={}
     GAME.playersCount=0
+    GAME.mainPID=false
     GAME.seed=math.random(2600,62600)
     GAME.mode=getMode(mode) or NONE
+    if GAME.mode.bgm then
+        BGM.play(GAME.mode.bgm)
+    end
 end
 
 function GAME.newPlayer(id,pType)
@@ -38,12 +42,18 @@ function GAME.newPlayer(id,pType)
     else
         error("player type must be 'mino'")
     end
+    P.id=id
+    P.isMain=false
     GAME.players[id]=P
     GAME.playersCount=GAME.playersCount+1
 end
 
 function GAME.setMain(id)
+    if GAME.mainPID then
+        GAME.players[GAME.mainPID].isMain=false
+    end
     GAME.mainPID=id
+    GAME.players[id].isMain=true
 end
 
 function GAME.press(action,id)
@@ -59,7 +69,10 @@ function GAME.release(action,id)
 end
 
 function GAME.start()
-    for id,P in next,GAME.players do P:setPosition(800,500) end
+    for id,P in next,GAME.players do
+        P:triggerEvent('playerInit')
+        P:setPosition(800,500)
+    end
 end
 
 function GAME.update(dt)
