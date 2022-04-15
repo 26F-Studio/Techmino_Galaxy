@@ -148,13 +148,14 @@ IMG.init{
 }
 SFX.init((function()
     local L={}
-    for _,v in next,love.filesystem.getDirectoryItems('assets/effect/chiptune/') do
-        if FILE.isSafe('assets/effect/chiptune/'..v) then
+    for _,v in next,love.filesystem.getDirectoryItems('assets/sfx/') do
+        if FILE.isSafe('assets/sfx/'..v) then
             table.insert(L,v:sub(1,-5))
         end
     end
     return L
 end)())
+SFX.load('assets/sfx/')
 BGM.load((function()
     local path='assets/music'
     local L={}

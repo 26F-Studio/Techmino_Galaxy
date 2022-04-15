@@ -88,7 +88,11 @@ local function r(P,dir)
                     C.matrix=icb
                     P.spinLast=test==2 and 0 or 1
                     P:freshGhost()
-                    return
+                    P:playSound('rotate')
+                    if P.handY==P.ghostY then
+                        P:playSound('touch')
+                    end
+                return
                 end
             end
         end

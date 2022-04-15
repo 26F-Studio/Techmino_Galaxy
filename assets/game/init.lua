@@ -38,7 +38,7 @@ function GAME.newPlayer(id,pType)
     local P
     assert(type(id)=='number',"newPlayer: wrong data.id")
     if pType=='mino' then
-        P=require'assets.game.minoPlayer'.new(id,GAME.mode)
+        P=require'assets.game.minoPlayer'.new(GAME.mode)
     else
         error("player type must be 'mino'")
     end

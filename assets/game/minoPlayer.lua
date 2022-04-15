@@ -15,7 +15,9 @@ actions.moveLeft={
         P.moveDir=-1
         P.moveCharge=0
         if P.hand then
-            P:moveLeft()
+            if P:moveLeft() and P.handY==P.ghostY then
+                P:playSound('touch')
+            end
         else
             P.keyBuffer.move='L'
         end
@@ -29,7 +31,9 @@ actions.moveRight={
         P.moveDir=1
         P.moveCharge=0
         if P.hand then
-            P:moveRight()
+            if P:moveRight() and P.handY==P.ghostY then
+                P:playSound('touch')
+            end
         else
             P.keyBuffer.move='R'
         end
@@ -80,6 +84,9 @@ function actions.softDrop(P)
     if P.handY>P.ghostY then
         P.handY=P.handY-1
         P:freshDelay('drop')
+        if P.handY==P.ghostY then
+            P:playSound('touch')
+        end
     end
 end
 function actions.sonicDrop(P)
@@ -87,6 +94,9 @@ function actions.sonicDrop(P)
     if P.handY>P.ghostY then
         P.handY=P.ghostY
         P:freshDelay('drop')
+        if P.handY==P.ghostY then
+            P:playSound('touch')
+        end
     end
 end
 actions.hardDrop={
@@ -125,16 +135,28 @@ actions.target3=NULL
 actions.target4=NULL
 
 function actions.sonicLeft(P)
+    local moved
     while P.hand and not P:ifoverlap(P.hand.matrix,P.handX-1,P.handY) do
+        moved=true
         P.handX=P.handX-1
         P:freshGhost()
     end
+    if P.handY==P.ghostY then
+        P:playSound('touch')
+    end
+    return moved
 end
 function actions.sonicRight(P)
+    local moved
     while P.hand and not P:ifoverlap(P.hand.matrix,P.handX+1,P.handY) do
+        moved=true
         P.handX=P.handX+1
         P:freshGhost()
     end
+    if P.handY==P.ghostY then
+        P:playSound('touch')
+    end
+    return moved
 end
 function actions.dropLeft(P)
     actions.sonicLeft(P)
@@ -206,7 +228,48 @@ local actionPacks={
     },
 }
 --------------------------------------------------------------
+-- Effects
+function MP:_()
+
+end
+--------------------------------------------------------------
 -- Game methods
+
+local defaultSoundLib={
+    touch=function()
+        SFX.play('touch')
+    end,
+    rotate=function(locked)
+        if locked then
+            SFX.play('rotate_locked')
+        else
+            SFX.play('rotate')
+        end
+    end,
+    clear=function(clearHis)
+        local l=clearHis.line
+        SFX.play(
+            l==1 and 'clear_1' or
+            l==2 and 'clear_2' or
+            l==3 and 'clear_3' or
+            l==4 and 'clear_4' or
+            'clear_5'
+        )
+        if l>=3 then
+            BGM.set('all','highgain',1/l,0)
+            BGM.set('all','highgain',1,min((l)^1.5/5,2.6))
+        end
+    end,
+}
+function MP:playSound(event,...)
+    if not self.sound then return end
+    if self.settings[event] then
+        self.settings[event](...)
+    elseif defaultSoundLib[event] then
+        defaultSoundLib[event](...)
+    end
+end
+
 function MP:triggerEvent(name,...)
     local L=self.event[name]
     if L then
@@ -376,12 +439,14 @@ function MP:moveLeft()
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
         self.handX=self.handX-1
         self:freshGhost()
+        return true
     end
 end
 function MP:moveRight()
     if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
         self.handX=self.handX+1
         self:freshGhost()
+        return true
     end
 end
 function MP:rotate(dir)
@@ -420,10 +485,15 @@ function MP:rotate(dir)
                     self.handX,self.handY=ix,iy
                     self.hand.direction=kick.target
                     self:freshGhost()
+                    self:playSound('rotate',self:ifoverlap(icb,ix,iy+1)and self:ifoverlap(icb,ix-1,iy)and self:ifoverlap(icb,ix+1,iy))
+                    if self.handY==self.ghostY then
+                        self:playSound('touch')
+                    end
                     return
                 end
             end
             self:freshDelay('move')
+            self:playSound('rotate_failed')
         else
             error("wtf why no state in minoData")
         end
@@ -471,9 +541,13 @@ function MP:hold_float()
     -- TODO
 end
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
-    self.handY=min(self.handY,self.ghostY)-- IHdS need this
+    if self.handY>self.ghostY then
+        if self.sound then SFX.play('drop') end
+        self.handY=self.ghostY-- IHdS need this
+    end
     self:triggerEvent('afterDrop')
     self:lock()
+    if self.sound then SFX.play('lock') end
     self:triggerEvent('afterLock')
     self:checkField(self.hand)
     if self.finished then return end
@@ -520,6 +594,7 @@ function MP:checkField(mino)-- Check line clear, top out checking, etc.
             lines=lineClear,
         }
         ins(self.clearHistory,h)
+        self:playSound('clear',h)
         self:triggerEvent('afterClear',h)
     else
         if self.handY>self.settings.deathH then
@@ -616,12 +691,24 @@ function MP:update(dt)
                     dist=int(c1/SET.arr)-int(c0/SET.arr)
                 end
             elseif c1>=SET.das then
-                dist=1
+                if SET.arr==0 then
+                    dist=1e99
+                else
+                    dist=1
+                end
             end
-            while self.hand and dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
-                self.handX=self.handX+self.moveDir
-                self:freshGhost()
-                dist=dist-1
+            if self.hand and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) then
+                local ox=self.handX
+                while dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
+                    self.handX=self.handX+self.moveDir
+                    self:freshGhost()
+                    dist=dist-1
+                end
+                if self.handX~=ox and self.handY==self.ghostY then
+                    self:playSound('touch')
+                end
+            else
+                self.moveCharge=SET.das
             end
         else
             self.moveDir=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
@@ -635,11 +722,19 @@ function MP:update(dt)
                 local c1=c0+1--[[df]]
                 self.downCharge=c1
 
-                local dist=SET.sdarr==0 and 1e99 or int(c1/SET.sdarr)-int(c0/SET.sdarr)
-                while self.hand and dist>0 and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) do
-                    self.handY=self.handY-1
-                    self:freshDelay('drop')
-                    dist=dist-1
+                if self.hand then
+                    local dist=SET.sdarr==0 and 1e99 or int(c1/SET.sdarr)-int(c0/SET.sdarr)
+                    local oy=self.handY
+                    while dist>0 and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) do
+                        self.handY=self.handY-1
+                        self:freshDelay('drop')
+                        dist=dist-1
+                    end
+                    if oy~=self.handY and self.handY==self.ghostY then
+                        self:playSound('touch')
+                    end
+                else
+                    self.downCharge=SET.sdarr
                 end
             else
                 self.downCharge=false
@@ -677,6 +772,9 @@ function MP:update(dt)
                     if self.dropTimer==0 then
                         self.dropTimer=SET.dropDelay
                         self.handY=self.handY-1
+                        if self.handY==self.ghostY then
+                            self:playSound('touch')
+                        end
                     end
                 elseif self.handY~=self.ghostY then-- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
                     self:freshDelay('drop')
@@ -974,7 +1072,7 @@ local modeDataMeta={
     __newindex=function(self,k,v)rawset(self,k,v)end,
     __metatable=true,
 }
-function MP.new(id,mode)
+function MP.new(mode)
     local P=setmetatable({},{__index=MP})
 
     P.settings=TABLE.copy(baseEnv)
@@ -1007,6 +1105,7 @@ function MP.new(id,mode)
         drawOnPlayer={},
     }
     P.modeData=setmetatable({},modeDataMeta)
+    P.sound=true
 
     -- Load data & events from mode settings
     for k,v in next,mode.settings do

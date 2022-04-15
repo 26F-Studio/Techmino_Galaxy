@@ -95,7 +95,7 @@ local OspinList={
     {seq='FFF',shape=7,direcion=2,bias={-1, 0},free='ANY',target={1,3,4,2}}, {seq='FFF',shape=7,direcion=2,bias={-2, 0},free='ANY',target={1,3,4,2}}, {seq='FFF',shape=7,direcion=2,bias={ 0, 0},free='ANY',target={1,3,4,2}}, --I(low)
     {seq='RFR',shape=6,direcion=0,bias={ 1,-1},free='ANY',target={2,4,1,3}}, {seq='RRF',shape=6,direcion=0,bias={ 2,-1},free='ANY',target={2,4,1,3}}, {seq='RFF',shape=6,direcion=0,bias={ 1,-2},free='ANY',target={2,4,1,3}}, --O
     {seq='LFL',shape=6,direcion=0,bias={-1,-1},free='ANY',target={3,1,4,2}}, {seq='LLF',shape=6,direcion=0,bias={-2,-1},free='ANY',target={3,1,4,2}}, {seq='LFF',shape=6,direcion=0,bias={-1,-2},free='ANY',target={3,1,4,2}}, --O
-}--{keys, ID, dir, dx, dy, freeLevel
+}
 TRS[6]={
     [0]={center={1,1}},
     [1]={center={1,1}},
@@ -148,6 +148,11 @@ TRS[6]={
 
                             P.handX,P.handY=x,y
                             P:freshGhost()
+                            P:playSound('rotate')
+                            P:playSound('ospin')
+                            if P.handY==P.ghostY then
+                                P:playSound('touch')
+                            end
                             return
                         end
                     end
