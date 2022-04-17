@@ -15,8 +15,11 @@ actions.moveLeft={
         P.moveDir=-1
         P.moveCharge=0
         if P.hand then
-            if P:moveLeft() and P.handY==P.ghostY then
-                P:playSound('touch')
+            if P:moveLeft() then
+                P:playSound('move')
+                if P.handY==P.ghostY then
+                    P:playSound('touch')
+                end
             end
         else
             P.keyBuffer.move='L'
@@ -31,8 +34,11 @@ actions.moveRight={
         P.moveDir=1
         P.moveCharge=0
         if P.hand then
-            if P:moveRight() and P.handY==P.ghostY then
-                P:playSound('touch')
+            if P:moveRight() then
+                P:playSound('move')
+                if P.handY==P.ghostY then
+                    P:playSound('touch')
+                end
             end
         else
             P.keyBuffer.move='R'
@@ -235,7 +241,33 @@ end
 --------------------------------------------------------------
 -- Game methods
 
-local defaultSoundLib={
+local defaultSoundFunc={
+    countDown=function(num)
+        if num==0 then-- 6, 3+6+6
+            SFX.playSample('bass',.8,'A3')
+            SFX.playSample('lead',.9,'A4','E5','A5')
+        elseif num==1 then-- 5, 3+7
+            SFX.playSample('bass',.9,'G3')
+            SFX.playSample('lead',.9,'B4','E5')
+        elseif num==2 then-- 4, 6+2
+            SFX.playSample('bass','F3')
+            SFX.playSample('lead',.8,'A4','D5')
+        elseif num==3 then-- 6+6
+            SFX.playSample('bass',.9,'A3','E4')
+            SFX.playSample('lead',.8,'A4')
+        elseif num==4 then-- 5+7, 5
+            SFX.playSample('bass',.9,'G3','B3')
+            SFX.playSample('lead',.6,'G4')
+        elseif num==5 then-- 4+6, 4
+            SFX.playSample('bass',.8,'F3','A3')
+            SFX.playSample('lead',.3,'F4')
+        elseif num<=10 then
+            SFX.playSample('bass',2.2-num/5,'A2','E3')
+        end
+    end,
+    move=function()
+        -- TODO
+    end,
     touch=function()
         SFX.play('touch')
     end,
@@ -265,8 +297,8 @@ function MP:playSound(event,...)
     if not self.sound then return end
     if self.settings[event] then
         self.settings[event](...)
-    elseif defaultSoundLib[event] then
-        defaultSoundLib[event](...)
+    elseif defaultSoundFunc[event] then
+        defaultSoundFunc[event](...)
     end
 end
 
@@ -668,7 +700,12 @@ function MP:update(dt)
         -- Step main time & Starting counter
         if self.time<SET.readyDelay then
             self.time=self.time+1--[[df]]
-            if self.time==SET.readyDelay then
+            local d=SET.readyDelay-self.time
+            if int((d+1--[[df]])/1000)~=int(d/1000) then
+                self:playSound('countDown',ceil(d/1000))
+            end
+            if d==0 then
+                self:playSound('countDown',0)
                 self:triggerEvent('gameStart')
                 self.timing=true
             end
@@ -704,8 +741,11 @@ function MP:update(dt)
                     self:freshGhost()
                     dist=dist-1
                 end
-                if self.handX~=ox and self.handY==self.ghostY then
-                    self:playSound('touch')
+                if self.handX~=ox then
+                    self:playSound('move')
+                    if self.handY==self.ghostY then
+                        self:playSound('touch')
+                    end
                 end
             else
                 self.moveCharge=SET.das
@@ -966,15 +1006,21 @@ function MP:render()
         local r,g,b
         local num=int((self.settings.readyDelay-self.time)/1000)+1
         local d=1-self.time%1000/1000-- d from 999 to 0
-        if num==3 then
-            r,g,b=.7,.8,.98
-            if d>.75 then gc.rotate((d-.75)^3*40) end
+        if num==1 then
+            r,g,b=1,.7,.7
+            if d>.75 then gc.scale(1,1+(d/.25-3)^2) end
         elseif num==2 then
             r,g,b=.98,.85,.75
             if d>.75 then gc.scale(1+(d/.25-3)^2,1) end
-        elseif num==1 then
-            r,g,b=1,.7,.7
-            if d>.75 then gc.scale(1,1+(d/.25-3)^2) end
+        elseif num==3 then
+            r,g,b=.7,.8,.98
+            if d>.75 then gc.rotate((d-.75)^3*40) end
+        elseif num==4 then
+            r,g,b=.95,.93,.5
+        elseif num==5 then
+            r,g,b=.7,.95,.7
+        else
+            r,g,b=max(1.26-num/10,0),max(1.26-num/10,0),max(1.26-num/10,0)
         end
 
         FONT.set(100)

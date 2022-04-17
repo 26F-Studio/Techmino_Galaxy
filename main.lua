@@ -155,6 +155,9 @@ SFX.init((function()
     end
     return L
 end)())
+SFX.loadSample{name='bass',path='assets/sample/bass',base='A2'}--A2~A4
+SFX.loadSample{name='lead',path='assets/sample/lead',base='A3'}--A3~A5
+
 SFX.load('assets/sfx/')
 BGM.load((function()
     local path='assets/music'
