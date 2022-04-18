@@ -240,17 +240,17 @@ local actionPacks={
 -- Effects
 function MP:shakeBoard(args)
     if args:sArg('-down') then
-        self.pos.vy=self.pos.vy+.1
+        self.pos.vy=self.pos.vy+.2*self.settings.shakeness
     elseif args:sArg('-right') then
-        self.pos.dx=self.pos.dx+.0626
+        self.pos.dx=self.pos.dx+.1*self.settings.shakeness
     elseif args:sArg('-left') then
-        self.pos.dx=self.pos.dx-.0626
+        self.pos.dx=self.pos.dx-.1*self.settings.shakeness
     elseif args:sArg('-cw') then
-        self.pos.va=self.pos.va+.0012
+        self.pos.va=self.pos.va+.002*self.settings.shakeness
     elseif args:sArg('-ccw') then
-        self.pos.va=self.pos.va-.0012
+        self.pos.va=self.pos.va-.002*self.settings.shakeness
     elseif args:sArg('-180') then
-        self.pos.vy=self.pos.vy+.1
+        self.pos.vy=self.pos.vy+.1*self.settings.shakeness
         self.pos.va=self.pos.va+((self.handX+#self.hand.matrix[1]/2-1)/self.settings.fieldW-.5)*.0026
     end
 end
@@ -658,7 +658,6 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         self:playSound('drop')
         self.handY=self.ghostY
         self:shakeBoard('-down')
-        self.pos.vy=self.pos.vy+.1
     end
     self:triggerEvent('afterDrop')
     self:lock()
@@ -787,9 +786,9 @@ function MP:update(dt)
         -- Calculate board animation
         local O=self.pos
         --                          sticky            force          soft
-        O.vx=expApproach(O.vx,0,.02)-sign(O.dx)*.00005*abs(O.dx)^1.3
-        O.vy=expApproach(O.vy,0,.02)-sign(O.dy)*.00005*abs(O.dy)^1.2
-        O.va=expApproach(O.va,0,.02)-sign(O.da)*.00005*abs(O.da)^1.0
+        O.vx=expApproach(O.vx,0,.02)-sign(O.dx)*.0001*abs(O.dx)^1.2
+        O.vy=expApproach(O.vy,0,.02)-sign(O.dy)*.0001*abs(O.dy)^1.1
+        O.va=expApproach(O.va,0,.02)-sign(O.da)*.0001*abs(O.da)^1.0
         O.dx=O.dx+O.vx
         O.dy=O.dy+O.vy
         O.da=O.da+O.va
@@ -1201,6 +1200,8 @@ local baseEnv={-- Generate from template in future
     rotSys='TRS',
 
     freshCondition='any',
+
+    shakeness=.6,
 }
 local seqGenerators={
     bag7=function(p)
