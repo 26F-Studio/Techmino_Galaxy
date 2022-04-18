@@ -36,12 +36,15 @@ end
 
 function GAME.newPlayer(id,pType)
     local P
-    assert(type(id)=='number',"newPlayer: wrong data.id")
-    if pType=='mino' then
-        P=require'assets.game.minoPlayer'.new(GAME.mode)
-    else
-        error("player type must be 'mino'")
+    if not(type(id)=='number' and math.floor(id)==id and id>=1 and id<=1000) then
+        MES.new('error',"player id must be 1~1000 integer")
+        return
     end
+    if pType~='mino' then
+        MES.new('error',"player type must be 'mino'")
+        return
+    end
+    P=require'assets.game.minoPlayer'.new(GAME.mode)
     P.id=id
     P.isMain=false
     GAME.players[id]=P
@@ -54,6 +57,7 @@ function GAME.setMain(id)
     end
     GAME.mainPID=id
     GAME.players[id].isMain=true
+    GAME.players[id].sound=true
 end
 
 function GAME.press(action,id)

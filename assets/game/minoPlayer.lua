@@ -6,6 +6,7 @@ local abs=math.abs
 local ins,rem=table.insert,table.remove
 
 local sign,expApproach=MATH.sign,MATH.expApproach
+local inst=SFX.playSample
 
 local MP={}
 
@@ -258,25 +259,25 @@ end
 local defaultSoundFunc={
     countDown=function(num)
         if num==0 then-- 6, 3+6+6
-            SFX.playSample('bass',.8,'A3')
-            SFX.playSample('lead',.9,'A4','E5','A5')
+            inst('bass',.8,'A3')
+            inst('lead',.9,'A4','E5','A5')
         elseif num==1 then-- 5, 3+7
-            SFX.playSample('bass',.9,'G3')
-            SFX.playSample('lead',.9,'B4','E5')
+            inst('bass',.9,'G3')
+            inst('lead',.9,'B4','E5')
         elseif num==2 then-- 4, 6+2
-            SFX.playSample('bass','F3')
-            SFX.playSample('lead',.8,'A4','D5')
+            inst('bass','F3')
+            inst('lead',.8,'A4','D5')
         elseif num==3 then-- 6+6
-            SFX.playSample('bass',.9,'A3','E4')
-            SFX.playSample('lead',.8,'A4')
+            inst('bass',.9,'A3','E4')
+            inst('lead',.8,'A4')
         elseif num==4 then-- 5+7, 5
-            SFX.playSample('bass',.9,'G3','B3')
-            SFX.playSample('lead',.6,'G4')
+            inst('bass',.9,'G3','B3')
+            inst('lead',.6,'G4')
         elseif num==5 then-- 4+6, 4
-            SFX.playSample('bass',.8,'F3','A3')
-            SFX.playSample('lead',.3,'F4')
+            inst('bass',.8,'F3','A3')
+            inst('lead',.3,'F4')
         elseif num<=10 then
-            SFX.playSample('bass',2.2-num/5,'A2','E3')
+            inst('bass',2.2-num/5,'A2','E3')
         end
     end,
     move=function()
@@ -292,6 +293,60 @@ local defaultSoundFunc={
             SFX.play('rotate')
         end
     end,
+    drop=function()
+        SFX.play('drop')
+    end,
+    lock=function()
+        SFX.play('lock')
+    end,
+    combo=function(clearHis)
+        local cmb=clearHis.combo
+        if cmb<=5 then
+            if     cmb==1 then  inst('bass','A2')
+            elseif cmb==2 then  inst('bass','C3')
+            elseif cmb==3 then  inst('bass','D3')
+            elseif cmb==4 then  inst('bass','E3')
+            elseif cmb==5 then  inst('bass','G3')
+            end
+        elseif cmb<=10 then
+            if     cmb==6 then  inst('bass',.90,'A3') inst('lead',.20,'A2')
+            elseif cmb==7 then  inst('bass',.75,'C4') inst('lead',.40,'C3')
+            elseif cmb==8 then  inst('bass',.60,'D4') inst('lead',.60,'D3')
+            elseif cmb==9 then  inst('bass',.40,'E4') inst('lead',.75,'E3')
+            elseif cmb==10 then inst('bass',.20,'G4') inst('lead',.90,'G3')
+            end
+        elseif cmb<=15 then
+            if     cmb==11 then inst('bass',.20,'A4') inst('lead','A3')
+            elseif cmb==12 then inst('bass',.40,'A4') inst('lead','C4')
+            elseif cmb==13 then inst('bass',.60,'A4') inst('lead','D4')
+            elseif cmb==14 then inst('bass',.75,'A4') inst('lead','E4')
+            elseif cmb==15 then inst('bass',.90,'A4') inst('lead','G4')
+            end
+        elseif cmb<=20 then
+            if     cmb==16 then inst('bass',.90,'A4') inst('bass',.90,'E5') inst('lead','A4')
+            elseif cmb==17 then inst('bass',.85,'A4') inst('bass',.85,'E5') inst('lead','C5')
+            elseif cmb==18 then inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5')
+            elseif cmb==19 then inst('bass',.75,'A4') inst('bass',.75,'E5') inst('lead','E5')
+            elseif cmb==20 then inst('bass',.70,'A4') inst('bass',.70,'E5') inst('lead','G5')
+            end
+        else
+            inst('bass',.626,'A4')
+            local phase=(cmb-20)%12
+            if     phase==1  then inst('lead',1-(12/12)^2,46+0 ) inst('lead',1-(1/12)^2, 58+0 )
+            elseif phase==2  then inst('lead',1-(11/12)^2,46+1 ) inst('lead',1-(2/12)^2, 58+1 )
+            elseif phase==3  then inst('lead',1-(10/12)^2,46+2 ) inst('lead',1-(3/12)^2, 58+2 )
+            elseif phase==4  then inst('lead',1-(9/12)^2, 46+3 ) inst('lead',1-(4/12)^2, 58+3 )
+            elseif phase==5  then inst('lead',1-(8/12)^2, 46+4 ) inst('lead',1-(5/12)^2, 58+4 )
+            elseif phase==6  then inst('lead',1-(7/12)^2, 46+5 ) inst('lead',1-(6/12)^2, 58+5 )
+            elseif phase==7  then inst('lead',1-(6/12)^2, 46+6 ) inst('lead',1-(7/12)^2, 58+6 )
+            elseif phase==8  then inst('lead',1-(5/12)^2, 46+7 ) inst('lead',1-(8/12)^2, 58+7 )
+            elseif phase==9  then inst('lead',1-(4/12)^2, 46+8 ) inst('lead',1-(9/12)^2, 58+8 )
+            elseif phase==10 then inst('lead',1-(3/12)^2, 46+9 ) inst('lead',1-(10/12)^2,58+9 )
+            elseif phase==11 then inst('lead',1-(2/12)^2, 46+10) inst('lead',1-(11/12)^2,58+10)
+            elseif phase==0  then inst('lead',1-(1/12)^2, 46+11) inst('lead',1-(12/12)^2,58+11)
+            end
+        end
+    end,
     clear=function(clearHis)
         local l=clearHis.line
         SFX.play(
@@ -305,6 +360,12 @@ local defaultSoundFunc={
             BGM.set('all','highgain',1/l,0)
             BGM.set('all','highgain',1,min((l)^1.5/5,2.6))
         end
+    end,
+    win=function()
+        SFX.play('beep1')
+    end,
+    lose=function()
+        SFX.play('beep2')
     end,
 }
 function MP:playSound(event,...)
@@ -594,14 +655,14 @@ function MP:hold_float()
 end
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if self.handY>self.ghostY then
-        if self.sound then SFX.play('drop') end
+        self:playSound('drop')
         self.handY=self.ghostY
         self:shakeBoard('-down')
         self.pos.vy=self.pos.vy+.1
     end
     self:triggerEvent('afterDrop')
     self:lock()
-    if self.sound then SFX.play('lock') end
+    self:playSound('lock')
     self:triggerEvent('afterLock')
     self:checkField(self.hand)
     if self.finished then return end
@@ -641,16 +702,20 @@ function MP:checkField(mino)-- Check line clear, top out checking, etc.
         end
     end
     if #lineClear>0 then
+        self.combo=self.combo+1
         self.clearTimer=self.settings.clearDelay
         local h={
             mino=mino,
+            combo=self.combo,
             line=#lineClear,
             lines=lineClear,
         }
         ins(self.clearHistory,h)
+        self:playSound('combo',h)
         self:playSound('clear',h)
         self:triggerEvent('afterClear',h)
     else
+        self.combo=0
         if self.handY>self.settings.deathH then
             self:gameover('MLE')
         end
@@ -668,7 +733,7 @@ function MP:gameover(reason)
     self.spawnTimer=1e99
     MES.new(reason=='AC' and 'check' or 'error',reason,6.26)
     if reason=='AC' then-- Win
-        -- TODO
+        self:playSound('win')
     elseif reason=='WA' then-- Block out
         -- TODO
     elseif reason=='CE' then-- Lock out
@@ -1187,7 +1252,7 @@ function MP.new(mode)
         drawOnPlayer={},
     }
     P.modeData=setmetatable({},modeDataMeta)
-    P.sound=true
+    P.sound=false
 
     -- Load data & events from mode settings
     for k,v in next,mode.settings do
@@ -1227,6 +1292,7 @@ function MP.new(mode)
     P.fieldBeneath=0
 
     P.minoCount=0
+    P.combo=0
 
     P.garbageBuffer={}
 
