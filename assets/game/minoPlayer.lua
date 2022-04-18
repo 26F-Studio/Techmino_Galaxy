@@ -2,8 +2,10 @@ local gc=love.graphics
 
 local max,min=math.max,math.min
 local int,ceil=math.floor,math.ceil
-
+local abs=math.abs
 local ins,rem=table.insert,table.remove
+
+local sign,expApproach=MATH.sign,MATH.expApproach
 
 local MP={}
 
@@ -235,12 +237,24 @@ local actionPacks={
 }
 --------------------------------------------------------------
 -- Effects
-function MP:_()
-
+function MP:shakeBoard(args)
+    if args:sArg('-down') then
+        self.pos.vy=self.pos.vy+.1
+    elseif args:sArg('-right') then
+        self.pos.dx=self.pos.dx+.0626
+    elseif args:sArg('-left') then
+        self.pos.dx=self.pos.dx-.0626
+    elseif args:sArg('-cw') then
+        self.pos.va=self.pos.va+.0012
+    elseif args:sArg('-ccw') then
+        self.pos.va=self.pos.va-.0012
+    elseif args:sArg('-180') then
+        self.pos.vy=self.pos.vy+.1
+        self.pos.va=self.pos.va+((self.handX+#self.hand.matrix[1]/2-1)/self.settings.fieldW-.5)*.0026
+    end
 end
 --------------------------------------------------------------
 -- Game methods
-
 local defaultSoundFunc={
     countDown=function(num)
         if num==0 then-- 6, 3+6+6
@@ -362,6 +376,7 @@ function MP:freshGhost()
 
         if (self.settings.dropDelay==0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then-- if (temp) 20G on
             self.handY=self.ghostY
+            self:shakeBoard('-down')
             self:freshDelay('drop')
         else
             self:freshDelay('move')
@@ -517,7 +532,12 @@ function MP:rotate(dir)
                     self.handX,self.handY=ix,iy
                     self.hand.direction=kick.target
                     self:freshGhost()
-                    self:playSound('rotate',self:ifoverlap(icb,ix,iy+1)and self:ifoverlap(icb,ix-1,iy)and self:ifoverlap(icb,ix+1,iy))
+                    if self:ifoverlap(icb,ix,iy+1)and self:ifoverlap(icb,ix-1,iy)and self:ifoverlap(icb,ix+1,iy) then
+                        self:shakeBoard(dir=='L' and '-ccw' or dir=='R' and '-cw' or '-180')
+                        self:playSound('rotate',true)
+                    else
+                        self:playSound('rotate')
+                    end
                     if self.handY==self.ghostY then
                         self:playSound('touch')
                     end
@@ -575,7 +595,9 @@ end
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if self.handY>self.ghostY then
         if self.sound then SFX.play('drop') end
-        self.handY=self.ghostY-- IHdS need this
+        self.handY=self.ghostY
+        self:shakeBoard('-down')
+        self.pos.vy=self.pos.vy+.1
     end
     self:triggerEvent('afterDrop')
     self:lock()
@@ -697,6 +719,16 @@ function MP:update(dt)
         -- Step game time
         if self.timing then self.gameTime=self.gameTime+1--[[df]] end
 
+        -- Calculate board animation
+        local O=self.pos
+        --                          sticky            force          soft
+        O.vx=expApproach(O.vx,0,.02)-sign(O.dx)*.00005*abs(O.dx)^1.3
+        O.vy=expApproach(O.vy,0,.02)-sign(O.dy)*.00005*abs(O.dy)^1.2
+        O.va=expApproach(O.va,0,.02)-sign(O.da)*.00005*abs(O.da)^1.0
+        O.dx=O.dx+O.vx
+        O.dy=O.dy+O.vy
+        O.da=O.da+O.va
+
         -- Step main time & Starting counter
         if self.time<SET.readyDelay then
             self.time=self.time+1--[[df]]
@@ -715,40 +747,45 @@ function MP:update(dt)
 
         -- Auto shift
         if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then-- Magic IF-statemant. I don't know why it works perfectly
-            local c0=self.moveCharge
-            local c1=c0+1--[[df]]
-            self.moveCharge=c1
-            local dist=0
-            if c0>=SET.das then
-                c0=c0-SET.das
-                c1=c1-SET.das
-                if SET.arr==0 then
-                    dist=1e99
-                else
-                    dist=int(c1/SET.arr)-int(c0/SET.arr)
-                end
-            elseif c1>=SET.das then
-                if SET.arr==0 then
-                    dist=1e99
-                else
-                    dist=1
-                end
-            end
             if self.hand and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) then
-                local ox=self.handX
-                while dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
-                    self.handX=self.handX+self.moveDir
-                    self:freshGhost()
-                    dist=dist-1
+                local c0=self.moveCharge
+                local c1=c0+1--[[df]]
+                self.moveCharge=c1
+                local dist=0
+                if c0>=SET.das then
+                    c0=c0-SET.das
+                    c1=c1-SET.das
+                    if SET.arr==0 then
+                        dist=1e99
+                    else
+                        dist=int(c1/SET.arr)-int(c0/SET.arr)
+                    end
+                elseif c1>=SET.das then
+                    if SET.arr==0 then
+                        dist=1e99
+                    else
+                        dist=1
+                    end
                 end
-                if self.handX~=ox then
-                    self:playSound('move')
-                    if self.handY==self.ghostY then
-                        self:playSound('touch')
+                if dist>0 then
+                    local ox=self.handX
+                    while dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
+                        self.handX=self.handX+self.moveDir
+                        self:freshGhost()
+                        dist=dist-1
+                    end
+                    if self.handX~=ox then
+                        self:playSound('move')
+                        if self.handY==self.ghostY then
+                            self:playSound('touch')
+                        end
                     end
                 end
             else
                 self.moveCharge=SET.das
+                if self.hand then
+                    self:shakeBoard(self.moveDir>0 and '-right' or '-left')
+                end
             end
         else
             self.moveDir=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
@@ -771,6 +808,7 @@ function MP:update(dt)
                         dist=dist-1
                     end
                     if oy~=self.handY and self.handY==self.ghostY then
+                        self:shakeBoard('-down')
                         self:playSound('touch')
                     end
                 else
@@ -831,9 +869,9 @@ function MP:render()
     -- applyPlayerTransform
     gc.setCanvas({Zenitha.getBigCanvas('player'),stencil=true})
     gc.clear(1,1,1,0)
-    gc.translate(self.pos.x,self.pos.y)
-    gc.scale(self.pos.kx,self.pos.ky)
-    gc.rotate(self.pos.angle)
+    gc.translate(self.pos.x+self.pos.dx,self.pos.y+self.pos.dy)
+    gc.scale(self.pos.k*self.pos.dk)
+    gc.rotate(self.pos.a+self.pos.da)
 
     -- applyFieldTransform
     gc.push('transform')
@@ -1056,19 +1094,17 @@ function MP:render()
 end
 --------------------------------------------------------------
 -- Other methods
-function MP:setPosition(x,y,kx,ky,angle)
+function MP:setPosition(x,y,k,angle)
     self.pos.x=x or self.pos.x
     self.pos.y=y or self.pos.y
-    self.pos.kx=kx or self.pos.kx
-    self.pos.ky=ky or self.pos.ky
-    self.pos.angle=angle or self.pos.angle
+    self.pos.k=k or self.pos.k
+    self.pos.a=angle or self.pos.a
 end
-function MP:movePosition(dx,dy,kx,ky,da)
+function MP:movePosition(dx,dy,k,da)
     self.pos.x=self.pos.x+(dx or 0)
     self.pos.y=self.pos.y+(dy or 0)
-    self.pos.kx=self.pos.kx*(kx or 1)
-    self.pos.ky=self.pos.ky*(ky or 1)
-    self.pos.angle=self.pos.angle+(da or 0)
+    self.pos.k=self.pos.k*(k or 1)
+    self.pos.a=self.pos.a+(da or 0)
 end
 --------------------------------------------------------------
 -- Builder
@@ -1176,9 +1212,10 @@ function MP.new(mode)
     end
 
     P.pos={
-        x=0,y=0,
-        kx=1,ky=1,
-        angle=0,
+        x=0,y=0,k=1,a=0,
+
+        dx=0,dy=0,dk=1,da=0,
+        vx=0,vy=0,vk=1,va=0,
     }
 
     P.realTime=0-- Real time, [float] s
