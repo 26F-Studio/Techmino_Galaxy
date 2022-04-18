@@ -89,13 +89,19 @@ end
 function RotationSys._reflect(m)-- Only available for 4/2/1 state minoes
     local m2=TABLE.copy(m)
     if m2[0] and m2[1] and m2[2] and m2[3] then
-        m2[0].R.test,m2[0].L.test,m2[0].F.test=RotationSys._flipList(m2[0].L.test),RotationSys._flipList(m2[0].R.test),RotationSys._flipList(m2[0].F.test)
-        m2[1].R.test,m2[1].L.test,m2[1].F.test=RotationSys._flipList(m2[3].L.test),RotationSys._flipList(m2[3].R.test),RotationSys._flipList(m2[3].F.test)
-        m2[2].R.test,m2[2].L.test,m2[2].F.test=RotationSys._flipList(m2[2].L.test),RotationSys._flipList(m2[2].R.test),RotationSys._flipList(m2[2].F.test)
-        m2[3].R.test,m2[3].L.test,m2[3].F.test=RotationSys._flipList(m2[1].L.test),RotationSys._flipList(m2[1].R.test),RotationSys._flipList(m2[1].F.test)
+        m2[0].R.test,m2[0].L.test,m2[0].F.test,
+        m2[1].R.test,m2[1].L.test,m2[1].F.test,
+        m2[2].R.test,m2[2].L.test,m2[2].F.test,
+        m2[3].R.test,m2[3].L.test,m2[3].F.test=
+        RotationSys._flipList(m2[0].L.test),RotationSys._flipList(m2[0].R.test),RotationSys._flipList(m2[0].F.test),
+        RotationSys._flipList(m2[3].L.test),RotationSys._flipList(m2[3].R.test),RotationSys._flipList(m2[3].F.test),
+        RotationSys._flipList(m2[2].L.test),RotationSys._flipList(m2[2].R.test),RotationSys._flipList(m2[2].F.test),
+        RotationSys._flipList(m2[1].L.test),RotationSys._flipList(m2[1].R.test),RotationSys._flipList(m2[1].F.test);
     elseif m2[0] and m2[1] then
-        m2[0].R.test,m2[0].L.test,m2[0].F.test=RotationSys._flipList(m2[0].L.test),RotationSys._flipList(m2[0].R.test),RotationSys._flipList(m2[0].F.test)
-        m2[1].R.test,m2[1].L.test,m2[1].F.test=RotationSys._flipList(m2[1].L.test),RotationSys._flipList(m2[1].R.test),RotationSys._flipList(m2[1].F.test)
+        m2[0].R.test,m2[0].L.test,m2[0].F.test,
+        m2[1].R.test,m2[1].L.test,m2[1].F.test=
+        RotationSys._flipList(m2[0].L.test),RotationSys._flipList(m2[0].R.test),RotationSys._flipList(m2[0].F.test),
+        RotationSys._flipList(m2[1].L.test),RotationSys._flipList(m2[1].R.test),RotationSys._flipList(m2[1].F.test);
     elseif m2[0] then
         m2[0].R.test,m2[0].L.test,m2[0].F.test=RotationSys._flipList(m2[0].L.test),RotationSys._flipList(m2[0].R.test),RotationSys._flipList(m2[0].F.test)
     else
