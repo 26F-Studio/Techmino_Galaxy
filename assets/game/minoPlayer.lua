@@ -239,19 +239,24 @@ local actionPacks={
 --------------------------------------------------------------
 -- Effects
 function MP:shakeBoard(args)
-    if args:sArg('-down') then
-        self.pos.vy=self.pos.vy+.2*self.settings.shakeness
+    local shake=self.settings.shakeness
+    if args:sArg('-drop') then
+        self.pos.vy=self.pos.vy+.2*shake
+    elseif args:sArg('-down') then
+        self.pos.dy=self.pos.dy+.1*shake
     elseif args:sArg('-right') then
-        self.pos.dx=self.pos.dx+.1*self.settings.shakeness
+        self.pos.dx=self.pos.dx+.1*shake
     elseif args:sArg('-left') then
-        self.pos.dx=self.pos.dx-.1*self.settings.shakeness
+        self.pos.dx=self.pos.dx-.1*shake
     elseif args:sArg('-cw') then
-        self.pos.va=self.pos.va+.002*self.settings.shakeness
+        self.pos.va=self.pos.va+.002*shake
     elseif args:sArg('-ccw') then
-        self.pos.va=self.pos.va-.002*self.settings.shakeness
+        self.pos.va=self.pos.va-.002*shake
     elseif args:sArg('-180') then
-        self.pos.vy=self.pos.vy+.1*self.settings.shakeness
-        self.pos.va=self.pos.va+((self.handX+#self.hand.matrix[1]/2-1)/self.settings.fieldW-.5)*.0026
+        self.pos.vy=self.pos.vy+.1*shake
+        self.pos.va=self.pos.va+((self.handX+#self.hand.matrix[1]/2-1)/self.settings.fieldW-.5)*.0026*shake
+    elseif args:sArg('-clear') then
+        self.pos.vk=self.pos.vk+.001*shake
     end
 end
 --------------------------------------------------------------
@@ -428,7 +433,7 @@ function MP:freshGhost()
 
         if (self.settings.dropDelay==0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then-- if (temp) 20G on
             self.handY=self.ghostY
-            self:shakeBoard('-down')
+            self:shakeBoard('-drop')
             self:freshDelay('drop')
         else
             self:freshDelay('move')
@@ -648,7 +653,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if self.handY>self.ghostY then
         self:playSound('drop')
         self.handY=self.ghostY
-        self:shakeBoard('-down')
+        self:shakeBoard('-drop')
     end
     self:triggerEvent('afterDrop')
     self:lock()
@@ -703,6 +708,7 @@ function MP:checkField(mino)-- Check line clear, top out checking, etc.
         ins(self.clearHistory,h)
         self:playSound('combo',h)
         self:playSound('clear',h)
+        self:shakeBoard('-clear')
         self:triggerEvent('afterClear',h)
     else
         self.combo=0
@@ -780,9 +786,11 @@ function MP:update(dt)
         O.vx=expApproach(O.vx,0,.02)-sign(O.dx)*.0001*abs(O.dx)^1.2
         O.vy=expApproach(O.vy,0,.02)-sign(O.dy)*.0001*abs(O.dy)^1.1
         O.va=expApproach(O.va,0,.02)-sign(O.da)*.0001*abs(O.da)^1.0
+        O.vk=expApproach(O.vk,0,.02)-sign(O.dk)*.0001*abs(O.dk)^1.0
         O.dx=O.dx+O.vx
         O.dy=O.dy+O.vy
         O.da=O.da+O.va
+        O.dk=O.dk+O.vk
 
         -- Step main time & Starting counter
         if self.time<SET.readyDelay then
@@ -848,30 +856,30 @@ function MP:update(dt)
         end
 
         -- Auto drop
-        if self.downCharge then
-            if self.keyState.softDrop then
+        if self.downCharge and self.keyState.softDrop then
+            if self.hand and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
                 local c0=self.downCharge
                 local c1=c0+1--[[df]]
                 self.downCharge=c1
-
-                if self.hand then
-                    local dist=SET.sdarr==0 and 1e99 or int(c1/SET.sdarr)-int(c0/SET.sdarr)
-                    local oy=self.handY
-                    while dist>0 and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) do
-                        self.handY=self.handY-1
-                        self:freshDelay('drop')
-                        dist=dist-1
-                    end
-                    if oy~=self.handY and self.handY==self.ghostY then
-                        self:shakeBoard('-down')
-                        self:playSound('touch')
-                    end
-                else
-                    self.downCharge=SET.sdarr
+                local dist=SET.sdarr==0 and 1e99 or int(c1/SET.sdarr)-int(c0/SET.sdarr)
+                local oy=self.handY
+                while dist>0 and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) do
+                    self.handY=self.handY-1
+                    self:freshDelay('drop')
+                    dist=dist-1
+                end
+                if oy~=self.handY and self.handY==self.ghostY then
+                    self:shakeBoard('-down')
+                    self:playSound('touch')
                 end
             else
-                self.downCharge=false
+                self.downCharge=SET.sdarr
+                if self.hand then
+                    self:shakeBoard('-down')
+                end
             end
+        else
+            self.downCharge=false
         end
 
         repeat-- Update hand
@@ -925,7 +933,7 @@ function MP:render()
     gc.setCanvas({Zenitha.getBigCanvas('player'),stencil=true})
     gc.clear(1,1,1,0)
     gc.translate(self.pos.x+self.pos.dx,self.pos.y+self.pos.dy)
-    gc.scale(self.pos.k*self.pos.dk)
+    gc.scale(self.pos.k*(1+self.pos.dk))
     gc.rotate(self.pos.a+self.pos.da)
 
     -- applyFieldTransform
@@ -1149,11 +1157,11 @@ function MP:render()
 end
 --------------------------------------------------------------
 -- Other methods
-function MP:setPosition(x,y,k,angle)
+function MP:setPosition(x,y,k,a)
     self.pos.x=x or self.pos.x
     self.pos.y=y or self.pos.y
     self.pos.k=k or self.pos.k
-    self.pos.a=angle or self.pos.a
+    self.pos.a=a or self.pos.a
 end
 function MP:movePosition(dx,dy,k,da)
     self.pos.x=self.pos.x+(dx or 0)
@@ -1271,8 +1279,8 @@ function MP.new(mode)
     P.pos={
         x=0,y=0,k=1,a=0,
 
-        dx=0,dy=0,dk=1,da=0,
-        vx=0,vy=0,vk=1,va=0,
+        dx=0,dy=0,dk=0,da=0,
+        vx=0,vy=0,vk=0,va=0,
     }
 
     P.realTime=0-- Real time, [float] s
