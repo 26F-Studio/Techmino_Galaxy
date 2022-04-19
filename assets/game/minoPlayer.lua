@@ -238,7 +238,7 @@ local actionPacks={
 }
 --------------------------------------------------------------
 -- Effects
-function MP:shakeBoard(args)
+function MP:shakeBoard(args,v)
     local shake=self.settings.shakeness
     if args:sArg('-drop') then
         self.pos.vy=self.pos.vy+.2*shake
@@ -256,7 +256,8 @@ function MP:shakeBoard(args)
         self.pos.vy=self.pos.vy+.1*shake
         self.pos.va=self.pos.va+((self.handX+#self.hand.matrix[1]/2-1)/self.settings.fieldW-.5)*.0026*shake
     elseif args:sArg('-clear') then
-        self.pos.vk=self.pos.vk+.001*shake
+        self.pos.dk=self.pos.dk*(1+shake)
+        self.pos.vk=self.pos.vk+.0002*shake*min(v^1.6,26)
     end
 end
 --------------------------------------------------------------
@@ -718,7 +719,7 @@ function MP:checkField(mino)-- Check line clear, top out checking, etc.
         ins(self.clearHistory,h)
         self:playSound('combo',h)
         self:playSound('clear',h)
-        self:shakeBoard('-clear')
+        self:shakeBoard('-clear',#lineClear)
         self:triggerEvent('afterClear',h)
     else
         self.combo=0
@@ -792,11 +793,11 @@ function MP:update(dt)
 
         -- Calculate board animation
         local O=self.pos
-        --                          sticky            force          soft
+        --                      sticky           force         soft
         O.vx=expApproach(O.vx,0,.02)-sign(O.dx)*.0001*abs(O.dx)^1.2
         O.vy=expApproach(O.vy,0,.02)-sign(O.dy)*.0001*abs(O.dy)^1.1
         O.va=expApproach(O.va,0,.02)-sign(O.da)*.0001*abs(O.da)^1.0
-        O.vk=expApproach(O.vk,0,.02)-sign(O.dk)*.0001*abs(O.dk)^1.0
+        O.vk=expApproach(O.vk,0,.01)-sign(O.dk)*.0001*abs(O.dk)^1.0
         O.dx=O.dx+O.vx
         O.dy=O.dy+O.vy
         O.da=O.da+O.va
@@ -1218,6 +1219,18 @@ local seqGenerators={
         local l={}
         while true do
             if not l[1] then for i=1,7 do l[i]=i end end
+            coroutine.yield(rem(l,P.seqRND:random(#l)))
+        end
+    end,
+    bag7b1=function(P)
+        local l0={}
+        local l={}
+        while true do
+            if not l[1] then
+                for i=1,7 do l[i]=i end
+                if not l0[1] then for i=1,7 do l0[i]=i end end
+                l[8]=rem(l0,P.seqRND:random(#l0))
+            end
             coroutine.yield(rem(l,P.seqRND:random(#l)))
         end
     end,
