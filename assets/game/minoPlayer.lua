@@ -472,10 +472,20 @@ function MP:freshDelay(reason)-- reason can be 'move' or 'drop' or 'spawn'
         error("wtf why settings.freshCondition is "..tostring(self.settings.freshCondition))
     end
 end
+function MP:freshNextQueue()
+    while #self.nextQueue<self.settings.nextCount do
+        local mino=self:seqGen()
+        if mino and type(mino)=='number' then
+            self:getMino(mino)
+        else
+            break
+        end
+    end
+end
 function MP:popNext()
     if self.nextQueue[1] then-- Most cases there is pieces in next queue
         self.hand=rem(self.nextQueue,1)
-        self.genNext()
+        self:freshNextQueue()
         self.holdChance=min(self.holdChance+1,self.settings.holdCount)
     elseif self.holdQueue[1] then-- If no nexts, force using hold
         ins(self.nextQueue,rem(self.holdQueue,1))
@@ -1203,14 +1213,64 @@ local baseEnv={-- Generate from template in future
     shakeness=.6,
 }
 local seqGenerators={
-    bag7=function(p)
+    none=function()while true do coroutine.yield()end end,
+    bag7=function(P)
         local l={}
         while true do
-            while #p.nextQueue<p.settings.nextCount do
-                if not l[1] then for i=1,7 do l[i]=i end end
-                p:getMino(rem(l,math.random(#l)))
+            if not l[1] then for i=1,7 do l[i]=i end end
+            coroutine.yield(rem(l,P.seqRND:random(#l)))
+        end
+    end,
+    h4r2=function(P)
+        local history=TABLE.new(0,2)
+        while true do
+            local r
+            for _=1,#history do-- Reroll up to [hisLen] times
+                r=P.seqRND:random(7)
+                local repeated
+                for i=1,#history do
+                    if r==history[i]then
+                        repeated=true
+                        break
+                    end
+                end
+                if not repeated then break end-- Not repeated means success, available r value
             end
-            coroutine.yield()
+            rem(history,1)
+            ins(history,r)
+            if history[1]~=0 then-- Initializing, just continue generating until history is full
+                coroutine.yield(r)
+            end
+        end
+    end,
+    c2=function(P)
+        local weight=TABLE.new(0,7)
+
+        while true do
+            local maxK=1
+            for i=1,7 do
+                weight[i]=weight[i]*.5+P.seqRND:random()
+                if weight[i]>weight[maxK]then
+                    maxK=i
+                end
+            end
+            weight[maxK]=weight[maxK]/3.5
+            coroutine.yield(maxK)
+        end
+    end,
+    random=function(P)
+        local r,prev
+        while true do
+            repeat
+                r=P.seqRND:random(7)
+            until r~=prev
+            prev=r
+            coroutine.yield(r)
+        end
+    end,
+    mess=function(P)
+        while true do
+            coroutine.yield(P.seqRND:random(7))
         end
     end,
 }
@@ -1297,8 +1357,9 @@ function MP.new(mode)
     P.garbageBuffer={}
 
     P.nextQueue={}
-    P.genNext=coroutine.wrap(seqGenerators[P.settings.seqType])
-    P:genNext()
+    P.seqRND=love.math.newRandomGenerator(GAME.seed)
+    P.seqGen=coroutine.wrap(seqGenerators[P.settings.seqType])
+    P:freshNextQueue()
 
     P.holdQueue={}
     P.holdChance=0

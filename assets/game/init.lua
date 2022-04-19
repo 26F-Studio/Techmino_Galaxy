@@ -23,11 +23,11 @@ local GAME={
     -- TODO: ,,,
 }
 
-function GAME.reset(mode)
+function GAME.reset(mode,seed)
     GAME.players={}
     GAME.playersCount=0
     GAME.mainPID=false
-    GAME.seed=math.random(2600,62600)
+    GAME.seed=seed or math.random(2^16,2^26)
     GAME.mode=getMode(mode) or NONE
     if GAME.mode.bgm then
         BGM.play(GAME.mode.bgm)
