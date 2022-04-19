@@ -302,11 +302,11 @@ local defaultSoundFunc={
     combo=function(clearHis)
         local cmb=clearHis.combo
         if cmb<=5 then
-            if     cmb==1 then  inst('bass','A2')
-            elseif cmb==2 then  inst('bass','C3')
-            elseif cmb==3 then  inst('bass','D3')
-            elseif cmb==4 then  inst('bass','E3')
-            elseif cmb==5 then  inst('bass','G3')
+            if     cmb==1 then  inst('bass',.50,'A2')
+            elseif cmb==2 then  inst('bass',.60,'C3')
+            elseif cmb==3 then  inst('bass',.70,'D3')
+            elseif cmb==4 then  inst('bass',.80,'E3')
+            elseif cmb==5 then  inst('bass',.90,'G3')
             end
         elseif cmb<=10 then
             if     cmb==6 then  inst('bass',.90,'A3') inst('lead',.20,'A2')
@@ -331,20 +331,11 @@ local defaultSoundFunc={
             end
         else
             inst('bass',.626,'A4')
-            local phase=(cmb-20)%12
-            if     phase==1  then inst('lead',1-(12/12)^2,46+0 ) inst('lead',1-(1/12)^2, 58+0 )
-            elseif phase==2  then inst('lead',1-(11/12)^2,46+1 ) inst('lead',1-(2/12)^2, 58+1 )
-            elseif phase==3  then inst('lead',1-(10/12)^2,46+2 ) inst('lead',1-(3/12)^2, 58+2 )
-            elseif phase==4  then inst('lead',1-(9/12)^2, 46+3 ) inst('lead',1-(4/12)^2, 58+3 )
-            elseif phase==5  then inst('lead',1-(8/12)^2, 46+4 ) inst('lead',1-(5/12)^2, 58+4 )
-            elseif phase==6  then inst('lead',1-(7/12)^2, 46+5 ) inst('lead',1-(6/12)^2, 58+5 )
-            elseif phase==7  then inst('lead',1-(6/12)^2, 46+6 ) inst('lead',1-(7/12)^2, 58+6 )
-            elseif phase==8  then inst('lead',1-(5/12)^2, 46+7 ) inst('lead',1-(8/12)^2, 58+7 )
-            elseif phase==9  then inst('lead',1-(4/12)^2, 46+8 ) inst('lead',1-(9/12)^2, 58+8 )
-            elseif phase==10 then inst('lead',1-(3/12)^2, 46+9 ) inst('lead',1-(10/12)^2,58+9 )
-            elseif phase==11 then inst('lead',1-(2/12)^2, 46+10) inst('lead',1-(11/12)^2,58+10)
-            elseif phase==0  then inst('lead',1-(1/12)^2, 46+11) inst('lead',1-(12/12)^2,58+11)
-            end
+            local phase=(cmb-21)%12
+            inst('lead',1-((11-phase)/12)^2,41+phase)-- E4+
+            inst('lead',1-((11-phase)/12)^2,46+phase)-- A4+
+            inst('lead',1-(phase/12)^2,     53+phase)-- E5+
+            inst('lead',1-(phase/12)^2,     58+phase)-- A5+
         end
     end,
     clear=function(clearHis)
