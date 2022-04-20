@@ -1,28 +1,7 @@
-local gc=love.graphics
-
 local scene={}
-
-function scene.enter()
-
-end
 
 function scene.leave()
     saveSetting()
-end
-
-function scene.mouseDown(x,y,k)
-
-end
-function scene.keyDown(key,isRep)
-
-end
-
-function scene.update(dt)
-
-end
-
-function scene.draw()
-
 end
 
 local function sliderShow_time(S) return S.disp().." ms"  end

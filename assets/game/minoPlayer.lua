@@ -299,6 +299,12 @@ local defaultSoundFunc={
             SFX.play('rotate')
         end
     end,
+    rotate_failed=function()
+        -- TODO
+    end,
+    ospin=function()
+        -- TODO
+    end,
     drop=function()
         SFX.play('drop')
     end,
@@ -371,6 +377,8 @@ function MP:playSound(event,...)
         self.settings[event](...)
     elseif defaultSoundFunc[event] then
         defaultSoundFunc[event](...)
+    else
+        MES.new('warn',"Unknown sound event: "..event)
     end
 end
 

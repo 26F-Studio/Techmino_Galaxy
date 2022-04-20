@@ -112,7 +112,7 @@ function scene.update(dt)
     if restartTimer then
         if holdR then
             restartTimer=restartTimer+dt
-            if restartTimer>=.626 then
+            if restartTimer>=.26 then
                 holdR=false
                 scene.enter()
             end
@@ -129,7 +129,7 @@ function scene.draw()
     GAME.render()
     gc.replaceTransform(SCR.origin)
     if restartTimer then
-        gc.setColor(0,0,0,restartTimer/.626)
+        gc.setColor(0,0,0,restartTimer/.26)
         gc.rectangle('fill',0,0,SCR.w,SCR.h)
     end
 end
