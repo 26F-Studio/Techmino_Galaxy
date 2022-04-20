@@ -79,6 +79,10 @@ do--Zenitha.setDrawCursor
         end
     end)
 end
+Zenitha.setOnGlobalKey('f11',function()
+    SETTINGS.system.fullscreen=not SETTINGS.system.fullscreen
+    saveSetting()
+end)
 Zenitha.setOnFnKeys({
     function() MES.new('info',("System:%s[%s]\nLuaVer:%s\nJitVer:%s\nJitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,
     function() MES.new('check',PROFILE.switch() and "Profile start!" or "Profile report copied!") end,
@@ -179,18 +183,29 @@ IMG.init{
     pay1='assets/image/mess/pay1.png',
     pay2='assets/image/mess/pay2.png',
 
-    miyaCH1='assets/image/characters/miya1.png',
-    miyaCH2='assets/image/characters/miya2.png',
-    miyaCH3='assets/image/characters/miya3.png',
-    miyaCH4='assets/image/characters/miya4.png',
-    miyaHeart='assets/image/characters/miya_heart.png',
-    miyaGlow='assets/image/characters/miya_glow.png',
+    miya={
+        miyaCH1='assets/image/characters/miya1.png',
+        miyaCH2='assets/image/characters/miya2.png',
+        miyaCH3='assets/image/characters/miya3.png',
+        miyaCH4='assets/image/characters/miya4.png',
+        heart='assets/image/characters/miya_heart.png',
+        glow='assets/image/characters/miya_glow.png',
+    },
     monoCH='assets/image/characters/mono.png',
     xiaoyaCH='assets/image/characters/xiaoya.png',
     xiaoyaOmino='assets/image/characters/xiaoya_Omino.png',
     mikuCH='assets/image/characters/miku.png',
     electric='assets/image/characters/electric.png',
     hbm='assets/image/characters/hbm.png',
+    z={
+        character='assets/image/characters/z_character.png',
+        screen1='assets/image/characters/z_screen1.png',
+        screen2='assets/image/characters/z_screen2.png',
+        particle1='assets/image/characters/z_particle1.png',
+        particle2='assets/image/characters/z_particle2.png',
+        particle3='assets/image/characters/z_particle3.png',
+        particle4='assets/image/characters/z_particle4.png',
+    },
 
     lanterns={
         'assets/image/lanterns/1.png',
