@@ -34,3 +34,10 @@ function playBgm(name,args)
         error("Wrong bgm args: "..tostring(args))
     end
 end
+
+function saveSetting()
+    FILE.save({
+        system=SETTINGS._system,
+        game=SETTINGS.game,
+    },'conf/settings','-json')
+end

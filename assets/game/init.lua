@@ -60,6 +60,11 @@ function GAME.setMain(id)
     GAME.players[id].sound=true
 end
 
+function GAME.loadSettings()
+    if GAME.mainPID then GAME.players[GAME.mainPID]:loadSettings(SETTINGS.game) end
+    for _,P in next,GAME.players do P:loadSettings(GAME.mode.settings) end
+end
+
 function GAME.press(action,id)
     if not id then id=GAME.mainPID end
     if not id then return end
@@ -73,18 +78,18 @@ function GAME.release(action,id)
 end
 
 function GAME.start()
-    for id,P in next,GAME.players do
+    for _,P in next,GAME.players do
         P:triggerEvent('playerInit')
         P:setPosition(800,500)
     end
 end
 
 function GAME.update(dt)
-    for id,P in next,GAME.players do P:update(dt) end
+    for _,P in next,GAME.players do P:update(dt) end
 end
 
 function GAME.render()
-    for id,P in next,GAME.players do P:render() end
+    for _,P in next,GAME.players do P:render() end
 
     gc.replaceTransform(SCR.origin)
     gc.setShader(SHADER.none)-- Directly draw the content, don't consider color, for better performance(?)

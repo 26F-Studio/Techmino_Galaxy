@@ -229,3 +229,66 @@ do
         end
     end
 end
+
+local settings
+settings={
+    _system={-- We just save values here, do not change them directly.
+        -- Audio
+        autoMute=false,
+        mainVol=1,
+        bgmVol=.8,
+        sfxVol=1,
+        vocVol=0,
+
+        -- Video
+        fullscreen=true,
+        maxFPS=300,
+        updRate=100,
+        drawRate=30,
+
+        -- Other
+        powerInfo=true,
+        sysCursor=false,
+        clickFX=true,
+        clean=false,
+        locale='en',
+    },
+    game={
+        -- Handling
+        das=75,
+        arr=0,
+        sdarr=0,
+
+        -- Video
+        shakeness=.6,
+    },
+}
+local settingTriggers=setmetatable({-- Changing values in SETTINGS.system will trigger these functions (if exist).
+    -- Audio
+    mainVol=        function(v) love.audio.setVolume(v) end,
+    bgmVol=         function(v) BGM.setVol(v) end,
+    sfxVol=         function(v) SFX.setVol(v) end,
+    vocVol=         function(v) VOC.setVol(v) end,
+
+    -- Video
+    fullscreen=     function(v) love.window.setFullscreen(v) love.resize(love.graphics.getWidth(),love.graphics.getHeight()) end,
+    maxFPS=         function(v) Zenitha.setMaxFPS(v) end,
+    updRate=        function(v) Zenitha.setUpdateFreq(v) end,
+    drawRate=       function(v) Zenitha.setDrawFreq(v) end,
+    sysCursor=      function(v) love.mouse.setVisible(v) end,
+    clickFX=        function(v) Zenitha.setClickFX(v) end,
+    clean=          function(v) Zenitha.setCleanCanvas(v) end,
+
+    -- Other
+    locale=         function(v) Text=LANG.get(v) LANG.setTextFuncSrc(Text) end,
+},{__index=function() return NULL end})
+settings.system=setmetatable({},{
+    __index=settings._system,
+    __newindex=function(_,k,v)
+        if settings._system[k]~=v then
+            settings._system[k]=v
+            settingTriggers[k](v)
+        end
+    end,
+})
+SETTINGS=settings

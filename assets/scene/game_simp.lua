@@ -1,8 +1,8 @@
 local gc=love.graphics
+local restartTimer,holdR=false,false
 
 local KEYMAP={
     {act='game_restart',   keys={'r','`'}},
-    {act='game_pause',     keys={'escape'}},
 
     {act='act_moveLeft',   keys={'kp1'}},
     {act='act_moveRight',  keys={'kp3'}},
@@ -35,8 +35,8 @@ local KEYMAP={
     {act='menu_down',      keys={'down'}},
     {act='menu_left',      keys={'left'}},
     {act='menu_right',     keys={'right'}},
-    {act='menu_pause',     keys={'return'}},
-    {act='menu_quit',      keys={'escape'}},
+    {act='menu_confirm',   keys={'return'}},
+    {act='menu_back',      keys={'escape'}},
 
     {act='rep_pause',      keys={'space'}},
     {act='rep_nextFrame',  keys={'n'}},
@@ -50,7 +50,7 @@ local KEYMAP={
     {act='rep_speed6x',    keys={'6'}},
     {act='rep_speed16x',   keys={'7'}},
 }
-local function _getKey(k)
+local function _getAction(k)
     for i=1,#KEYMAP do
         local l=KEYMAP[i].keys
         for j=1,#l do
@@ -67,49 +67,71 @@ function scene.enter()
     GAME.reset('sprint')
     GAME.newPlayer(1,'mino')
     GAME.setMain(1)
+    GAME.loadSettings()
     GAME.start()
-
-    BG.set('image')
-    BG.send('image',.12,IMG.cover)
 end
 
 function scene.keyDown(key,isRep)
     if isRep then return end
-    local action=_getKey(key)
+    local action=_getAction(key)
     if not action then return end
     if action:sub(1,4)=='act_' then
         GAME.press(action:sub(5))
     elseif action:sub(1,5)=='menu_' then
-        -- if action=='menu_pause' then
-        --     pauseGame()
-        -- elseif action=='menu_quit' then
-        --     quitGame()
-        -- end
-    elseif action:sub(1,5)=='game_' then
-        if action=='game_restart' then
-            scene.enter()
-        elseif action=='game_pause' then
-            MES.new('info',"No pausing now lol")
+        if action=='menu_confirm' then
+            if GAME.canPause then
+                SCN.go()
+            end
+        elseif action=='menu_back' then
+            SCN.back()
         end
+    elseif action=='game_restart' then
+        holdR=true
+        restartTimer=restartTimer or 0
     elseif action:sub(1,4)=='rep_' then
         -- TODO
     end
 end
 
 function scene.keyUp(key)
-    local action=_getKey(key)
+    local action=_getAction(key)
     if not action then return end
     if action:sub(1,4)=='act_' then
         GAME.release(action:sub(5))
+    elseif action=='game_restart' then
+        holdR=false
+    elseif action:sub(1,5)=='menu_' then
+        if action=='menu_back' then
+            SCN.back()
+        end
     end
 end
 
 function scene.update(dt)
     GAME.update(dt)
+    if restartTimer then
+        if holdR then
+            restartTimer=restartTimer+dt
+            if restartTimer>=.626 then
+                holdR=false
+                scene.enter()
+            end
+        else
+            restartTimer=restartTimer-2.6*dt
+            if restartTimer<=0 then
+                restartTimer=false
+            end
+        end
+    end
 end
 
 function scene.draw()
     GAME.render()
+    gc.replaceTransform(SCR.origin)
+    if restartTimer then
+        gc.setColor(0,0,0,restartTimer/.626)
+        gc.rectangle('fill',0,0,SCR.w,SCR.h)
+    end
 end
 
 scene.widgetList={

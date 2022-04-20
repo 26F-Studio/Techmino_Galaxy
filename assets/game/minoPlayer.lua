@@ -1201,17 +1201,18 @@ local baseEnv={-- Generate from template in future
     spawnDelay=0,
     clearDelay=0,
 
-    das=75,
-    arr=0,
-    sdarr=0,
-
     actionPack='modern',
     seqType='bag7',
     rotSys='TRS',
 
     freshCondition='any',
 
-    shakeness=.6,
+    -- Will be overrode with user setting
+    das=162,
+    arr=26,
+    sdarr=12,
+
+    shakeness=.26,
 }
 local seqGenerators={
     none=function()while true do coroutine.yield()end end,
@@ -1292,7 +1293,7 @@ local modeDataMeta={
     __newindex=function(self,k,v)rawset(self,k,v)end,
     __metatable=true,
 }
-function MP.new(mode)
+function MP.new()
     local P=setmetatable({},{__index=MP})
 
     P.settings=TABLE.copy(baseEnv)
@@ -1326,28 +1327,6 @@ function MP.new(mode)
     }
     P.modeData=setmetatable({},modeDataMeta)
     P.sound=false
-
-    -- Load data & events from mode settings
-    for k,v in next,mode.settings do
-        if k~='event' then
-            if type(v)=='table' then
-                P.settings[k]=TABLE.copy(v)
-            elseif v~=nil then
-                P.settings[k]=v
-            end
-        else
-            for name,E in next,v do
-                assert(P.event[name],"Wrong event key: '"..tostring(name).."'")
-                if type(E)=='table' then
-                    for i=1,#E do
-                        ins(P.event[name],E[i])
-                    end
-                elseif type(E)=='function' then
-                    ins(P.event[name],E)
-                end
-            end
-        end
-    end
 
     P.pos={
         x=0,y=0,k=1,a=0,
@@ -1437,6 +1416,29 @@ function MP.new(mode)
     end
 
     return P
+end
+function MP:loadSettings(settings)
+    -- Load data & events from mode settings
+    for k,v in next,settings do
+        if k~='event' then
+            if type(v)=='table' then
+                self.settings[k]=TABLE.copy(v)
+            elseif v~=nil then
+                self.settings[k]=v
+            end
+        else
+            for name,E in next,v do
+                assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
+                if type(E)=='table' then
+                    for i=1,#E do
+                        ins(self.event[name],E[i])
+                    end
+                elseif type(E)=='function' then
+                    ins(self.event[name],E)
+                end
+            end
+        end
+    end
 end
 --------------------------------------------------------------
 

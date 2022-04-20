@@ -57,11 +57,26 @@ DEBUG.checkLoadTime("Load Assets")
 STRING.install()
 Zenitha.setAppName('Techmino')
 Zenitha.setVersionText(VERSION.appVer)
-Zenitha.setFirstScene('game_simp')
+Zenitha.setFirstScene('main_1')
 Zenitha.setMaxFPS(260)
 Zenitha.setUpdateFreq(100)
 Zenitha.setDrawFreq(60/260*100)
-Zenitha.setDrawCursor(NULL)
+do--Zenitha.setDrawCursor
+    local gc=love.graphics
+    Zenitha.setDrawCursor(function(_,x,y)
+        if not SETTINGS.system.sysCursor then
+            gc.setColor(1,1,1)
+            gc.setLineWidth(2)
+            gc.translate(x,y)
+            gc.rotate(love.timer.getTime()%6.283185307179586)
+            gc.rectangle('line',-10,-10,20,20)
+            if love.mouse.isDown(1) then gc.rectangle('fill',-6,-6,12,12) end
+            gc.setColor(1,1,1,.626)
+            gc.line(0,-20,0,20)
+            gc.line(-20,0,20,0)
+        end
+    end)
+end
 Zenitha.setOnFnKeys({
     function() MES.new('info',("System:%s[%s]\nLuaVer:%s\nJitVer:%s\nJitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,
     function() MES.new('check',PROFILE.switch() and "Profile start!" or "Profile report copied!") end,
@@ -78,28 +93,64 @@ Zenitha.setDebugInfo{
     {"Audios",love.audio.getSourceCount},
 }
 do-- Zenitha.setOnFocus
-    -- local function task_autoSoundOff()
-    --     repeat
-    --         local v=math.max(love.audio.getVolume()-coroutine.yield(),0)
-    --         love.audio.setVolume(v)
-    --     until v==0
-    -- end
-    -- local function task_autoSoundOn()
-    --     repeat
-    --         local v=math.min(love.audio.getVolume()+coroutine.yield(),1)
-    --         love.audio.setVolume(v)
-    --     until v==1
-    -- end
-    -- Zenitha.setOnFocus(function(f)
-    --     if f then
-    --         TASK.removeTask_code(task_autoSoundOff)
-    --         TASK.new(task_autoSoundOn)
-    --     else
-    --         TASK.removeTask_code(task_autoSoundOn)
-    --         TASK.new(task_autoSoundOff)
-    --     end
-    -- end)
+    local function task_autoSoundOff()
+        repeat
+            local v=math.max(love.audio.getVolume()-coroutine.yield(),0)
+            love.audio.setVolume(v*SETTINGS.system.mainVol)
+        until v==0
+    end
+    local function task_autoSoundOn()
+        repeat
+            local v=math.min(love.audio.getVolume()+coroutine.yield(),1)
+            love.audio.setVolume(v*SETTINGS.system.mainVol)
+        until v==1
+    end
+    Zenitha.setOnFocus(function(f)
+        if SETTINGS.system.autoMute then
+            if f then
+                TASK.removeTask_code(task_autoSoundOff)
+                TASK.new(task_autoSoundOn)
+            else
+                TASK.removeTask_code(task_autoSoundOn)
+                TASK.new(task_autoSoundOff)
+            end
+        end
+    end)
 end
+do--Zenitha.setDrawSysInfo
+    local gc=love.graphics
+    Zenitha.setDrawSysInfo(function()
+        if not SETTINGS.system.powerInfo then return end
+        gc.translate(SCR.safeX,0)
+        gc.setColor(0,0,0,.26)
+        gc.rectangle('fill',0,0,107,26)
+        local state,pow=love.system.getPowerInfo()
+        if state~='unknown' then
+            gc.setLineWidth(2)
+            if state=='nobattery' then
+                gc.setColor(1,1,1)
+                gc.line(74,5,100,22)
+            elseif pow then
+                if state=='charging' then gc.setColor(0,1,0)
+                elseif pow>50 then        gc.setColor(1,1,1)
+                elseif pow>26 then        gc.setColor(1,1,0)
+                elseif pow==26 then       gc.setColor(.5,0,1)
+                else                      gc.setColor(1,0,0)
+                end
+                gc.rectangle('fill',76,6,pow*.22,14)
+                if pow<100 then
+                    FONT.set(10,'_basic')
+                    GC.shadedPrint(pow,87,6,'center',1,8)
+                end
+            end
+            gc.rectangle('line',74,4,26,18)
+            gc.rectangle('fill',102,6,2,14)
+        end
+        FONT.set(25,'_basic')
+        gc.print(os.date("%H:%M"),3,-5)
+    end)
+end
+
 FONT.load{
     norm='assets/fonts/proportional.otf',
     mono='assets/fonts/monospaced.otf',
@@ -110,6 +161,10 @@ FONT.setDefaultFallback('norm')
 SCR.setSize(1600,1000)
 BGM.setMaxSources(20)
 VOC.setDiversion(.62)
+WIDGET.setDefaultButtonSound('button')
+WIDGET.setDefaultCheckBoxSound('check','uncheck')
+WIDGET.setDefaultSelectorSound('selector')
+
 --[Attention] Not loading IMG/SFX/BGM files here, just read file paths
 IMG.init{
     lock='assets/image/mess/lock.png',
@@ -173,8 +228,17 @@ BGM.load((function()
     return L
 end)())
 VOC.init{}
-WS.switchHost('101.43.110.22','10026','/tech/socket/v1')
+LANG.add{
+    en='assets/language/lang_en.lua',
+}
 DEBUG.checkLoadTime("Configuring Zenitha")
+--------------------------------------------------------------
+-- Load saving data
+TABLE.coverR(FILE.load('conf/settings','-json -canskip') or {},SETTINGS)
+for k,v in next,SETTINGS._system do
+    SETTINGS._system[k]=nil
+    SETTINGS.system[k]=v
+end
 --------------------------------------------------------------
 -- Load SOURCE ONLY resources
 SHADER={}
@@ -196,6 +260,6 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
         SCN.add(sceneName,require('assets/scene/'..sceneName))
     end
 end
-DEBUG.checkLoadTime("Load SDs+BGs+SCNs")
+DEBUG.checkLoadTime("Load shaders/backgrounds/scenes")
 --------------------------------------------------------------
 DEBUG.logLoadTime()
