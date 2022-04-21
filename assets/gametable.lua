@@ -216,16 +216,25 @@ do
             base={'melody','bass','drum'},
             full={'melody','accompany1','accompany2','bass','drum'},
         },
+        ['1980s']=true,
+        ['blank orchestra']=true,
+        ['empty']=true,
+        ['jazz nihilism']=true,
+        ['sakura']=true,
     }
     for name,song in next,bgmList do
-        if song.base and song.full then
-            song.add=TABLE.shift(song.full)
-            TABLE.subtract(song.add,song.base)
-        end
-        for mode,channels in next,song do
-            for i=1,#channels do
-                channels[i]=name..'/'..channels[i]
+        if type(song)=='table' then
+            if song.base and song.full then
+                song.add=TABLE.shift(song.full)
+                TABLE.subtract(song.add,song.base)
             end
+            for mode,channels in next,song do
+                for i=1,#channels do
+                    channels[i]=name..'/'..channels[i]
+                end
+            end
+        else
+            bgmList[name]={name}
         end
     end
 end

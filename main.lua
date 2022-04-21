@@ -235,10 +235,17 @@ BGM.load((function()
     local path='assets/music'
     local L={}
     for _,dir in next,love.filesystem.getDirectoryItems(path) do
-        for _,file in next,love.filesystem.getDirectoryItems(path..'/'..dir) do
-            local fullPath=path..'/'..dir..'/'..file
+        if love.filesystem.getInfo(path..'/'..dir).type=='directory' then
+            for _,file in next,love.filesystem.getDirectoryItems(path..'/'..dir) do
+                local fullPath=path..'/'..dir..'/'..file
+                if FILE.isSafe(fullPath) then
+                    L[dir..'/'..file:sub(1,-5)]=fullPath
+                end
+            end
+        elseif love.filesystem.getInfo(path..'/'..dir).type=='file' then
+            local fullPath=path..'/'..dir
             if FILE.isSafe(fullPath) then
-                L[dir..'/'..file:sub(1,-5)]=fullPath
+                L[dir:sub(1,-5)]=fullPath
             end
         end
     end
