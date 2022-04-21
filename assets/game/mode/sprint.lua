@@ -11,7 +11,7 @@ return {
                 end
             end,
             afterClear=function(P)
-                P.modeData.line=P.modeData.line+P.clearHistory[#P.clearHistory].line
+                P.modeData.line=math.min(P.modeData.line+P.clearHistory[#P.clearHistory].line,40)
                 if P.modeData.line>=40 then P:gameover('AC') end
                 if P.isMain and P.modeData.line>10 then
                     BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-10)/20,1),2.6)
@@ -24,7 +24,7 @@ return {
             drawOnPlayer=function(P)
                 gc.setColor(COLOR.L)
                 FONT.set(80)
-                GC.mStr(math.max(40-P.modeData.line,0),-300,-55)
+                GC.mStr(40-P.modeData.line,-300,-55)
             end,
             gameOver=function(P)
                 -- TODO

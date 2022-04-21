@@ -364,6 +364,9 @@ local defaultSoundFunc={
             BGM.set('all','highgain',1,min((l)^1.5/5,2.6))
         end
     end,
+    reach=function()
+        SFX.play('beep1')
+    end,
     win=function()
         SFX.play('beep1')
     end,
@@ -747,8 +750,9 @@ function MP:gameover(reason)
     self.hand=false
     self.spawnTimer=1e99
     MES.new(reason=='AC' and 'check' or 'error',reason,6.26)
+    self:playSound(reason=='AC' and 'win' or 'lose')
     if reason=='AC' then-- Win
-        self:playSound('win')
+        -- TODO
     elseif reason=='WA' then-- Block out
         -- TODO
     elseif reason=='CE' then-- Lock out

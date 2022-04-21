@@ -64,7 +64,7 @@ end
 local scene={}
 
 function scene.enter()
-    GAME.reset('sprint')
+    GAME.reset(SCN.args[1])
     GAME.newPlayer(1,'mino')
     GAME.setMain(1)
     GAME.loadSettings()
