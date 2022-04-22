@@ -7,7 +7,8 @@ return {
         event={
             playerInit=function(P)
                 if P.isMain then
-                    playBgm('sakura')
+                    playBgm('sakura','-noloop')
+                    BGM.set('all','seek',0)
                 end
             end,
             always=function(P)
@@ -34,6 +35,10 @@ return {
                 gc.pop()
             end,
             gameOver=function(P)
+                if P.isMain then
+                    BGM.set('all','pitch',.5,5)
+                    BGM.stop(5)
+                end
                 -- TODO
             end,
         },

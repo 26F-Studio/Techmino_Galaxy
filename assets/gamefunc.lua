@@ -20,19 +20,19 @@ end
 
 function playBgm(name,args)
     if bgmList[name][1] then
-        BGM.play(bgmList[name])
+        BGM.play(bgmList[name],args)
     else
         if args:sArg('-simp') then
-            BGM.play(bgmList[name].base)
+            BGM.play(bgmList[name].base,args)
         elseif args:sArg('-base') then
             if not TABLE.compare(BGM.getPlaying(),bgmList[name].full) then
-                BGM.play(bgmList[name].full)
+                BGM.play(bgmList[name].full,args)
                 BGM.set(bgmList[name].add,'volume',0,0)
             else
                 BGM.set(bgmList[name].add,'volume',0,1)
             end
         elseif args:sArg('-full') then
-            BGM.play(bgmList[name].full)
+            BGM.play(bgmList[name].full,args)
         else
             error("Wrong bgm args: "..tostring(args))
         end
