@@ -29,7 +29,7 @@ function scene.keyDown(key,isRep)
         if kb.isDown('lshift','rshift') then note=note+1 end
         if kb.isDown('lctrl','rctrl') then note=note-1 end
         SFX.playSample(inst,note)
-        TEXT.show(SFX.getNoteName(note),math.random(150,1130),math.random(140,500),60,'score',.8)
+        TEXT:add(SFX.getNoteName(note),math.random(150,1130),math.random(140,500),60,'score',.8)
     elseif key=='tab' then
         inst=TABLE.next(instList,inst)
     elseif key=='lalt' then

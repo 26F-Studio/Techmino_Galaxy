@@ -89,7 +89,7 @@ local function merge()
         board[cy][cx]=chosen+1
         local getScore=3^(chosen-1)*math.min(int(.5+count/2),4)
         score=score+getScore
-        TEXT.show(getScore,cx*128+256,cy*128-40,40,'score')
+        TEXT:add(getScore,cx*128+256,cy*128-40,40,'score')
         SYSFX.newRectRipple(2,320+cx*128-128,40+cy*128-128,128,128)
         SFX.play('lock')
         if chosen==maxTile then

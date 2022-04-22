@@ -82,7 +82,7 @@ local function newTile()
 
     -- Fresh score
     score=score+2^nextTile
-    TEXT.show("+"..2^nextTile,field.x+field.w+180+rnd(-90,90),770+rnd(-40,40),40,'score',1.5)
+    TEXT:add("+"..2^nextTile,field.x+field.w+180+rnd(-90,90),770+rnd(-40,40),40,'score',1.5)
 
     -- Generate next number
     nextCD=nextCD-1
@@ -309,7 +309,7 @@ function scene.keyDown(key,isRep)
                     end
                 end
                 newTile()
-                TEXT.show(arrows[key],field.mx,field.my,100,'beat',3)
+                TEXT:add(arrows[key],field.mx,field.my,100,'beat',3)
                 move=move+1
                 if not autoPressing then
                     SFX.play('touch')

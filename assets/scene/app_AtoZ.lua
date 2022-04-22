@@ -49,7 +49,7 @@ function scene.keyDown(key,isRep)
             if key:upper():byte()==targetString:byte(progress) then
                 progress=progress+1
                 frameKeyCount=frameKeyCount+1
-                TEXT.show(key:upper(),rnd(320,960),rnd(100,240),90,'score',2.6)
+                TEXT:add(key:upper(),rnd(320,960),rnd(100,240),90,'score',2.6)
                 SFX.play('touch')
                 if progress==2 then
                     state=1

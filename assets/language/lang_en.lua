@@ -1,4 +1,28 @@
 return{
+    clearName={
+        "Single",
+        "Double",
+        "Triple",
+        "Techrash",
+        "Pentacrash",
+        "Hexacrash",
+        "Heptacrash",
+        "Octacrash",
+        "Nonacrash",
+        "Decacrash",
+        "Undecacrash",
+        "Dodecacrash",
+        "Tridecacrash",
+        "Tetradecacrash",
+        "Pentadecacrash",
+        "Hexadecacrash",
+        "Heptadecacrash",
+        "Octadecacrash",
+        "Nonadecacrash",
+        "Ultracrash",
+        "Impossicrash",
+    },
+
     -- Widget texts
     main_1_play="Play",
     main_1_setting="Setting",

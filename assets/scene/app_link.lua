@@ -186,7 +186,7 @@ local function tap(x,y)
                 -- Score
                 local s=1000+int(combo^.9)
                 score=score+s
-                TEXT.show("+"..s,1205,600,20,'score')
+                TEXT:add("+"..s,1205,600,20,'score')
 
                 -- Combo
                 if comboTime==0 then
@@ -202,7 +202,7 @@ local function tap(x,y)
                     if noComboBreak then
                         SFX.play('emit')
                         SFX.play('clear_4')
-                        TEXT.show("FULL COMBO",640,360,100,'beat',.626)
+                        TEXT:add("FULL COMBO",640,360,100,'beat',.626)
                         comboTime=comboTime+3
                         score=int(score*1.1)
                     end

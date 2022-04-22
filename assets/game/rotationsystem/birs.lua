@@ -84,15 +84,10 @@ local function r(P,dir)
             then
                 local x,y=ix+fdx,iy+fdy
                 if not P:ifoverlap(icb,x,y) then
-                    P.handX,P.handY,C.direction=x,y,idir
                     C.matrix=icb
-                    P.spinLast=test==2 and 0 or 1
-                    P:freshGhost()
-                    P:playSound('rotate')
-                    if P.handY==P.ghostY then
-                        P:playSound('touch')
-                    end
-                return
+                    C.direction=idir
+                    P:moveHand('rotate','s',x,y)
+                    return
                 end
             end
         end

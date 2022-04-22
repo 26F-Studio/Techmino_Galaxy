@@ -173,7 +173,7 @@ function player:click(y,x)
 
                 local getScore=4^cur*count
                 self.score=self.score+getScore
-                TEXT.show(getScore,player.x+self.selectX*100-50,player.y+self.selectY*100-50,40,'score',1.626/math.log(getScore,3))
+                TEXT:add(getScore,player.x+self.selectX*100-50,player.y+self.selectY*100-50,40,'score',1.626/math.log(getScore,3))
                 for i=1,#self.mergedTiles do
                     newMergeFX(self.mergedTiles[i][1],self.mergedTiles[i][2],cur+1)
                 end

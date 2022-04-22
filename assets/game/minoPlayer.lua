@@ -91,7 +91,7 @@ function actions.softDrop(P)
     P.downCharge=0
     if not P.hand then return end
     if P.handY>P.ghostY then
-        P.handY=P.handY-1
+        P:moveHand('move','d',0,-1)
         P:freshDelay('drop')
         if P.handY==P.ghostY then
             P:playSound('touch')
@@ -101,7 +101,7 @@ end
 function actions.sonicDrop(P)
     if not P.hand then return end
     if P.handY>P.ghostY then
-        P.handY=P.ghostY
+        P:moveHand('move','d',0,P.ghostY-P.handY)
         P:freshDelay('drop')
         if P.handY==P.ghostY then
             P:playSound('touch')
@@ -147,7 +147,7 @@ function actions.sonicLeft(P)
     local moved
     while P.hand and not P:ifoverlap(P.hand.matrix,P.handX-1,P.handY) do
         moved=true
-        P.handX=P.handX-1
+        P:moveHand('move','d',-1,0)
         P:freshGhost()
     end
     if P.handY==P.ghostY then
@@ -159,7 +159,7 @@ function actions.sonicRight(P)
     local moved
     while P.hand and not P:ifoverlap(P.hand.matrix,P.handX+1,P.handY) do
         moved=true
-        P.handX=P.handX+1
+        P:moveHand('move','d',1,0)
         P:freshGhost()
     end
     if P.handY==P.ghostY then
@@ -391,6 +391,55 @@ function MP:triggerEvent(name,...)
         for i=1,#L do L[i](self,...) end
     end
 end
+function MP:moveHand(action,mode,x,y,z)
+    if mode=='d' then
+        self.handX=self.handX+x
+        self.handY=self.handY+y
+    elseif mode=='s' then
+        self.handX=x
+        self.handY=y
+    end
+    local movement={
+        action=action,
+        mino=self.hand,
+        x=self.handX,y=self.handY,
+    }
+
+    if action=='rotate' then
+        if
+            self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
+            self:ifoverlap(self.hand.matrix,self.handX,self.handY+1) and
+            self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) and
+            self:ifoverlap(self.hand.matrix,self.handX+1,self.handY)
+        then
+            movement.immobile=true
+            self:shakeBoard(z=='L' and '-ccw' or z=='R' and '-cw' or '-180')
+            self:playSound('rotate',true)
+        else
+            self:playSound('rotate')
+        end
+        local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
+        local state=minoData[self.hand.direction]
+        local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
+        if centerPos then
+            local cx,cy=self.handX+centerPos[1]-.5,self.handY+centerPos[2]-.5
+            if int(cx)==cx then
+                local corners=0
+                local F=self.field
+                if F:getCell(cx-1,cy-1) then corners=corners+1 end
+                if F:getCell(cx+1,cy-1) then corners=corners+1 end
+                if F:getCell(cx-1,cy+1) then corners=corners+1 end
+                if F:getCell(cx+1,cy+1) then corners=corners+1 end
+                movement.corners=corners
+            end
+        end
+        self:freshGhost()
+        if self.handY==self.ghostY then
+            self:playSound('touch')
+        end
+    end
+    self.lastMovement=movement
+end
 function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside, like shape, name, direction)
     if not mino._origin then return end
     for k,v in next,mino._origin do
@@ -399,8 +448,7 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
     return mino
 end
 function MP:resetPos()-- Move hand piece to the normal spawn position
-    self.handX=int(self.field:getWidth()/2-#self.hand.matrix[1]/2+1)
-    self.handY=self.settings.spawnH+1
+    self:moveHand('reset','s',int(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
     self.minY=self.handY
     if self.keyBuffer.move then-- IMS
         if self.keyBuffer.move=='L' then
@@ -444,7 +492,7 @@ function MP:freshGhost()
         end
 
         if (self.settings.dropDelay==0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then-- if (temp) 20G on
-            self.handY=self.ghostY
+            self:moveHand('drop','d',0,self.ghostY-self.handY)
             self:shakeBoard('-drop')
             self:freshDelay('drop')
         else
@@ -563,14 +611,14 @@ function MP:ifoverlap(CB,cx,cy)
 end
 function MP:moveLeft()
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
-        self.handX=self.handX-1
+        self:moveHand('move','d',-1,0)
         self:freshGhost()
         return true
     end
 end
 function MP:moveRight()
     if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
-        self.handX=self.handX+1
+        self:moveHand('move','d',1,0)
         self:freshGhost()
         return true
     end
@@ -608,18 +656,8 @@ function MP:rotate(dir)
                 local ix,iy=self.handX+baseX+kick.test[n][1],self.handY+baseY+kick.test[n][2]
                 if not self:ifoverlap(icb,ix,iy) then
                     self.hand.matrix=icb
-                    self.handX,self.handY=ix,iy
                     self.hand.direction=kick.target
-                    self:freshGhost()
-                    if self:ifoverlap(icb,ix,iy+1)and self:ifoverlap(icb,ix-1,iy)and self:ifoverlap(icb,ix+1,iy) then
-                        self:shakeBoard(dir=='L' and '-ccw' or dir=='R' and '-cw' or '-180')
-                        self:playSound('rotate',true)
-                    else
-                        self:playSound('rotate')
-                    end
-                    if self.handY==self.ghostY then
-                        self:playSound('touch')
-                    end
+                    self:moveHand('rotate','s',ix,iy,dir)
                     return
                 end
             end
@@ -672,18 +710,45 @@ function MP:hold_float()
     -- TODO
 end
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
+    -- Move down
     if self.handY>self.ghostY then
         self:playSound('drop')
-        self.handY=self.ghostY
+        self:moveHand('drop','d',0,self.ghostY-self.handY)
         self:shakeBoard('-drop')
     end
     self:triggerEvent('afterDrop')
+
+    -- Lock to field
     self:lock()
     self:playSound('lock')
     self:triggerEvent('afterLock')
-    self:checkField(self.hand)
+
+    -- Check field
+    local M=self.lastMovement
+    local text=''
+    local spin=M.action=='rotate' and (M.immobile or M.corners and M.corners>=3)
+    M.clear=self:checkField(self.hand)
+    if M.clear then
+        self:triggerEvent('afterClear',M)
+        if spin then
+            text=M.mino.name..'-Spin '
+        end
+        text=text..(Text.clearName[M.clear.line] or ('['..M.clear.line..']'))
+
+        self.texts:add(text,0,0,spin and 60 or 70,M.clear.line>=4 and 'stretch' or spin and 'spin' or 'appear',.32)
+    else
+        if spin then
+            text=M.mino.name..'-Spin'
+        end
+        self.texts:add(text,0,0,55,'appear',.626)
+    end
+
+    -- Discard hand
+    self.hand=false
     if self.finished then return end
-    self:discardMino()
+
+    -- Fresh hand
+    self.spawnTimer=self.settings.spawnDelay
     if self.clearTimer==0 and self.spawnTimer==0 then
         self:popNext()
     end
@@ -726,22 +791,20 @@ function MP:checkField(mino)-- Check line clear, top out checking, etc.
             combo=self.combo,
             line=#lineClear,
             lines=lineClear,
+            time=self.time,
         }
         ins(self.clearHistory,h)
         self:playSound('combo',h)
         self:playSound('clear',h)
         self:shakeBoard('-clear',#lineClear)
-        self:triggerEvent('afterClear',h)
+        return h
     else
         self.combo=0
         if self.handY>self.settings.deathH then
             self:gameover('MLE')
         end
     end
-end
-function MP:discardMino()
-    self.hand=false
-    self.spawnTimer=self.settings.spawnDelay
+    return false
 end
 function MP:gameover(reason)
     if self.finished then return end
@@ -856,7 +919,7 @@ function MP:update(dt)
                 if dist>0 then
                     local ox=self.handX
                     while dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
-                        self.handX=self.handX+self.moveDir
+                        self:moveHand('move','d',self.moveDir,0)
                         self:freshGhost()
                         dist=dist-1
                     end
@@ -887,7 +950,7 @@ function MP:update(dt)
                 local dist=SET.sdarr==0 and 1e99 or int(c1/SET.sdarr)-int(c0/SET.sdarr)
                 local oy=self.handY
                 while dist>0 and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) do
-                    self.handY=self.handY-1
+                    self:moveHand('drop','d',0,-1)
                     self:freshDelay('drop')
                     dist=dist-1
                 end
@@ -935,7 +998,7 @@ function MP:update(dt)
                     self.dropTimer=self.dropTimer-1--[[df]]
                     if self.dropTimer==0 then
                         self.dropTimer=SET.dropDelay
-                        self.handY=self.handY-1
+                        self:moveHand('drop','d',0,-1)
                         if self.handY==self.ghostY then
                             self:playSound('touch')
                         end
@@ -945,6 +1008,8 @@ function MP:update(dt)
                 end
             end
         until true
+
+        self.texts:update(dt)
 
         self:triggerEvent('always',1--[[df]])
     end
@@ -989,7 +1054,7 @@ function MP:render()
         end
     end
 
-    -- Cells
+    -- Field cells
     local F=self.field
     for y=1,F:getHeight() do for x=1,F:getWidth() do
         local C=F:getCell(x,y)
@@ -1119,6 +1184,7 @@ function MP:render()
     gc.setColor(COLOR.dL)
     FONT.set(30)
     gc.printf(("%.3f"):format(self.gameTime/1000),-210-260,380,260,'right')
+    self.texts:draw()
 
 
     self:triggerEvent('drawOnPlayer')
@@ -1180,6 +1246,29 @@ function MP:render()
 end
 --------------------------------------------------------------
 -- Other methods
+function MP:loadSettings(settings)
+    -- Load data & events from mode settings
+    for k,v in next,settings do
+        if k~='event' then
+            if type(v)=='table' then
+                self.settings[k]=TABLE.copy(v)
+            elseif v~=nil then
+                self.settings[k]=v
+            end
+        else
+            for name,E in next,v do
+                assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
+                if type(E)=='table' then
+                    for i=1,#E do
+                        ins(self.event[name],E[i])
+                    end
+                elseif type(E)=='function' then
+                    ins(self.event[name],E)
+                end
+            end
+        end
+    end
+end
 function MP:setPosition(x,y,k,a)
     self.pos.x=x or self.pos.x
     self.pos.y=y or self.pos.y
@@ -1376,9 +1465,10 @@ function MP.new()
     P.spawnTimer=P.settings.readyDelay
     P.clearTimer=0
 
-    P.hand=false
+    P.hand=false-- Controlling mino object
     P.handX=false
     P.handY=false
+    P.lastMovement=false-- Controlling mino path, for spin/tuck/... checking
     P.ghostY=false
     P.minY=false
 
@@ -1395,6 +1485,7 @@ function MP.new()
     }
     P.dropHistory={}
     P.clearHistory={}
+    P.texts=TEXT.new()
 
     -- Generate available actions
     do
@@ -1428,29 +1519,6 @@ function MP.new()
     end
 
     return P
-end
-function MP:loadSettings(settings)
-    -- Load data & events from mode settings
-    for k,v in next,settings do
-        if k~='event' then
-            if type(v)=='table' then
-                self.settings[k]=TABLE.copy(v)
-            elseif v~=nil then
-                self.settings[k]=v
-            end
-        else
-            for name,E in next,v do
-                assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
-                if type(E)=='table' then
-                    for i=1,#E do
-                        ins(self.event[name],E[i])
-                    end
-                elseif type(E)=='function' then
-                    ins(self.event[name],E)
-                end
-            end
-        end
-    end
 end
 --------------------------------------------------------------
 
