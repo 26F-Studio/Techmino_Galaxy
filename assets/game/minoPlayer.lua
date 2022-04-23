@@ -372,6 +372,12 @@ local defaultSoundFunc={
             BGM.set('all','highgain',1,min((l)^1.5/5,2.6))
         end
     end,
+    allClear=function ()
+        SFX.play('all_clear')
+    end,
+    halfClear=function ()
+        SFX.play('half_clear')
+    end,
     reach=function()
         SFX.play('beep1')
     end,
@@ -746,9 +752,8 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         local M=self.lastMovement
         local text=''
         local spin=M.action=='rotate' and (M.immobile or M.corners and M.corners>=3)
-        M.clear=self:checkField(self.hand)
+        M.clear=self:checkField()
         if M.clear then
-            self:triggerEvent('afterClear',M)
             if spin then
                 text=Text.spin:repD(M.mino.name).." "
             end
@@ -760,9 +765,16 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
             end
             if self.field:getHeight()==0 then
                 self.texts:add(Text.allClear,0,-80,75,'flicker',.2)
+                self:playSound('allClear')
             elseif M.y>self.field:getHeight() then
                 self.texts:add(Text.halfClear,0,-80,65,'fly',.3)
+                self:playSound('halfClear')
             end
+
+            self:playSound('combo',M.clear)
+            self:playSound('clear',M.clear)
+
+            self:triggerEvent('afterClear',M)
         else
             if M.tuck then
                 text=Text.tuck
@@ -799,7 +811,7 @@ function MP:lock()-- Put mino into field
         y=self.handY,
     })
 end
-function MP:checkField(mino)-- Check line clear, top out checking, etc.
+function MP:checkField()-- Check line clear, top out checking, etc.
     local lineClear={}
     local F=self.field
     for y=F:getHeight(),1,-1 do
@@ -819,15 +831,12 @@ function MP:checkField(mino)-- Check line clear, top out checking, etc.
         self.combo=self.combo+1
         self.clearTimer=self.settings.clearDelay
         local h={
-            mino=mino,
             combo=self.combo,
             line=#lineClear,
             lines=lineClear,
             time=self.time,
         }
         ins(self.clearHistory,h)
-        self:playSound('combo',h)
-        self:playSound('clear',h)
         self:shakeBoard('-clear',#lineClear)
         return h
     else
