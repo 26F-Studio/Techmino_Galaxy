@@ -91,7 +91,7 @@ function actions.softDrop(P)
     P.downCharge=0
     if not P.hand then return end
     if P.handY>P.ghostY then
-        P:moveHand('move','d',0,-1)
+        P:moveHand('moveY',-1)
         P:freshDelay('drop')
         if P.handY==P.ghostY then
             P:playSound('touch')
@@ -101,7 +101,7 @@ end
 function actions.sonicDrop(P)
     if not P.hand then return end
     if P.handY>P.ghostY then
-        P:moveHand('move','d',0,P.ghostY-P.handY)
+        P:moveHand('moveY',P.ghostY-P.handY)
         P:freshDelay('drop')
         if P.handY==P.ghostY then
             P:playSound('touch')
@@ -147,7 +147,7 @@ function actions.sonicLeft(P)
     local moved
     while P.hand and not P:ifoverlap(P.hand.matrix,P.handX-1,P.handY) do
         moved=true
-        P:moveHand('move','d',-1,0)
+        P:moveHand('moveX',-1)
         P:freshGhost()
     end
     if P.handY==P.ghostY then
@@ -159,7 +159,7 @@ function actions.sonicRight(P)
     local moved
     while P.hand and not P:ifoverlap(P.hand.matrix,P.handX+1,P.handY) do
         moved=true
-        P:moveHand('move','d',1,0)
+        P:moveHand('moveX',1)
         P:freshGhost()
     end
     if P.handY==P.ghostY then
@@ -391,21 +391,31 @@ function MP:triggerEvent(name,...)
         for i=1,#L do L[i](self,...) end
     end
 end
-function MP:moveHand(action,mode,x,y,z)
-    if mode=='d' then
-        self.handX=self.handX+x
-        self.handY=self.handY+y
-    elseif mode=='s' then
-        self.handX=x
-        self.handY=y
+function MP:moveHand(action,a,b,c)
+    if action=='moveX' then
+        self.handX=self.handX+a
+    elseif action=='drop' or action=='moveY' then
+        self.handY=self.handY+a
+    elseif action=='rotate' or action=='reset' then
+        self.handX,self.handY=a,b
+    else
+        error('wtf why action is '..tostring(action))
     end
+
     local movement={
         action=action,
         mino=self.hand,
         x=self.handX,y=self.handY,
     }
 
-    if action=='rotate' then
+    if action=='moveX' then
+        if
+            self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
+            self:ifoverlap(self.hand.matrix,self.handX,self.handY+1)
+        then
+            movement.tuck=true
+        end
+    elseif action=='rotate' then
         if
             self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY+1) and
@@ -413,7 +423,7 @@ function MP:moveHand(action,mode,x,y,z)
             self:ifoverlap(self.hand.matrix,self.handX+1,self.handY)
         then
             movement.immobile=true
-            self:shakeBoard(z=='L' and '-ccw' or z=='R' and '-cw' or '-180')
+            self:shakeBoard(c=='L' and '-ccw' or c=='R' and '-cw' or '-180')
             self:playSound('rotate',true)
         else
             self:playSound('rotate')
@@ -425,11 +435,10 @@ function MP:moveHand(action,mode,x,y,z)
             local cx,cy=self.handX+centerPos[1]-.5,self.handY+centerPos[2]-.5
             if int(cx)==cx then
                 local corners=0
-                local F=self.field
-                if F:getCell(cx-1,cy-1) then corners=corners+1 end
-                if F:getCell(cx+1,cy-1) then corners=corners+1 end
-                if F:getCell(cx-1,cy+1) then corners=corners+1 end
-                if F:getCell(cx+1,cy+1) then corners=corners+1 end
+                if self.field:getCell(cx-1,cy-1) then corners=corners+1 end
+                if self.field:getCell(cx+1,cy-1) then corners=corners+1 end
+                if self.field:getCell(cx-1,cy+1) then corners=corners+1 end
+                if self.field:getCell(cx+1,cy+1) then corners=corners+1 end
                 movement.corners=corners
             end
         end
@@ -448,7 +457,7 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
     return mino
 end
 function MP:resetPos()-- Move hand piece to the normal spawn position
-    self:moveHand('reset','s',int(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
+    self:moveHand('reset',int(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
     self.minY=self.handY
     if self.keyBuffer.move then-- IMS
         if self.keyBuffer.move=='L' then
@@ -492,7 +501,7 @@ function MP:freshGhost()
         end
 
         if (self.settings.dropDelay==0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then-- if (temp) 20G on
-            self:moveHand('drop','d',0,self.ghostY-self.handY)
+            self:moveHand('drop',self.ghostY-self.handY)
             self:shakeBoard('-drop')
             self:freshDelay('drop')
         else
@@ -611,14 +620,14 @@ function MP:ifoverlap(CB,cx,cy)
 end
 function MP:moveLeft()
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
-        self:moveHand('move','d',-1,0)
+        self:moveHand('moveX',-1)
         self:freshGhost()
         return true
     end
 end
 function MP:moveRight()
     if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
-        self:moveHand('move','d',1,0)
+        self:moveHand('moveX',1)
         self:freshGhost()
         return true
     end
@@ -657,7 +666,7 @@ function MP:rotate(dir)
                 if not self:ifoverlap(icb,ix,iy) then
                     self.hand.matrix=icb
                     self.hand.direction=kick.target
-                    self:moveHand('rotate','s',ix,iy,dir)
+                    self:moveHand('rotate',ix,iy,dir)
                     return
                 end
             end
@@ -713,7 +722,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     -- Move down
     if self.handY>self.ghostY then
         self:playSound('drop')
-        self:moveHand('drop','d',0,self.ghostY-self.handY)
+        self:moveHand('drop',self.ghostY-self.handY)
         self:shakeBoard('-drop')
     end
     self:triggerEvent('afterDrop')
@@ -737,10 +746,15 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
 
         self.texts:add(text,0,0,spin and 60 or 70,M.clear.line>=4 and 'stretch' or spin and 'spin' or 'appear',.32)
     else
+        if M.tuck then
+            text='Tuck'
+        end
         if spin then
             text=M.mino.name..'-Spin'
         end
-        self.texts:add(text,0,0,55,'appear',.626)
+        if #text>0 then
+            self.texts:add(text,0,0,55,'appear',.626)
+        end
     end
 
     -- Discard hand
@@ -919,7 +933,7 @@ function MP:update(dt)
                 if dist>0 then
                     local ox=self.handX
                     while dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
-                        self:moveHand('move','d',self.moveDir,0)
+                        self:moveHand('moveX',self.moveDir)
                         self:freshGhost()
                         dist=dist-1
                     end
@@ -950,7 +964,7 @@ function MP:update(dt)
                 local dist=SET.sdarr==0 and 1e99 or int(c1/SET.sdarr)-int(c0/SET.sdarr)
                 local oy=self.handY
                 while dist>0 and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) do
-                    self:moveHand('drop','d',0,-1)
+                    self:moveHand('drop',-1)
                     self:freshDelay('drop')
                     dist=dist-1
                 end
@@ -998,7 +1012,7 @@ function MP:update(dt)
                     self.dropTimer=self.dropTimer-1--[[df]]
                     if self.dropTimer==0 then
                         self.dropTimer=SET.dropDelay
-                        self:moveHand('drop','d',0,-1)
+                        self:moveHand('drop',-1)
                         if self.handY==self.ghostY then
                             self:playSound('touch')
                         end

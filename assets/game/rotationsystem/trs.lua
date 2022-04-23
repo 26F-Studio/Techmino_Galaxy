@@ -144,7 +144,7 @@ TRS[6]={
                                 C._origin.direction=test.direcion
                                 C._origin.matrix=test.direcion==0 and newMatrix or test.direcion==2 and TABLE.rotate(newMatrix,'F') or error("Oh I forgot this")
 
-                                P:moveHand('rotate','s',x,y,dir)
+                                P:moveHand('rotate',x,y,dir)
                                 P:playSound('ospin')
                                 break
                             end

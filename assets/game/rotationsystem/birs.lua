@@ -86,7 +86,7 @@ local function r(P,dir)
                 if not P:ifoverlap(icb,x,y) then
                     C.matrix=icb
                     C.direction=idir
-                    P:moveHand('rotate','s',x,y)
+                    P:moveHand('rotate',x,y,dir)
                     return
                 end
             end
