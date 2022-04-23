@@ -372,10 +372,15 @@ local defaultSoundFunc={
             BGM.set('all','highgain',1,min((l)^1.5/5,2.6))
         end
     end,
-    allClear=function ()
+    frenzy=function(clearHis)
+        inst('lead','A4')inst('lead','D4')inst('lead','A5')
+        -- clearHis.combo, clearHis.line
+        -- TODO
+    end,
+    allClear=function()
         SFX.play('all_clear')
     end,
-    halfClear=function ()
+    halfClear=function()
         SFX.play('half_clear')
     end,
     reach=function()
@@ -757,6 +762,15 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
             if spin then
                 text=Text.spin:repD(M.mino.name).." "
             end
+
+            if M.clear.line>=4 and M.clear.combo>1 then
+                local lastClear=self.clearHistory[#self.clearHistory-1]
+                if lastClear and M.clear.line==lastClear.line then
+                    text=text.."M-"
+                    self:playSound('frenzy',M.clear)
+                end
+            end
+
             text=text..(Text.clearName[M.clear.line] or ('['..M.clear.line..']'))
 
             self.texts:add(text,0,0,spin and 60 or 70,M.clear.line>=4 and 'stretch' or spin and 'spin' or 'appear',.32)
