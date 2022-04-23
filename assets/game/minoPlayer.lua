@@ -286,11 +286,14 @@ local defaultSoundFunc={
             inst('bass',2.2-num/5,'A2','E3')
         end
     end,
+    initmove=function()
+        -- TODO
+    end,
     move=function()
         -- TODO
     end,
-    touch=function()
-        SFX.play('touch')
+    initrotate=function()
+        -- TODO
     end,
     rotate=function(locked)
         if locked then
@@ -302,8 +305,11 @@ local defaultSoundFunc={
     rotate_failed=function()
         -- TODO
     end,
-    ospin=function()
+    rotate_special=function()
         -- TODO
+    end,
+    touch=function()
+        SFX.play('touch')
     end,
     drop=function()
         SFX.play('drop')
@@ -477,9 +483,11 @@ function MP:checkHand()-- Reset hand position and check death
     if self:ifoverlap(self.hand.matrix,self.handX,self.handY) then
         -- Struggle IMS
         if self.moveDir==-1 then
-            self:moveLeft()
+            self:moveHand('moveX',-1)
+            self:playSound('initmove')
         elseif self.moveDir==1 then
-            self:moveRight()
+            self:moveHand('moveX',1)
+            self:playSound('initmove')
         end
 
         if self:ifoverlap(self.hand.matrix,self.handX,self.handY) then
@@ -569,9 +577,8 @@ function MP:popNext()
         self:hold()
     else
         self:resetPos()
+        self:checkHand()
     end
-
-    self:checkHand()
 
     if self.keyBuffer.hardDrop then-- IHdS
         self.keyBuffer.hardDrop=false
@@ -835,26 +842,20 @@ function MP:gameover(reason)
     self.finished=true
     self.hand=false
     self.spawnTimer=1e99
+
     MES.new(reason=='AC' and 'check' or 'error',reason,6.26)
     self:playSound(reason=='AC' and 'win' or 'lose')
+
+    -- TODO
     if reason=='AC' then-- Win
-        -- TODO
     elseif reason=='WA' then-- Block out
-        -- TODO
     elseif reason=='CE' then-- Lock out
-        -- TODO
     elseif reason=='MLE' then-- Top out
-        -- TODO
     elseif reason=='TLE' then-- Time out
-        -- TODO
     elseif reason=='OLE' then-- Finesse fault
-        -- TODO
     elseif reason=='ILE' then-- Ran out pieces
-        -- TODO
     elseif reason=='PE' then-- Mission failed
-        -- TODO
     elseif reason=='RE' then-- Other reason
-        -- TODO
     end
     self:triggerEvent('gameOver',reason)
 end
@@ -1459,6 +1460,7 @@ function MP.new()
         vx=0,vy=0,vk=0,va=0,
     }
 
+    P.finished=false-- Did game finish
     P.realTime=0-- Real time, [float] s
     P.time=0-- Inside timer for player, [int] ms
     P.gameTime=0-- Game time of player, [int] ms
