@@ -292,21 +292,23 @@ local defaultSoundFunc={
     move=function()
         -- TODO
     end,
+    tuck=function()
+        SFX.play('tuck')
+    end,
     initrotate=function()
         -- TODO
     end,
-    rotate=function(locked)
-        if locked then
-            SFX.play('rotate_locked')
-        else
-            SFX.play('rotate')
-        end
+    rotate=function()
+        SFX.play('rotate')
+    end,
+    rotate_locked=function()
+        SFX.play('rotate_locked')
     end,
     rotate_failed=function()
-        -- TODO
+        SFX.play('rotate_failed')
     end,
     rotate_special=function()
-        -- TODO
+        SFX.play('rotate_special')
     end,
     touch=function()
         SFX.play('touch')
@@ -420,6 +422,7 @@ function MP:moveHand(action,a,b,c)
             self:ifoverlap(self.hand.matrix,self.handX,self.handY+1)
         then
             movement.tuck=true
+            self:playSound('tuck')
         end
     elseif action=='rotate' then
         if
@@ -430,10 +433,9 @@ function MP:moveHand(action,a,b,c)
         then
             movement.immobile=true
             self:shakeBoard(c=='L' and '-ccw' or c=='R' and '-cw' or '-180')
-            self:playSound('rotate',true)
-        else
-            self:playSound('rotate')
+            self:playSound('rotate_locked')
         end
+        self:playSound('rotate')
         local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
         local state=minoData[self.hand.direction]
         local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)

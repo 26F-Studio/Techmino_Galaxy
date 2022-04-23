@@ -87,6 +87,7 @@ local function r(P,dir)
                     C.matrix=icb
                     C.direction=idir
                     P:moveHand('rotate',x,y,dir)
+                    P:playSound('rotate')
                     return
                 end
             end
@@ -98,9 +99,11 @@ local function r(P,dir)
         elseif dy~=0 then
             dy=0
         else
-            return
+            break
         end
     end
+    P:freshDelay('move')
+    P:playSound('rotate_failed')
 end
 for i=1,29 do BiRS[i]={[0]={},[1]={},[2]={},[3]={},rotate=r} end
 return BiRS
