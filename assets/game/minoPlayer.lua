@@ -733,27 +733,36 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     self:triggerEvent('afterLock')
 
     -- Check field
-    local M=self.lastMovement
-    local text=''
-    local spin=M.action=='rotate' and (M.immobile or M.corners and M.corners>=3)
-    M.clear=self:checkField(self.hand)
-    if M.clear then
-        self:triggerEvent('afterClear',M)
-        if spin then
-            text=M.mino.name..'-Spin '
-        end
-        text=text..(Text.clearName[M.clear.line] or ('['..M.clear.line..']'))
+    do
+        local M=self.lastMovement
+        local text=''
+        local spin=M.action=='rotate' and (M.immobile or M.corners and M.corners>=3)
+        M.clear=self:checkField(self.hand)
+        if M.clear then
+            self:triggerEvent('afterClear',M)
+            if spin then
+                text=Text.spin:repD(M.mino.name).." "
+            end
+            text=text..(Text.clearName[M.clear.line] or ('['..M.clear.line..']'))
 
-        self.texts:add(text,0,0,spin and 60 or 70,M.clear.line>=4 and 'stretch' or spin and 'spin' or 'appear',.32)
-    else
-        if M.tuck then
-            text='Tuck'
-        end
-        if spin then
-            text=M.mino.name..'-Spin'
-        end
-        if #text>0 then
-            self.texts:add(text,0,0,55,'appear',.626)
+            self.texts:add(text,0,0,spin and 60 or 70,M.clear.line>=4 and 'stretch' or spin and 'spin' or 'appear',.32)
+            if M.clear.combo>1 then
+                self.texts:add(Text.combo(M.clear.combo-1),0,60,15+min(M.clear.combo,15)*5)
+            end
+            if self.field:getHeight()==0 then
+                self.texts:add(Text.allClear,0,-80,75,'flicker',.2)
+            elseif M.y>self.field:getHeight() then
+                self.texts:add(Text.halfClear,0,-80,65,'fly',.3)
+            end
+        else
+            if M.tuck then
+                text=Text.tuck
+            elseif spin then
+                text=Text.spin:repD(M.mino.name)
+            end
+            if #text>0 then
+                self.texts:add(text,0,0,55,'appear',.626)
+            end
         end
     end
 

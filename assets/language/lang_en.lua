@@ -1,4 +1,5 @@
 return{
+    -- Clearing texts
     clearName={
         "Single",
         "Double",
@@ -22,6 +23,21 @@ return{
         "Ultracrash",
         "Impossicrash",
     },
+
+    combo=function(c)
+        if     c<=9  then return c.." Combo"
+        elseif c<=13 then return c.." Combo!"
+        elseif c<=16 then return c.." Combo!!"
+        elseif c<=19 then return c.." Combo!!!"
+        else              return "MEGACMB"
+        end
+    end,
+
+    spin='$1-spin',
+    tuck='Tuck',
+
+    allClear='ALL CLEAR',
+    halfClear='Half Clear',
 
     -- Widget texts
     main_1_play="Play",
