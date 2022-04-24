@@ -30,6 +30,7 @@ actions.moveLeft={
     end,
     release=function(P)
         if P.keyBuffer.move=='L' then P.keyBuffer.move=false end
+        if P.deathTimer then P:moveRight() end
     end
 }
 actions.moveRight={
@@ -49,6 +50,7 @@ actions.moveRight={
     end,
     release=function(P)
         if P.keyBuffer.move=='R' then P.keyBuffer.move=false end
+        if P.deathTimer then P:moveLeft() end
     end
 }
 actions.rotateCW={
@@ -89,28 +91,25 @@ actions.rotate180={
 }
 function actions.softDrop(P)
     P.downCharge=0
-    if not P.hand then return end
+    if not P.hand or P.deathTimer then return end
     if P.handY>P.ghostY then
-        P:moveHand('moveY',-1)
-        P:freshDelay('drop')
-        if P.handY==P.ghostY then
-            P:playSound('touch')
+        if P:moveDown() then
+            P:playSound('move')
         end
     end
 end
 function actions.sonicDrop(P)
-    if not P.hand then return end
+    if not P.hand or P.deathTimer then return end
     if P.handY>P.ghostY then
         P:moveHand('moveY',P.ghostY-P.handY)
         P:freshDelay('drop')
-        if P.handY==P.ghostY then
-            P:playSound('touch')
-        end
+        P:playSound('move')
+        P:playSound('touch')
     end
 end
 actions.hardDrop={
     press=function(P)
-        if P.hand then
+        if P.hand and not P.deathTimer then
             P:minoDropped()
         else
             P.keyBuffer.hardDrop=true
@@ -289,51 +288,30 @@ local defaultSoundFunc={
     initmove=function()
         -- TODO
     end,
-    move=function()
-        SFX.play('move')
-    end,
-    tuck=function()
-        SFX.play('tuck')
-    end,
+    move=               function() SFX.play('move')             end,
+    tuck=               function() SFX.play('tuck')             end,
     initrotate=function()
         -- TODO
     end,
-    rotate=function()
-        SFX.play('rotate')
-    end,
-    rotate_locked=function()
-        SFX.play('rotate_locked')
-    end,
-    rotate_corners=function()
-        SFX.play('rotate_corners')
-    end,
-    rotate_failed=function()
-        SFX.play('rotate_failed')
-    end,
-    rotate_special=function()
-        SFX.play('rotate_special')
-    end,
-    touch=function()
-        SFX.play('touch')
-    end,
-    drop=function()
-        SFX.play('drop')
-    end,
-    lock=function()
-        SFX.play('lock')
-    end,
+    rotate=             function() SFX.play('rotate')           end,
+    rotate_locked=      function() SFX.play('rotate_locked')    end,
+    rotate_corners=     function() SFX.play('rotate_corners')   end,
+    rotate_failed=      function() SFX.play('rotate_failed')    end,
+    rotate_special=     function() SFX.play('rotate_special')   end,
+    touch=              function() SFX.play('touch')            end,
+    drop=               function() SFX.play('drop')             end,
+    lock=               function() SFX.play('lock')             end,
     clear=function(clearHis)
-        local l=clearHis.line
         SFX.play(
-            l==1 and 'clear_1' or
-            l==2 and 'clear_2' or
-            l==3 and 'clear_3' or
-            l==4 and 'clear_4' or
+            clearHis.line==1 and 'clear_1' or
+            clearHis.line==2 and 'clear_2' or
+            clearHis.line==3 and 'clear_3' or
+            clearHis.line==4 and 'clear_4' or
             'clear_5'
         )
-        if l>=3 then
-            BGM.set('all','highgain',1/l,0)
-            BGM.set('all','highgain',1,min((l)^1.5/5,2.6))
+        if clearHis.line>=3 then
+            BGM.set('all','highgain',1/clearHis.line,0)
+            BGM.set('all','highgain',1,min((clearHis.line)^1.5/5,2.6))
         end
     end,
     combo=function(clearHis)
@@ -380,21 +358,13 @@ local defaultSoundFunc={
         -- clearHis.combo, clearHis.line
         -- TODO
     end,
-    allClear=function()
-        SFX.play('all_clear')
-    end,
-    halfClear=function()
-        SFX.play('half_clear')
-    end,
-    reach=function()
-        SFX.play('beep1')
-    end,
-    win=function()
-        SFX.play('beep1')
-    end,
-    lose=function()
-        SFX.play('beep2')
-    end,
+    allClear=           function() SFX.play('all_clear')        end,
+    halfClear=          function() SFX.play('half_clear')       end,
+    suffocate=          function() SFX.play('suffocate')        end,
+    desuffocate=        function() SFX.play('desuffocate')      end,
+    reach=              function() SFX.play('beep1')            end,
+    win=                function() SFX.play('beep1')            end,
+    lose=               function() SFX.play('beep2')            end,
 }
 function MP:playSound(event,...)
     if not self.sound then return end
@@ -458,10 +428,10 @@ function MP:moveHand(action,a,b,c)
                 local cx,cy=self.handX+centerPos[1]-.5,self.handY+centerPos[2]-.5
                 if int(cx)==cx then
                     local corners=0
-                    if self.field:getCell(cx-1,cy-1) then corners=corners+1 end
-                    if self.field:getCell(cx+1,cy-1) then corners=corners+1 end
-                    if self.field:getCell(cx-1,cy+1) then corners=corners+1 end
-                    if self.field:getCell(cx+1,cy+1) then corners=corners+1 end
+                    if self:isSolidCell(cx-1,cy-1) then corners=corners+1 end
+                    if self:isSolidCell(cx+1,cy-1) then corners=corners+1 end
+                    if self:isSolidCell(cx-1,cy+1) then corners=corners+1 end
+                    if self:isSolidCell(cx+1,cy+1) then corners=corners+1 end
                     if corners>=self.settings.spin_corners then
                         movement.corners=true
                         self:playSound('rotate_corners')
@@ -475,6 +445,16 @@ function MP:moveHand(action,a,b,c)
         end
     end
     self.lastMovement=movement
+
+    if self.deathTimer then
+        local t=self.deathTimer
+        self.deathTimer=false
+        if self:ifoverlap(self.hand.matrix,self.handX,self.handY) then
+            self.deathTimer=t
+        else
+            self:playSound('desuffocate')
+        end
+    end
 end
 function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside, like shape, name, direction)
     if not mino._origin then return end
@@ -483,42 +463,51 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
     end
     return mino
 end
-function MP:resetPos()-- Move hand piece to the normal spawn position
+function MP:resetPos()-- Move hand piece to the normal spawn position and check death
     self:moveHand('reset',int(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
     self.minY=self.handY
-    if self.keyBuffer.move then-- IMS
-        if self.keyBuffer.move=='L' then
-            self:moveLeft()
-        elseif self.keyBuffer.move=='R' then
-            self:moveRight()
-        end
-        self.keyBuffer.move=false
-    end
-    if self.keyBuffer.rotate then-- IRS
-        local r=self.keyBuffer.rotate
-        self.keyBuffer.rotate=false
-        self:rotate(r)
-    end
-end
-function MP:checkHand()-- Reset hand position and check death
-    if self:ifoverlap(self.hand.matrix,self.handX,self.handY) then
-        -- Struggle IMS
-        if self.moveDir==-1 then
-            self:moveHand('moveX',-1)
-            self:playSound('initmove')
-        elseif self.moveDir==1 then
-            self:moveHand('moveX',1)
-            self:playSound('initmove')
-        end
 
-        if self:ifoverlap(self.hand.matrix,self.handX,self.handY) then
+    local suffocated-- Cancel deathTimer temporarily, or we cannot apply IMS when hold in suffcating
+    if self.deathTimer then
+        local bufferedDeathTimer=self.deathTimer
+        self.deathTimer=false
+        suffocated=self:ifoverlap(self.hand.matrix,self.handX,self.handY)
+        self.deathTimer=bufferedDeathTimer
+    else
+        suffocated=self:ifoverlap(self.hand.matrix,self.handX,self.handY)
+    end
+
+    if suffocated then
+        if self.settings.deathDelay>0 then
+            self.deathTimer=self.settings.deathDelay
+            self:playSound('suffocate')
+
+            -- Suffocate IMS, trigger when key pressed, not buffered
+            if self.keyState.moveLeft then self:moveLeft() end
+            if self.keyState.moveRight then self:moveRight() end
+        else
             self:lock()
             self:gameover('WA')
             return
         end
+    else
+        if self.keyBuffer.move then-- IMS
+            if self.keyBuffer.move=='L' then
+                self:moveLeft()
+            elseif self.keyBuffer.move=='R' then
+                self:moveRight()
+            end
+            self.keyBuffer.move=false
+        end
+
+        self:freshGhost()
+        self:freshDelay('spawn')
     end
-    self:freshGhost()
-    self:freshDelay('spawn')
+
+    if self.keyBuffer.rotate then-- IRS
+        self:rotate(self.keyBuffer.rotate)
+        self.keyBuffer.rotate=false
+    end
 end
 function MP:freshGhost()
     if self.hand then
@@ -529,10 +518,10 @@ function MP:freshGhost()
             self.ghostY=self.ghostY-1
         end
 
-        if (self.settings.dropDelay==0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then-- if (temp) 20G on
+        if (self.settings.dropDelay<=0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then-- if (temp) 20G on
             self:moveHand('drop',self.ghostY-self.handY)
-            self:shakeBoard('-drop')
             self:freshDelay('drop')
+            self:shakeBoard('-drop')
         else
             self:freshDelay('move')
         end
@@ -598,15 +587,14 @@ function MP:popNext()
         self:hold()
     else
         self:resetPos()
-        self:checkHand()
     end
+
+    self:triggerEvent('afterSpawn')
 
     if self.keyBuffer.hardDrop then-- IHdS
         self.keyBuffer.hardDrop=false
         self:minoDropped()
     end
-
-    self:triggerEvent('afterSpawn')
 end
 function MP:getMino(shapeID)
     local shape=TABLE.shift(Minos[shapeID].shape)
@@ -638,13 +626,16 @@ function MP:ifoverlap(CB,cx,cy)
 
     -- Check field
     for y=1,#CB do for x=1,#CB[1] do
-        if CB[y][x] and F:getCell(cx+x-1,cy+y-1) then
+        if CB[y][x] and self:isSolidCell(cx+x-1,cy+y-1) then
             return true
         end
     end end
 
     -- No collision
     return false
+end
+function MP:isSolidCell(x,y)
+    return not self.deathTimer and self.field:getCell(x,y) and true or false
 end
 function MP:moveLeft()
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
@@ -657,6 +648,16 @@ function MP:moveRight()
     if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
         self:moveHand('moveX',1)
         self:freshGhost()
+        return true
+    end
+end
+function MP:moveDown()
+    if not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
+        self:moveHand('moveY',-1)
+        self:freshDelay('drop')
+        if self.handY==self.ghostY then
+            self:playSound('touch')
+        end
         return true
     end
 end
@@ -727,7 +728,6 @@ function MP:hold_hold()
     if self.holdQueue[1] then
         self.hand,self.holdQueue[1]=self.holdQueue[1],self.hand
         self:resetPos()
-        self:checkHand()
     else
         self.holdQueue[1]=self.hand
         self.hand=false
@@ -741,7 +741,6 @@ function MP:hold_swap()
         end
         self.hand,self.nextQueue[1]=self.nextQueue[1],self.hand
         self:resetPos()
-        self:checkHand()
     end
 end
 function MP:hold_float()
@@ -750,9 +749,9 @@ end
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     -- Move down
     if self.handY>self.ghostY then
-        self:playSound('drop')
         self:moveHand('drop',self.ghostY-self.handY)
         self:shakeBoard('-drop')
+        self:playSound('drop')
     end
     self:triggerEvent('afterDrop')
 
@@ -816,7 +815,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
 
     -- Fresh hand
     self.spawnTimer=self.settings.spawnDelay
-    if self.clearTimer==0 and self.spawnTimer==0 then
+    if self.clearTimer<=0 and self.spawnTimer<=0 then
         self:popNext()
     end
 end
@@ -952,120 +951,132 @@ function MP:update(dt)
             self.time=self.time+1--[[df]]
         end
 
-        -- Auto shift
-        if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then-- Magic IF-statemant. I don't know why it works perfectly
-            if self.hand and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) then
-                local c0=self.moveCharge
-                local c1=c0+1--[[df]]
-                self.moveCharge=c1
-                local dist=0
-                if c0>=SET.das then
-                    c0=c0-SET.das
-                    c1=c1-SET.das
-                    if SET.arr==0 then
-                        dist=1e99
-                    else
-                        dist=int(c1/SET.arr)-int(c0/SET.arr)
+        if not self.deathTimer then
+            -- Auto shift
+            if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then-- Magic IF-statemant. I don't know why it works perfectly
+                if self.hand and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) then
+                    local c0=self.moveCharge
+                    local c1=c0+1--[[df]]
+                    self.moveCharge=c1
+                    local dist=0
+                    if c0>=SET.das then
+                        c0=c0-SET.das
+                        c1=c1-SET.das
+                        if SET.arr==0 then
+                            dist=1e99
+                        else
+                            dist=int(c1/SET.arr)-int(c0/SET.arr)
+                        end
+                    elseif c1>=SET.das then
+                        if SET.arr==0 then
+                            dist=1e99
+                        else
+                            dist=1
+                        end
                     end
-                elseif c1>=SET.das then
-                    if SET.arr==0 then
-                        dist=1e99
-                    else
-                        dist=1
+                    if dist>0 then
+                        local ox=self.handX
+                        while dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
+                            self:moveHand('moveX',self.moveDir)
+                            self:freshGhost()
+                            dist=dist-1
+                        end
+                        if self.handX~=ox then
+                            self:playSound('move')
+                            if self.handY==self.ghostY then
+                                self:playSound('touch')
+                            end
+                        end
+                    end
+                else
+                    self.moveCharge=SET.das
+                    if self.hand then
+                        self:shakeBoard(self.moveDir>0 and '-right' or '-left')
                     end
                 end
-                if dist>0 then
-                    local ox=self.handX
-                    while dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
-                        self:moveHand('moveX',self.moveDir)
-                        self:freshGhost()
+            else
+                self.moveDir=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
+                self.moveCharge=0
+            end
+
+            -- Auto drop
+            if self.downCharge and self.keyState.softDrop then
+                if self.hand and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
+                    local c0=self.downCharge
+                    local c1=c0+1--[[df]]
+                    self.downCharge=c1
+                    local dist=SET.sdarr==0 and 1e99 or int(c1/SET.sdarr)-int(c0/SET.sdarr)
+                    local oy=self.handY
+                    while dist>0 do
+                        if not self:moveDown() then break end
                         dist=dist-1
                     end
-                    if self.handX~=ox then
+                    if oy~=self.handY then
+                        self:freshDelay('drop')
                         self:playSound('move')
                         if self.handY==self.ghostY then
+                            self:shakeBoard('-down')
                             self:playSound('touch')
                         end
                     end
+                else
+                    self.downCharge=SET.sdarr
+                    if self.hand then
+                        self:shakeBoard('-down')
+                    end
                 end
             else
-                self.moveCharge=SET.das
-                if self.hand then
-                    self:shakeBoard(self.moveDir>0 and '-right' or '-left')
-                end
-            end
-        else
-            self.moveDir=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
-            self.moveCharge=0
-        end
-
-        -- Auto drop
-        if self.downCharge and self.keyState.softDrop then
-            if self.hand and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
-                local c0=self.downCharge
-                local c1=c0+1--[[df]]
-                self.downCharge=c1
-                local dist=SET.sdarr==0 and 1e99 or int(c1/SET.sdarr)-int(c0/SET.sdarr)
-                local oy=self.handY
-                while dist>0 and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) do
-                    self:moveHand('drop',-1)
-                    self:freshDelay('drop')
-                    dist=dist-1
-                end
-                if oy~=self.handY and self.handY==self.ghostY then
-                    self:shakeBoard('-down')
-                    self:playSound('touch')
-                end
-            else
-                self.downCharge=SET.sdarr
-                if self.hand then
-                    self:shakeBoard('-down')
-                end
-            end
-        else
-            self.downCharge=false
-        end
-
-        repeat-- Update hand
-            -- Wait clearing animation
-            if self.clearTimer>0 then
-                self.clearTimer=self.clearTimer-1--[[df]]
-                break
+                self.downCharge=false
             end
 
-            -- Try spawn mino if don't have one
-            if self.spawnTimer>0 then
-                self.spawnTimer=self.spawnTimer-1--[[df]]
-                if self.spawnTimer==0 then
+            repeat-- Update hand
+                -- Wait clearing animation
+                if self.clearTimer>0 then
+                    self.clearTimer=self.clearTimer-1--[[df]]
+                    break
+                end
+
+                -- Try spawn mino if don't have one
+                if self.spawnTimer>0 then
+                    self.spawnTimer=self.spawnTimer-1--[[df]]
+                    if self.spawnTimer<=0 then
+                        self:popNext()
+                    end
+                    break
+                elseif not self.hand then
                     self:popNext()
                 end
-                break
-            elseif not self.hand then
-                self:popNext()
-            end
 
-            -- Try lock/drop mino
-            if self.handY==self.ghostY then
-                self.lockTimer=self.lockTimer-1--[[df]]
-                if self.lockTimer==0 then
-                    self:minoDropped()
-                end
-                break
-            else
-                if self.dropDelay~=0 then
-                    self.dropTimer=self.dropTimer-1--[[df]]
-                    if self.dropTimer==0 then
-                        self.dropTimer=SET.dropDelay
-                        self:moveHand('drop',-1)
-                        if self.handY==self.ghostY then
-                            self:playSound('touch')
-                        end
+                -- Try lock/drop mino
+                if self.handY==self.ghostY then
+                    self.lockTimer=self.lockTimer-1--[[df]]
+                    if self.lockTimer<=0 then
+                        self:minoDropped()
                     end
-                elseif self.handY~=self.ghostY then-- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
-                    self:freshDelay('drop')
+                    break
+                else
+                    if self.dropDelay~=0 then
+                        self.dropTimer=self.dropTimer-1--[[df]]
+                        if self.dropTimer<=0 then
+                            self.dropTimer=SET.dropDelay
+                            self:moveHand('drop',-1)
+                            if self.handY==self.ghostY then
+                                self:playSound('touch')
+                            end
+                        end
+                    elseif self.handY~=self.ghostY then-- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
+                        self:freshDelay('drop')
+                    end
                 end
+            until true
+        else
+            self.deathTimer=self.deathTimer-1
+            if self.deathTimer<=0 then
+                self.deathTimer=false
+                self:lock()
+                self:gameover('WA')
             end
-        until true
+        end
 
         self.texts:update(dt)
 
@@ -1129,35 +1140,39 @@ function MP:render()
     if self.hand then
         local CB=self.hand.matrix
 
-        -- Ghost
-        gc.setColor(1,1,1,.26)
-        for y=1,#CB do for x=1,#CB[1] do
-            if CB[y][x] then
-                gc.rectangle('fill',(self.handX+x-2)*40,-(self.ghostY+y-1)*40,40,40)
-            end
-        end end
+        if not self.deathTimer then
+            -- Ghost
+            gc.setColor(1,1,1,.26)
+            for y=1,#CB do for x=1,#CB[1] do
+                if CB[y][x] then
+                    gc.rectangle('fill',(self.handX+x-2)*40,-(self.ghostY+y-1)*40,40,40)
+                end
+            end end
+        end
 
         -- Mino
-        gc.push('transform')
-        if self.handY>self.ghostY then
-            gc.translate(0,40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6)
-        end
-        gc.setColor(1,1,1)
-        for y=1,#CB do for x=1,#CB[1] do
-            if CB[y][x] then
-                gc.setColor(ColorTable[CB[y][x].color])
-                gc.rectangle('fill',(self.handX+x-2)*40,-(self.handY+y-1)*40,40,40)
+        if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
+            local droppingY
+            if self.handY>self.ghostY then
+                droppingY=40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6
+                gc.translate(0,droppingY)
             end
-        end end
-        local RS=RotationSys[self.settings.rotSys]
-        local minoData=RS[self.hand.shape]
-        local state=minoData[self.hand.direction]
-        local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
-        if centerPos then
-            gc.setColor(1,1,1)
-            GC.draw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40)
+            for y=1,#CB do for x=1,#CB[1] do
+                if CB[y][x] then
+                    gc.setColor(ColorTable[CB[y][x].color])
+                    gc.rectangle('fill',(self.handX+x-2)*40,-(self.handY+y-1)*40,40,40)
+                end
+            end end
+            local RS=RotationSys[self.settings.rotSys]
+            local minoData=RS[self.hand.shape]
+            local state=minoData[self.hand.direction]
+            local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
+            if centerPos then
+                gc.setColor(1,1,1)
+                GC.draw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40)
+            end
+            if droppingY then gc.translate(0,-droppingY) end
         end
-        gc.pop()
     end
 
 
@@ -1191,7 +1206,9 @@ function MP:render()
     gc.rectangle('line',-201,401,402,12)
     local color,value
     if not self.hand then
-        color,value=COLOR.lR,self.spawnTimer/self.settings.spawnDelay
+        color,value=COLOR.lB,self.spawnTimer/self.settings.spawnDelay
+    elseif self.deathTimer then
+        color,value=COLOR.R,self.deathTimer/self.settings.deathDelay
     elseif self.handY~=self.ghostY then
         color,value=COLOR.lG,self.dropTimer/self.settings.dropDelay
     else
@@ -1359,6 +1376,7 @@ local baseEnv={-- Generate from template in future
     lockDelay=1000,
     spawnDelay=0,
     clearDelay=0,
+    deathDelay=260,
 
     actionPack='modern',
     seqType='bag7',
@@ -1525,6 +1543,7 @@ function MP.new()
     P.lockTimer=0
     P.spawnTimer=P.settings.readyDelay
     P.clearTimer=0
+    P.deathTimer=false
 
     P.hand=false-- Controlling mino object
     P.handX=false

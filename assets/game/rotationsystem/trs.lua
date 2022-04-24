@@ -107,7 +107,7 @@ TRS[6]={
         local baseX,baseY=P.handX,P.handY
         P:freshDelay('move')
         P:playSound('rotate',.5)
-        if baseY==P.ghostY and ((F:getCell(baseX-1,baseY) or F:getCell(baseX-1,baseY+1))) and (F:getCell(baseX+2,baseY) or F:getCell(baseX+2,baseY+1)) then
+        if (baseY==P.ghostY and ((F:getCell(baseX-1,baseY) or F:getCell(baseX-1,baseY+1))) and (F:getCell(baseX+2,baseY) or F:getCell(baseX+2,baseY+1))) or P.deathTimer then
             if not P.settings.noOspin then
                 -- [Warning] field 'spinSeq' is a dirty data, TRS put this var into the block.
                 C.spinSeq=((C.spinSeq or '')..dir):sub(-3)
@@ -129,10 +129,12 @@ TRS[6]={
 
                             local x,y=P.handX+test.bias[1],P.handY+test.bias[2]
                             if
-                                not P:ifoverlap(newMatrix,x,y) and (
-                                    test.free~='FIX' or (P:ifoverlap(newMatrix,x-1,y) and P:ifoverlap(newMatrix,x+1,y))
-                                ) and (
-                                    test.free=='ANY' or (P:ifoverlap(newMatrix,x,y-1) and P:ifoverlap(newMatrix,x,y+1))
+                                P.deathTimer or (
+                                    not P:ifoverlap(newMatrix,x,y) and (
+                                        test.free~='FIX' or (P:ifoverlap(newMatrix,x-1,y) and P:ifoverlap(newMatrix,x+1,y))
+                                    ) and (
+                                        test.free=='ANY' or (P:ifoverlap(newMatrix,x,y-1) and P:ifoverlap(newMatrix,x,y+1))
+                                    )
                                 )
                             then
                                 C.shape=test.shape
