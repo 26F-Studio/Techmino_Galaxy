@@ -353,11 +353,7 @@ local defaultSoundFunc={
             inst('lead',1-(phase/12)^2,     58+phase)-- A5+
         end
     end,
-    frenzy=function(clearHis)
-        -- inst('lead','A4')inst('lead','D4')inst('lead','A5')
-        -- clearHis.combo, clearHis.line
-        -- TODO
-    end,
+    frenzy=             function() SFX.play('frenzy')           end,
     allClear=           function() SFX.play('all_clear')        end,
     halfClear=          function() SFX.play('half_clear')       end,
     suffocate=          function() SFX.play('suffocate')        end,
@@ -425,16 +421,19 @@ function MP:moveHand(action,a,b,c)
             local state=minoData[self.hand.direction]
             local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
             if centerPos then
-                local cx,cy=self.handX+centerPos[1]-.5,self.handY+centerPos[2]-.5
+                local cx=self.handX+centerPos[1]-.5
                 if int(cx)==cx then
-                    local corners=0
-                    if self:isSolidCell(cx-1,cy-1) then corners=corners+1 end
-                    if self:isSolidCell(cx+1,cy-1) then corners=corners+1 end
-                    if self:isSolidCell(cx-1,cy+1) then corners=corners+1 end
-                    if self:isSolidCell(cx+1,cy+1) then corners=corners+1 end
-                    if corners>=self.settings.spin_corners then
-                        movement.corners=true
-                        self:playSound('rotate_corners')
+                    local cy=self.handY+centerPos[2]-.5
+                    if int(cy)==cy then
+                        local corners=0
+                        if self:isSolidCell(cx-1,cy-1) then corners=corners+1 end
+                        if self:isSolidCell(cx+1,cy-1) then corners=corners+1 end
+                        if self:isSolidCell(cx-1,cy+1) then corners=corners+1 end
+                        if self:isSolidCell(cx+1,cy+1) then corners=corners+1 end
+                        if corners>=self.settings.spin_corners then
+                            movement.corners=true
+                            self:playSound('rotate_corners')
+                        end
                     end
                 end
             end
@@ -457,9 +456,10 @@ function MP:moveHand(action,a,b,c)
     end
 end
 function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside, like shape, name, direction)
-    if not mino._origin then return end
-    for k,v in next,mino._origin do
-        mino[k]=v
+    if mino._origin then
+        for k,v in next,mino._origin do
+            mino[k]=v
+        end
     end
     return mino
 end
@@ -500,7 +500,7 @@ function MP:resetPos()-- Move hand piece to the normal spawn position and check 
             self.keyBuffer.move=false
         end
 
-        self:freshGhost()
+        self:freshGhost(true)
         self:freshDelay('spawn')
     end
 
@@ -509,7 +509,7 @@ function MP:resetPos()-- Move hand piece to the normal spawn position and check 
         self.keyBuffer.rotate=false
     end
 end
-function MP:freshGhost()
+function MP:freshGhost(justFreshGhost)
     if self.hand then
         self.ghostY=min(self.field:getHeight()+1,self.handY)
 
@@ -518,12 +518,14 @@ function MP:freshGhost()
             self.ghostY=self.ghostY-1
         end
 
-        if (self.settings.dropDelay<=0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then-- if (temp) 20G on
-            self:moveHand('drop',self.ghostY-self.handY)
-            self:freshDelay('drop')
-            self:shakeBoard('-drop')
-        else
-            self:freshDelay('move')
+        if not justFreshGhost then
+            if (self.settings.dropDelay<=0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then-- if (temp) 20G on
+                self:moveHand('drop',self.ghostY-self.handY)
+                self:freshDelay('drop')
+                self:shakeBoard('-drop')
+            else
+                self:freshDelay('move')
+            end
         end
     end
 end
@@ -775,7 +777,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                 local lastClear=self.clearHistory[#self.clearHistory-1]
                 if lastClear and M.clear.line==lastClear.line then
                     text=text.."M-"
-                    self:playSound('frenzy',M.clear)
+                    self:playSound('frenzy')
                 end
             end
 
