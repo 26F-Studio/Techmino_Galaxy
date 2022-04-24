@@ -290,7 +290,7 @@ local defaultSoundFunc={
         -- TODO
     end,
     move=function()
-        -- TODO
+        SFX.play('move')
     end,
     tuck=function()
         SFX.play('tuck')
@@ -303,6 +303,9 @@ local defaultSoundFunc={
     end,
     rotate_locked=function()
         SFX.play('rotate_locked')
+    end,
+    rotate_corners=function()
+        SFX.play('rotate_corners')
     end,
     rotate_failed=function()
         SFX.play('rotate_failed')
@@ -318,6 +321,20 @@ local defaultSoundFunc={
     end,
     lock=function()
         SFX.play('lock')
+    end,
+    clear=function(clearHis)
+        local l=clearHis.line
+        SFX.play(
+            l==1 and 'clear_1' or
+            l==2 and 'clear_2' or
+            l==3 and 'clear_3' or
+            l==4 and 'clear_4' or
+            'clear_5'
+        )
+        if l>=3 then
+            BGM.set('all','highgain',1/l,0)
+            BGM.set('all','highgain',1,min((l)^1.5/5,2.6))
+        end
     end,
     combo=function(clearHis)
         local cmb=clearHis.combo
@@ -358,22 +375,8 @@ local defaultSoundFunc={
             inst('lead',1-(phase/12)^2,     58+phase)-- A5+
         end
     end,
-    clear=function(clearHis)
-        local l=clearHis.line
-        SFX.play(
-            l==1 and 'clear_1' or
-            l==2 and 'clear_2' or
-            l==3 and 'clear_3' or
-            l==4 and 'clear_4' or
-            'clear_5'
-        )
-        if l>=3 then
-            BGM.set('all','highgain',1/l,0)
-            BGM.set('all','highgain',1,min((l)^1.5/5,2.6))
-        end
-    end,
     frenzy=function(clearHis)
-        inst('lead','A4')inst('lead','D4')inst('lead','A5')
+        -- inst('lead','A4')inst('lead','D4')inst('lead','A5')
         -- clearHis.combo, clearHis.line
         -- TODO
     end,
@@ -437,6 +440,7 @@ function MP:moveHand(action,a,b,c)
         end
     elseif action=='rotate' then
         if
+            self.settings.spin_immobile and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY+1) and
             self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) and
@@ -446,22 +450,26 @@ function MP:moveHand(action,a,b,c)
             self:shakeBoard(c=='L' and '-ccw' or c=='R' and '-cw' or '-180')
             self:playSound('rotate_locked')
         end
-        self:playSound('rotate')
-        local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
-        local state=minoData[self.hand.direction]
-        local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
-        if centerPos then
-            local cx,cy=self.handX+centerPos[1]-.5,self.handY+centerPos[2]-.5
-            if int(cx)==cx then
-                local corners=0
-                if self.field:getCell(cx-1,cy-1) then corners=corners+1 end
-                if self.field:getCell(cx+1,cy-1) then corners=corners+1 end
-                if self.field:getCell(cx-1,cy+1) then corners=corners+1 end
-                if self.field:getCell(cx+1,cy+1) then corners=corners+1 end
-                movement.corners=corners
+        if self.settings.spin_corners then
+            local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
+            local state=minoData[self.hand.direction]
+            local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
+            if centerPos then
+                local cx,cy=self.handX+centerPos[1]-.5,self.handY+centerPos[2]-.5
+                if int(cx)==cx then
+                    local corners=0
+                    if self.field:getCell(cx-1,cy-1) then corners=corners+1 end
+                    if self.field:getCell(cx+1,cy-1) then corners=corners+1 end
+                    if self.field:getCell(cx-1,cy+1) then corners=corners+1 end
+                    if self.field:getCell(cx+1,cy+1) then corners=corners+1 end
+                    if corners>=self.settings.spin_corners then
+                        movement.corners=true
+                        self:playSound('rotate_corners')
+                    end
+                end
             end
         end
-        self:freshGhost()
+        self:playSound('rotate')
         if self.handY==self.ghostY then
             self:playSound('touch')
         end
@@ -687,6 +695,7 @@ function MP:rotate(dir)
                     self.hand.matrix=icb
                     self.hand.direction=kick.target
                     self:moveHand('rotate',ix,iy,dir)
+                    self:freshGhost()
                     return
                 end
             end
@@ -756,7 +765,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     do
         local M=self.lastMovement
         local text=''
-        local spin=M.action=='rotate' and (M.immobile or M.corners and M.corners>=3)
+        local spin=M.action=='rotate' and (M.immobile or M.corners)
         M.clear=self:checkField()
         if M.clear then
             if spin then
@@ -1354,6 +1363,8 @@ local baseEnv={-- Generate from template in future
     actionPack='modern',
     seqType='bag7',
     rotSys='TRS',
+    spin_immobile=true,
+    spin_corners=3,
 
     freshCondition='any',
 

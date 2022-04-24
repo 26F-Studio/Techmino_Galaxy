@@ -87,6 +87,7 @@ local function r(P,dir)
                     C.matrix=icb
                     C.direction=idir
                     P:moveHand('rotate',x,y,dir)
+                    P:freshGhost()
                     return
                 end
             end
