@@ -1470,7 +1470,7 @@ local seqGenerators={
                 r=P.seqRND:random(7)
                 local repeated
                 for i=1,#history do
-                    if r==history[i]then
+                    if r==history[i] then
                         repeated=true
                         break
                     end
@@ -1491,7 +1491,7 @@ local seqGenerators={
             local maxK=1
             for i=1,7 do
                 weight[i]=weight[i]*.5+P.seqRND:random()
-                if weight[i]>weight[maxK]then
+                if weight[i]>weight[maxK] then
                     maxK=i
                 end
             end

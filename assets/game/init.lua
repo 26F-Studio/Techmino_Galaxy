@@ -36,7 +36,7 @@ end
 
 function GAME.newPlayer(id,pType)
     local P
-    if not(type(id)=='number' and math.floor(id)==id and id>=1 and id<=1000) then
+    if not (type(id)=='number' and math.floor(id)==id and id>=1 and id<=1000) then
         MES.new('error',"player id must be 1~1000 integer")
         return
     end
