@@ -105,7 +105,7 @@ TRS[6]={
         local C=P.hand
         local F=P.field
         local baseX,baseY=P.handX,P.handY
-        P:freshDelay('move')
+        P:freshDelay('rotate')
         P:playSound('rotate',.5)
         if (baseY==P.ghostY and ((F:getCell(baseX-1,baseY) or F:getCell(baseX-1,baseY+1))) and (F:getCell(baseX+2,baseY) or F:getCell(baseX+2,baseY+1))) or P.deathTimer then
             if not P.settings.noOspin then

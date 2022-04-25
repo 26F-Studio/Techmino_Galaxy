@@ -530,32 +530,57 @@ function MP:freshGhost(justFreshGhost)
     end
 end
 function MP:freshDelay(reason)-- reason can be 'move' or 'drop' or 'spawn'
-    if self.handY<self.minY then self.minY=self.handY end
+    local fell
+    if self.handY<self.minY then
+        self.minY=self.handY
+        fell=true
+    end
+    local maxLockDelayAdded=min(self.settings.lockDelay-self.lockTimer,self.freshTimeRemain)
     if self.settings.freshCondition=='any' then
-        if reason=='move' then
-            if self.lockTimer<self.settings.lockDelay then
-                self.lockTimer=self.settings.lockDelay
-                -- TODO: self.freshTime-=1
+        if reason=='move' or reason=='rotate' then
+            if self.lockTimer<self.settings.lockDelay and self.freshChance>0 then
+                self.lockTimer=self.lockTimer+maxLockDelayAdded
+                self.freshTimeRemain=self.freshTimeRemain-maxLockDelayAdded
+                self.freshChance=self.freshChance-1
             end
-        elseif reason=='drop' or reason=='spawn' then
+        elseif reason=='drop' then
+            self.dropTimer=self.settings.dropDelay
+            self.lockTimer=self.lockTimer+maxLockDelayAdded
+            self.freshTimeRemain=self.freshTimeRemain-maxLockDelayAdded
+        elseif reason=='spawn' then
             self.dropTimer=self.settings.dropDelay
             self.lockTimer=self.settings.lockDelay
+            self.freshChance=self.settings.freshCount
+            self.freshTimeRemain=self.settings.maxFreshTime
         end
     elseif self.settings.freshCondition=='fall' then
-        if reason=='drop' then
+        if reason=='move' or reason=='rotate' then
+            if fell and self.lockTimer<self.settings.lockDelay and self.freshChance>0 then
+                self.lockTimer=self.lockTimer+maxLockDelayAdded
+                self.freshTimeRemain=self.freshTimeRemain-maxLockDelayAdded
+                self.freshChance=self.freshChance-1
+            end
+        elseif reason=='drop' then
             self.dropTimer=self.settings.dropDelay
-            if self.lockTimer<self.settings.lockDelay then
-                self.lockTimer=self.settings.lockDelay
-                -- TODO: self.freshTime-=1
+            if self.lockTimer<self.settings.lockDelay and self.freshChance>0 then
+                self.lockTimer=self.lockTimer+maxLockDelayAdded
+                self.freshTimeRemain=self.freshTimeRemain-maxLockDelayAdded
+                self.freshChance=self.freshChance-1
             end
         elseif reason=='spawn' then
             self.dropTimer=self.settings.dropDelay
             self.lockTimer=self.settings.lockDelay
+            self.freshChance=self.settings.freshCount
+            self.freshTimeRemain=self.settings.maxFreshTime
         end
     elseif self.settings.freshCondition=='never' then
-        if reason=='spawn' then
+        if reason=='move' or reason=='rotate' or reason=='drop' then
+            -- Do nothing
+        elseif reason=='spawn' then
             self.dropTimer=self.settings.dropDelay
             self.lockTimer=self.settings.lockDelay
+            self.freshChance=self.settings.freshCount
+            self.freshTimeRemain=self.settings.maxFreshTime
         end
     else
         error("wtf why settings.freshCondition is "..tostring(self.settings.freshCondition))
@@ -702,7 +727,7 @@ function MP:rotate(dir)
                     return
                 end
             end
-            self:freshDelay('move')
+            self:freshDelay('rotate')
             self:playSound('rotate_failed')
         else
             error("wtf why no state in minoData")
@@ -1219,6 +1244,10 @@ function MP:render()
     gc.setColor(color)
     gc.rectangle('fill',-199,403,398*math.min(value,1),8)
 
+    for i=1,min(self.freshChance,15) do
+
+    end
+
     -- Next (Almost same as drawing hold(s), don't forget to change both)
     gc.push('transform')
     gc.translate(300,-400+50)
@@ -1387,6 +1416,8 @@ local baseEnv={-- Generate from template in future
     spin_corners=3,
 
     freshCondition='any',
+    freshCount=15,
+    maxFreshTime=6200,
 
     -- Will be overrode with user setting
     das=162,
@@ -1546,6 +1577,8 @@ function MP.new()
     P.spawnTimer=P.settings.readyDelay
     P.clearTimer=0
     P.deathTimer=false
+    P.freshChance=0
+    P.freshTimeRemain=0
 
     P.hand=false-- Controlling mino object
     P.handX=false

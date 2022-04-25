@@ -102,7 +102,7 @@ local function r(P,dir)
             break
         end
     end
-    P:freshDelay('move')
+    P:freshDelay('rotate')
     P:playSound('rotate_failed')
 end
 for i=1,29 do BiRS[i]={[0]={},[1]={},[2]={},[3]={},rotate=r} end
