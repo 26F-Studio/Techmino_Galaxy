@@ -1,7 +1,7 @@
 local gc=love.graphics
 
 local max,min=math.max,math.min
-local int,ceil=math.floor,math.ceil
+local floor,ceil=math.floor,math.ceil
 local abs=math.abs
 local ins,rem=table.insert,table.remove
 
@@ -419,9 +419,9 @@ function MP:moveHand(action,a,b,c,d)
             local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
             if centerPos then
                 local cx=self.handX+centerPos[1]-.5
-                if int(cx)==cx then
+                if floor(cx)==cx then
                     local cy=self.handY+centerPos[2]-.5
-                    if int(cy)==cy then
+                    if floor(cy)==cy then
                         local corners=0
                         if self:isSolidCell(cx-1,cy-1) then corners=corners+1 end
                         if self:isSolidCell(cx+1,cy-1) then corners=corners+1 end
@@ -461,7 +461,7 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
     return mino
 end
 function MP:resetPos()-- Move hand piece to the normal spawn position and check death
-    self:moveHand('reset',int(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
+    self:moveHand('reset',floor(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
     self.minY=self.handY
 
     local suffocated-- Cancel deathTimer temporarily, or we cannot apply IMS when hold in suffcating
@@ -584,10 +584,10 @@ function MP:freshDelay(reason)-- reason can be 'move' or 'drop' or 'spawn'
     end
 end
 function MP:freshNextQueue()
-    while #self.nextQueue<self.settings.nextCount do
-        local mino=self:seqGen()
-        if mino and type(mino)=='number' then
-            self:getMino(mino)
+    while #self.nextQueue<max(self.settings.nextCount,1) do
+        local shapeID=self:seqGen()
+        if shapeID and type(shapeID)=='number' then
+            self:getMino(shapeID)
         else
             break
         end
@@ -940,7 +940,7 @@ end
 --------------------------------------------------------------
 -- Update & Render
 function MP:update(dt)
-    local df=int((self.realTime+dt)*1000)-int(self.realTime*1000)
+    local df=floor((self.realTime+dt)*1000)-floor(self.realTime*1000)
     self.realTime=self.realTime+dt
     local SET=self.settings
 
@@ -964,7 +964,7 @@ function MP:update(dt)
         if self.time<SET.readyDelay then
             self.time=self.time+1--[[df]]
             local d=SET.readyDelay-self.time
-            if int((d+1--[[df]])/1000)~=int(d/1000) then
+            if floor((d+1--[[df]])/1000)~=floor(d/1000) then
                 self:playSound('countDown',ceil(d/1000))
             end
             if d==0 then
@@ -990,7 +990,7 @@ function MP:update(dt)
                         if SET.arr==0 then
                             dist=1e99
                         else
-                            dist=int(c1/SET.arr)-int(c0/SET.arr)
+                            dist=floor(c1/SET.arr)-floor(c0/SET.arr)
                         end
                     elseif c1>=SET.das then
                         if SET.arr==0 then
@@ -1030,7 +1030,7 @@ function MP:update(dt)
                     local c0=self.downCharge
                     local c1=c0+1--[[df]]
                     self.downCharge=c1
-                    local dist=SET.sdarr==0 and 1e99 or int(c1/SET.sdarr)-int(c0/SET.sdarr)
+                    local dist=SET.sdarr==0 and 1e99 or floor(c1/SET.sdarr)-floor(c0/SET.sdarr)
                     local oy=self.handY
                     while dist>0 do
                         if not self:moveDown() then break end
@@ -1109,6 +1109,7 @@ function MP:update(dt)
     end
 end
 function MP:render()
+    local settings=self.settings
     gc.push('transform')
 
     -- applyPlayerTransform
@@ -1123,7 +1124,7 @@ function MP:render()
     gc.translate(-200,400)
     GC.stc_setComp('equal',1)
     GC.stc_rect(0,0,400,-840)
-    gc.scale(10/self.settings.fieldW)
+    gc.scale(10/settings.fieldW)
 
 
     self:triggerEvent('drawBelowField')
@@ -1132,8 +1133,8 @@ function MP:render()
     -- Grid
     gc.setColor(1,1,1,.26)
     local rad,len=1,6-- Line width/length
-    local gridHeight=min(max(self.settings.spawnH,self.settings.deathH),2*self.settings.fieldW)
-    for x=1,self.settings.fieldW do
+    local gridHeight=min(max(settings.spawnH,settings.deathH),2*settings.fieldW)
+    for x=1,settings.fieldW do
         x=(x-1)*40
         for y=1,gridHeight do
             y=-y*40
@@ -1179,7 +1180,7 @@ function MP:render()
         if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
             local droppingY
             if self.handY>self.ghostY then
-                droppingY=40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6
+                droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
                 gc.translate(0,droppingY)
             end
             for y=1,#CB do for x=1,#CB[1] do
@@ -1188,7 +1189,7 @@ function MP:render()
                     gc.rectangle('fill',(self.handX+x-2)*40,-(self.handY+y-1)*40,40,40)
                 end
             end end
-            local RS=RotationSys[self.settings.rotSys]
+            local RS=RotationSys[settings.rotSys]
             local minoData=RS[self.hand.shape]
             local state=minoData[self.hand.direction]
             local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
@@ -1205,9 +1206,9 @@ function MP:render()
 
 
     -- Height lines
-    local width=self.settings.fieldW*40
-    gc.setColor(0,.4,1,.8)gc.rectangle('fill',0,-self.settings.spawnH*40-2,width,4)-- Spawning height
-    gc.setColor(1,0,0,.6)gc.rectangle('fill',0,-self.settings.deathH*40-2,width,4)-- Death height
+    local width=settings.fieldW*40
+    gc.setColor(0,.4,1,.8)gc.rectangle('fill',0,-settings.spawnH*40-2,width,4)-- Spawning height
+    gc.setColor(1,0,0,.6)gc.rectangle('fill',0,-settings.deathH*40-2,width,4)-- Death height
     gc.setColor(0,0,0,.5)gc.rectangle('fill',0,-1260*40-40,width,40)-- Void height
 
 
@@ -1231,26 +1232,34 @@ function MP:render()
     gc.rectangle('line',-201,401,402,12)
     local color,value
     if not self.hand then
-        color,value=COLOR.lB,self.spawnTimer/self.settings.spawnDelay
+        color,value=COLOR.lB,self.spawnTimer/settings.spawnDelay
     elseif self.deathTimer then
-        color,value=COLOR.R,self.deathTimer/self.settings.deathDelay
+        color,value=COLOR.R,self.deathTimer/settings.deathDelay
     elseif self.handY~=self.ghostY then
-        color,value=COLOR.lG,self.dropTimer/self.settings.dropDelay
+        color,value=COLOR.lG,self.dropTimer/settings.dropDelay
     else
-        color,value=COLOR.L,self.lockTimer/self.settings.lockDelay
+        color,value=COLOR.L,self.lockTimer/settings.lockDelay
     end
     gc.setColor(color)
     gc.rectangle('fill',-199,403,398*math.min(value,1),8)
 
-    for i=1,min(self.freshChance,15) do
-
+    if self.freshChance>0 then
+        gc.setColor(
+            settings.freshCondition=='any' and COLOR.dL or
+            settings.freshCondition=='fall' and COLOR.R or
+            settings.freshCondition=='none' and COLOR.D or
+            COLOR.random(4)
+        )
+        for i=1,min(self.freshChance,15) do gc.rectangle('fill',-221+26*i-1,418-1,20+2,5+2) end
+        gc.setColor(COLOR.hsv(min((self.freshChance-1)/14,1)/2.6,.4,.9))
+        for i=1,min(self.freshChance,15) do gc.rectangle('fill',-221+26*i,418,20,5) end
     end
 
     -- Next (Almost same as drawing hold(s), don't forget to change both)
     gc.push('transform')
     gc.translate(300,-400+50)
     gc.setColor(1,1,1)
-    for n=1,#self.nextQueue do
+    for n=1,min(#self.nextQueue,settings.nextCount) do
         local NB=self.nextQueue[n].matrix
         local k=min(2.3/#NB,3/#NB[1],.86)
         gc.scale(k)
@@ -1295,30 +1304,23 @@ function MP:render()
 
 
     -- Starting counter
-    if self.time<self.settings.readyDelay then
+    if self.time<settings.readyDelay then
         gc.push('transform')
+        local num=floor((settings.readyDelay-self.time)/1000)+1
         local r,g,b
-        local num=int((self.settings.readyDelay-self.time)/1000)+1
-        local d=1-self.time%1000/1000-- d from 999 to 0
-        if num==1 then
-            r,g,b=1,.7,.7
-            if d>.75 then gc.scale(1,1+(d/.25-3)^2) end
-        elseif num==2 then
-            r,g,b=.98,.85,.75
-            if d>.75 then gc.scale(1+(d/.25-3)^2,1) end
-        elseif num==3 then
-            r,g,b=.7,.8,.98
-            if d>.75 then gc.rotate((d-.75)^3*40) end
-        elseif num==4 then
-            r,g,b=.95,.93,.5
-        elseif num==5 then
-            r,g,b=.7,.95,.7
-        else
-            r,g,b=max(1.26-num/10,0),max(1.26-num/10,0),max(1.26-num/10,0)
+        local d=1-self.time%1000/1000-- from .999 to 0
+
+        if     num==1 then r,g,b=1.00,0.70,0.70 if d>.75 then gc.scale(1,1+(d/.25-3)^2) end
+        elseif num==2 then r,g,b=0.98,0.85,0.75 if d>.75 then gc.scale(1+(d/.25-3)^2,1) end
+        elseif num==3 then r,g,b=0.70,0.80,0.98 if d>.75 then gc.rotate((d-.75)^3*40) end
+        elseif num==4 then r,g,b=0.95,0.93,0.50
+        elseif num==5 then r,g,b=0.70,0.95,0.70
+        else  r,g,b=max(1.26-num/10,0),max(1.26-num/10,0),max(1.26-num/10,0)
         end
 
         FONT.set(100)
 
+        -- Warping number
         gc.push('transform')
             gc.scale((1.5-d*.6)^1.5)
             gc.setColor(r,g,b,d)
@@ -1327,6 +1329,7 @@ function MP:render()
             GC.mStr(num,0,-70)
         gc.pop()
 
+        -- Scaling + Fading number
         gc.scale(min(d/.333,1)^.4)
         gc.setColor(r,g,b)
         GC.mStr(num,0,-70)

@@ -1,7 +1,7 @@
 local gc=love.graphics
 local setColor,rectangle=gc.setColor,gc.rectangle
 
-local int,abs=math.floor,math.abs
+local floor,abs=math.floor,math.abs
 local rnd,min=math.random,math.min
 local ins=table.insert
 local setFont=FONT.set
@@ -360,7 +360,7 @@ function scene.draw()
     for i=1,16 do
         if field[i] then
             local r=field.r
-            local x,y=field.x+r*((i-1)%4)+3,field.y+r*(int((i-1)/4))+3
+            local x,y=field.x+r*((i-1)%4)+3,field.y+r*(floor((i-1)/4))+3
             local N=field[i]
             local textScale=min(field.r/tileText[N]:getWidth(),field.r/tileText[N]:getHeight())/1.26
             if i~=prevPos or prevSpawnTime==1 then
@@ -387,7 +387,7 @@ function scene.draw()
     end
 
     -- New tile position
-    local x,y=1+(prevPos-1)%4,int((prevPos+3)/4)
+    local x,y=1+(prevPos-1)%4,floor((prevPos+3)/4)
     gc.setLineWidth(8)
     setColor(.2,.8,0,prevSpawnTime)
     local d=25-prevSpawnTime*25

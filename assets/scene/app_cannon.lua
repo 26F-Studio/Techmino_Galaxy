@@ -1,5 +1,6 @@
 local gc=love.graphics
-local int,rnd,abs,sin,cos=math.floor,math.random,math.abs,math.sin,math.cos
+local floor,rnd,abs=math.floor,math.random,math.abs
+local sin,cos=math.sin,math.cos
 
 local pow,ang
 local state,timer,score,combo
@@ -59,7 +60,7 @@ function scene.update()
         end
         if x>1280 or y>720 then
             if score>0 then
-                score=score-int(score/10)
+                score=score-floor(score/10)
             end
             SFX.play('finesseError')
             combo=0
@@ -108,7 +109,7 @@ function scene.draw()
         gc.setColor(1,1,.6)
         gc.print("x"..combo,300,80)
     end
-    gc.setColor(COLOR[scoreColor[int(score/20)+1] or 'D'])
+    gc.setColor(COLOR[scoreColor[floor(score/20)+1] or 'D'])
     gc.print(score,300,30)
 
     -- Cannon ball

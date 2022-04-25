@@ -1,6 +1,6 @@
 local gc=love.graphics
 local rnd=math.random
-local int,ceil=math.floor,math.ceil
+local floor,ceil=math.floor,math.ceil
 local char=string.char
 
 local timing,time
@@ -10,7 +10,7 @@ local function b2(i)
     local s=""
     while i>0 do
         s=(i%2)..s
-        i=int(i/2)
+        i=floor(i/2)
     end
     return "0b"..s
 end
@@ -19,7 +19,7 @@ local function b8(i)
     local s=""
     while i>0 do
         s=(i%8)..s
-        i=int(i/8)
+        i=floor(i/8)
     end
     return "0o"..s
 end
@@ -28,7 +28,7 @@ local function b16(i)
     local s=""
     while i>0 do
         s=char((i%16<10 and 48 or 55)+i%16)..s
-        i=int(i/16)
+        i=floor(i/16)
     end
     return "0x"..s
 end
@@ -41,12 +41,12 @@ local levels={
     end,nil,nil,
     function() -- <+> [,20]
         local s=rnd(10,18)
-        local a=rnd(s-9,int(s/2))
+        local a=rnd(s-9,floor(s/2))
         return a.."+"..s-a,s
     end,nil,nil,
     function() -- <+> [,100]
         local s=rnd(22,99)
-        local a=rnd(11,int(s/2))
+        local a=rnd(11,floor(s/2))
         return a.."+"..s-a,s
     end,nil,nil,
     function() -- <-> [,10]
@@ -56,7 +56,7 @@ local levels={
     end,nil,nil,
     function() -- <-> [,100]
         local s=rnd(22,99)
-        local a=rnd(11,int(s/2))
+        local a=rnd(11,floor(s/2))
         return s.."-"..a,s-a
     end,nil,nil,
     function() -- <-> [-10,]
@@ -67,7 +67,7 @@ local levels={
     function() -- <*> [,100]
         local b=rnd(21,89)
         local a=rnd(ceil(b/10),9)
-        b=int(b/a)
+        b=floor(b/a)
         return a.."*"..b,a*b
     end,nil,nil,nil,nil,
     function() -- <*> [,1000]
@@ -77,7 +77,7 @@ local levels={
     function() -- </> [,100]
         local b=rnd(21,89)
         local a=rnd(ceil(b/10),9)
-        b=int(b/a)
+        b=floor(b/a)
         return a*b.."/"..a,b
     end,nil,nil,nil,nil,
     function() -- <%3>
@@ -103,17 +103,17 @@ local levels={
     end,nil,nil,
     function() -- <b+>
         local s=rnd(9,31)
-        local a=rnd(5,int(s/2))
+        local a=rnd(5,floor(s/2))
         return {COLOR.N,b2(a),COLOR.L,"+",COLOR.N,b2(s-a)},s
     end,nil,nil,nil,nil,
     function() -- <o+>
         local s=rnd(18,63)
-        local a=rnd(9,int(s/2))
+        local a=rnd(9,floor(s/2))
         return {COLOR.lR,b8(a),COLOR.L,"+",COLOR.lR,b8(s-a)},s
     end,nil,nil,nil,
     function() -- <h+>
         local s=rnd(34,255)
-        local a=rnd(17,int(s/2))
+        local a=rnd(17,floor(s/2))
         return {COLOR.J,b16(a),COLOR.L,"+",COLOR.J,b16(s-a)},s
     end,nil,nil,
     function() timing=false return "Coming S∞n"..(rnd()<.5 and "" or " "),1e99 end,

@@ -1,6 +1,6 @@
 local gc=love.graphics
 
-local int,rnd=math.floor,math.random
+local floor,rnd=math.floor,math.random
 
 local scene={}
 
@@ -82,7 +82,7 @@ local function tapBoard(x,y,key)
             if pathVis then
                 SYSFX.new('rect',6,x-5,y-5,11,11,1,1,1)
             end
-            x,y=int((x-SCR.w0/2)/160/scale)+3,int((y-SCR.h0/2)/160/scale)+3
+            x,y=floor((x-SCR.w0/2)/160/scale)+3,floor((y-SCR.h0/2)/160/scale)+3
         end
         local b=board
         local moves=0
