@@ -285,19 +285,16 @@ local defaultSoundFunc={
             inst('bass',2.2-num/5,'A2','E3')
         end
     end,
-    initmove=function()
-        -- TODO
-    end,
     move=               function() SFX.play('move')             end,
     tuck=               function() SFX.play('tuck')             end,
-    initrotate=function()
-        -- TODO
-    end,
     rotate=             function() SFX.play('rotate')           end,
+    initrotate=         function() SFX.play('initrotate')       end,
     rotate_locked=      function() SFX.play('rotate_locked')    end,
     rotate_corners=     function() SFX.play('rotate_corners')   end,
     rotate_failed=      function() SFX.play('rotate_failed')    end,
     rotate_special=     function() SFX.play('rotate_special')   end,
+    hold=               function() SFX.play('hold')             end,
+    inithold=           function() SFX.play('inithold')         end,
     touch=              function() SFX.play('touch')            end,
     drop=               function() SFX.play('drop')             end,
     lock=               function() SFX.play('lock')             end,
@@ -379,7 +376,7 @@ function MP:triggerEvent(name,...)
         for i=1,#L do L[i](self,...) end
     end
 end
-function MP:moveHand(action,a,b,c)
+function MP:moveHand(action,a,b,c,d)
     if action=='moveX' then
         self.handX=self.handX+a
     elseif action=='drop' or action=='moveY' then
@@ -438,7 +435,7 @@ function MP:moveHand(action,a,b,c)
                 end
             end
         end
-        self:playSound('rotate')
+        self:playSound(d and 'initrotate' or 'rotate')
         if self.handY==self.ghostY then
             self:playSound('touch')
         end
@@ -505,7 +502,7 @@ function MP:resetPos()-- Move hand piece to the normal spawn position and check 
     end
 
     if self.keyBuffer.rotate then-- IRS
-        self:rotate(self.keyBuffer.rotate)
+        self:rotate(self.keyBuffer.rotate,true)
         self.keyBuffer.rotate=false
     end
 end
@@ -611,7 +608,7 @@ function MP:popNext()
 
     if self.keyBuffer.hold then-- IHS
         self.keyBuffer.hold=false
-        self:hold()
+        self:hold(true)
     else
         self:resetPos()
     end
@@ -688,13 +685,13 @@ function MP:moveDown()
         return true
     end
 end
-function MP:rotate(dir)
+function MP:rotate(dir,ifInit)
     if not self.hand then return end
     local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
     if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F ("..tostring(dir)..")") end
 
     if minoData.rotate then-- Custom rotate function
-        minoData.rotate(self,dir)
+        minoData.rotate(self,dir,ifInit)
     else-- Normal rotate procedure
         local preState=minoData[self.hand.direction]
         if preState then
@@ -722,7 +719,7 @@ function MP:rotate(dir)
                 if not self:ifoverlap(icb,ix,iy) then
                     self.hand.matrix=icb
                     self.hand.direction=kick.target
-                    self:moveHand('rotate',ix,iy,dir)
+                    self:moveHand('rotate',ix,iy,dir,ifInit)
                     self:freshGhost()
                     return
                 end
@@ -734,7 +731,7 @@ function MP:rotate(dir)
         end
     end
 end
-function MP:hold()
+function MP:hold(ifInit)
     if self.holdChance<=0 then return end
     local mode=self.settings.holdMode
     if mode=='hold' then
@@ -746,6 +743,7 @@ function MP:hold()
     else
         error("wtf why hold mode is "..tostring(mode))
     end
+    self:playSound(ifInit and 'inithold' or 'hold')
     self.holdChance=self.holdChance-1
 end
 function MP:hold_hold()

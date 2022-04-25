@@ -101,12 +101,12 @@ TRS[6]={
     [1]={center={1,1}},
     [2]={center={1,1}},
     [3]={center={1,1}},
-    rotate=function(P,dir)
+    rotate=function(P,dir,ifInit)
         local C=P.hand
         local F=P.field
         local baseX,baseY=P.handX,P.handY
         P:freshDelay('rotate')
-        P:playSound('rotate',.5)
+        local transformed
         if (baseY==P.ghostY and ((F:getCell(baseX-1,baseY) or F:getCell(baseX-1,baseY+1))) and (F:getCell(baseX+2,baseY) or F:getCell(baseX+2,baseY+1))) or P.deathTimer then
             if not P.settings.noOspin then
                 -- [Warning] field 'spinSeq' is a dirty data, TRS put this var into the block.
@@ -146,9 +146,10 @@ TRS[6]={
                                 C._origin.direction=test.direcion
                                 C._origin.matrix=test.direcion==0 and newMatrix or test.direcion==2 and TABLE.rotate(newMatrix,'F') or error("Oh I forgot this")
 
-                                P:moveHand('rotate',x,y,dir)
+                                P:moveHand('rotate',x,y,dir,ifInit)
                                 P:freshGhost()
                                 P:playSound('rotate_special')
+                                transformed=true
                                 break
                             end
                         end
@@ -159,6 +160,9 @@ TRS[6]={
             C.spinSeq=nil
             C.matrix=TABLE.rotate(C.matrix,dir)
             C.direction=(C.direction+(dir=='R' and 1 or dir=='L' and 3 or dir=='F' and 2))%4
+        end
+        if not transformed then
+            P:playSound(ifInit and 'initrotate' or 'rotate')
         end
         if P.handY==P.ghostY then
             P:playSound('touch')
