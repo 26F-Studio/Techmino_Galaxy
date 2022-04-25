@@ -314,10 +314,10 @@ local defaultSoundFunc={
     combo=function(clearHis)
         local cmb=clearHis.combo
         if cmb<=5 then
-            if     cmb==1 then  inst('bass',.50,'A2')
-            elseif cmb==2 then  inst('bass',.60,'C3')
-            elseif cmb==3 then  inst('bass',.70,'D3')
-            elseif cmb==4 then  inst('bass',.80,'E3')
+            if     cmb==1 then  inst('bass',.70,'A2')
+            elseif cmb==2 then  inst('bass',.75,'C3')
+            elseif cmb==3 then  inst('bass',.80,'D3')
+            elseif cmb==4 then  inst('bass',.85,'E3')
             elseif cmb==5 then  inst('bass',.90,'G3')
             end
         elseif cmb<=10 then
@@ -361,12 +361,15 @@ local defaultSoundFunc={
 }
 function MP:playSound(event,...)
     if not self.sound then return end
-    if self.settings[event] then
-        self.settings[event](...)
-    elseif defaultSoundFunc[event] then
-        defaultSoundFunc[event](...)
-    else
-        MES.new('warn',"Unknown sound event: "..event)
+    if self.time-self.soundTimeHistory[event]>=15 then
+        self.soundTimeHistory[event]=self.time
+        if self.settings[event] then
+            self.settings[event](...)
+        elseif defaultSoundFunc[event] then
+            defaultSoundFunc[event](...)
+        else
+            MES.new('warn',"Unknown sound event: "..event)
+        end
     end
 end
 
@@ -812,15 +815,15 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
 
             text=text..(Text.clearName[M.clear.line] or ('['..M.clear.line..']'))
 
-            self.texts:add(text,0,0,spin and 60 or 70,M.clear.line>=4 and 'stretch' or spin and 'spin' or 'appear',.32)
+            self.texts:add(text,0,0,spin and 60 or 70,M.clear.line>=4 and 'stretch' or spin and 'spin' or 'appear')
             if M.clear.combo>1 then
                 self.texts:add(Text.combo(M.clear.combo-1),0,60,15+min(M.clear.combo,15)*5)
             end
             if self.field:getHeight()==0 then
-                self.texts:add(Text.allClear,0,-80,75,'flicker',.2)
+                self.texts:add(Text.allClear,0,-80,75,'flicker',0.4)
                 self:playSound('allClear')
             elseif M.y>self.field:getHeight() then
-                self.texts:add(Text.halfClear,0,-80,65,'fly',.3)
+                self.texts:add(Text.halfClear,0,-80,65,'fly',0.6)
                 self:playSound('halfClear')
             end
 
@@ -835,7 +838,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                 text=Text.spin:repD(M.mino.name)
             end
             if #text>0 then
-                self.texts:add(text,0,0,55,'appear',.626)
+                self.texts:add(text,0,0,55,'appear',1.26)
             end
         end
     end
@@ -959,7 +962,7 @@ function MP:update(dt)
 
         -- Calculate board animation
         local O=self.pos
-        --                      sticky           force         soft
+        --                     sticky           force          soft
         O.vx=expApproach(O.vx,0,.02)-sign(O.dx)*.0001*abs(O.dx)^1.2
         O.vy=expApproach(O.vy,0,.02)-sign(O.dy)*.0001*abs(O.dy)^1.1
         O.va=expApproach(O.va,0,.02)-sign(O.da)*.0001*abs(O.da)^1.0
@@ -1114,10 +1117,9 @@ function MP:update(dt)
             end
         end
 
-        self.texts:update(dt)
-
         self:triggerEvent('always',1--[[df]])
     end
+    self.texts:update(dt)
 end
 function MP:render()
     local settings=self.settings
@@ -1218,9 +1220,9 @@ function MP:render()
 
     -- Height lines
     local width=settings.fieldW*40
-    gc.setColor(0,.4,1,.8)gc.rectangle('fill',0,-settings.spawnH*40-2,width,4)-- Spawning height
-    gc.setColor(1,0,0,.6)gc.rectangle('fill',0,-settings.deathH*40-2,width,4)-- Death height
-    gc.setColor(0,0,0,.5)gc.rectangle('fill',0,-1260*40-40,width,40)-- Void height
+    gc.setColor(0,.4,1,.8) gc.rectangle('fill',0,-settings.spawnH*40-2,width,4)-- Spawning height
+    gc.setColor(1,0,0,.6) gc.rectangle('fill',0,-settings.deathH*40-2,width,4)-- Death height
+    gc.setColor(0,0,0,.5) gc.rectangle('fill',0,-1260*40-40,width,40)-- Void height
 
 
     self:triggerEvent('drawInField')
@@ -1261,9 +1263,9 @@ function MP:render()
             settings.freshCondition=='none' and COLOR.D or
             COLOR.random(4)
         )
-        for i=1,min(self.freshChance,15) do gc.rectangle('fill',-221+26*i-1,418-1,20+2,5+2) end
+        for i=1,min(self.freshChance,15) do gc.rectangle('fill',-218+26*i-1,420-1,20+2,5+2) end
         gc.setColor(COLOR.hsv(min((self.freshChance-1)/14,1)/2.6,.4,.9))
-        for i=1,min(self.freshChance,15) do gc.rectangle('fill',-221+26*i,418,20,5) end
+        for i=1,min(self.freshChance,15) do gc.rectangle('fill',-218+26*i,420,20,5) end
     end
 
     -- Next (Almost same as drawing hold(s), don't forget to change both)
@@ -1404,8 +1406,8 @@ end
 local baseEnv={-- Generate from template in future
     fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. If really want change it, you need change both 'self.field._width' and 'self.field._matrix'
     spawnH=20,-- [WARNING] This can be changed anytime. Field object actually do not contain height information
-    lockoutH=20,
-    deathH=21,
+    lockoutH=1e99,
+    deathH=1e99,
     barrierL=18,
     barrierH=21,
 
@@ -1440,7 +1442,7 @@ local baseEnv={-- Generate from template in future
     shakeness=.26,
 }
 local seqGenerators={
-    none=function()while true do coroutine.yield()end end,
+    none=function() while true do coroutine.yield() end end,
     bag7=function(P)
         local l={}
         while true do
@@ -1514,9 +1516,12 @@ local seqGenerators={
     end,
 }
 local modeDataMeta={
-    __index=function(self,k)rawset(self,k,0)return 0 end,
-    __newindex=function(self,k,v)rawset(self,k,v)end,
+    __index=function(self,k) rawset(self,k,0) return 0 end,
+    __newindex=function(self,k,v) rawset(self,k,v) end,
     __metatable=true,
+}
+local soundTimeMeta={
+    __index=function(self,k) rawset(self,k,0) return -1e99 end
 }
 function MP.new()
     local P=setmetatable({},{__index=MP})
@@ -1552,6 +1557,7 @@ function MP.new()
     }
     P.modeData=setmetatable({},modeDataMeta)
     P.sound=false
+    P.soundTimeHistory=setmetatable({},soundTimeMeta)
 
     P.pos={
         x=0,y=0,k=1,a=0,
@@ -1590,7 +1596,7 @@ function MP.new()
     P.spawnTimer=P.settings.readyDelay
     P.clearTimer=0
     P.deathTimer=false
-    P.freshChance=0
+    P.freshChance=P.settings.freshCount
     P.freshTimeRemain=0
 
     P.hand=false-- Controlling mino object
