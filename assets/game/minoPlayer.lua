@@ -387,6 +387,8 @@ function MP:moveHand(action,a,b,c,d)
         error('wtf why action is '..tostring(action))
     end
 
+    if self.handX%1~=0 or self.handY%1~=0 then error('EUREKA! Please report this error to developer.') end
+
     local movement={
         action=action,
         mino=self.hand,
@@ -782,6 +784,10 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
 
     -- Lock to field
     self:lock()
+    if self.handY+#self.hand.matrix-1>self.settings.deathH then
+        self:gameover('MLE')
+        return
+    end
     self:playSound('lock')
     self:triggerEvent('afterLock')
 
@@ -888,8 +894,8 @@ function MP:checkField()-- Check line clear, top out checking, etc.
         return h
     else
         self.combo=0
-        if self.handY>self.settings.deathH then
-            self:gameover('MLE')
+        if self.settings.lockout and self.handY>self.settings.lockoutH then
+            self:gameover('CE')
         end
     end
     return false
@@ -901,21 +907,24 @@ function MP:gameover(reason)
     self.hand=false
     self.spawnTimer=1e99
 
+    --[[
+        Reason can be:
+        AC:  Win
+        WA:  Block out
+        CE:  Lock out
+        MLE: Top out
+        TLE: Time out
+        OLE: Finesse fault
+        ILE: Ran out pieces
+        PE:  Mission failed
+        RE:  Other reason
+    ]]
+    self:triggerEvent('gameOver',reason)
+
+    -- <Temporarily>
     MES.new(reason=='AC' and 'check' or 'error',reason,6.26)
     self:playSound(reason=='AC' and 'win' or 'lose')
-
-    -- TODO
-    if reason=='AC' then-- Win
-    elseif reason=='WA' then-- Block out
-    elseif reason=='CE' then-- Lock out
-    elseif reason=='MLE' then-- Top out
-    elseif reason=='TLE' then-- Time out
-    elseif reason=='OLE' then-- Finesse fault
-    elseif reason=='ILE' then-- Ran out pieces
-    elseif reason=='PE' then-- Mission failed
-    elseif reason=='RE' then-- Other reason
-    end
-    self:triggerEvent('gameOver',reason)
+    -- </Temporarily>
 end
 --------------------------------------------------------------
 -- Press & Release
@@ -978,7 +987,7 @@ function MP:update(dt)
 
         if not self.deathTimer then
             -- Auto shift
-            if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then-- Magic IF-statemant. I don't know why it works perfectly
+            if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then
                 if self.hand and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) then
                     local c0=self.moveCharge
                     local c1=c0+1--[[df]]
@@ -1032,16 +1041,18 @@ function MP:update(dt)
                     self.downCharge=c1
                     local dist=SET.sdarr==0 and 1e99 or floor(c1/SET.sdarr)-floor(c0/SET.sdarr)
                     local oy=self.handY
-                    while dist>0 do
-                        if not self:moveDown() then break end
-                        dist=dist-1
-                    end
-                    if oy~=self.handY then
-                        self:freshDelay('drop')
-                        self:playSound('move')
-                        if self.handY==self.ghostY then
-                            self:shakeBoard('-down')
-                            self:playSound('touch')
+                    if dist>0 then
+                        while dist>0 do
+                            dist=dist-1
+                            if not self:moveDown() then break end
+                        end
+                        if oy~=self.handY then
+                            self:freshDelay('drop')
+                            self:playSound('move')
+                            if self.handY==self.ghostY then
+                                self:shakeBoard('-down')
+                                self:playSound('touch')
+                            end
                         end
                     end
                 else
@@ -1133,7 +1144,7 @@ function MP:render()
     -- Grid
     gc.setColor(1,1,1,.26)
     local rad,len=1,6-- Line width/length
-    local gridHeight=min(max(settings.spawnH,settings.deathH),2*settings.fieldW)
+    local gridHeight=min(max(settings.spawnH,settings.lockoutH,settings.deathH),2*settings.fieldW)
     for x=1,settings.fieldW do
         x=(x-1)*40
         for y=1,gridHeight do
@@ -1393,6 +1404,7 @@ end
 local baseEnv={-- Generate from template in future
     fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. If really want change it, you need change both 'self.field._width' and 'self.field._matrix'
     spawnH=20,-- [WARNING] This can be changed anytime. Field object actually do not contain height information
+    lockoutH=20,
     deathH=21,
     barrierL=18,
     barrierH=21,
