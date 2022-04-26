@@ -363,10 +363,8 @@ function MP:playSound(event,...)
     if not self.sound then return end
     if self.time-self.soundTimeHistory[event]>=15 then
         self.soundTimeHistory[event]=self.time
-        if self.settings[event] then
-            self.settings[event](...)
-        elseif defaultSoundFunc[event] then
-            defaultSoundFunc[event](...)
+        if self.soundEvent[event] then
+            self.soundEvent[event](...)
         else
             MES.new('warn',"Unknown sound event: "..event)
         end
@@ -1408,13 +1406,7 @@ end
 function MP:loadSettings(settings)
     -- Load data & events from mode settings
     for k,v in next,settings do
-        if k~='event' then
-            if type(v)=='table' then
-                self.settings[k]=TABLE.copy(v)
-            elseif v~=nil then
-                self.settings[k]=v
-            end
-        else
+        if k=='event' then
             for name,E in next,v do
                 assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
                 if type(E)=='table' then
@@ -1424,6 +1416,20 @@ function MP:loadSettings(settings)
                 elseif type(E)=='function' then
                     ins(self.event[name],E)
                 end
+            end
+        elseif k=='soundEvent' then
+            for name,E in next,v do
+                if type(E)=='function' then
+                    self.soundEvent[name]=E
+                else
+                    error("soundEvent must be function")
+                end
+            end
+        else
+            if type(v)=='table' then
+                self.settings[k]=TABLE.copy(v)
+            elseif v~=nil then
+                self.settings[k]=v
             end
         end
     end
@@ -1562,6 +1568,9 @@ local modeDataMeta={
 local soundTimeMeta={
     __index=function(self,k) rawset(self,k,0) return -1e99 end
 }
+local soundEventMeta={
+    __index=defaultSoundFunc
+}
 function MP.new()
     local P=setmetatable({},{__index=MP})
 
@@ -1594,6 +1603,7 @@ function MP.new()
         drawInField={},
         drawOnPlayer={},
     }
+    P.soundEvent=setmetatable({},soundEventMeta)
     P.modeData=setmetatable({},modeDataMeta)
     P.sound=false
     P.soundTimeHistory=setmetatable({},soundTimeMeta)
