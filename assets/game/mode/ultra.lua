@@ -36,8 +36,8 @@ return {
             end,
             gameOver=function(P)
                 if P.isMain then
-                    BGM.set('all','pitch',.5,5)
-                    BGM.stop(5)
+                    BGM.set('all','pitch',.5,1)
+                    BGM.stop(1)
                 end
                 -- TODO
             end,
