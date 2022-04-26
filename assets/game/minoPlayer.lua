@@ -465,10 +465,12 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
     end
     return mino
 end
-function MP:resetPos()-- Move hand piece to the normal spawn position and check death
+function MP:resetPos()-- Move hand piece to the normal spawn position
     self:moveHand('reset',floor(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
     self.minY=self.handY
-
+    self:resetPosCheck()
+end
+function MP:resetPosCheck()
     local suffocated-- Cancel deathTimer temporarily, or we cannot apply IMS when hold in suffcating
     if self.deathTimer then
         local bufferedDeathTimer=self.deathTimer
@@ -739,15 +741,13 @@ end
 function MP:hold(ifInit)
     if self.holdChance<=0 then return end
     local mode=self.settings.holdMode
-    if mode=='hold' then
-        self:hold_hold()
-    elseif mode=='swap' then
-        self:hold_swap()
-    elseif mode=='float' then
-        self:hold_float()
-    else
-        error("wtf why hold mode is "..tostring(mode))
+    local freshChance,freshTimeRemain=self.freshChance,self.freshTimeRemain
+    if     mode=='hold'  then self:hold_hold()
+    elseif mode=='swap'  then self:hold_swap()
+    elseif mode=='float' then self:hold_float()
+    else   error("wtf why hold mode is "..tostring(mode))
     end
+    self.freshChance,self.freshTimeRemain=freshChance,freshTimeRemain
     self:playSound(ifInit and 'inithold' or 'hold')
     self.holdChance=self.holdChance-1
 end
@@ -774,7 +774,25 @@ function MP:hold_swap()
     end
 end
 function MP:hold_float()
-    -- TODO
+    if self.floatHolds[1] then
+        local h=self.floatHolds[1]
+        h.hand,self.hand=self.hand,h.hand
+        h.handX,self.handX=self.handX,h.handX
+        h.handY,self.handY=self.handY,h.handY
+        h.lastMovement,self.lastMovement=self.lastMovement,h.lastMovement
+        h.minY,self.minY=self.minY,h.minY
+        self:resetPosCheck()
+    else
+        self.floatHolds[1]={
+            hand=self.hand,
+            handX=self.handX,
+            handY=self.handY,
+            lastMovement=self.lastMovement,
+            minY=self.minY,
+        }
+        self.hand=false
+        self:popNext()
+    end
 end
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     -- Move down
@@ -1214,15 +1232,36 @@ function MP:render()
         end
     end
 
+    -- Float hold
+    if #self.floatHolds>0 then
+        for i=1,#self.floatHolds do
+            local H=self.floatHolds[i]
+            local HB=H.hand.matrix
+            for y=1,#HB do for x=1,#HB[1] do
+                if HB[y][x] then
+                    if self.holdChance>0 then
+                        local r,g,b=unpack(ColorTable[HB[y][x].color])
+                        gc.setColor(r,g,b,.25+self.time%150/200)
+                    else
+                        gc.setColor(.6,.6,.6,.25+self.time%150/200)
+                    end
+
+                    gc.rectangle('fill',(H.handX+x-2)*40,-(H.handY+y-1)*40,40,40)
+                end
+            end end
+        end
+    end
+
 
     self:triggerEvent('drawBelowMarks')
 
 
     -- Height lines
     local width=settings.fieldW*40
-    gc.setColor(0,.4,1,.8) gc.rectangle('fill',0,-settings.spawnH*40-2,width,4)-- Spawning height
-    gc.setColor(1,0,0,.6) gc.rectangle('fill',0,-settings.deathH*40-2,width,4)-- Death height
-    gc.setColor(0,0,0,.5) gc.rectangle('fill',0,-1260*40-40,width,40)-- Void height
+    gc.setColor(.0,.4,1.,.8) gc.rectangle('fill',0,-settings.spawnH  *40-2 ,width,4 )-- Spawning height
+    gc.setColor(1.,.5,.0,.6) gc.rectangle('fill',0,-settings.lockoutH*40-2 ,width,4 )-- lock-out height
+    gc.setColor(1.,.0,.0,.6) gc.rectangle('fill',0,-settings.deathH  *40-2 ,width,4 )-- Death height
+    gc.setColor(.0,.0,.0,.5) gc.rectangle('fill',0,-1260             *40-40,width,40)-- Void height
 
 
     self:triggerEvent('drawInField')
@@ -1587,6 +1626,7 @@ function MP.new()
 
     P.holdQueue={}
     P.holdChance=0
+    P.floatHolds={}
 
     P.energy=0
     P.energyShow=0
