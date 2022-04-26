@@ -102,7 +102,7 @@ function F.new(width)
         _matrix={},
     }
     f._matrix._f=f
-    setmetatable(f,{__index=F})
+    setmetatable(f,{__index=F,__metatable=true})
 
     return f
 end

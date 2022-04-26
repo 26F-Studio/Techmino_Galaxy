@@ -145,15 +145,15 @@ do--Zenitha.setDrawSysInfo
                 end
                 gc.rectangle('fill',76,6,pow*.22,14)
                 if pow<100 then
-                    FONT.set(10,'_basic')
-                    GC.shadedPrint(pow,87,6,'center',1,8)
+                    FONT.set(15,'_basic')
+                    GC.shadedPrint(pow,87,4,'center',1,8)
                 end
             end
             gc.rectangle('line',74,4,26,18)
             gc.rectangle('fill',102,6,2,14)
         end
         FONT.set(25,'_basic')
-        gc.print(os.date("%H:%M"),3,-5)
+        gc.print(os.date("%H:%M"),3,0,nil,.9)
     end)
 end
 

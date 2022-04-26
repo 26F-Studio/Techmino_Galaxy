@@ -299,5 +299,6 @@ settings.system=setmetatable({},{
             settingTriggers[k](v)
         end
     end,
+    __metatable=true,
 })
 SETTINGS=settings

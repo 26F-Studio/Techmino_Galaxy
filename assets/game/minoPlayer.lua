@@ -817,29 +817,56 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         local spin=M.action=='rotate' and (M.immobile or M.corners)
         M.clear=self:checkField()
         if M.clear then
+            local textDuration=M.clear.line/3
             if spin then
                 text=Text.spin:repD(M.mino.name).." "
+                textDuration=textDuration+.6
             end
 
             if M.clear.line>=4 and M.clear.combo>1 then
                 local lastClear=self.clearHistory[#self.clearHistory-1]
                 if lastClear and M.clear.line==lastClear.line then
                     text=text.."M-"
+                    textDuration=textDuration+.6
                     self:playSound('frenzy')
                 end
             end
 
             text=text..(Text.clearName[M.clear.line] or ('['..M.clear.line..']'))
-
-            self.texts:add(text,0,0,spin and 60 or 70,M.clear.line>=4 and 'stretch' or spin and 'spin' or 'appear')
+            self.texts:add{
+                text=text,
+                a=.626,
+                fontSize=min(M.clear.line-3,0)*10+(spin and 60 or 70),
+                style=M.clear.line>=4 and 'stretch' or spin and 'spin' or 'appear',
+                duration=textDuration,
+            }
             if M.clear.combo>1 then
-                self.texts:add(Text.combo(M.clear.combo-1),0,60,15+min(M.clear.combo,15)*5)
+                self.texts:add{
+                    text=Text.combo(M.clear.combo-1),
+                    a=.7-.3/(2+M.clear.combo),
+                    y=60,
+                    fontSize=15+min(M.clear.combo,15)*5,
+                }
             end
             if self.field:getHeight()==0 then
-                self.texts:add(Text.allClear,0,-80,75,'flicker',0.4)
+                self.texts:add{
+                    text=Text.allClear,
+                    y=-80,
+                    a=.626,
+                    fontSize=75,
+                    style='flicker',
+                    duration=2.5,
+                }
                 self:playSound('allClear')
             elseif M.y>self.field:getHeight() then
-                self.texts:add(Text.halfClear,0,-80,65,'fly',0.6)
+                self.texts:add{
+                    text=Text.halfClear,
+                    y=-80,
+                    a=.8,
+                    fontSize=65,
+                    style='fly',
+                    duration=1.6,
+                }
                 self:playSound('halfClear')
             end
 
@@ -854,7 +881,12 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                 text=Text.spin:repD(M.mino.name)
             end
             if #text>0 then
-                self.texts:add(text,0,0,55,'appear',1.26)
+                self.texts:add{
+                    text=text,
+                    y=60,
+                    a=.4,
+                    duration=.8,
+                }
             end
         end
     end
@@ -1566,13 +1598,15 @@ local modeDataMeta={
     __metatable=true,
 }
 local soundTimeMeta={
-    __index=function(self,k) rawset(self,k,0) return -1e99 end
+    __index=function(self,k) rawset(self,k,0) return -1e99 end,
+    __metatable=true,
 }
 local soundEventMeta={
-    __index=defaultSoundFunc
+    __index=defaultSoundFunc,
+    __metatable=true,
 }
 function MP.new()
-    local P=setmetatable({},{__index=MP})
+    local P=setmetatable({},{__index=MP,__metatable=true})
 
     P.settings=TABLE.copy(baseEnv)
     P.event={
