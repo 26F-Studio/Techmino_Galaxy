@@ -31,8 +31,8 @@ TRS[1]={
         L={test={'+0+0','-1+0','-1-1','+0+2','-1+2','+0-1'}},
         F={test={'+0+0','+0+1','+0-1','+0+2'}},
     },
-}--Z
-TRS[2]=RotationSys._reflect(TRS[1])--S
+}-- Z
+TRS[2]=RotationSys._reflect(TRS[1])-- S
 TRS[3]={
     [0]={
         R={test={'+0+0','-1+0','-1+1','+0-2','+1+1','+0+1','+0-1'}},
@@ -54,8 +54,8 @@ TRS[3]={
         L={test={'+0+0','-1+0','-1-1','+1+0','+0+2','-1+2','-1+1'}},
         F={test={'+0+0','+0+1','+0-1','-1+0'}},
     },
-}--J
-TRS[4]=RotationSys._reflect(TRS[3])--L
+}-- J
+TRS[4]=RotationSys._reflect(TRS[3])-- L
 TRS[5]={
     [0]={
         R={test={'+0+0','-1+0','-1+1','+0-2','-1-2','+0+1'}},
@@ -77,24 +77,24 @@ TRS[5]={
         L={test={'+0+0','-1+0','-1-1','+0-1','+1-1','+0+2','-1+2','-1+1'}},
         F={test={'+0+0','+0-1','+0+1','-1+0','+0-2','+0+2'}},
     },
-}--T
+}-- T
 local Ocells={{1,1},{1,2},{2,1},{2,2}}
 local OspinList={
-    {seq='RRR',shape=5,direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, {seq='RRR',shape=5,direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, --T
-    {seq='LLL',shape=5,direcion=2,bias={-1,-1},free='FIX',target={1,3,4,2}}, {seq='LLL',shape=5,direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, --T
-    {seq='RRR',shape=5,direcion=0,bias={-1, 0},free='FIX',target={1,2,4,3}}, --T(mini)
-    {seq='LLL',shape=5,direcion=0,bias={ 0, 0},free='FIX',target={3,1,2,4}}, --T(mini)
-    {seq='LRL',shape=1,direcion=2,bias={-1, 0},free='FIX',target={1,2,3,4}}, {seq='LRL',shape=1,direcion=2,bias={ 0,-1},free='FIX',target={1,2,3,4}}, {seq='LRL',shape=1,direcion=2,bias={ 0, 0},free='FIX',target={1,2,3,4}}, --Z
-    {seq='RLR',shape=2,direcion=2,bias={ 0, 0},free='FIX',target={1,2,3,4}}, {seq='RLR',shape=2,direcion=2,bias={-1,-1},free='FIX',target={1,2,3,4}}, {seq='RLR',shape=2,direcion=2,bias={-1, 0},free='FIX',target={1,2,3,4}}, --S
-    {seq='LLR',shape=3,direcion=2,bias={ 0,-1},free='MOV',target={2,1,3,4}}, --J(farDown) --2,3,1,4?
-    {seq='RRL',shape=4,direcion=2,bias={-1,-1},free='MOV',target={1,3,4,2}}, --L(farDown) --1,3,2,4?
-    {seq='RRL',shape=3,direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, {seq='RRL',shape=3,direcion=0,bias={ 0, 0},free='FIX',target={1,2,4,3}}, --J
-    {seq='LLR',shape=4,direcion=2,bias={ 0,-1},free='FIX',target={1,3,4,2}}, {seq='LLR',shape=4,direcion=0,bias={-1, 0},free='FIX',target={3,1,2,4}}, --L
+    {seq='RRR',shape=5,direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, {seq='RRR',shape=5,direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, -- T
+    {seq='LLL',shape=5,direcion=2,bias={-1,-1},free='FIX',target={1,3,4,2}}, {seq='LLL',shape=5,direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, -- T
+    {seq='RRR',shape=5,direcion=0,bias={-1, 0},free='FIX',target={1,2,4,3}}, -- T(mini)
+    {seq='LLL',shape=5,direcion=0,bias={ 0, 0},free='FIX',target={3,1,2,4}}, -- T(mini)
+    {seq='LRL',shape=1,direcion=2,bias={-1, 0},free='FIX',target={1,2,3,4}}, {seq='LRL',shape=1,direcion=2,bias={ 0,-1},free='FIX',target={1,2,3,4}}, {seq='LRL',shape=1,direcion=2,bias={ 0, 0},free='FIX',target={1,2,3,4}}, -- Z
+    {seq='RLR',shape=2,direcion=2,bias={ 0, 0},free='FIX',target={1,2,3,4}}, {seq='RLR',shape=2,direcion=2,bias={-1,-1},free='FIX',target={1,2,3,4}}, {seq='RLR',shape=2,direcion=2,bias={-1, 0},free='FIX',target={1,2,3,4}}, -- S
+    {seq='LLR',shape=3,direcion=2,bias={ 0,-1},free='MOV',target={2,1,3,4}}, -- J(farDown) -- 2,3,1,4?
+    {seq='RRL',shape=4,direcion=2,bias={-1,-1},free='MOV',target={1,3,4,2}}, -- L(farDown) -- 1,3,2,4?
+    {seq='RRL',shape=3,direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, {seq='RRL',shape=3,direcion=0,bias={ 0, 0},free='FIX',target={1,2,4,3}}, -- J
+    {seq='LLR',shape=4,direcion=2,bias={ 0,-1},free='FIX',target={1,3,4,2}}, {seq='LLR',shape=4,direcion=0,bias={-1, 0},free='FIX',target={3,1,2,4}}, -- L
 
-    {seq='FFF',shape=7,direcion=0,bias={-1, 1},free='MOV',target={3,1,2,4}}, {seq='FFF',shape=7,direcion=0,bias={-2, 1},free='MOV',target={3,1,2,4}}, {seq='FFF',shape=7,direcion=0,bias={ 0, 1},free='MOV',target={3,1,2,4}}, --I(high)
-    {seq='FFF',shape=7,direcion=2,bias={-1, 0},free='ANY',target={1,3,4,2}}, {seq='FFF',shape=7,direcion=2,bias={-2, 0},free='ANY',target={1,3,4,2}}, {seq='FFF',shape=7,direcion=2,bias={ 0, 0},free='ANY',target={1,3,4,2}}, --I(low)
-    {seq='RFR',shape=6,direcion=0,bias={ 1,-1},free='ANY',target={2,4,1,3}}, {seq='RRF',shape=6,direcion=0,bias={ 2,-1},free='ANY',target={2,4,1,3}}, {seq='RFF',shape=6,direcion=0,bias={ 1,-2},free='ANY',target={2,4,1,3}}, --O
-    {seq='LFL',shape=6,direcion=0,bias={-1,-1},free='ANY',target={3,1,4,2}}, {seq='LLF',shape=6,direcion=0,bias={-2,-1},free='ANY',target={3,1,4,2}}, {seq='LFF',shape=6,direcion=0,bias={-1,-2},free='ANY',target={3,1,4,2}}, --O
+    {seq='FFF',shape=7,direcion=0,bias={-1, 1},free='MOV',target={3,1,2,4}}, {seq='FFF',shape=7,direcion=0,bias={-2, 1},free='MOV',target={3,1,2,4}}, {seq='FFF',shape=7,direcion=0,bias={ 0, 1},free='MOV',target={3,1,2,4}}, -- I(high)
+    {seq='FFF',shape=7,direcion=2,bias={-1, 0},free='ANY',target={1,3,4,2}}, {seq='FFF',shape=7,direcion=2,bias={-2, 0},free='ANY',target={1,3,4,2}}, {seq='FFF',shape=7,direcion=2,bias={ 0, 0},free='ANY',target={1,3,4,2}}, -- I(low)
+    {seq='RFR',shape=6,direcion=0,bias={ 1,-1},free='ANY',target={2,4,1,3}}, {seq='RRF',shape=6,direcion=0,bias={ 2,-1},free='ANY',target={2,4,1,3}}, {seq='RFF',shape=6,direcion=0,bias={ 1,-2},free='ANY',target={2,4,1,3}}, -- O
+    {seq='LFL',shape=6,direcion=0,bias={-1,-1},free='ANY',target={3,1,4,2}}, {seq='LLF',shape=6,direcion=0,bias={-2,-1},free='ANY',target={3,1,4,2}}, {seq='LFF',shape=6,direcion=0,bias={-1,-2},free='ANY',target={3,1,4,2}}, -- O
 }
 TRS[6]={
     [0]={center={1,1}},
@@ -168,7 +168,7 @@ TRS[6]={
             P:playSound('touch')
         end
     end,
-}--O
+}-- O
 TRS[7]={
     [0]={
         R={test={'+0+0','+0+1','+1+0','-2+0','-2-1','+1+2'}},
@@ -190,7 +190,7 @@ TRS[7]={
         L={test={'+0+0','+1+0','-2+0','-2-1','+0-1','+1+2'}},
         F={test={'+0+0','+0-1','+1+0','-1+0','+0+1'}},
     },
-}--I
+}-- I
 TRS[8]={
     [0]={
         R={target=1,test={'+0+0','+0+1','+1+1','-1+0','+0-3','+0+2','+0-2','+0+3','-1+2'}},
@@ -202,8 +202,8 @@ TRS[8]={
         L={target=0,test={'+0+0','+0-1','-1-1','+1+0','+0-3','+0+2','+0-2','+0+3','+1-2'}},
         F={target=1},
     },
-}--Z5
-TRS[9]=RotationSys._reflect(TRS[8])--S5
+}-- Z5
+TRS[9]=RotationSys._reflect(TRS[8])-- S5
 TRS[10]={
     [0]={
         R={test={'+0+0','-1+0','-1+1','+0-2','-1-2','-1-1','+0+1'}},
@@ -225,8 +225,8 @@ TRS[10]={
         L={test={'+0+0','-1+0','-1-1','-1+1','+0-1','+0+2','-1+2'}},
         F={test={'+0+0','-1+0','+0-1','+1+0'}},
     },
-}--P
-TRS[11]=RotationSys._reflect(TRS[10])--Q
+}-- P
+TRS[11]=RotationSys._reflect(TRS[10])-- Q
 TRS[12]={
     [0]={
         R={test={'+0+0','-1+0','+1+0','-1+1','+0-2','+0-3'}},
@@ -248,8 +248,8 @@ TRS[12]={
         L={test={'+0+0','-1+0','+0+1','-1+1','+1+0','+0+2','-2+0'}},
         F={test={'+0+0','+0-1','+1-1','+0+1'}},
     },
-}--F
-TRS[13]=RotationSys._reflect(TRS[12])--E
+}-- F
+TRS[13]=RotationSys._reflect(TRS[12])-- E
 TRS[14]={
     [0]={
         R={test={'+0+0','+0-1','-1-1','+1+0','+1+1','+0-3','-1+0','+0+2','-1+2'}},
@@ -271,7 +271,7 @@ TRS[14]={
         L={test={'+0+0','-1+0','+1+0','+0-2','+0-3','+0+1','+1+1'}},
         F={test={'+0+0','-1+0','+1+1','+2+0'}},
     },
-}--T5
+}-- T5
 TRS[15]={
     [0]={
         R={test={'+0+0','-1+0','-1+1','+0-2','-1-2'}},
@@ -293,7 +293,7 @@ TRS[15]={
         L={test={'+0+0','-1+0','-1-1','-1+1'}},
         F={test={'+0+0','+0-1','+0+1','-1+0'}},
     },
-}--U
+}-- U
 TRS[16]={
     [0]={
         R={test={'+0+0','+0+1','-1+0','+0-2','-1-2'}},
@@ -307,7 +307,7 @@ TRS[16]={
     },
     [2]={
         R={test={'+0+0','-1+0','+1+0'}},
-        L={test={'+0+0','+0-1','+0-2','+0-2'}},
+        L={test={'+0+0','+0-1','+0+1','+0-2'}},
         F={test={'+0+0','+1-1','-1+1'}},
     },
     [3]={
@@ -315,7 +315,7 @@ TRS[16]={
         L={test={'+0+0','+1+0','-1+0'}},
         F={test={'+0+0','-1-1','+1+1'}},
     },
-}--V
+}-- V
 TRS[17]={
     [0]={
         R={test={'+0+0','+0-1','-1+0','+1+0','+1-1','+0+2'}},
@@ -337,14 +337,14 @@ TRS[17]={
         L={test={'+0+0','+0-1','+1+0','+0+1','-1+0','-1-1','+0+2'}},
         F={test={'+0+0','+0-1','+1+0'}},
     },
-}--W
+}-- W
 TRS[18]={
     [0]={
         R={target=0,test={'+1-1','+1+0','+1+1','+1-2','+1+2'}},
         L={target=0,test={'-1-1','-1+0','-1+1','-1-2','-1+2'}},
         F={target=0,test={'+0-1','+0-2','+0+1','+0-2','+0+2'}},
     },
-}--X
+}-- X
 TRS[19]={
     [0]={
         R={test={'+0+0','-1+0','-1+1','+0-3','-1+1','-1+2','+0+1'}},
@@ -366,8 +366,8 @@ TRS[19]={
         L={test={'+0+0','-1+0','-1+1','-1-1','+1+0','+0+2','-1+2','+0-2'}},
         F={test={'+0+0','+1+0','+1+1','+0-1','+1+2'}},
     },
-}--J5
-TRS[20]=RotationSys._reflect(TRS[19])--L5
+}-- J5
+TRS[20]=RotationSys._reflect(TRS[19])-- L5
 TRS[21]={
     [0]={
         R={test={'+0+0','-1+0','-1+1','+1+0','-1+2','-1-1','+0-3','+0+1'}},
@@ -389,8 +389,8 @@ TRS[21]={
         L={test={'+0+0','+0-1','-1+0','-1+1','-1-1','+1+0','+0+2','-1+2','+0-2'}},
         F={test={'+0+0','+1+0','+1+1','+0-1','+1+2'}},
     },
-}--R
-TRS[22]=RotationSys._reflect(TRS[21])--Y
+}-- R
+TRS[22]=RotationSys._reflect(TRS[21])-- Y
 TRS[23]={
     [0]={
         R={test={'+0+0','-1+0','-1+1','+0+1','+1+0','+1+1','-1+2','-2+0','+0-2'}},
@@ -412,8 +412,8 @@ TRS[23]={
         L={test={'+0+0','-1+0','+0-1','-1-2','+1-1','+1+0','+1+1','+0+2','+0+3'}},
         F={test={'+0+0','+1+0','+1+1','+0-1','-1-2'}},
     },
-}--N
-TRS[24]=RotationSys._reflect(TRS[23])--H
+}-- N
+TRS[24]=RotationSys._reflect(TRS[23])-- H
 TRS[25]={
     [0]={
         R={target=1,test={'+0+0','+1-1','+1+0','+1+1','+0+1','-1+1','-1+0','-1-1','+0-1','+0-2','-2-1','-2-2','+2+0','+2-1','+2-2','+1+2','+2+2','-1+2','-2+2'}},
@@ -425,7 +425,7 @@ TRS[25]={
         L={target=0,test={'+0+0','-1+0','-1-1','+0-1','+1-1','-2-2','-2-1','-2+0','-1-2','+0-2','+1-2','+2-2','-1+1','-2+1','-2+2','+1+0','+2+0','+2-1','+0+1','+1-1','+2-2'}},
         F={target=1},
     },
-}--I5
+}-- I5
 TRS[26]={
     [0]={
         R={target=1,test={'+0+0','-1+0','-1-1','+1+1','-1+1'}},
@@ -437,7 +437,7 @@ TRS[26]={
         L={target=0,test={'+0+0','-1+0','+1+0','-1-1','+1+1'}},
         F={target=1},
     },
-}--I3
+}-- I3
 TRS[27]={
     [0]={
         R={test={'+0+0','-1+0','+1+0'}},
@@ -459,7 +459,7 @@ TRS[27]={
         L={test={'+0+0','-1+0','+1+0'}},
         F={test={'+0+0','+0+1','+1+1','-1+1'}},
     },
-}--C
+}-- C
 TRS[28]={
     [0]={
         R={test={'+0+0','-1+0','+0+1'}},
@@ -481,12 +481,12 @@ TRS[28]={
         L={test={'+0+0','-1+0','+0+2'}},
         F={test={'+0+0','+1+0','-1+0'}},
     },
-}--I2
+}-- I2
 TRS[29]={
     [0]={
         R={target=0},
         L={target=0},
         F={target=0},
     },
-}--O1
+}-- O1
 return TRS

@@ -40,7 +40,7 @@ local _minoData={-- This is a template MINODATA for SZJLT
 for i=1,29 do
     SRS[i]=_minoData-- Don't worry about duplicating object, I will deep copy all of them later
 end
-SRS[7]={--I
+SRS[7]={-- I
     [0]={
         R={test={'+0+0','-2+0','+1+0','-2-1','+1+2'}},
         L={test={'+0+0','-1+0','+2+0','-1+2','+2-1'}},
