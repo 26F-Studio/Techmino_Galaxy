@@ -20,7 +20,7 @@ local GAME={
     seed=false,
     mode=false,
     mainPID=false,
-    -- TODO: ,,,
+    -- TODO: ...
 }
 
 function GAME.reset(mode,seed)
@@ -28,7 +28,7 @@ function GAME.reset(mode,seed)
     GAME.playersCount=0
     GAME.mainPID=false
     GAME.seed=seed or math.random(2^16,2^26)
-    GAME.mode=getMode(mode) or NONE
+    GAME.mode=mode and getMode(mode) or NONE
     if GAME.mode.bgm then
         BGM.play(GAME.mode.bgm)
     end
@@ -55,14 +55,30 @@ function GAME.setMain(id)
     if GAME.mainPID then
         GAME.players[GAME.mainPID].isMain=false
     end
-    GAME.mainPID=id
-    GAME.players[id].isMain=true
-    GAME.players[id].sound=true
+    if GAME.players[id] then
+        GAME.mainPID=id
+        GAME.players[id].isMain=true
+        GAME.players[id].sound=true
+    end
 end
 
-function GAME.loadSettings()
+function GAME.start()
     if GAME.mainPID then GAME.players[GAME.mainPID]:loadSettings(SETTINGS.game) end
-    for _,P in next,GAME.players do P:loadSettings(GAME.mode.settings) end
+    if GAME.mode.settings then
+        for _,P in next,GAME.players do
+            P:loadSettings(GAME.mode.settings)
+        end
+    end
+
+    if GAME.mode.layout then
+        
+    end
+
+    for _,P in next,GAME.players do
+        P:initialize()
+        P:triggerEvent('playerInit')
+        P:setPosition(800,500)
+    end
 end
 
 function GAME.press(action,id)
@@ -75,13 +91,6 @@ function GAME.release(action,id)
     if not id then id=GAME.mainPID end
     if not id then return end
     GAME.players[id or GAME.mainPID]:release(action)
-end
-
-function GAME.start()
-    for _,P in next,GAME.players do
-        P:triggerEvent('playerInit')
-        P:setPosition(800,500)
-    end
 end
 
 function GAME.update(dt)

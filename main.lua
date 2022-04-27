@@ -61,7 +61,7 @@ Zenitha.setFirstScene('main_1')
 Zenitha.setMaxFPS(260)
 Zenitha.setUpdateFreq(100)
 Zenitha.setDrawFreq(60/260*100)
-do--Zenitha.setDrawCursor
+do-- Zenitha.setDrawCursor
     local gc=love.graphics
     Zenitha.setDrawCursor(function(_,x,y)
         if not SETTINGS.system.sysCursor then
@@ -123,7 +123,7 @@ do-- Zenitha.setOnFocus
         end
     end)
 end
-do--Zenitha.setDrawSysInfo
+do-- Zenitha.setDrawSysInfo
     local gc=love.graphics
     Zenitha.setDrawSysInfo(function()
         if not SETTINGS.system.powerInfo then return end
@@ -227,8 +227,8 @@ SFX.init((function()
     end
     return L
 end)())
-SFX.loadSample{name='bass',path='assets/sample/bass',base='A2'}--A2~A4
-SFX.loadSample{name='lead',path='assets/sample/lead',base='A3'}--A3~A5
+SFX.loadSample{name='bass',path='assets/sample/bass',base='A2'}-- A2~A4
+SFX.loadSample{name='lead',path='assets/sample/lead',base='A3'}-- A3~A5
 
 SFX.load('assets/sfx/')
 BGM.load((function()

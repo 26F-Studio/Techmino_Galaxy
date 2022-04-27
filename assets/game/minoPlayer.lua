@@ -98,15 +98,6 @@ function actions.softDrop(P)
         end
     end
 end
-function actions.sonicDrop(P)
-    if not P.hand or P.deathTimer then return end
-    if P.handY>P.ghostY then
-        P:moveHand('moveY',P.ghostY-P.handY)
-        P:freshDelay('drop')
-        P:playSound('move')
-        P:playSound('touch')
-    end
-end
 actions.hardDrop={
     press=function(P)
         if P.hand and not P.deathTimer then
@@ -131,17 +122,15 @@ actions.holdPiece={
         P.keyBuffer.hold=false
     end
 }
-
-actions.function1=NULL
-actions.function2=NULL
-actions.function3=NULL
-actions.function4=NULL
-
-actions.target1=NULL
-actions.target2=NULL
-actions.target3=NULL
-actions.target4=NULL
-
+function actions.sonicDrop(P)
+    if not P.hand or P.deathTimer then return end
+    if P.handY>P.ghostY then
+        P:moveHand('moveY',P.ghostY-P.handY)
+        P:freshDelay('drop')
+        P:playSound('move')
+        P:playSound('touch')
+    end
+end
 function actions.sonicLeft(P)
     local moved
     while P.hand and not P:ifoverlap(P.hand.matrix,P.handX-1,P.handY) do
@@ -166,26 +155,16 @@ function actions.sonicRight(P)
     end
     return moved
 end
-function actions.dropLeft(P)
-    actions.sonicLeft(P)
-    actions.hardDrop(P)
-end
-function actions.dropRight(P)
-    actions.sonicRight(P)
-    actions.hardDrop(P)
-end
-function actions.zangiLeft(P)
-    actions.sonicLeft(P)
-    actions.sonicDrop(P)
-    actions.sonicRight(P)
-    actions.hardDrop(P)
-end
-function actions.zangiRight(P)
-    actions.sonicRight(P)
-    actions.sonicDrop(P)
-    actions.sonicLeft(P)
-    actions.hardDrop(P)
-end
+
+actions.function1=NULL
+actions.function2=NULL
+actions.function3=NULL
+actions.function4=NULL
+
+actions.target1=NULL
+actions.target2=NULL
+actions.target3=NULL
+actions.target4=NULL
 
 local function _getActionObj(a)
     if type(a)=='string' then
@@ -589,7 +568,7 @@ function MP:freshDelay(reason)-- reason can be 'move' or 'drop' or 'spawn'
     end
 end
 function MP:freshNextQueue()
-    while #self.nextQueue<max(self.settings.nextCount,1) do
+    while #self.nextQueue<max(self.settings.nextSlot,1) do
         local shapeID=self:seqGen()
         if shapeID and type(shapeID)=='number' then
             self:getMino(shapeID)
@@ -1341,7 +1320,7 @@ function MP:render()
     gc.push('transform')
     gc.translate(300,-400+50)
     gc.setColor(1,1,1)
-    for n=1,min(#self.nextQueue,settings.nextCount) do
+    for n=1,min(#self.nextQueue,settings.nextSlot) do
         local NB=self.nextQueue[n].matrix
         local k=min(2.3/#NB,3/#NB[1],.86)
         gc.scale(k)
@@ -1435,37 +1414,6 @@ function MP:render()
 end
 --------------------------------------------------------------
 -- Other methods
-function MP:loadSettings(settings)
-    -- Load data & events from mode settings
-    for k,v in next,settings do
-        if k=='event' then
-            for name,E in next,v do
-                assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
-                if type(E)=='table' then
-                    for i=1,#E do
-                        ins(self.event[name],E[i])
-                    end
-                elseif type(E)=='function' then
-                    ins(self.event[name],E)
-                end
-            end
-        elseif k=='soundEvent' then
-            for name,E in next,v do
-                if type(E)=='function' then
-                    self.soundEvent[name]=E
-                else
-                    error("soundEvent must be function")
-                end
-            end
-        else
-            if type(v)=='table' then
-                self.settings[k]=TABLE.copy(v)
-            elseif v~=nil then
-                self.settings[k]=v
-            end
-        end
-    end
-end
 function MP:setPosition(x,y,k,a)
     self.pos.x=x or self.pos.x
     self.pos.y=y or self.pos.y
@@ -1488,8 +1436,9 @@ local baseEnv={-- Generate from template in future
     barrierL=18,
     barrierH=21,
 
-    nextCount=6,
+    nextSlot=6,
 
+    holdSlot=1,
     holdCount=1,
     holdMode='hold',
     holdKeepState=false,
@@ -1606,10 +1555,10 @@ local soundEventMeta={
     __metatable=true,
 }
 function MP.new()
-    local P=setmetatable({},{__index=MP,__metatable=true})
-
-    P.settings=TABLE.copy(baseEnv)
-    P.event={
+    local self=setmetatable({},{__index=MP,__metatable=true})
+    self.sound=false
+    self.settings=TABLE.copy(baseEnv)
+    self.event={
         -- Press & Release
         beforePress={},
         afterPress={},
@@ -1637,91 +1586,124 @@ function MP.new()
         drawInField={},
         drawOnPlayer={},
     }
-    P.soundEvent=setmetatable({},soundEventMeta)
-    P.modeData=setmetatable({},modeDataMeta)
-    P.sound=false
-    P.soundTimeHistory=setmetatable({},soundTimeMeta)
 
-    P.pos={
+    return self
+end
+function MP:loadSettings(settings)
+    -- Load data & events from mode settings
+    for k,v in next,settings do
+        if k=='event' then
+            for name,E in next,v do
+                assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
+                if type(E)=='table' then
+                    for i=1,#E do
+                        ins(self.event[name],E[i])
+                    end
+                elseif type(E)=='function' then
+                    ins(self.event[name],E)
+                end
+            end
+        elseif k=='soundEvent' then
+            for name,E in next,v do
+                if type(E)=='function' then
+                    self.soundEvent[name]=E
+                else
+                    error("soundEvent must be function")
+                end
+            end
+        else
+            if type(v)=='table' then
+                self.settings[k]=TABLE.copy(v)
+            elseif v~=nil then
+                self.settings[k]=v
+            end
+        end
+    end
+end
+function MP:initialize()
+    self.soundEvent=setmetatable({},soundEventMeta)
+    self.modeData=setmetatable({},modeDataMeta)
+    self.soundTimeHistory=setmetatable({},soundTimeMeta)
+
+    self.pos={
         x=0,y=0,k=1,a=0,
 
         dx=0,dy=0,dk=0,da=0,
         vx=0,vy=0,vk=0,va=0,
     }
 
-    P.finished=false-- Did game finish
-    P.realTime=0-- Real time, [float] s
-    P.time=0-- Inside timer for player, [int] ms
-    P.gameTime=0-- Game time of player, [int] ms
-    P.timing=false-- Is gameTime running?
+    self.finished=false-- Did game finish
+    self.realTime=0-- Real time, [float] s
+    self.time=0-- Inside timer for player, [int] ms
+    self.gameTime=0-- Game time of player, [int] ms
+    self.timing=false-- Is gameTime running?
 
-    P.field=require'assets.game.minoField'.new(P.settings.fieldW,P.settings.spawnH)
-    P.fieldBeneath=0
+    self.field=require'assets.game.minoField'.new(self.settings.fieldW,self.settings.spawnH)
 
-    P.minoCount=0
-    P.combo=0
+    self.minoCount=0
+    self.combo=0
 
-    P.garbageBuffer={}
+    self.garbageBuffer={}
 
-    P.nextQueue={}
-    P.seqRND=love.math.newRandomGenerator(GAME.seed)
-    P.seqGen=coroutine.wrap(seqGenerators[P.settings.seqType])
-    P:freshNextQueue()
+    self.nextQueue={}
+    self.seqRND=love.math.newRandomGenerator(GAME.seed)
+    self.seqGen=coroutine.wrap(seqGenerators[self.settings.seqType])
+    self:freshNextQueue()
 
-    P.holdQueue={}
-    P.holdChance=0
-    P.floatHolds={}
+    self.holdQueue={}
+    self.holdChance=self.settings.holdCount
+    self.floatHolds={}
 
-    P.energy=0
-    P.energyShow=0
+    self.energy=0
+    self.energyShow=0
 
-    P.dropTimer=0
-    P.lockTimer=0
-    P.spawnTimer=P.settings.readyDelay
-    P.clearTimer=0
-    P.deathTimer=false
-    P.freshChance=P.settings.freshCount
-    P.freshTimeRemain=0
+    self.dropTimer=0
+    self.lockTimer=0
+    self.spawnTimer=self.settings.readyDelay
+    self.clearTimer=0
+    self.deathTimer=false
+    self.freshChance=self.settings.freshCount
+    self.freshTimeRemain=0
 
-    P.hand=false-- Controlling mino object
-    P.handX=false
-    P.handY=false
-    P.lastMovement=false-- Controlling mino path, for spin/tuck/... checking
-    P.ghostY=false
-    P.minY=false
+    self.hand=false-- Controlling mino object
+    self.handX=false
+    self.handY=false
+    self.lastMovement=false-- Controlling mino path, for spin/tuck/... checking
+    self.ghostY=false
+    self.minY=false
 
-    P.moveDir=false
-    P.moveCharge=0
-    P.downCharge=false
+    self.moveDir=false
+    self.moveCharge=0
+    self.downCharge=false
 
-    P.actionHistory={}
-    P.keyBuffer={
+    self.actionHistory={}
+    self.keyBuffer={
         move=false,
         rotate=false,
         hold=false,
         hardDrop=false,
     }
-    P.dropHistory={}
-    P.clearHistory={}
-    P.texts=TEXT.new()
+    self.dropHistory={}
+    self.clearHistory={}
+    self.texts=TEXT.new()
 
     -- Generate available actions
     do
-        P.actions={}
-        local pack=P.settings.actionPack
+        self.actions={}
+        local pack=self.settings.actionPack
         if type(pack)=='string' then
             pack=actionPacks[pack]
             assert(pack,STRING.repD("Invalid actionPack '$1'",pack))
             for i=1,#pack do
-                P.actions[pack[i]]=_getActionObj(pack[i])
+                self.actions[pack[i]]=_getActionObj(pack[i])
             end
         elseif type(pack)=='table' then
             for k,v in next,pack do
                 if type(k)=='number' then
-                    P.actions[v]=_getActionObj(v)
+                    self.actions[v]=_getActionObj(v)
                 elseif type(k)=='string' then
                     assert(actions[k],STRING.repD("newMinoPlayer: no action called '$1'",k))
-                    P.actions[k]=_getActionObj(v)
+                    self.actions[k]=_getActionObj(v)
                 else
                     error(STRING.repD("newMinoPlayer: wrong actionPack table format (type $1)",type(k)))
                 end
@@ -1730,13 +1712,11 @@ function MP.new()
             error("newMinoPlayer: actionPack must be string or table")
         end
 
-        P.keyState={}
-        for k in next,P.actions do
-            P.keyState[k]=false
+        self.keyState={}
+        for k in next,self.actions do
+            self.keyState[k]=false
         end
     end
-
-    return P
 end
 --------------------------------------------------------------
 
