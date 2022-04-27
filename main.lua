@@ -259,9 +259,14 @@ DEBUG.checkLoadTime("Configuring Zenitha")
 --------------------------------------------------------------
 -- Load saving data
 TABLE.coverR(FILE.load('conf/settings','-json -canskip') or {},SETTINGS)
-for k,v in next,SETTINGS._system do
-    SETTINGS._system[k]=nil
-    SETTINGS.system[k]=v
+for k,v in next,SETTINGS._system do SETTINGS._system[k]=nil SETTINGS.system[k]=v end
+local keyMap=FILE.load('conf/keymap','-json -canskip')
+if keyMap then
+    for i=1,#KEYMAP do
+        if keyMap[i] then
+            KEYMAP[i].keys=TABLE.shift(keyMap[i],0)
+        end
+    end
 end
 --------------------------------------------------------------
 -- Load SOURCE ONLY resources

@@ -45,3 +45,11 @@ function saveSetting()
         game=SETTINGS.game,
     },'conf/settings','-json')
 end
+
+function saveKey()
+    local M={}
+    for i=1,#KEYMAP do
+        M[i]=KEYMAP[i].keys
+    end
+    FILE.save(M,'conf/keymap','-json')
+end

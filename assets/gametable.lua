@@ -349,6 +349,13 @@ KEYMAP={
     {act='rep_speed2x',     keys={'6'}},
     {act='rep_speed6x',     keys={'7'}},
     {act='rep_speed16x',    keys={'8'}},
+    _getKeys=function(self,action)
+        for i=1,#self do
+            if self[i].act==action then
+                return self[i].keys
+            end
+        end
+    end,
     _getAction=function(self,key)
         for i=1,#self do
             local l=self[i].keys
