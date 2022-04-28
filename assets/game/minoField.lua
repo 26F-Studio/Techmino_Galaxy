@@ -74,7 +74,7 @@ end
 function F:getHeight()
     return #self._matrix
 end
-local wallCell=setmetatable({},{__newIndex=NULL})
+local wallCell=setmetatable({},{__newIndex=NULL,__metatable=true})
 function F:getCell(x,y)
     if x<=0 or x>self._width or y<=0 then return wallCell end
     if y>#self._matrix then return false end
