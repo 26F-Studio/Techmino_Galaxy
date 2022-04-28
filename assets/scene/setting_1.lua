@@ -35,6 +35,9 @@ function scene.keyDown(key,isRep)
                     end
                 end
                 table.insert(KEYMAP[i].keys,key)
+                while #KEYMAP[i].keys>=5 do
+                    table.remove(KEYMAP[i].keys,1)
+                end
                 actionSelected=false
                 break
             end
@@ -43,9 +46,10 @@ function scene.keyDown(key,isRep)
 end
 
 function scene.draw()
+    gc.replaceTransform(SCR.xOy_ur)
     local t=love.timer.getTime()
     -- Character
-    gc.translate(1000,800)
+    gc.translate(-600,800)
     gc.setColor(1,1,1)
     gc.scale(.7)
     GC.draw(IMG.z.character)

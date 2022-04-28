@@ -1163,7 +1163,7 @@ function MP:render()
     gc.push('transform')
     gc.translate(-200,400)
     GC.stc_setComp('equal',1)
-    GC.stc_rect(0,0,400,-840)
+    GC.stc_rect(0,0,400,-920)
     gc.scale(10/settings.fieldW)
 
 
@@ -1402,9 +1402,9 @@ function MP:render()
     -- Upside fade out
     gc.setBlendMode('multiply','premultiplied')
     gc.setColorMask(false,false,false,true)
-    for i=0,39 do
-        gc.setColor(0,0,0,(1-i/40)^2)
-        gc.rectangle('fill',-200,-402-i,400,-1)
+    for i=0,99,2 do
+        gc.setColor(0,0,0,(1-i/100)^2)
+        gc.rectangle('fill',-200,-422-i,400,-2)
     end
     gc.setBlendMode('alpha')
     gc.setColorMask()
