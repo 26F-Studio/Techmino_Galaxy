@@ -1,6 +1,6 @@
 local gc=love.graphics
 local gc_push,gc_pop=gc.push,gc.pop
-local gc_scale,gc_rotate=gc.scale,gc.rotate
+local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
 local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
 local gc_line=gc.line
 local gc_rectangle=gc.rectangle
@@ -8,14 +8,12 @@ local gc_printf=gc.printf
 
 local max,min=math.max,math.min
 
+local COLOR=COLOR
+
 local S={
-    nextPosX=300,
-    nextPosY=-400+50,
-    nextStep=100,
-    holdPosX=-300,
-    holdPosY=-400+50,
-    holdStep=100,
 }
+local _time
+function S.setTime(t) _time=t end
 
 local R=3
 local function drawSide(B,x,y,bx,by)
@@ -80,7 +78,7 @@ function S.drawFieldCells(F)
     end end
 end
 
-function S.drawFloatHold(B,handX,handY,unavailable)
+function S.drawFloatHold(n,B,handX,handY,unavailable)
     if unavailable then
         gc_setColor(.6,.6,.6,.25)
         for y=1,#B do for x=1,#B[1] do
@@ -93,14 +91,17 @@ function S.drawFloatHold(B,handX,handY,unavailable)
             if B[y][x] then
                 local bx,by=(handX+x-2)*40,-(handY+y-1)*40
                 local r,g,b=unpack(ColorTable[B[y][x].color])
-                gc_setColor(r,g,b,.25)
+                gc_setColor(r,g,b,_time%150/200)
                 gc_rectangle('fill',bx,by,40,40)
 
-                gc_setColor(r*.5,g*.5,b*.5,.25)
+                gc_setColor(r*.5,g*.5,b*.5,_time%150/200)
                 drawSide(B,x,y,bx,by)
             end
         end end
     end
+    FONT.set(50)
+    gc_setColor(unavailable and COLOR.DL or COLOR.L)
+    GC.mStr(n,(handX-1+#B[1]/2)*40,-(handY+#B/2)*40+5)
 end
 
 function S.drawHeightLines(fieldW,spawnH,lockoutH,deathH,voidH)
@@ -164,9 +165,16 @@ function S.drawHand(B,handX,handY)
     end end
 end
 
-function S.drawNext(B,unavailable)
-    local k=min(2.3/#B,3/#B[1],.86)
-    gc_scale(k)
+function S.drawNextBorder(slot)
+    gc_setColor(COLOR.L)
+    gc_setLineWidth(2)
+    gc_rectangle('line',30,0,140,100*slot)
+end
+
+function S.drawNext(n,B,unavailable)
+    gc.push('transform')
+    gc_translate(100,100*n-50)
+    gc_scale(min(2.3/#B,3/#B[1],.86))
     if unavailable then
         gc_setColor(.6,.6,.6)
         for y=1,#B do for x=1,#B[1] do
@@ -187,12 +195,24 @@ function S.drawNext(B,unavailable)
             end
         end end
     end
-    gc_scale(1/k)
+    gc.pop()
 end
 
-function S.drawHold(B,unavailable)
-    local k=min(2.3/#B,3/#B[1],.86)
-    gc_scale(k)
+function S.drawHoldBorder(mode,slot)
+    gc_setLineWidth(2)
+    if mode=='hold' then
+        gc_setColor(COLOR.L)
+        gc_rectangle('line',-170,0,140,100*slot)
+    elseif mode=='swap' then
+        gc_setColor(COLOR.L)
+        gc_rectangle('line',430,0,140,100*slot)
+    end
+end
+
+function S.drawHold(n,B,unavailable)
+    gc.push('transform')
+    gc_translate(-100,100*n-50)
+    gc_scale(min(2.3/#B,3/#B[1],.86))
     for y=1,#B do for x=1,#B[1] do
         if B[y][x] then
             if unavailable then
@@ -203,7 +223,7 @@ function S.drawHold(B,unavailable)
             gc_rectangle('fill',(x-#B[1]/2-1)*40,(y-#B/2)*-40,40,40)
         end
     end end
-    gc_scale(1/k)
+    gc.pop()
 end
 
 function S.drawTime(time)
@@ -212,11 +232,11 @@ function S.drawTime(time)
     gc_printf(("%.3f"):format(time/1000),-210-260,380,260,'right')
 end
 
-function S.drawStartingCounter(readyDelay,time)
+function S.drawStartingCounter(readyDelay)
     gc_push('transform')
-    local num=math.floor((readyDelay-time)/1000)+1
+    local num=math.floor((readyDelay-_time)/1000)+1
     local r,g,b
-    local d=1-time%1000/1000-- from .999 to 0
+    local d=1-_time%1000/1000-- from .999 to 0
 
     if     num==1 then r,g,b=1.00,0.70,0.70 if d>.75 then gc_scale(1,1+(d/.25-3)^2) end
     elseif num==2 then r,g,b=0.98,0.85,0.75 if d>.75 then gc_scale(1+(d/.25-3)^2,1) end

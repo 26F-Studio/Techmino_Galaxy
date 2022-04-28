@@ -1173,6 +1173,8 @@ end
 function MP:render()
     local settings=self.settings
     local skin=SKIN[settings.skin] or SKIN.default
+    skin.setTime(self.time)
+
     gc.push('transform')
 
     -- applyPlayerTransform
@@ -1236,7 +1238,7 @@ function MP:render()
     if #self.floatHolds>0 then
         for n=1,#self.floatHolds do
             local H=self.floatHolds[n]
-            skin.drawFloatHold(H.hand.matrix,H.handX,H.handY,settings.holdMode=='float' and not settings.infHold and n<=self.holdTime)
+            skin.drawFloatHold(n,H.hand.matrix,H.handX,H.handY,settings.holdMode=='float' and not settings.infHold and n<=self.holdTime)
         end
     end
 
@@ -1280,23 +1282,23 @@ function MP:render()
 
     -- Next (Almost same as drawing hold(s), don't forget to change both)
     gc.push('transform')
-    gc.translate(skin.nextPosX,skin.nextPosY)
+    gc.translate(200,-400)
+    skin.drawNextBorder(settings.nextSlot)
     for n=1,min(#self.nextQueue,settings.nextSlot) do
-        skin.drawNext(self.nextQueue[n].matrix,settings.holdMode=='swap' and not settings.infHold and n<=self.holdTime)
-        gc.translate(0,skin.nextStep)
+        skin.drawNext(n,self.nextQueue[n].matrix,settings.holdMode=='swap' and not settings.infHold and n<=self.holdTime)
     end
     gc.pop()
 
     -- Hold (Almost same as drawing next(s), don't forget to change both)
+    gc.push('transform')
+    gc.translate(-200,-400)
+    skin.drawHoldBorder(settings.holdMode,settings.holdSlot)
     if #self.holdQueue>0 then
-        gc.push('transform')
-        gc.translate(skin.holdPosX,skin.holdPosY)
         for n=1,#self.holdQueue do
-            skin.drawHold(self.holdQueue[n].matrix,settings.holdMode=='hold' and not settings.infHold and n<=self.holdTime)
-            gc.translate(0,skin.holdStep)
+            skin.drawHold(n,self.holdQueue[n].matrix,settings.holdMode=='hold' and not settings.infHold and n<=self.holdTime)
         end
-        gc.pop()
     end
+    gc.pop()
 
     -- Timer
     skin.drawTime(self.gameTime)
@@ -1310,7 +1312,7 @@ function MP:render()
 
     -- Starting counter
     if self.time<settings.readyDelay then
-        skin.drawStartingCounter(settings.readyDelay,self.time)
+        skin.drawStartingCounter(settings.readyDelay)
     end
 
     -- Upside fade out
