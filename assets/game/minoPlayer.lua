@@ -1172,6 +1172,7 @@ function MP:update(dt)
 end
 function MP:render()
     local settings=self.settings
+    local skin=SKIN[settings.skin] or SKIN.default
     gc.push('transform')
 
     -- applyPlayerTransform
@@ -1192,34 +1193,9 @@ function MP:render()
     self:triggerEvent('drawBelowField')
 
 
-    -- Grid
-    gc.setColor(1,1,1,.26)
-    local rad,len=1,6-- Line width/length
-    local gridHeight=min(max(settings.spawnH,settings.lockoutH,settings.deathH),2*settings.fieldW)
-    for x=1,settings.fieldW do
-        x=(x-1)*40
-        for y=1,gridHeight do
-            y=-y*40
-            gc.rectangle('fill',x,y,len,rad)
-            gc.rectangle('fill',x,y+rad,rad,len-rad)
-            gc.rectangle('fill',x+40,y,-len,rad)
-            gc.rectangle('fill',x+40,y+rad,-rad,len-rad)
-            gc.rectangle('fill',x,y+40,len,-rad)
-            gc.rectangle('fill',x,y+40-rad,rad,rad-len)
-            gc.rectangle('fill',x+40,y+40,-len,-rad)
-            gc.rectangle('fill',x+40,y+40-rad,-rad,rad-len)
-        end
-    end
-
-    -- Field cells
-    local F=self.field
-    for y=1,F:getHeight() do for x=1,F:getWidth() do
-        local C=F:getCell(x,y)
-        if C then
-            gc.setColor(ColorTable[C.color])
-            gc.rectangle('fill',(x-1)*40,-y*40,40,40)
-        end
-    end end
+    -- Grid & Cells
+    skin.drawFieldGrid(settings.fieldW,min(max(settings.spawnH,settings.lockoutH,settings.deathH),2*settings.fieldW))
+    skin.drawFieldCells(self.field)
 
 
     self:triggerEvent('drawBelowBlock')
@@ -1228,29 +1204,22 @@ function MP:render()
     if self.hand then
         local CB=self.hand.matrix
 
+        -- Ghost
         if not self.deathTimer then
-            -- Ghost
-            gc.setColor(1,1,1,.26)
-            for y=1,#CB do for x=1,#CB[1] do
-                if CB[y][x] then
-                    gc.rectangle('fill',(self.handX+x-2)*40,-(self.ghostY+y-1)*40,40,40)
-                end
-            end end
+            skin.drawGhost(CB,self.handX,self.ghostY)
         end
 
         -- Mino
         if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
+            -- Smooth
             local droppingY
             if self.handY>self.ghostY then
                 droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
                 gc.translate(0,droppingY)
             end
-            for y=1,#CB do for x=1,#CB[1] do
-                if CB[y][x] then
-                    gc.setColor(ColorTable[CB[y][x].color])
-                    gc.rectangle('fill',(self.handX+x-2)*40,-(self.handY+y-1)*40,40,40)
-                end
-            end end
+
+            skin.drawHand(CB,self.handX,self.handY)
+
             local RS=RotationSys[settings.rotSys]
             local minoData=RS[self.hand.shape]
             local state=minoData[self.hand.direction]
@@ -1265,21 +1234,9 @@ function MP:render()
 
     -- Float hold
     if #self.floatHolds>0 then
-        for i=1,#self.floatHolds do
-            local H=self.floatHolds[i]
-            local HB=H.hand.matrix
-            for y=1,#HB do for x=1,#HB[1] do
-                if HB[y][x] then
-                    if self.holdTime<settings.holdSlot then
-                        local r,g,b=unpack(ColorTable[HB[y][x].color])
-                        gc.setColor(r,g,b,.25+self.time%150/200)
-                    else
-                        gc.setColor(.6,.6,.6,.25+self.time%150/200)
-                    end
-
-                    gc.rectangle('fill',(H.handX+x-2)*40,-(H.handY+y-1)*40,40,40)
-                end
-            end end
+        for n=1,#self.floatHolds do
+            local H=self.floatHolds[n]
+            skin.drawFloatHold(H.hand.matrix,H.handX,H.handY,settings.holdMode=='float' and not settings.infHold and n<=self.holdTime)
         end
     end
 
@@ -1288,11 +1245,13 @@ function MP:render()
 
 
     -- Height lines
-    local width=settings.fieldW*40
-    gc.setColor(.0,.4,1.,.8) gc.rectangle('fill',0,-settings.spawnH  *40-2 ,width,4 )-- Spawning height
-    gc.setColor(1.,.5,.0,.6) gc.rectangle('fill',0,-settings.lockoutH*40-2 ,width,4 )-- lock-out height
-    gc.setColor(1.,.0,.0,.6) gc.rectangle('fill',0,-settings.deathH  *40-2 ,width,4 )-- Death height
-    gc.setColor(.0,.0,.0,.5) gc.rectangle('fill',0,-1260             *40-40,width,40)-- Void height
+    skin.drawHeightLines(
+        settings.fieldW*40,  -- (pixels) Field Width
+        settings.spawnH*40,  -- (pixels) Spawning height
+        settings.lockoutH*40,-- (pixels) lock-out height
+        settings.deathH*40,  -- (pixels) Death height
+        1260                 -- (pixels) Void height
+    )
 
 
     self:triggerEvent('drawInField')
@@ -1303,83 +1262,46 @@ function MP:render()
     gc.pop()
 
     -- Field border
-    gc.setLineWidth(2)
-    gc.setColor(1,1,1)
-    gc.line(-201,-401,-201, 401,201, 401,201,-401)
-    gc.setColor(1,1,1,.626)
-    gc.line(-201,-401,201,-401)
+    skin.drawFieldBorder()
 
     -- Delay indicator
-    gc.setColor(1,1,1)
-    gc.setLineWidth(2)
-    gc.rectangle('line',-201,401,402,12)
-    local color,value
     if not self.hand then
-        color,value=COLOR.lB,self.spawnTimer/settings.spawnDelay
+        skin.drawDelayIndicator('spawn',self.spawnTimer/settings.spawnDelay)
     elseif self.deathTimer then
-        color,value=COLOR.R,self.deathTimer/settings.deathDelay
+        skin.drawDelayIndicator('death',self.deathTimer/settings.deathDelay)
     elseif self.handY~=self.ghostY then
-        color,value=COLOR.lG,self.dropTimer/settings.dropDelay
+        skin.drawDelayIndicator('drop',self.dropTimer/settings.dropDelay)
     else
-        color,value=COLOR.L,self.lockTimer/settings.lockDelay
+        skin.drawDelayIndicator('lock',self.lockTimer/settings.lockDelay)
     end
-    gc.setColor(color)
-    gc.rectangle('fill',-199,403,398*math.min(value,1),8)
 
-    if self.freshChance>0 then
-        gc.setColor(
-            settings.freshCondition=='any' and COLOR.dL or
-            settings.freshCondition=='fall' and COLOR.R or
-            settings.freshCondition=='none' and COLOR.D or
-            COLOR.random(4)
-        )
-        for i=1,min(self.freshChance,15) do gc.rectangle('fill',-218+26*i-1,420-1,20+2,5+2) end
-        gc.setColor(COLOR.hsv(min((self.freshChance-1)/14,1)/2.6,.4,.9))
-        for i=1,min(self.freshChance,15) do gc.rectangle('fill',-218+26*i,420,20,5) end
-    end
+    -- Lock delay indicator
+    skin.drawLockDelayIndicator(settings.freshCondition,self.freshChance)
 
     -- Next (Almost same as drawing hold(s), don't forget to change both)
     gc.push('transform')
-    gc.translate(300,-400+50)
-    gc.setColor(1,1,1)
+    gc.translate(skin.nextPosX,skin.nextPosY)
     for n=1,min(#self.nextQueue,settings.nextSlot) do
-        local NB=self.nextQueue[n].matrix
-        local k=min(2.3/#NB,3/#NB[1],.86)
-        gc.scale(k)
-        for y=1,#NB do for x=1,#NB[1] do
-            if NB[y][x] then
-                gc.setColor(ColorTable[NB[y][x].color])
-                gc.rectangle('fill',(x-#NB[1]/2-1)*40,(y-#NB/2)*-40,40,40)
-            end
-        end end
-        gc.scale(1/k)
-        gc.translate(0,100)
+        skin.drawNext(self.nextQueue[n].matrix,settings.holdMode=='swap' and not settings.infHold and n<=self.holdTime)
+        gc.translate(0,skin.nextStep)
     end
     gc.pop()
 
     -- Hold (Almost same as drawing next(s), don't forget to change both)
-    gc.push('transform')
-    gc.translate(-300,-400+50)
-    gc.setColor(1,1,1)
-    for n=1,#self.holdQueue do
-        local NB=self.holdQueue[n].matrix
-        local k=min(2.3/#NB,3/#NB[1],.86)
-        gc.scale(k)
-        for y=1,#NB do for x=1,#NB[1] do
-            if NB[y][x] then
-                gc.setColor(ColorTable[NB[y][x].color])
-                gc.rectangle('fill',(x-#NB[1]/2-1)*40,(y-#NB/2)*-40,40,40)
-            end
-        end end
-        gc.scale(1/k)
-        gc.translate(0,100)
+    if #self.holdQueue>0 then
+        gc.push('transform')
+        gc.translate(skin.holdPosX,skin.holdPosY)
+        for n=1,#self.holdQueue do
+            skin.drawHold(self.holdQueue[n].matrix,settings.holdMode=='hold' and not settings.infHold and n<=self.holdTime)
+            gc.translate(0,skin.holdStep)
+        end
+        gc.pop()
     end
-    gc.pop()
 
-    -- Info
-    gc.setColor(COLOR.dL)
-    FONT.set(30)
-    gc.printf(("%.3f"):format(self.gameTime/1000),-210-260,380,260,'right')
+    -- Timer
+    skin.drawTime(self.gameTime)
+
+    -- Texts
     self.texts:draw()
 
 
@@ -1388,37 +1310,7 @@ function MP:render()
 
     -- Starting counter
     if self.time<settings.readyDelay then
-        gc.push('transform')
-        local num=floor((settings.readyDelay-self.time)/1000)+1
-        local r,g,b
-        local d=1-self.time%1000/1000-- from .999 to 0
-
-        if     num==1 then r,g,b=1.00,0.70,0.70 if d>.75 then gc.scale(1,1+(d/.25-3)^2) end
-        elseif num==2 then r,g,b=0.98,0.85,0.75 if d>.75 then gc.scale(1+(d/.25-3)^2,1) end
-        elseif num==3 then r,g,b=0.70,0.80,0.98 if d>.75 then gc.rotate((d-.75)^3*40) end
-        elseif num==4 then r,g,b=0.95,0.93,0.50
-        elseif num==5 then r,g,b=0.70,0.95,0.70
-        else  r,g,b=max(1.26-num/10,0),max(1.26-num/10,0),max(1.26-num/10,0)
-        end
-
-        FONT.set(100)
-
-        -- Warping number
-        gc.push('transform')
-            gc.scale((1.5-d*.6)^1.5)
-            gc.setColor(r,g,b,d)
-            GC.mStr(num,0,-70)
-            gc.setColor(1,1,1,1.5*d-0.5)
-            GC.mStr(num,0,-70)
-        gc.pop()
-
-        -- Scaling + Fading number
-        gc.scale(min(d/.333,1)^.4)
-        gc.setColor(r,g,b)
-        GC.mStr(num,0,-70)
-        gc.setColor(1,1,1,1.5*d-0.5)
-        GC.mStr(num,0,-70)
-        gc.pop()
+        skin.drawStartingCounter(settings.readyDelay,self.time)
     end
 
     -- Upside fade out
@@ -1486,6 +1378,7 @@ local baseEnv={-- Generate from template in future
     das=162,
     arr=26,
     sdarr=12,
+    skin='default',
 
     shakeness=.26,
 }

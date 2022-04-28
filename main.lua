@@ -47,6 +47,7 @@ end
 --------------------------------------------------------------
 -- Load modules
 GAME=require'assets.game'
+SKIN=require'assets.skin'
 CHAR=require'assets.char'
 require'assets.gamefunc'
 require'assets.gametable'
