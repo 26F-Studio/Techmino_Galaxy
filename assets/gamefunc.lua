@@ -39,7 +39,7 @@ function playBgm(name,args)
     end
 end
 
-function saveSetting()
+function saveSettings()
     FILE.save({
         system=SETTINGS._system,
         game=SETTINGS.game,

@@ -8,7 +8,7 @@ function scene.enter()
     actionSelected=false
 end
 function scene.leave()
-    saveSetting()
+    saveSettings()
     saveKey()
 end
 

@@ -82,7 +82,7 @@ do-- Zenitha.setDrawCursor
 end
 Zenitha.setOnGlobalKey('f11',function()
     SETTINGS.system.fullscreen=not SETTINGS.system.fullscreen
-    saveSetting()
+    saveSettings()
 end)
 Zenitha.setOnFnKeys({
     function() MES.new('info',("System:%s[%s]\nLuaVer:%s\nJitVer:%s\nJitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,
@@ -255,6 +255,7 @@ end)())
 VOC.init{}
 LANG.add{
     en='assets/language/lang_en.lua',
+    zh='assets/language/lang_zh.lua',
 }
 DEBUG.checkLoadTime("Configuring Zenitha")
 --------------------------------------------------------------
