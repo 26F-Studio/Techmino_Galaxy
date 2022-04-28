@@ -23,6 +23,8 @@ actions.moveLeft={
                 if P.handY==P.ghostY then
                     P:playSound('touch')
                 end
+            else
+                P:playSound('move_failed')
             end
         else
             P.keyBuffer.move='L'
@@ -43,6 +45,8 @@ actions.moveRight={
                 if P.handY==P.ghostY then
                     P:playSound('touch')
                 end
+            else
+                P:playSound('move_failed')
             end
         else
             P.keyBuffer.move='R'
@@ -138,7 +142,9 @@ function actions.sonicLeft(P)
         P:moveHand('moveX',-1)
         P:freshGhost()
     end
-    if P.handY==P.ghostY then
+    if not moved then
+        P:playSound('move_failed')
+    elseif P.handY==P.ghostY then
         P:playSound('touch')
     end
     return moved
@@ -150,7 +156,9 @@ function actions.sonicRight(P)
         P:moveHand('moveX',1)
         P:freshGhost()
     end
-    if P.handY==P.ghostY then
+    if not moved then
+        P:playSound('move_failed')
+    elseif P.handY==P.ghostY then
         P:playSound('touch')
     end
     return moved
@@ -265,6 +273,7 @@ local defaultSoundFunc={
         end
     end,
     move=               function() SFX.play('move')             end,
+    move_failed=        function() SFX.play('move_failed')      end,
     tuck=               function() SFX.play('tuck')             end,
     rotate=             function() SFX.play('rotate')           end,
     initrotate=         function() SFX.play('initrotate')       end,
