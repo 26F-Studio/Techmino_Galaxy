@@ -8,6 +8,10 @@ local ins,rem=table.insert,table.remove
 local sign,expApproach=MATH.sign,MATH.expApproach
 local inst=SFX.playSample
 
+local particleTemplates={
+    star=gc.newParticleSystem(GC.load{5,5,{'fCirc',2,2,2}},2600)
+}
+
 local MP={}
 
 --------------------------------------------------------------
@@ -359,6 +363,24 @@ function MP:playSound(event,...)
     end
 end
 
+function MP:createMoveParticle(x1,y1,x2,y2)
+    self.particles.star:setParticleLifetime(.26,.5)
+    self.particles.star:setEmissionArea('none')
+    for x=x1,x2,x2>x1 and 1 or -1 do for y=y1,y2,y2>y1 and 1 or -1 do
+        self.particles.star:setPosition(
+            -200+(x+math.random()*#self.hand.matrix[1]-1)*40,
+            400-(y+math.random()*#self.hand.matrix-1)*40
+        )
+        self.particles.star:emit(1)
+    end end
+end
+function MP:createFrenzyParticle(amount)
+    self.particles.star:setParticleLifetime(.626,1.6)
+    self.particles.star:setEmissionArea('uniform',200,400,0,true)
+    self.particles.star:setPosition(0,0)
+    self.particles.star:emit(amount)
+end
+
 function MP:triggerEvent(name,...)
     local L=self.event[name]
     if L then
@@ -367,8 +389,10 @@ function MP:triggerEvent(name,...)
 end
 function MP:moveHand(action,a,b,c,d)
     if action=='moveX' then
+        self:createMoveParticle(self.handX,self.handY,self.handX+a,self.handY)
         self.handX=self.handX+a
     elseif action=='drop' or action=='moveY' then
+        self:createMoveParticle(self.handX,self.handY,self.handX,self.handY+a)
         self.handY=self.handY+a
     elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
@@ -818,6 +842,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         local spin=M.action=='rotate' and (M.immobile or M.corners)
         M.clear=self:checkField()
         if M.clear then
+            self:createFrenzyParticle(M.clear.line*26)
             local textDuration=M.clear.line/3
             if spin then
                 text=Text.spin:repD(M.mino.name).." "
@@ -1168,6 +1193,7 @@ function MP:update(dt)
 
         self:triggerEvent('always',1--[[df]])
     end
+    self.particles.star:update(dt)
     self.texts:update(dt)
 end
 function MP:render()
@@ -1262,6 +1288,10 @@ function MP:render()
     -- popFieldTransform
     GC.stc_stop()
     gc.pop()
+
+    -- Particles
+    gc.setColor(1,1,1)
+    gc.draw(self.particles.star)
 
     -- Field border
     skin.drawFieldBorder()
@@ -1549,11 +1579,11 @@ function MP:initialize()
         vx=0,vy=0,vk=0,va=0,
     }
 
-    self.finished=false-- Did game finish
-    self.realTime=0-- Real time, [float] s
-    self.time=0-- Inside timer for player, [int] ms
-    self.gameTime=0-- Game time of player, [int] ms
-    self.timing=false-- Is gameTime running?
+    self.finished=false -- Did game finish
+    self.realTime=0     -- Real time, [float] s
+    self.time=0         -- Inside timer for player, [int] ms
+    self.gameTime=0     -- Game time of player, [int] ms
+    self.timing=false   -- Is gameTime running?
 
     self.field=require'assets.game.minoField'.new(self.settings.fieldW,self.settings.spawnH)
 
@@ -1634,6 +1664,12 @@ function MP:initialize()
             self.keyState[k]=false
         end
     end
+
+    self.particles={}
+    self.particles.star=particleTemplates.star:clone()
+    self.particles.star:setSizes(.26,1,.8,.6,.4,.2,0)
+    self.particles.star:setSpread(6.2832)
+    self.particles.star:setSpeed(0,20)
 end
 --------------------------------------------------------------
 

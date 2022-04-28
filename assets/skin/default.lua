@@ -143,9 +143,10 @@ function S.drawLockDelayIndicator(freshCondition,freshChance)
 end
 
 function S.drawGhost(B,handX,ghostY)
-    gc_setColor(1,1,1,.26)
+    gc_setColor(1,1,1,.12)
     for y=1,#B do for x=1,#B[1] do
         if B[y][x] then
+            gc_rectangle('fill',(handX+x-2)*40+R,-(ghostY+y-1)*40+R,40-R*2,40-R*2)
             gc_rectangle('fill',(handX+x-2)*40,-(ghostY+y-1)*40,40,40)
         end
     end end
