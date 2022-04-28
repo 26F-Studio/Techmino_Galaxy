@@ -590,7 +590,7 @@ function MP:popNext()
     if self.nextQueue[1] then-- Most cases there is pieces in next queue
         self.hand=rem(self.nextQueue,1)
         self:freshNextQueue()
-        self.holdChance=min(self.holdChance+1,self.settings.holdCount)
+        self.holdTime=0
     elseif self.holdQueue[1] then-- If no nexts, force using hold
         ins(self.nextQueue,rem(self.holdQueue,1))
         self:popNext()
@@ -725,43 +725,56 @@ function MP:rotate(dir,ifInit)
     end
 end
 function MP:hold(ifInit)
-    if self.holdChance<=0 then return end
+    if self.holdTime>=self.settings.holdSlot and not self.settings.infHold then return end
     local mode=self.settings.holdMode
+
+    -- These data may changed during hold, so we store them and recover them later
     local freshChance,freshTimeRemain=self.freshChance,self.freshTimeRemain
-    if     mode=='hold'  then self:hold_hold()
-    elseif mode=='swap'  then self:hold_swap()
-    elseif mode=='float' then self:hold_float()
-    else   error("wtf why hold mode is "..tostring(mode))
-    end
+    local holdTime=self.holdTime
+
+    self[
+        mode=='hold' and 'hold_hold' or
+        mode=='swap' and 'hold_swap' or
+        mode=='float' and 'hold_float' or
+        error("wtf why hold mode is "..tostring(mode))
+    ](self)
+
+    -- Recover data
     self.freshChance,self.freshTimeRemain=freshChance,freshTimeRemain
+    self.holdTime=holdTime+1
+
     self:playSound(ifInit and 'inithold' or 'hold')
-    self.holdChance=self.holdChance-1
 end
 function MP:hold_hold()
     if not self.settings.holdKeepState then
         self.hand=self:restoreMinoState(self.hand)
     end
-    if self.holdQueue[1] then
-        self.hand,self.holdQueue[1]=self.holdQueue[1],self.hand
+
+    -- Swap hand and hold
+    local swapN=self.holdTime%self.settings.holdSlot+1
+    self.hand,self.holdQueue[swapN]=self.holdQueue[swapN],self.hand
+
+    -- Reset position or pop next out
+    if self.hand then
         self:resetPos()
     else
-        self.holdQueue[1]=self.hand
-        self.hand=false
         self:popNext()
     end
 end
 function MP:hold_swap()
-    if self.nextQueue[1] then
+    local swapN=self.holdTime%self.settings.holdSlot+1
+    if self.nextQueue[swapN] then
         if not self.settings.holdKeepState then
             self.hand=self:restoreMinoState(self.hand)
         end
-        self.hand,self.nextQueue[1]=self.nextQueue[1],self.hand
+        self.hand,self.nextQueue[swapN]=self.nextQueue[swapN],self.hand
         self:resetPos()
     end
 end
 function MP:hold_float()
-    if self.floatHolds[1] then
-        local h=self.floatHolds[1]
+    local swapN=self.holdTime%self.settings.holdSlot+1
+    if self.floatHolds[swapN] then
+        local h=self.floatHolds[swapN]
         h.hand,self.hand=self.hand,h.hand
         h.handX,self.handX=self.handX,h.handX
         h.handY,self.handY=self.handY,h.handY
@@ -769,7 +782,7 @@ function MP:hold_float()
         h.minY,self.minY=self.minY,h.minY
         self:resetPosCheck()
     else
-        self.floatHolds[1]={
+        self.floatHolds[swapN]={
             hand=self.hand,
             handX=self.handX,
             handY=self.handY,
@@ -1257,7 +1270,7 @@ function MP:render()
             local HB=H.hand.matrix
             for y=1,#HB do for x=1,#HB[1] do
                 if HB[y][x] then
-                    if self.holdChance>0 then
+                    if self.holdTime<settings.holdSlot then
                         local r,g,b=unpack(ColorTable[HB[y][x].color])
                         gc.setColor(r,g,b,.25+self.time%150/200)
                     else
@@ -1448,7 +1461,7 @@ local baseEnv={-- Generate from template in future
     nextSlot=6,
 
     holdSlot=1,
-    holdCount=1,
+    infHold=false,
     holdMode='hold',
     holdKeepState=false,
 
@@ -1660,7 +1673,7 @@ function MP:initialize()
     self:freshNextQueue()
 
     self.holdQueue={}
-    self.holdChance=self.settings.holdCount
+    self.holdTime=0
     self.floatHolds={}
 
     self.energy=0
