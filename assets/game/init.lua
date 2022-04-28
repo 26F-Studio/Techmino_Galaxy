@@ -17,6 +17,8 @@ local GAME={
     players={},
     playersCount=0,
 
+    hitWaves={},
+
     seed=false,
     mode=false,
     mainPID=false,
@@ -26,6 +28,9 @@ local GAME={
 function GAME.reset(mode,seed)
     GAME.players={}
     GAME.playersCount=0
+
+    GAME.hitWaves={}
+
     GAME.mainPID=false
     GAME.seed=seed or math.random(2^16,2^26)
     GAME.mode=mode and getMode(mode) or NONE
@@ -95,15 +100,38 @@ end
 
 function GAME.update(dt)
     for _,P in next,GAME.players do P:update(dt) end
+
+    for i=#GAME.hitWaves,1,-1 do
+        local wave=GAME.hitWaves[i]
+        wave[3]=wave[3]+dt
+    end
 end
 
 function GAME.render()
     for _,P in next,GAME.players do P:render() end
 
     gc.replaceTransform(SCR.origin)
-    gc.setShader(SHADER.none)-- Directly draw the content, don't consider color, for better performance(?)
+    if #GAME.hitWaves>0 then
+        SHADER.warp:send('hitWaves',unpack(GAME.hitWaves))
+        gc.setShader(SHADER.warp)
+    else
+        gc.setShader(SHADER.none)-- Directly draw the content, don't consider color, for better performance(?)
+    end
     gc.draw(Zenitha.getBigCanvas('player'))
     gc.setShader()
+end
+
+function GAME._addHitWave(x,y,power)
+    if #GAME.hitWaves>=10 then
+        local maxI=1
+        for i=2,#GAME.hitWaves do
+            if GAME.hitWaves[i][3]>GAME.hitWaves[maxI][3] then
+                maxI=i
+            end
+        end
+        table.remove(GAME.hitWaves,maxI)
+    end
+    table.insert(GAME.hitWaves,{x,y,0,power})
 end
 
 return GAME

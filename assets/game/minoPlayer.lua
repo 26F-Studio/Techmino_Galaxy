@@ -843,6 +843,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         M.clear=self:checkField()
         if M.clear then
             self:createFrenzyParticle(M.clear.line*26)
+            GAME._addHitWave(.5,.5,M.clear.line)
             local textDuration=M.clear.line/3
             if spin then
                 text=Text.spin:repD(M.mino.name).." "
