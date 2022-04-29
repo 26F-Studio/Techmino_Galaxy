@@ -291,6 +291,12 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
         SCN.add(sceneName,require('assets/scene/'..sceneName))
     end
 end
+for _,v in next,love.filesystem.getDirectoryItems('assets/skin') do
+    if v~='init.lua' and FILE.isSafe('assets/skin/'..v) then
+        local skinName=v:sub(1,-5)
+        SKIN.add(skinName,require('assets/skin/'..skinName))
+    end
+end
 DEBUG.checkLoadTime("Load shaders/backgrounds/scenes")
 --------------------------------------------------------------
 DEBUG.logLoadTime()

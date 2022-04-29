@@ -1278,7 +1278,7 @@ end
 function MP:render()
     local settings=self.settings
     local skin=SKIN.get(settings.skin)
-    skin.setTime(self.time)
+    SKIN.time=self.time
 
     gc.push('transform')
 
