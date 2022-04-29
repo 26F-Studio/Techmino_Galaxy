@@ -878,6 +878,7 @@ function MP:hold_float()
         h.handY,self.handY=self.handY,h.handY
         h.lastMovement,self.lastMovement=self.lastMovement,h.lastMovement
         h.minY,self.minY=self.minY,h.minY
+        while self:ifoverlap(self.hand.matrix,self.handX,self.handY) and self.handY<self.settings.spawnH+1 do self.handY=self.handY+1 end
         self:resetPosCheck()
     else
         self.floatHolds[swapN]={
