@@ -103,7 +103,7 @@ function GAME.update(dt)
 
     for i=#GAME.hitWaves,1,-1 do
         local wave=GAME.hitWaves[i]
-        wave[3]=wave[3]+dt
+        wave.time=wave.time+dt
     end
 end
 
@@ -112,7 +112,17 @@ function GAME.render()
 
     gc.replaceTransform(SCR.origin)
     if #GAME.hitWaves>0 then
-        SHADER.warp:send('hitWaves',unpack(GAME.hitWaves))
+        local L=GAME.hitWaves
+        for i=1,#L do
+            local timeK=1/(400*L[i].time+50)-.0026
+            if timeK<=0 then
+                L[i][3]=0
+            else
+                L[i][3]=6.26-2.6*L[i][2]
+                L[i][4]=math.cos(L[i][2]*26)*L[i].power*timeK
+            end
+        end
+        SHADER.warp:send('hitWaves',unpack(L))
         gc.setShader(SHADER.warp)
     else
         gc.setShader(SHADER.none)-- Directly draw the content, don't consider color, for better performance(?)
@@ -123,16 +133,21 @@ end
 
 function GAME._addHitWave(x,y,power)
     if SETTINGS.system.hitWavePower<=0 then return end
-    if #GAME.hitWaves>=10 then
+    if #GAME.hitWaves>=8 then
         local maxI=1
         for i=2,#GAME.hitWaves do
-            if GAME.hitWaves[i][3]>GAME.hitWaves[maxI][3] then
+            if GAME.hitWaves[i].time>GAME.hitWaves[maxI].time then
                 maxI=i
             end
         end
         table.remove(GAME.hitWaves,maxI)
     end
-    table.insert(GAME.hitWaves,{x,y,0,power*SETTINGS.system.hitWavePower})
+    table.insert(GAME.hitWaves,{
+        x,y,
+        nil,nil,-- power1 & power2, calculated before sending uniform
+        time=0,
+        power=power*SETTINGS.system.hitWavePower,
+    })
 end
 
 return GAME
