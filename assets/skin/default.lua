@@ -15,16 +15,19 @@ local S={
 local _time
 function S.setTime(t) _time=t end
 
-local R=3
+local X=3-- Border width
+
 local function drawSide(B,x,y,bx,by)
-    if not (B[y  ] and B[y  ][x+1]) then gc_rectangle('fill',bx+40  ,by   ,-R,40) end
-    if not (B[y  ] and B[y  ][x-1]) then gc_rectangle('fill',bx     ,by   ,R ,40) end
-    if not (B[y-1] and B[y-1][x  ]) then gc_rectangle('fill',bx     ,by+40,40,-R) end
-    if not (B[y+1] and B[y+1][x  ]) then gc_rectangle('fill',bx     ,by   ,40, R) end
-    if not (B[y-1] and B[y-1][x-1]) then gc_rectangle('fill',bx     ,by+40,R ,-R) end
-    if not (B[y+1] and B[y+1][x-1]) then gc_rectangle('fill',bx     ,by   ,R , R) end
-    if not (B[y-1] and B[y-1][x+1]) then gc_rectangle('fill',bx+40  ,by+40,-R,-R) end
-    if not (B[y+1] and B[y+1][x+1]) then gc_rectangle('fill',bx+40  ,by   ,-R, R) end
+    local U,D,L,R
+    if not (B[y  ] and B[y  ][x+1]) then gc_rectangle('fill',bx+40  ,by   ,-X,40) R=true end
+    if not (B[y  ] and B[y  ][x-1]) then gc_rectangle('fill',bx     ,by   ,X ,40) L=true end
+    if not (B[y-1] and B[y-1][x  ]) then gc_rectangle('fill',bx     ,by+40,40,-X) D=true end
+    if not (B[y+1] and B[y+1][x  ]) then gc_rectangle('fill',bx     ,by   ,40, X) U=true end
+
+    if not (D or L or B[y-1] and B[y-1][x-1]) then gc_rectangle('fill',bx     ,by+40,X ,-X) end
+    if not (U or L or B[y+1] and B[y+1][x-1]) then gc_rectangle('fill',bx     ,by   ,X , X) end
+    if not (D or R or B[y-1] and B[y-1][x+1]) then gc_rectangle('fill',bx+40  ,by+40,-X,-X) end
+    if not (U or R or B[y+1] and B[y+1][x+1]) then gc_rectangle('fill',bx+40  ,by   ,-X, X) end
 end
 
 function S.drawFieldGrid(fieldW,gridHeight)
@@ -50,7 +53,8 @@ function S.drawFieldBorder()
     gc_setColor(1,1,1)
     gc_line(-201,-401,-201, 401,201, 401,201,-401)
     gc_setColor(1,1,1,.626)
-    gc_line(-201,-401,201,-401)
+    gc_line(-201,-401,-181,-401)
+    gc_line(181,-401,201,-401)
 end
 
 function S.drawFieldCells(F)
@@ -66,14 +70,16 @@ function S.drawFieldCells(F)
             gc_setColor(r*.5,g*.5,b*.5)
             -- Reuse local var g,b
             g=C.nearby
-            if not g[F[y  ] and F[y  ][x+1]] then gc_rectangle('fill',bx+40-R,by   ,R ,40) end
-            if not g[F[y  ] and F[y  ][x-1]] then gc_rectangle('fill',bx     ,by   ,R ,40) end
-            if not g[F[y-1] and F[y-1][x  ]] then gc_rectangle('fill',bx     ,by+40,40,-R) end
-            if not g[F[y+1] and F[y+1][x  ]] then gc_rectangle('fill',bx     ,by   ,40, R) end
-            if not g[F[y-1] and F[y-1][x-1]] then gc_rectangle('fill',bx     ,by+40,R ,-R) end
-            if not g[F[y+1] and F[y+1][x-1]] then gc_rectangle('fill',bx     ,by   ,R , R) end
-            if not g[F[y-1] and F[y-1][x+1]] then gc_rectangle('fill',bx+40-R,by+40,R ,-R) end
-            if not g[F[y+1] and F[y+1][x+1]] then gc_rectangle('fill',bx+40-R,by   ,R , R) end
+            local U,D,L,R
+            if not g[F[y  ] and F[y  ][x+1]] then gc_rectangle('fill',bx+40-X,by   ,X ,40) R=true end
+            if not g[F[y  ] and F[y  ][x-1]] then gc_rectangle('fill',bx     ,by   ,X ,40) L=true end
+            if not g[F[y-1] and F[y-1][x  ]] then gc_rectangle('fill',bx     ,by+40,40,-X) D=true end
+            if not g[F[y+1] and F[y+1][x  ]] then gc_rectangle('fill',bx     ,by   ,40, X) U=true end
+
+            if not (D or L or g[F[y-1] and F[y-1][x-1]]) then gc_rectangle('fill',bx     ,by+40,X ,-X) end
+            if not (U or L or g[F[y+1] and F[y+1][x-1]]) then gc_rectangle('fill',bx     ,by   ,X , X) end
+            if not (D or R or g[F[y-1] and F[y-1][x+1]]) then gc_rectangle('fill',bx+40-X,by+40,X ,-X) end
+            if not (U or R or g[F[y+1] and F[y+1][x+1]]) then gc_rectangle('fill',bx+40-X,by   ,X , X) end
         end
     end end
 end
@@ -105,9 +111,9 @@ function S.drawFloatHold(n,B,handX,handY,unavailable)
 end
 
 function S.drawHeightLines(fieldW,spawnH,lockoutH,deathH,voidH)
-    gc_setColor(.0,.4,1.,.8) gc_rectangle('fill',0,-spawnH  -2 ,fieldW,4 )
-    gc_setColor(1.,.5,.0,.6) gc_rectangle('fill',0,-lockoutH-2 ,fieldW,4 )
-    gc_setColor(1.,.0,.0,.6) gc_rectangle('fill',0,-deathH  -2 ,fieldW,4 )
+    gc_setColor(.0,.4,1.,.8) gc_rectangle('fill',0,-spawnH  -1 ,fieldW,2 )
+    gc_setColor(1.,.5,.0,.6) gc_rectangle('fill',0,-lockoutH-1 ,fieldW,2 )
+    gc_setColor(1.,.0,.0,.6) gc_rectangle('fill',0,-deathH  -1 ,fieldW,2 )
     gc_setColor(.0,.0,.0,.6) gc_rectangle('fill',0,-voidH   -40,fieldW,40)
 end
 
@@ -143,11 +149,11 @@ function S.drawLockDelayIndicator(freshCondition,freshChance)
 end
 
 function S.drawGhost(B,handX,ghostY)
-    gc_setColor(1,1,1,.12)
     for y=1,#B do for x=1,#B[1] do
         if B[y][x] then
-            gc_rectangle('fill',(handX+x-2)*40+R,-(ghostY+y-1)*40+R,40-R*2,40-R*2)
+            gc_setColor(1,1,1,.162)
             gc_rectangle('fill',(handX+x-2)*40,-(ghostY+y-1)*40,40,40)
+            drawSide(B,x,y,(handX+x-2)*40,-(ghostY+y-1)*40)
         end
     end end
 end
