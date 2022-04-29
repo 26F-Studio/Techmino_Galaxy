@@ -118,8 +118,8 @@ function GAME.render()
             if timeK<=0 then
                 L[i][3]=0
             else
-                L[i][3]=6.26-2.6*L[i][2]
-                L[i][4]=math.cos(L[i][2]*26)*L[i].power*timeK
+                L[i][3]=6.26-2.6*L[i].time
+                L[i][4]=math.cos(L[i].time*26)*L[i].power*timeK
             end
         end
         SHADER.warp:send('hitWaves',unpack(L))
