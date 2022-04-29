@@ -122,6 +122,7 @@ function GAME.render()
 end
 
 function GAME._addHitWave(x,y,power)
+    if SETTINGS.system.hitWavePower<=0 then return end
     if #GAME.hitWaves>=10 then
         local maxI=1
         for i=2,#GAME.hitWaves do
@@ -131,7 +132,7 @@ function GAME._addHitWave(x,y,power)
         end
         table.remove(GAME.hitWaves,maxI)
     end
-    table.insert(GAME.hitWaves,{x,y,0,power})
+    table.insert(GAME.hitWaves,{x,y,0,power*SETTINGS.system.hitWavePower})
 end
 
 return GAME

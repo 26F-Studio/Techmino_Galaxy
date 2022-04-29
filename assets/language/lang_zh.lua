@@ -47,6 +47,7 @@ return {
     setting_arr="ARR",
     setting_sdarr="SDARR",
     setting_shakeness="场地晃动",
+    setting_hitWavePower="冲击波强度",
 
     setting_mainVol="主音量",
     setting_bgm="音乐",

@@ -40,7 +40,7 @@ local particleTemplates do
             ins(L,{'fRect',0,i,width,1})
         end
         return GC.load(L)
-    end)(),26)
+    end)(),12)
     p.trail:setOffset(width/2,height)
     p.trail:setParticleLifetime(.32)
     p.trail:setColors(

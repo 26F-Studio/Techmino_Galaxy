@@ -250,6 +250,7 @@ settings={
         vocVol=0,
 
         -- Video
+        hitWavePower=.6,
         fullscreen=true,
         maxFPS=300,
         updRate=100,

@@ -47,6 +47,7 @@ return {
     setting_arr="ARR",
     setting_sdarr="SDARR",
     setting_shakeness="Shakeness",
+    setting_hitWavePower="Hitwave Power",
 
     setting_mainVol="Main Volume",
     setting_bgm="BGM",
