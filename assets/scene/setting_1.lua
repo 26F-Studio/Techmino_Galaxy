@@ -64,7 +64,7 @@ function scene.draw()
     gc.translate(0,-SCN.curScroll)
     FONT.set(30)
     gc.setColor(COLOR.L)
-    for i=1,39 do
+    for i=1,#KEYMAP do
         local y=710+70*i
         if actionSelected==KEYMAP[i].act then
             gc.setLineWidth(4)
@@ -85,7 +85,7 @@ local function sliderShow_mul(S)  return S.disp().."%"    end
 local function _selAct(act) if actionSelected==act then actionSelected=false else actionSelected=act end end
 local function selAct(act) return function() _selAct(act) end end
 
-scene.scrollHeight=2600
+scene.scrollHeight=2400
 scene.widgetList={
     -- Game: handling
     WIDGET.new{type='slider',     pos={0,0},x=260, y=100,w=1000,    text=LANG'setting_das',         widthLimit=260,axis={0,260,1},smooth=true,   disp=TABLE.func_getVal(SETTINGS.game,'das'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game,'das')},
@@ -133,28 +133,26 @@ scene.widgetList={
     WIDGET.new{type='button',     pos={0,0},x=200,y=1780,w=220,h=60,text=LANG"key_act_function2",   fontSize=20,   code=selAct'act_function2' },
     WIDGET.new{type='button',     pos={0,0},x=200,y=1850,w=220,h=60,text=LANG"key_act_function3",   fontSize=20,   code=selAct'act_function3' },
     WIDGET.new{type='button',     pos={0,0},x=200,y=1920,w=220,h=60,text=LANG"key_act_function4",   fontSize=20,   code=selAct'act_function4' },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=1990,w=220,h=60,text=LANG"key_act_target1",     fontSize=20,   code=selAct'act_target1'   },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=2060,w=220,h=60,text=LANG"key_act_target2",     fontSize=20,   code=selAct'act_target2'   },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=2130,w=220,h=60,text=LANG"key_act_target3",     fontSize=20,   code=selAct'act_target3'   },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=2200,w=220,h=60,text=LANG"key_act_target4",     fontSize=20,   code=selAct'act_target4'   },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=2270,w=220,h=60,text=LANG"key_menu_up",         fontSize=20,   code=selAct'menu_up'       },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=2340,w=220,h=60,text=LANG"key_menu_down",       fontSize=20,   code=selAct'menu_down'     },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=2410,w=220,h=60,text=LANG"key_menu_left",       fontSize=20,   code=selAct'menu_left'     },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=2480,w=220,h=60,text=LANG"key_menu_right",      fontSize=20,   code=selAct'menu_right'    },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=2550,w=220,h=60,text=LANG"key_menu_confirm",    fontSize=20,   code=selAct'menu_confirm'  },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=2620,w=220,h=60,text=LANG"key_menu_back",       fontSize=20,   code=selAct'menu_back'     },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=2690,w=220,h=60,text=LANG"key_rep_pause",       fontSize=20,   code=selAct'rep_pause'     },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=2760,w=220,h=60,text=LANG"key_rep_prevFrame",   fontSize=20,   code=selAct'rep_prevFrame' },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=2830,w=220,h=60,text=LANG"key_rep_nextFrame",   fontSize=20,   code=selAct'rep_nextFrame' },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=2900,w=220,h=60,text=LANG"key_rep_speedDown",   fontSize=20,   code=selAct'rep_speedDown' },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=2970,w=220,h=60,text=LANG"key_rep_speedUp",     fontSize=20,   code=selAct'rep_speedUp'   },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=3040,w=220,h=60,text=LANG"key_rep_speed1_16x",  fontSize=20,   code=selAct'rep_speed1_16x'},
-    WIDGET.new{type='button',     pos={0,0},x=200,y=3110,w=220,h=60,text=LANG"key_rep_speed1_6x",   fontSize=20,   code=selAct'rep_speed1_6x' },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=3180,w=220,h=60,text=LANG"key_rep_speed1_2x",   fontSize=20,   code=selAct'rep_speed1_2x' },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=3250,w=220,h=60,text=LANG"key_rep_speed1x",     fontSize=20,   code=selAct'rep_speed1x'   },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=3320,w=220,h=60,text=LANG"key_rep_speed2x",     fontSize=20,   code=selAct'rep_speed2x'   },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=3390,w=220,h=60,text=LANG"key_rep_speed6x",     fontSize=20,   code=selAct'rep_speed6x'   },
-    WIDGET.new{type='button',     pos={0,0},x=200,y=3460,w=220,h=60,text=LANG"key_rep_speed16x",    fontSize=20,   code=selAct'rep_speed16x'  },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=1990,w=220,h=60,text=LANG"key_act_function5",   fontSize=20,   code=selAct'act_function5' },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=2060,w=220,h=60,text=LANG"key_act_function6",   fontSize=20,   code=selAct'act_function6' },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=2130,w=220,h=60,text=LANG"key_menu_up",         fontSize=20,   code=selAct'menu_up'       },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=2200,w=220,h=60,text=LANG"key_menu_down",       fontSize=20,   code=selAct'menu_down'     },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=2270,w=220,h=60,text=LANG"key_menu_left",       fontSize=20,   code=selAct'menu_left'     },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=2340,w=220,h=60,text=LANG"key_menu_right",      fontSize=20,   code=selAct'menu_right'    },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=2410,w=220,h=60,text=LANG"key_menu_confirm",    fontSize=20,   code=selAct'menu_confirm'  },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=2480,w=220,h=60,text=LANG"key_menu_back",       fontSize=20,   code=selAct'menu_back'     },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=2550,w=220,h=60,text=LANG"key_rep_pause",       fontSize=20,   code=selAct'rep_pause'     },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=2620,w=220,h=60,text=LANG"key_rep_prevFrame",   fontSize=20,   code=selAct'rep_prevFrame' },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=2690,w=220,h=60,text=LANG"key_rep_nextFrame",   fontSize=20,   code=selAct'rep_nextFrame' },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=2760,w=220,h=60,text=LANG"key_rep_speedDown",   fontSize=20,   code=selAct'rep_speedDown' },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=2830,w=220,h=60,text=LANG"key_rep_speedUp",     fontSize=20,   code=selAct'rep_speedUp'   },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=2900,w=220,h=60,text=LANG"key_rep_speed1_16x",  fontSize=20,   code=selAct'rep_speed1_16x'},
+    WIDGET.new{type='button',     pos={0,0},x=200,y=2970,w=220,h=60,text=LANG"key_rep_speed1_6x",   fontSize=20,   code=selAct'rep_speed1_6x' },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=3040,w=220,h=60,text=LANG"key_rep_speed1_2x",   fontSize=20,   code=selAct'rep_speed1_2x' },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=3110,w=220,h=60,text=LANG"key_rep_speed1x",     fontSize=20,   code=selAct'rep_speed1x'   },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=3180,w=220,h=60,text=LANG"key_rep_speed2x",     fontSize=20,   code=selAct'rep_speed2x'   },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=3250,w=220,h=60,text=LANG"key_rep_speed6x",     fontSize=20,   code=selAct'rep_speed6x'   },
+    WIDGET.new{type='button',     pos={0,0},x=200,y=3320,w=220,h=60,text=LANG"key_rep_speed16x",    fontSize=20,   code=selAct'rep_speed16x'  },
 
     -- Test
     WIDGET.new{type='button',     pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG'setting_test',fontSize=45,        code=function() SCN.go('game_simp',nil,'test') end},

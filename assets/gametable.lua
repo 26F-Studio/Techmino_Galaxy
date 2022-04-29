@@ -324,12 +324,9 @@ KEYMAP={
     {act='act_function1',   keys={'a'}},
     {act='act_function2',   keys={'s'}},
     {act='act_function3',   keys={'d'}},
-    {act='act_function4',   keys={'f'}},
-
-    {act='act_target1',     keys={'q'}},
-    {act='act_target2',     keys={'w'}},
-    {act='act_target3',     keys={'e'}},
-    {act='act_target4',     keys={'r'}},
+    {act='act_function4',   keys={'q'}},
+    {act='act_function5',   keys={'w'}},
+    {act='act_function6',   keys={'e'}},
 
     {act='menu_up',         keys={'up'}},
     {act='menu_down',       keys={'down'}},

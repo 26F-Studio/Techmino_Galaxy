@@ -215,11 +215,8 @@ actions.function1=NULL
 actions.function2=NULL
 actions.function3=NULL
 actions.function4=NULL
-
-actions.target1=NULL
-actions.target2=NULL
-actions.target3=NULL
-actions.target4=NULL
+actions.function5=NULL
+actions.function6=NULL
 
 local function _getActionObj(a)
     if type(a)=='string' then
