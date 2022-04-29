@@ -7,10 +7,53 @@ local ins,rem=table.insert,table.remove
 
 local sign,expApproach=MATH.sign,MATH.expApproach
 local inst=SFX.playSample
+local particleTemplates do
+    local p={}
+    p.star=gc.newParticleSystem(GC.load{7,7,
+        {'setLW',1},
+        {'line',0,3.5,6.5,3.5},
+        {'line',3.5,0,3.5,6.5},
+        {'fRect',2,2,3,3},
+    },2600)
+    p.star:setSizes(.26,1,.8,.6,.4,.2,0)
+    p.star:setSpread(6.2832)
+    p.star:setSpeed(0,20)
 
-local particleTemplates={
-    star=gc.newParticleSystem(GC.load{5,5,{'fCirc',2,2,2}},2600)
-}
+    local width=80
+    local height=240
+    local fadeLength=40
+    p.trail=gc.newParticleSystem((function()
+        local L={width,height}
+        for i=1,width/2 do
+            ins(L,{'setCL',1,1,1,i/(width/2)})
+            ins(L,{'fRect',i,0,1,height})
+            ins(L,{'fRect',width-i,0,1,height})
+        end
+        ins(L,{'setBM','multiply','premultiplied'})
+        ins(L,{'setCM',false,false,false,true})
+        for i=0,height-1 do
+            if i<height-fadeLength then
+                ins(L,{'setCL',0,0,0,i/(height-fadeLength)})
+            else
+                ins(L,{'setCL',0,0,0,(height-i)/fadeLength})
+            end
+            ins(L,{'fRect',0,i,width,1})
+        end
+        return GC.load(L)
+    end)(),26)
+    p.trail:setOffset(width/2,height)
+    p.trail:setParticleLifetime(.32)
+    p.trail:setColors(
+        1,1,1,0.0,
+        1,1,1,1.0,
+        1,1,1,0.8,
+        1,1,1,0.6,
+        1,1,1,0.4,
+        1,1,1,0.2,
+        1,1,1,0.0
+    )
+    particleTemplates=p
+end
 
 local MP={}
 
@@ -364,21 +407,31 @@ function MP:playSound(event,...)
 end
 
 function MP:createMoveParticle(x1,y1,x2,y2)
-    self.particles.star:setParticleLifetime(.26,.5)
-    self.particles.star:setEmissionArea('none')
+    local p=self.particles.star
+    p:setParticleLifetime(.26,.5)
+    p:setEmissionArea('none')
     for x=x1,x2,x2>x1 and 1 or -1 do for y=y1,y2,y2>y1 and 1 or -1 do
-        self.particles.star:setPosition(
+        p:setPosition(
             -200+(x+math.random()*#self.hand.matrix[1]-1)*40,
             400-(y+math.random()*#self.hand.matrix-1)*40
         )
-        self.particles.star:emit(1)
+        p:emit(1)
     end end
 end
 function MP:createFrenzyParticle(amount)
-    self.particles.star:setParticleLifetime(.626,1.6)
-    self.particles.star:setEmissionArea('uniform',200,400,0,true)
-    self.particles.star:setPosition(0,0)
-    self.particles.star:emit(amount)
+    local p=self.particles.star
+    p:setParticleLifetime(.626,1.6)
+    p:setEmissionArea('uniform',200,400,0,true)
+    p:setPosition(0,0)
+    p:emit(amount)
+end
+function MP:createLockParticle(x,y)
+    local p=self.particles.trail
+    p:setPosition(
+        -200+(x+#self.hand.matrix[1]/2-1)*40,
+        400-(y+#self.hand.matrix/2-1)*40
+    )
+    p:emit(1)
 end
 
 function MP:triggerEvent(name,...)
@@ -824,6 +877,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         self:shakeBoard('-drop')
         self:playSound('drop')
     end
+    self:createLockParticle(self.handX,self.handY)
     self:triggerEvent('afterDrop')
 
     -- Lock to field
@@ -1194,7 +1248,7 @@ function MP:update(dt)
 
         self:triggerEvent('always',1--[[df]])
     end
-    self.particles.star:update(dt)
+    for _,v in next,self.particles do v:update(dt) end
     self.texts:update(dt)
 end
 function MP:render()
@@ -1293,6 +1347,7 @@ function MP:render()
     -- Particles
     gc.setColor(1,1,1)
     gc.draw(self.particles.star)
+    gc.draw(self.particles.trail)
 
     -- Field border
     skin.drawFieldBorder()
@@ -1667,10 +1722,9 @@ function MP:initialize()
     end
 
     self.particles={}
-    self.particles.star=particleTemplates.star:clone()
-    self.particles.star:setSizes(.26,1,.8,.6,.4,.2,0)
-    self.particles.star:setSpread(6.2832)
-    self.particles.star:setSpeed(0,20)
+    for k,v in next,particleTemplates do
+        self.particles[k]=v:clone()
+    end
 end
 --------------------------------------------------------------
 
