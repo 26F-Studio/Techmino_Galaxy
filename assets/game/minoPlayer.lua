@@ -330,17 +330,26 @@ local defaultSoundFunc={
     touch=              function() SFX.play('touch')            end,
     drop=               function() SFX.play('drop')             end,
     lock=               function() SFX.play('lock')             end,
-    clear=function(clearHis)
+    clear=function(lines)
         SFX.play(
-            clearHis.line==1 and 'clear_1' or
-            clearHis.line==2 and 'clear_2' or
-            clearHis.line==3 and 'clear_3' or
-            clearHis.line==4 and 'clear_4' or
+            lines==1 and 'clear_1' or
+            lines==2 and 'clear_2' or
+            lines==3 and 'clear_3' or
+            lines==4 and 'clear_4' or
             'clear_5'
         )
-        if clearHis.line>=3 then
-            BGM.set('all','highgain',1/clearHis.line,0)
-            BGM.set('all','highgain',1,min((clearHis.line)^1.5/5,2.6))
+        if lines>=3 then
+            BGM.set('all','highgain',1/lines,0)
+            BGM.set('all','highgain',1,min((lines)^1.5/5,2.6))
+        end
+    end,
+    spin=function(lines)
+        if lines==0 then     SFX.play('spin_0')
+        elseif lines==1 then SFX.play('spin_1')
+        elseif lines==2 then SFX.play('spin_2')
+        elseif lines==3 then SFX.play('spin_3')
+        elseif lines==4 then SFX.play('spin_4')
+        else                 SFX.play('spin_mega')
         end
     end,
     combo=setmetatable({
@@ -364,13 +373,12 @@ local defaultSoundFunc={
         function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end,-- 18 combo
         function() inst('bass',.75,'A4') inst('bass',.75,'E5') inst('lead','E5') end,-- 19 combo
         function() inst('bass',.70,'A4') inst('bass',.70,'E5') inst('lead','G5') end,-- 20 combo
-    },{__call=function(self,clearHis)
-        local cmb=clearHis.combo
-        if self[cmb] then
-            self[cmb]()
+    },{__call=function(self,combo)
+        if self[combo] then
+            self[combo]()
         else
             inst('bass',.626,'A4')
-            local phase=(cmb-21)%12
+            local phase=(combo-21)%12
             inst('lead',1-((11-phase)/12)^2,41+phase)-- E4+
             inst('lead',1-((11-phase)/12)^2,46+phase)-- A4+
             inst('lead',1-(phase/12)^2,     53+phase)-- E5+
@@ -964,8 +972,9 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                 self:playSound('halfClear')
             end
 
-            self:playSound('combo',M.clear)
-            self:playSound('clear',M.clear)
+            self:playSound('combo',M.clear.combo)
+            self:playSound('clear',M.clear.line)
+            if spin then self:playSound('spin',M.clear.line) end
 
             self:triggerEvent('afterClear',M)
         else
@@ -973,6 +982,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                 text=Text.tuck
             elseif spin then
                 text=Text.spin:repD(M.mino.name)
+                self:playSound('spin',0)
             end
             if #text>0 then
                 self.texts:add{
