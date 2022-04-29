@@ -17,10 +17,10 @@ function S.setTime(t) _time=t end
 
 local R=3
 local function drawSide(B,x,y,bx,by)
-    if not (B[y]   and B[y][x+1]  ) then gc_rectangle('fill',bx+40  ,by   ,-R,40) end
-    if not (B[y]   and B[y][x-1]  ) then gc_rectangle('fill',bx     ,by   ,R ,40) end
-    if not (B[y-1] and B[y-1][x]  ) then gc_rectangle('fill',bx     ,by+40,40,-R) end
-    if not (B[y+1] and B[y+1][x]  ) then gc_rectangle('fill',bx     ,by   ,40, R) end
+    if not (B[y  ] and B[y  ][x+1]) then gc_rectangle('fill',bx+40  ,by   ,-R,40) end
+    if not (B[y  ] and B[y  ][x-1]) then gc_rectangle('fill',bx     ,by   ,R ,40) end
+    if not (B[y-1] and B[y-1][x  ]) then gc_rectangle('fill',bx     ,by+40,40,-R) end
+    if not (B[y+1] and B[y+1][x  ]) then gc_rectangle('fill',bx     ,by   ,40, R) end
     if not (B[y-1] and B[y-1][x-1]) then gc_rectangle('fill',bx     ,by+40,R ,-R) end
     if not (B[y+1] and B[y+1][x-1]) then gc_rectangle('fill',bx     ,by   ,R , R) end
     if not (B[y-1] and B[y-1][x+1]) then gc_rectangle('fill',bx+40  ,by+40,-R,-R) end
@@ -65,15 +65,15 @@ function S.drawFieldCells(F)
 
             gc_setColor(r*.5,g*.5,b*.5)
             -- Reuse local var g,b
-            g=C.minoID
-            b=F[y  ] if b then b=b[x+1] end if not (b and b.minoID==g) then gc_rectangle('fill',bx+40-R,by   ,R ,40) end
-            b=F[y  ] if b then b=b[x-1] end if not (b and b.minoID==g) then gc_rectangle('fill',bx     ,by   ,R ,40) end
-            b=F[y-1] if b then b=b[x  ] end if not (b and b.minoID==g) then gc_rectangle('fill',bx     ,by+40,40,-R) end
-            b=F[y+1] if b then b=b[x  ] end if not (b and b.minoID==g) then gc_rectangle('fill',bx     ,by   ,40, R) end
-            b=F[y-1] if b then b=b[x-1] end if not (b and b.minoID==g) then gc_rectangle('fill',bx     ,by+40,R ,-R) end
-            b=F[y+1] if b then b=b[x-1] end if not (b and b.minoID==g) then gc_rectangle('fill',bx     ,by   ,R , R) end
-            b=F[y-1] if b then b=b[x+1] end if not (b and b.minoID==g) then gc_rectangle('fill',bx+40-R,by+40,R ,-R) end
-            b=F[y+1] if b then b=b[x+1] end if not (b and b.minoID==g) then gc_rectangle('fill',bx+40-R,by   ,R , R) end
+            g=C.nearby
+            if not g[F[y  ] and F[y  ][x+1]] then gc_rectangle('fill',bx+40-R,by   ,R ,40) end
+            if not g[F[y  ] and F[y  ][x-1]] then gc_rectangle('fill',bx     ,by   ,R ,40) end
+            if not g[F[y-1] and F[y-1][x  ]] then gc_rectangle('fill',bx     ,by+40,40,-R) end
+            if not g[F[y+1] and F[y+1][x  ]] then gc_rectangle('fill',bx     ,by   ,40, R) end
+            if not g[F[y-1] and F[y-1][x-1]] then gc_rectangle('fill',bx     ,by+40,R ,-R) end
+            if not g[F[y+1] and F[y+1][x-1]] then gc_rectangle('fill',bx     ,by   ,R , R) end
+            if not g[F[y-1] and F[y-1][x+1]] then gc_rectangle('fill',bx+40-R,by+40,R ,-R) end
+            if not g[F[y+1] and F[y+1][x+1]] then gc_rectangle('fill',bx+40-R,by   ,R , R) end
         end
     end end
 end

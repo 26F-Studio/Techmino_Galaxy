@@ -1,5 +1,11 @@
+local skinLib={
+    default=require'assets.skin.default',
+}
+
 local SKIN={}
 
-SKIN.default=require'assets.skin.default'
+function SKIN.get(name)
+    return skinLib[name] or skinLib.default
+end
 
 return SKIN

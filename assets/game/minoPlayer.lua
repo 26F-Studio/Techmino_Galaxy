@@ -686,14 +686,34 @@ end
 function MP:getMino(shapeID)
     self.minoCount=self.minoCount+1
     local shape=TABLE.shift(Minos[shapeID].shape)
+
+    -- Generate matrix
     for y=1,#shape do for x=1,#shape[1] do
         if shape[y][x] then
             shape[y][x]={
                 minoID=self.minoCount,
-                color=defaultMinoColor[shapeID]
+                color=defaultMinoColor[shapeID],
+                nearby={},
             }-- Should be player's color setting
         end
     end end
+
+    -- Connect nearby cells
+    for y=1,#shape do for x=1,#shape[1] do
+        if shape[y][x] then
+            local L=shape[y][x].nearby
+            local b
+            b=shape[y]   if b and b[x-1] then L[b[x-1]]=true end
+            b=shape[y]   if b and b[x+1] then L[b[x+1]]=true end
+            b=shape[y-1] if b and b[x]   then L[b[x]  ]=true end
+            b=shape[y+1] if b and b[x]   then L[b[x]  ]=true end
+            b=shape[y-1] if b and b[x-1] then L[b[x-1]]=true end
+            b=shape[y-1] if b and b[x+1] then L[b[x+1]]=true end
+            b=shape[y+1] if b and b[x-1] then L[b[x-1]]=true end
+            b=shape[y+1] if b and b[x+1] then L[b[x+1]]=true end
+        end
+    end end
+
     local mino={
         id=self.minoCount,
         shape=shapeID,
@@ -1249,7 +1269,7 @@ function MP:update(dt)
 end
 function MP:render()
     local settings=self.settings
-    local skin=SKIN[settings.skin] or SKIN.default
+    local skin=SKIN.get(settings.skin)
     skin.setTime(self.time)
 
     gc.push('transform')
