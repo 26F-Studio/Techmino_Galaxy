@@ -346,36 +346,31 @@ local defaultSoundFunc={
             BGM.set('all','highgain',1,min((clearHis.line)^1.5/5,2.6))
         end
     end,
-    combo=function(clearHis)
+    combo=setmetatable({
+        function() inst('bass',.70,'A2') end,-- 1 combo
+        function() inst('bass',.75,'C3') end,-- 2 combo
+        function() inst('bass',.80,'D3') end,-- 3 combo
+        function() inst('bass',.85,'E3') end,-- 4 combo
+        function() inst('bass',.90,'G3') end,-- 5 combo
+        function() inst('bass',.90,'A3') inst('lead',.20,'A2') end,-- 6 combo
+        function() inst('bass',.75,'C4') inst('lead',.40,'C3') end,-- 7 combo
+        function() inst('bass',.60,'D4') inst('lead',.60,'D3') end,-- 8 combo
+        function() inst('bass',.40,'E4') inst('lead',.75,'E3') end,-- 9 combo
+        function() inst('bass',.20,'G4') inst('lead',.90,'G3') end,-- 10 combo
+        function() inst('bass',.20,'A4') inst('lead','A3') end,-- 11 combo
+        function() inst('bass',.40,'A4') inst('lead','C4') end,-- 12 combo
+        function() inst('bass',.60,'A4') inst('lead','D4') end,-- 13 combo
+        function() inst('bass',.75,'A4') inst('lead','E4') end,-- 14 combo
+        function() inst('bass',.90,'A4') inst('lead','G4') end,-- 15 combo
+        function() inst('bass',.90,'A4') inst('bass',.90,'E5') inst('lead','A4') end,-- 16 combo
+        function() inst('bass',.85,'A4') inst('bass',.85,'E5') inst('lead','C5') end,-- 17 combo
+        function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end,-- 18 combo
+        function() inst('bass',.75,'A4') inst('bass',.75,'E5') inst('lead','E5') end,-- 19 combo
+        function() inst('bass',.70,'A4') inst('bass',.70,'E5') inst('lead','G5') end,-- 20 combo
+    },{__call=function(self,clearHis)
         local cmb=clearHis.combo
-        if cmb<=5 then
-            if     cmb==1 then  inst('bass',.70,'A2')
-            elseif cmb==2 then  inst('bass',.75,'C3')
-            elseif cmb==3 then  inst('bass',.80,'D3')
-            elseif cmb==4 then  inst('bass',.85,'E3')
-            elseif cmb==5 then  inst('bass',.90,'G3')
-            end
-        elseif cmb<=10 then
-            if     cmb==6 then  inst('bass',.90,'A3') inst('lead',.20,'A2')
-            elseif cmb==7 then  inst('bass',.75,'C4') inst('lead',.40,'C3')
-            elseif cmb==8 then  inst('bass',.60,'D4') inst('lead',.60,'D3')
-            elseif cmb==9 then  inst('bass',.40,'E4') inst('lead',.75,'E3')
-            elseif cmb==10 then inst('bass',.20,'G4') inst('lead',.90,'G3')
-            end
-        elseif cmb<=15 then
-            if     cmb==11 then inst('bass',.20,'A4') inst('lead','A3')
-            elseif cmb==12 then inst('bass',.40,'A4') inst('lead','C4')
-            elseif cmb==13 then inst('bass',.60,'A4') inst('lead','D4')
-            elseif cmb==14 then inst('bass',.75,'A4') inst('lead','E4')
-            elseif cmb==15 then inst('bass',.90,'A4') inst('lead','G4')
-            end
-        elseif cmb<=20 then
-            if     cmb==16 then inst('bass',.90,'A4') inst('bass',.90,'E5') inst('lead','A4')
-            elseif cmb==17 then inst('bass',.85,'A4') inst('bass',.85,'E5') inst('lead','C5')
-            elseif cmb==18 then inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5')
-            elseif cmb==19 then inst('bass',.75,'A4') inst('bass',.75,'E5') inst('lead','E5')
-            elseif cmb==20 then inst('bass',.70,'A4') inst('bass',.70,'E5') inst('lead','G5')
-            end
+        if self[cmb] then
+            self[cmb]()
         else
             inst('bass',.626,'A4')
             local phase=(cmb-21)%12
@@ -384,7 +379,7 @@ local defaultSoundFunc={
             inst('lead',1-(phase/12)^2,     53+phase)-- E5+
             inst('lead',1-(phase/12)^2,     58+phase)-- A5+
         end
-    end,
+    end,__metatable=true}),
     frenzy=             function() SFX.play('frenzy')           end,
     allClear=           function() SFX.play('all_clear')        end,
     halfClear=          function() SFX.play('half_clear')       end,
@@ -436,9 +431,7 @@ end
 
 function MP:triggerEvent(name,...)
     local L=self.event[name]
-    if L then
-        for i=1,#L do L[i](self,...) end
-    end
+    if L then for i=1,#L do L[i](self,...) end end
 end
 function MP:moveHand(action,a,b,c,d)
     if action=='moveX' then
@@ -691,13 +684,16 @@ function MP:popNext()
     end
 end
 function MP:getMino(shapeID)
+    self.minoCount=self.minoCount+1
     local shape=TABLE.shift(Minos[shapeID].shape)
     for y=1,#shape do for x=1,#shape[1] do
         if shape[y][x] then
-            shape[y][x]={color=defaultMinoColor[shapeID]}-- Should be player's color setting
+            shape[y][x]={
+                minoID=self.minoCount,
+                color=defaultMinoColor[shapeID]
+            }-- Should be player's color setting
         end
     end end
-    self.minoCount=self.minoCount+1
     local mino={
         id=self.minoCount,
         shape=shapeID,

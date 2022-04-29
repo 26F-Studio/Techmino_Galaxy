@@ -65,15 +65,15 @@ function S.drawFieldCells(F)
 
             gc_setColor(r*.5,g*.5,b*.5)
             -- Reuse local var g,b
-            g=C.color
-            b=F[y  ] if b then b=b[x+1] end if not (b and b.color==g) then gc_rectangle('fill',bx+40-R,by   ,R ,40) end
-            b=F[y  ] if b then b=b[x-1] end if not (b and b.color==g) then gc_rectangle('fill',bx     ,by   ,R ,40) end
-            b=F[y-1] if b then b=b[x  ] end if not (b and b.color==g) then gc_rectangle('fill',bx     ,by+40,40,-R) end
-            b=F[y+1] if b then b=b[x  ] end if not (b and b.color==g) then gc_rectangle('fill',bx     ,by   ,40, R) end
-            b=F[y-1] if b then b=b[x-1] end if not (b and b.color==g) then gc_rectangle('fill',bx     ,by+40,R ,-R) end
-            b=F[y+1] if b then b=b[x-1] end if not (b and b.color==g) then gc_rectangle('fill',bx     ,by   ,R , R) end
-            b=F[y-1] if b then b=b[x+1] end if not (b and b.color==g) then gc_rectangle('fill',bx+40-R,by+40,R ,-R) end
-            b=F[y+1] if b then b=b[x+1] end if not (b and b.color==g) then gc_rectangle('fill',bx+40-R,by   ,R , R) end
+            g=C.minoID
+            b=F[y  ] if b then b=b[x+1] end if not (b and b.minoID==g) then gc_rectangle('fill',bx+40-R,by   ,R ,40) end
+            b=F[y  ] if b then b=b[x-1] end if not (b and b.minoID==g) then gc_rectangle('fill',bx     ,by   ,R ,40) end
+            b=F[y-1] if b then b=b[x  ] end if not (b and b.minoID==g) then gc_rectangle('fill',bx     ,by+40,40,-R) end
+            b=F[y+1] if b then b=b[x  ] end if not (b and b.minoID==g) then gc_rectangle('fill',bx     ,by   ,40, R) end
+            b=F[y-1] if b then b=b[x-1] end if not (b and b.minoID==g) then gc_rectangle('fill',bx     ,by+40,R ,-R) end
+            b=F[y+1] if b then b=b[x-1] end if not (b and b.minoID==g) then gc_rectangle('fill',bx     ,by   ,R , R) end
+            b=F[y-1] if b then b=b[x+1] end if not (b and b.minoID==g) then gc_rectangle('fill',bx+40-R,by+40,R ,-R) end
+            b=F[y+1] if b then b=b[x+1] end if not (b and b.minoID==g) then gc_rectangle('fill',bx+40-R,by   ,R , R) end
         end
     end end
 end
