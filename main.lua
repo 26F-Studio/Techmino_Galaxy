@@ -47,6 +47,8 @@ end
 --------------------------------------------------------------
 -- Load modules
 GAME=require'assets.game'
+VCTRL=require'assets.vctrl'
+KEYMAP=require'assets.keymap'
 SKIN=require'assets.skin'
 CHAR=require'assets.char'
 require'assets.gamefunc'
@@ -262,14 +264,7 @@ DEBUG.checkLoadTime("Configuring Zenitha")
 -- Load saving data
 TABLE.coverR(FILE.load('conf/settings','-json -canskip') or {},SETTINGS)
 for k,v in next,SETTINGS._system do SETTINGS._system[k]=nil SETTINGS.system[k]=v end
-local keyMap=FILE.load('conf/keymap','-json -canskip')
-if keyMap and #keyMap==37 then
-    for i=1,#KEYMAP do
-        if keyMap[i] then
-            KEYMAP[i].keys=TABLE.shift(keyMap[i],0)
-        end
-    end
-end
+KEYMAP:load(FILE.load('conf/keymap','-json -canskip'))
 --------------------------------------------------------------
 -- Load SOURCE ONLY resources
 SHADER={}

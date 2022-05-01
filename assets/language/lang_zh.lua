@@ -68,8 +68,6 @@ return {
     setting_test="测试",
 
     -- Key setting
-    key_game_restart=   "游戏: 重新开始",
-    key_game_chat=      "游戏: 开启聊天框",
     key_act_moveLeft=   "操作: 左移",
     key_act_moveRight=  "操作: 右移",
     key_act_rotateCW=   "操作: 顺时针旋转",
@@ -87,6 +85,8 @@ return {
     key_act_function4=  "操作: 功能键 4",
     key_act_function5=  "操作: 功能键 5",
     key_act_function6=  "操作: 功能键 6",
+    key_game_restart=   "游戏: 重新开始",
+    key_game_chat=      "游戏: 开启聊天框",
     key_menu_up=        "菜单: 上",
     key_menu_down=      "菜单: 下",
     key_menu_left=      "菜单: 左",
@@ -105,4 +105,8 @@ return {
     key_rep_speed2x=    "回放: 调整至2倍速",
     key_rep_speed6x=    "回放: 调整至6倍速",
     key_rep_speed16x=   "回放: 调整至16倍速",
+
+    setting_key_pressKey="按下要设置的键",
+    setting_key_deleted= "*已删除*",
+    setting_key_info=    "[Esc]: 取消\n[Backspace]: 删除",
 }

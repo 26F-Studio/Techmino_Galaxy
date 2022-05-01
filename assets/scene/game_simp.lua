@@ -1,12 +1,12 @@
 local gc=love.graphics
+local tc=love.touch
 
 local scene={}
 
-local touches={}
 local repMode=false
 
 function scene.enter()
-    TABLE.cut(touches)
+    VCTRL.reset()
     GAME.reset(SCN.args[1])
     GAME.newPlayer(1,'mino')
     GAME.setMain(1)
@@ -44,30 +44,18 @@ function scene.keyUp(key)
 end
 
 function scene.touchDown(x,y,id)
-    table.insert(touches,{
-        id=id,
-        x=x,y=y,
-    })
+    if VCTRL.press(x,y,id) then return end
 end
-
 function scene.touchMove(x,y,_,_,id)
-    for i=1,#touches do
-        if touches[i].id==id then
-            touches[i].x=x
-            touches[i].y=y
-            break
-        end
-    end
+    VCTRL.move(x,y,id)
+end
+function scene.touchUp(_,_,id)
+    VCTRL.release(id)
 end
 
-function scene.touchUp(_,_,id)
-    for i=1,#touches do
-        if touches[i].id==id then
-            table.remove(touches,i)
-            break
-        end
-    end
-end
+scene.mouseDown=scene.touchDown
+function scene.mouseMove(x,y,dx,dy) scene.touchMove(x,y,dx,dy,1) end
+scene.mouseUp=scene.touchUp
 
 function scene.update(dt)
     GAME.update(dt)
@@ -76,12 +64,16 @@ end
 function scene.draw()
     GAME.render()
 
+    gc.replaceTransform(SCR.xOy)
+    VCTRL.draw()
+
     if SETTINGS.system.showTouch then
         gc.setColor(1,1,1,.5)
         gc.setLineWidth(4)
-        gc.replaceTransform(SCR.xOy)
-        for i=1,#touches do
-            gc.circle('line',touches[i].x,touches[i].y,80)
+        for _,id in next,tc.getTouches() do
+            local x,y=tc.getPosition(id)
+            x,y=SCR.xOy:transformPoint(x,y)
+            gc.circle('line',x,y,80)
         end
     end
 end

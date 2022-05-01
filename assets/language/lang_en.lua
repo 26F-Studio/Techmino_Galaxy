@@ -68,8 +68,6 @@ return {
     setting_test="Test",
 
     -- Key setting
-    key_game_restart=   "Game: Restart",
-    key_game_chat=      "Game: Chat",
     key_act_moveLeft=   "Act: Move Left",
     key_act_moveRight=  "Act: Move Right",
     key_act_rotateCW=   "Act: Rotate CW",
@@ -87,6 +85,8 @@ return {
     key_act_function4=  "Act: Function 4",
     key_act_function5=  "Act: Function 5",
     key_act_function6=  "Act: Function 6",
+    key_game_restart=   "Game: Restart",
+    key_game_chat=      "Game: Chat",
     key_menu_up=        "Menu: Up",
     key_menu_down=      "Menu: Down",
     key_menu_left=      "Menu: Left",
@@ -105,4 +105,8 @@ return {
     key_rep_speed2x=    "Rep: Speed 2x",
     key_rep_speed6x=    "Rep: Speed 6x",
     key_rep_speed16x=   "Rep: Speed 16x",
+
+    setting_key_pressKey="Press a key",
+    setting_key_deleted= "*Deleted*",
+    setting_key_info=    "[Esc]: cancel\n[Backspace]: delete",
 }
