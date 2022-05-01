@@ -24,7 +24,7 @@ function scene.draw()
 end
 
 local function _selAct(act)
-    SCN.go('setting_presskey','none',act)
+    SCN.go('setting_key_press','none',act)
 end
 local function selAct(act) return function() _selAct(act) end end
 
@@ -67,8 +67,8 @@ scene.widgetList={
     WIDGET.new{type='button', x=1200,y=710, w=200,h=60,text=LANG"key_rep_speed6x",    fontSize=20, color='LD',code=selAct'rep_speed6x'   },
     WIDGET.new{type='button', x=1200,y=780, w=200,h=60,text=LANG"key_rep_speed16x",   fontSize=20, color='LD',code=selAct'rep_speed16x'  },
 
-    -- Test
-    WIDGET.new{type='button',     pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG'setting_test',fontSize=45,        code=function() SCN.go('game_simp',nil,'test') end},
+    WIDGET.new{type='button',pos={1,1},x=-480,y=-80,w=160,h=80,text=LANG'setting_key_touch',fontSize=45,code=WIDGET.c_goScn('setting_key_touch')},
+    WIDGET.new{type='button',pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG'setting_key_test',fontSize=45,code=function() SCN.go('game_simp',nil,'test') end},
 
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }

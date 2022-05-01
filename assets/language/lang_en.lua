@@ -65,7 +65,8 @@ return {
     setting_updRate="Update rate",
     setting_drawRate="Draw rate",
 
-    setting_test="Test",
+    setting_key_touch="Touch",
+    setting_key_test="Test",
 
     -- Key setting
     key_act_moveLeft=   "Act: Move Left",
@@ -109,4 +110,7 @@ return {
     setting_key_pressKey="Press a key",
     setting_key_deleted= "*Deleted*",
     setting_key_info=    "[Esc]: cancel\n[Backspace]: delete",
+
+    setting_touch_stick2way="Virtual joystick",
+    setting_touch_button="Add/Remove button",
 }

@@ -65,7 +65,8 @@ return {
     setting_updRate="更新比率",
     setting_drawRate="绘制比率",
 
-    setting_test="测试",
+    setting_key_touch="触屏",
+    setting_key_test="测试",
 
     -- Key setting
     key_act_moveLeft=   "操作: 左移",
@@ -109,4 +110,7 @@ return {
     setting_key_pressKey="按下要设置的键",
     setting_key_deleted= "*已删除*",
     setting_key_info=    "[Esc]: 取消\n[Backspace]: 删除",
+
+    setting_touch_stick2way="虚拟摇杆",
+    setting_touch_button="增减虚拟按键",
 }

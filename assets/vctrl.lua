@@ -1,17 +1,28 @@
 local abs=math.abs
+local max=math.max
 
 local gc=love.graphics
 
 local touches={}
 
 local buttons={
-    {x=1150,y=800,r=70,lastPressTime=-1e99},
-    {x=1300,y=800,r=70,lastPressTime=-1e99},
-    {x=1450,y=800,r=70,lastPressTime=-1e99},
-    {x=1300,y=650,r=70,lastPressTime=-1e99},
-    {x=1450,y=650,r=70,lastPressTime=-1e99},
-    {x=1450,y=500,r=70,lastPressTime=-1e99},
+    {x=1150,y=800,r=70,shape='circle',lastPressTime=-1e99},
+    {x=1300,y=800,r=70,shape='circle',lastPressTime=-1e99},
+    {x=1450,y=800,r=70,shape='circle',lastPressTime=-1e99},
+    {x=1300,y=650,r=70,shape='circle',lastPressTime=-1e99},
+    {x=1450,y=650,r=70,shape='circle',lastPressTime=-1e99},
+    {x=1450,y=500,r=70,shape='circle',lastPressTime=-1e99},
 }
+function buttons:new(data)
+    if not data then data=NONE end
+    return {
+        x=data.x or SCR.w0/2,
+        y=data.y or SCR.h0/2,
+        r=data.r or 70,
+        shape=data.shape or 'circle',
+        lastPressTime=-1e99,
+    }
+end
 function buttons:reset()
     for i=1,#self do
         local v=self[i]
@@ -20,20 +31,26 @@ function buttons:reset()
         v.lastPressTime=-1e99
     end
 end
-function buttons:draw()
+function buttons:draw(setting)
     gc.setLineWidth(4)
-    local t=love.timer.getTime()
+    FONT.set(50)
     for i=1,#self do
         local b=self[i]
-        gc.setColor(1,1,1,.6)
-        gc.circle('line',b.x,b.y,b.r-2)
-        if t-b.lastPressTime<.26 then
-            gc.setColor(1,1,1,1-(t-b.lastPressTime)/.26)
-            gc.circle('line',b.x,b.y,b.r+(t-b.lastPressTime)*62)
-        end
+        if b.shape=='circle' then
+            gc.setColor(1,1,1,b.pressed and .5 or .05)
+            gc.circle('fill',b.x,b.y,b.r-4)
 
-        gc.setColor(1,1,1,b.pressed and .2 or .05)
-        gc.circle('fill',b.x,b.y,b.r-4)
+            gc.setColor(1,1,1)
+            gc.circle('line',b.x,b.y,b.r-2)
+        elseif b.shape=='rectangle' then
+            gc.setColor(1,1,1,b.pressed and .5 or .05)
+            gc.rectangle('fill',b.x-b.r-4,b.y-b.r-4,b.r*2+8,b.r*2+8)
+
+            gc.setColor(1,1,1)
+            gc.rectangle('line',b.x-b.r-2,b.y-b.r-2,b.r*2+4,b.r*2+4)
+        end
+        if not setting then gc.setColor(1,1,1,.4) end
+        GC.mStr(i,b.x,b.y-35)
     end
 end
 
@@ -50,6 +67,9 @@ function stick2way:isAbove(x,y)
         (abs(x-stick2way.x)<stick2way.len/2 and abs(y-stick2way.y)<stick2way.h/2) or
         MATH.distance(x,y,stick2way.x-stick2way.len/2,stick2way.y)<stick2way.h/2 or
         MATH.distance(x,y,stick2way.x+stick2way.len/2,stick2way.y)<stick2way.h/2
+end
+function stick2way:drag(dx,dy)
+    self.x,self.y=self.x+dx,self.y+dy
 end
 function stick2way:reset()
     self.touchID=false
@@ -78,15 +98,21 @@ function stick2way:updatePos(x)
         end
     end
 end
-function stick2way:draw()
+function stick2way:draw(setting)
     gc.setLineWidth(4)
-    gc.setColor(1,1,1,.8)
-    gc.rectangle('line',self.x-self.len/2-self.h/2,self.y-self.h/2,self.len+self.h,self.h,self.h/2)
-
-    gc.setColor(1,1,1,.6)
-    gc.circle('line',self.x+self.stickX*self.len/2,self.y,self.h/2-10)
-    gc.setColor(1,1,1,self.touchID and .2 or .05)
-    gc.circle('fill',self.x+self.stickX*self.len/2,self.y,self.h/2-12)
+    if setting then
+        gc.setColor(1,1,1)
+        gc.rectangle('line',self.x-self.len/2-self.h/2,self.y-self.h/2,self.len+self.h,self.h,self.h/2)
+        gc.circle('line',self.x,self.y,self.h/2-10)
+        gc.setColor(1,1,1,self.touchID and .5 or .05)
+        gc.rectangle('fill',self.x-self.len/2-self.h/2,self.y-self.h/2,self.len+self.h,self.h,self.h/2)
+    else
+        gc.setColor(1,1,1)
+        gc.rectangle('line',self.x-self.len/2-self.h/2,self.y-self.h/2,self.len+self.h,self.h,self.h/2)
+        gc.circle('line',self.x+self.stickX*self.len/2,self.y,self.h/2-10)
+        gc.setColor(1,1,1,self.touchID and .5 or .05)
+        gc.circle('fill',self.x+self.stickX*self.len/2,self.y,self.h/2-12)
+    end
 end
 
 local VCTRL={}
@@ -109,9 +135,14 @@ function VCTRL.press(x,y,id)
         local closestID,closestDist=false,1e99
         for i=1,#buttons do
             local b=buttons[i]
-            local d=MATH.distance(x,y,b.x,b.y)
-            if d<b.r and d<closestDist then
-                closestID,closestDist=i,d/b.r
+            local d
+            if b.shape=='circle' then
+                d=MATH.distance(x,y,b.x,b.y)/b.r
+            elseif b.shape=='rectangle' then
+                d=max(abs(x-b.x),abs(y-b.y))/b.r
+            end
+            if d<=1 and d<closestDist then
+                closestID,closestDist=i,d
             end
         end
         if closestID then
@@ -134,6 +165,15 @@ function VCTRL.move(x,y,id)
     end
 end
 
+function VCTRL.drag(dx,dy,id)
+    if type(touches[id])=='number' then
+        local b=buttons[touches[id]]
+        b.x,b.y=b.x+dx,b.y+dy
+    elseif touches[id]=='stick2way' then
+        stick2way:drag(dx,dy)
+    end
+end
+
 function VCTRL.release(id)
     if type(touches[id])=='number' then
         local b=buttons[touches[id]]
@@ -151,9 +191,28 @@ function VCTRL.release(id)
     touches[id]=nil
 end
 
-function VCTRL.draw()
-    buttons:draw()
-    stick2way:draw()
+function VCTRL.draw(setting)
+    if setting then
+        buttons:draw(true)
+        stick2way:draw(true)
+    else
+        buttons:draw()
+        stick2way:draw()
+    end
+end
+
+function VCTRL.set(method,args)
+    if method=='button' then
+        if args=='add' then
+            if #buttons<26 then
+                table.insert(buttons,buttons:new())
+            end
+        elseif args=='remove' then
+            if #buttons>0 then
+                table.remove(buttons)
+            end
+        end
+    end
 end
 
 function VCTRL.importSettings(data)
