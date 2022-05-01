@@ -20,6 +20,7 @@ function scene.keyDown(key,isRep)
         local L=KEYMAP:_getKeys(act)
         if L then TABLE.cut(L) end
         result=Text.setting_key_deleted
+        SFX.play('beep2')
         SCN.back()
     else
         for i=1,#KEYMAP do
@@ -35,6 +36,7 @@ function scene.keyDown(key,isRep)
                     table.remove(KEYMAP[i].keys,1)
                 end
                 result=key
+                SFX.play('beep1')
                 break
             end
         end
@@ -75,7 +77,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={1,0},x=-300,y=80,w=160,h=80,fontSize=60,text=CHAR.key.backspace,code=function() SCN.go('game_simp',nil,'test') end},
+    WIDGET.new{type='button',pos={1,0},x=-300,y=80,w=160,h=80,fontSize=60,text=CHAR.key.backspace,code=WIDGET.c_pressKey('backspace')},
     WIDGET.new{type='button',pos={1,0},x=-120,y=80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
 
