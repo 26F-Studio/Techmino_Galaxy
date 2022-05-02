@@ -42,6 +42,7 @@ local KEYMAP={
     {act='rep_speed16x',    keys={'8'}},
 }
 function KEYMAP:load(data)
+    if not data then return end
     for i=1,#KEYMAP do
         if data[i] then
             KEYMAP[i].keys=TABLE.shift(data[i],0)
