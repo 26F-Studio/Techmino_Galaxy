@@ -15,7 +15,7 @@ end
 
 function scene.keyDown(key,isRep)
     if isRep then return end
-    local action=KEYMAP:_getAction(key)
+    local action=KEYMAP.getAction(key)
     if not action then return end
     if action:sub(1,4)=='act_' then
         GAME.press(action:sub(5))
@@ -32,7 +32,7 @@ function scene.keyDown(key,isRep)
 end
 
 function scene.keyUp(key)
-    local action=KEYMAP:_getAction(key)
+    local action=KEYMAP.getAction(key)
     if not action then return end
     if action:sub(1,4)=='act_' then
         GAME.release(action:sub(5))

@@ -41,7 +41,7 @@ local KEYMAP={
     {act='rep_speed6x',     keys={'7'}},
     {act='rep_speed16x',    keys={'8'}},
 }
-function KEYMAP:load(data)
+function KEYMAP.load(data)
     if not data then return end
     for i=1,#KEYMAP do
         if data[i] then
@@ -49,20 +49,42 @@ function KEYMAP:load(data)
         end
     end
 end
-function KEYMAP:_getKeys(action)
-    for i=1,#self do
-        if self[i].act==action then
-            return self[i].keys
+function KEYMAP.getKeys(action)
+    for i=1,#KEYMAP do
+        if KEYMAP[i].act==action then
+            return KEYMAP[i].keys
         end
     end
 end
-function KEYMAP:_getAction(key)
-    for i=1,#self do
-        local l=self[i].keys
+function KEYMAP.getAction(key)
+    for i=1,#KEYMAP do
+        local l=KEYMAP[i].keys
         for j=1,#l do
             if l[j]==key then
-                return self[i].act
+                return KEYMAP[i].act
             end
+        end
+    end
+end
+
+function KEYMAP.remKey(key)
+    for j=1,#KEYMAP do
+        local k=TABLE.find(KEYMAP[j].keys,key)
+        if k then
+            table.remove(KEYMAP[j].keys,k)
+        end
+    end
+end
+
+function KEYMAP.addKey(act,key)
+    for i=1,#KEYMAP do
+        if KEYMAP[i].act==act then
+            table.insert(KEYMAP[i].keys,key)
+            while #KEYMAP[i].keys>=5 do
+                table.remove(KEYMAP[i].keys,1)
+            end
+            SFX.play('beep1')
+            break
         end
     end
 end

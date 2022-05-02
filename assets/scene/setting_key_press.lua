@@ -17,29 +17,15 @@ function scene.keyDown(key,isRep)
     if key=='escape' then
         SCN.back()
     elseif key=='backspace' then
-        local L=KEYMAP:_getKeys(act)
+        local L=KEYMAP.getKeys(act)
         if L then TABLE.cut(L) end
         result=Text.setting_key_deleted
         SFX.play('beep2')
         SCN.back()
     else
-        for i=1,#KEYMAP do
-            if KEYMAP[i].act==act then
-                for j=1,#KEYMAP do
-                    local k=TABLE.find(KEYMAP[j].keys,key)
-                    if k then
-                        table.remove(KEYMAP[j].keys,k)
-                    end
-                end
-                table.insert(KEYMAP[i].keys,key)
-                while #KEYMAP[i].keys>=5 do
-                    table.remove(KEYMAP[i].keys,1)
-                end
-                result=key
-                SFX.play('beep1')
-                break
-            end
-        end
+        result=key
+        KEYMAP.remKey(key)
+        KEYMAP.addKey(act,key)
     end
 end
 
