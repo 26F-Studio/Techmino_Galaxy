@@ -7,6 +7,14 @@ local F={}
 function F:removeLine(h)
     table.remove(self._matrix,h)
 end
+function F:fresh()
+    for y=#self._matrix,1,-1 do
+        for i=1,#self._matrix[y] do
+            if self._matrix[y][i] then return end
+            self:removeLine(y)
+        end
+    end
+end
 function F:export_string_simp()
     local str=''
 

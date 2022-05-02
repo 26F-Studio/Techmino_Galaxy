@@ -1056,6 +1056,24 @@ function MP:checkField()-- Check line clear, top out checking, etc.
     end
     return false
 end
+function MP:changeFieldWidth(w,origPos)
+    if w>0 and w%1==0 then
+        if not origPos then origPos=1 end
+        local w0=self.settings.fieldW
+        for y=1,#self.field:getHeight() do
+            local L=TABLE.new(false,w)
+            for x=1,w0 do
+                local newX=origPos+x-1
+                if newX>=1 and newX<=w then
+                    L[newX]=self.field._matrix[y][x]
+                end
+            end
+        end
+        self.settings.fieldW=w
+        self.field._width=w
+        self.field:fresh()
+    end
+end
 function MP:gameover(reason)
     if self.finished then return end
     self.timing=false
@@ -1301,7 +1319,7 @@ function MP:render()
 
 
     -- Grid & Cells
-    skin.drawFieldGrid(settings.fieldW,min(max(settings.spawnH,settings.lockoutH,settings.deathH),2*settings.fieldW))
+    skin.drawFieldGrid(settings.fieldW,min(max(settings.lockoutH,settings.deathH),2*settings.fieldW))
     skin.drawFieldCells(self.field)
 
 
@@ -1455,8 +1473,8 @@ end
 --------------------------------------------------------------
 -- Builder
 local baseEnv={-- Generate from template in future
-    fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. If really want change it, you need change both 'self.field._width' and 'self.field._matrix'
-    spawnH=20,-- [WARNING] This can be changed anytime. Field object actually do not contain height information
+    fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. If really want change it, please use 'self:changeFieldWidth'
+    spawnH=20,
     lockoutH=1e99,
     deathH=1e99,
     barrierL=18,
@@ -1665,7 +1683,7 @@ function MP:initialize()
     self.gameTime=0     -- Game time of player, [int] ms
     self.timing=false   -- Is gameTime running?
 
-    self.field=require'assets.game.minoField'.new(self.settings.fieldW,self.settings.spawnH)
+    self.field=require'assets.game.minoField'.new(self.settings.fieldW)
 
     self.minoCount=0
     self.combo=0
