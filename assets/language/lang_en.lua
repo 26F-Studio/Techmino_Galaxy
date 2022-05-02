@@ -113,4 +113,8 @@ return {
 
     setting_touch_stick2way="Virtual joystick",
     setting_touch_button="Add/Remove button",
+    setting_touch_buttonSize="Button size",
+    settinh_touch_buttonShape="Change button shape",
+    setting_touch_stickLength="Stick length",
+    setting_touch_stickSize="Stick size",
 }

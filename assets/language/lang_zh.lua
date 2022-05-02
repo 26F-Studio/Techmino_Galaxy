@@ -113,4 +113,8 @@ return {
 
     setting_touch_stick2way="虚拟摇杆",
     setting_touch_button="增减虚拟按键",
+    setting_touch_buttonSize="按键尺寸",
+    settinh_touch_buttonShape="更改形状",
+    setting_touch_stickLength="摇杆长度",
+    setting_touch_stickSize="摇杆宽度",
 }
