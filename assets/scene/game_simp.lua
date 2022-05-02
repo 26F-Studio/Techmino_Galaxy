@@ -25,9 +25,6 @@ function scene.keyDown(key,isRep)
         end
     elseif action=='game_restart' then
         scene.enter()
-    elseif action:sub(1,4)=='rep_' then
-        if not repMode then return end
-        -- TODO
     end
 end
 

@@ -27,19 +27,6 @@ local KEYMAP={
     {act='menu_right',      keys={'right'}},
     {act='menu_confirm',    keys={'return'}},
     {act='menu_back',       keys={'escape'}},
-
-    {act='rep_pause',       keys={'space','1'}},
-    {act='rep_prevFrame',   keys={'left',','}},
-    {act='rep_nextFrame',   keys={'right','.'}},
-    {act='rep_speedDown',   keys={'down'}},
-    {act='rep_speedUp',     keys={'up'}},
-    {act='rep_speed1_16x',  keys={'2'}},
-    {act='rep_speed1_6x',   keys={'3'}},
-    {act='rep_speed1_2x',   keys={'4'}},
-    {act='rep_speed1x',     keys={'5'}},
-    {act='rep_speed2x',     keys={'6'}},
-    {act='rep_speed6x',     keys={'7'}},
-    {act='rep_speed16x',    keys={'8'}},
 }
 function KEYMAP.load(data)
     if not data then return end
