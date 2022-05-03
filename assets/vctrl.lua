@@ -233,12 +233,12 @@ end
 local VCTRL={
     stick2way:new(),
     stick4way:new{available=false},
-    button:new{x=1150,y=800,r=70,shape='circle',key='vk_1'},
-    button:new{x=1300,y=800,r=70,shape='circle',key='vk_2'},
-    button:new{x=1450,y=800,r=70,shape='circle',key='vk_3'},
-    button:new{x=1300,y=650,r=70,shape='circle',key='vk_4'},
-    button:new{x=1450,y=650,r=70,shape='circle',key='vk_5'},
-    button:new{x=1450,y=500,r=70,shape='circle',key='vk_6'},
+    button:new{x=1140,y=800,r=80,shape='circle',key='vk_1'},
+    button:new{x=1300,y=800,r=80,shape='circle',key='vk_2'},
+    button:new{x=1460,y=800,r=80,shape='circle',key='vk_3'},
+    button:new{x=1300,y=640,r=80,shape='circle',key='vk_4'},
+    button:new{x=1460,y=640,r=80,shape='circle',key='vk_5'},
+    button:new{x=1460,y=480,r=80,shape='circle',key='vk_6'},
 }
 VCTRL.focus=false
 
