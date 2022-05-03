@@ -16,7 +16,7 @@ local particleTemplates do
         {'fRect',2,2,3,3},
     },2600)
     p.star:setSizes(.26,1,.8,.6,.4,.2,0)
-    p.star:setSpread(6.2832)
+    p.star:setSpread(MATH.tau)
     p.star:setSpeed(0,20)
 
     local width=80

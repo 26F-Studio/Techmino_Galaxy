@@ -71,7 +71,7 @@ do-- Zenitha.setDrawCursor
             gc.setColor(1,1,1)
             gc.setLineWidth(2)
             gc.translate(x,y)
-            gc.rotate(love.timer.getTime()%6.283185307179586)
+            gc.rotate(love.timer.getTime()%MATH.tau)
             gc.rectangle('line',-10,-10,20,20)
             if love.mouse.isDown(1) then gc.rectangle('line',-6,-6,12,12) end
             if love.mouse.isDown(2) then gc.rectangle('fill',-4,-4,8,8) end

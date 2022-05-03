@@ -15,13 +15,13 @@ function scene.keyDown(key,isRep)
     if isRep then return end
     if result then return end
     if key=='escape' then
-        SCN.back()
+        SCN.pop() SCN.swapTo('setting_key','none')
     elseif key=='backspace' then
         local L=KEYMAP.getKeys(act)
         if L then TABLE.cut(L) end
         result=Text.setting_key_deleted
         SFX.play('beep2')
-        SCN.back()
+        SCN.pop() SCN.swapTo('setting_key','none')
     else
         result=key
         KEYMAP.remKey(key)
@@ -46,8 +46,8 @@ scene.mouseUp=scene.touchUp
 function scene.update(dt)
     if result then
         quitTimer=quitTimer+dt
-        if quitTimer>.2 then
-            SCN.back()
+        if quitTimer>.1 then
+            SCN.pop() SCN.swapTo('setting_key','none')
         end
     end
 end
@@ -64,7 +64,7 @@ end
 
 scene.widgetList={
     WIDGET.new{type='button',pos={1,0},x=-300,y=80,w=160,h=80,sound=false,fontSize=60,text=CHAR.key.backspace,code=WIDGET.c_pressKey('backspace')},
-    WIDGET.new{type='button',pos={1,0},x=-120,y=80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
+    WIDGET.new{type='button',pos={1,0},x=-120,y=80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=function() SCN.pop() SCN.swapTo('setting_key','none') end},
 }
 
 return scene

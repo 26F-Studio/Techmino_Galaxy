@@ -148,6 +148,97 @@ function stick2way:draw(setting)
     end
 end
 
+
+local stick4way={}
+stick4way.__index=stick4way
+function stick4way:new(data)
+    if not data then data=NONE end
+    return setmetatable({
+        type='stick4way',
+        x=data.x or 300,
+        y=data.y or 700,
+        r=data.r or 160,threshold=.26,
+        stickR=.3,
+        stickD=0,stickA=0,
+        touchID=false,
+        state='wait',
+    },self)
+end
+function stick4way:getDistance(x,y)
+    return MATH.distance(x,y,self.x,self.y)<self.r and 1 or 1e99
+end
+function stick4way:updatePos(x,y)
+    if not x then
+        self.stickD,self.stickA=0,0
+    else
+        self.stickD=math.min(MATH.distance(x,y,self.x,self.y)/self.r,1)
+        self.stickA=math.atan2(y-self.y,x-self.x)
+    end
+    local newState
+    if self.stickD<=self.threshold then
+        newState='wait'
+    else
+        local a=self.stickA%MATH.tau/MATH.tau
+        newState=
+            a<1/8 and 'right' or
+            a<3/8 and 'down' or
+            a<5/8 and 'left' or
+            a<7/8 and 'up' or
+            'right'
+    end
+    if self.state~=newState then
+        if self.state~='wait' then love.keyreleased(self.state) end
+        if newState~='wait' then love.keypressed(newState) end
+        self.state=newState
+    end
+end
+function stick4way:press(x,y,id)
+    if not self.touchID then
+        self.touchID=id
+        self:updatePos(x,y)
+    end
+end
+function stick4way:move(x,y,_)
+    self:updatePos(x,y)
+end
+function stick4way:drag(dx,dy)
+    self.x,self.y=self.x+dx,self.y+dy
+end
+function stick4way:release()
+    if self.touchID then
+        self.touchID=false
+        self:updatePos()
+    end
+end
+function stick4way:reset()
+    self.touchID=false
+    self.state='wait'
+    self.stickX=0
+end
+function stick4way:draw(setting)
+    gc.setLineWidth(4)
+    gc.setColor(1,1,1,.2)
+    local bigR=self.r*(1+self.stickR)+5-- Real radius (with stickR and extra +5)
+    local ballR=self.r*self.stickR
+    gc.line(self.x-bigR/2^.5,self.y-bigR/2^.5,self.x+bigR/2^.5,self.y+bigR/2^.5)
+    gc.line(self.x-bigR/2^.5,self.y+bigR/2^.5,self.x+bigR/2^.5,self.y-bigR/2^.5)
+    gc.setColor(1,1,1,.5)
+    gc.line(self.x,self.y,self.x+self.stickD*self.r*math.cos(self.stickA),self.y+self.stickD*self.r*math.sin(self.stickA))
+    gc.setColor(1,1,1)
+    gc.circle('line',self.x,self.y,bigR)
+    if setting then
+        gc.circle('line',self.x,self.y,ballR)
+        gc.setColor(1,1,1,self.touchID and .5 or .05)
+        gc.circle('fill',self.x,self.y,bigR)
+    else
+        local x,y=self.x+self.stickD*self.r*math.cos(self.stickA),self.y+self.stickD*self.r*math.sin(self.stickA)
+        gc.circle('line',x,y,ballR)
+        gc.setColor(1,1,1,self.touchID and .5 or .05)
+        gc.circle('fill',x,y,ballR)
+    end
+end
+
+
 local VCTRL={
     stick2way:new{x=300,y=800},
     button:new{x=1150,y=800,r=70,shape='circle',key='vk_1'},
