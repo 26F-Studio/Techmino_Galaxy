@@ -99,7 +99,8 @@ return {
     setting_key_deleted= "*已删除*",
     setting_key_info=    "[Esc]: 取消\n[Backspace]: 删除",
 
-    setting_touch_stick2way="虚拟摇杆",
+    stick2_switch="2向摇杆",
+    stick4_switch="4向摇杆",
     setting_touch_button="增减虚拟按键",
     setting_touch_buttonSize="按键尺寸",
     settinh_touch_buttonShape="更改形状",

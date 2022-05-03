@@ -8,6 +8,7 @@ function button:new(data)
     if not data then data=NONE end
     return setmetatable({
         type='button',
+        available=data.available or data.available==nil,
         x=data.x or SCR.w0/2,
         y=data.y or SCR.h0/2,
         r=data.r or 70,
@@ -72,6 +73,7 @@ function stick2way:new(data)
     if not data then data=NONE end
     return setmetatable({
         type='stick2way',
+        available=data.available or data.available==nil,
         x=data.x or 300,
         y=data.y or 800,
         len=data.len or 320,-- Not include semicircle
@@ -90,24 +92,12 @@ function stick2way:getDistance(x,y)
 end
 function stick2way:updatePos(x)
     self.stickX=x and MATH.clamp((x-self.x)/(self.len/2),-1,1) or 0
-    if self.state=='wait' then
-        if self.stickX>.26 then
-            love.keypressed('right')
-            self.state='right'
-        elseif self.stickX<-.26 then
-            love.keypressed('left')
-            self.state='left'
-        end
-    elseif self.state=='right' then
-        if self.stickX<.26 then
-            love.keyreleased('right')
-            self.state='wait'
-        end
-    elseif self.state=='left' then
-        if self.stickX>.26 then
-            love.keyreleased('left')
-            self.state='wait'
-        end
+    local newState
+    newState=self.stickX>.26 and 'right' or self.stickX<-.26 and 'left' or 'wait'
+    if self.state~=newState then
+        if self.state~='wait' then love.keyreleased('vj2'..self.state) end
+        if newState~='wait' then love.keypressed('vj2'..newState) end
+        self.state=newState
     end
 end
 function stick2way:press(x,_,id)
@@ -155,6 +145,7 @@ function stick4way:new(data)
     if not data then data=NONE end
     return setmetatable({
         type='stick4way',
+        available=data.available or data.available==nil,
         x=data.x or 300,
         y=data.y or 700,
         r=data.r or 160,threshold=.26,
@@ -187,8 +178,8 @@ function stick4way:updatePos(x,y)
             'right'
     end
     if self.state~=newState then
-        if self.state~='wait' then love.keyreleased(self.state) end
-        if newState~='wait' then love.keypressed(newState) end
+        if self.state~='wait' then love.keyreleased('vj4'..self.state) end
+        if newState~='wait' then love.keypressed('vj4'..newState) end
         self.state=newState
     end
 end
@@ -240,7 +231,8 @@ end
 
 
 local VCTRL={
-    stick4way:new{x=300,y=700},
+    stick2way:new(),
+    stick4way:new{available=false},
     button:new{x=1150,y=800,r=70,shape='circle',key='vk_1'},
     button:new{x=1300,y=800,r=70,shape='circle',key='vk_2'},
     button:new{x=1450,y=800,r=70,shape='circle',key='vk_3'},
@@ -261,9 +253,12 @@ end
 function VCTRL.press(x,y,id)
     local obj,closestDist=false,1e99
     for i=1,#VCTRL do
-        local d=VCTRL[i]:getDistance(x,y)
-        if d<=1 and d<closestDist then
-            obj,closestDist=VCTRL[i],d
+        local w=VCTRL[i]
+        if w.available then
+            local d=w:getDistance(x,y)
+            if d<=1 and d<closestDist then
+                obj,closestDist=w,d
+            end
         end
     end
     if obj then
@@ -294,7 +289,9 @@ end
 
 function VCTRL.draw(setting)
     for i=1,#VCTRL do
-        VCTRL[i]:draw(setting)
+        if VCTRL[i].available then
+            VCTRL[i]:draw(setting)
+        end
     end
 end
 
@@ -321,6 +318,22 @@ function VCTRL.removeButton()
                 table.remove(VCTRL,i)
                 return
             end
+        end
+    end
+end
+
+function VCTRL.switchStick2way()
+    for i=1,#VCTRL do
+        if VCTRL[i].type=='stick2way' then
+            VCTRL[i].available=not VCTRL[i].available
+        end
+    end
+end
+
+function VCTRL.switchStick4way()
+    for i=1,#VCTRL do
+        if VCTRL[i].type=='stick4way' then
+            VCTRL[i].available=not VCTRL[i].available
         end
     end
 end

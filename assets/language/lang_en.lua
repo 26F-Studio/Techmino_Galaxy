@@ -99,7 +99,8 @@ return {
     setting_key_deleted= "*Deleted*",
     setting_key_info=    "[Esc]: cancel\n[Backspace]: delete",
 
-    setting_touch_stick2way="Virtual joystick",
+    stick2_switch="2-way joystick",
+    stick4_switch="4-way joystick",
     setting_touch_button="Add/Remove button",
     setting_touch_buttonSize="Button size",
     settinh_touch_buttonShape="Change button shape",

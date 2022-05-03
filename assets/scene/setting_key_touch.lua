@@ -33,6 +33,10 @@ function scene.keyDown(key,isRep)
         if VCTRL.focus and VCTRL.focus.type=='button' then
             VCTRL.focus.shape=TABLE.next({'circle','square'},VCTRL.focus.shape)
         end
+    elseif key=='q' then
+        VCTRL.switchStick2way()
+    elseif key=='w' then
+        VCTRL.switchStick4way()
     elseif key=='escape' then
         SCN.back()
     end
@@ -52,17 +56,19 @@ function scene.mouseUp(x,y,k) if k==1 then scene.touchUp(x,y,1) end end
 function scene.draw() VCTRL.draw(true) end
 
 scene.widgetList={
-    -- WIDGET.new{type='checkBox',pos={.5,.18},x=-260,w=70, text=LANG'setting_touch_stick2way', fontSize=40,widthLimit=480,labelPos='right'},
-    WIDGET.new{type='button',  pos={.5,.1}, x=-260,w=100,                    fontSize=80,text='-',code=WIDGET.c_pressKey('-')},
-    WIDGET.new{type='text',    pos={.5,.1}, text=LANG'setting_touch_button', fontSize=40,widthLimit=400},
-    WIDGET.new{type='button',  pos={.5,.1}, x=260, w=100,                    fontSize=80,text='+',code=WIDGET.c_pressKey('+')},
+    WIDGET.new{type='button',  pos={.6,.1},  x=-260,w=100,                    fontSize=80,text='-',code=WIDGET.c_pressKey('-')},
+    WIDGET.new{type='text',    pos={.6,.1},  text=LANG'setting_touch_button', fontSize=40,widthLimit=400},
+    WIDGET.new{type='button',  pos={.6,.1},  x=260, w=100,                    fontSize=80,text='+',code=WIDGET.c_pressKey('+')},
 
-    WIDGET.new{type='slider',  pos={.5,.22},name='button1',  x=-300,w=600,axis={60,260,20},  smooth=true, text=LANG'setting_touch_buttonSize',  disp=function() return VCTRL.focus and VCTRL.focus.type=='button' and VCTRL.focus.r      end,code=function(v) if VCTRL.focus then VCTRL.focus.r=v     end end},
-    WIDGET.new{type='button',  pos={.5,.33},name='button2',       w=360,h=100,               fontSize=40, text=LANG'settinh_touch_buttonShape',                                                                                             code=WIDGET.c_pressKey('0'),                                    },
-    WIDGET.new{type='slider',  pos={.5,.22},name='stick2_1', x=-300,w=600,axis={200,500,25}, smooth=true, text=LANG'setting_touch_stickLength', disp=function() return VCTRL.focus.len    end,code=function(v) VCTRL.focus.len=v    end},
-    WIDGET.new{type='slider',  pos={.5,.3}, name='stick2_2', x=-300,w=600,axis={100,200,10}, smooth=true, text=LANG'setting_touch_stickSize',   disp=function() return VCTRL.focus.h      end,code=function(v) VCTRL.focus.h=v      end},
-    WIDGET.new{type='slider',  pos={.5,.22},name='stick4_1', x=-300,w=600,axis={100,250,25}, smooth=true, text=LANG'setting_touch_stickLength', disp=function() return VCTRL.focus.r      end,code=function(v) VCTRL.focus.r=v      end},
-    WIDGET.new{type='slider',  pos={.5,.3}, name='stick4_2', x=-300,w=600,axis={.1,.8},      smooth=true, text=LANG'setting_touch_stickSize',   disp=function() return VCTRL.focus.stickR end,code=function(v) VCTRL.focus.stickR=v end},
+    WIDGET.new{type='button',  pos={.22,.1}, w=180,h=100, text=LANG'stick2_switch',code=WIDGET.c_pressKey('q')},
+    WIDGET.new{type='button',  pos={.22,.22},w=180,h=100, text=LANG'stick4_switch',code=WIDGET.c_pressKey('w')},
+
+    WIDGET.new{type='slider',  pos={.6,.22}, name='button1',  x=-300,w=600,axis={60,260,20},  text=LANG'setting_touch_buttonSize',  widthLimit=200, disp=function() return VCTRL.focus and VCTRL.focus.type=='button' and VCTRL.focus.r      end,code=function(v) if VCTRL.focus then VCTRL.focus.r=v     end end},
+    WIDGET.new{type='button',  pos={.6,.33}, name='button2',  w=360,h=100,fontSize=40,        text=LANG'settinh_touch_buttonShape', code=WIDGET.c_pressKey('0')},
+    WIDGET.new{type='slider',  pos={.6,.22}, name='stick2_1', x=-300,w=600,axis={200,500,25}, text=LANG'setting_touch_stickLength', widthLimit=200, disp=function() return VCTRL.focus.len    end,code=function(v) VCTRL.focus.len=v    end},
+    WIDGET.new{type='slider',  pos={.6,.3},  name='stick2_2', x=-300,w=600,axis={100,200,10}, text=LANG'setting_touch_stickSize',   widthLimit=200, disp=function() return VCTRL.focus.h      end,code=function(v) VCTRL.focus.h=v      end},
+    WIDGET.new{type='slider',  pos={.6,.22}, name='stick4_1', x=-300,w=600,axis={100,250,25}, text=LANG'setting_touch_stickLength', widthLimit=200, disp=function() return VCTRL.focus.r      end,code=function(v) VCTRL.focus.r=v      end},
+    WIDGET.new{type='slider',  pos={.6,.3},  name='stick4_2', x=-300,w=600,axis={.1,.8,.1},   text=LANG'setting_touch_stickSize',   widthLimit=200, disp=function() return VCTRL.focus.stickR end,code=function(v) VCTRL.focus.stickR=v end},
 
     WIDGET.new{type='button',  pos={1,0},x=-120,y=80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
