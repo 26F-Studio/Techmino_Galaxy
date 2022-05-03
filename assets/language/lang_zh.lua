@@ -104,5 +104,5 @@ return {
     setting_touch_buttonSize="按键尺寸",
     settinh_touch_buttonShape="更改形状",
     setting_touch_stickLength="摇杆长度",
-    setting_touch_stickSize="摇杆宽度",
+    setting_touch_stickSize="摇把尺寸",
 }

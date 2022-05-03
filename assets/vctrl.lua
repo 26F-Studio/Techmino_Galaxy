@@ -222,8 +222,6 @@ function stick4way:draw(setting)
     local ballR=self.r*self.stickR
     gc.line(self.x-bigR/2^.5,self.y-bigR/2^.5,self.x+bigR/2^.5,self.y+bigR/2^.5)
     gc.line(self.x-bigR/2^.5,self.y+bigR/2^.5,self.x+bigR/2^.5,self.y-bigR/2^.5)
-    gc.setColor(1,1,1,.5)
-    gc.line(self.x,self.y,self.x+self.stickD*self.r*math.cos(self.stickA),self.y+self.stickD*self.r*math.sin(self.stickA))
     gc.setColor(1,1,1)
     gc.circle('line',self.x,self.y,bigR)
     if setting then
@@ -235,12 +233,14 @@ function stick4way:draw(setting)
         gc.circle('line',x,y,ballR)
         gc.setColor(1,1,1,self.touchID and .5 or .05)
         gc.circle('fill',x,y,ballR)
+        gc.setColor(1,1,1,.5)
+        gc.line(self.x,self.y,self.x+self.stickD*self.r*math.cos(self.stickA),self.y+self.stickD*self.r*math.sin(self.stickA))
     end
 end
 
 
 local VCTRL={
-    stick2way:new{x=300,y=800},
+    stick4way:new{x=300,y=700},
     button:new{x=1150,y=800,r=70,shape='circle',key='vk_1'},
     button:new{x=1300,y=800,r=70,shape='circle',key='vk_2'},
     button:new{x=1450,y=800,r=70,shape='circle',key='vk_3'},
