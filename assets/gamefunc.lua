@@ -53,3 +53,7 @@ function saveKey()
     end
     FILE.save(M,'conf/keymap','-json')
 end
+
+function saveTouch()
+    FILE.save(VCTRL.exportSettings(),'conf/touch','-json')
+end

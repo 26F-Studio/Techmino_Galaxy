@@ -65,6 +65,16 @@ function button:draw(setting)
     if not setting then gc.setColor(1,1,1,.4) end
     GC.mStr(self.key,self.x,self.y-35)
 end
+function button:export()
+    return {
+        type=self.type,
+        x=math.floor(self.x),
+        y=math.floor(self.y),
+        r=self.r,
+        shape=self.shape,
+        key=self.key,
+    }
+end
 
 
 local stick2way={}
@@ -137,6 +147,16 @@ function stick2way:draw(setting)
         gc.circle('fill',self.x+self.stickX*self.len/2,self.y,self.h/2-12)
     end
 end
+function stick2way:export()
+    return {
+        type=self.type,
+        available=self.available,
+        x=math.floor(self.x),
+        y=math.floor(self.y),
+        len=self.len,
+        h=self.h,
+    }
+end
 
 
 local stick4way={}
@@ -148,15 +168,16 @@ function stick4way:new(data)
         available=data.available or data.available==nil,
         x=data.x or 300,
         y=data.y or 700,
-        r=data.r or 160,threshold=.26,
-        stickR=.3,
+        r=data.r or 160,
+        threshold=data.threshold or .26,
+        ball=data.ball or .3,
         stickD=0,stickA=0,
         touchID=false,
         state='wait',
     },self)
 end
 function stick4way:getDistance(x,y)
-    return MATH.distance(x,y,self.x,self.y)<self.r and 1 or 1e99
+    return MATH.distance(x,y,self.x,self.y)<self.r and 0 or 1e99
 end
 function stick4way:updatePos(x,y)
     if not x then
@@ -209,8 +230,8 @@ end
 function stick4way:draw(setting)
     gc.setLineWidth(4)
     gc.setColor(1,1,1,.2)
-    local bigR=self.r*(1+self.stickR)+5-- Real radius (with stickR and extra +5)
-    local ballR=self.r*self.stickR
+    local bigR=self.r*(1+self.ball)+5-- Real radius (with ball and extra +5)
+    local ballR=self.r*self.ball
     gc.line(self.x-bigR/2^.5,self.y-bigR/2^.5,self.x+bigR/2^.5,self.y+bigR/2^.5)
     gc.line(self.x-bigR/2^.5,self.y+bigR/2^.5,self.x+bigR/2^.5,self.y-bigR/2^.5)
     gc.setColor(1,1,1)
@@ -228,7 +249,17 @@ function stick4way:draw(setting)
         gc.line(self.x,self.y,self.x+self.stickD*self.r*math.cos(self.stickA),self.y+self.stickD*self.r*math.sin(self.stickA))
     end
 end
-
+function stick4way:export()
+    return {
+        type=self.type,
+        available=self.available,
+        x=math.floor(self.x),
+        y=math.floor(self.y),
+        r=self.r,
+        ball=self.ball,
+        threshold=self.threshold,
+    }
+end
 
 local VCTRL={
     stick2way:new(),
@@ -339,11 +370,24 @@ function VCTRL.switchStick4way()
 end
 
 function VCTRL.importSettings(data)
-    -- TODO
+    if not data then return end
+    TABLE.cut(VCTRL)
+    for i=1,#data do
+        local w=data[i]
+        VCTRL[i]=(
+            w.type=='stick2way' and stick2way or
+            w.type=='stick4way' and stick4way or
+            w.type=='button' and button
+        ):new(w)
+    end
 end
 
 function VCTRL.exportSettings()
-    -- TODO
+    local T={}
+    for i=1,#VCTRL do
+        table.insert(T,VCTRL[i]:export())
+    end
+    return T
 end
 
 return VCTRL

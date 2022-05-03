@@ -265,6 +265,7 @@ DEBUG.checkLoadTime("Configuring Zenitha")
 TABLE.coverR(FILE.load('conf/settings','-json -canskip') or {},SETTINGS)
 for k,v in next,SETTINGS._system do SETTINGS._system[k]=nil SETTINGS.system[k]=v end
 KEYMAP.load(FILE.load('conf/keymap','-json -canskip'))
+VCTRL.importSettings(FILE.load('conf/touch','-json -canskip'))
 --------------------------------------------------------------
 -- Load SOURCE ONLY resources
 SHADER={}
