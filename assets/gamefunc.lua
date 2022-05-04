@@ -22,6 +22,7 @@ function playBgm(name,args)
     if bgmList[name][1] then
         BGM.play(bgmList[name],args)
     else
+        if not args then args='-full' end
         if args:sArg('-simp') then
             BGM.play(bgmList[name].base,args)
         elseif args:sArg('-base') then
@@ -33,8 +34,6 @@ function playBgm(name,args)
             end
         elseif args:sArg('-full') then
             BGM.play(bgmList[name].full,args)
-        else
-            error("Wrong bgm args: "..tostring(args))
         end
     end
 end
