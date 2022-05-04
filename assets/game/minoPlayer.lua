@@ -412,8 +412,8 @@ function MP:createMoveParticle(x1,y1,x2,y2)
     p:setEmissionArea('none')
     for x=x1,x2,x2>x1 and 1 or -1 do for y=y1,y2,y2>y1 and 1 or -1 do
         p:setPosition(
-            -200+(x+math.random()*#self.hand.matrix[1]-1)*40,
-            400-(y+math.random()*#self.hand.matrix-1)*40
+            (x+math.random()*#self.hand.matrix[1]-1)*40,
+            -(y+math.random()*#self.hand.matrix-1)*40
         )
         p:emit(1)
     end end
@@ -422,14 +422,14 @@ function MP:createFrenzyParticle(amount)
     local p=self.particles.star
     p:setParticleLifetime(.626,1.6)
     p:setEmissionArea('uniform',200,400,0,true)
-    p:setPosition(0,0)
+    p:setPosition(200,-400)
     p:emit(amount)
 end
 function MP:createLockParticle(x,y)
     local p=self.particles.trail
     p:setPosition(
-        -200+(x+#self.hand.matrix[1]/2-1)*40,
-        400-(y+#self.hand.matrix/2-1)*40
+        (x+#self.hand.matrix[1]/2-1)*40,
+        -(y+#self.hand.matrix/2-1)*40
     )
     p:emit(1)
 end
@@ -1316,6 +1316,8 @@ function MP:render()
     -- applyFieldTransform
     gc.push('transform')
     gc.translate(-200,400)
+
+    -- startFieldStencil
     GC.stc_setComp('equal',1)
     GC.stc_rect(0,0,400,-920)
     gc.scale(10/settings.fieldW)
@@ -1388,14 +1390,16 @@ function MP:render()
     self:triggerEvent('drawInField')
 
 
-    -- popFieldTransform
+    -- stopFieldStencil
     GC.stc_stop()
-    gc.pop()
 
     -- Particles
     gc.setColor(1,1,1)
     gc.draw(self.particles.star)
     gc.draw(self.particles.trail)
+
+    -- popFieldTransform
+    gc.pop()
 
     -- Field border
     skin.drawFieldBorder()
