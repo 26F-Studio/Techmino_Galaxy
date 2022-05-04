@@ -2,11 +2,12 @@ local gc=love.graphics
 
 local max,min=math.max,math.min
 local floor,ceil=math.floor,math.ceil
-local abs=math.abs
+local abs,rnd=math.abs,math.random
 local ins,rem=table.insert,table.remove
 
 local sign,expApproach=MATH.sign,MATH.expApproach
 local inst=SFX.playSample
+
 local particleTemplates do
     local p={}
     p.star=gc.newParticleSystem(GC.load{7,7,
@@ -412,8 +413,8 @@ function MP:createMoveParticle(x1,y1,x2,y2)
     p:setEmissionArea('none')
     for x=x1,x2,x2>x1 and 1 or -1 do for y=y1,y2,y2>y1 and 1 or -1 do
         p:setPosition(
-            (x+math.random()*#self.hand.matrix[1]-1)*40,
-            -(y+math.random()*#self.hand.matrix-1)*40
+            (x+rnd()*#self.hand.matrix[1]-1)*40,
+            -(y+rnd()*#self.hand.matrix-1)*40
         )
         p:emit(1)
     end end
@@ -1318,7 +1319,7 @@ function MP:render()
     gc.translate(-200,400)
 
     -- startFieldStencil
-    GC.stc_setComp('equal',1)
+    GC.stc_setComp()
     GC.stc_rect(0,0,400,-920)
     gc.scale(10/settings.fieldW)
 
