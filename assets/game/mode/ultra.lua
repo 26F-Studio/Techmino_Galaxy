@@ -1,16 +1,14 @@
 local gc=love.graphics
 
 return {
+    initialize=function()
+        playBgm('sakura','-noloop')
+        BGM.set('all','seek',0)
+    end,
     settings={
         dropDelay=1000,
         lockDelay=1000,
         event={
-            playerInit=function(P)
-                if P.isMain then
-                    playBgm('sakura','-noloop')
-                    BGM.set('all','seek',0)
-                end
-            end,
             always=function(P)
                 if P.gameTime>=120000 then
                     P:gameover('AC')

@@ -1,15 +1,14 @@
 local gc=love.graphics
 
 return {
+    initialize=function()
+        playBgm('race','-base')
+        BG.set('none')
+    end,
     settings={
         dropDelay=1000,
         lockDelay=1000,
         event={
-            playerInit=function(P)
-                if P.isMain then
-                    playBgm('race','-base')
-                end
-            end,
             afterClear=function(P)
                 P.modeData.line=math.min(P.modeData.line+P.clearHistory[#P.clearHistory].line,40)
                 if P.modeData.line>=40 then P:gameover('AC') end

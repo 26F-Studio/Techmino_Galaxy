@@ -34,9 +34,6 @@ function GAME.reset(mode,seed)
     GAME.mainPID=false
     GAME.seed=seed or math.random(2^16,2^26)
     GAME.mode=mode and getMode(mode) or NONE
-    if GAME.mode.bgm then
-        BGM.play(GAME.mode.bgm)
-    end
 end
 
 function GAME.newPlayer(id,pType)
@@ -69,20 +66,24 @@ end
 
 function GAME.start()
     if GAME.mainPID then GAME.players[GAME.mainPID]:loadSettings(SETTINGS.game) end
+    if GAME.mode.initialize then GAME.mode.initialize() end
     if GAME.mode.settings then
         for _,P in next,GAME.players do
             P:loadSettings(GAME.mode.settings)
         end
     end
 
-    if GAME.mode.layout then
-        
-    end
-
     for _,P in next,GAME.players do
         P:initialize()
         P:triggerEvent('playerInit')
-        P:setPosition(800,500)
+    end
+
+    if GAME.mode.layout then
+        -- TODO
+    else
+        for _,P in next,GAME.players do
+            P:setPosition(800,500)
+        end
     end
 end
 
