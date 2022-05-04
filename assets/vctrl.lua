@@ -333,6 +333,7 @@ function VCTRL.addButton()
         for i=1,#VCTRL do
             if VCTRL[i].type=='button' and VCTRL[i].key=='vk_'..k then
                 k=k+1
+                if k>26 then return end
                 flag=true
             end
         end
