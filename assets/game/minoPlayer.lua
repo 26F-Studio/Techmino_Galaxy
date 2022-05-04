@@ -948,7 +948,10 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
             }
             if M.clear.combo>1 then
                 self.texts:add{
-                    text=Text.combo(M.clear.combo-1),
+                    text=
+                        M.clear.combo<11 and Text.combo_small:repD(M.clear.combo-1) or
+                        M.clear.combo<21 and Text.combo_large:repD(M.clear.combo-1) or
+                        Text.mega_combo,
                     a=.7-.3/(2+M.clear.combo),
                     y=60,
                     fontSize=15+min(M.clear.combo,15)*5,

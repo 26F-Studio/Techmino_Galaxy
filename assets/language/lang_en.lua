@@ -24,14 +24,9 @@ return {
         "Impossicrash",
     },
 
-    combo=function(c)
-        if     c<=9  then return c.." Combo"
-        elseif c<=13 then return c.." Combo!"
-        elseif c<=16 then return c.." Combo!!"
-        elseif c<=19 then return c.." Combo!!!"
-        else              return "MEGACMB"
-        end
-    end,
+    combo_small="$1 Combo",
+    combo_large="$1 Combo!",
+    mega_combo="MEGACMB",
 
     spin='$1-spin',
     tuck='Tuck',
