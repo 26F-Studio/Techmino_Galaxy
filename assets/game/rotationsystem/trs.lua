@@ -149,11 +149,13 @@ TRS[6]={
                                     test.free=='MOV' and (P:ifoverlap(newMatrix,x,y-1) and P:ifoverlap(newMatrix,x,y+1))
                                 )
                             then
+                                -- Apply transformation
                                 C.shape=test.shape
                                 C.matrix=newMatrix
                                 C.direction=test.direcion
                                 C.spinSeq=''
 
+                                -- Overwrite origin state (keep shape when hold)
                                 C._origin.shape=test.shape
                                 C._origin.direction=test.direcion
                                 C._origin.matrix=test.direcion==0 and newMatrix or test.direcion==2 and TABLE.rotate(newMatrix,'F') or error("Oh I forgot this")
@@ -161,6 +163,15 @@ TRS[6]={
                                 P:moveHand('rotate',x,y,dir,ifInit)
                                 P:freshGhost()
                                 P:playSound('rotate_special')
+
+                                -- Create particles
+                                local p=P.particles.star
+                                local w,h=#newMatrix[1],#newMatrix
+                                p:setParticleLifetime(.26,1.26)
+                                p:setEmissionArea('uniform',(w/2+.5)*40,(h/2+.5)*40,0,true)
+                                p:setPosition((P.handX-1+w/2)*40,-(P.handY-1+h/2)*40)
+                                p:emit(26)
+
                                 transformed=true
                                 break
                             end
