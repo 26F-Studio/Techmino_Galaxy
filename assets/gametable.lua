@@ -256,6 +256,9 @@ settings={
         updRate=100,
         drawRate=30,
 
+        -- Gameplay
+        touchControl=false,
+
         -- Other
         powerInfo=true,
         sysCursor=false,

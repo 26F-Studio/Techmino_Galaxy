@@ -41,13 +41,13 @@ function scene.keyUp(key)
 end
 
 function scene.touchDown(x,y,id)
-    if VCTRL.press(x,y,id) then return end
+    if SETTINGS.system.touchControl then VCTRL.press(x,y,id) end
 end
 function scene.touchMove(x,y,_,_,id)
-    VCTRL.move(x,y,id)
+    if SETTINGS.system.touchControl then VCTRL.move(x,y,id) end
 end
 function scene.touchUp(_,_,id)
-    VCTRL.release(id)
+    if SETTINGS.system.touchControl then VCTRL.release(id) end
 end
 
 scene.mouseDown=scene.touchDown
@@ -62,7 +62,7 @@ function scene.draw()
     GAME.render()
 
     gc.replaceTransform(SCR.xOy)
-    VCTRL.draw()
+    if SETTINGS.system.touchControl then VCTRL.draw() end
 
     if SETTINGS.system.showTouch then
         gc.setColor(1,1,1,.5)
