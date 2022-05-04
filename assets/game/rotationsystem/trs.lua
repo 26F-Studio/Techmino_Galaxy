@@ -80,21 +80,36 @@ TRS[5]={
 }-- T
 local Ocells={{1,1},{1,2},{2,1},{2,2}}
 local OspinList={
-    {seq='RRR',shape=5,direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, {seq='RRR',shape=5,direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, -- T
-    {seq='LLL',shape=5,direcion=2,bias={-1,-1},free='FIX',target={1,3,4,2}}, {seq='LLL',shape=5,direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, -- T
+    {seq='RRR',shape=5,direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, -- T(down)
+    {seq='RRR',shape=5,direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, -- T(squash)
+    {seq='LLL',shape=5,direcion=2,bias={-1,-1},free='FIX',target={1,3,4,2}}, -- T(down)
+    {seq='LLL',shape=5,direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, -- T(squash)
     {seq='RRR',shape=5,direcion=0,bias={-1, 0},free='FIX',target={1,2,4,3}}, -- T(mini)
     {seq='LLL',shape=5,direcion=0,bias={ 0, 0},free='FIX',target={3,1,2,4}}, -- T(mini)
-    {seq='LRL',shape=1,direcion=2,bias={-1, 0},free='FIX',target={1,2,3,4}}, {seq='LRL',shape=1,direcion=2,bias={ 0,-1},free='FIX',target={1,2,3,4}}, {seq='LRL',shape=1,direcion=2,bias={ 0, 0},free='FIX',target={1,2,3,4}}, -- Z
-    {seq='RLR',shape=2,direcion=2,bias={ 0, 0},free='FIX',target={1,2,3,4}}, {seq='RLR',shape=2,direcion=2,bias={-1,-1},free='FIX',target={1,2,3,4}}, {seq='RLR',shape=2,direcion=2,bias={-1, 0},free='FIX',target={1,2,3,4}}, -- S
-    {seq='LLR',shape=3,direcion=2,bias={ 0,-1},free='MOV',target={2,1,3,4}}, -- J(farDown) -- 2,3,1,4?
-    {seq='RRL',shape=4,direcion=2,bias={-1,-1},free='MOV',target={1,3,4,2}}, -- L(farDown) -- 1,3,2,4?
-    {seq='RRL',shape=3,direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, {seq='RRL',shape=3,direcion=0,bias={ 0, 0},free='FIX',target={1,2,4,3}}, -- J
-    {seq='LLR',shape=4,direcion=2,bias={ 0,-1},free='FIX',target={1,3,4,2}}, {seq='LLR',shape=4,direcion=0,bias={-1, 0},free='FIX',target={3,1,2,4}}, -- L
-
-    {seq='FFF',shape=7,direcion=0,bias={-1, 1},free='MOV',target={3,1,2,4}}, {seq='FFF',shape=7,direcion=0,bias={-2, 1},free='MOV',target={3,1,2,4}}, {seq='FFF',shape=7,direcion=0,bias={ 0, 1},free='MOV',target={3,1,2,4}}, -- I(high)
-    {seq='FFF',shape=7,direcion=2,bias={-1, 0},free='ANY',target={1,3,4,2}}, {seq='FFF',shape=7,direcion=2,bias={-2, 0},free='ANY',target={1,3,4,2}}, {seq='FFF',shape=7,direcion=2,bias={ 0, 0},free='ANY',target={1,3,4,2}}, -- I(low)
-    {seq='RFR',shape=6,direcion=0,bias={ 1,-1},free='ANY',target={2,4,1,3}}, {seq='RRF',shape=6,direcion=0,bias={ 2,-1},free='ANY',target={2,4,1,3}}, {seq='RFF',shape=6,direcion=0,bias={ 1,-2},free='ANY',target={2,4,1,3}}, -- O
-    {seq='LFL',shape=6,direcion=0,bias={-1,-1},free='ANY',target={3,1,4,2}}, {seq='LLF',shape=6,direcion=0,bias={-2,-1},free='ANY',target={3,1,4,2}}, {seq='LFF',shape=6,direcion=0,bias={-1,-2},free='ANY',target={3,1,4,2}}, -- O
+    {seq='LRL',shape=1,direcion=2,bias={ 0, 0},free='FIX',target={1,2,3,4}}, -- Z(downshift)
+    {seq='LRL',shape=1,direcion=2,bias={ 0,-1},free='FIX',target={1,2,3,4}}, -- Z(squash)
+    {seq='LRL',shape=1,direcion=2,bias={-1, 0},free='FIX',target={1,2,3,4}}, -- Z(upshift)
+    {seq='RLR',shape=2,direcion=2,bias={-1, 0},free='FIX',target={1,2,3,4}}, -- S(downshift)
+    {seq='RLR',shape=2,direcion=2,bias={-1,-1},free='FIX',target={1,2,3,4}}, -- S(squash)
+    {seq='RLR',shape=2,direcion=2,bias={ 0, 0},free='FIX',target={1,2,3,4}}, -- S(upshift)
+    {seq='LLR',shape=3,direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, -- J(farDown) -- 2,3,1,4?
+    {seq='RRL',shape=4,direcion=2,bias={-1,-1},free='FIX',target={1,3,4,2}}, -- L(farDown) -- 1,3,2,4?
+    {seq='RRL',shape=3,direcion=0,bias={ 0, 0},free='FIX',target={1,2,4,3}}, -- J(shoe)
+    {seq='RRL',shape=3,direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, -- J(gun)
+    {seq='LLR',shape=4,direcion=0,bias={-1, 0},free='FIX',target={3,1,2,4}}, -- L(shoe)
+    {seq='LLR',shape=4,direcion=2,bias={ 0,-1},free='FIX',target={1,3,4,2}}, -- L(gun)
+    {seq='FFF',shape=7,direcion=0,bias={ 0, 1},free='MOV',target={3,1,2,4}}, -- I(high-R)
+    {seq='FFF',shape=7,direcion=0,bias={-2, 1},free='MOV',target={3,1,2,4}}, -- I(high)
+    {seq='FFF',shape=7,direcion=0,bias={-1, 1},free='MOV',target={3,1,2,4}}, -- I(high-L)
+    {seq='FFF',shape=7,direcion=2,bias={ 0, 0},free='ANY',target={1,3,4,2}}, -- I(low-R)
+    {seq='FFF',shape=7,direcion=2,bias={-2, 0},free='ANY',target={1,3,4,2}}, -- I(low)
+    {seq='FFF',shape=7,direcion=2,bias={-1, 0},free='ANY',target={1,3,4,2}}, -- I(low-L)
+    {seq='RFR',shape=6,direcion=0,bias={ 1,-1},free='ANY',target={2,4,1,3}}, -- O(+1-1)
+    {seq='RRF',shape=6,direcion=0,bias={ 2,-1},free='ANY',target={2,4,1,3}}, -- O(+2-1)
+    {seq='RFF',shape=6,direcion=0,bias={ 1,-2},free='ANY',target={2,4,1,3}}, -- O(+1-2)
+    {seq='LFL',shape=6,direcion=0,bias={-1,-1},free='ANY',target={3,1,4,2}}, -- O(-1-1)
+    {seq='LLF',shape=6,direcion=0,bias={-2,-1},free='ANY',target={3,1,4,2}}, -- O(-2-1)
+    {seq='LFF',shape=6,direcion=0,bias={-1,-2},free='ANY',target={3,1,4,2}}, -- O(-1-2)
 }
 TRS[6]={
     [0]={center={1,1}},
@@ -118,23 +133,20 @@ TRS[6]={
                             local newMatrix=TABLE.shift(Minos[test.shape].shape)
                             if test.direcion==2 then newMatrix=TABLE.rotate(newMatrix,'F') end
                             local c=0
-                            for y=1,#newMatrix do
-                                for x=1,#newMatrix[1] do
-                                    if newMatrix[y][x] then
-                                        c=c+1
-                                        newMatrix[y][x]=C.matrix[Ocells[test.target[c]][1]][Ocells[test.target[c]][2]]
-                                    end
+                            for y=1,#newMatrix do for x=1,#newMatrix[1] do
+                                if newMatrix[y][x] then
+                                    c=c+1
+                                    newMatrix[y][x]=C.matrix[Ocells[test.target[c]][1]][Ocells[test.target[c]][2]]
                                 end
-                            end
+                            end end
 
                             local x,y=P.handX+test.bias[1],P.handY+test.bias[2]
                             if
-                                P.deathTimer or (
-                                    not P:ifoverlap(newMatrix,x,y) and (
-                                        test.free~='FIX' or (P:ifoverlap(newMatrix,x-1,y) and P:ifoverlap(newMatrix,x+1,y))
-                                    ) and (
-                                        test.free=='ANY' or (P:ifoverlap(newMatrix,x,y-1) and P:ifoverlap(newMatrix,x,y+1))
-                                    )
+                                P.deathTimer or
+                                not P:ifoverlap(newMatrix,x,y) and (
+                                    test.free=='ANY' and (true) or
+                                    test.free=='FIX' and (P:ifoverlap(newMatrix,x-1,y) and P:ifoverlap(newMatrix,x+1,y) and P:ifoverlap(newMatrix,x,y-1) and P:ifoverlap(newMatrix,x,y+1)) or
+                                    test.free=='MOV' and (P:ifoverlap(newMatrix,x,y-1) and P:ifoverlap(newMatrix,x,y+1))
                                 )
                             then
                                 C.shape=test.shape
