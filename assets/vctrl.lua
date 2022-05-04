@@ -11,7 +11,7 @@ function button:new(data)
         available=data.available or data.available==nil,
         x=data.x or SCR.w0/2,
         y=data.y or SCR.h0/2,
-        r=data.r or 70,
+        r=data.r or 80,
         shape=data.shape or 'circle',
         lastPressTime=-1e99,
         key=data.key or 'X',
@@ -338,7 +338,7 @@ function VCTRL.addButton()
             end
         end
     until not flag
-    table.insert(VCTRL,button:new{x=SCR.w0/2,y=SCR.h0/2,r=70,shape='circle',key='vk_'..k})
+    table.insert(VCTRL,button:new{x=SCR.w0/2,y=SCR.h0/2,r=80,shape='circle',key='vk_'..k})
 end
 
 function VCTRL.removeButton()
