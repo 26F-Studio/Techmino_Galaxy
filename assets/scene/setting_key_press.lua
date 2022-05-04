@@ -21,7 +21,6 @@ function scene.keyDown(key,isRep)
         if L then TABLE.cut(L) end
         result=Text.setting_key_deleted
         SFX.play('beep2')
-        SCN.pop() SCN.swapTo('setting_key','none')
     else
         result=key
         KEYMAP.remKey(key)
