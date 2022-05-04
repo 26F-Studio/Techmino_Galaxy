@@ -9,6 +9,8 @@ function scene.keyDown(key,isRep)
     if isRep then return end
     if key=='return' then
         SCN.go('game_simp',nil,'sprint')
+    elseif key=='c' then
+        SCN.go('_console')
     end
 end
 
