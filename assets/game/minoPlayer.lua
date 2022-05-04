@@ -529,6 +529,7 @@ end
 function MP:resetPos()-- Move hand piece to the normal spawn position
     self:moveHand('reset',floor(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
     self.minY=self.handY
+    self.ghostY=self.handY
     self:resetPosCheck()
 end
 function MP:resetPosCheck()
@@ -893,6 +894,8 @@ function MP:hold_float()
     end
 end
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
+    if not self.hand then return end
+
     -- Move down
     if self.handY>self.ghostY then
         self:moveHand('drop',self.ghostY-self.handY)
