@@ -13,6 +13,15 @@ local function getMode(name)
     end
 end
 
+local layoutFuncs=setmetatable({},{__index=function(self,k)
+    return k==nil and self.default or error("Layout '"..tostring(k).."' not exist")
+end})
+function layoutFuncs.default()
+    for _,P in next,GAME.players do
+        P:setPosition(800,500)
+    end
+end
+
 local GAME={
     players={},
     playersCount=0,
@@ -78,13 +87,7 @@ function GAME.start()
         P:triggerEvent('playerInit')
     end
 
-    if GAME.mode.layout then
-        -- TODO
-    else
-        for _,P in next,GAME.players do
-            P:setPosition(800,500)
-        end
-    end
+    layoutFuncs[GAME.mode.layout]()
 end
 
 function GAME.press(action,id)

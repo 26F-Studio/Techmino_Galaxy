@@ -5,5 +5,4 @@ return {
         infHold=true,
         readyDelay=1000,
     },
-    layout='test',
 }
