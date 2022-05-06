@@ -2,6 +2,8 @@ local gc=love.graphics
 
 return {
     initialize=function()
+        GAME.newPlayer(1,'mino')
+        GAME.setMain(1)
         playBgm('race','-base')
         BG.set('none')
     end,

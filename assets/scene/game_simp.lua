@@ -8,8 +8,6 @@ local repMode=false
 function scene.enter()
     VCTRL.reset()
     GAME.reset(SCN.args[1])
-    GAME.newPlayer(1,'mino')
-    GAME.setMain(1)
     GAME.start()
 end
 

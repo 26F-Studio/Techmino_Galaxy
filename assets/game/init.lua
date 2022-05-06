@@ -14,7 +14,13 @@ local function getMode(name)
 end
 
 local layoutFuncs=setmetatable({},{__index=function(self,k)
-    return k==nil and self.default or error("Layout '"..tostring(k).."' not exist")
+    if k==nil then
+        return self.default
+    elseif type(k)=='string' then
+        return self[k] or error("Layout '"..tostring(k).."' not exist")
+    else
+        error("Layout must be string")
+    end
 end})
 function layoutFuncs.default()
     for _,P in next,GAME.players do
@@ -43,6 +49,7 @@ function GAME.reset(mode,seed)
     GAME.mainPID=false
     GAME.seed=seed or math.random(2^16,2^26)
     GAME.mode=mode and getMode(mode) or NONE
+    if GAME.mode.initialize then GAME.mode.initialize() end
 end
 
 function GAME.newPlayer(id,pType)
@@ -75,7 +82,6 @@ end
 
 function GAME.start()
     if GAME.mainPID then GAME.players[GAME.mainPID]:loadSettings(SETTINGS.game) end
-    if GAME.mode.initialize then GAME.mode.initialize() end
     if GAME.mode.settings then
         for _,P in next,GAME.players do
             P:loadSettings(GAME.mode.settings)
@@ -87,7 +93,11 @@ function GAME.start()
         P:triggerEvent('playerInit')
     end
 
-    layoutFuncs[GAME.mode.layout]()
+    if type(GAME.mode.layout)=='function' then
+        GAME.mode.layout()
+    else
+        layoutFuncs[GAME.mode.layout]()
+    end
 end
 
 function GAME.press(action,id)
