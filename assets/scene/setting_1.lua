@@ -35,20 +35,21 @@ scene.widgetList={
     WIDGET.new{type='slider',     pos={0,0},x=260, y=100,w=1000,    text=LANG'setting_das',         widthLimit=260,axis={0,260,1},smooth=true,   disp=TABLE.func_getVal(SETTINGS.game,'das'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game,'das')},
     WIDGET.new{type='slider',     pos={0,0},x=260, y=160,w=1000,    text=LANG'setting_arr',         widthLimit=260,axis={0,120,1},smooth=true,   disp=TABLE.func_getVal(SETTINGS.game,'arr'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game,'arr')},
     WIDGET.new{type='slider',     pos={0,0},x=260, y=220,w=1000,    text=LANG'setting_sdarr',       widthLimit=260,axis={0,100,1},smooth=true,   disp=TABLE.func_getVal(SETTINGS.game,'sdarr'),      valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game,'sdarr')},
+    WIDGET.new{type='slider',     pos={0,0},x=260, y=280,w=1000,    text=LANG'setting_dascut',      widthLimit=260,axis={0,100,1},smooth=true,   disp=TABLE.func_getVal(SETTINGS.game,'dascut'),     valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game,'dascut')},
 
     -- Game: video
-    WIDGET.new{type='slider_fill',pos={0,0},x=260, y=280,w=500,     text=LANG'setting_shakeness',   widthLimit=260,axis={0,1},                   disp=TABLE.func_getVal(SETTINGS.game,'shakeness'),                             code=TABLE.func_setVal(SETTINGS.game,'shakeness')},
+    WIDGET.new{type='slider_fill',pos={0,0},x=260, y=340,w=500,     text=LANG'setting_shakeness',   widthLimit=260,axis={0,1},                   disp=TABLE.func_getVal(SETTINGS.game,'shakeness'),                             code=TABLE.func_setVal(SETTINGS.game,'shakeness')},
 
     -- System: audio
-    WIDGET.new{type='slider_fill',pos={0,0},x=260, y=370,w=500,h=35,text=LANG'setting_mainVol',     widthLimit=260,                              disp=TABLE.func_getVal(SETTINGS.system,'mainVol'),                             code=TABLE.func_setVal(SETTINGS.system,'mainVol')},
-    WIDGET.new{type='slider_fill',pos={0,0},x=260, y=420,w=500,h=35,text=LANG'setting_bgm',         widthLimit=260,                              disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),                              code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
-    WIDGET.new{type='slider_fill',pos={0,0},x=260, y=470,w=500,h=35,text=LANG'setting_sfx',         widthLimit=260,                              disp=TABLE.func_getVal(SETTINGS.system,'sfxVol'),                              code=TABLE.func_setVal(SETTINGS.system,'sfxVol')},
+    WIDGET.new{type='slider_fill',pos={0,0},x=260, y=430,w=500,h=35,text=LANG'setting_mainVol',     widthLimit=260,                              disp=TABLE.func_getVal(SETTINGS.system,'mainVol'),                             code=TABLE.func_setVal(SETTINGS.system,'mainVol')},
+    WIDGET.new{type='slider_fill',pos={0,0},x=260, y=480,w=500,h=35,text=LANG'setting_bgm',         widthLimit=260,                              disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),                              code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
+    WIDGET.new{type='slider_fill',pos={0,0},x=260, y=530,w=500,h=35,text=LANG'setting_sfx',         widthLimit=260,                              disp=TABLE.func_getVal(SETTINGS.system,'sfxVol'),                              code=TABLE.func_setVal(SETTINGS.system,'sfxVol')},
 
     -- System: video
-    WIDGET.new{type='slider_fill',pos={0,0},x=260, y=570,w=500,     text=LANG'setting_hitWavePower',widthLimit=260,axis={0,1},                   disp=TABLE.func_getVal(SETTINGS.system,'hitWavePower'),                        code=TABLE.func_setVal(SETTINGS.system,'hitWavePower')},
-    WIDGET.new{type='slider',     pos={0,0},x=260, y=630,w=500,     text=LANG'setting_maxFPS',      widthLimit=260,axis={120,400,10},smooth=true,disp=TABLE.func_getVal(SETTINGS.system,'maxFPS'),   valueShow=sliderShow_fps,  code=TABLE.func_setVal(SETTINGS.system,'maxFPS')},
-    WIDGET.new{type='slider',     pos={0,0},x=260, y=680,w=500,     text=LANG'setting_updRate',     widthLimit=260,axis={20,100,10},             disp=TABLE.func_getVal(SETTINGS.system,'updRate'),  valueShow=sliderShow_mul,  code=TABLE.func_setVal(SETTINGS.system,'updRate')},
-    WIDGET.new{type='slider',     pos={0,0},x=260, y=730,w=500,     text=LANG'setting_drawRate',    widthLimit=260,axis={20,100,10},             disp=TABLE.func_getVal(SETTINGS.system,'drawRate'), valueShow=sliderShow_mul,  code=TABLE.func_setVal(SETTINGS.system,'drawRate')},
+    WIDGET.new{type='slider_fill',pos={0,0},x=260, y=630,w=500,     text=LANG'setting_hitWavePower',widthLimit=260,axis={0,1},                   disp=TABLE.func_getVal(SETTINGS.system,'hitWavePower'),                        code=TABLE.func_setVal(SETTINGS.system,'hitWavePower')},
+    WIDGET.new{type='slider',     pos={0,0},x=260, y=690,w=500,     text=LANG'setting_maxFPS',      widthLimit=260,axis={120,400,10},smooth=true,disp=TABLE.func_getVal(SETTINGS.system,'maxFPS'),   valueShow=sliderShow_fps,  code=TABLE.func_setVal(SETTINGS.system,'maxFPS')},
+    WIDGET.new{type='slider',     pos={0,0},x=260, y=740,w=500,     text=LANG'setting_updRate',     widthLimit=260,axis={20,100,10},             disp=TABLE.func_getVal(SETTINGS.system,'updRate'),  valueShow=sliderShow_mul,  code=TABLE.func_setVal(SETTINGS.system,'updRate')},
+    WIDGET.new{type='slider',     pos={0,0},x=260, y=790,w=500,     text=LANG'setting_drawRate',    widthLimit=260,axis={20,100,10},             disp=TABLE.func_getVal(SETTINGS.system,'drawRate'), valueShow=sliderShow_mul,  code=TABLE.func_setVal(SETTINGS.system,'drawRate')},
 
     -- System: other
     WIDGET.new{type='checkBox',   pos={1,0},x=-420,y=370,           text=LANG'setting_sysCursor',   widthLimit=360,labelPos='right',             disp=TABLE.func_getVal(SETTINGS.system,'sysCursor'),                           code=TABLE.func_revVal(SETTINGS.system,'sysCursor')},

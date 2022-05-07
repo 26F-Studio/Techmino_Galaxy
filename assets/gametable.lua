@@ -272,6 +272,7 @@ settings={
         das=75,
         arr=0,
         sdarr=0,
+        dascut=0,
 
         -- Video
         shakeness=.6,

@@ -575,6 +575,10 @@ function MP:resetPosCheck()
         self:rotate(self.keyBuffer.rotate,true)
         self.keyBuffer.rotate=false
     end
+
+    if self.settings.dascut>0 then--DAS cut
+        self.moveCharge=self.moveCharge-self.settings.dascut
+    end
 end
 function MP:freshGhost(justFreshGhost)
     if self.hand then
@@ -1516,6 +1520,7 @@ local baseEnv={-- Generate from template in future
     das=162,
     arr=26,
     sdarr=12,
+    dascut=0,
     skin='default',
 
     shakeness=.26,

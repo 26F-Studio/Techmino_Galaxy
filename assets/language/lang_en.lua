@@ -41,6 +41,7 @@ return {
     setting_das="DAS",
     setting_arr="ARR",
     setting_sdarr="SDARR",
+    setting_dascut="DAS Cut",
     setting_shakeness="Shakeness",
     setting_hitWavePower="Hitwave Power",
 
