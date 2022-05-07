@@ -1086,12 +1086,6 @@ function MP:changeFieldWidth(w,origPos)
     end
 end
 function MP:gameover(reason)
-    if self.finished then return end
-    self.timing=false
-    self.finished=true
-    self.hand=false
-    self.spawnTimer=1e99
-
     --[[
         Reason can be:
         AC:  Win
@@ -1104,11 +1098,20 @@ function MP:gameover(reason)
         PE:  Mission failed
         RE:  Other reason
     ]]
+
+    if self.finished then return end
+    self.timing=false
+    self.finished=true
+    self.hand=false
+    self.spawnTimer=1e99
+
     self:triggerEvent('gameOver',reason)
 
     -- <Temporarily>
-    MES.new(reason=='AC' and 'check' or 'error',reason,6.26)
-    self:playSound(reason=='AC' and 'win' or 'lose')
+    if self.isMain then
+        MES.new(reason=='AC' and 'check' or 'error',reason,6.26)
+        self:playSound(reason=='AC' and 'win' or 'lose')
+    end
     -- </Temporarily>
 end
 --------------------------------------------------------------
