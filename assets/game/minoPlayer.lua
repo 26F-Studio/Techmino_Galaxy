@@ -1308,8 +1308,6 @@ function MP:render()
     gc.push('transform')
 
     -- applyPlayerTransform
-    gc.setCanvas({Zenitha.getBigCanvas('player'),stencil=true})
-    gc.clear(1,1,1,0)
     gc.translate(self.pos.x+self.pos.dx,self.pos.y+self.pos.dy)
     gc.scale(self.pos.k*(1+self.pos.dk))
     gc.rotate(self.pos.a+self.pos.da)
@@ -1384,7 +1382,7 @@ function MP:render()
         settings.spawnH*40,  -- (pixels) Spawning height
         settings.lockoutH*40,-- (pixels) lock-out height
         settings.deathH*40,  -- (pixels) Death height
-        1260                 -- (pixels) Void height
+        1260*40              -- (pixels) Void height
     )
 
 
@@ -1463,7 +1461,6 @@ function MP:render()
     end
     gc.setBlendMode('alpha')
     gc.setColorMask()
-    gc.setCanvas()
 
     gc.pop()
 end
