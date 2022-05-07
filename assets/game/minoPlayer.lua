@@ -481,7 +481,7 @@ function MP:moveHand(action,a,b,c,d)
             self:playSound('rotate_locked')
         end
         if self.settings.spin_corners then
-            local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
+            local minoData=MinoRotSys[self.settings.rotSys][self.hand.shape]
             local state=minoData[self.hand.direction]
             local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
             if centerPos then
@@ -784,7 +784,7 @@ function MP:moveDown()
 end
 function MP:rotate(dir,ifInit)
     if not self.hand then return end
-    local minoData=RotationSys[self.settings.rotSys][self.hand.shape]
+    local minoData=MinoRotSys[self.settings.rotSys][self.hand.shape]
     if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F ("..tostring(dir)..")") end
 
     if minoData.rotate then-- Custom rotate function
@@ -919,93 +919,9 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     self:playSound('lock')
     self:triggerEvent('afterLock')
 
-    -- Check field
-    do
-        local M=self.lastMovement
-        local text=''
-        local spin=M.action=='rotate' and (M.immobile or M.corners)
-        M.clear=self:checkField()
-        if M.clear then
-            self:createFrenzyParticle(M.clear.line*26)
-            GAME._addHitWave(.5,.5,M.clear.line)
-            local textDuration=M.clear.line/3
-            if spin then
-                text=Text.spin:repD(M.mino.name).." "
-                textDuration=textDuration+.6
-            end
-
-            if M.clear.line>=4 and M.clear.combo>1 then
-                local lastClear=self.clearHistory[#self.clearHistory-1]
-                if lastClear and M.clear.line==lastClear.line then
-                    text=text.."M-"
-                    textDuration=textDuration+.6
-                    self:playSound('frenzy')
-                end
-            end
-
-            text=text..(Text.clearName[M.clear.line] or ('['..M.clear.line..']'))
-            self.texts:add{
-                text=text,
-                a=.626,
-                fontSize=min(M.clear.line-3,0)*10+(spin and 60 or 70),
-                style=M.clear.line>=4 and 'stretch' or spin and 'spin' or 'appear',
-                duration=textDuration,
-            }
-            if M.clear.combo>1 then
-                self.texts:add{
-                    text=
-                        M.clear.combo<11 and Text.combo_small:repD(M.clear.combo-1) or
-                        M.clear.combo<21 and Text.combo_large:repD(M.clear.combo-1) or
-                        Text.mega_combo,
-                    a=.7-.3/(2+M.clear.combo),
-                    y=60,
-                    fontSize=15+min(M.clear.combo,15)*5,
-                }
-            end
-            if self.field:getHeight()==0 then
-                self.texts:add{
-                    text=Text.allClear,
-                    y=-80,
-                    a=.626,
-                    fontSize=75,
-                    style='flicker',
-                    duration=2.5,
-                }
-                self:playSound('allClear')
-            elseif M.y>self.field:getHeight() then
-                self.texts:add{
-                    text=Text.halfClear,
-                    y=-80,
-                    a=.8,
-                    fontSize=65,
-                    style='fly',
-                    duration=1.6,
-                }
-                self:playSound('halfClear')
-            end
-
-            self:playSound('combo',M.clear.combo)
-            self:playSound('clear',M.clear.line)
-            if spin then self:playSound('spin',M.clear.line) end
-
-            self:triggerEvent('afterClear',M)
-        else
-            if M.tuck then
-                text=Text.tuck
-            elseif spin then
-                text=Text.spin:repD(M.mino.name)
-                self:playSound('spin',0)
-            end
-            if #text>0 then
-                self.texts:add{
-                    text=text,
-                    y=60,
-                    a=.4,
-                    duration=.8,
-                }
-            end
-        end
-    end
+    -- Calculate bonus
+    local clearInfo=self:checkField()
+    self:clearEffect(clearInfo)
 
     -- Discard hand
     self.hand=false
@@ -1066,6 +982,91 @@ function MP:checkField()-- Check line clear, top out checking, etc.
         end
     end
     return false
+end
+function MP:clearEffect(clearInfo)
+    local M=self.lastMovement
+    local text=''
+    local spin=M.action=='rotate' and (M.immobile or M.corners)
+    M.clear=clearInfo
+    if M.clear then
+        self:createFrenzyParticle(M.clear.line*26)
+        local textDuration=M.clear.line/3
+        if spin then
+            text=Text.spin:repD(M.mino.name).." "
+            textDuration=textDuration+.6
+        end
+
+        if M.clear.line>=4 and M.clear.combo>1 then
+            local lastClear=self.clearHistory[#self.clearHistory-1]
+            if lastClear and M.clear.line==lastClear.line then
+                text=text.."M-"
+                textDuration=textDuration+.6
+                self:playSound('frenzy')
+            end
+        end
+
+        text=text..(Text.clearName[M.clear.line] or ('['..M.clear.line..']'))
+        self.texts:add{
+            text=text,
+            a=.626,
+            fontSize=min(M.clear.line-3,0)*10+(spin and 60 or 70),
+            style=M.clear.line>=4 and 'stretch' or spin and 'spin' or 'appear',
+            duration=textDuration,
+        }
+        if M.clear.combo>1 then
+            self.texts:add{
+                text=
+                    M.clear.combo<11 and Text.combo_small:repD(M.clear.combo-1) or
+                    M.clear.combo<21 and Text.combo_large:repD(M.clear.combo-1) or
+                    Text.mega_combo,
+                a=.7-.3/(2+M.clear.combo),
+                y=60,
+                fontSize=15+min(M.clear.combo,15)*5,
+            }
+        end
+        if self.field:getHeight()==0 then
+            self.texts:add{
+                text=Text.allClear,
+                y=-80,
+                a=.626,
+                fontSize=75,
+                style='flicker',
+                duration=2.5,
+            }
+            self:playSound('allClear')
+        elseif M.y>self.field:getHeight() then
+            self.texts:add{
+                text=Text.halfClear,
+                y=-80,
+                a=.8,
+                fontSize=65,
+                style='fly',
+                duration=1.6,
+            }
+            self:playSound('halfClear')
+        end
+
+        self:playSound('combo',M.clear.combo)
+        self:playSound('clear',M.clear.line)
+        if spin then self:playSound('spin',M.clear.line) end
+
+        self:triggerEvent('afterClear',M)
+    else
+        if M.tuck then
+            text=Text.tuck
+        elseif spin then
+            text=Text.spin:repD(M.mino.name)
+            self:playSound('spin',0)
+        end
+        if #text>0 then
+            self.texts:add{
+                text=text,
+                y=60,
+                a=.4,
+                duration=.8,
+            }
+        end
+    end
 end
 function MP:changeFieldWidth(w,origPos)
     if w>0 and w%1==0 then
@@ -1315,8 +1316,9 @@ function MP:render()
     gc.push('transform')
 
     -- applyPlayerTransform
-    gc.translate(self.pos.x+self.pos.dx,self.pos.y+self.pos.dy)
+    gc.translate(self.pos.x,self.pos.y)
     gc.scale(self.pos.k*(1+self.pos.dk))
+    gc.translate(self.pos.dx,self.pos.dy)
     gc.rotate(self.pos.a+self.pos.da)
 
     -- applyFieldTransform
@@ -1359,7 +1361,7 @@ function MP:render()
 
             skin.drawHand(CB,self.handX,self.handY)
 
-            local RS=RotationSys[settings.rotSys]
+            local RS=MinoRotSys[settings.rotSys]
             local minoData=RS[self.hand.shape]
             local state=minoData[self.hand.direction]
             local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
@@ -1514,6 +1516,7 @@ local baseEnv={-- Generate from template in future
     rotSys='TRS',
     spin_immobile=true,
     spin_corners=3,
+    atkSys='none',
 
     freshCondition='any',
     freshCount=15,

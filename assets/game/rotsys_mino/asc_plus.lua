@@ -12,16 +12,16 @@ ASC.centerTex=GC.load{10,10,
     {'fCirc',5,5,3},
 }
 local L={'+0+0','+1+0','+0-1','+1-1','+0-2','+1-2','+2+0','+2-1','+2-2','-1+0','-1-1','+0+1','+1+1','+2+1','-1-2','-2+0','+0+2','+1+2','+2+2','-2-1','-2-2'}
-local R=RotationSys._flipList(L)
+local R=MinoRotSys._flipList(L)
 local FL={'+0+0','-1+0','+1+0','+0-1','-1-1','+1-1','+0-2','-1-2','+1-2','-2+0','+2+0','-2-1','+2-1','-2+1','+2+1','+0+2','-1+2','+1+2'}
-local FR=RotationSys._flipList(FL)
+local FR=MinoRotSys._flipList(FL)
 local Z={
     [0]={R={test=R},L={test=L},F={test=FR}},
     [1]={R={test=R},L={test=L},F={test=FL}},
     [2]={R={test=R},L={test=L},F={test=FL}},
     [3]={R={test=R},L={test=L},F={test=FR}},
 }
-local S=RotationSys._reflect(Z)
+local S=MinoRotSys._reflect(Z)
 
 ASC[1]=Z-- Z
 ASC[2]=S-- S

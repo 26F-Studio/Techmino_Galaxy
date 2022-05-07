@@ -14,7 +14,7 @@ local Z={
     [2]={R={test=R},L={test=L},F={test=L}},
     [3]={R={test=R},L={test=L},F={test=R}},
 }
-local S=RotationSys._reflect(Z)
+local S=MinoRotSys._reflect(Z)
 DRS_weak[1]=Z-- Z
 DRS_weak[2]=S-- S
 DRS_weak[3]=Z-- J

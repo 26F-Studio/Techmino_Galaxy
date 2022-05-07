@@ -53,7 +53,8 @@ SKIN=require'assets.skin'
 CHAR=require'assets.char'
 require'assets.gamefunc'
 require'assets.gametable'
-require'assets.game.rotationsystem'
+require'assets.game.rotsys_mino'
+require'assets.game.atksys_mino'
 DEBUG.checkLoadTime("Load Assets")
 --------------------------------------------------------------
 -- Config Zenitha
