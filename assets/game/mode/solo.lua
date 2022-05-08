@@ -10,6 +10,7 @@ return {
     settings={
         dropDelay=1000,
         lockDelay=1000,
+        atkSys='Modern',
         event={
             gameOver=function(P)
                 -- TODO

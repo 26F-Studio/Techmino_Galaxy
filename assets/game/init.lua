@@ -166,6 +166,7 @@ function GAME.newPlayer(id,pType)
         return
     end
     P=require'assets.game.minoPlayer'.new(GAME.mode)
+    P.gameMode=pType
     P.id=id
     P.isMain=false
     GAME.playerMap[id]=P
@@ -213,6 +214,13 @@ function GAME.release(action,id)
     if not id then id=GAME.mainPID end
     if not id then return end
     GAME.playerMap[id or GAME.mainPID]:release(action)
+end
+
+function GAME.send(source,data)
+    data.source=source
+    data.sourceMode=source.gameMode
+    MES.new('info',"+"..data.amount,0)
+    -- TODO
 end
 
 function GAME.update(dt)

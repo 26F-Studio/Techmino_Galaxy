@@ -920,8 +920,9 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     self:triggerEvent('afterLock')
 
     -- Calculate bonus
-    local clearInfo=self:checkField()
-    self:clearEffect(clearInfo)
+    self:clearEffect(self:checkField())
+    local atk=MinoAtkSys[self.settings.atkSys].drop(self)
+    if atk then GAME.send(self,atk) end
 
     -- Discard hand
     self.hand=false
@@ -1085,6 +1086,10 @@ function MP:changeFieldWidth(w,origPos)
         self.field._width=w
         self.field:fresh()
     end
+end
+function MP:changeAtkSys(sys)
+    self.atkSysData={}
+    if MinoAtkSys[sys].init then MinoAtkSys[sys].init(self) end
 end
 function MP:gameover(reason)
     --[[
@@ -1516,7 +1521,7 @@ local baseEnv={-- Generate from template in future
     rotSys='TRS',
     spin_immobile=true,
     spin_corners=3,
-    atkSys='none',
+    atkSys='None',
 
     freshCondition='any',
     freshCount=15,
@@ -1707,6 +1712,7 @@ function MP:initialize()
     self.minoCount=0
     self.combo=0
 
+    self:changeAtkSys(self.settings.atkSys)
     self.garbageBuffer={}
 
     self.nextQueue={}
