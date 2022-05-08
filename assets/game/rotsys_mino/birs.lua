@@ -57,8 +57,8 @@ for i=1,29 do
     list[i][01]=a; list[i][10]=b; list[i][03]=b; list[i][30]=a
     list[i][12]=a; list[i][21]=b; list[i][32]=b; list[i][23]=a
 end
-local function r(P,dir)
-    local C=P.hand
+local function r(self,dir)
+    local C=self.hand
 
     local icb=TABLE.rotate(C.matrix,dir)
     local idir=(C.direction+(dir=='R' and 1 or dir=='L' and 3 or 2))%4
@@ -68,12 +68,12 @@ local function r(P,dir)
     local ix,iy do
         local oldSC=MinoRotSys.BiRS[C.shape][C.direction].center
         local newSC=MinoRotSys.BiRS[C.shape][idir].center
-        ix,iy=P.handX+oldSC[1]-newSC[1],P.handY+oldSC[2]-newSC[2]
+        ix,iy=self.handX+oldSC[1]-newSC[1],self.handY+oldSC[2]-newSC[2]
     end
     local dx,dy=0,0 do
-        if P.keyState.moveLeft  and P:ifoverlap(C.matrix,P.handX-1,P.handY) then dx=dx-1 end
-        if P.keyState.moveRight and P:ifoverlap(C.matrix,P.handX+1,P.handY) then dx=dx+1 end
-        if P.keyState.softDrop  and P:ifoverlap(C.matrix,P.handX,P.handY-1) then dy=  -1 end
+        if self.keyState.moveLeft  and self:ifoverlap(C.matrix,self.handX-1,self.handY) then dx=dx-1 end
+        if self.keyState.moveRight and self:ifoverlap(C.matrix,self.handX+1,self.handY) then dx=dx+1 end
+        if self.keyState.softDrop  and self:ifoverlap(C.matrix,self.handX,self.handY-1) then dy=  -1 end
     end
     while true do
         for test=1,#kickList do
@@ -83,11 +83,11 @@ local function r(P,dir)
                 fdx^2+fdy^2<=5
             then
                 local x,y=ix+fdx,iy+fdy
-                if not P:ifoverlap(icb,x,y) then
+                if not self:ifoverlap(icb,x,y) then
                     C.matrix=icb
                     C.direction=idir
-                    P:moveHand('rotate',x,y,dir)
-                    P:freshGhost()
+                    self:moveHand('rotate',x,y,dir)
+                    self:freshGhost()
                     return
                 end
             end
@@ -102,8 +102,8 @@ local function r(P,dir)
             break
         end
     end
-    P:freshDelay('rotate')
-    P:playSound('rotate_failed')
+    self:freshDelay('rotate')
+    self:playSound('rotate_failed')
 end
 for i=1,29 do BiRS[i]={[0]={},[1]={},[2]={},[3]={},rotate=r} end
 return BiRS

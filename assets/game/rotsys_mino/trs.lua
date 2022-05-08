@@ -116,14 +116,14 @@ TRS[6]={
     [1]={center={1,1}},
     [2]={center={1,1}},
     [3]={center={1,1}},
-    rotate=function(P,dir,ifInit)
-        local C=P.hand
-        local F=P.field
-        local baseX,baseY=P.handX,P.handY
-        P:freshDelay('rotate')
+    rotate=function(self,dir,ifInit)
+        local C=self.hand
+        local F=self.field
+        local baseX,baseY=self.handX,self.handY
+        self:freshDelay('rotate')
         local transformed
-        if (baseY==P.ghostY and ((F:getCell(baseX-1,baseY) or F:getCell(baseX-1,baseY+1))) and (F:getCell(baseX+2,baseY) or F:getCell(baseX+2,baseY+1))) or P.deathTimer then
-            if not P.settings.noOspin then
+        if (baseY==self.ghostY and ((F:getCell(baseX-1,baseY) or F:getCell(baseX-1,baseY+1))) and (F:getCell(baseX+2,baseY) or F:getCell(baseX+2,baseY+1))) or self.deathTimer then
+            if not self.settings.noOspin then
                 -- [Warning] field 'spinSeq' is a dirty data, TRS put this var into the block.
                 C.spinSeq=((C.spinSeq or '')..dir):sub(-3)
                 if #C.spinSeq==3 then
@@ -140,13 +140,13 @@ TRS[6]={
                                 end
                             end end
 
-                            local x,y=P.handX+test.bias[1],P.handY+test.bias[2]
+                            local x,y=self.handX+test.bias[1],self.handY+test.bias[2]
                             if
-                                P.deathTimer or
-                                not P:ifoverlap(newMatrix,x,y) and (
+                                self.deathTimer or
+                                not self:ifoverlap(newMatrix,x,y) and (
                                     test.free=='ANY' and (true) or
-                                    test.free=='FIX' and (P:ifoverlap(newMatrix,x-1,y) and P:ifoverlap(newMatrix,x+1,y) and P:ifoverlap(newMatrix,x,y-1) and P:ifoverlap(newMatrix,x,y+1)) or
-                                    test.free=='MOV' and (P:ifoverlap(newMatrix,x,y-1) and P:ifoverlap(newMatrix,x,y+1))
+                                    test.free=='FIX' and (self:ifoverlap(newMatrix,x-1,y) and self:ifoverlap(newMatrix,x+1,y) and self:ifoverlap(newMatrix,x,y-1) and self:ifoverlap(newMatrix,x,y+1)) or
+                                    test.free=='MOV' and (self:ifoverlap(newMatrix,x,y-1) and self:ifoverlap(newMatrix,x,y+1))
                                 )
                             then
                                 -- Apply transformation
@@ -160,16 +160,16 @@ TRS[6]={
                                 C._origin.direction=test.direcion
                                 C._origin.matrix=test.direcion==0 and newMatrix or test.direcion==2 and TABLE.rotate(newMatrix,'F') or error("Oh I forgot this")
 
-                                P:moveHand('rotate',x,y,dir,ifInit)
-                                P:freshGhost()
-                                P:playSound('rotate_special')
+                                self:moveHand('rotate',x,y,dir,ifInit)
+                                self:freshGhost()
+                                self:playSound('rotate_special')
 
                                 -- Create particles
-                                local p=P.particles.star
+                                local p=self.particles.star
                                 local w,h=#newMatrix[1],#newMatrix
                                 p:setParticleLifetime(.26,1.26)
                                 p:setEmissionArea('uniform',(w/2+.5)*40,(h/2+.5)*40,0,true)
-                                p:setPosition((P.handX-1+w/2)*40,-(P.handY-1+h/2)*40)
+                                p:setPosition((self.handX-1+w/2)*40,-(self.handY-1+h/2)*40)
                                 p:emit(26)
 
                                 transformed=true
@@ -185,10 +185,10 @@ TRS[6]={
             C.direction=(C.direction+(dir=='R' and 1 or dir=='L' and 3 or dir=='F' and 2))%4
         end
         if not transformed then
-            P:playSound(ifInit and 'initrotate' or 'rotate')
+            self:playSound(ifInit and 'initrotate' or 'rotate')
         end
-        if P.handY==P.ghostY then
-            P:playSound('touch')
+        if self.handY==self.ghostY then
+            self:playSound('touch')
         end
     end,
 }-- O
