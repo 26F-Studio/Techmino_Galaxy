@@ -7,8 +7,14 @@ local function getMode(name)
     else
         local path='assets/game/mode/'..name..'.lua'
         if FILE.isSafe(path) then
-            modeLib[name]=FILE.load(path,'-lua')
-            return modeLib[name]
+            local M=FILE.load(path,'-lua')
+            if not M.initialize  then M.initialize=  NULL else assert(type(M.initialize)  =='function',"[Mode].initialize muse be function (if exist)")  end
+            if not M.settings    then M.settings=    {}   else assert(type(M.settings)    =='table',   "[Mode].settings muse be table (if exist)")       end
+            if not M.checkFinish then M.checkFinish= NULL else assert(type(M.checkFinish) =='function',"[Mode].checkFinish muse be function (if exist)") end
+            if not M.result      then M.result=      NULL else assert(type(M.result)      =='function',"[Mode].result muse be function (if exist)")      end
+            if not M.scorePage   then M.scorePage=   NULL else assert(type(M.scorePage)   =='function',"[Mode].scorePage muse be function (if exist)")   end
+            modeLib[name]=M
+            return M
         end
     end
 end
@@ -217,10 +223,23 @@ function GAME.release(action,id)
 end
 
 function GAME.send(source,data)
-    data.source=source
-    data.sourceMode=source.gameMode
-    MES.new('info',"+"..data.amount,0)
-    -- TODO
+    local target=data.target
+    if not (target and GAME.playerMap[target]) then
+        for i=1,#GAME.playerList do
+            if source~=GAME.playerList[i] then
+                target=GAME.playerList[i]
+            end
+        end
+    end
+    if target then
+        target:receive(data)
+    end
+end
+
+function GAME.checkFinish()
+    if GAME.mode.checkFinish() then
+        GAME.mode.result()
+    end
 end
 
 function GAME.update(dt)

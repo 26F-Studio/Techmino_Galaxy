@@ -1,5 +1,3 @@
-local gc=love.graphics
-
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -11,16 +9,8 @@ return {
         dropDelay=1000,
         lockDelay=1000,
         atkSys='Modern',
-        event={
-            gameOver=function(P)
-                -- TODO
-            end,
-        },
     },
-    result=function(P)
-        -- TODO
-    end,
-    scorePage=function(data)
-        -- TODO
+    checkFinish=function()
+        return #GAME.playerList==1
     end,
 }

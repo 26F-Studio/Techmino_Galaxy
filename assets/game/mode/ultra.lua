@@ -13,7 +13,7 @@ return {
         event={
             always=function(P)
                 if P.gameTime>=120000 then
-                    P:gameover('AC')
+                    P:finish('AC')
                 end
             end,
             drawOnPlayer=function(P)
@@ -34,19 +34,14 @@ return {
                 GC.mStr(T,0,-35)
                 gc.pop()
             end,
-            gameOver=function(P)
-                if P.isMain then
-                    BGM.set('all','pitch',.5,1)
-                    BGM.stop(1)
-                end
-                -- TODO
-            end,
         },
     },
-    result=function(P)
-        -- TODO
-    end,
-    scorePage=function(data)
-        -- TODO
+    checkFinish=function()
+        for i=1,#GAME.playerList do
+            if not GAME.playerList[i].finished then
+                return false
+            end
+        end
+        return true
     end,
 }

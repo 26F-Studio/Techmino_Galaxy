@@ -554,7 +554,7 @@ function MP:resetPosCheck()
             if self.keyState.moveRight then self:moveRight() end
         else
             self:lock()
-            self:gameover('WA')
+            self:finish('WA')
             return
         end
     else
@@ -676,7 +676,7 @@ function MP:popNext()
         ins(self.nextQueue,rem(self.holdQueue,1))
         self:popNext()
     else-- If no piece to use, both Next and Hold queue are empty, game over
-        self:gameover('ILE')
+        self:finish('ILE')
         return
     end
 
@@ -913,7 +913,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     -- Lock to field
     self:lock()
     if self.handY+#self.hand.matrix-1>self.settings.deathH then
-        self:gameover('MLE')
+        self:finish('MLE')
         return
     end
     self:playSound('lock')
@@ -979,7 +979,7 @@ function MP:checkField()-- Check line clear, top out checking, etc.
     else
         self.combo=0
         if self.settings.lockout and self.handY>self.settings.lockoutH then
-            self:gameover('CE')
+            self:finish('CE')
         end
     end
     return false
@@ -1091,7 +1091,10 @@ function MP:changeAtkSys(sys)
     self.atkSysData={}
     if MinoAtkSys[sys].init then MinoAtkSys[sys].init(self) end
 end
-function MP:gameover(reason)
+function MP:receive(data)
+    -- TODO
+end
+function MP:finish(reason)
     --[[
         Reason can be:
         AC:  Win
@@ -1112,6 +1115,7 @@ function MP:gameover(reason)
     self.spawnTimer=1e99
 
     self:triggerEvent('gameOver',reason)
+    GAME.checkFinish()
 
     -- <Temporarily>
     if self.isMain then
@@ -1304,7 +1308,7 @@ function MP:update(dt)
             if self.deathTimer<=0 then
                 self.deathTimer=false
                 self:lock()
-                self:gameover('WA')
+                self:finish('WA')
             end
         end
 

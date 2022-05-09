@@ -29,7 +29,7 @@ return {
                         P.modeData.target=P.modeData.target+10
                         P:playSound('reach')
                     else
-                        P:gameover('AC')
+                        P:finish('AC')
                     end
                 end
             end,
@@ -40,15 +40,9 @@ return {
                 gc.rectangle('fill',-380,-2,160,4)
                 GC.mStr(P.modeData.target,-300,0)
             end,
-            gameOver=function(P)
-                -- TODO
-            end,
         },
     },
-    result=function(P)
-        -- TODO
-    end,
-    scorePage=function(data)
-        -- TODO
+    checkFinish=function()
+        return true
     end,
 }

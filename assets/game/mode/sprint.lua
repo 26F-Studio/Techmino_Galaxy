@@ -13,7 +13,7 @@ return {
         event={
             afterClear=function(P)
                 P.modeData.line=math.min(P.modeData.line+P.clearHistory[#P.clearHistory].line,40)
-                if P.modeData.line>=40 then P:gameover('AC') end
+                if P.modeData.line>=40 then P:finish('AC') end
                 if P.isMain and P.modeData.line>10 then
                     BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-10)/20,1),2.6)
                 end
@@ -27,15 +27,9 @@ return {
                 FONT.set(80)
                 GC.mStr(40-P.modeData.line,-300,-55)
             end,
-            gameOver=function(P)
-                -- TODO
-            end,
         },
     },
-    result=function(P)
-        -- TODO
-    end,
-    scorePage=function(data)
-        -- TODO
+    checkFinish=function()
+        return true
     end,
 }
