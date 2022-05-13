@@ -68,10 +68,10 @@ function S.drawFieldCells(F)
             -- Reuse local var g,b
             g=C.nearby
             local U,D,L,R
-            if not g[F[y  ] and F[y  ][x+1]] then gc_rectangle('fill',bx+40-X,by   ,X ,40) R=true end
-            if not g[F[y  ] and F[y  ][x-1]] then gc_rectangle('fill',bx     ,by   ,X ,40) L=true end
-            if not g[F[y-1] and F[y-1][x  ]] then gc_rectangle('fill',bx     ,by+40,40,-X) D=true end
-            if not g[F[y+1] and F[y+1][x  ]] then gc_rectangle('fill',bx     ,by   ,40, X) U=true end
+            if not (g and g[F[y  ] and F[y  ][x+1]]) then gc_rectangle('fill',bx+40-X,by   ,X ,40) R=true end
+            if not (g and g[F[y  ] and F[y  ][x-1]]) then gc_rectangle('fill',bx     ,by   ,X ,40) L=true end
+            if not (g and g[F[y-1] and F[y-1][x  ]]) then gc_rectangle('fill',bx     ,by+40,40,-X) D=true end
+            if not (g and g[F[y+1] and F[y+1][x  ]]) then gc_rectangle('fill',bx     ,by   ,40, X) U=true end
 
             if not (D or L or g[F[y-1] and F[y-1][x-1]]) then gc_rectangle('fill',bx     ,by+40,X ,-X) end
             if not (U or L or g[F[y+1] and F[y+1][x-1]]) then gc_rectangle('fill',bx     ,by   ,X , X) end
