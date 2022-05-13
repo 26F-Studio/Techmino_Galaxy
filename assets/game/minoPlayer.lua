@@ -691,7 +691,9 @@ function MP:popNext()
 
     if self.keyBuffer.hardDrop then-- IHdS
         self.keyBuffer.hardDrop=false
-        self:minoDropped()
+        if not self.deathTimer then
+            self:minoDropped()
+        end
     end
 end
 function MP:getMino(shapeID)
