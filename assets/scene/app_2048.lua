@@ -37,7 +37,7 @@ local repeater={
     seq={"",""},last={"X","X"},
 }
 
---[[Tiles' value:
+--[[ Tiles' value:
     -1: black tile, cannot move
     0: X tile, cannot merge
     1/2/3/...: 2/4/8/... tile
