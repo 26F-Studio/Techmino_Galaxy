@@ -935,6 +935,24 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if self.clearTimer<=0 and self.spawnTimer<=0 then
         self:popNext()
     end
+
+    -- Update & Release garbage
+    local i=1
+    while true do
+        g=self.garbageBuffer[i]
+        if not g then break end
+        if g.time==g.time0 then
+            local r=rnd(10)
+            for _=1,g.power do
+                self:riseGarbage(r)
+            end
+            rem(self.garbageBuffer,i)
+            i=i-1-- Avoid index error
+        elseif g.mode==1 then
+            g.time=g.time+1
+        end
+        i=i+1
+    end
 end
 function MP:lock()-- Put mino into field
     local CB=self.hand.matrix
@@ -949,6 +967,42 @@ function MP:lock()-- Put mino into field
         x=self.handX,
         y=self.handY,
     })
+end
+function MP:riseGarbage(holePos)
+    local F=self.field
+    local w=F:getWidth()
+    local L={}
+
+    -- Generate line
+    for x=1,w do
+        L[x]={
+            color=1,
+            nearby={},
+        }
+    end
+
+    -- Generate hole
+    if L[holePos] then
+        L[holePos]=false
+    else
+        L[rnd(w)]=false
+    end
+
+    -- Add nearby
+    for x=1,w do
+        if L[x] then
+            if L[x-1] then L[x].nearby[L[x-1]]=true end
+            if L[x+1] then L[x].nearby[L[x+1]]=true end
+        end
+    end
+    ins(F._matrix,1,L)
+
+    -- Update hand position
+    if self.hand then
+        self.handY=self.handY+1
+        self.ghostY=self.ghostY+1
+        self.minY=self.minY+1
+    end
 end
 function MP:checkField()-- Check line clear, top out checking, etc.
     local lineClear={}
@@ -1093,12 +1147,27 @@ function MP:changeAtkSys(sys)
     self.atkSysData={}
     if MinoAtkSys[sys].init then MinoAtkSys[sys].init(self) end
 end
+
 function MP:receive(data)
-    -- TODO
+    --[[ data:
+        power (0~∞)
+        mode  (0~1)
+        time  (0~∞)
+        fatal (0~100)
+        speed (0~100)
+    ]]
+    local B={
+        power=data.power,
+        mode=data.mode,
+        time0=data.time,
+        time=0,
+        fatal=data.fatal,
+        speed=data.speed,
+    }
+    ins(self.garbageBuffer,B)
 end
 function MP:finish(reason)
-    --[[
-        Reason can be:
+    --[[ Reason:
         AC:  Win
         WA:  Block out
         CE:  Lock out
@@ -1155,7 +1224,9 @@ function MP:update(dt)
 
     for _=1,df do
         -- Step game time
-        if self.timing then self.gameTime=self.gameTime+1--[[df]] end
+        if self.timing then self.gameTime=self.gameTime+1 end
+
+        self:triggerEvent('always',1)
 
         -- Calculate board animation
         local O=self.pos
@@ -1171,9 +1242,9 @@ function MP:update(dt)
 
         -- Step main time & Starting counter
         if self.time<SET.readyDelay then
-            self.time=self.time+1--[[df]]
+            self.time=self.time+1
             local d=SET.readyDelay-self.time
-            if floor((d+1--[[df]])/1000)~=floor(d/1000) then
+            if floor((d+1)/1000)~=floor(d/1000) then
                 self:playSound('countDown',ceil(d/1000))
             end
             if d==0 then
@@ -1182,15 +1253,16 @@ function MP:update(dt)
                 self.timing=true
             end
         else
-            self.time=self.time+1--[[df]]
+            self.time=self.time+1
         end
 
+        -- Controlling piece
         if not self.deathTimer then
             -- Auto shift
             if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then
                 if self.hand and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) then
                     local c0=self.moveCharge
-                    local c1=c0+1--[[df]]
+                    local c1=c0+1
                     self.moveCharge=c1
                     local dist=0
                     if c0>=SET.das then
@@ -1237,7 +1309,7 @@ function MP:update(dt)
             if self.downCharge and self.keyState.softDrop then
                 if self.hand and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
                     local c0=self.downCharge
-                    local c1=c0+1--[[df]]
+                    local c1=c0+1
                     self.downCharge=c1
                     local dist=SET.sdarr==0 and 1e99 or floor(c1/SET.sdarr)-floor(c0/SET.sdarr)
                     local oy=self.handY
@@ -1268,13 +1340,13 @@ function MP:update(dt)
             repeat-- Update hand
                 -- Wait clearing animation
                 if self.clearTimer>0 then
-                    self.clearTimer=self.clearTimer-1--[[df]]
+                    self.clearTimer=self.clearTimer-1
                     break
                 end
 
                 -- Try spawn mino if don't have one
                 if self.spawnTimer>0 then
-                    self.spawnTimer=self.spawnTimer-1--[[df]]
+                    self.spawnTimer=self.spawnTimer-1
                     if self.spawnTimer<=0 then
                         self:popNext()
                     end
@@ -1285,14 +1357,14 @@ function MP:update(dt)
 
                 -- Try lock/drop mino
                 if self.handY==self.ghostY then
-                    self.lockTimer=self.lockTimer-1--[[df]]
+                    self.lockTimer=self.lockTimer-1
                     if self.lockTimer<=0 then
                         self:minoDropped()
                     end
                     break
                 else
                     if self.dropDelay~=0 then
-                        self.dropTimer=self.dropTimer-1--[[df]]
+                        self.dropTimer=self.dropTimer-1
                         if self.dropTimer<=0 then
                             self.dropTimer=SET.dropDelay
                             self:moveHand('drop',-1)
@@ -1314,7 +1386,13 @@ function MP:update(dt)
             end
         end
 
-        self:triggerEvent('always',1--[[df]])
+        -- Update garbage
+        for i=1,#self.garbageBuffer do
+            local g=self.garbageBuffer[i]
+            if g.mode==0 and g.time<g.time0 then
+                g.time=g.time+1
+            end
+        end
     end
     for _,v in next,self.particles do v:update(dt) end
     self.texts:update(dt)
@@ -1731,7 +1809,6 @@ function MP:initialize()
     self.floatHolds={}
 
     self.energy=0
-    self.energyShow=0
 
     self.dropTimer=0
     self.lockTimer=0

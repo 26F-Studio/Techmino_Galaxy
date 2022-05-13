@@ -21,7 +21,7 @@ return {
             end
             L=L+math.min(math.floor(self.combo/3),3)
             if L>0 then return {
-                amount=L,
+                power=L,
             } end
         end
     end,

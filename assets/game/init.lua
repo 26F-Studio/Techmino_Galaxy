@@ -1,33 +1,6 @@
 local gc=love.graphics
 
-local modeLib={}
-local function getMode(name)
-    if modeLib[name] then
-        return modeLib[name]
-    else
-        local path='assets/game/mode/'..name..'.lua'
-        if FILE.isSafe(path) then
-            local M=FILE.load(path,'-lua')
-            if not M.initialize  then M.initialize=  NULL else assert(type(M.initialize)  =='function',"[Mode].initialize muse be function (if exist)")  end
-            if not M.settings    then M.settings=    {}   else assert(type(M.settings)    =='table',   "[Mode].settings muse be table (if exist)")       end
-            if not M.checkFinish then M.checkFinish= NULL else assert(type(M.checkFinish) =='function',"[Mode].checkFinish muse be function (if exist)") end
-            if not M.result      then M.result=      NULL else assert(type(M.result)      =='function',"[Mode].result muse be function (if exist)")      end
-            if not M.scorePage   then M.scorePage=   NULL else assert(type(M.scorePage)   =='function',"[Mode].scorePage muse be function (if exist)")   end
-            modeLib[name]=M
-            return M
-        end
-    end
-end
-
-local layoutFuncs=setmetatable({},{__index=function(self,k)
-    if k==nil then
-        return self.default
-    elseif type(k)=='string' then
-        return self[k] or error("Layout '"..tostring(k).."' not exist")
-    else
-        error("Layout must be string")
-    end
-end})
+local layoutFuncs={}
 do -- function layoutFuncs.default():
     local defaultPosList={
         alive={
@@ -137,6 +110,26 @@ do -- function layoutFuncs.default():
     end
 end
 
+local modeLib={}
+local function getMode(name)
+    if modeLib[name] then
+        return modeLib[name]
+    else
+        local path='assets/game/mode/'..name..'.lua'
+        if FILE.isSafe(path) then
+            local M=FILE.load(path,'-lua')
+            if M.initialize ==nil then M.initialize=  NULL      else assert(type(M.initialize)  =='function',"[Mode].initialize muse be function (if exist)")  end
+            if M.settings   ==nil then M.settings=    {}        else assert(type(M.settings)    =='table',   "[Mode].settings muse be table (if exist)")       end
+            if M.layout     ==nil then M.layout=      'default' else assert(layoutFuncs[M.layout],           "[Mode].layout doesn't exist")                    end
+            if M.checkFinish==nil then M.checkFinish= NULL      else assert(type(M.checkFinish) =='function',"[Mode].checkFinish muse be function (if exist)") end
+            if M.result     ==nil then M.result=      NULL      else assert(type(M.result)      =='function',"[Mode].result muse be function (if exist)")      end
+            if M.scorePage  ==nil then M.scorePage=   NULL      else assert(type(M.scorePage)   =='function',"[Mode].scorePage muse be function (if exist)")   end
+            modeLib[name]=M
+            return M
+        end
+    end
+end
+
 local GAME={
     playerList=false,
     playerMap=false,
@@ -146,7 +139,6 @@ local GAME={
     seed=false,
     mode=false,
     mainPID=false,
-    -- TODO: ...
 }
 
 function GAME.reset(mode,seed)
@@ -203,11 +195,7 @@ function GAME.start()
         GAME.playerList[i]:triggerEvent('playerInit')
     end
 
-    if type(GAME.mode.layout)=='function' then
-        GAME.mode.layout()
-    else
-        layoutFuncs[GAME.mode.layout]()
-    end
+    layoutFuncs[GAME.mode['layout']]()
 end
 
 function GAME.press(action,id)
@@ -222,8 +210,43 @@ function GAME.release(action,id)
     GAME.playerMap[id or GAME.mainPID]:release(action)
 end
 
+--[[ data:
+    power (0~∞,  no default)
+    mode  (0~1,   default to 0, 0: trigger by time, 1:trigger by step)
+    time  (0~∞,  default to 0, seconds)
+    fatal (0~100, default to 0, percentage)
+    speed (0~100, default to 0, percentage)
+]]
 function GAME.send(source,data)
-    local target=data.target
+    -- Format normalization
+    assert(type(data)=='table',"data not table")
+    assert(type(data.power)=='number' and data.power>0,"bad power value")
+    if data.mode==nil then data.mode=0 end
+    assert(data.mode==0 or data.mode==1,"bad mode value")
+    if data.time==nil then data.time=0 else
+        assert(type(data.time)=='number',"time not number")
+        data.time=math.max(data.time,0)
+        if data.mode==1 then data.time=math.floor(data.time) end
+    end
+    if data.fatal==nil then data.fatal=0 else
+        assert(type(data.fatal)=='number',"fatal not number")
+        data.fatal=MATH.clamp(data.fatal,0,100)
+    end
+    if data.speed==nil then data.speed=0 else
+        assert(type(data.speed)=='number',"speed not number")
+        data.speed=MATH.clamp(data.speed,0,100)
+    end
+
+    local d={
+        power=data.power,
+        mode=data.mode,
+        time=data.time,
+        fatal=data.fatal,
+        speed=data.speed,
+    }
+
+    -- Find target
+    local target=d.target
     if not (target and GAME.playerMap[target]) then
         for i=1,#GAME.playerList do
             if source~=GAME.playerList[i] then
@@ -231,8 +254,10 @@ function GAME.send(source,data)
             end
         end
     end
+
+    -- Sending airmail
     if target then
-        target:receive(data)
+        target:receive(d)
     end
 end
 
