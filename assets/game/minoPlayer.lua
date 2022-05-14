@@ -1512,6 +1512,9 @@ function MP:render()
         skin.drawDelayIndicator('lock',self.lockTimer/settings.lockDelay)
     end
 
+    -- Garbage buffer
+    skin.drawGarbageBuffer(self.garbageBuffer)
+
     -- Lock delay indicator
     skin.drawLockDelayIndicator(settings.freshCondition,self.freshChance)
 
@@ -1616,7 +1619,7 @@ local baseEnv={-- Generate from template in future
     arr=26,
     sdarr=12,
     dascut=0,
-    skin='default',
+    skin='plastic',
 
     shakeness=.26,
 }
