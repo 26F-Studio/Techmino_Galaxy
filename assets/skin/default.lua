@@ -102,6 +102,9 @@ function S.drawGarbageBuffer(garbageBuffer)
     for i=1,#garbageBuffer do
         local g=garbageBuffer[i]
         local h=g.power*40
+        if y+h>800 then
+            h=800-y
+        end
         if g.time<g.time0 then
             gc_setColor(COLOR.R)
             gc_rectangle('fill',210,400-y-h+3,10,h-6)
@@ -113,6 +116,7 @@ function S.drawGarbageBuffer(garbageBuffer)
             gc_rectangle('fill',210,400-y-h+3,10,h-6)
         end
         y=y+h
+        if y>=800 then break end
     end
 end
 
