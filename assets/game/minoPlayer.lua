@@ -327,6 +327,7 @@ local defaultSoundFunc={
     touch=              function() SFX.play('touch')            end,
     drop=               function() SFX.play('drop')             end,
     lock=               function() SFX.play('lock')             end,
+    b2b=                function() SFX.play('b2b')              end,
     clear=function(lines)
         SFX.play(
             lines==1 and 'clear_1' or
@@ -921,6 +922,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     local clear=self:checkField()
     self.lastMovement.clear=clear
     if clear then
+        self:createFrenzyParticle(clear.line*26)
         self:triggerEvent('afterClear',self.lastMovement)
     end
 

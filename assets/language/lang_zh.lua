@@ -28,6 +28,7 @@ return {
     combo_large="$1 Combo!",
     mega_combo="MEGACMB",
 
+    b2b='B2B',
     spin='$1-spin',
     tuck='Tuck',
 
