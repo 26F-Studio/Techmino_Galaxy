@@ -1,4 +1,9 @@
 return {
+    init=function(self)
+        self.settings.tuck=true
+        self.settings.spin_immobile=true
+        self.settings.spin_corners=3
+    end,
     drop=function(self)
         local M=self.lastMovement
         local C=M.clear

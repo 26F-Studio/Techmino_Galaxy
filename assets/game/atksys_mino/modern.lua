@@ -1,6 +1,8 @@
 return {
     init=function(self)
         self.atkSysData.b2b=0
+        self.settings.spin_immobile=true
+        self.settings.spin_corners=3
     end,
     drop=function(self)
         local M=self.lastMovement

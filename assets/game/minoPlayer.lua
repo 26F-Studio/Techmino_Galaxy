@@ -460,6 +460,7 @@ function MP:moveHand(action,a,b,c,d)
 
     if action=='moveX' then
         if
+            self.settings.tuck and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY+1)
         then
@@ -1526,8 +1527,9 @@ local baseEnv={-- Generate from template in future
     actionPack='Normal',
     seqType='bag7',
     rotSys='TRS',
-    spin_immobile=true,
-    spin_corners=3,
+    tuck=false,
+    spin_immobile=false,
+    spin_corners=false,
     atkSys='None',
 
     freshCondition='any',
@@ -1730,8 +1732,6 @@ function MP:initialize()
     self.holdQueue={}
     self.holdTime=0
     self.floatHolds={}
-
-    self.energy=0
 
     self.dropTimer=0
     self.lockTimer=0
