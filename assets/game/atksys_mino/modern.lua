@@ -13,7 +13,7 @@ return {
                 -- Add B2B text & sound
                 if (C.line>=4 or spin) and self.atkSysData.b2b>0 then
                     t=t..Text.b2b.." "
-                    self:playSound('b2b',self.atkSysData.b2b,10)
+                    self:playSound('b2b',self.atkSysData.b2b)
                 end
 
                 -- Add spin text & sound

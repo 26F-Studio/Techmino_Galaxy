@@ -327,7 +327,7 @@ local defaultSoundFunc={
     touch=              function() SFX.play('touch',.5)         end,
     drop=               function() SFX.play('drop')             end,
     lock=               function() SFX.play('lock')             end,
-    b2b=                function(lv) SFX.play('b2b_'..tostring(lv)) end,
+    b2b=                function(lv) SFX.play('b2b_'..min(lv,10)) end,
     clear=function(lines)
         SFX.play(
             lines==1 and 'clear_1' or
