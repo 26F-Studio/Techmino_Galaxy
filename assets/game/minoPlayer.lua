@@ -1363,11 +1363,14 @@ function MP:render()
         -- Mino
         if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
             -- Smooth
-            local droppingY
+            local movingX,droppingY=0,0
+            if self.moveDir and self.moveCharge<self.settings.das then
+                movingX=15*self.moveDir*(self.moveCharge/self.settings.das-.5)
+            end
             if self.handY>self.ghostY then
                 droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
-                gc.translate(0,droppingY)
             end
+            gc.translate(movingX,droppingY)
 
             skin.drawHand(CB,self.handX,self.handY)
 
@@ -1379,7 +1382,7 @@ function MP:render()
                 gc.setColor(1,1,1)
                 GC.draw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40)
             end
-            if droppingY then gc.translate(0,-droppingY) end
+            gc.translate(-movingX,-droppingY)
         end
     end
 
@@ -1503,7 +1506,7 @@ end
 --------------------------------------------------------------
 -- Builder
 local baseEnv={-- Generate from template in future
-    fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. If really want change it, please use 'self:changeFieldWidth'
+    fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
     spawnH=20,
     lockoutH=1e99,
     deathH=1e99,
