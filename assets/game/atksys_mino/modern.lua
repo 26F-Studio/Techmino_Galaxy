@@ -58,7 +58,6 @@ return {
 
                 -- Combo & Clearing sound
                 self:playSound('combo',C.combo)
-                self:playSound('clear',C.line)
             end
 
             do-- Calculate attack

@@ -9,7 +9,6 @@ return {
                 style=C.line>=4 and 'stretch' or 'appear',
                 duration=C.line/2,
             }
-            self:playSound('clear',C.line)
             return {power=C.line,}
         end
     end,

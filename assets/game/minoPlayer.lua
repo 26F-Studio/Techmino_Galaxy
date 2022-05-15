@@ -922,6 +922,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     local clear=self:checkField()
     self.lastMovement.clear=clear
     if clear then
+        self:playSound('clear',clear.line)
         self:createFrenzyParticle(clear.line*26)
         self:triggerEvent('afterClear',self.lastMovement)
     end

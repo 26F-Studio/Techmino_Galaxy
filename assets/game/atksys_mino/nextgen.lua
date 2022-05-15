@@ -76,7 +76,6 @@ return {
             end
 
             self:playSound('combo',C.combo)
-            self:playSound('clear',C.line)
 
             -- Calculate attack
             local atk
