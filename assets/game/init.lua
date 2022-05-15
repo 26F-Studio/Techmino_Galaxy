@@ -118,12 +118,12 @@ local function getMode(name)
         local path='assets/game/mode/'..name..'.lua'
         if FILE.isSafe(path) then
             local M=FILE.load(path,'-lua')
-            if M.initialize ==nil then M.initialize=  NULL      else assert(type(M.initialize)  =='function',"[Mode].initialize muse be function (if exist)")  end
-            if M.settings   ==nil then M.settings=    {}        else assert(type(M.settings)    =='table',   "[Mode].settings muse be table (if exist)")       end
-            if M.layout     ==nil then M.layout=      'default' else assert(layoutFuncs[M.layout],           "[Mode].layout doesn't exist")                    end
-            if M.checkFinish==nil then M.checkFinish= NULL      else assert(type(M.checkFinish) =='function',"[Mode].checkFinish muse be function (if exist)") end
-            if M.result     ==nil then M.result=      NULL      else assert(type(M.result)      =='function',"[Mode].result muse be function (if exist)")      end
-            if M.scorePage  ==nil then M.scorePage=   NULL      else assert(type(M.scorePage)   =='function',"[Mode].scorePage muse be function (if exist)")   end
+            assert(type(M['initialize'])=='function',"[mode].initialize must be function")
+            if M.settings   ==nil then M.settings=   {}        else assert(type(M.settings)           =='table',   "[mode].settings must be table (if exist)")       end
+            if M.layout     ==nil then M.layout=     'default' else assert(type(layoutFuncs[M.layout])=='funcion', "[mode].layout wrong")                            end
+            if M.checkFinish==nil then M.checkFinish=NULL      else assert(type(M.checkFinish)        =='function',"[mode].checkFinish must be function (if exist)") end
+            if M.result     ==nil then M.result=     NULL      else assert(type(M.result)             =='function',"[mode].result must be function (if exist)")      end
+            if M.scorePage  ==nil then M.scorePage=  NULL      else assert(type(M.scorePage)          =='function',"[mode].scorePage must be function (if exist)")   end
             modeLib[name]=M
             return M
         end
