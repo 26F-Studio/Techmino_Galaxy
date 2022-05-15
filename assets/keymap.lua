@@ -70,7 +70,7 @@ function KEYMAP.addKey(act,key)
             while #KEYMAP[i].keys>=5 do
                 table.remove(KEYMAP[i].keys,1)
             end
-            SFX.play('beep1')
+            SFX.play('beep_1')
             break
         end
     end

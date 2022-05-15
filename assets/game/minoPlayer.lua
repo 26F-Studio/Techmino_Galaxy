@@ -324,10 +324,10 @@ local defaultSoundFunc={
     rotate_special=     function() SFX.play('rotate_special')   end,
     hold=               function() SFX.play('hold')             end,
     inithold=           function() SFX.play('inithold')         end,
-    touch=              function() SFX.play('touch')            end,
+    touch=              function() SFX.play('touch',.5)         end,
     drop=               function() SFX.play('drop')             end,
     lock=               function() SFX.play('lock')             end,
-    b2b=                function() SFX.play('b2b')              end,
+    b2b=                function(lv) SFX.play('b2b_'..tostring(lv)) end,
     clear=function(lines)
         SFX.play(
             lines==1 and 'clear_1' or
@@ -388,9 +388,9 @@ local defaultSoundFunc={
     halfClear=          function() SFX.play('half_clear')       end,
     suffocate=          function() SFX.play('suffocate')        end,
     desuffocate=        function() SFX.play('desuffocate')      end,
-    reach=              function() SFX.play('beep1')            end,
-    win=                function() SFX.play('beep1')            end,
-    lose=               function() SFX.play('beep2')            end,
+    reach=              function() SFX.play('beep_1')            end,
+    win=                function() SFX.play('beep_1')            end,
+    lose=               function() SFX.play('beep_2')            end,
 }
 function MP:playSound(event,...)
     if not self.sound then return end
