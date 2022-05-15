@@ -313,22 +313,22 @@ local defaultSoundFunc={
             inst('bass',2.2-num/5,'A2','E3')
         end
     end,
-    move=               function() SFX.play('move')             end,
-    move_failed=        function() SFX.play('move_failed')      end,
-    tuck=               function() SFX.play('tuck')             end,
-    rotate=             function() SFX.play('rotate')           end,
-    initrotate=         function() SFX.play('initrotate')       end,
-    rotate_locked=      function() SFX.play('rotate_locked')    end,
-    rotate_corners=     function() SFX.play('rotate_corners')   end,
-    rotate_failed=      function() SFX.play('rotate_failed')    end,
-    rotate_special=     function() SFX.play('rotate_special')   end,
-    hold=               function() SFX.play('hold')             end,
-    inithold=           function() SFX.play('inithold')         end,
-    touch=              function() SFX.play('touch',.5)         end,
-    drop=               function() SFX.play('drop')             end,
-    lock=               function() SFX.play('lock')             end,
-    b2b=                function(lv) SFX.play('b2b_'..min(lv,10)) end,
-    b2b_break=          function() SFX.play('b2b_break') end,
+    move=           function() SFX.play('move')             end,
+    move_failed=    function() SFX.play('move_failed')      end,
+    tuck=           function() SFX.play('tuck')             end,
+    rotate=         function() SFX.play('rotate')           end,
+    initrotate=     function() SFX.play('initrotate')       end,
+    rotate_locked=  function() SFX.play('rotate_locked')    end,
+    rotate_corners= function() SFX.play('rotate_corners')   end,
+    rotate_failed=  function() SFX.play('rotate_failed')    end,
+    rotate_special= function() SFX.play('rotate_special')   end,
+    hold=           function() SFX.play('hold')             end,
+    inithold=       function() SFX.play('inithold')         end,
+    touch=          function() SFX.play('touch',.5)         end,
+    drop=           function() SFX.play('drop')             end,
+    lock=           function() SFX.play('lock')             end,
+    b2b=            function(lv) SFX.play('b2b_'..min(lv,10)) end,
+    b2b_break=      function() SFX.play('b2b_break') end,
     clear=function(lines)
         SFX.play(
             lines==1 and 'clear_1' or
@@ -384,14 +384,14 @@ local defaultSoundFunc={
             inst('lead',1-(phase/12)^2,     58+phase)-- A5+
         end
     end,__metatable=true}),
-    frenzy=             function() SFX.play('frenzy')           end,
-    allClear=           function() SFX.play('all_clear')        end,
-    halfClear=          function() SFX.play('half_clear')       end,
-    suffocate=          function() SFX.play('suffocate')        end,
-    desuffocate=        function() SFX.play('desuffocate')      end,
-    reach=              function() SFX.play('beep_1')            end,
-    win=                function() SFX.play('beep_1')            end,
-    lose=               function() SFX.play('beep_2')            end,
+    frenzy=      function() SFX.play('frenzy')      end,
+    allClear=    function() SFX.play('all_clear')   end,
+    halfClear=   function() SFX.play('half_clear')  end,
+    suffocate=   function() SFX.play('suffocate')   end,
+    desuffocate= function() SFX.play('desuffocate') end,
+    reach=       function() SFX.play('beep_1')      end,
+    win=         function() SFX.play('win')         end,
+    fail=        function() SFX.play('fail')        end,
 }
 function MP:playSound(event,...)
     if not self.sound then return end
@@ -1111,7 +1111,7 @@ function MP:finish(reason)
     -- <Temporarily>
     if self.isMain then
         MES.new(reason=='AC' and 'check' or 'error',reason,6.26)
-        self:playSound(reason=='AC' and 'win' or 'lose')
+        self:playSound(reason=='AC' and 'win' or 'fail')
     end
     -- </Temporarily>
 end
