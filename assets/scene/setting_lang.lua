@@ -53,21 +53,21 @@ local function _setLang(lid)
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',x=350,y=310,w=390,h=100,fontSize=40, text=langList.en, color='R', sound='check',code=function() _setLang('en') end},
-    WIDGET.new{type='button'     ,x=350,y=460,w=390,h=100,fontSize=40, text='',          color='F', sound='check'},
-    WIDGET.new{type='button'     ,x=350,y=610,w=390,h=100,fontSize=35, text='',          color='O', sound='check'},
-    WIDGET.new{type='button'     ,x=350,y=760,w=390,h=100,fontSize=35, text='',          color='Y', sound='check'},
+    WIDGET.new{type='button',         x=350,y=310,w=390,h=100,fontSize=40, text=langList.en, color='R', sound='check',code=function() _setLang('en') end},
+    WIDGET.new{type='button_fill',    x=350,y=460,w=390,h=100,fontSize=40, text='',          color='F'},
+    WIDGET.new{type='button_fill',    x=350,y=610,w=390,h=100,fontSize=35, text='',          color='O'},
+    WIDGET.new{type='button_fill',    x=350,y=760,w=390,h=100,fontSize=35, text='',          color='Y'},
 
-    WIDGET.new{type='button'     ,x=800,y=310,w=390,h=100,fontSize=40, text='',          color='A', sound='check'},
-    WIDGET.new{type='button'     ,x=800,y=460,w=390,h=100,fontSize=40, text='',          color='K', sound='check'},
-    WIDGET.new{type='button'     ,x=800,y=610,w=390,h=100,fontSize=40, text='',          color='G', sound='check'},
-    WIDGET.new{type='button'     ,x=800,y=760,w=390,h=100,fontSize=40, text='',          color='J', sound='check'},
+    WIDGET.new{type='button_fill',    x=800,y=310,w=390,h=100,fontSize=40, text='',          color='A'},
+    WIDGET.new{type='button_fill',    x=800,y=460,w=390,h=100,fontSize=40, text='',          color='K'},
+    WIDGET.new{type='button_fill',    x=800,y=610,w=390,h=100,fontSize=40, text='',          color='G'},
+    WIDGET.new{type='button_fill',    x=800,y=760,w=390,h=100,fontSize=40, text='',          color='J'},
 
-    WIDGET.new{type='button_fill',x=1250,y=310,w=390,h=100,fontSize=40,text=langList.zh, color='I', sound='check',code=function() _setLang('zh') end},
-    WIDGET.new{type='button'     ,x=1250,y=460,w=390,h=100,fontSize=40,text='',          color='B', sound='check'},
-    WIDGET.new{type='button'     ,x=1250,y=610,w=390,h=100,fontSize=40,text='',          color='P', sound='check'},
+    WIDGET.new{type='button',         x=1250,y=310,w=390,h=100,fontSize=40,text=langList.zh, color='I', sound='check',code=function() _setLang('zh') end},
+    WIDGET.new{type='button_fill',    x=1250,y=460,w=390,h=100,fontSize=40,text='',          color='B'},
+    WIDGET.new{type='button_fill',    x=1250,y=610,w=390,h=100,fontSize=40,text='',          color='P'},
 
-    WIDGET.new{type='button_fill',x=1250,y=760,w=390,h=100,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
+    WIDGET.new{type='button',x=1250,y=760,w=390,h=100,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
 
 return scene
