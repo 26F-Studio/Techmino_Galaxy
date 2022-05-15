@@ -76,7 +76,7 @@ return {
                     self.atkSysData.b2b=math.min(self.atkSysData.b2b+1,26)
                 else
                     atk=C.line-1
-                    if self.atkSysData.b2b>=4 then
+                    if self.atkSysData.b2b>1 then
                         self:playSound('b2b_break')
                     end
                     self.atkSysData.b2b=0
