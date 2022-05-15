@@ -1,6 +1,6 @@
 return {
     init=function(self)
-        self.atkSysData.b2b=false
+        self.atkSysData.b2b=0
     end,
     drop=function(self)
         local M=self.lastMovement
@@ -11,9 +11,9 @@ return {
                 local t=""
 
                 -- Add B2B text & sound
-                if (C.line>=4 or spin) and self.atkSysData.b2b then
+                if (C.line>=4 or spin) and self.atkSysData.b2b>0 then
                     t=t..Text.b2b.." "
-                    self:playSound('b2b')
+                    self:playSound('b2b',self.atkSysData.b2b,10)
                 end
 
                 -- Add spin text & sound
@@ -65,17 +65,17 @@ return {
                 local atk
 
                 -- Clearing type
-                if C.line>=4 then
-                    atk=C.line
-                    if self.atkSysData.b2b then atk=atk+1 end
-                    self.atkSysData.b2b=true
-                elseif spin then
+                if spin then
                     atk=2*C.line
-                    if self.atkSysData.b2b then atk=atk+1 end
-                    self.atkSysData.b2b=true
+                    atk=atk+math.ceil(self.atkSysData.b2b/6,3)
+                    self.atkSysData.b2b=self.atkSysData.b2b+1
+                elseif C.line>=4 then
+                    atk=C.line
+                    atk=atk+math.min(math.ceil(self.atkSysData.b2b/4),4)
+                    self.atkSysData.b2b=self.atkSysData.b2b+1
                 else
                     atk=C.line-1
-                    self.atkSysData.b2b=false
+                    self.atkSysData.b2b=0
                 end
 
                 -- All clear bonus
