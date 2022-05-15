@@ -66,14 +66,17 @@ return {
                 -- Clearing type
                 if spin then
                     atk=2*C.line
-                    atk=atk+math.ceil(self.atkSysData.b2b/6,3)
-                    self.atkSysData.b2b=self.atkSysData.b2b+1
+                    atk=atk+math.ceil(self.atkSysData.b2b/4,2)
+                    self.atkSysData.b2b=math.min(self.atkSysData.b2b+1,26)
                 elseif C.line>=4 then
                     atk=C.line
                     atk=atk+math.min(math.ceil(self.atkSysData.b2b/4),4)
-                    self.atkSysData.b2b=self.atkSysData.b2b+1
+                    self.atkSysData.b2b=math.min(self.atkSysData.b2b+1,26)
                 else
                     atk=C.line-1
+                    if self.atkSysData.b2b>=4 then
+                        self:playSound('b2b_break')
+                    end
                     self.atkSysData.b2b=0
                 end
 

@@ -328,6 +328,7 @@ local defaultSoundFunc={
     drop=               function() SFX.play('drop')             end,
     lock=               function() SFX.play('lock')             end,
     b2b=                function(lv) SFX.play('b2b_'..min(lv,10)) end,
+    b2b_break=          function() SFX.play('b2b_break') end,
     clear=function(lines)
         SFX.play(
             lines==1 and 'clear_1' or
