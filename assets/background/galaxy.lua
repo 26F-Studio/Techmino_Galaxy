@@ -2,7 +2,7 @@
 local gc=love.graphics
 local back={}
 local shader=SHADER.galaxy
-shader:send('alpha',0.8)
+shader:send('alpha',.626)
 local t
 
 function back.init()

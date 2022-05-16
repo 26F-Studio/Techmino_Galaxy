@@ -8,7 +8,7 @@
 // License: CC-BY-NC-SA (default to this if not specified, on shadertoy.com)
 
 uniform float t;
-uniform float alpha=1.0;
+uniform float alpha;
 
 float mod289(float x){return x-floor(x*(1.0/289.0))*289.0;}
 vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
@@ -96,7 +96,7 @@ vec4 effect(vec4 color,sampler2D tex,vec2 texCoord,vec2 scrCoord){
     vec3 p2=vec3(uvs/(4.+sin(t*0.11)*0.2+0.2+sin(t*0.15)*0.3+0.4),1.5)+vec3(2.,-1.3,-1.);
     p2+=0.25*vec3(sin(t/16.),sin(t/12.),sin(t/128.));
     float t2=field2(p2,freqs[3]);
-    vec4 c2=mix(.4,1.,v)*vec4(1.3*t2*t2*t2,1.8*t2*t2,t2*freqs[0],t2);
+    vec4 c2=mix(.4,1.,v)*vec4(1.6*t2*t2*t2,1.2*t2*t2,2.0*t2*freqs[0],t2);
 
 
     //Let's add some stars

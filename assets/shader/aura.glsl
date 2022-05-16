@@ -1,5 +1,5 @@
 uniform float phase;
-uniform float alpha=1;
+uniform float alpha;
 vec4 effect(vec4 color,sampler2D tex,vec2 texCoord,vec2 scrCoord){
     vec2 p=vec2(scrCoord.x/love_ScreenSize.x,scrCoord.y/love_ScreenSize.y);
     vec3 c=vec3(0.);

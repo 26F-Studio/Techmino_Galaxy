@@ -20,9 +20,6 @@ DEBUG.checkLoadTime("Load Zenitha")
 --------------------------------------------------------------
 -- Global Vars Declaration
 VERSION=require"version"
-FNNS=SYSTEM:find'\79\83'-- What does FNSF stand for? IDK so don't ask me lol
-SFXPACKS={'chiptune'}
-VOCPACKS={'miya',--[['mono',]]'xiaoya','miku'}
 --------------------------------------------------------------
 -- System setting
 math.randomseed(os.time()*626)

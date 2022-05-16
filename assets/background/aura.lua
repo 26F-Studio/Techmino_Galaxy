@@ -2,6 +2,7 @@
 local gc=love.graphics
 local back={}
 local shader=SHADER.aura
+shader:send('phase',.626)
 local t
 
 function back.init()
