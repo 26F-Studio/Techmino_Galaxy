@@ -7,7 +7,7 @@
 // MrZ make this work in love2d
 // License: CC-BY-NC-SA (default to this if not specified, on shadertoy.com)
 
-uniform float t;
+uniform float time;
 uniform float alpha;
 
 float mod289(float x){return x-floor(x*(1.0/289.0))*289.0;}
@@ -36,7 +36,7 @@ float noise(vec3 p){
     return o4.y*d.y+o4.x*(1.0-d.y);
 }
 float field(in vec3 p,float s){
-    float strength=7.+.03*log(1.e-6+fract(sin(t)*4373.11));
+    float strength=7.+.03*log(1.e-6+fract(sin(time)*4373.11));
     float accum=s/4.;
     float prev=0.;
     float tw=0.;
@@ -53,7 +53,7 @@ float field(in vec3 p,float s){
 
     //Less iterations for second layer
 float field2(in vec3 p,float s){
-    float strength=7.+.03*log(1.e-6+fract(sin(t)*4373.11));
+    float strength=7.+.03*log(1.e-6+fract(sin(time)*4373.11));
     float accum=s/4.;
     float prev=0.;
     float tw=0.;
@@ -80,23 +80,23 @@ vec4 effect(vec4 color,sampler2D tex,vec2 texCoord,vec2 scrCoord){
     vec2 uv=2.*scrCoord/love_ScreenSize.xy-1.;
     vec2 uvs=uv*love_ScreenSize.xy/max(love_ScreenSize.x,love_ScreenSize.y);
     vec3 p=vec3(uvs/4.,0)+vec3(1.,-1.3,0.);
-    p+=.2*vec3(sin(t/16.),sin(t/12.),sin(t/128.));
+    p+=.2*vec3(sin(time/16.),sin(time/12.),sin(time/128.));
 
     //Sound
     float freqs[4];
-    freqs[0]=noise(vec3(0.01*100.0,0.25,t/10.0));
-    freqs[1]=noise(vec3(0.07*100.0,0.25,t/10.0));
-    freqs[2]=noise(vec3(0.15*100.0,0.25,t/10.0));
-    freqs[3]=noise(vec3(0.30*100.0,0.25,t/10.0));
+    freqs[0]=noise(vec3(0.01*100.0,0.25,time/10.0));
+    freqs[1]=noise(vec3(0.07*100.0,0.25,time/10.0));
+    freqs[2]=noise(vec3(0.15*100.0,0.25,time/10.0));
+    freqs[3]=noise(vec3(0.30*100.0,0.25,time/10.0));
 
     float t=field(p,freqs[2]);
     float v=(1.-exp((abs(uv.x)-1.)*6.))*(1.-exp((abs(uv.y)-1.)*6.));
 
     //Second Layer
-    vec3 p2=vec3(uvs/(4.+sin(t*0.11)*0.2+0.2+sin(t*0.15)*0.3+0.4),1.5)+vec3(2.,-1.3,-1.);
-    p2+=0.25*vec3(sin(t/16.),sin(t/12.),sin(t/128.));
+    vec3 p2=vec3(uvs/(4.+sin(time*0.11)*0.2+0.2+sin(time*0.15)*0.3+0.4),1.5)+vec3(2.,-1.3,-1.);
+    p2+=0.25*vec3(sin(time/16.),sin(time/12.),sin(time/128.));
     float t2=field2(p2,freqs[3]);
-    vec4 c2=mix(.4,1.,v)*vec4(1.6*t2*t2*t2,1.2*t2*t2,2.0*t2*freqs[0],t2);
+    vec4 c2=mix(.4,1.,v)*vec4(1.3*t2*t2*t2,1.8*t2*t2,t2*freqs[0],t2);
 
 
     //Let's add some stars
