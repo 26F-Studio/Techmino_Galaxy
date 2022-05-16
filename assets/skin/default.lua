@@ -14,6 +14,8 @@ local S={}
 
 local crossR,crossL=1,6
 function S.drawFieldBackground(fieldW,gridHeight)
+    gc_setColor(0,0,0,.26)
+    gc_rectangle('fill',0,0,400,-800)
     gc_setColor(1,1,1,.26)
     for x=1,fieldW do
         x=(x-1)*40
@@ -153,8 +155,10 @@ function S.drawHand(B,handX,handY)
 end
 
 function S.drawNextBorder(slot)
-    gc_setColor(COLOR.L)
+    gc_setColor(0,0,0,.26)
+    gc_rectangle('fill',30,0,140,100*slot)
     gc_setLineWidth(2)
+    gc_setColor(COLOR.L)
     gc_rectangle('line',30,0,140,100*slot)
 end
 
@@ -183,9 +187,13 @@ end
 function S.drawHoldBorder(mode,slot)
     gc_setLineWidth(2)
     if mode=='hold' then
+        gc_setColor(0,0,0,.26)
+        gc_rectangle('fill',-170,0,140,100*slot)
         gc_setColor(COLOR.L)
         gc_rectangle('line',-170,0,140,100*slot)
     elseif mode=='swap' then
+        gc_setColor(0,0,0,.26)
+        gc_rectangle('fill',430,0,140,100*slot)
         gc_setColor(COLOR.L)
         gc_rectangle('line',430,0,140,100*slot)
     end

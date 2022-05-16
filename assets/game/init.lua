@@ -278,7 +278,7 @@ end
 
 function GAME.render()
     gc.setCanvas({Zenitha.getBigCanvas('player'),stencil=true})
-    gc.clear(1,1,1,0)
+    gc.clear(0,0,0,0)
     for _,P in next,GAME.playerList do P:render() end
     gc.setCanvas()
 
