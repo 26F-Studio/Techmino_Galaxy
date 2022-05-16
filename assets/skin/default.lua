@@ -13,7 +13,7 @@ local COLOR=COLOR
 local S={}
 
 local crossR,crossL=1,6
-function S.drawFieldGrid(fieldW,gridHeight)
+function S.drawFieldBackground(fieldW,gridHeight)
     gc_setColor(1,1,1,.26)
     for x=1,fieldW do
         x=(x-1)*40

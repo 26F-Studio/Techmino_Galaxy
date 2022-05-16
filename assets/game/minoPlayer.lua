@@ -1345,7 +1345,7 @@ function MP:render()
 
 
     -- Grid & Cells
-    skin.drawFieldGrid(settings.fieldW,min(max(settings.lockoutH,settings.deathH),2*settings.fieldW))
+    skin.drawFieldBackground(settings.fieldW,min(max(settings.lockoutH,settings.deathH),2*settings.fieldW))
     skin.drawFieldCells(self.field)
 
 
