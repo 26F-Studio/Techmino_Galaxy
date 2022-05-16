@@ -1,7 +1,8 @@
 local scene={}
 
 function scene.enter()
-    BG.set('image')BG.send('image',.12,IMG.cover)
+    -- BG.set('image')BG.send('image',.12,IMG.cover)
+    BG.set('galaxy')
     playBgm('blank','-base')
 end
 
