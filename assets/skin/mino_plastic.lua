@@ -8,6 +8,7 @@ local min=math.min
 local COLOR=COLOR
 
 local S={}
+S.base='mino_default'
 
 local X=3-- Border width
 

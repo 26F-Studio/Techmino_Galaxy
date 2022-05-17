@@ -1535,7 +1535,7 @@ local baseEnv={
     arr=26,
     sdarr=12,
     dascut=0,
-    skin='plastic',
+    skin='mino_plastic',
 
     shakeness=.26,
 }

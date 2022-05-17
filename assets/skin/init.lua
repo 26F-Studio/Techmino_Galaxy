@@ -11,16 +11,16 @@ function SKIN.add(name,data)
     assert(type(data)=='table',"Skin must be table")
     assert(getmetatable(data)==nil,"Skin table must not have metatable")
 
-    assert(not data.getTime,"Fatal warning: skin table must not define 'getTime'")
+    assert(not data.getTime,"Skin mustn't define 'getTime'")
     data.getTime=_getTime
 
-    setmetatable(data,{__index=skinLib.default})
+    setmetatable(data,{__index=data.base and assert(skinLib[data.base],"no base skin called "..tostring(data.base))})
 
     skinLib[name]=data
 end
 
 function SKIN.get(name)
-    return skinLib[name] or skinLib.default
+    return assert(skinLib[name])
 end
 
 function SKIN.setTime(t)
