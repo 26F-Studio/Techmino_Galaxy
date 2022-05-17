@@ -2,7 +2,7 @@ local gc=love.graphics
 local gc_push,gc_pop=gc.push,gc.pop
 local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
 local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
-local gc_line=gc.line
+local gc_draw,gc_line=gc.draw,gc.line
 local gc_rectangle=gc.rectangle
 local gc_printf=gc.printf
 
@@ -13,24 +13,24 @@ local COLOR=COLOR
 local S={}
 
 local crossR,crossL=1,6
+local gridMark=GC.load{40,40,
+    {'setCL',1,1,1,.26},
+    {'fRect',0, 0, crossL, crossR},
+    {'fRect',0, 0, crossR, crossL},
+    {'fRect',40,0, -crossL,crossR},
+    {'fRect',40,0, -crossR,crossL},
+    {'fRect',0, 40,crossL, -crossR},
+    {'fRect',0, 40,crossR, -crossR-crossL},
+    {'fRect',40,40,-crossL,-crossR},
+    {'fRect',40,40,-crossR,-crossR-crossL},
+}
 function S.drawFieldBackground(fieldW,gridHeight)
     gc_setColor(0,0,0,.26)
     gc_rectangle('fill',0,0,400,-800)
-    gc_setColor(1,1,1,.26)
-    for x=1,fieldW do
-        x=(x-1)*40
-        for y=1,gridHeight do
-            y=-y*40
-            gc_rectangle('fill',x,    y,    crossL,  crossR)
-            gc_rectangle('fill',x,    y,    crossR,  crossL)
-            gc_rectangle('fill',x+40, y,    -crossL, crossR)
-            gc_rectangle('fill',x+40, y,    -crossR, crossL)
-            gc_rectangle('fill',x,    y+40, crossL,  -crossR)
-            gc_rectangle('fill',x,    y+40, crossR,  -crossR-crossL)
-            gc_rectangle('fill',x+40, y+40, -crossL, -crossR)
-            gc_rectangle('fill',x+40, y+40, -crossR, -crossR-crossL)
-        end
-    end
+    gc_setColor(1,1,1)
+    for x=1,fieldW do for y=1,gridHeight do
+        gc_draw(gridMark,x*40-40,-y*40)
+    end end
 end
 
 function S.drawFieldBorder()

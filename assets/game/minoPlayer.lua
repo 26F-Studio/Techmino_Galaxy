@@ -1341,74 +1341,74 @@ function MP:render()
     gc.scale(10/settings.fieldW)
 
 
-    self:triggerEvent('drawBelowField')
+        self:triggerEvent('drawBelowField')
 
 
-    -- Grid & Cells
-    skin.drawFieldBackground(settings.fieldW,min(max(settings.lockoutH,settings.deathH),2*settings.fieldW))
-    skin.drawFieldCells(self.field)
+        -- Grid & Cells
+        skin.drawFieldBackground(settings.fieldW,min(max(settings.lockoutH,settings.deathH),2*settings.fieldW))
+        skin.drawFieldCells(self.field)
 
 
-    self:triggerEvent('drawBelowBlock')
+        self:triggerEvent('drawBelowBlock')
 
 
-    if self.hand then
-        local CB=self.hand.matrix
+        if self.hand then
+            local CB=self.hand.matrix
 
-        -- Ghost
-        if not self.deathTimer then
-            skin.drawGhost(CB,self.handX,self.ghostY)
+            -- Ghost
+            if not self.deathTimer then
+                skin.drawGhost(CB,self.handX,self.ghostY)
+            end
+
+            -- Mino
+            if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
+                -- Smooth
+                local movingX,droppingY=0,0
+                if self.moveDir and self.moveCharge<self.settings.das then
+                    movingX=15*self.moveDir*(self.moveCharge/self.settings.das-.5)
+                end
+                if self.handY>self.ghostY then
+                    droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
+                end
+                gc.translate(movingX,droppingY)
+
+                skin.drawHand(CB,self.handX,self.handY)
+
+                local RS=MinoRotSys[settings.rotSys]
+                local minoData=RS[self.hand.shape]
+                local state=minoData[self.hand.direction]
+                local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
+                if centerPos then
+                    gc.setColor(1,1,1)
+                    GC.draw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40)
+                end
+                gc.translate(-movingX,-droppingY)
+            end
         end
 
-        -- Mino
-        if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
-            -- Smooth
-            local movingX,droppingY=0,0
-            if self.moveDir and self.moveCharge<self.settings.das then
-                movingX=15*self.moveDir*(self.moveCharge/self.settings.das-.5)
+        -- Float hold
+        if #self.floatHolds>0 then
+            for n=1,#self.floatHolds do
+                local H=self.floatHolds[n]
+                skin.drawFloatHold(n,H.hand.matrix,H.handX,H.handY,settings.holdMode=='float' and not settings.infHold and n<=self.holdTime)
             end
-            if self.handY>self.ghostY then
-                droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
-            end
-            gc.translate(movingX,droppingY)
-
-            skin.drawHand(CB,self.handX,self.handY)
-
-            local RS=MinoRotSys[settings.rotSys]
-            local minoData=RS[self.hand.shape]
-            local state=minoData[self.hand.direction]
-            local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
-            if centerPos then
-                gc.setColor(1,1,1)
-                GC.draw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40)
-            end
-            gc.translate(-movingX,-droppingY)
         end
-    end
-
-    -- Float hold
-    if #self.floatHolds>0 then
-        for n=1,#self.floatHolds do
-            local H=self.floatHolds[n]
-            skin.drawFloatHold(n,H.hand.matrix,H.handX,H.handY,settings.holdMode=='float' and not settings.infHold and n<=self.holdTime)
-        end
-    end
 
 
-    self:triggerEvent('drawBelowMarks')
+        self:triggerEvent('drawBelowMarks')
 
 
-    -- Height lines
-    skin.drawHeightLines(
-        settings.fieldW*40,  -- (pixels) Field Width
-        settings.spawnH*40,  -- (pixels) Spawning height
-        settings.lockoutH*40,-- (pixels) lock-out height
-        settings.deathH*40,  -- (pixels) Death height
-        1260*40              -- (pixels) Void height
-    )
+        -- Height lines
+        skin.drawHeightLines(
+            settings.fieldW*40,  -- (pixels) Field Width
+            settings.spawnH*40,  -- (pixels) Spawning height
+            settings.lockoutH*40,-- (pixels) lock-out height
+            settings.deathH*40,  -- (pixels) Death height
+            1260*40              -- (pixels) Void height
+        )
 
 
-    self:triggerEvent('drawInField')
+        self:triggerEvent('drawInField')
 
 
     -- stopFieldStencil
