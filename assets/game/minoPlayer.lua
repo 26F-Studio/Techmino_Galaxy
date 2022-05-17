@@ -338,7 +338,7 @@ local defaultSoundFunc={
             'clear_5'
         )
         if lines>=3 then
-            BGM.set('all','highgain',1/lines,0)
+            BGM.set('all','highgain',.26+1/lines,0)
             BGM.set('all','highgain',1,min((lines)^1.5/5,2.6))
         end
     end,
@@ -362,16 +362,16 @@ local defaultSoundFunc={
         function() inst('bass',.60,'D4') inst('lead',.60,'D3') end,-- 8 combo
         function() inst('bass',.40,'E4') inst('lead',.75,'E3') end,-- 9 combo
         function() inst('bass',.20,'G4') inst('lead',.90,'G3') end,-- 10 combo
-        function() inst('bass',.20,'A4') inst('lead','A3') end,-- 11 combo
-        function() inst('bass',.40,'A4') inst('lead','C4') end,-- 12 combo
-        function() inst('bass',.60,'A4') inst('lead','D4') end,-- 13 combo
-        function() inst('bass',.75,'A4') inst('lead','E4') end,-- 14 combo
-        function() inst('bass',.90,'A4') inst('lead','G4') end,-- 15 combo
-        function() inst('bass',.90,'A4') inst('bass',.90,'E5') inst('lead','A4') end,-- 16 combo
-        function() inst('bass',.85,'A4') inst('bass',.85,'E5') inst('lead','C5') end,-- 17 combo
+        function() inst('bass',.20,'A4') inst('lead',.85,'A3') end,-- 11 combo
+        function() inst('bass',.40,'A4') inst('lead',.80,'C4') end,-- 12 combo
+        function() inst('bass',.60,'A4') inst('lead',.75,'D4') end,-- 13 combo
+        function() inst('bass',.75,'A4') inst('lead',.70,'E4') end,-- 14 combo
+        function() inst('bass',.90,'A4') inst('lead',.65,'G4') end,-- 15 combo
+        function() inst('bass',.90,'A4') inst('bass',.70,'E5') inst('lead','A4') end,-- 16 combo
+        function() inst('bass',.85,'A4') inst('bass',.75,'E5') inst('lead','C5') end,-- 17 combo
         function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end,-- 18 combo
-        function() inst('bass',.75,'A4') inst('bass',.75,'E5') inst('lead','E5') end,-- 19 combo
-        function() inst('bass',.70,'A4') inst('bass',.70,'E5') inst('lead','G5') end,-- 20 combo
+        function() inst('bass',.75,'A4') inst('bass',.85,'E5') inst('lead','E5') end,-- 19 combo
+        function() inst('bass',.70,'A4') inst('bass',.90,'E5') inst('lead','G5') end,-- 20 combo
     },{__call=function(self,combo)
         if self[combo] then
             self[combo]()
