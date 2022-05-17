@@ -57,7 +57,7 @@ scene.widgetList={
 
     WIDGET.new{type='checkBox',pos={1,1},x=-600,y=-80,w=50,      text='',disp=TABLE.func_getVal(SETTINGS.system,'touchControl'),code=TABLE.func_revVal(SETTINGS.system,'touchControl')},
     WIDGET.new{type='button',  pos={1,1},x=-480,y=-80,w=160,h=80,text=LANG'setting_key_touch',fontSize=45,code=WIDGET.c_goScn('setting_key_touch')},
-    WIDGET.new{type='button',  pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG'setting_key_test',fontSize=45,code=function() SCN.go('game_simp',nil,'test') end},
+    WIDGET.new{type='button',  pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG'setting_key_test',fontSize=45,code=function() SCN.go('game_simp',nil,'test_mino') end},
 
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }

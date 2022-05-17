@@ -7,7 +7,7 @@ return {
         playBgm('race','-base')
         BG.set('none')
     end,
-    settings={
+    settings={mino={
         dropDelay=1000,
         lockDelay=1000,
         event={
@@ -28,7 +28,7 @@ return {
                 GC.mStr(40-P.modeData.line,-300,-55)
             end,
         },
-    },
+    }},
     checkFinish=function()
         return true
     end,

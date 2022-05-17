@@ -1,3 +1,8 @@
+require'assets.game.rotsys_mino'
+MinoAtkSys=require'assets.game.atksys_mino'
+Minoes=require'assets.game.minoes'
+particleTemplate=require'assets.game.particleSystemTemplate'
+
 local gc=love.graphics
 
 local layoutFuncs={}
@@ -117,7 +122,8 @@ local function getMode(name)
     else
         local path='assets/game/mode/'..name..'.lua'
         if FILE.isSafe(path) then
-            local M=FILE.load(path,'-lua')
+            local M=FILE.load(path,'-lua -canskip')
+            if not M then error("No mode called "..tostring(name)) end
             if M.initialize ==nil then M.initialize= NULL      else assert(type(M.initialize)         =='function',"[mode].initialize must be function") end
             if M.settings   ==nil then M.settings=   {}        else assert(type(M.settings)           =='table',   "[mode].settings must be table (if exist)")       end
             if M.layout     ==nil then M.layout=     'default' else assert(type(layoutFuncs[M.layout])=='funcion', "[mode].layout wrong")                            end
@@ -125,6 +131,7 @@ local function getMode(name)
             if M.result     ==nil then M.result=     NULL      else assert(type(M.result)             =='function',"[mode].result must be function (if exist)")      end
             if M.scorePage  ==nil then M.scorePage=  NULL      else assert(type(M.scorePage)          =='function',"[mode].scorePage must be function (if exist)")   end
             modeLib[name]=M
+            M.name=name
             return M
         end
     end
@@ -154,16 +161,23 @@ function GAME.reset(mode,seed)
 end
 
 function GAME.newPlayer(id,pType)
-    local P
     if not (type(id)=='number' and math.floor(id)==id and id>=1 and id<=1000) then
         MES.new('error',"player id must be 1~1000 integer")
         return
     end
-    if pType~='mino' then
-        MES.new('error',"player type must be 'mino'")
+
+    local P
+    if pType=='mino' then
+        P=require'assets.game.minoPlayer'.new(GAME.mode)
+    elseif pType=='puyo' then
+        P=require'assets.game.puyoPlayer'.new(GAME.mode)
+    elseif pType=='jewel' then
+        P=require'assets.game.jewelPlayer'.new(GAME.mode)
+    else
+        MES.new('error',"invalid player type :'"..tostring(pType).."'")
         return
     end
-    P=require'assets.game.minoPlayer'.new(GAME.mode)
+
     P.gameMode=pType
     P.id=id
     P.isMain=false
@@ -184,12 +198,15 @@ end
 
 function GAME.start()
     if #GAME.playerList==0 then
-        MES.new('warning',"No players created in this mode")
+        MES.new('warn',"No players created in this mode")
     else
         if GAME.mainPID then GAME.playerMap[GAME.mainPID]:loadSettings(SETTINGS.game) end
         if GAME.mode.settings then
             for i=1,#GAME.playerList do
-                GAME.playerList[i]:loadSettings(GAME.mode.settings)
+                GAME.playerList[i]:loadSettings(
+                    GAME.mode.settings[GAME.playerList[i].gameMode]
+                    or error("Mode "..GAME.mode.name.." has no gamemode setting for "..GAME.playerList[i].gameMode)
+                )
             end
         end
 

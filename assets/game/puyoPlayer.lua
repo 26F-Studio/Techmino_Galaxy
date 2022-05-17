@@ -34,20 +34,13 @@ local defaultSoundFunc={
     end,
     move=           function() SFX.play('move')             end,
     move_failed=    function() SFX.play('move_failed')      end,
-    tuck=           function() SFX.play('tuck')             end,
     rotate=         function() SFX.play('rotate')           end,
     initrotate=     function() SFX.play('initrotate')       end,
-    rotate_locked=  function() SFX.play('rotate_locked')    end,
-    rotate_corners= function() SFX.play('rotate_corners')   end,
     rotate_failed=  function() SFX.play('rotate_failed')    end,
     rotate_special= function() SFX.play('rotate_special')   end,
-    hold=           function() SFX.play('hold')             end,
-    inithold=       function() SFX.play('inithold')         end,
     touch=          function() SFX.play('touch',.5)         end,
     drop=           function() SFX.play('drop')             end,
     lock=           function() SFX.play('lock')             end,
-    b2b=            function(lv) SFX.play('b2b_'..min(lv,10)) end,
-    b2b_break=      function() SFX.play('b2b_break') end,
     clear=function(lines)
         SFX.play(
             lines==1 and 'clear_1' or
@@ -59,15 +52,6 @@ local defaultSoundFunc={
         if lines>=3 then
             BGM.set('all','highgain',.26+1/lines,0)
             BGM.set('all','highgain',1,min((lines)^1.5/5,2.6))
-        end
-    end,
-    spin=function(lines)
-        if lines==0 then     SFX.play('spin_0')
-        elseif lines==1 then SFX.play('spin_1')
-        elseif lines==2 then SFX.play('spin_2')
-        elseif lines==3 then SFX.play('spin_3')
-        elseif lines==4 then SFX.play('spin_4')
-        else                 SFX.play('spin_mega')
         end
     end,
     combo=setmetatable({
@@ -105,7 +89,6 @@ local defaultSoundFunc={
     end,__metatable=true}),
     frenzy=      function() SFX.play('frenzy')      end,
     allClear=    function() SFX.play('all_clear')   end,
-    halfClear=   function() SFX.play('half_clear')  end,
     suffocate=   function() SFX.play('suffocate')   end,
     desuffocate= function() SFX.play('desuffocate') end,
     reach=       function() SFX.play('beep_1')      end,
@@ -113,8 +96,7 @@ local defaultSoundFunc={
     fail=        function() SFX.play('fail')        end,
 }
 
-local MP={}
-
+local PP={}
 --------------------------------------------------------------
 -- Actions
 local actions={}
@@ -210,7 +192,7 @@ end
 actions.hardDrop={
     press=function(P)
         if P.hand and not P.deathTimer then
-            P:minoDropped()
+            P:puyoDropped()
         else
             P.keyBuffer.hardDrop=true
         end
@@ -219,55 +201,6 @@ actions.hardDrop={
         P.keyBuffer.hardDrop=false
     end
 }
-actions.holdPiece={
-    press=function(P)
-        if P.hand then
-            P:hold()
-        else
-            P.keyBuffer.hold=true
-        end
-    end,
-    release=function(P)
-        P.keyBuffer.hold=false
-    end
-}
-function actions.sonicDrop(P)
-    if not P.hand or P.deathTimer then return end
-    if P.handY>P.ghostY then
-        P:moveHand('moveY',P.ghostY-P.handY)
-        P:freshDelay('drop')
-        P:playSound('move')
-        P:playSound('touch')
-    end
-end
-function actions.sonicLeft(P)
-    local moved
-    while P.hand and not P:ifoverlap(P.hand.matrix,P.handX-1,P.handY) do
-        moved=true
-        P:moveHand('moveX',-1)
-        P:freshGhost()
-    end
-    if not moved then
-        P:playSound('move_failed')
-    elseif P.handY==P.ghostY then
-        P:playSound('touch')
-    end
-    return moved
-end
-function actions.sonicRight(P)
-    local moved
-    while P.hand and not P:ifoverlap(P.hand.matrix,P.handX+1,P.handY) do
-        moved=true
-        P:moveHand('moveX',1)
-        P:freshGhost()
-    end
-    if not moved then
-        P:playSound('move_failed')
-    elseif P.handY==P.ghostY then
-        P:playSound('touch')
-    end
-    return moved
-end
 
 actions.function1=NULL
 actions.function2=NULL
@@ -300,29 +233,9 @@ local function _getActionObj(a)
     end
 end
 for k,v in next,actions do actions[k]=_getActionObj(v) end
-local actionPacks={
-    Classic={
-        'moveLeft',
-        'moveRight',
-        'rotateCW',
-        'rotateCCW',
-        'softDrop',
-    },
-    Normal={
-        'moveLeft',
-        'moveRight',
-        'rotateCW',
-        'rotateCCW',
-        'rotate180',
-        'softDrop',
-        'sonicDrop',
-        'hardDrop',
-        'holdPiece',
-    },
-}
 --------------------------------------------------------------
 -- Effects
-function MP:shakeBoard(args,v)
+function PP:shakeBoard(args,v)
     local shake=self.settings.shakeness
     if args:sArg('-drop') then
         self.pos.vy=self.pos.vy+.2*shake
@@ -344,7 +257,7 @@ function MP:shakeBoard(args,v)
         self.pos.vk=self.pos.vk+.0002*shake*min(v^1.6,26)
     end
 end
-function MP:playSound(event,...)
+function PP:playSound(event,...)
     if not self.sound then return end
     if self.time-self.soundTimeHistory[event]>=15 then
         self.soundTimeHistory[event]=self.time
@@ -355,7 +268,7 @@ function MP:playSound(event,...)
         end
     end
 end
-function MP:createMoveParticle(x1,y1,x2,y2)
+function PP:createMoveParticle(x1,y1,x2,y2)
     local p=self.particles.star
     p:setParticleLifetime(.26,.5)
     p:setEmissionArea('none')
@@ -367,14 +280,14 @@ function MP:createMoveParticle(x1,y1,x2,y2)
         p:emit(1)
     end end
 end
-function MP:createFrenzyParticle(amount)
+function PP:createFrenzyParticle(amount)
     local p=self.particles.star
     p:setParticleLifetime(.626,1.6)
     p:setEmissionArea('uniform',200,400,0,true)
     p:setPosition(200,-400)
     p:emit(amount)
 end
-function MP:createLockParticle(x,y)
+function PP:createLockParticle(x,y)
     local p=self.particles.trail
     p:setPosition(
         (x+#self.hand.matrix[1]/2-1)*40,
@@ -382,13 +295,13 @@ function MP:createLockParticle(x,y)
     )
     p:emit(1)
 end
-function MP:setPosition(x,y,k,a)
+function PP:setPosition(x,y,k,a)
     self.pos.x=x or self.pos.x
     self.pos.y=y or self.pos.y
     self.pos.k=k or self.pos.k
     self.pos.a=a or self.pos.a
 end
-function MP:movePosition(dx,dy,k,da)
+function PP:movePosition(dx,dy,k,da)
     self.pos.x=self.pos.x+(dx or 0)
     self.pos.y=self.pos.y+(dy or 0)
     self.pos.k=self.pos.k*(k or 1)
@@ -396,11 +309,11 @@ function MP:movePosition(dx,dy,k,da)
 end
 --------------------------------------------------------------
 -- Game methods
-function MP:triggerEvent(name,...)
+function PP:triggerEvent(name,...)
     local L=self.event[name]
     if L then for i=1,#L do L[i](self,...) end end
 end
-function MP:moveHand(action,a,b,c,d)
+function PP:moveHand(action,a,b,c,d)
     if action=='moveX' then
         self:createMoveParticle(self.handX,self.handY,self.handX+a,self.handY)
         self.handX=self.handX+a
@@ -415,62 +328,6 @@ function MP:moveHand(action,a,b,c,d)
 
     if self.handX%1~=0 or self.handY%1~=0 then error('EUREKA! Decimal position.') end
 
-    local movement={
-        action=action,
-        mino=self.hand,
-        x=self.handX,y=self.handY,
-    }
-
-    if action=='moveX' then
-        if
-            self.settings.tuck and
-            self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
-            self:ifoverlap(self.hand.matrix,self.handX,self.handY+1)
-        then
-            movement.tuck=true
-            self:playSound('tuck')
-        end
-    elseif action=='rotate' then
-        if
-            self.settings.spin_immobile and
-            self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
-            self:ifoverlap(self.hand.matrix,self.handX,self.handY+1) and
-            self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) and
-            self:ifoverlap(self.hand.matrix,self.handX+1,self.handY)
-        then
-            movement.immobile=true
-            self:shakeBoard(c=='L' and '-ccw' or c=='R' and '-cw' or '-180')
-            self:playSound('rotate_locked')
-        end
-        if self.settings.spin_corners then
-            local minoData=MinoRotSys[self.settings.rotSys][self.hand.shape]
-            local state=minoData[self.hand.direction]
-            local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
-            if centerPos then
-                local cx=self.handX+centerPos[1]-.5
-                if floor(cx)==cx then
-                    local cy=self.handY+centerPos[2]-.5
-                    if floor(cy)==cy then
-                        local corners=0
-                        if self:isSolidCell(cx-1,cy-1) then corners=corners+1 end
-                        if self:isSolidCell(cx+1,cy-1) then corners=corners+1 end
-                        if self:isSolidCell(cx-1,cy+1) then corners=corners+1 end
-                        if self:isSolidCell(cx+1,cy+1) then corners=corners+1 end
-                        if corners>=self.settings.spin_corners then
-                            movement.corners=true
-                            self:playSound('rotate_corners')
-                        end
-                    end
-                end
-            end
-        end
-        self:playSound(d and 'initrotate' or 'rotate')
-        if self.handY==self.ghostY then
-            self:playSound('touch')
-        end
-    end
-    self.lastMovement=movement
-
     if self.deathTimer then
         local t=self.deathTimer
         self.deathTimer=false
@@ -481,7 +338,7 @@ function MP:moveHand(action,a,b,c,d)
         end
     end
 end
-function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside, like shape, name, direction)
+function PP:restoreMinoState(mino)-- Restore a mino object's state (only inside, like shape, name, direction)
     if mino._origin then
         for k,v in next,mino._origin do
             mino[k]=v
@@ -489,13 +346,13 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
     end
     return mino
 end
-function MP:resetPos()-- Move hand piece to the normal spawn position
+function PP:resetPos()-- Move hand piece to the normal spawn position
     self:moveHand('reset',floor(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
     self.minY=self.handY
     self.ghostY=self.handY
     self:resetPosCheck()
 end
-function MP:resetPosCheck()
+function PP:resetPosCheck()
     local suffocated-- Cancel deathTimer temporarily, or we cannot apply IMS when hold in suffcating
     if self.deathTimer then
         local bufferedDeathTimer=self.deathTimer
@@ -542,7 +399,7 @@ function MP:resetPosCheck()
         self.moveCharge=self.moveCharge-self.settings.dascut
     end
 end
-function MP:freshGhost(justFreshGhost)
+function PP:freshGhost(justFreshGhost)
     if self.hand then
         self.ghostY=min(self.field:getHeight()+1,self.handY)
 
@@ -562,7 +419,7 @@ function MP:freshGhost(justFreshGhost)
         end
     end
 end
-function MP:freshDelay(reason)-- reason can be 'move' or 'drop' or 'spawn'
+function PP:freshDelay(reason)-- reason can be 'move' or 'drop' or 'spawn'
     local fell
     if self.handY<self.minY then
         self.minY=self.handY
@@ -619,57 +476,42 @@ function MP:freshDelay(reason)-- reason can be 'move' or 'drop' or 'spawn'
         error("wtf why settings.freshCondition is "..tostring(self.settings.freshCondition))
     end
 end
-function MP:freshNextQueue()
+function PP:freshNextQueue()
     while #self.nextQueue<max(self.settings.nextSlot,1) do
-        local shapeID=self:seqGen()
-        if shapeID then
-            if type(shapeID)=='number' then
-                self:getMino(shapeID)
-            else
-                break
-            end
-        end
+        local shape=self:seqGen()
+        if shape then self:getPuyo(shape) end
     end
 end
-function MP:popNext()
+function PP:popNext()
     if self.nextQueue[1] then-- Most cases there is pieces in next queue
         self.hand=rem(self.nextQueue,1)
         self:freshNextQueue()
-        self.holdTime=0
-    elseif self.holdQueue[1] then-- If no nexts, force using hold
-        ins(self.nextQueue,rem(self.holdQueue,1))
-        self:popNext()
-    else-- If no piece to use, both Next and Hold queue are empty, game over
+    else-- If no piece to use, Next queue are empty, game over
         self:finish('ILE')
         return
     end
 
-    if self.keyBuffer.hold then-- IHS
-        self.keyBuffer.hold=false
-        self:hold(true)
-    else
-        self:resetPos()
-    end
+    self:resetPos()
 
     self:triggerEvent('afterSpawn')
 
     if self.keyBuffer.hardDrop then-- IHdS
         self.keyBuffer.hardDrop=false
         if not self.deathTimer then
-            self:minoDropped()
+            self:puyoDropped()
         end
     end
 end
-function MP:getMino(shapeID)
+function PP:getPuyo(shape)
     self.pieceCount=self.pieceCount+1
-    local shape=TABLE.shift(Minoes[shapeID].shape)
+    shape=TABLE.shift(shape)
 
     -- Generate matrix
     for y=1,#shape do for x=1,#shape[1] do
         if shape[y][x] then
             shape[y][x]={
-                minoID=self.pieceCount,
-                color=defaultMinoColor[shapeID],
+                puyoID=self.pieceCount,
+                color=defaultPuyoColor[shape[y][x]],
                 nearby={},
             }-- Should be player's color setting
         end
@@ -691,17 +533,16 @@ function MP:getMino(shapeID)
         end
     end end
 
-    local mino={
+    local puyo={
         id=self.pieceCount,
-        shape=shapeID,
+        shape=shape,
         direction=0,
-        name=Minoes[shapeID].name,
         matrix=shape,
     }
-    mino._origin=TABLE.copy(mino,0)
-    ins(self.nextQueue,mino)
+    puyo._origin=TABLE.copy(puyo,0)
+    ins(self.nextQueue,puyo)
 end
-function MP:ifoverlap(CB,cx,cy)
+function PP:ifoverlap(CB,cx,cy)
     local F=self.field
 
     -- Must in wall
@@ -720,24 +561,24 @@ function MP:ifoverlap(CB,cx,cy)
     -- No collision
     return false
 end
-function MP:isSolidCell(x,y)
+function PP:isSolidCell(x,y)
     return not self.deathTimer and self.field:getCell(x,y) and true or false
 end
-function MP:moveLeft()
+function PP:moveLeft()
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
         self:moveHand('moveX',-1)
         self:freshGhost()
         return true
     end
 end
-function MP:moveRight()
+function PP:moveRight()
     if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
         self:moveHand('moveX',1)
         self:freshGhost()
         return true
     end
 end
-function MP:moveDown()
+function PP:moveDown()
     if not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
         self:moveHand('moveY',-1)
         self:freshDelay('drop')
@@ -747,123 +588,29 @@ function MP:moveDown()
         return true
     end
 end
-function MP:rotate(dir,ifInit)
+local kicks={{0,0},{-1,0},{1,0},{0,-1},{-1,-1},{1,-1}}
+function PP:rotate(dir,ifInit)
     if not self.hand then return end
-    local minoData=MinoRotSys[self.settings.rotSys][self.hand.shape]
     if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F ("..tostring(dir)..")") end
 
-    if minoData.rotate then-- Custom rotate function
-        minoData.rotate(self,dir,ifInit)
-    else-- Normal rotate procedure
-        local preState=minoData[self.hand.direction]
-        if preState then
-            -- Rotate matrix
-            local kick=preState[dir]
-            if not kick then return end-- This RS doesn't define this rotation
+    -- Rotate matrix
+    local cb=self.hand.matrix
+    local icb=TABLE.rotate(cb,dir)
 
-            local cb=self.hand.matrix
-            local icb=TABLE.rotate(cb,dir)
-            local baseX,baseY
-
-            local afterState=minoData[kick.target]
-            if kick.base then
-                baseX=kick.base[1]
-                baseY=kick.base[2]
-            elseif preState.center and afterState.center then
-                baseX=preState.center[1]-afterState.center[1]
-                baseY=preState.center[2]-afterState.center[2]
-            else
-                error('cannot get baseX/Y')
-            end
-
-            for n=1,#kick.test do
-                local ix,iy=self.handX+baseX+kick.test[n][1],self.handY+baseY+kick.test[n][2]
-                if not self:ifoverlap(icb,ix,iy) then
-                    self.hand.matrix=icb
-                    self.hand.direction=kick.target
-                    self:moveHand('rotate',ix,iy,dir,ifInit)
-                    self:freshGhost()
-                    return
-                end
-            end
-            self:freshDelay('rotate')
-            self:playSound('rotate_failed')
-        else
-            error("wtf why no state in minoData")
+    for n=1,#kicks do
+        local ix,iy=self.handX+kicks[n][1],self.handY+kicks[n][2]
+        if not self:ifoverlap(icb,ix,iy) then
+            self.hand.matrix=icb
+            self.hand.direction=(self.hand.direction+(dir=='R' and 1 or dir=='L' and -1 or 2))%4
+            self:moveHand('rotate',ix,iy,dir,ifInit)
+            self:freshGhost()
+            return
         end
     end
+    self:freshDelay('rotate')
+    self:playSound('rotate_failed')
 end
-function MP:hold(ifInit)
-    if self.holdTime>=self.settings.holdSlot and not self.settings.infHold then return end
-    local mode=self.settings.holdMode
-
-    -- These data may changed during hold, so we store them and recover them later
-    local freshChance,freshTimeRemain=self.freshChance,self.freshTimeRemain
-    local holdTime=self.holdTime
-
-    self[
-        mode=='hold' and 'hold_hold' or
-        mode=='swap' and 'hold_swap' or
-        mode=='float' and 'hold_float' or
-        error("wtf why hold mode is "..tostring(mode))
-    ](self)
-
-    -- Recover data
-    self.freshChance,self.freshTimeRemain=freshChance,freshTimeRemain
-    self.holdTime=holdTime+1
-
-    self:playSound(ifInit and 'inithold' or 'hold')
-end
-function MP:hold_hold()
-    if not self.settings.holdKeepState then
-        self.hand=self:restoreMinoState(self.hand)
-    end
-
-    -- Swap hand and hold
-    local swapN=self.holdTime%self.settings.holdSlot+1
-    self.hand,self.holdQueue[swapN]=self.holdQueue[swapN],self.hand
-
-    -- Reset position or pop next out
-    if self.hand then
-        self:resetPos()
-    else
-        self:popNext()
-    end
-end
-function MP:hold_swap()
-    local swapN=self.holdTime%self.settings.holdSlot+1
-    if self.nextQueue[swapN] then
-        if not self.settings.holdKeepState then
-            self.hand=self:restoreMinoState(self.hand)
-        end
-        self.hand,self.nextQueue[swapN]=self.nextQueue[swapN],self.hand
-        self:resetPos()
-    end
-end
-function MP:hold_float()
-    local swapN=self.holdTime%self.settings.holdSlot+1
-    if self.floatHolds[swapN] then
-        local h=self.floatHolds[swapN]
-        h.hand,self.hand=self.hand,h.hand
-        h.handX,self.handX=self.handX,h.handX
-        h.handY,self.handY=self.handY,h.handY
-        h.lastMovement,self.lastMovement=self.lastMovement,h.lastMovement
-        h.minY,self.minY=self.minY,h.minY
-        while self:ifoverlap(self.hand.matrix,self.handX,self.handY) and self.handY<self.settings.spawnH+1 do self.handY=self.handY+1 end
-        self:resetPosCheck()
-    else
-        self.floatHolds[swapN]={
-            hand=self.hand,
-            handX=self.handX,
-            handY=self.handY,
-            lastMovement=self.lastMovement,
-            minY=self.minY,
-        }
-        self.hand=false
-        self:popNext()
-    end
-end
-function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
+function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
     if not self.hand then return end
 
     -- Move down
@@ -877,46 +624,12 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
 
     -- Lock to field
     self:lock()
-    if self.handY+#self.hand.matrix-1>self.settings.deathH then
-        self:finish('MLE')
-        return
-    end
     self:playSound('lock')
     self:triggerEvent('afterLock')
-
-    -- Calculate bonus
-    local clear=self:checkField()
-    self.lastMovement.clear=clear
-    if clear then
-        self:playSound('clear',clear.line)
-        self:createFrenzyParticle(clear.line*26)
-        self:triggerEvent('afterClear',self.lastMovement)
-    end
-
-    local atk=MinoAtkSys[self.settings.atkSys].drop(self)
-    if atk then GAME.send(self,atk) end
 
     -- Discard hand
     self.hand=false
     if self.finished then return end
-
-    -- Update & Release garbage
-    local i=1
-    while true do
-        g=self.garbageBuffer[i]
-        if not g then break end
-        if g.time==g.time0 then
-            local r=rnd(10)
-            for _=1,g.power do
-                self:riseGarbage(r)
-            end
-            rem(self.garbageBuffer,i)
-            i=i-1-- Avoid index error
-        elseif g.mode==1 then
-            g.time=g.time+1
-        end
-        i=i+1
-    end
 
     -- Fresh hand
     self.spawnTimer=self.settings.spawnDelay
@@ -924,7 +637,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         self:popNext()
     end
 end
-function MP:lock()-- Put mino into field
+function PP:lock()-- Put puyo into field
     local CB=self.hand.matrix
     local F=self.field
     for y=1,#CB do for x=1,#CB[1] do
@@ -938,112 +651,10 @@ function MP:lock()-- Put mino into field
         y=self.handY,
     })
 end
-function MP:riseGarbage(holePos)
-    local F=self.field
-    local w=F:getWidth()
-    local L={}
-
-    -- Generate line
-    for x=1,w do
-        L[x]={
-            color=1,
-            nearby={},
-        }
-    end
-
-    -- Generate hole
-    if L[holePos] then
-        L[holePos]=false
-    else
-        L[rnd(w)]=false
-    end
-
-    -- Add nearby
-    for x=1,w do
-        if L[x] then
-            if L[x-1] then L[x].nearby[L[x-1]]=true end
-            if L[x+1] then L[x].nearby[L[x+1]]=true end
-        end
-    end
-    ins(F._matrix,1,L)
-
-    -- Update hand position
-    if self.hand then
-        self.handY=self.handY+1
-        self.ghostY=self.ghostY+1
-        self.minY=self.minY+1
-    end
+function PP:receive(data)
+    -- TODO
 end
-function MP:checkField()-- Check line clear, top out checking, etc.
-    local lineClear={}
-    local F=self.field
-    for y=F:getHeight(),1,-1 do
-        local hasHole
-        for x=1,F:getWidth() do
-            if not F:getCell(x,y) then
-                hasHole=true
-                break
-            end
-        end
-        if not hasHole then
-            F:removeLine(y)
-            ins(lineClear,y)
-        end
-    end
-    if #lineClear>0 then
-        self.combo=self.combo+1
-        self.clearTimer=self.settings.clearDelay
-        local h={
-            combo=self.combo,
-            line=#lineClear,
-            lines=lineClear,
-            time=self.time,
-        }
-        ins(self.clearHistory,h)
-        self:shakeBoard('-clear',#lineClear)
-        return h
-    else
-        self.combo=0
-        if self.settings.lockout and self.handY>self.settings.lockoutH then
-            self:finish('CE')
-        end
-    end
-    return false
-end
-function MP:changeFieldWidth(w,origPos)
-    if w>0 and w%1==0 then
-        if not origPos then origPos=1 end
-        local w0=self.settings.fieldW
-        for y=1,#self.field:getHeight() do
-            local L=TABLE.new(false,w)
-            for x=1,w0 do
-                local newX=origPos+x-1
-                if newX>=1 and newX<=w then
-                    L[newX]=self.field._matrix[y][x]
-                end
-            end
-        end
-        self.settings.fieldW=w
-        self.field._width=w
-        self.field:fresh()
-    end
-end
-function MP:changeAtkSys(sys)
-    self.atkSysData={}
-    if MinoAtkSys[sys].init then MinoAtkSys[sys].init(self) end
-end
-function MP:receive(data)
-    local B={
-        power=data.power,
-        mode=data.mode,
-        time0=math.floor(data.time*1000+.5),
-        time=0,
-        fatal=data.fatal,
-        speed=data.speed,
-    }
-    ins(self.garbageBuffer,B)
-end
-function MP:finish(reason)
+function PP:finish(reason)
     --[[ Reason:
         AC:  Win
         WA:  Block out
@@ -1074,7 +685,7 @@ function MP:finish(reason)
 end
 --------------------------------------------------------------
 -- Press & Release
-function MP:press(act)
+function PP:press(act)
     self:triggerEvent('beforePress',act)
 
     if not self.actions[act] or self.keyState[act] then return end
@@ -1084,7 +695,7 @@ function MP:press(act)
 
     self:triggerEvent('afterPress',act)
 end
-function MP:release(act)
+function PP:release(act)
     self:triggerEvent('beforeRelease',act)
     if not self.actions[act] or not self.keyState[act] then return end
     self.keyState[act]=false
@@ -1094,7 +705,7 @@ function MP:release(act)
 end
 --------------------------------------------------------------
 -- Update & Render
-function MP:update(dt)
+function PP:update(dt)
     local df=floor((self.realTime+dt)*1000)-floor(self.realTime*1000)
     self.realTime=self.realTime+dt
     local SET=self.settings
@@ -1236,7 +847,7 @@ function MP:update(dt)
                 if self.handY==self.ghostY then
                     self.lockTimer=self.lockTimer-1
                     if self.lockTimer<=0 then
-                        self:minoDropped()
+                        self:puyoDropped()
                     end
                     break
                 else
@@ -1274,7 +885,7 @@ function MP:update(dt)
     for _,v in next,self.particles do v:update(dt) end
     self.texts:update(dt)
 end
-function MP:render()
+function PP:render()
     local settings=self.settings
     local skin=SKIN.get(settings.skin)
     SKIN.time=self.time
@@ -1301,7 +912,7 @@ function MP:render()
 
 
         -- Grid & Cells
-        skin.drawFieldBackground(settings.fieldW,min(max(settings.lockoutH,settings.deathH),2*settings.fieldW))
+        skin.drawFieldBackground(settings.fieldW,2*settings.fieldW)
         skin.drawFieldCells(self.field)
 
 
@@ -1316,7 +927,7 @@ function MP:render()
                 skin.drawGhost(CB,self.handX,self.ghostY)
             end
 
-            -- Mino
+            -- Puyo
             if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
                 -- Smooth
                 local movingX,droppingY=0,0
@@ -1327,26 +938,8 @@ function MP:render()
                     droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
                 end
                 gc.translate(movingX,droppingY)
-
                 skin.drawHand(CB,self.handX,self.handY)
-
-                local RS=MinoRotSys[settings.rotSys]
-                local minoData=RS[self.hand.shape]
-                local state=minoData[self.hand.direction]
-                local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
-                if centerPos then
-                    gc.setColor(1,1,1)
-                    GC.draw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40)
-                end
                 gc.translate(-movingX,-droppingY)
-            end
-        end
-
-        -- Float hold
-        if #self.floatHolds>0 then
-            for n=1,#self.floatHolds do
-                local H=self.floatHolds[n]
-                skin.drawFloatHold(n,H.hand.matrix,H.handX,H.handY,settings.holdMode=='float' and not settings.infHold and n<=self.holdTime)
             end
         end
 
@@ -1356,11 +949,9 @@ function MP:render()
 
         -- Height lines
         skin.drawHeightLines(
-            settings.fieldW*40,  -- (pixels) Field Width
-            settings.spawnH*40,  -- (pixels) Spawning height
-            settings.lockoutH*40,-- (pixels) lock-out height
-            settings.deathH*40,  -- (pixels) Death height
-            1260*40              -- (pixels) Void height
+            settings.fieldW*40, -- (pixels) Field Width
+            settings.spawnH*40, -- (pixels) Spawning height
+            620*40              -- (pixels) Void height
         )
 
 
@@ -1392,29 +983,15 @@ function MP:render()
         skin.drawDelayIndicator('lock',self.lockTimer/settings.lockDelay)
     end
 
-    -- Garbage buffer
-    skin.drawGarbageBuffer(self.garbageBuffer)
-
     -- Lock delay indicator
     skin.drawLockDelayIndicator(settings.freshCondition,self.freshChance)
 
-    -- Next (Almost same as drawing hold(s), don't forget to change both)
+    -- Next
     gc.push('transform')
     gc.translate(200,-400)
     skin.drawNextBorder(settings.nextSlot)
     for n=1,min(#self.nextQueue,settings.nextSlot) do
-        skin.drawNext(n,self.nextQueue[n].matrix,settings.holdMode=='swap' and not settings.infHold and n<=self.holdTime)
-    end
-    gc.pop()
-
-    -- Hold (Almost same as drawing next(s), don't forget to change both)
-    gc.push('transform')
-    gc.translate(-200,-400)
-    skin.drawHoldBorder(settings.holdMode,settings.holdSlot)
-    if #self.holdQueue>0 then
-        for n=1,#self.holdQueue do
-            skin.drawHold(n,self.holdQueue[n].matrix,settings.holdMode=='hold' and not settings.infHold and n<=self.holdTime)
-        end
+        skin.drawNext(n,self.nextQueue[n].matrix)
     end
     gc.pop()
 
@@ -1448,17 +1025,10 @@ end
 --------------------------------------------------------------
 -- Builder
 local baseEnv={
-    fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
-    spawnH=20,
-    lockoutH=1e99,
-    deathH=1e99,
+    fieldW=6,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
+    spawnH=12,
 
     nextSlot=6,
-
-    holdSlot=1,
-    infHold=false,
-    holdMode='hold',
-    holdKeepState=false,
 
     readyDelay=3000,
     dropDelay=1000,
@@ -1467,12 +1037,7 @@ local baseEnv={
     clearDelay=0,
     deathDelay=260,
 
-    actionPack='Normal',
-    seqType='bag7',
-    rotSys='TRS',
-    tuck=false,
-    spin_immobile=false,
-    spin_corners=false,
+    seqType='bag_2_4',
     atkSys='None',
 
     freshCondition='any',
@@ -1484,80 +1049,31 @@ local baseEnv={
     arr=26,
     sdarr=12,
     dascut=0,
-    skin='mino_plastic',
+    skin='puyo_default',
 
     shakeness=.26,
 }
 local seqGenerators={
     none=function() while true do coroutine.yield() end end,
-    bag7=function(P)
+    bag_2_3=function(P)
         local l={}
         while true do
-            if not l[1] then for i=1,7 do l[i]=i end end
+            if not l[1] then for i=1,3 do for j=1,3 do ins(l,{{i},{j}}) end end end
             coroutine.yield(rem(l,P.seqRND:random(#l)))
         end
     end,
-    bag7b1=function(P)
-        local l0={}
+    bag_2_4=function(P)
         local l={}
         while true do
-            if not l[1] then
-                for i=1,7 do l[i]=i end
-                if not l0[1] then for i=1,7 do l0[i]=i end end
-                l[8]=rem(l0,P.seqRND:random(#l0))
-            end
+            if not l[1] then for i=1,4 do for j=1,4 do ins(l,{{i},{j}}) end end end
             coroutine.yield(rem(l,P.seqRND:random(#l)))
         end
     end,
-    h4r2=function(P)
-        local history=TABLE.new(0,2)
+    bag_2_5=function(P)
+        local l={}
         while true do
-            local r
-            for _=1,#history do-- Reroll up to [hisLen] times
-                r=P.seqRND:random(7)
-                local repeated
-                for i=1,#history do
-                    if r==history[i] then
-                        repeated=true
-                        break
-                    end
-                end
-                if not repeated then break end-- Not repeated means success, available r value
-            end
-            rem(history,1)
-            ins(history,r)
-            if history[1]~=0 then-- Initializing, just continue generating until history is full
-                coroutine.yield(r)
-            end
-        end
-    end,
-    c2=function(P)
-        local weight=TABLE.new(0,7)
-        while true do
-            local maxK=1
-            for i=1,7 do
-                weight[i]=weight[i]*.5+P.seqRND:random()
-                if weight[i]>weight[maxK] then
-                    maxK=i
-                end
-            end
-            weight[maxK]=weight[maxK]/3.5
-            coroutine.yield(maxK)
-        end
-    end,
-    random=function(P)
-        local r,prev
-        while true do
-            repeat
-                r=P.seqRND:random(7)
-            until r~=prev
-            prev=r
-            coroutine.yield(r)
-        end
-    end,
-    mess=function(P)
-        while true do
-            coroutine.yield(P.seqRND:random(7))
+            if not l[1] then for i=1,5 do for j=1,5 do ins(l,{{i},{j}}) end end end
+            coroutine.yield(rem(l,P.seqRND:random(#l)))
         end
     end,
 }
@@ -1574,8 +1090,8 @@ local soundEventMeta={
     __index=defaultSoundFunc,
     __metatable=true,
 }
-function MP.new()
-    local self=setmetatable({},{__index=MP,__metatable=true})
+function PP.new()
+    local self=setmetatable({},{__index=PP,__metatable=true})
     self.sound=false
     self.settings=TABLE.copy(baseEnv)
     self.event={
@@ -1609,7 +1125,7 @@ function MP.new()
 
     return self
 end
-function MP:loadSettings(settings)
+function PP:loadSettings(settings)
     -- Load data & events from mode settings
     for k,v in next,settings do
         if k=='event' then
@@ -1640,7 +1156,7 @@ function MP:loadSettings(settings)
         end
     end
 end
-function MP:initialize()
+function PP:initialize()
     self.soundEvent=setmetatable({},soundEventMeta)
     self.modeData=setmetatable({},modeDataMeta)
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
@@ -1663,17 +1179,12 @@ function MP:initialize()
     self.pieceCount=0
     self.combo=0
 
-    self:changeAtkSys(self.settings.atkSys)
     self.garbageBuffer={}
 
     self.nextQueue={}
     self.seqRND=love.math.newRandomGenerator(GAME.seed)
     self.seqGen=coroutine.wrap(seqGenerators[self.settings.seqType])
     self:freshNextQueue()
-
-    self.holdQueue={}
-    self.holdTime=0
-    self.floatHolds={}
 
     self.dropTimer=0
     self.lockTimer=0
@@ -1683,10 +1194,9 @@ function MP:initialize()
     self.freshChance=self.settings.freshCount
     self.freshTimeRemain=0
 
-    self.hand=false-- Controlling mino object
+    self.hand=false-- Controlling puyo object
     self.handX=false
     self.handY=false
-    self.lastMovement=false-- Controlling mino path, for spin/tuck/... checking
     self.ghostY=false
     self.minY=false
 
@@ -1698,7 +1208,6 @@ function MP:initialize()
     self.keyBuffer={
         move=false,
         rotate=false,
-        hold=false,
         hardDrop=false,
     }
     self.dropHistory={}
@@ -1708,26 +1217,8 @@ function MP:initialize()
     -- Generate available actions
     do
         self.actions={}
-        local pack=self.settings.actionPack
-        if type(pack)=='string' then
-            pack=actionPacks[pack]
-            assert(pack,STRING.repD("Invalid actionPack '$1'",pack))
-            for i=1,#pack do
-                self.actions[pack[i]]=_getActionObj(pack[i])
-            end
-        elseif type(pack)=='table' then
-            for k,v in next,pack do
-                if type(k)=='number' then
-                    self.actions[v]=_getActionObj(v)
-                elseif type(k)=='string' then
-                    assert(actions[k],STRING.repD("no action called '$1'",k))
-                    self.actions[k]=_getActionObj(v)
-                else
-                    error(STRING.repD("wrong actionPack table format (type $1)",type(k)))
-                end
-            end
-        else
-            error("actionPack must be string or table")
+        for k in next,actions do
+            self.actions[k]=_getActionObj(k)
         end
 
         self.keyState={}
@@ -1742,5 +1233,4 @@ function MP:initialize()
     end
 end
 --------------------------------------------------------------
-
-return MP
+return PP

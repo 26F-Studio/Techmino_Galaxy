@@ -5,11 +5,11 @@ return {
         GAME.setMain(1)
         playBgm('battle','-base')
     end,
-    settings={
+    settings={mino={
         dropDelay=1000,
         lockDelay=1000,
         atkSys='Modern',
-    },
+    }},
     checkFinish=function()
         return #GAME.playerList==1
     end,

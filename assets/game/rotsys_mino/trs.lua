@@ -130,7 +130,7 @@ TRS[6]={
                     for i=1,#OspinList do
                         local test=OspinList[i]
                         if C.spinSeq==test.seq then
-                            local newMatrix=TABLE.shift(Minos[test.shape].shape)
+                            local newMatrix=TABLE.shift(Minoes[test.shape].shape)
                             if test.direcion==2 then newMatrix=TABLE.rotate(newMatrix,'F') end
                             local c=0
                             for y=1,#newMatrix do for x=1,#newMatrix[1] do

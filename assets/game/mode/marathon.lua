@@ -7,7 +7,7 @@ return {
         GAME.setMain(1)
         playBgm('push','-base')
     end,
-    settings={
+    settings={mino={
         das=120,
         arr=16,
         sdarr=16,
@@ -41,7 +41,7 @@ return {
                 GC.mStr(P.modeData.target,-300,0)
             end,
         },
-    },
+    }},
     checkFinish=function()
         return true
     end,

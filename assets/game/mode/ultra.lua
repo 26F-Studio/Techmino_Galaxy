@@ -7,7 +7,7 @@ return {
         playBgm('sakura','-noloop')
         BGM.set('all','seek',0)
     end,
-    settings={
+    settings={mino={
         dropDelay=1000,
         lockDelay=1000,
         event={
@@ -35,7 +35,7 @@ return {
                 gc.pop()
             end,
         },
-    },
+    }},
     checkFinish=function()
         for i=1,#GAME.playerList do
             if not GAME.playerList[i].finished then
