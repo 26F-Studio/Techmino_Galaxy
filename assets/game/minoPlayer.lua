@@ -1070,17 +1070,10 @@ function MP:changeAtkSys(sys)
 end
 
 function MP:receive(data)
-    --[[ data:
-        power (0~∞)
-        mode  (0~1)
-        time  (0~∞)
-        fatal (0~100)
-        speed (0~100)
-    ]]
     local B={
         power=data.power,
         mode=data.mode,
-        time0=data.time,
+        time0=math.floor(data.time*1000+.5),
         time=0,
         fatal=data.fatal,
         speed=data.speed,

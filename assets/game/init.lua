@@ -218,8 +218,8 @@ end
     power (0~∞,  no default)
     mode  (0~1,   default to 0, 0: trigger by time, 1:trigger by step)
     time  (0~∞,  default to 0, seconds)
-    fatal (0~100, default to 0, percentage)
-    speed (0~100, default to 0, percentage)
+    fatal (0~100, default to 50, percentage)
+    speed (0~100, default to 50, percentage)
 ]]
 function GAME.send(source,data)
     -- Format normalization
@@ -232,11 +232,11 @@ function GAME.send(source,data)
         data.time=math.max(data.time,0)
         if data.mode==1 then data.time=math.floor(data.time) end
     end
-    if data.fatal==nil then data.fatal=0 else
+    if data.fatal==nil then data.fatal=50 else
         assert(type(data.fatal)=='number',"fatal not number")
         data.fatal=MATH.clamp(data.fatal,0,100)
     end
-    if data.speed==nil then data.speed=0 else
+    if data.speed==nil then data.speed=50 else
         assert(type(data.speed)=='number',"speed not number")
         data.speed=MATH.clamp(data.speed,0,100)
     end
