@@ -118,7 +118,7 @@ local function getMode(name)
         local path='assets/game/mode/'..name..'.lua'
         if FILE.isSafe(path) then
             local M=FILE.load(path,'-lua')
-            assert(type(M['initialize'])=='function',"[mode].initialize must be function")
+            if M.initialize ==nil then M.initialize= NULL      else assert(type(M.initialize)         =='function',"[mode].initialize must be function") end
             if M.settings   ==nil then M.settings=   {}        else assert(type(M.settings)           =='table',   "[mode].settings must be table (if exist)")       end
             if M.layout     ==nil then M.layout=     'default' else assert(type(layoutFuncs[M.layout])=='funcion', "[mode].layout wrong")                            end
             if M.checkFinish==nil then M.checkFinish=NULL      else assert(type(M.checkFinish)        =='function',"[mode].checkFinish must be function (if exist)") end
@@ -183,19 +183,23 @@ function GAME.setMain(id)
 end
 
 function GAME.start()
-    if GAME.mainPID then GAME.playerMap[GAME.mainPID]:loadSettings(SETTINGS.game) end
-    if GAME.mode.settings then
-        for i=1,#GAME.playerList do
-            GAME.playerList[i]:loadSettings(GAME.mode.settings)
+    if #GAME.playerList==0 then
+        MES.new('warning',"No players created in this mode")
+    else
+        if GAME.mainPID then GAME.playerMap[GAME.mainPID]:loadSettings(SETTINGS.game) end
+        if GAME.mode.settings then
+            for i=1,#GAME.playerList do
+                GAME.playerList[i]:loadSettings(GAME.mode.settings)
+            end
         end
-    end
 
-    for i=1,#GAME.playerList do
-        GAME.playerList[i]:initialize()
-        GAME.playerList[i]:triggerEvent('playerInit')
-    end
+        for i=1,#GAME.playerList do
+            GAME.playerList[i]:initialize()
+            GAME.playerList[i]:triggerEvent('playerInit')
+        end
 
-    layoutFuncs[GAME.mode['layout']]()
+        layoutFuncs[GAME.mode['layout']]()
+    end
 end
 
 function GAME.press(action,id)
