@@ -56,6 +56,111 @@ local particleTemplates do
     particleTemplates=p
 end
 
+local defaultSoundFunc={
+    countDown=function(num)
+        if num==0 then-- 6, 3+6+6
+            inst('bass',.8,'A3')
+            inst('lead',.9,'A4','E5','A5')
+        elseif num==1 then-- 5, 3+7
+            inst('bass',.9,'G3')
+            inst('lead',.9,'B4','E5')
+        elseif num==2 then-- 4, 6+2
+            inst('bass','F3')
+            inst('lead',.8,'A4','D5')
+        elseif num==3 then-- 6+6
+            inst('bass',.9,'A3','E4')
+            inst('lead',.8,'A4')
+        elseif num==4 then-- 5+7, 5
+            inst('bass',.9,'G3','B3')
+            inst('lead',.6,'G4')
+        elseif num==5 then-- 4+6, 4
+            inst('bass',.8,'F3','A3')
+            inst('lead',.3,'F4')
+        elseif num<=10 then
+            inst('bass',2.2-num/5,'A2','E3')
+        end
+    end,
+    move=           function() SFX.play('move')             end,
+    move_failed=    function() SFX.play('move_failed')      end,
+    tuck=           function() SFX.play('tuck')             end,
+    rotate=         function() SFX.play('rotate')           end,
+    initrotate=     function() SFX.play('initrotate')       end,
+    rotate_locked=  function() SFX.play('rotate_locked')    end,
+    rotate_corners= function() SFX.play('rotate_corners')   end,
+    rotate_failed=  function() SFX.play('rotate_failed')    end,
+    rotate_special= function() SFX.play('rotate_special')   end,
+    hold=           function() SFX.play('hold')             end,
+    inithold=       function() SFX.play('inithold')         end,
+    touch=          function() SFX.play('touch',.5)         end,
+    drop=           function() SFX.play('drop')             end,
+    lock=           function() SFX.play('lock')             end,
+    b2b=            function(lv) SFX.play('b2b_'..min(lv,10)) end,
+    b2b_break=      function() SFX.play('b2b_break') end,
+    clear=function(lines)
+        SFX.play(
+            lines==1 and 'clear_1' or
+            lines==2 and 'clear_2' or
+            lines==3 and 'clear_3' or
+            lines==4 and 'clear_4' or
+            'clear_5'
+        )
+        if lines>=3 then
+            BGM.set('all','highgain',.26+1/lines,0)
+            BGM.set('all','highgain',1,min((lines)^1.5/5,2.6))
+        end
+    end,
+    spin=function(lines)
+        if lines==0 then     SFX.play('spin_0')
+        elseif lines==1 then SFX.play('spin_1')
+        elseif lines==2 then SFX.play('spin_2')
+        elseif lines==3 then SFX.play('spin_3')
+        elseif lines==4 then SFX.play('spin_4')
+        else                 SFX.play('spin_mega')
+        end
+    end,
+    combo=setmetatable({
+        function() inst('bass',.70,'A2') end,-- 1 combo
+        function() inst('bass',.75,'C3') end,-- 2 combo
+        function() inst('bass',.80,'D3') end,-- 3 combo
+        function() inst('bass',.85,'E3') end,-- 4 combo
+        function() inst('bass',.90,'G3') end,-- 5 combo
+        function() inst('bass',.90,'A3') inst('lead',.20,'A2') end,-- 6 combo
+        function() inst('bass',.75,'C4') inst('lead',.40,'C3') end,-- 7 combo
+        function() inst('bass',.60,'D4') inst('lead',.60,'D3') end,-- 8 combo
+        function() inst('bass',.40,'E4') inst('lead',.75,'E3') end,-- 9 combo
+        function() inst('bass',.20,'G4') inst('lead',.90,'G3') end,-- 10 combo
+        function() inst('bass',.20,'A4') inst('lead',.85,'A3') end,-- 11 combo
+        function() inst('bass',.40,'A4') inst('lead',.80,'C4') end,-- 12 combo
+        function() inst('bass',.60,'A4') inst('lead',.75,'D4') end,-- 13 combo
+        function() inst('bass',.75,'A4') inst('lead',.70,'E4') end,-- 14 combo
+        function() inst('bass',.90,'A4') inst('lead',.65,'G4') end,-- 15 combo
+        function() inst('bass',.90,'A4') inst('bass',.70,'E5') inst('lead','A4') end,-- 16 combo
+        function() inst('bass',.85,'A4') inst('bass',.75,'E5') inst('lead','C5') end,-- 17 combo
+        function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end,-- 18 combo
+        function() inst('bass',.75,'A4') inst('bass',.85,'E5') inst('lead','E5') end,-- 19 combo
+        function() inst('bass',.70,'A4') inst('bass',.90,'E5') inst('lead','G5') end,-- 20 combo
+    },{__call=function(self,combo)
+        if self[combo] then
+            self[combo]()
+        else
+            inst('bass',.626,'A4')
+            local phase=(combo-21)%12
+            inst('lead',1-((11-phase)/12)^2,41+phase)-- E4+
+            inst('lead',1-((11-phase)/12)^2,46+phase)-- A4+
+            inst('lead',1-(phase/12)^2,     53+phase)-- E5+
+            inst('lead',1-(phase/12)^2,     58+phase)-- A5+
+        end
+    end,__metatable=true}),
+    frenzy=      function() SFX.play('frenzy')      end,
+    allClear=    function() SFX.play('all_clear')   end,
+    halfClear=   function() SFX.play('half_clear')  end,
+    suffocate=   function() SFX.play('suffocate')   end,
+    desuffocate= function() SFX.play('desuffocate') end,
+    reach=       function() SFX.play('beep_1')      end,
+    win=         function() SFX.play('win')         end,
+    fail=        function() SFX.play('fail')        end,
+}
+
 local MP={}
 
 --------------------------------------------------------------
@@ -287,112 +392,7 @@ function MP:shakeBoard(args,v)
         self.pos.vk=self.pos.vk+.0002*shake*min(v^1.6,26)
     end
 end
---------------------------------------------------------------
--- Game methods
-local defaultSoundFunc={
-    countDown=function(num)
-        if num==0 then-- 6, 3+6+6
-            inst('bass',.8,'A3')
-            inst('lead',.9,'A4','E5','A5')
-        elseif num==1 then-- 5, 3+7
-            inst('bass',.9,'G3')
-            inst('lead',.9,'B4','E5')
-        elseif num==2 then-- 4, 6+2
-            inst('bass','F3')
-            inst('lead',.8,'A4','D5')
-        elseif num==3 then-- 6+6
-            inst('bass',.9,'A3','E4')
-            inst('lead',.8,'A4')
-        elseif num==4 then-- 5+7, 5
-            inst('bass',.9,'G3','B3')
-            inst('lead',.6,'G4')
-        elseif num==5 then-- 4+6, 4
-            inst('bass',.8,'F3','A3')
-            inst('lead',.3,'F4')
-        elseif num<=10 then
-            inst('bass',2.2-num/5,'A2','E3')
-        end
-    end,
-    move=           function() SFX.play('move')             end,
-    move_failed=    function() SFX.play('move_failed')      end,
-    tuck=           function() SFX.play('tuck')             end,
-    rotate=         function() SFX.play('rotate')           end,
-    initrotate=     function() SFX.play('initrotate')       end,
-    rotate_locked=  function() SFX.play('rotate_locked')    end,
-    rotate_corners= function() SFX.play('rotate_corners')   end,
-    rotate_failed=  function() SFX.play('rotate_failed')    end,
-    rotate_special= function() SFX.play('rotate_special')   end,
-    hold=           function() SFX.play('hold')             end,
-    inithold=       function() SFX.play('inithold')         end,
-    touch=          function() SFX.play('touch',.5)         end,
-    drop=           function() SFX.play('drop')             end,
-    lock=           function() SFX.play('lock')             end,
-    b2b=            function(lv) SFX.play('b2b_'..min(lv,10)) end,
-    b2b_break=      function() SFX.play('b2b_break') end,
-    clear=function(lines)
-        SFX.play(
-            lines==1 and 'clear_1' or
-            lines==2 and 'clear_2' or
-            lines==3 and 'clear_3' or
-            lines==4 and 'clear_4' or
-            'clear_5'
-        )
-        if lines>=3 then
-            BGM.set('all','highgain',.26+1/lines,0)
-            BGM.set('all','highgain',1,min((lines)^1.5/5,2.6))
-        end
-    end,
-    spin=function(lines)
-        if lines==0 then     SFX.play('spin_0')
-        elseif lines==1 then SFX.play('spin_1')
-        elseif lines==2 then SFX.play('spin_2')
-        elseif lines==3 then SFX.play('spin_3')
-        elseif lines==4 then SFX.play('spin_4')
-        else                 SFX.play('spin_mega')
-        end
-    end,
-    combo=setmetatable({
-        function() inst('bass',.70,'A2') end,-- 1 combo
-        function() inst('bass',.75,'C3') end,-- 2 combo
-        function() inst('bass',.80,'D3') end,-- 3 combo
-        function() inst('bass',.85,'E3') end,-- 4 combo
-        function() inst('bass',.90,'G3') end,-- 5 combo
-        function() inst('bass',.90,'A3') inst('lead',.20,'A2') end,-- 6 combo
-        function() inst('bass',.75,'C4') inst('lead',.40,'C3') end,-- 7 combo
-        function() inst('bass',.60,'D4') inst('lead',.60,'D3') end,-- 8 combo
-        function() inst('bass',.40,'E4') inst('lead',.75,'E3') end,-- 9 combo
-        function() inst('bass',.20,'G4') inst('lead',.90,'G3') end,-- 10 combo
-        function() inst('bass',.20,'A4') inst('lead',.85,'A3') end,-- 11 combo
-        function() inst('bass',.40,'A4') inst('lead',.80,'C4') end,-- 12 combo
-        function() inst('bass',.60,'A4') inst('lead',.75,'D4') end,-- 13 combo
-        function() inst('bass',.75,'A4') inst('lead',.70,'E4') end,-- 14 combo
-        function() inst('bass',.90,'A4') inst('lead',.65,'G4') end,-- 15 combo
-        function() inst('bass',.90,'A4') inst('bass',.70,'E5') inst('lead','A4') end,-- 16 combo
-        function() inst('bass',.85,'A4') inst('bass',.75,'E5') inst('lead','C5') end,-- 17 combo
-        function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end,-- 18 combo
-        function() inst('bass',.75,'A4') inst('bass',.85,'E5') inst('lead','E5') end,-- 19 combo
-        function() inst('bass',.70,'A4') inst('bass',.90,'E5') inst('lead','G5') end,-- 20 combo
-    },{__call=function(self,combo)
-        if self[combo] then
-            self[combo]()
-        else
-            inst('bass',.626,'A4')
-            local phase=(combo-21)%12
-            inst('lead',1-((11-phase)/12)^2,41+phase)-- E4+
-            inst('lead',1-((11-phase)/12)^2,46+phase)-- A4+
-            inst('lead',1-(phase/12)^2,     53+phase)-- E5+
-            inst('lead',1-(phase/12)^2,     58+phase)-- A5+
-        end
-    end,__metatable=true}),
-    frenzy=      function() SFX.play('frenzy')      end,
-    allClear=    function() SFX.play('all_clear')   end,
-    halfClear=   function() SFX.play('half_clear')  end,
-    suffocate=   function() SFX.play('suffocate')   end,
-    desuffocate= function() SFX.play('desuffocate') end,
-    reach=       function() SFX.play('beep_1')      end,
-    win=         function() SFX.play('win')         end,
-    fail=        function() SFX.play('fail')        end,
-}
+
 function MP:playSound(event,...)
     if not self.sound then return end
     if self.time-self.soundTimeHistory[event]>=15 then
@@ -433,6 +433,20 @@ function MP:createLockParticle(x,y)
     p:emit(1)
 end
 
+function MP:setPosition(x,y,k,a)
+    self.pos.x=x or self.pos.x
+    self.pos.y=y or self.pos.y
+    self.pos.k=k or self.pos.k
+    self.pos.a=a or self.pos.a
+end
+function MP:movePosition(dx,dy,k,da)
+    self.pos.x=self.pos.x+(dx or 0)
+    self.pos.y=self.pos.y+(dy or 0)
+    self.pos.k=self.pos.k*(k or 1)
+    self.pos.a=self.pos.a+(da or 0)
+end
+--------------------------------------------------------------
+-- Game methods
 function MP:triggerEvent(name,...)
     local L=self.event[name]
     if L then for i=1,#L do L[i](self,...) end end
@@ -936,12 +950,6 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     self.hand=false
     if self.finished then return end
 
-    -- Fresh hand
-    self.spawnTimer=self.settings.spawnDelay
-    if self.clearTimer<=0 and self.spawnTimer<=0 then
-        self:popNext()
-    end
-
     -- Update & Release garbage
     local i=1
     while true do
@@ -958,6 +966,12 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
             g.time=g.time+1
         end
         i=i+1
+    end
+
+    -- Fresh hand
+    self.spawnTimer=self.settings.spawnDelay
+    if self.clearTimer<=0 and self.spawnTimer<=0 then
+        self:popNext()
     end
 end
 function MP:lock()-- Put mino into field
@@ -1483,28 +1497,12 @@ function MP:render()
     gc.pop()
 end
 --------------------------------------------------------------
--- Other methods
-function MP:setPosition(x,y,k,a)
-    self.pos.x=x or self.pos.x
-    self.pos.y=y or self.pos.y
-    self.pos.k=k or self.pos.k
-    self.pos.a=a or self.pos.a
-end
-function MP:movePosition(dx,dy,k,da)
-    self.pos.x=self.pos.x+(dx or 0)
-    self.pos.y=self.pos.y+(dy or 0)
-    self.pos.k=self.pos.k*(k or 1)
-    self.pos.a=self.pos.a+(da or 0)
-end
---------------------------------------------------------------
 -- Builder
-local baseEnv={-- Generate from template in future
+local baseEnv={
     fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
     spawnH=20,
     lockoutH=1e99,
     deathH=1e99,
-    barrierL=18,
-    barrierH=21,
 
     nextSlot=6,
 
@@ -1586,7 +1584,6 @@ local seqGenerators={
     end,
     c2=function(P)
         local weight=TABLE.new(0,7)
-
         while true do
             local maxK=1
             for i=1,7 do
