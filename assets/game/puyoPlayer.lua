@@ -49,38 +49,34 @@ local defaultSoundFunc={
             lines==4 and 'clear_4' or
             'clear_5'
         )
-        if lines>=3 then
-            BGM.set('all','highgain',.26+1/lines,0)
-            BGM.set('all','highgain',1,min((lines)^1.5/5,2.6))
-        end
     end,
-    combo=setmetatable({
-        function() inst('bass',.70,'A2') end,-- 1 combo
-        function() inst('bass',.75,'C3') end,-- 2 combo
-        function() inst('bass',.80,'D3') end,-- 3 combo
-        function() inst('bass',.85,'E3') end,-- 4 combo
-        function() inst('bass',.90,'G3') end,-- 5 combo
-        function() inst('bass',.90,'A3') inst('lead',.20,'A2') end,-- 6 combo
-        function() inst('bass',.75,'C4') inst('lead',.40,'C3') end,-- 7 combo
-        function() inst('bass',.60,'D4') inst('lead',.60,'D3') end,-- 8 combo
-        function() inst('bass',.40,'E4') inst('lead',.75,'E3') end,-- 9 combo
-        function() inst('bass',.20,'G4') inst('lead',.90,'G3') end,-- 10 combo
-        function() inst('bass',.20,'A4') inst('lead',.85,'A3') end,-- 11 combo
-        function() inst('bass',.40,'A4') inst('lead',.80,'C4') end,-- 12 combo
-        function() inst('bass',.60,'A4') inst('lead',.75,'D4') end,-- 13 combo
-        function() inst('bass',.75,'A4') inst('lead',.70,'E4') end,-- 14 combo
-        function() inst('bass',.90,'A4') inst('lead',.65,'G4') end,-- 15 combo
-        function() inst('bass',.90,'A4') inst('bass',.70,'E5') inst('lead','A4') end,-- 16 combo
-        function() inst('bass',.85,'A4') inst('bass',.75,'E5') inst('lead','C5') end,-- 17 combo
-        function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end,-- 18 combo
-        function() inst('bass',.75,'A4') inst('bass',.85,'E5') inst('lead','E5') end,-- 19 combo
-        function() inst('bass',.70,'A4') inst('bass',.90,'E5') inst('lead','G5') end,-- 20 combo
-    },{__call=function(self,combo)
-        if self[combo] then
-            self[combo]()
+    chain=setmetatable({
+        function() inst('bass',.70,'A2') end,-- 1 chain
+        function() inst('bass',.75,'C3') end,-- 2 chain
+        function() inst('bass',.80,'D3') end,-- 3 chain
+        function() inst('bass',.85,'E3') end,-- 4 chain
+        function() inst('bass',.90,'G3') end,-- 5 chain
+        function() inst('bass',.90,'A3') inst('lead',.20,'A2') end,-- 6 chain
+        function() inst('bass',.75,'C4') inst('lead',.40,'C3') end,-- 7 chain
+        function() inst('bass',.60,'D4') inst('lead',.60,'D3') end,-- 8 chain
+        function() inst('bass',.40,'E4') inst('lead',.75,'E3') end,-- 9 chain
+        function() inst('bass',.20,'G4') inst('lead',.90,'G3') end,-- 10 chain
+        function() inst('bass',.20,'A4') inst('lead',.85,'A3') end,-- 11 chain
+        function() inst('bass',.40,'A4') inst('lead',.80,'C4') end,-- 12 chain
+        function() inst('bass',.60,'A4') inst('lead',.75,'D4') end,-- 13 chain
+        function() inst('bass',.75,'A4') inst('lead',.70,'E4') end,-- 14 chain
+        function() inst('bass',.90,'A4') inst('lead',.65,'G4') end,-- 15 chain
+        function() inst('bass',.90,'A4') inst('bass',.70,'E5') inst('lead','A4') end,-- 16 chain
+        function() inst('bass',.85,'A4') inst('bass',.75,'E5') inst('lead','C5') end,-- 17 chain
+        function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end,-- 18 chain
+        function() inst('bass',.75,'A4') inst('bass',.85,'E5') inst('lead','E5') end,-- 19 chain
+        function() inst('bass',.70,'A4') inst('bass',.90,'E5') inst('lead','G5') end,-- 20 chain
+    },{__call=function(self,chain)
+        if self[chain] then
+            self[chain]()
         else
             inst('bass',.626,'A4')
-            local phase=(combo-21)%12
+            local phase=(chain-21)%12
             inst('lead',1-((11-phase)/12)^2,41+phase)-- E4+
             inst('lead',1-((11-phase)/12)^2,46+phase)-- A4+
             inst('lead',1-(phase/12)^2,     53+phase)-- E5+
@@ -280,12 +276,12 @@ function PP:createMoveParticle(x1,y1,x2,y2)
         p:emit(1)
     end end
 end
-function PP:createFrenzyParticle(amount)
+function PP:createClearParticle(x,y)
     local p=self.particles.star
-    p:setParticleLifetime(.626,1.6)
-    p:setEmissionArea('uniform',200,400,0,true)
-    p:setPosition(200,-400)
-    p:emit(amount)
+    p:setParticleLifetime(.26,.626)
+    p:setEmissionArea('ellipse',30,30,0,true)
+    p:setPosition(40*x-20,-40*y+20)
+    p:emit(6)
 end
 function PP:createLockParticle(x,y)
     local p=self.particles.trail
@@ -502,42 +498,43 @@ function PP:popNext()
         end
     end
 end
-function PP:getPuyo(shape)
+function PP:getPuyo(mat)
     self.pieceCount=self.pieceCount+1
-    shape=TABLE.shift(shape)
+    mat=TABLE.shift(mat)
 
     -- Generate matrix
-    for y=1,#shape do for x=1,#shape[1] do
-        if shape[y][x] then
-            shape[y][x]={
+    for y=1,#mat do for x=1,#mat[1] do
+        if mat[y][x] then
+            mat[y][x]={
                 puyoID=self.pieceCount,
-                color=defaultPuyoColor[shape[y][x]],
+                color=defaultPuyoColor[mat[y][x]],
+                clearing=false,
                 nearby={},
             }-- Should be player's color setting
         end
     end end
 
     -- Connect nearby cells
-    for y=1,#shape do for x=1,#shape[1] do
-        if shape[y][x] then
-            local L=shape[y][x].nearby
+    for y=1,#mat do for x=1,#mat[1] do
+        if mat[y][x] then
+            local L=mat[y][x].nearby
             local b
-            b=shape[y]   if b and b[x-1] then L[b[x-1]]=true end
-            b=shape[y]   if b and b[x+1] then L[b[x+1]]=true end
-            b=shape[y-1] if b and b[x]   then L[b[x]  ]=true end
-            b=shape[y+1] if b and b[x]   then L[b[x]  ]=true end
-            b=shape[y-1] if b and b[x-1] then L[b[x-1]]=true end
-            b=shape[y-1] if b and b[x+1] then L[b[x+1]]=true end
-            b=shape[y+1] if b and b[x-1] then L[b[x-1]]=true end
-            b=shape[y+1] if b and b[x+1] then L[b[x+1]]=true end
+            b=mat[y]   if b and b[x-1] then L[b[x-1]]=true end
+            b=mat[y]   if b and b[x+1] then L[b[x+1]]=true end
+            b=mat[y-1] if b and b[x]   then L[b[x]  ]=true end
+            b=mat[y+1] if b and b[x]   then L[b[x]  ]=true end
+            b=mat[y-1] if b and b[x-1] then L[b[x-1]]=true end
+            b=mat[y-1] if b and b[x+1] then L[b[x+1]]=true end
+            b=mat[y+1] if b and b[x-1] then L[b[x-1]]=true end
+            b=mat[y+1] if b and b[x+1] then L[b[x+1]]=true end
         end
     end end
 
     local puyo={
         id=self.pieceCount,
-        shape=shape,
+        shapeH=#mat[1],
         direction=0,
-        matrix=shape,
+        matrix=mat,
     }
     puyo._origin=TABLE.copy(puyo,0)
     ins(self.nextQueue,puyo)
@@ -588,7 +585,36 @@ function PP:moveDown()
         return true
     end
 end
-local kicks={{0,0},{-1,0},{1,0},{0,-1},{-1,-1},{1,-1}}
+local PRS={
+    [1]={
+        [0]={
+            R={target=1,{0,0},{0,1},{-1,0},{-1,1}},
+            L={target=3,{-1,0},{0,-1},{1,0},{1,1}},
+            F={target=2,{0,-1},{0,0}},
+        },
+        [1]={
+            R={target=2,{0,-1},{0,0},{1,-1},{1,0}},
+            L={target=0,{0,0},{1,0},{0,-1},{1,-1}},
+            F={target=3,{-1,0},{0,0}},
+        },
+        [2]={
+            R={target=3,{-1,1},{0,1},{-1,0},{0,0}},
+            L={target=1,{0,1},{-1,1},{0,0},{-1,0}},
+            F={target=0,{0,1},{0,0}},
+        },
+        [3]={
+            R={target=0,{1,0},{0,0},{1,-1},{0,-1}},
+            L={target=2,{1,-1},{1,0},{0,-1},{0,0}},
+            F={target=1,{1,0},{0,0}},
+        },
+    },
+    [2]={
+        [0]={R={target=1,{0,0}},L={target=3,{0,0}},F={target=2,{0,0}}},
+        [1]={R={target=2,{0,0}},L={target=0,{0,0}},F={target=3,{0,0}}},
+        [2]={R={target=3,{0,0}},L={target=1,{0,0}},F={target=0,{0,0}}},
+        [3]={R={target=0,{0,0}},L={target=2,{0,0}},F={target=1,{0,0}}},
+    },
+}
 function PP:rotate(dir,ifInit)
     if not self.hand then return end
     if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F ("..tostring(dir)..")") end
@@ -597,11 +623,12 @@ function PP:rotate(dir,ifInit)
     local cb=self.hand.matrix
     local icb=TABLE.rotate(cb,dir)
 
+    local kicks=PRS[self.hand.shapeH][self.hand.direction][dir]
     for n=1,#kicks do
         local ix,iy=self.handX+kicks[n][1],self.handY+kicks[n][2]
         if not self:ifoverlap(icb,ix,iy) then
             self.hand.matrix=icb
-            self.hand.direction=(self.hand.direction+(dir=='R' and 1 or dir=='L' and -1 or 2))%4
+            self.hand.direction=kicks.target
             self:moveHand('rotate',ix,iy,dir,ifInit)
             self:freshGhost()
             return
@@ -623,6 +650,7 @@ function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
     self:triggerEvent('afterDrop')
 
     -- Lock to field
+    self.chain=0
     self:lock()
     self:playSound('lock')
     self:triggerEvent('afterLock')
@@ -667,10 +695,17 @@ end
 function PP:getGroup(x,y,cell,set)
     local F=self.field
     local c
-    c=F:getCell(x-1,y) if c and not set[c] and c.color==cell.color then set[c]={x-1,y} self:getGroup(x-1,y,cell,set) end
-    c=F:getCell(x+1,y) if c and not set[c] and c.color==cell.color then set[c]={x+1,y} self:getGroup(x+1,y,cell,set) end
-    c=F:getCell(x,y-1) if c and not set[c] and c.color==cell.color then set[c]={x,y-1} self:getGroup(x,y-1,cell,set) end
-    c=F:getCell(x,y+1) if c and not set[c] and c.color==cell.color then set[c]={x,y+1} self:getGroup(x,y+1,cell,set) end
+    local h=self.settings.connH
+    if y-1<=h then
+        c=F:getCell(x,y-1) if c and not set[c] and c.color==cell.color then set[c]={x,y-1} self:getGroup(x,y-1,cell,set) end
+        if y<=h then
+            c=F:getCell(x-1,y) if c and not set[c] and c.color==cell.color then set[c]={x-1,y} self:getGroup(x-1,y,cell,set) end
+            c=F:getCell(x+1,y) if c and not set[c] and c.color==cell.color then set[c]={x+1,y} self:getGroup(x+1,y,cell,set) end
+            if y+1<=h then
+                c=F:getCell(x,y+1) if c and not set[c] and c.color==cell.color then set[c]={x,y+1} self:getGroup(x,y+1,cell,set) end
+            end
+        end
+    end
 end
 function PP:checkPosition(x,y)
     local set={}
@@ -684,9 +719,14 @@ function PP:checkPosition(x,y)
     end
 
     -- Find all connected cells
-    self:getGroup(x,y,cell,set)
+    if y<=self.settings.connH then
+        self:getGroup(x,y,cell,set)
+    end
+
+    -- Record the group, mark cells, trigger clearing (or later)
     if TABLE.getSize(set)>=self.settings.clearGroupSize then
         ins(self.clearingGroups,set)
+        for k in next,set do k.clearing=true end
         if self.settings.clearDelay<=0 then
             self:clearField()
         else
@@ -732,13 +772,21 @@ function PP:checkClear()
             self:checkPosition(x,y)
         end
     end end
+    if #self.clearingGroups>0 then
+        self:playSound('desuffocate')
+    end
 end
 function PP:clearField()
+    self.chain=self.chain+1
+    self:playSound('chain',self.chain)
+    self:playSound('clear',#self.clearingGroups)
+
     local F=self.field
     for i=1,#self.clearingGroups do
         local set=self.clearingGroups[i]
         for _,pos in next,set do
             F:setCell(false,pos[1],pos[2])
+            self:createClearParticle(pos[1],pos[2])
         end
     end
     self.clearingGroups={}
@@ -951,8 +999,10 @@ function PP:update(dt)
                 if self.fallTimer>0 then
                     self.fallTimer=self.fallTimer-1
                     if self.fallTimer<=0 then
-                        if self:fieldFall() and self:canFall() then
-                            self.fallTimer=self.settings.fallDelay
+                        if self:canFall() then
+                            if self:fieldFall() then
+                                self.fallTimer=self.settings.fallDelay
+                            end
                         else
                             self:checkClear()
                         end
@@ -961,7 +1011,9 @@ function PP:update(dt)
                 end
                 if self.clearTimer>0 then
                     self.clearTimer=self.clearTimer-1
-                    self:clearField()
+                    if self.clearTimer==0 then
+                        self:clearField()
+                    end
                     break
                 end
 
@@ -1098,14 +1150,12 @@ function PP:render()
     skin.drawFieldBorder()
 
     -- Delay indicator
-    if not self.hand then
-        skin.drawDelayIndicator('spawn',self.spawnTimer/settings.spawnDelay)
-    elseif self.deathTimer then
-        skin.drawDelayIndicator('death',self.deathTimer/settings.deathDelay)
-    elseif self.handY~=self.ghostY then
-        skin.drawDelayIndicator('drop',self.dropTimer/settings.dropDelay)
-    else
-        skin.drawDelayIndicator('lock',self.lockTimer/settings.lockDelay)
+    if not self.hand then-- Spawn
+        skin.drawDelayIndicator(COLOR.lB,self.spawnTimer/settings.spawnDelay)
+    elseif self.deathTimer then-- Death
+        skin.drawDelayIndicator(COLOR.R,self.deathTimer/settings.deathDelay)
+    else-- Lock
+        skin.drawDelayIndicator(COLOR.lY,self.lockTimer/settings.lockDelay)
     end
 
     -- Lock delay indicator
@@ -1151,7 +1201,8 @@ end
 -- Builder
 local baseEnv={
     fieldW=6,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
-    spawnH=10,
+    spawnH=11,
+    connH=12,-- standard 12
 
     nextSlot=6,
 
@@ -1160,7 +1211,7 @@ local baseEnv={
     lockDelay=1000,
     spawnDelay=200,
     fallDelay=100,
-    clearDelay=100,
+    clearDelay=200,
     deathDelay=260,
 
     seqType='double4color',
@@ -1304,7 +1355,7 @@ function PP:initialize()
     self.field=require'assets.game.rectField'.new(self.settings.fieldW)
 
     self.pieceCount=0
-    self.combo=0
+    self.chain=0
 
     self.clearingGroups={}
 

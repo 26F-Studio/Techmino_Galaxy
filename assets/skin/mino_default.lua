@@ -82,21 +82,13 @@ function S.drawHeightLines(fieldW,spawnH,lockoutH,deathH,voidH)
     gc_setColor(.0,.0,.0,.6) gc_rectangle('fill',0,-voidH   -40,fieldW,40)
 end
 
-function S.drawDelayIndicator(mode,value)
+function S.drawDelayIndicator(color,value)
+    gc_setColor(color)
+    gc_rectangle('fill',-199,403,398*math.min(value,1),8)
+
     gc_setLineWidth(2)
     gc_setColor(1,1,1)
     gc_rectangle('line',-201,401,402,12)
-
-    if mode=='spawn' then
-        gc_setColor(COLOR.lB)
-    elseif mode=='death' then
-        gc_setColor(COLOR.R)
-    elseif mode=='drop' then
-        gc_setColor(COLOR.lG)
-    elseif mode=='lock' then
-        gc_setColor(COLOR.L)
-    end
-    gc_rectangle('fill',-199,403,398*math.min(value,1),8)
 end
 
 function S.drawGarbageBuffer(garbageBuffer)

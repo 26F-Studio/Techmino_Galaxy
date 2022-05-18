@@ -1305,7 +1305,7 @@ function MP:render()
 
 
         -- Grid & Cells
-        skin.drawFieldBackground(40*settings.fieldW)
+        skin.drawFieldBackground(settings.fieldW)
         skin.drawFieldCells(self.field)
 
 
@@ -1386,14 +1386,12 @@ function MP:render()
     skin.drawFieldBorder()
 
     -- Delay indicator
-    if not self.hand then
-        skin.drawDelayIndicator('spawn',self.spawnTimer/settings.spawnDelay)
-    elseif self.deathTimer then
-        skin.drawDelayIndicator('death',self.deathTimer/settings.deathDelay)
-    elseif self.handY~=self.ghostY then
-        skin.drawDelayIndicator('drop',self.dropTimer/settings.dropDelay)
-    else
-        skin.drawDelayIndicator('lock',self.lockTimer/settings.lockDelay)
+    if not self.hand then-- Spawn
+        skin.drawDelayIndicator(COLOR.lB,self.spawnTimer/settings.spawnDelay)
+    elseif self.deathTimer then-- Death
+        skin.drawDelayIndicator(COLOR.R,self.deathTimer/settings.deathDelay)
+    else-- Lock
+        skin.drawDelayIndicator(COLOR.lY,self.lockTimer/settings.lockDelay)
     end
 
     -- Garbage buffer

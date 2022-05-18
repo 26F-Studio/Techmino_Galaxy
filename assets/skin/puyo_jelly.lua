@@ -18,11 +18,12 @@ end
 
 function S.drawFieldCells(F)
     F=F._matrix
+    local flashing=S.getTime()%100<=50
     for y=1,#F do for x=1,#F[1] do
         local C=F[y][x]
-        if C then
+        if C and (not C.clearing or flashing) then
             gc_setColor(ColorTable[C.color])
-            gc_rectangle('fill',(x-1)*40,-y*40,40,40,18)
+            gc_rectangle('fill',(x-1)*40,-y*40,40,40,15)
             drawSide(F,x,y,(x-1)*40,-y*40)
         end
     end end
