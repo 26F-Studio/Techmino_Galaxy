@@ -950,7 +950,7 @@ function MP:riseGarbage(holePos)
     -- Generate line
     for x=1,w do
         L[x]={
-            color=1,
+            color=0,
             nearby={},
         }
     end

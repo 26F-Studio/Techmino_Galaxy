@@ -2,6 +2,7 @@ require'assets.game.rotsys_mino'
 MinoAtkSys=require'assets.game.atksys_mino'
 Minoes=require'assets.game.minoes'
 particleTemplate=require'assets.game.particleSystemTemplate'
+ColorTable=require'assets.game.colorTable'
 
 local gc=love.graphics
 

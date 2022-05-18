@@ -1,5 +1,4 @@
 -- Global color table for minoes
-ColorTable={} for i=1,64 do ColorTable[i]={COLOR.hsv((i-1)/64,.6,.83)} end
 defaultMinoColor=setmetatable({2,22,42,6,52,12,32},{__index=function() return math.random(64) end})
 defaultPuyoColor=setmetatable({2,12,42,22,52},{__index=function() return math.random(64) end})
 
