@@ -24,11 +24,11 @@ local gridMark=GC.load{40,40,
     {'fRect',40,40,-crossL,-crossR},
     {'fRect',40,40,-crossR,-crossR-crossL},
 }
-function S.drawFieldBackground(fieldW,gridHeight)
-    gc_setColor(0,0,0,.26)
-    gc_rectangle('fill',0,0,400,-800)
+function S.drawFieldBackground(fieldW)
+    gc_setColor(0,0,0,.42)
+    gc_rectangle('fill',0,0,40*fieldW,-80*fieldW)
     gc_setColor(1,1,1)
-    for x=1,fieldW do for y=1,gridHeight do
+    for x=1,fieldW do for y=1,2*fieldW do
         gc_draw(gridMark,x*40-40,-y*40)
     end end
 end

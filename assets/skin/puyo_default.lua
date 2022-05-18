@@ -12,9 +12,9 @@ local COLOR=COLOR
 
 local S={}
 
-function S.drawFieldBackground(fieldW,gridHeight)
-    gc_setColor(0,0,0,.26)
-    gc_rectangle('fill',0,0,400,-800)
+function S.drawFieldBackground(fieldW)
+    gc_setColor(0,0,0,.42)
+    gc_rectangle('fill',0,0,40*fieldW,-80*fieldW)
 end
 
 function S.drawFieldBorder()

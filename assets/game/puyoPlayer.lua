@@ -1037,7 +1037,7 @@ function PP:render()
 
 
         -- Grid & Cells
-        skin.drawFieldBackground(settings.fieldW,2*settings.fieldW)
+        skin.drawFieldBackground(settings.fieldW)
         skin.drawFieldCells(self.field)
 
 
