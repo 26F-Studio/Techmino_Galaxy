@@ -171,8 +171,8 @@ function GAME.newPlayer(id,pType)
         P=require'assets.game.minoPlayer'.new(GAME.mode)
     elseif pType=='puyo' then
         P=require'assets.game.puyoPlayer'.new(GAME.mode)
-    elseif pType=='jewel' then
-        P=require'assets.game.jewelPlayer'.new(GAME.mode)
+    elseif pType=='gem' then
+        P=require'assets.game.gemPlayer'.new(GAME.mode)
     else
         MES.new('error',"invalid player type :'"..tostring(pType).."'")
         return
