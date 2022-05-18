@@ -907,7 +907,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         g=self.garbageBuffer[i]
         if not g then break end
         if g.time==g.time0 then
-            local r=rnd(10)
+            local r=self.rcvRND:random(10)
             for _=1,g.power do
                 self:riseGarbage(r)
             end
@@ -1647,6 +1647,9 @@ function MP:initialize()
     self.modeData=setmetatable({},modeDataMeta)
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 
+    self.rcvRND=love.math.newRandomGenerator(GAME.seed+434)
+    self.seqRND=love.math.newRandomGenerator(GAME.seed+231)
+
     self.pos={
         x=0,y=0,k=1,a=0,
 
@@ -1669,7 +1672,6 @@ function MP:initialize()
     self.garbageBuffer={}
 
     self.nextQueue={}
-    self.seqRND=love.math.newRandomGenerator(GAME.seed)
     self.seqGen=coroutine.wrap(seqGenerators[self.settings.seqType])
     self:freshNextQueue()
 
