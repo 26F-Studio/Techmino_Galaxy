@@ -23,7 +23,7 @@ function S.drawFieldCells(F)
         local C=F[y][x]
         if C and (not C.clearing or flashing) then
             gc_setColor(ColorTable[C.color])
-            gc_rectangle('fill',(x-1)*40,-y*40,40,40,15)
+            gc_rectangle('fill',(x-1)*40+2,-y*40+2,36,36,15)
             drawSide(F,x,y,(x-1)*40,-y*40)
         end
     end end
@@ -34,7 +34,7 @@ function S.drawHand(B,handX,handY)
         if B[y][x] then
             local bx,by=(handX+x-2)*40,-(handY+y-1)*40
             gc_setColor(ColorTable[B[y][x].color])
-            gc_rectangle('fill',bx,by,40,40,18)
+            gc_rectangle('fill',bx+2,by+2,36,36,15)
             drawSide(B,x,y,bx,by)
         end
     end end
@@ -48,7 +48,7 @@ function S.drawNext(n,B)
         if B[y][x] then
             local bx,by=(x-#B[1]/2-1)*40,(y-#B/2)*-40
             gc_setColor(ColorTable[B[y][x].color])
-            gc_rectangle('fill',bx,by,40,40,18)
+            gc_rectangle('fill',bx+2,by+2,36,36,18)
             drawSide(B,x,y,bx,by)
         end
     end end
