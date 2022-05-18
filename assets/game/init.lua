@@ -269,12 +269,13 @@ function GAME.send(source,data)
 
     -- Find target
     local target=d.target
-    if not (target and GAME.playerMap[target]) then
-        for i=1,#GAME.playerList do
-            if source~=GAME.playerList[i] then
-                target=GAME.playerList[i]
-            end
+    if not (target and GAME.playerMap[target]) and #GAME.playerList>1 then
+        local r=math.random(#GAME.playerList)
+        if GAME.playerList[r]==source then
+            r=math.random(#GAME.playerList-1)
+            if r>=(TABLE.find(GAME.playerList,source)) then r=r+1 end
         end
+        target=GAME.playerList[r]
     end
 
     -- Sending airmail

@@ -10,10 +10,11 @@ S.base='puyo_default'
 
 local function drawSide(B,x,y,bx,by)
     local c=B[y][x].color
-    if B[y  ] and B[y  ][x+1] and B[y  ][x+1].color==c then gc_rectangle('fill',bx+40, by+8,  -5,24) end
-    if B[y  ] and B[y  ][x-1] and B[y  ][x-1].color==c then gc_rectangle('fill',bx,    by+8,  5 ,24) end
-    if B[y-1] and B[y-1][x  ] and B[y-1][x  ].color==c then gc_rectangle('fill',bx+8,  by+40, 24,-5) end
-    if B[y+1] and B[y+1][x  ] and B[y+1][x  ].color==c then gc_rectangle('fill',bx+8,  by,    24, 5) end
+    local t
+    if B[y  ] then t=B[y  ][x+1] if t and t.connClear and t.color==c then gc_rectangle('fill',bx+40, by+8,  -5,24) end end
+    if B[y  ] then t=B[y  ][x-1] if t and t.connClear and t.color==c then gc_rectangle('fill',bx,    by+8,  5 ,24) end end
+    if B[y-1] then t=B[y-1][x  ] if t and t.connClear and t.color==c then gc_rectangle('fill',bx+8,  by+40, 24,-5) end end
+    if B[y+1] then t=B[y+1][x  ] if t and t.connClear and t.color==c then gc_rectangle('fill',bx+8,  by,    24, 5) end end
 end
 
 function S.drawFieldCells(F)

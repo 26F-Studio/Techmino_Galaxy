@@ -309,7 +309,7 @@ function PP:triggerEvent(name,...)
     local L=self.event[name]
     if L then for i=1,#L do L[i](self,...) end end
 end
-function PP:moveHand(action,a,b,c,d)
+function PP:moveHand(action,a,b,c)
     if action=='moveX' then
         self:createMoveParticle(self.handX,self.handY,self.handX+a,self.handY)
         self.handX=self.handX+a
@@ -323,6 +323,13 @@ function PP:moveHand(action,a,b,c,d)
     end
 
     if self.handX%1~=0 or self.handY%1~=0 then error('EUREKA! Decimal position.') end
+
+    if action=='rotate' then
+        self:playSound(c and 'initrotate' or 'rotate')
+        if self.handY==self.ghostY then
+            self:playSound('touch')
+        end
+    end
 
     if self.deathTimer then
         local t=self.deathTimer
@@ -508,25 +515,8 @@ function PP:getPuyo(mat)
             mat[y][x]={
                 puyoID=self.pieceCount,
                 color=defaultPuyoColor[mat[y][x]],
-                clearing=false,
-                nearby={},
-            }-- Should be player's color setting
-        end
-    end end
-
-    -- Connect nearby cells
-    for y=1,#mat do for x=1,#mat[1] do
-        if mat[y][x] then
-            local L=mat[y][x].nearby
-            local b
-            b=mat[y]   if b and b[x-1] then L[b[x-1]]=true end
-            b=mat[y]   if b and b[x+1] then L[b[x+1]]=true end
-            b=mat[y-1] if b and b[x]   then L[b[x]  ]=true end
-            b=mat[y+1] if b and b[x]   then L[b[x]  ]=true end
-            b=mat[y-1] if b and b[x-1] then L[b[x-1]]=true end
-            b=mat[y-1] if b and b[x+1] then L[b[x+1]]=true end
-            b=mat[y+1] if b and b[x-1] then L[b[x-1]]=true end
-            b=mat[y+1] if b and b[x+1] then L[b[x+1]]=true end
+                connClear=true,
+            }
         end
     end end
 
@@ -629,7 +619,7 @@ function PP:rotate(dir,ifInit)
         if not self:ifoverlap(icb,ix,iy) then
             self.hand.matrix=icb
             self.hand.direction=kicks.target
-            self:moveHand('rotate',ix,iy,dir,ifInit)
+            self:moveHand('rotate',ix,iy,ifInit)
             self:freshGhost()
             return
         end
@@ -655,6 +645,31 @@ function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
     self:playSound('lock')
     self:triggerEvent('afterLock')
 
+    -- Update & Release garbage
+    local i=1
+    while true do
+        g=self.garbageBuffer[i]
+        if not g then break end
+        if g.time==g.time0 then
+            self:dropGarbage(g.power*2)
+            rem(self.garbageBuffer,i)
+            i=i-1-- Avoid index error
+        elseif g.mode==1 then
+            g.time=g.time+1
+        end
+        i=i+1
+    end
+
+    if self:canFall() then
+        if self.settings.fallDelay<=0 then
+            repeat until not self:fieldFall()
+        else
+            self.fallTimer=self.settings.fallDelay
+        end
+    else
+        self:checkClear()
+    end
+
     -- Discard hand
     self.hand=false
     if self.finished then return end
@@ -676,15 +691,6 @@ function PP:lock()-- Put puyo into field
             F:setCell(CB[y][x],self.handX+x-1,self.handY+y-1)
         end
     end end
-    if self:canFall() then
-        if self.settings.fallDelay<=0 then
-            repeat until not self:fieldFall()
-        else
-            self.fallTimer=self.settings.fallDelay
-        end
-    else
-        self:checkClear()
-    end
 
     ins(self.dropHistory,{
         id=self.hand.id,
@@ -707,6 +713,26 @@ function PP:getGroup(x,y,cell,set)
         end
     end
 end
+function PP:checkDig(set)
+    local F=self.field
+    local h=self.settings.connH
+    local tset={}
+    for _,pos in next,set do
+        local x,y=pos[1],pos[2]
+        local c
+        if y-1<=h then
+            c=F:getCell(x,y-1) if c and c.diggable then tset[c]={x,y-1} end
+            if y<=h then
+                c=F:getCell(x-1,y) if c and c.diggable then tset[c]={x-1,y} end
+                c=F:getCell(x+1,y) if c and c.diggable then tset[c]={x+1,y} end
+                if y+1<=h then
+                    c=F:getCell(x,y+1) if c and c.diggable then tset[c]={x,y+1} end
+                end
+            end
+        end
+    end
+    TABLE.cover(tset,set)
+end
 function PP:checkPosition(x,y)
     local set={}
     local cell=self.field:getCell(x,y)
@@ -726,6 +752,7 @@ function PP:checkPosition(x,y)
     -- Record the group, mark cells, trigger clearing (or later)
     if TABLE.getSize(set)>=self.settings.clearGroupSize then
         ins(self.clearingGroups,set)
+        self:checkDig(set)
         for k in next,set do k.clearing=true end
         if self.settings.clearDelay<=0 then
             self:clearField()
@@ -765,10 +792,24 @@ function PP:fieldFall()
     end
     return fallen
 end
+function PP:dropGarbage(count)
+    local F=self.field
+    local w=F:getWidth()
+    for _=1,count do
+        local x=self.seqRND:random(w)
+        local y=self.settings.spawnH+1
+        while F:getCell(x,y) do y=y+1 end
+        F:setCell({
+            color=0,
+            diggable=true,
+        },x,y)
+    end
+end
 function PP:checkClear()
     local F=self.field
     for y=1,F:getHeight() do for x=1,F:getWidth() do
-        if F:getCell(x,y) then
+        local c=F:getCell(x,y)
+        if c and c.connClear then
             self:checkPosition(x,y)
         end
     end end
@@ -821,7 +862,15 @@ function PP:changeFieldWidth(w,origPos)
     end
 end
 function PP:receive(data)
-    -- TODO
+    local B={
+        power=data.power,
+        mode=data.mode,
+        time0=math.floor(data.time*1000+.5),
+        time=0,
+        fatal=data.fatal,
+        speed=data.speed,
+    }
+    ins(self.garbageBuffer,B)
 end
 function PP:finish(reason)
     --[[ Reason:
@@ -1058,6 +1107,14 @@ function PP:update(dt)
                 self:finish('WA')
             end
         end
+
+        -- Update garbage
+        for i=1,#self.garbageBuffer do
+            local g=self.garbageBuffer[i]
+            if g.mode==0 and g.time<g.time0 then
+                g.time=g.time+1
+            end
+        end
     end
     for _,v in next,self.particles do v:update(dt) end
     self.texts:update(dt)
@@ -1158,6 +1215,9 @@ function PP:render()
         skin.drawDelayIndicator(COLOR.lY,self.lockTimer/settings.lockDelay)
     end
 
+    -- Garbage buffer
+    skin.drawGarbageBuffer(self.garbageBuffer)
+
     -- Lock delay indicator
     skin.drawLockDelayIndicator(settings.freshCondition,self.freshChance)
 
@@ -1218,7 +1278,7 @@ local baseEnv={
     atkSys='None',
 
     clearGroupSize=4,
-    freshCondition='any',
+    freshCondition='fall',
     freshCount=15,
     maxFreshTime=6200,
 
@@ -1339,6 +1399,9 @@ function PP:initialize()
     self.modeData=setmetatable({},modeDataMeta)
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 
+    self.rcvRND=love.math.newRandomGenerator(GAME.seed+434)
+    self.seqRND=love.math.newRandomGenerator(GAME.seed+231)
+
     self.pos={
         x=0,y=0,k=1,a=0,
 
@@ -1358,9 +1421,9 @@ function PP:initialize()
     self.chain=0
 
     self.clearingGroups={}
+    self.garbageBuffer={}
 
     self.nextQueue={}
-    self.seqRND=love.math.newRandomGenerator(GAME.seed)
     self.seqGen=coroutine.wrap(seqGenerators[self.settings.seqType])
     self:freshNextQueue()
 

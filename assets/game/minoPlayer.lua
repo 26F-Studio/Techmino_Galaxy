@@ -671,7 +671,7 @@ function MP:getMino(shapeID)
                 id=self.pieceCount,
                 color=defaultMinoColor[shapeID],
                 nearby={},
-            }-- Should be player's color setting
+            }
         end
     end end
 
