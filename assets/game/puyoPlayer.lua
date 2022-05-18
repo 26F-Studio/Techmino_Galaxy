@@ -632,9 +632,12 @@ function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
     if self.finished then return end
 
     -- Fresh hand
-    self.spawnTimer=self.settings.spawnDelay
-    if self.clearTimer<=0 and self.spawnTimer<=0 then
-        self:popNext()
+    if self.settings.spawnDelay<=0 then
+        if self.fallTimer<=0 and self.clearTimer<=0 then
+            self:popNext()
+        end
+    else
+        self.spawnTimer=self.settings.spawnDelay
     end
 end
 function PP:lock()-- Put puyo into field
@@ -645,11 +648,129 @@ function PP:lock()-- Put puyo into field
             F:setCell(CB[y][x],self.handX+x-1,self.handY+y-1)
         end
     end end
+    if self:canFall() then
+        if self.settings.fallDelay<=0 then
+            repeat until not self:fieldFall()
+        else
+            self.fallTimer=self.settings.fallDelay
+        end
+    else
+        self:checkClear()
+    end
+
     ins(self.dropHistory,{
         id=self.hand.id,
         x=self.handX,
         y=self.handY,
     })
+end
+function PP:getGroup(x,y,cell,set)
+    local F=self.field
+    local c
+    c=F:getCell(x-1,y) if c and not set[c] and c.color==cell.color then set[c]={x-1,y} self:getGroup(x-1,y,cell,set) end
+    c=F:getCell(x+1,y) if c and not set[c] and c.color==cell.color then set[c]={x+1,y} self:getGroup(x+1,y,cell,set) end
+    c=F:getCell(x,y-1) if c and not set[c] and c.color==cell.color then set[c]={x,y-1} self:getGroup(x,y-1,cell,set) end
+    c=F:getCell(x,y+1) if c and not set[c] and c.color==cell.color then set[c]={x,y+1} self:getGroup(x,y+1,cell,set) end
+end
+function PP:checkPosition(x,y)
+    local set={}
+    local cell=self.field:getCell(x,y)
+
+    -- Skip if this cell is being cleared
+    for i=1,#self.clearingGroups do
+        if self.clearingGroups[i][cell] then
+            return
+        end
+    end
+
+    -- Find all connected cells
+    self:getGroup(x,y,cell,set)
+    if TABLE.getSize(set)>=self.settings.clearGroupSize then
+        ins(self.clearingGroups,set)
+        if self.settings.clearDelay<=0 then
+            self:clearField()
+        else
+            self.clearTimer=self.settings.clearDelay
+        end
+    end
+end
+function PP:canFall()
+    local F=self.field
+    for y=1,F:getHeight() do for x=1,F:getWidth() do
+        if self:isSolidCell(x,y) and not self:isSolidCell(x,y-1) then
+            return true
+        end
+    end end
+end
+function PP:fieldFall()
+    local F=self.field
+    local fallen=false
+    for x=1,F:getWidth() do
+        local airHeight
+        for y=1,F:getHeight() do
+            if not F:getCell(x,y) then
+                airHeight=y
+                break
+            end
+        end
+        if airHeight then
+            for y=airHeight,F:getHeight() do
+                local c=F:getCell(x,y+1)
+                F:setCell(c,x,y)
+                if c then
+                    fallen=true
+                end
+            end
+        end
+    end
+    return fallen
+end
+function PP:checkClear()
+    local F=self.field
+    for y=1,F:getHeight() do for x=1,F:getWidth() do
+        if F:getCell(x,y) then
+            self:checkPosition(x,y)
+        end
+    end end
+end
+function PP:clearField()
+    local F=self.field
+    for i=1,#self.clearingGroups do
+        local set=self.clearingGroups[i]
+        for _,pos in next,set do
+            F:setCell(false,pos[1],pos[2])
+        end
+    end
+    self.clearingGroups={}
+
+    if self:canFall() then
+        if self.settings.fallDelay<=0 then
+            repeat until not self:fieldFall()
+            self:checkClear()
+        else
+            self.fallTimer=self.settings.fallDelay
+        end
+    else
+        self:checkClear()
+    end
+end
+function PP:changeFieldWidth(w,origPos)
+    if w>0 and w%1==0 then
+        if not origPos then origPos=1 end
+        local w0=self.settings.fieldW
+        for y=1,#self.field:getHeight() do
+            local L=TABLE.new(false,w)
+            for x=1,w0 do
+                local newX=origPos+x-1
+                if newX>=1 and newX<=w then
+                    L[newX]=self.field._matrix[y][x]
+                end
+            end
+        end
+        self.settings.fieldW=w
+        self.field._width=w
+        self.field:fresh()
+    end
 end
 function PP:receive(data)
     -- TODO
@@ -658,10 +779,10 @@ function PP:finish(reason)
     --[[ Reason:
         AC:  Win
         WA:  Block out
-        CE:  Lock out
-        MLE: Top out
+        CE:  /
+        MLE: /
         TLE: Time out
-        OLE: Finesse fault
+        OLE: /
         ILE: Ran out pieces
         PE:  Mission failed
         RE:  Other reason
@@ -826,9 +947,21 @@ function PP:update(dt)
             end
 
             repeat-- Update hand
-                -- Wait clearing animation
+                -- Wait falling & clearing animation
+                if self.fallTimer>0 then
+                    self.fallTimer=self.fallTimer-1
+                    if self.fallTimer<=0 then
+                        if self:fieldFall() and self:canFall() then
+                            self.fallTimer=self.settings.fallDelay
+                        else
+                            self:checkClear()
+                        end
+                    end
+                    break
+                end
                 if self.clearTimer>0 then
                     self.clearTimer=self.clearTimer-1
+                    self:clearField()
                     break
                 end
 
@@ -871,14 +1004,6 @@ function PP:update(dt)
                 self.deathTimer=false
                 self:lock()
                 self:finish('WA')
-            end
-        end
-
-        -- Update garbage
-        for i=1,#self.garbageBuffer do
-            local g=self.garbageBuffer[i]
-            if g.mode==0 and g.time<g.time0 then
-                g.time=g.time+1
             end
         end
     end
@@ -1026,20 +1151,22 @@ end
 -- Builder
 local baseEnv={
     fieldW=6,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
-    spawnH=12,
+    spawnH=10,
 
     nextSlot=6,
 
     readyDelay=3000,
     dropDelay=1000,
     lockDelay=1000,
-    spawnDelay=0,
-    clearDelay=0,
+    spawnDelay=200,
+    fallDelay=100,
+    clearDelay=100,
     deathDelay=260,
 
-    seqType='bag_2_4',
+    seqType='double4color',
     atkSys='None',
 
+    clearGroupSize=4,
     freshCondition='any',
     freshCount=15,
     maxFreshTime=6200,
@@ -1049,27 +1176,27 @@ local baseEnv={
     arr=26,
     sdarr=12,
     dascut=0,
-    skin='puyo_default',
+    skin='puyo_jelly',
 
     shakeness=.26,
 }
 local seqGenerators={
     none=function() while true do coroutine.yield() end end,
-    bag_2_3=function(P)
+    double3color=function(P)
         local l={}
         while true do
             if not l[1] then for i=1,3 do for j=1,3 do ins(l,{{i},{j}}) end end end
             coroutine.yield(rem(l,P.seqRND:random(#l)))
         end
     end,
-    bag_2_4=function(P)
+    double4color=function(P)
         local l={}
         while true do
             if not l[1] then for i=1,4 do for j=1,4 do ins(l,{{i},{j}}) end end end
             coroutine.yield(rem(l,P.seqRND:random(#l)))
         end
     end,
-    bag_2_5=function(P)
+    double5color=function(P)
         local l={}
         while true do
             if not l[1] then for i=1,5 do for j=1,5 do ins(l,{{i},{j}}) end end end
@@ -1179,7 +1306,7 @@ function PP:initialize()
     self.pieceCount=0
     self.combo=0
 
-    self.garbageBuffer={}
+    self.clearingGroups={}
 
     self.nextQueue={}
     self.seqRND=love.math.newRandomGenerator(GAME.seed)
@@ -1189,8 +1316,10 @@ function PP:initialize()
     self.dropTimer=0
     self.lockTimer=0
     self.spawnTimer=self.settings.readyDelay
+    self.fallTimer=0
     self.clearTimer=0
     self.deathTimer=false
+
     self.freshChance=self.settings.freshCount
     self.freshTimeRemain=0
 

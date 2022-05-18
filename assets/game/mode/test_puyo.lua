@@ -4,8 +4,6 @@ return {
         GAME.setMain(1)
     end,
     settings={puyo={
-        dropDelay=1e99,
-        lockDelay=1e99,
         readyDelay=1000,
     }},
 }

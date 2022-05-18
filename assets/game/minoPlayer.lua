@@ -668,7 +668,7 @@ function MP:getMino(shapeID)
     for y=1,#shape do for x=1,#shape[1] do
         if shape[y][x] then
             shape[y][x]={
-                minoID=self.pieceCount,
+                id=self.pieceCount,
                 color=defaultMinoColor[shapeID],
                 nearby={},
             }-- Should be player's color setting
@@ -884,7 +884,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     self:playSound('lock')
     self:triggerEvent('afterLock')
 
-    -- Calculate bonus
+    -- Clear
     local clear=self:checkField()
     self.lastMovement.clear=clear
     if clear then
@@ -893,6 +893,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         self:triggerEvent('afterClear',self.lastMovement)
     end
 
+    -- Attack
     local atk=MinoAtkSys[self.settings.atkSys].drop(self)
     if atk then GAME.send(self,atk) end
 
@@ -919,9 +920,12 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     end
 
     -- Fresh hand
-    self.spawnTimer=self.settings.spawnDelay
-    if self.clearTimer<=0 and self.spawnTimer<=0 then
-        self:popNext()
+    if self.spawnTimer<=0 then
+        if self.clearTimer<=0 then
+            self:popNext()
+        end
+    else
+        self.spawnTimer=self.settings.spawnDelay
     end
 end
 function MP:lock()-- Put mino into field
@@ -974,7 +978,7 @@ function MP:riseGarbage(holePos)
         self.minY=self.minY+1
     end
 end
-function MP:checkField()-- Check line clear, top out checking, etc.
+function MP:checkField()
     local lineClear={}
     local F=self.field
     for y=F:getHeight(),1,-1 do
@@ -1680,6 +1684,7 @@ function MP:initialize()
     self.spawnTimer=self.settings.readyDelay
     self.clearTimer=0
     self.deathTimer=false
+
     self.freshChance=self.settings.freshCount
     self.freshTimeRemain=0
 

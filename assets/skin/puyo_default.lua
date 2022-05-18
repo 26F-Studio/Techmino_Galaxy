@@ -2,7 +2,7 @@ local gc=love.graphics
 local gc_push,gc_pop=gc.push,gc.pop
 local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
 local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
-local gc_draw,gc_line=gc.draw,gc.line
+local gc_line=gc.line
 local gc_rectangle=gc.rectangle
 local gc_printf=gc.printf
 
@@ -12,25 +12,9 @@ local COLOR=COLOR
 
 local S={}
 
-local crossR,crossL=1,6
-local gridMark=GC.load{40,40,
-    {'setCL',1,1,1,.26},
-    {'fRect',0, 0, crossL, crossR},
-    {'fRect',0, 0, crossR, crossL},
-    {'fRect',40,0, -crossL,crossR},
-    {'fRect',40,0, -crossR,crossL},
-    {'fRect',0, 40,crossL, -crossR},
-    {'fRect',0, 40,crossR, -crossR-crossL},
-    {'fRect',40,40,-crossL,-crossR},
-    {'fRect',40,40,-crossR,-crossR-crossL},
-}
 function S.drawFieldBackground(fieldW,gridHeight)
     gc_setColor(0,0,0,.26)
     gc_rectangle('fill',0,0,400,-800)
-    gc_setColor(1,1,1)
-    for x=1,fieldW do for y=1,gridHeight do
-        gc_draw(gridMark,x*40-40,-y*40)
-    end end
 end
 
 function S.drawFieldBorder()
@@ -48,7 +32,7 @@ function S.drawFieldCells(F)
         local C=F[y][x]
         if C then
             gc_setColor(ColorTable[C.color])
-            gc_rectangle('fill',(x-1)*40,-y*40,40,40)
+            gc_rectangle('fill',(x-1)*40,-y*40,40,40,15)
         end
     end end
 end
@@ -116,7 +100,7 @@ function S.drawGhost(B,handX,ghostY)
     gc_setColor(1,1,1,.162)
     for y=1,#B do for x=1,#B[1] do
         if B[y][x] then
-            gc_rectangle('fill',(handX+x-2)*40,-(ghostY+y-1)*40,40,40)
+            gc_rectangle('fill',(handX+x-2)*40,-(ghostY+y-1)*40,40,40,15)
         end
     end end
 end
@@ -125,7 +109,7 @@ function S.drawHand(B,handX,handY)
     for y=1,#B do for x=1,#B[1] do
         if B[y][x] then
             gc_setColor(ColorTable[B[y][x].color])
-            gc_rectangle('fill',(handX+x-2)*40,-(handY+y-1)*40,40,40)
+            gc_rectangle('fill',(handX+x-2)*40,-(handY+y-1)*40,40,40,15)
         end
     end end
 end
@@ -146,14 +130,14 @@ function S.drawNext(n,B,unavailable)
         gc_setColor(.6,.6,.6)
         for y=1,#B do for x=1,#B[1] do
             if B[y][x] then
-                gc_rectangle('fill',(x-#B[1]/2-1)*40,(y-#B/2)*-40,40,40)
+                gc_rectangle('fill',(x-#B[1]/2-1)*40,(y-#B/2)*-40,40,40,15)
             end
         end end
     else
         for y=1,#B do for x=1,#B[1] do
             if B[y][x] then
                 gc_setColor(ColorTable[B[y][x].color])
-                gc_rectangle('fill',(x-#B[1]/2-1)*40,(y-#B/2)*-40,40,40)
+                gc_rectangle('fill',(x-#B[1]/2-1)*40,(y-#B/2)*-40,40,40,15)
             end
         end end
     end

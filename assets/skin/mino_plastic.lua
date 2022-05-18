@@ -83,7 +83,7 @@ end
 function S.drawGhost(B,handX,ghostY)
     for y=1,#B do for x=1,#B[1] do
         if B[y][x] then
-            gc_setColor(1,1,1,.162)
+            gc_setColor(1,1,1,.26)
             gc_rectangle('fill',(handX+x-2)*40,-(ghostY+y-1)*40,40,40)
             drawSide(B,x,y,(handX+x-2)*40,-(ghostY+y-1)*40)
         end
