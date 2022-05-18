@@ -204,10 +204,10 @@ function GAME.start()
         if GAME.mainPID then GAME.playerMap[GAME.mainPID]:loadSettings(SETTINGS.game) end
         if GAME.mode.settings then
             for i=1,#GAME.playerList do
-                GAME.playerList[i]:loadSettings(
-                    GAME.mode.settings[GAME.playerList[i].gameMode]
-                    or error("Mode "..GAME.mode.name.." has no gamemode setting for "..GAME.playerList[i].gameMode)
-                )
+                local conf=GAME.mode.settings[GAME.playerList[i].gameMode]
+                if conf then
+                    GAME.playerList[i]:loadSettings(conf)
+                end
             end
         end
 

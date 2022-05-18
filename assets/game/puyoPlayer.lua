@@ -825,8 +825,13 @@ function PP:clearField()
     local F=self.field
     for i=1,#self.clearingGroups do
         local set=self.clearingGroups[i]
-        for _,pos in next,set do
-            F:setCell(false,pos[1],pos[2])
+        for k,pos in next,set do
+            if k.shield then
+                k.shield=k.shield>0 and k.shield-1 or nil
+            else
+                k=false
+            end
+            F:setCell(k,pos[1],pos[2])
             self:createClearParticle(pos[1],pos[2])
         end
     end
