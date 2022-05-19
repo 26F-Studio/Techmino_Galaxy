@@ -796,7 +796,7 @@ function PP:dropGarbage(count)
     local F=self.field
     local w=F:getWidth()
     for _=1,count do
-        local x=self.seqRND:random(w)
+        local x=self.rcvRND:random(w)
         local y=self.settings.spawnH+1
         while F:getCell(x,y) do y=y+1 end
         F:setCell({
