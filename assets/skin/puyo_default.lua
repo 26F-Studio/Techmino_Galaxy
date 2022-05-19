@@ -3,6 +3,7 @@ local gc_push,gc_pop=gc.push,gc.pop
 local gc_translate,gc_scale=gc.translate,gc.scale
 local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
+local gc_setLineWidth=gc.setLineWidth
 
 local min=math.min
 
@@ -49,25 +50,23 @@ function S.drawHand(B,handX,handY)
     end end
 end
 
-function S.drawNext(n,B,unavailable)
+function S.drawNextBorder(slot)
+    gc_setColor(0,0,0,.26)
+    gc_rectangle('fill',30,0,100,100*slot)
+    gc_setLineWidth(2)
+    gc_setColor(COLOR.L)
+    gc_rectangle('line',30,0,100,100*slot)
+end
+
+function S.drawNext(n,B)
     gc_push('transform')
-    gc_translate(100,100*n-50)
-    gc_scale(min(2.3/#B,3/#B[1],.86))
-    if unavailable then
-        gc_setColor(.6,.6,.6)
-        for y=1,#B do for x=1,#B[1] do
-            if B[y][x] then
-                gc_rectangle('fill',(x-#B[1]/2-1)*40+2,(y-#B/2)*-40,36,36,15)
-            end
-        end end
-    else
-        for y=1,#B do for x=1,#B[1] do
-            if B[y][x] then
-                gc_setColor(ColorTable[B[y][x].color])
-                gc_rectangle('fill',(x-#B[1]/2-1)*40+2,(y-#B/2)*-40,36,36,15)
-            end
-        end end
-    end
+    gc_translate(80,100*n-50)
+    for y=1,#B do for x=1,#B[1] do
+        if B[y][x] then
+            gc_setColor(ColorTable[B[y][x].color])
+            gc_rectangle('fill',(x-#B[1]/2-1)*40+2,(y-#B/2)*-40,36,36,15)
+        end
+    end end
     gc_pop()
 end
 

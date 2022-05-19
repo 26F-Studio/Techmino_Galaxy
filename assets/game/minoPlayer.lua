@@ -1077,7 +1077,7 @@ function MP:finish(reason)
     -- </Temporarily>
 end
 --------------------------------------------------------------
--- Press & Release
+-- Press & Release & Update & Render
 function MP:press(act)
     self:triggerEvent('beforePress',act)
 
@@ -1096,8 +1096,6 @@ function MP:release(act)
     self.actions[act].release(self)
     self:triggerEvent('afterRelease',act)
 end
---------------------------------------------------------------
--- Update & Render
 function MP:update(dt)
     local df=floor((self.realTime+dt)*1000)-floor(self.realTime*1000)
     self.realTime=self.realTime+dt

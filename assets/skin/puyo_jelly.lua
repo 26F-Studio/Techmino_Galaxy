@@ -44,8 +44,7 @@ end
 
 function S.drawNext(n,B)
     gc_push('transform')
-    gc_translate(100,100*n-50)
-    gc_scale(min(2.3/#B,3/#B[1],.86))
+    gc_translate(80,100*n-50)
     for y=1,#B do for x=1,#B[1] do
         if B[y][x] then
             local bx,by=(x-#B[1]/2-1)*40,(y-#B/2)*-40
