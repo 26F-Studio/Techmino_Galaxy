@@ -1,4 +1,5 @@
 local gc=love.graphics
+local gc_push,gc_pop=gc.push,gc.pop
 local gc_translate,gc_scale=gc.translate,gc.scale
 local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
@@ -42,7 +43,7 @@ function S.drawHand(B,handX,handY)
 end
 
 function S.drawNext(n,B)
-    gc.push('transform')
+    gc_push('transform')
     gc_translate(100,100*n-50)
     gc_scale(min(2.3/#B,3/#B[1],.86))
     for y=1,#B do for x=1,#B[1] do
@@ -53,7 +54,7 @@ function S.drawNext(n,B)
             drawSide(B,x,y,bx,by)
         end
     end end
-    gc.pop()
+    gc_pop()
 end
 
 return S

@@ -155,7 +155,7 @@ function S.drawNextBorder(slot)
 end
 
 function S.drawNext(n,B,unavailable)
-    gc.push('transform')
+    gc_push('transform')
     gc_translate(100,100*n-50)
     gc_scale(min(2.3/#B,3/#B[1],.86))
     if unavailable then
@@ -173,7 +173,7 @@ function S.drawNext(n,B,unavailable)
             end
         end end
     end
-    gc.pop()
+    gc_pop()
 end
 
 function S.drawHoldBorder(mode,slot)
@@ -192,7 +192,7 @@ function S.drawHoldBorder(mode,slot)
 end
 
 function S.drawHold(n,B,unavailable)
-    gc.push('transform')
+    gc_push('transform')
     gc_translate(-100,100*n-50)
     gc_scale(min(2.3/#B,3/#B[1],.86))
     for y=1,#B do for x=1,#B[1] do
@@ -205,7 +205,7 @@ function S.drawHold(n,B,unavailable)
             gc_rectangle('fill',(x-#B[1]/2-1)*40,(y-#B/2)*-40,40,40)
         end
     end end
-    gc.pop()
+    gc_pop()
 end
 
 function S.drawTime(time)
