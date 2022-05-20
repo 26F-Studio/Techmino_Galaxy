@@ -1,6 +1,6 @@
 return {
     initialize=function()
-        -- GAME.newPlayer(1,'gem')
+        GAME.newPlayer(1,'gem')
         GAME.setMain(1)
     end,
     settings={gem={

@@ -648,14 +648,14 @@ function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
     -- Update & Release garbage
     local i=1
     while true do
-        g=self.garbageBuffer[i]
-        if not g then break end
-        if g.time==g.time0 then
-            self:dropGarbage(g.power*2)
+        l=self.garbageBuffer[i]
+        if not l then break end
+        if l.time==l.time0 then
+            self:dropGarbage(l.power*2)
             rem(self.garbageBuffer,i)
             i=i-1-- Avoid index error
-        elseif g.mode==1 then
-            g.time=g.time+1
+        elseif l.mode==1 then
+            l.time=l.time+1
         end
         i=i+1
     end
