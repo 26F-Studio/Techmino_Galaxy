@@ -223,12 +223,30 @@ settings={
         clean=false,
         locale='en',
     },
-    game={
+    game_mino={
         -- Handling
-        das=75,
-        arr=0,
-        sdarr=0,
-        dascut=0,
+        das=120,
+        arr=20,
+        sdarr=20,
+        dascut=26,
+
+        -- Video
+        shakeness=.6,
+    },
+    game_puyo={
+        -- Handling
+        das=120,
+        arr=20,
+        sdarr=20,
+        dascut=26,
+
+        -- Video
+        shakeness=.6,
+    },
+    game_gem={
+        -- Handling
+        das=100,
+        arr=30,
 
         -- Video
         shakeness=.6,

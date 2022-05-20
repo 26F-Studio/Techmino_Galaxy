@@ -201,7 +201,11 @@ function GAME.start()
     if #GAME.playerList==0 then
         MES.new('warn',"No players created in this mode")
     else
-        if GAME.mainPID then GAME.playerMap[GAME.mainPID]:loadSettings(SETTINGS.game) end
+        if GAME.mainPID then
+            local P=GAME.playerMap[GAME.mainPID]
+            local conf=SETTINGS["game_"..P.gameMode]
+            if conf then P:loadSettings(conf) end
+        end
         if GAME.mode.settings then
             for i=1,#GAME.playerList do
                 local conf=GAME.mode.settings[GAME.playerList[i].gameMode]

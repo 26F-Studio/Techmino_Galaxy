@@ -32,13 +32,13 @@ local function sliderShow_mul(S)  return S.disp().."%"    end
 
 scene.widgetList={
     -- Game: handling
-    WIDGET.new{type='slider',     pos={0,0},x=260, y=100,w=1000,    text=LANG'setting_das',         widthLimit=260,axis={0,260,1},smooth=true,   disp=TABLE.func_getVal(SETTINGS.game,'das'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game,'das')},
-    WIDGET.new{type='slider',     pos={0,0},x=260, y=160,w=1000,    text=LANG'setting_arr',         widthLimit=260,axis={0,120,1},smooth=true,   disp=TABLE.func_getVal(SETTINGS.game,'arr'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game,'arr')},
-    WIDGET.new{type='slider',     pos={0,0},x=260, y=220,w=1000,    text=LANG'setting_sdarr',       widthLimit=260,axis={0,100,1},smooth=true,   disp=TABLE.func_getVal(SETTINGS.game,'sdarr'),      valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game,'sdarr')},
-    WIDGET.new{type='slider',     pos={0,0},x=260, y=280,w=1000,    text=LANG'setting_dascut',      widthLimit=260,axis={0,100,1},smooth=true,   disp=TABLE.func_getVal(SETTINGS.game,'dascut'),     valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game,'dascut')},
+    WIDGET.new{type='slider',     pos={0,0},x=260, y=100,w=1000,    text=LANG'setting_das',         widthLimit=260,axis={0,260,1},smooth=true,   disp=TABLE.func_getVal(SETTINGS.game_mino,'das'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'das')},
+    WIDGET.new{type='slider',     pos={0,0},x=260, y=160,w=1000,    text=LANG'setting_arr',         widthLimit=260,axis={0,120,1},smooth=true,   disp=TABLE.func_getVal(SETTINGS.game_mino,'arr'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'arr')},
+    WIDGET.new{type='slider',     pos={0,0},x=260, y=220,w=1000,    text=LANG'setting_sdarr',       widthLimit=260,axis={0,100,1},smooth=true,   disp=TABLE.func_getVal(SETTINGS.game_mino,'sdarr'),      valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'sdarr')},
+    WIDGET.new{type='slider',     pos={0,0},x=260, y=280,w=1000,    text=LANG'setting_dascut',      widthLimit=260,axis={0,100,1},smooth=true,   disp=TABLE.func_getVal(SETTINGS.game_mino,'dascut'),     valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'dascut')},
 
     -- Game: video
-    WIDGET.new{type='slider_fill',pos={0,0},x=260, y=340,w=500,h=30,text=LANG'setting_shakeness',   widthLimit=260,axis={0,1},                   disp=TABLE.func_getVal(SETTINGS.game,'shakeness'),                             code=TABLE.func_setVal(SETTINGS.game,'shakeness')},
+    WIDGET.new{type='slider_fill',pos={0,0},x=260, y=340,w=500,h=30,text=LANG'setting_shakeness',   widthLimit=260,axis={0,1},                   disp=TABLE.func_getVal(SETTINGS.game_mino,'shakeness'),                             code=TABLE.func_setVal(SETTINGS.game_mino,'shakeness')},
 
     -- System: audio
     WIDGET.new{type='slider_fill',pos={0,0},x=260, y=430,w=500,h=30,text=LANG'setting_mainVol',     widthLimit=260,                              disp=TABLE.func_getVal(SETTINGS.system,'mainVol'),                             code=TABLE.func_setVal(SETTINGS.system,'mainVol')},

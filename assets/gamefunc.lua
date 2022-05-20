@@ -41,7 +41,9 @@ end
 function saveSettings()
     FILE.save({
         system=SETTINGS._system,
-        game=SETTINGS.game,
+        game_mino=SETTINGS.game_mino,
+        game_puyo=SETTINGS.game_puyo,
+        game_gem=SETTINGS.game_gem,
     },'conf/settings','-json')
 end
 
