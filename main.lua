@@ -254,6 +254,7 @@ VOC.init{}
 LANG.add{
     en='assets/language/lang_en.lua',
     zh='assets/language/lang_zh.lua',
+    eo='assets/language/lang_eo.lua',
 }
 DEBUG.checkLoadTime("Configuring Zenitha")
 --------------------------------------------------------------
