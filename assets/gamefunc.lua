@@ -48,11 +48,12 @@ function saveSettings()
 end
 
 function saveKey()
-    local M={}
-    for i=1,#KEYMAP do
-        M[i]=KEYMAP[i].keys
-    end
-    FILE.save(M,'conf/keymap','-json')
+    FILE.save({
+        mino=KEYMAP.mino:export(),
+        puyo=KEYMAP.puyo:export(),
+        gem= KEYMAP.gem:export(),
+        sys= KEYMAP.sys:export(),
+    },'conf/keymap','-json')
 end
 
 function saveTouch()

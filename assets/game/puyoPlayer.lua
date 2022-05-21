@@ -198,12 +198,12 @@ actions.hardDrop={
     end
 }
 
-actions.function1=NULL
-actions.function2=NULL
-actions.function3=NULL
-actions.function4=NULL
-actions.function5=NULL
-actions.function6=NULL
+actions.func1=NULL
+actions.func2=NULL
+actions.func3=NULL
+actions.func4=NULL
+actions.func5=NULL
+actions.func6=NULL
 
 local function _getActionObj(a)
     if type(a)=='string' then

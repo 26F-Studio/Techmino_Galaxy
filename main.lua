@@ -260,8 +260,77 @@ DEBUG.checkLoadTime("Configuring Zenitha")
 -- Load saving data
 TABLE.coverR(FILE.load('conf/settings','-json -canskip') or {},SETTINGS)
 for k,v in next,SETTINGS._system do SETTINGS._system[k]=nil SETTINGS.system[k]=v end
-KEYMAP.load(FILE.load('conf/keymap','-json -canskip'))
 VCTRL.importSettings(FILE.load('conf/touch','-json -canskip'))
+KEYMAP.mino=KEYMAP.new{
+    {act='moveLeft',    keys={'left'}},
+    {act='moveRight',   keys={'right'}},
+    {act='rotateCW',    keys={'up'}},
+    {act='rotateCCW',   keys={'down'}},
+    {act='rotate180',   keys={'c'}},
+    {act='holdPiece',   keys={'space'}},
+    {act='softDrop',    keys={'x'}},
+    {act='hardDrop',    keys={'z'}},
+    {act='sonicDrop',   keys={'c'}},
+    {act='sonicLeft',   keys={}},
+    {act='sonicRight',  keys={}},
+    {act='func1',       keys={'a'}},
+    {act='func2',       keys={'s'}},
+    {act='func3',       keys={'d'}},
+    {act='func4',       keys={'q'}},
+    {act='func5',       keys={'w'}},
+    {act='func6',       keys={'e'}},
+}
+KEYMAP.puyo=KEYMAP.new{
+    {act='moveLeft',    keys={'left'}},
+    {act='moveRight',   keys={'right'}},
+    {act='rotateCW',    keys={'up'}},
+    {act='rotateCCW',   keys={'down'}},
+    {act='rotate180',   keys={'c'}},
+    {act='softDrop',    keys={'x'}},
+    {act='hardDrop',    keys={'z'}},
+    {act='func1',       keys={'a'}},
+    {act='func2',       keys={'s'}},
+    {act='func3',       keys={'d'}},
+    {act='func4',       keys={'q'}},
+    {act='func5',       keys={'w'}},
+    {act='func6',       keys={'e'}},
+}
+KEYMAP.gem=KEYMAP.new{
+    {act='swapLeft',    keys={'left'}},
+    {act='swapRight',   keys={'right'}},
+    {act='swapUp',      keys={'up'}},
+    {act='swapDown',    keys={'down'}},
+    {act='rotateCW',    keys={'e'}},
+    {act='rotateCCW',   keys={'q'}},
+    {act='rotate180',   keys={'z'}},
+    {act='moveLeft',    keys={'a'}},
+    {act='moveRight',   keys={'d'}},
+    {act='moveUp',      keys={'w'}},
+    {act='moveDown',    keys={'s'}},
+    {act='func1',       keys={'a'}},
+    {act='func2',       keys={'s'}},
+    {act='func3',       keys={'d'}},
+    {act='func4',       keys={'q'}},
+    {act='func5',       keys={'w'}},
+    {act='func6',       keys={'e'}},
+}
+KEYMAP.sys=KEYMAP.new{
+    {act='restart',     keys={'r'}},
+    {act='chat',        keys={'t'}},
+    {act='up',          keys={'up'}},
+    {act='down',        keys={'down'}},
+    {act='left',        keys={'left'}},
+    {act='right',       keys={'right'}},
+    {act='select',      keys={'return'}},
+    {act='back',        keys={'escape'}},
+}
+local keys=FILE.load('conf/keymap','-json -canskip')
+if keys then
+    KEYMAP.mino:import(keys['mino'])
+    KEYMAP.puyo:import(keys['puyo'])
+    KEYMAP.gem :import(keys['gem'])
+    KEYMAP.sys :import(keys['sys'])
+end
 --------------------------------------------------------------
 -- Load SOURCE ONLY resources
 SHADER={}

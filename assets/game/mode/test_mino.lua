@@ -3,10 +3,10 @@ return {
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
     end,
-    settings={
+    settings={mino={
         dropDelay=1e99,
         lockDelay=1e99,
         infHold=true,
         readyDelay=1000,
-    },
+    }},
 }

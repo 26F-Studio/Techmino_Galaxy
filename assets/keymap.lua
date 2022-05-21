@@ -1,79 +1,65 @@
-local KEYMAP={
-    {act='act_moveLeft',    keys={'kp1'}},
-    {act='act_moveRight',   keys={'kp3'}},
-    {act='act_rotateCW',    keys={'kp5'}},
-    {act='act_rotateCCW',   keys={'kp2'}},
-    {act='act_rotate180',   keys={'kp6'}},
-    {act='act_holdPiece',   keys={'space'}},
-    {act='act_softDrop',    keys={'x'}},
-    {act='act_hardDrop',    keys={'z'}},
-    {act='act_sonicDrop',   keys={'c'}},
-    {act='act_sonicLeft',   keys={}},
-    {act='act_sonicRight',  keys={}},
+local Map={}
+Map.__index=Map
 
-    {act='act_function1',   keys={'a'}},
-    {act='act_function2',   keys={'s'}},
-    {act='act_function3',   keys={'d'}},
-    {act='act_function4',   keys={'q'}},
-    {act='act_function5',   keys={'w'}},
-    {act='act_function6',   keys={'e'}},
-
-    {act='game_restart',    keys={'r','`'}},
-    {act='game_chat',       keys={'return'}},
-
-    {act='menu_up',         keys={'up'}},
-    {act='menu_down',       keys={'down'}},
-    {act='menu_left',       keys={'left'}},
-    {act='menu_right',      keys={'right'}},
-    {act='menu_confirm',    keys={'return'}},
-    {act='menu_back',       keys={'escape'}},
-}
-function KEYMAP.load(data)
+function Map:import(data)
     if not data then return end
-    for i=1,#KEYMAP do
+    for i=1,#self do
         if data[i] then
-            KEYMAP[i].keys=TABLE.shift(data[i],0)
+            self[i].keys=TABLE.shift(data[i],0)
         end
     end
 end
-function KEYMAP.getKeys(action)
-    for i=1,#KEYMAP do
-        if KEYMAP[i].act==action then
-            return KEYMAP[i].keys
+
+function Map:export()
+    local data={}
+    for i=1,#self do
+        data[i]=TABLE.shift(self[i].keys,0)
+    end
+    return data
+end
+
+function Map:getKeys(action)
+    for i=1,#self do
+        if self[i].act==action then
+            return self[i].keys
         end
     end
 end
-function KEYMAP.getAction(key)
-    for i=1,#KEYMAP do
-        local l=KEYMAP[i].keys
+
+function Map:getAction(key)
+    for i=1,#self do
+        local l=self[i].keys
         for j=1,#l do
             if l[j]==key then
-                return KEYMAP[i].act
+                return self[i].act
             end
         end
     end
 end
 
-function KEYMAP.remKey(key)
-    for j=1,#KEYMAP do
-        local k=TABLE.find(KEYMAP[j].keys,key)
+function Map:remKey(key)
+    for j=1,#self do
+        local k=TABLE.find(self[j].keys,key)
         if k then
-            table.remove(KEYMAP[j].keys,k)
+            table.remove(self[j].keys,k)
         end
     end
 end
 
-function KEYMAP.addKey(act,key)
-    for i=1,#KEYMAP do
-        if KEYMAP[i].act==act then
-            table.insert(KEYMAP[i].keys,key)
-            while #KEYMAP[i].keys>=5 do
-                table.remove(KEYMAP[i].keys,1)
+function Map:addKey(act,key)
+    for i=1,#self do
+        if self[i].act==act then
+            table.insert(self[i].keys,key)
+            while #self[i].keys>=5 do
+                table.remove(self[i].keys,1)
             end
-            SFX.play('beep_1')
             break
         end
     end
 end
 
-return KEYMAP
+function Map.new(l)
+    return setmetatable(l or {},Map)
+end
+
+return Map

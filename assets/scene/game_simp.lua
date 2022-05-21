@@ -13,27 +13,34 @@ end
 
 function scene.keyDown(key,isRep)
     if isRep then return end
-    local action=KEYMAP.getAction(key)
-    if not action then return end
-    if action:sub(1,4)=='act_' then
-        GAME.press(action:sub(5))
-    elseif action:sub(1,5)=='menu_' then
-        if action=='menu_back' then
-            SCN.back()
+    local action
+
+    local p=GAME.playerMap[GAME.mainPID]
+    if p then
+        action=KEYMAP[p.gameMode]:getAction(key)
+        if action then
+            GAME.press(action)
+            return
         end
-    elseif action=='game_restart' then
+    end
+
+    action=KEYMAP.sys:getAction(key)
+    if action=='restart' then
         scene.enter()
+    elseif action=='back' then
+        SCN.back()
     end
 end
 
 function scene.keyUp(key)
-    local action=KEYMAP.getAction(key)
-    if not action then return end
-    if action:sub(1,4)=='act_' then
-        GAME.release(action:sub(5))
-    elseif action:sub(1,5)=='menu_' then
-        if action=='menu_back' then
-            SCN.back()
+    local action
+
+    local p=GAME.playerMap[GAME.mainPID]
+    if p then
+        action=KEYMAP[p.gameMode]:getAction(key)
+        if action then
+            GAME.release(action)
+            return
         end
     end
 end

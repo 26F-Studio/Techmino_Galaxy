@@ -60,6 +60,37 @@ local GP={}
 -- Actions
 local actions={}
 
+function actions.swapLeft(P)
+end
+function actions.swapRight(P)
+end
+function actions.swapUp(P)
+end
+function actions.swapDown(P)
+end
+function actions.rotateCW(P)
+end
+function actions.rotateCCW(P)
+end
+function actions.rotate180(P)
+end
+actions.moveLeft={
+}
+actions.moveRight={
+}
+actions.moveUp={
+}
+actions.moveDown={
+}
+
+actions.func1=NULL
+actions.func2=NULL
+actions.func3=NULL
+actions.func4=NULL
+actions.func5=NULL
+actions.func6=NULL
+
+
 local function _getActionObj(a)
     if type(a)=='string' then
         return actions[a]
