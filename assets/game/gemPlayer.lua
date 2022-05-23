@@ -61,26 +61,71 @@ local GP={}
 local actions={}
 
 function actions.swapLeft(P)
+    if P.settings.swap then
+        P:swap(P.swapX,P.swapY,-1,0)
+    end
 end
 function actions.swapRight(P)
+    if P.settings.swap then
+        P:swap(P.swapX,P.swapY,1,0)
+    end
 end
 function actions.swapUp(P)
+    if P.settings.swap then
+        P:swap(P.swapX,P.swapY,0,1)
+    end
 end
 function actions.swapDown(P)
+    if P.settings.swap then
+        P:swap(P.swapX,P.swapY,0,-1)
+    end
 end
 function actions.rotateCW(P)
+    if P.settings.twistR then
+        P:rotate(P.twistX,P.twistY,'R')
+    end
 end
 function actions.rotateCCW(P)
+    if P.settings.twistL then
+        P:rotate(P.twistX,P.twistY,'L')
+    end
 end
 function actions.rotate180(P)
+    if P.settings.twistF then
+        P:rotate(P.twistX,P.twistY,'F')
+    end
 end
 actions.moveLeft={
+    press=function(P)
+        P.swapX=(P.swapX-2)%P.settings.fieldSize+1
+        P.twistX=(P.twistX-2)%(P.settings.fieldSize-1)+1
+    end,
+    release=function(P)
+    end
 }
 actions.moveRight={
+    press=function(P)
+        P.swapX=P.swapX%P.settings.fieldSize+1
+        P.twistX=P.twistX%(P.settings.fieldSize-1)+1
+    end,
+    release=function(P)
+    end
 }
 actions.moveUp={
+    press=function(P)
+        P.swapY=P.swapY%P.settings.fieldSize+1
+        P.twistY=P.twistY%(P.settings.fieldSize-1)+1
+    end,
+    release=function(P)
+    end
 }
 actions.moveDown={
+    press=function(P)
+        P.swapY=(P.swapY-2)%P.settings.fieldSize+1
+        P.twistY=(P.twistY-2)%(P.settings.fieldSize-1)+1
+    end,
+    release=function(P)
+    end
 }
 
 actions.func1=NULL
@@ -162,14 +207,138 @@ function GP:movePosition(dx,dy,k,da)
     self.pos.k=self.pos.k*(k or 1)
     self.pos.a=self.pos.a+(da or 0)
 end
-
 --------------------------------------------------------------
 -- Game methods
 function GP:triggerEvent(name,...)
     local L=self.event[name]
     if L then for i=1,#L do L[i](self,...) end end
 end
-function GP:swap(x1,y1,dx,dy)
+function GP:isMoveAble(x,y)
+    if
+        x>=1 and x<=self.settings.fieldSize and
+        y>=1 and y<=self.settings.fieldSize and
+        1
+    then
+        local F=self.field
+        if F[y][x] then
+            return not F[y][x].clearTimer
+        else
+            return true
+        end
+    else
+        return false
+    end
+end
+function GP:swap(x,y,dx,dy)
+    local F=self.field
+    if
+        self:isMoveAble(x,y) and self:isMoveAble(x+dx,y+dy)
+    then
+        F[y][x],F[y+dy][x+dx]=F[y+dy][x+dx],F[y][x]
+        self:checkPosition(x,y)
+        self:checkPosition(x+dx,y+dy)
+    end
+end
+function GP:rotate(x,y,dir)
+    local F=self.field
+    if
+        self:isMoveAble(x,y) and self:isMoveAble(x,y+1) and
+        self:isMoveAble(x+1,y+1) and self:isMoveAble(x+1,y)
+    then
+        if dir=='R' then
+            F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y][x+1],F[y+1][x+1],F[y+1][x],F[y][x]
+        elseif dir=='L' then
+            F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y+1][x],F[y][x],F[y][x+1],F[y+1][x+1]
+        elseif dir=='F' then
+            F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y+1][x+1],F[y+1][x],F[y][x],F[y][x+1]
+        end
+        self:checkPosition(x,y)
+        self:checkPosition(x+1,y)
+        self:checkPosition(x+1,y+1)
+        self:checkPosition(x,y+1)
+    end
+end
+local function linkLen(F,color,x,y,dx,dy)
+    local cnt=0
+    x,y=x+dx,y+dy
+    while F[y] and F[y][x] and F[y][x].color==color do
+        x,y=x+dx,y+dy
+        cnt=cnt+1
+    end
+    return cnt
+end
+function GP:checkPosition(x,y)
+    local F=self.field
+    if not F[y][x] then return end
+
+    local color=F[y][x].color
+
+    if not F[y][x].lrCnt then
+        local stepX,stepY=1,0
+        local left=linkLen(F,color,x,y,-stepX,-stepY)
+        local right=linkLen(F,color,x,y,stepX,stepY)
+        local len=1+left+right
+        if len>=self.settings.linkLen then
+            for i=-left,right do
+                local cx,cy=x+stepX*i,y+stepY*i
+                local c=F[cy] and F[cy][cx]
+                if c and not c.clearTimer then
+                    c.clearTimer=self.settings.clearDelay
+                    c.lrCnt=len
+                end
+            end
+        end
+    end
+    if not F[y][x].udCnt then
+        local stepX,stepY=0,1
+        local left=linkLen(F,color,x,y,-stepX,-stepY)
+        local right=linkLen(F,color,x,y,stepX,stepY)
+        local len=1+left+right
+        if len>=self.settings.linkLen then
+            for i=-left,right do
+                local cx,cy=x+stepX*i,y+stepY*i
+                local c=F[cy] and F[cy][cx]
+                if c and not c.clearTimer then
+                    c.clearTimer=self.settings.clearDelay
+                    c.lrCnt=len
+                end
+            end
+        end
+    end
+    if self.settings.diagonalLinkLen then
+        if not F[y][x].riseCnt then
+            local stepX,stepY=1,1
+            local left=linkLen(F,color,x,y,-stepX,-stepY)
+            local right=linkLen(F,color,x,y,stepX,stepY)
+            local len=1+left+right
+            if len>=self.settings.diagonalLinkLen then
+                for i=-left,right do
+                    local cx,cy=x+stepX*i,y+stepY*i
+                    local c=F[cy] and F[cy][cx]
+                    if c and not c.clearTimer then
+                        c.clearTimer=self.settings.clearDelay
+                        c.lrCnt=len
+                    end
+                end
+            end
+        end
+        if not F[y][x].dropCnt then
+            local stepX,stepY=1,-1
+            local left=linkLen(F,color,x,y,-stepX,-stepY)
+            local right=linkLen(F,color,x,y,stepX,stepY)
+            local len=1+left+right
+            if len>=self.settings.diagonalLinkLen then
+                for i=-left,right do
+                    local cx,cy=x+stepX*i,y+stepY*i
+                    local c=F[cy] and F[cy][cx]
+                    if c and not c.clearTimer then
+                        c.clearTimer=self.settings.clearDelay
+                        c.lrCnt=len
+                    end
+                end
+            end
+        end
+    end
 end
 function GP:freshGems()
     local holes={}
@@ -191,7 +360,8 @@ function GP:freshGems()
         freshTimes=freshTimes+1
     until freshTimes>=self.settings.refreshCount or self:hasMove()
 end
-function GP:hasMove()return true
+function GP:hasMove()
+    return true
 end
 function GP:changeFieldSize(w,h,origX,origY)
 end
@@ -292,7 +462,20 @@ function GP:update(dt)
             self.time=self.time+1
         end
 
-        -- TODO: ALL THINGS
+        local F=self.field
+        for y=1,self.settings.fieldSize do
+            for x=1,self.settings.fieldSize do
+                local g=F[y][x]
+                if g then
+                    if g.clearTimer then
+                        g.clearTimer=g.clearTimer-1
+                        if g.clearTimer==0 then
+                            F[y][x]=false
+                        end
+                    end
+                end
+            end
+        end
 
         -- Update garbage
         for i=1,#self.garbageBuffer do
@@ -347,8 +530,13 @@ function GP:render()
     gc.draw(self.particles.star)
     gc.draw(self.particles.trail)
 
-    -- Cursor
-    skin.drawCursor(self.curX,self.curY)
+    -- Cursor(s)
+    if self.settings.swap then
+        skin.drawSwapCursor(self.swapX,self.swapY)
+    end
+    if self.settings.twistR then
+        skin.drawTwistCursor(self.twistX,self.twistY)
+    end
 
     -- popFieldTransform
     gc.pop()
@@ -384,10 +572,9 @@ local baseEnv={
     readyDelay=3000,
     swapDelay=1000,
     spinDelay=1000,
-    fallDelay=200,
-    clearDelay=100,
+    clearDelay=200,
+    fallDelay=100,
 
-    genType='double4color',
     atkSys='None',
 
     colors=7,
@@ -396,8 +583,8 @@ local baseEnv={
     refreshCount=0,
 
     swap=true,
-    swapForce=false,
-    spin=true,-- false | 'R' | 'L' | 'RL'
+    swapForce=true,
+    twistR=true,twistL=false,twistF=false,
     spinForce=false,
 
     skin='gem_default',
@@ -510,7 +697,8 @@ function GP:initialize()
     end
     self:freshGems()
 
-    self.curX,self.curY=1,1
+    self.swapX,self.swapY=1,1
+    self.twistX,self.twistY=1,1
 
     self.garbageBuffer={}
 

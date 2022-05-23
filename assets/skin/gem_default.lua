@@ -3,7 +3,7 @@ local gc_push,gc_pop=gc.push,gc.pop
 local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
 local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
 local gc_draw,gc_line=gc.draw,gc.line
-local gc_rectangle=gc.rectangle
+local gc_rectangle,gc_circle=gc.rectangle,gc.circle
 local gc_printf=gc.printf
 
 local max,min=math.max,math.min
@@ -33,10 +33,16 @@ function S.drawFieldBackground(fieldSize)
     end end
 end
 
-function S.drawCursor(x,y)
+function S.drawSwapCursor(cx,cy)
     gc_setLineWidth(4)
-    gc_setColor(COLOR.LL)
-    gc_rectangle('line',x*45-45,-y*45,45,45)
+    gc_setColor(1,1,1,.6)
+    gc_rectangle('line',cx*45-45,-cy*45,45,45)
+end
+
+function S.drawTwistCursor(sx,sy)
+    gc_setLineWidth(4)
+    gc_setColor(1,1,1,.6)
+    gc_circle('line',sx*45,-sy*45,50)
 end
 
 function S.drawFieldBorder()
@@ -46,11 +52,16 @@ function S.drawFieldBorder()
 end
 
 function S.drawFieldCells(F)
+    local flashing=S.getTime()%100<=50
+    gc_setLineWidth(3)
     for y=1,#F do for x=1,#F[1] do
         local C=F[y][x]
-        if C then
-            gc_setColor(ColorTable[C.color*8-7])
-            gc_rectangle('fill',x*45-40,-y*45+5,35,35)
+        if C and (not C.clearTimer or flashing) then
+            local r,g,b=unpack(ColorTable[C.color*8-7])
+            gc_setColor(r,g,b)
+            gc_rectangle('line',x*45-37,-y*45+8,29,29)
+            gc_setColor(r,g,b,.6)
+            gc_rectangle('fill',x*45-37,-y*45+8,29,29)
         end
     end end
 end
