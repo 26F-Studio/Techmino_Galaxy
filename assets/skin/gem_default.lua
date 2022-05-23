@@ -3,7 +3,7 @@ local gc_push,gc_pop=gc.push,gc.pop
 local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
 local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
 local gc_draw,gc_line=gc.draw,gc.line
-local gc_rectangle,gc_circle=gc.rectangle,gc.circle
+local gc_rectangle,gc_circle,gc_polygon=gc.rectangle,gc.circle,gc.polygon
 local gc_printf=gc.printf
 
 local max,min=math.max,math.min
@@ -14,7 +14,7 @@ local S={}
 
 local crossR,crossL=1,6
 local gridMark=GC.load{45,45,
-    {'setCL',1,1,1,.26},
+    {'setCL',1,1,1,.42},
     {'fRect',0, 0, crossL, crossR},
     {'fRect',0, 0, crossR, crossL},
     {'fRect',45,0, -crossL,crossR},
@@ -51,21 +51,108 @@ function S.drawFieldBorder()
     gc_rectangle('line',-361,-361,722,722)
 end
 
+local gemShapes={
+    {-- Red Square
+        color={COLOR.hsv(0,1,1,.5)},
+        coords={
+            -16,-10,
+            -10,-16,
+            10,-16,
+            16,-10,
+            16,10,
+            10,16,
+            -10,16,
+            -16,10,
+        },
+    },
+    {-- Orange Hexagon
+        color={COLOR.hsv(.1,1,1,.5)},
+        coords=(function()
+            local l={}
+                for i=0,5 do
+                    table.insert(l,18*math.cos(-MATH.pi/2+MATH.tau*i/6))
+                    table.insert(l,18*math.sin(-MATH.pi/2+MATH.tau*i/6))
+                end
+            return l
+        end)()
+    },
+    {-- Yellow Rhombus
+        color={COLOR.hsv(.17,1,1,.5)},
+        coords=(function()
+            local l={}
+                for i=0,3 do
+                    table.insert(l,17*math.cos(MATH.tau*i/4))
+                    table.insert(l,17*math.sin(MATH.tau*i/4))
+                end
+            return l
+        end)()
+    },
+    {-- Green Octagon
+        color={COLOR.hsv(.33,1,1,.5)},
+        coords=(function()
+            local l={}
+                for i=0,7 do
+                    table.insert(l,17*math.cos(MATH.tau*i/8))
+                    table.insert(l,17*math.sin(MATH.tau*i/8))
+                end
+            return l
+        end)()
+    },
+    {-- Blue Diamond
+        color={COLOR.hsv(.6,1,1,.5)},
+        coords={
+            0,18,
+            16,-5,
+            8,-16,
+            -8,-16,
+            -16 ,-5,
+        },
+    },
+    {-- Magenta Triangle
+        color={COLOR.hsv(.86,1,1,.5)},
+        coords={
+            0,-15,
+            16,15,
+            -16,15,
+        },
+    },
+    {-- White Circle
+        color={COLOR.hsv(0,0,1,.5)},
+        coords=(function()
+            local l={}
+                for i=0,15 do
+                    table.insert(l,16*math.cos(MATH.tau*i/16))
+                    table.insert(l,16*math.sin(MATH.tau*i/16))
+                end
+            return l
+        end)()
+    },
+}
+for i=1,#gemShapes do
+    gemShapes[i].lineColor=TABLE.shift(gemShapes[i].color)
+    gemShapes[i].lineColor[4]=nil
+end
+local function drawGem(id)
+    gc_setColor(gemShapes[id].lineColor)
+    gc_polygon('line',gemShapes[id].coords)
+    gc_setColor(gemShapes[id].color)
+    gc_polygon('fill',gemShapes[id].coords)
+end
 function S.drawFieldCells(F)
     local flashing=S.getTime()%60<=20
-    gc_setLineWidth(3)
+    gc_setLineWidth(2)
     for y=1,#F do for x=1,#F[1] do
         local C=F[y][x]
         if C and (not C.clearTimer or flashing) then
-            local r,g,b=unpack(ColorTable[C.id*8-7])
-            local dx,dy=0,0
+            local cx,cy=x,y
             if C.moveTimer then
-                dx,dy=C.moveTimer/C.moveDelay*C.dx,C.moveTimer/C.moveDelay*C.dy
+                local d=C.moveTimer/C.moveDelay
+                cx,cy=x+d*C.dx,y+d*C.dy
             end
-            gc_setColor(r,g,b)
-            gc_rectangle('line',(x+dx)*45-37,-(y+dy)*45+8,29,29)
-            gc_setColor(r,g,b,.6)
-            gc_rectangle('fill',(x+dx)*45-37,-(y+dy)*45+8,29,29)
+            cx,cy=45*cx-22.5,-45*cy+22.5
+            gc_translate(cx,cy)
+            drawGem(C.id)
+            gc_translate(-cx,-cy)
         end
     end end
 end
