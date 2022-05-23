@@ -57,7 +57,7 @@ function S.drawFieldCells(F)
     for y=1,#F do for x=1,#F[1] do
         local C=F[y][x]
         if C and (not C.clearTimer or flashing) then
-            local r,g,b=unpack(ColorTable[C.color*8-7])
+            local r,g,b=unpack(ColorTable[C.id*8-7])
             local dx,dy=0,0
             if C.moveTimer then
                 dx,dy=C.moveTimer/C.moveDelay*C.dx,C.moveTimer/C.moveDelay*C.dy

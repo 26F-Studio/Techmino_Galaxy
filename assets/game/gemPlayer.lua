@@ -291,12 +291,17 @@ function GP:rotate(x,y,dir)
         end
     end
 end
-local function linkLen(F,color,x,y,dx,dy)
+local function linkLen(F,id,x,y,dx,dy)
     local cnt=0
     x,y=x+dx,y+dy
-    while F[y] and F[y][x] and F[y][x].color==color do
-        x,y=x+dx,y+dy
-        cnt=cnt+1
+    while true do
+        local C=F[y] and F[y][x]
+        if C and C.id==id and not C.clearTimer then
+            x,y=x+dx,y+dy
+            cnt=cnt+1
+        else
+            break
+        end
     end
     return cnt
 end
@@ -304,12 +309,12 @@ function GP:checkPosition(x,y)
     local F=self.field
     if not F[y][x] then return end
 
-    local color=F[y][x].color
+    local id=F[y][x].id
 
     if not F[y][x].lrCnt then
         local stepX,stepY=1,0
-        local left=linkLen(F,color,x,y,-stepX,-stepY)
-        local right=linkLen(F,color,x,y,stepX,stepY)
+        local left=linkLen(F,id,x,y,-stepX,-stepY)
+        local right=linkLen(F,id,x,y,stepX,stepY)
         local len=1+left+right
         if len>=self.settings.linkLen then
             for i=-left,right do
@@ -325,8 +330,8 @@ function GP:checkPosition(x,y)
     end
     if not F[y][x].udCnt then
         local stepX,stepY=0,1
-        local left=linkLen(F,color,x,y,-stepX,-stepY)
-        local right=linkLen(F,color,x,y,stepX,stepY)
+        local left=linkLen(F,id,x,y,-stepX,-stepY)
+        local right=linkLen(F,id,x,y,stepX,stepY)
         local len=1+left+right
         if len>=self.settings.linkLen then
             for i=-left,right do
@@ -343,8 +348,8 @@ function GP:checkPosition(x,y)
     if self.settings.diagonalLinkLen then
         if not F[y][x].riseCnt then
             local stepX,stepY=1,1
-            local left=linkLen(F,color,x,y,-stepX,-stepY)
-            local right=linkLen(F,color,x,y,stepX,stepY)
+            local left=linkLen(F,id,x,y,-stepX,-stepY)
+            local right=linkLen(F,id,x,y,stepX,stepY)
             local len=1+left+right
             if len>=self.settings.diagonalLinkLen then
                 for i=-left,right do
@@ -360,8 +365,8 @@ function GP:checkPosition(x,y)
         end
         if not F[y][x].dropCnt then
             local stepX,stepY=1,-1
-            local left=linkLen(F,color,x,y,-stepX,-stepY)
-            local right=linkLen(F,color,x,y,stepX,stepY)
+            local left=linkLen(F,id,x,y,-stepX,-stepY)
+            local right=linkLen(F,id,x,y,stepX,stepY)
             local len=1+left+right
             if len>=self.settings.diagonalLinkLen then
                 for i=-left,right do
@@ -394,7 +399,7 @@ function GP:freshGems()
     local freshTimes=0
     repeat
         for i=1,#holes do
-            holes[i].color=self.seqRND:random(self.settings.colors)
+            holes[i].id=self.seqRND:random(self.settings.colors)
         end
         freshTimes=freshTimes+1
     until freshTimes>=self.settings.refreshCount or self:hasMove()
