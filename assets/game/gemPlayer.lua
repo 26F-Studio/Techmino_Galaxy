@@ -54,6 +54,24 @@ local defaultSoundFunc={
     fail=        function() SFX.play('fail')        end,
 }
 
+--[[ Gem tags:
+    int color (1~64)
+    boolean movable
+    boolean moving
+
+    int clearTimer
+
+    int moveTimer
+    int moveDelay
+    float dx
+    float dy
+
+    int lrCnt
+    int udCnt
+    int riseCnt
+    int dropCnt
+]]
+
 local GP={}
 
 --------------------------------------------------------------
@@ -213,15 +231,11 @@ function GP:triggerEvent(name,...)
     local L=self.event[name]
     if L then for i=1,#L do L[i](self,...) end end
 end
-function GP:isMoveAble(x,y)
-    if
-        x>=1 and x<=self.settings.fieldSize and
-        y>=1 and y<=self.settings.fieldSize and
-        1
-    then
+function GP:isMovable(x,y)
+    if x>=1 and x<=self.settings.fieldSize and y>=1 and y<=self.settings.fieldSize then
         local F=self.field
         if F[y][x] then
-            return not F[y][x].clearTimer
+            return F[y][x].movable
         else
             return true
         end
@@ -229,33 +243,52 @@ function GP:isMoveAble(x,y)
         return false
     end
 end
+function GP:setMoveBias(C,dx,dy)
+    if not C then return end
+    C.checkTimer=false
+    C.movable=false
+    C.moveTimer=self.settings.moveDelay
+    C.moveDelay=self.settings.moveDelay
+    C.dx=dx
+    C.dy=dy
+end
 function GP:swap(x,y,dx,dy)
     local F=self.field
     if
-        self:isMoveAble(x,y) and self:isMoveAble(x+dx,y+dy)
+        self:isMovable(x,y) and self:isMovable(x+dx,y+dy)
     then
+        self:setMoveBias(F[y][x],-dx,-dy)
+        self:setMoveBias(F[y+dy][x+dx],dx,dy)
         F[y][x],F[y+dy][x+dx]=F[y+dy][x+dx],F[y][x]
-        self:checkPosition(x,y)
-        self:checkPosition(x+dx,y+dy)
     end
 end
 function GP:rotate(x,y,dir)
     local F=self.field
     if
-        self:isMoveAble(x,y) and self:isMoveAble(x,y+1) and
-        self:isMoveAble(x+1,y+1) and self:isMoveAble(x+1,y)
+        self:isMovable(x,y) and
+        self:isMovable(x,y+1) and
+        self:isMovable(x+1,y+1) and
+        self:isMovable(x+1,y)
     then
         if dir=='R' then
+            self:setMoveBias(F[y][x],0,-1)
+            self:setMoveBias(F[y][x+1],1,0)
+            self:setMoveBias(F[y+1][x+1],0,1)
+            self:setMoveBias(F[y+1][x],-1,0)
             F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y][x+1],F[y+1][x+1],F[y+1][x],F[y][x]
         elseif dir=='L' then
+            self:setMoveBias(F[y][x],-1,0)
+            self:setMoveBias(F[y][x+1],0,-1)
+            self:setMoveBias(F[y+1][x+1],1,0)
+            self:setMoveBias(F[y+1][x],0,1)
             F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y+1][x],F[y][x],F[y][x+1],F[y+1][x+1]
         elseif dir=='F' then
+            self:setMoveBias(F[y][x],-1,-1)
+            self:setMoveBias(F[y][x+1],1,-1)
+            self:setMoveBias(F[y+1][x+1],1,1)
+            self:setMoveBias(F[y+1][x],-1,1)
             F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y+1][x+1],F[y+1][x],F[y][x],F[y][x+1]
         end
-        self:checkPosition(x,y)
-        self:checkPosition(x+1,y)
-        self:checkPosition(x+1,y+1)
-        self:checkPosition(x,y+1)
     end
 end
 local function linkLen(F,color,x,y,dx,dy)
@@ -284,6 +317,7 @@ function GP:checkPosition(x,y)
                 local c=F[cy] and F[cy][cx]
                 if c and not c.clearTimer then
                     c.clearTimer=self.settings.clearDelay
+                    c.movable=false
                     c.lrCnt=len
                 end
             end
@@ -300,6 +334,7 @@ function GP:checkPosition(x,y)
                 local c=F[cy] and F[cy][cx]
                 if c and not c.clearTimer then
                     c.clearTimer=self.settings.clearDelay
+                    c.movable=false
                     c.lrCnt=len
                 end
             end
@@ -317,6 +352,7 @@ function GP:checkPosition(x,y)
                     local c=F[cy] and F[cy][cx]
                     if c and not c.clearTimer then
                         c.clearTimer=self.settings.clearDelay
+                        c.movable=false
                         c.lrCnt=len
                     end
                 end
@@ -333,6 +369,7 @@ function GP:checkPosition(x,y)
                     local c=F[cy] and F[cy][cx]
                     if c and not c.clearTimer then
                         c.clearTimer=self.settings.clearDelay
+                        c.movable=false
                         c.lrCnt=len
                     end
                 end
@@ -346,7 +383,9 @@ function GP:freshGems()
     for y=1,self.settings.fieldSize do
         for x=1,self.settings.fieldSize do
             if not F[y][x] then
-                local g={}
+                local g={
+                    movable=true,
+                }
                 F[y][x]=g
                 ins(holes,g)
             end
@@ -473,6 +512,20 @@ function GP:update(dt)
                             F[y][x]=false
                         end
                     end
+                    if g.moveTimer then
+                        g.moveTimer=g.moveTimer-1
+                        if g.moveTimer==0 then
+                            g.moveTimer=nil
+                            g.movable=true
+                            g.checkTimer=self.settings.checkDelay
+                        end
+                    end
+                    if g.checkTimer then
+                        g.checkTimer=g.checkTimer-1
+                        if g.checkTimer==0 then
+                            self:checkPosition(x,y)
+                        end
+                    end
                 end
             end
         end
@@ -570,8 +623,8 @@ local baseEnv={
     fieldSize=8,
 
     readyDelay=3000,
-    swapDelay=1000,
-    spinDelay=1000,
+    moveDelay=200,
+    checkDelay=100,
     clearDelay=200,
     fallDelay=100,
 

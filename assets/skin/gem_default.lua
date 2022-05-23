@@ -52,16 +52,20 @@ function S.drawFieldBorder()
 end
 
 function S.drawFieldCells(F)
-    local flashing=S.getTime()%100<=50
+    local flashing=S.getTime()%60<=20
     gc_setLineWidth(3)
     for y=1,#F do for x=1,#F[1] do
         local C=F[y][x]
         if C and (not C.clearTimer or flashing) then
             local r,g,b=unpack(ColorTable[C.color*8-7])
+            local dx,dy=0,0
+            if C.moveTimer then
+                dx,dy=C.moveTimer/C.moveDelay*C.dx,C.moveTimer/C.moveDelay*C.dy
+            end
             gc_setColor(r,g,b)
-            gc_rectangle('line',x*45-37,-y*45+8,29,29)
+            gc_rectangle('line',(x+dx)*45-37,-(y+dy)*45+8,29,29)
             gc_setColor(r,g,b,.6)
-            gc_rectangle('fill',x*45-37,-y*45+8,29,29)
+            gc_rectangle('fill',(x+dx)*45-37,-(y+dy)*45+8,29,29)
         end
     end end
 end
