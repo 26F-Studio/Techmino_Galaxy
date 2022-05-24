@@ -59,6 +59,7 @@ local defaultSoundFunc={
     boolean movable
 
     int clearTimer
+    int clearDelay
 
     int moveTimer
     int moveDelay
@@ -385,6 +386,7 @@ function GP:checkPosition(x,y)
                 local g=F[cy] and F[cy][cx]
                 if g and not g.clearTimer then
                     g.clearTimer=self.settings.clearDelay
+                    g.clearDelay=self.settings.clearDelay
                     g.movable=false
                     g.lrCnt=len
                 end
@@ -402,6 +404,7 @@ function GP:checkPosition(x,y)
                 local g=F[cy] and F[cy][cx]
                 if g and not g.clearTimer then
                     g.clearTimer=self.settings.clearDelay
+                    g.clearDelay=self.settings.clearDelay
                     g.movable=false
                     g.udCnt=len
                 end
@@ -420,6 +423,7 @@ function GP:checkPosition(x,y)
                     local g=F[cy] and F[cy][cx]
                     if g and not g.clearTimer then
                         g.clearTimer=self.settings.clearDelay
+                        g.clearDelay=self.settings.clearDelay
                         g.movable=false
                         g.riseCnt=len
                     end
@@ -437,6 +441,7 @@ function GP:checkPosition(x,y)
                     local g=F[cy] and F[cy][cx]
                     if g and not g.clearTimer then
                         g.clearTimer=self.settings.clearDelay
+                        g.clearDelay=self.settings.clearDelay
                         g.movable=false
                         g.dropCnt=len
                     end
@@ -748,9 +753,9 @@ local baseEnv={
 
     readyDelay=3000,
     moveDelay=200,
-    checkDelay=100,
-    clearDelay=200,
-    fallDelay=100,
+    checkDelay=200,
+    clearDelay=500,
+    fallDelay=200,
 
     atkSys='None',
 
@@ -761,7 +766,7 @@ local baseEnv={
 
     swap=true,
     swapForce=true,
-    twistR=true,twistL=true,twistF=false,
+    twistR=false,twistL=false,twistF=false,
     twistForce=false,
 
     skin='gem_default',

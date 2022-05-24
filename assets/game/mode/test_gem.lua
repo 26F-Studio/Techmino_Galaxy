@@ -5,5 +5,9 @@ return {
     end,
     settings={gem={
         readyDelay=1000,
+        swap=true,
+        swapForce=false,
+        twistR=true,twistL=true,twistF=true,
+        twistForce=false,
     }},
 }

@@ -2,7 +2,7 @@ local gc=love.graphics
 local gc_push,gc_pop=gc.push,gc.pop
 local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
 local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
-local gc_draw,gc_line=gc.draw,gc.line
+local gc_draw=gc.draw
 local gc_rectangle,gc_circle,gc_polygon=gc.rectangle,gc.circle,gc.polygon
 local gc_printf=gc.printf
 
@@ -140,20 +140,23 @@ local function drawGem(C)
     gc_polygon('fill',gemShapes[id].coords)
 end
 function S.drawFieldCells(F)
-    local flashing=S.getTime()%60<=20
     gc_setLineWidth(2)
     for y=1,#F do for x=1,#F[1] do
         local C=F[y][x]
-        if C and (not C.clearTimer or flashing) then
-            local cx,cy=x,y
+        if C then
+            gc_push('transform')
             if C.moveTimer then
                 local d=C.moveTimer/C.moveDelay
-                cx,cy=x+d*C.dx,y+d*C.dy
+                gc_translate(45*(x+d*C.dx)-22.5,-45*(y+d*C.dy)+22.5)
+            else
+                gc_translate(45*x-22.5,-45*y+22.5)
             end
-            cx,cy=45*cx-22.5,-45*cy+22.5
-            gc_translate(cx,cy)
+            if C.clearTimer then
+                local i=C.clearTimer/C.clearDelay
+                gc_scale(-2*i^2+3*i)
+            end
             drawGem(C)
-            gc_translate(-cx,-cy)
+            gc_pop()
         end
     end end
 end
