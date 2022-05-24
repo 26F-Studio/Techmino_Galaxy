@@ -53,7 +53,7 @@ end
 
 local gemShapes={
     {-- Red Square
-        color={COLOR.hsv(0,1,1,.626)},
+        color={COLOR.hsv(.97,.9,1,.5)},
         coords={
             -16,-10,
             -10,-16,
@@ -66,7 +66,7 @@ local gemShapes={
         },
     },
     {-- Orange Hexagon
-        color={COLOR.hsv(.1,1,1,.626)},
+        color={COLOR.hsv(.1,.9,1,.5)},
         coords=(function()
             local l={}
                 for i=0,5 do
@@ -77,7 +77,7 @@ local gemShapes={
         end)()
     },
     {-- Yellow Rhombus
-        color={COLOR.hsv(.17,1,1,.626)},
+        color={COLOR.hsv(.18,.9,1,.5)},
         coords=(function()
             local l={}
                 for i=0,3 do
@@ -88,7 +88,7 @@ local gemShapes={
         end)()
     },
     {-- Green Octagon
-        color={COLOR.hsv(.33,1,1,.626)},
+        color={COLOR.hsv(.33,.9,1,.5)},
         coords=(function()
             local l={}
                 for i=0,5 do
@@ -99,7 +99,7 @@ local gemShapes={
         end)()
     },
     {-- Blue Diamond
-        color={COLOR.hsv(.6,1,1,.626)},
+        color={COLOR.hsv(.6,.9,1,.5)},
         coords={
             0,18,
             17,-5,
@@ -109,7 +109,7 @@ local gemShapes={
         },
     },
     {-- Magenta Triangle
-        color={COLOR.hsv(.86,1,1,.626)},
+        color={COLOR.hsv(.86,.9,1,.5)},
         coords={
             0,-15,
             16,15,
@@ -117,7 +117,7 @@ local gemShapes={
         },
     },
     {-- White Circle
-        color={COLOR.hsv(0,0,1,.626)},
+        color={COLOR.hsv(0,0,1,.5)},
         coords=(function()
             local l={}
                 for i=0,15 do

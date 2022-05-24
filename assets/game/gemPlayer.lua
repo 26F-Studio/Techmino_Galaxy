@@ -584,6 +584,7 @@ function GP:update(dt)
 
         local F=self.field
         local r=self.settings.fieldSize
+        local needFresh=false
 
         -- Update moveTimer
         for y=1,r do for x=1,r do local g=F[y][x] if g and g.moveTimer then
@@ -593,6 +594,7 @@ function GP:update(dt)
                 g.dx,g.dy=nil
                 g.movable=true
                 g.checkTimer=self.settings.checkDelay
+                needFresh=true
             end
         end end end
 
@@ -631,15 +633,15 @@ function GP:update(dt)
         end end end
 
         -- Update clearTimer
-        local cleared
         for y=1,r do for x=1,r do local g=F[y][x] if g and g.clearTimer then
             g.clearTimer=g.clearTimer-1
             if g.clearTimer<=0 then
                 F[y][x]=false
-                cleared=true
+                needFresh=true
             end
         end end end
-        if cleared then
+
+        if needFresh then
             self:freshGems()
         end
 
@@ -750,8 +752,8 @@ local baseEnv={
 
     swap=true,
     swapForce=true,
-    twistR=true,twistL=true,twistF=true,
-    twistForce=true,
+    twistR=true,twistL=true,twistF=false,
+    twistForce=false,
 
     skin='gem_default',
 
