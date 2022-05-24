@@ -32,9 +32,11 @@ local defaultSoundFunc={
             inst('bass',2.2-num/5,'A2','E3')
         end
     end,
-    move=           function() SFX.play('move')             end,
-    move_failed=    function() SFX.play('move_failed')      end,
-    touch=          function() SFX.play('touch',.5)         end,
+    swap=           function() SFX.play('move')             end,
+    twist=          function() SFX.play('rotate')           end,
+    move_failed=    function() SFX.play('tuck')             end,
+    move_back=      function() SFX.play('rotate_failed')    end,
+    touch=          function() SFX.play('lock')             end,
     clear=function(lines)
         SFX.play(
             lines==1 and 'clear_1' or
@@ -65,6 +67,7 @@ local defaultSoundFunc={
     int moveDelay
     float dx
     float dy
+    boolean fall
 
     int lrCnt
     int udCnt
@@ -98,17 +101,17 @@ function actions.swapDown(P)
         P:swap('action',P.swapX,P.swapY,0,-1)
     end
 end
-function actions.rotateCW(P)
+function actions.twistCW(P)
     if P.settings.twistR then
         P:twist('action',P.twistX,P.twistY,'R')
     end
 end
-function actions.rotateCCW(P)
+function actions.twistCCW(P)
     if P.settings.twistL then
         P:twist('action',P.twistX,P.twistY,'L')
     end
 end
-function actions.rotate180(P)
+function actions.twist180(P)
     if P.settings.twistF then
         P:twist('action',P.twistX,P.twistY,'F')
     end
@@ -254,7 +257,7 @@ function GP:isMovable(x,y)
         return false
     end
 end
-function GP:setMoveBias(C,dx,dy)
+function GP:setMoveBias(mode,C,dx,dy)
     if not C then return end
     C.checkTimer=false
     C.movable=false
@@ -262,14 +265,15 @@ function GP:setMoveBias(C,dx,dy)
     C.moveDelay=self.settings.moveDelay
     C.dx=(C.dx or 0)+dx
     C.dy=(C.dy or 0)+dy
+    if mode=='fall' then C.fall=true end
 end
 function GP:swap(mode,x,y,dx,dy)
     local F=self.field
     if
         self:isMovable(x,y) and self:isMovable(x+dx,y+dy)
     then
-        self:setMoveBias(F[y][x],-dx,-dy)
-        self:setMoveBias(F[y+dy][x+dx],dx,dy)
+        self:setMoveBias('swap',F[y][x],-dx,-dy)
+        self:setMoveBias('swap',F[y+dy][x+dx],dx,dy)
         F[y][x],F[y+dy][x+dx]=F[y+dy][x+dx],F[y][x]
         if mode=='action' then
             if self.settings.swapForce then
@@ -280,7 +284,12 @@ function GP:swap(mode,x,y,dx,dy)
                 })
             end
             self:triggerEvent('legalMove','swap')
+            self:playSound('swap')
+        elseif mode=='auto' then
+            self:playSound('move_back')
         end
+    else
+        self:playSound('move_failed')
     end
 end
 function GP:twist(mode,x,y,dir)
@@ -292,22 +301,22 @@ function GP:twist(mode,x,y,dir)
         self:isMovable(x+1,y)
     then
         if dir=='R' then
-            self:setMoveBias(F[y][x],0,-1)
-            self:setMoveBias(F[y][x+1],1,0)
-            self:setMoveBias(F[y+1][x+1],0,1)
-            self:setMoveBias(F[y+1][x],-1,0)
+            self:setMoveBias('twist',F[y][x],0,-1)
+            self:setMoveBias('twist',F[y][x+1],1,0)
+            self:setMoveBias('twist',F[y+1][x+1],0,1)
+            self:setMoveBias('twist',F[y+1][x],-1,0)
             F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y][x+1],F[y+1][x+1],F[y+1][x],F[y][x]
         elseif dir=='L' then
-            self:setMoveBias(F[y][x],-1,0)
-            self:setMoveBias(F[y][x+1],0,-1)
-            self:setMoveBias(F[y+1][x+1],1,0)
-            self:setMoveBias(F[y+1][x],0,1)
+            self:setMoveBias('twist',F[y][x],-1,0)
+            self:setMoveBias('twist',F[y][x+1],0,-1)
+            self:setMoveBias('twist',F[y+1][x+1],1,0)
+            self:setMoveBias('twist',F[y+1][x],0,1)
             F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y+1][x],F[y][x],F[y][x+1],F[y+1][x+1]
         elseif dir=='F' then
-            self:setMoveBias(F[y][x],-1,-1)
-            self:setMoveBias(F[y][x+1],1,-1)
-            self:setMoveBias(F[y+1][x+1],1,1)
-            self:setMoveBias(F[y+1][x],-1,1)
+            self:setMoveBias('twist',F[y][x],-1,-1)
+            self:setMoveBias('twist',F[y][x+1],1,-1)
+            self:setMoveBias('twist',F[y+1][x+1],1,1)
+            self:setMoveBias('twist',F[y+1][x],-1,1)
             F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y+1][x+1],F[y+1][x],F[y][x],F[y][x+1]
         end
         if mode=='action' then
@@ -318,8 +327,13 @@ function GP:twist(mode,x,y,dir)
                     positions={x,y,x+1,y,x+1,y+1,x,y+1},
                 })
             end
+            self:playSound('twist')
             self:triggerEvent('legalMove','twist')
+        elseif mode=='auto' then
+            self:playSound('move_back')
         end
+    else
+        self:playSound('move_failed')
     end
 end
 local function linkLen(F,id,x,y,dx,dy)
@@ -375,6 +389,8 @@ function GP:checkPosition(x,y)
 
     local id=F[y][x].id
 
+    local line=0
+
     if not F[y][x].lrCnt then
         local stepX,stepY=1,0
         local l=linkLen(F,id,x,y,-stepX,-stepY)
@@ -391,6 +407,7 @@ function GP:checkPosition(x,y)
                     g.lrCnt=len
                 end
             end
+            line=line+1
         end
     end
     if not F[y][x].udCnt then
@@ -409,6 +426,7 @@ function GP:checkPosition(x,y)
                     g.udCnt=len
                 end
             end
+            line=line+1
         end
     end
     if self.settings.diagonalLinkLen then
@@ -428,6 +446,7 @@ function GP:checkPosition(x,y)
                         g.riseCnt=len
                     end
                 end
+                line=line+1
             end
         end
         if not F[y][x].dropCnt then
@@ -446,8 +465,13 @@ function GP:checkPosition(x,y)
                         g.dropCnt=len
                     end
                 end
+                line=line+1
             end
         end
+    end
+
+    if line>0 then
+        self:playSound('clear',line)
     end
 end
 function GP:freshGems()
@@ -464,7 +488,7 @@ function GP:freshGems()
                         -- Move it if it's movable
                         if self:isMovable(x,gY) then
                             F[y][x],F[gY][x]=F[gY][x],false
-                            self:setMoveBias(F[y][x],0,gY-y)
+                            self:setMoveBias('fall',F[y][x],0,gY-y)
                         end
                         break
                     end
@@ -476,7 +500,7 @@ function GP:freshGems()
         for y=self.settings.fieldSize,1,-1 do
             if not F[y][x] then
                 F[y][x]={}
-                self:setMoveBias(F[y][x],0,8)
+                self:setMoveBias('fall',F[y][x],0,8)
                 ins(holes,F[y][x])
             else
                 break
@@ -596,6 +620,7 @@ function GP:update(dt)
         local F=self.field
         local r=self.settings.fieldSize
         local needFresh=false
+        local touch
 
         -- Update moveTimer
         for y=1,r do for x=1,r do local g=F[y][x] if g and g.moveTimer then
@@ -606,8 +631,14 @@ function GP:update(dt)
                 g.movable=true
                 g.checkTimer=self.settings.checkDelay
                 needFresh=true
+                if g.fall then
+                    g.fall=nil
+                    touch=true
+                end
             end
         end end end
+
+        if touch then self:playSound('touch') end
 
         for i=#self.movingGroups,1,-1 do
             local group=self.movingGroups[i]
