@@ -935,7 +935,7 @@ function PP:update(dt)
         -- Step game time
         if self.timing then self.gameTime=self.gameTime+1 end
 
-        self:triggerEvent('always',1)
+        self:triggerEvent('always')
 
         -- Calculate board animation
         local O=self.pos
@@ -1065,6 +1065,7 @@ function PP:update(dt)
                     self.clearTimer=self.clearTimer-1
                     if self.clearTimer==0 then
                         self:clearField()
+                        self:triggerEvent('afterClear')
                     end
                     break
                 end

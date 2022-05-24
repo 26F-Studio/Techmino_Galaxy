@@ -270,12 +270,15 @@ function GP:swap(mode,x,y,dx,dy)
         self:setMoveBias(F[y][x],-dx,-dy)
         self:setMoveBias(F[y+dy][x+dx],dx,dy)
         F[y][x],F[y+dy][x+dx]=F[y+dy][x+dx],F[y][x]
-        if mode=='action' and self.settings.swapForce then
-            ins(self.movingGroups,{
-                mode='swap',
-                args={x,y,dx,dy},
-                positions={x,y,x+dx,y+dy},
-            })
+        if mode=='action' then
+            if self.settings.swapForce then
+                ins(self.movingGroups,{
+                    mode='swap',
+                    args={x,y,dx,dy},
+                    positions={x,y,x+dx,y+dy},
+                })
+            end
+            self:triggerEvent('legalMove','swap')
         end
     end
 end
@@ -306,12 +309,15 @@ function GP:twist(mode,x,y,dir)
             self:setMoveBias(F[y+1][x],-1,1)
             F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y+1][x+1],F[y+1][x],F[y][x],F[y][x+1]
         end
-        if mode=='action' and self.settings.twistForce then
-            ins(self.movingGroups,{
-                mode='twist',
-                args={x,y,dir=='R' and 'L' or dir=='L' and 'R' or 'F'},
-                positions={x,y,x+1,y,x+1,y+1,x,y+1},
-            })
+        if mode=='action' then
+            if self.settings.twistForce then
+                ins(self.movingGroups,{
+                    mode='twist',
+                    args={x,y,dir=='R' and 'L' or dir=='L' and 'R' or 'F'},
+                    positions={x,y,x+1,y,x+1,y+1,x,y+1},
+                })
+            end
+            self:triggerEvent('legalMove','twist')
         end
     end
 end
@@ -552,7 +558,7 @@ function GP:update(dt)
         -- Step game time
         if self.timing then self.gameTime=self.gameTime+1 end
 
-        self:triggerEvent('always',1)
+        self:triggerEvent('always')
 
         -- Calculate board animation
         local O=self.pos
@@ -618,6 +624,9 @@ function GP:update(dt)
             if fin then
                 if not legal then
                     self[group.mode](self,'auto',unpack(group.args))
+                    self:triggerEvent('illegalMove',group.mode)
+                else
+                    self:triggerEvent('legalMove',group.mode)
                 end
                 rem(self.movingGroups,i)
             end
@@ -789,10 +798,8 @@ function GP.new()
         gameOver={},
 
         -- Drop
-        afterSpawn={},
-        afterDrop={},
-        afterLock={},
-        afterClear={},
+        legalMove={},
+        illegalMove={},
 
         -- Update
         always={},
