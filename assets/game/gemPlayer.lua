@@ -79,37 +79,37 @@ local actions={}
 
 function actions.swapLeft(P)
     if P.settings.swap then
-        P:swap(P.swapX,P.swapY,-1,0)
+        P:swap('action',P.swapX,P.swapY,-1,0)
     end
 end
 function actions.swapRight(P)
     if P.settings.swap then
-        P:swap(P.swapX,P.swapY,1,0)
+        P:swap('action',P.swapX,P.swapY,1,0)
     end
 end
 function actions.swapUp(P)
     if P.settings.swap then
-        P:swap(P.swapX,P.swapY,0,1)
+        P:swap('action',P.swapX,P.swapY,0,1)
     end
 end
 function actions.swapDown(P)
     if P.settings.swap then
-        P:swap(P.swapX,P.swapY,0,-1)
+        P:swap('action',P.swapX,P.swapY,0,-1)
     end
 end
 function actions.rotateCW(P)
     if P.settings.twistR then
-        P:rotate(P.twistX,P.twistY,'R')
+        P:twist('action',P.twistX,P.twistY,'R')
     end
 end
 function actions.rotateCCW(P)
     if P.settings.twistL then
-        P:rotate(P.twistX,P.twistY,'L')
+        P:twist('action',P.twistX,P.twistY,'L')
     end
 end
 function actions.rotate180(P)
     if P.settings.twistF then
-        P:rotate(P.twistX,P.twistY,'F')
+        P:twist('action',P.twistX,P.twistY,'F')
     end
 end
 actions.moveLeft={
@@ -262,7 +262,7 @@ function GP:setMoveBias(C,dx,dy)
     C.dx=(C.dx or 0)+dx
     C.dy=(C.dy or 0)+dy
 end
-function GP:swap(x,y,dx,dy)
+function GP:swap(mode,x,y,dx,dy)
     local F=self.field
     if
         self:isMovable(x,y) and self:isMovable(x+dx,y+dy)
@@ -270,9 +270,16 @@ function GP:swap(x,y,dx,dy)
         self:setMoveBias(F[y][x],-dx,-dy)
         self:setMoveBias(F[y+dy][x+dx],dx,dy)
         F[y][x],F[y+dy][x+dx]=F[y+dy][x+dx],F[y][x]
+        if mode=='action' and self.settings.swapForce then
+            ins(self.movingGroups,{
+                mode='swap',
+                args={x,y,dx,dy},
+                positions={x,y,x+dx,y+dy},
+            })
+        end
     end
 end
-function GP:rotate(x,y,dir)
+function GP:twist(mode,x,y,dir)
     local F=self.field
     if
         self:isMovable(x,y) and
@@ -299,14 +306,21 @@ function GP:rotate(x,y,dir)
             self:setMoveBias(F[y+1][x],-1,1)
             F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y+1][x+1],F[y+1][x],F[y][x],F[y][x+1]
         end
+        if mode=='action' and self.settings.twistForce then
+            ins(self.movingGroups,{
+                mode='twist',
+                args={x,y,dir=='R' and 'L' or dir=='L' and 'R' or 'F'},
+                positions={x,y,x+1,y,x+1,y+1,x,y+1},
+            })
+        end
     end
 end
 local function linkLen(F,id,x,y,dx,dy)
     local cnt=0
     x,y=x+dx,y+dy
     while true do
-        local C=F[y] and F[y][x]
-        if C and C.id==id and C.movable and not C.clearTimer then
+        local G=F[y] and F[y][x]
+        if G and G.id==id and G.movable then
             x,y=x+dx,y+dy
             cnt=cnt+1
         else
@@ -314,6 +328,39 @@ local function linkLen(F,id,x,y,dx,dy)
         end
     end
     return cnt
+end
+function GP:psedoCheckPos(x,y)
+    local F=self.field
+    if not F[y][x] then return end
+
+    local id=F[y][x].id
+
+    if not F[y][x].lrCnt then
+        local stepX,stepY=1,0
+        if 1+linkLen(F,id,x,y,-stepX,-stepY)+linkLen(F,id,x,y,stepX,stepY)>=self.settings.linkLen then
+            return true
+        end
+    end
+    if not F[y][x].udCnt then
+        local stepX,stepY=0,1
+        if 1+linkLen(F,id,x,y,-stepX,-stepY)+linkLen(F,id,x,y,stepX,stepY)>=self.settings.linkLen then
+            return true
+        end
+    end
+    if self.settings.diagonalLinkLen then
+        if not F[y][x].riseCnt then
+            local stepX,stepY=1,1
+            if 1+linkLen(F,id,x,y,-stepX,-stepY)+linkLen(F,id,x,y,stepX,stepY)>=self.settings.diagonalLinkLen then
+                return true
+            end
+        end
+        if not F[y][x].dropCnt then
+            local stepX,stepY=1,-1
+            if 1+linkLen(F,id,x,y,-stepX,-stepY)+linkLen(F,id,x,y,stepX,stepY)>=self.settings.diagonalLinkLen then
+                return true
+            end
+        end
+    end
 end
 function GP:checkPosition(x,y)
     local F=self.field
@@ -329,11 +376,11 @@ function GP:checkPosition(x,y)
         if len>=self.settings.linkLen then
             for i=-l,r do
                 local cx,cy=x+stepX*i,y+stepY*i
-                local c=F[cy] and F[cy][cx]
-                if c and not c.clearTimer then
-                    c.clearTimer=self.settings.clearDelay
-                    c.movable=false
-                    c.lrCnt=len
+                local g=F[cy] and F[cy][cx]
+                if g and not g.clearTimer then
+                    g.clearTimer=self.settings.clearDelay
+                    g.movable=false
+                    g.lrCnt=len
                 end
             end
         end
@@ -346,11 +393,11 @@ function GP:checkPosition(x,y)
         if len>=self.settings.linkLen then
             for i=-l,r do
                 local cx,cy=x+stepX*i,y+stepY*i
-                local c=F[cy] and F[cy][cx]
-                if c and not c.clearTimer then
-                    c.clearTimer=self.settings.clearDelay
-                    c.movable=false
-                    c.udCnt=len
+                local g=F[cy] and F[cy][cx]
+                if g and not g.clearTimer then
+                    g.clearTimer=self.settings.clearDelay
+                    g.movable=false
+                    g.udCnt=len
                 end
             end
         end
@@ -364,11 +411,11 @@ function GP:checkPosition(x,y)
             if len>=self.settings.diagonalLinkLen then
                 for i=-l,r do
                     local cx,cy=x+stepX*i,y+stepY*i
-                    local c=F[cy] and F[cy][cx]
-                    if c and not c.clearTimer then
-                        c.clearTimer=self.settings.clearDelay
-                        c.movable=false
-                        c.riseCnt=len
+                    local g=F[cy] and F[cy][cx]
+                    if g and not g.clearTimer then
+                        g.clearTimer=self.settings.clearDelay
+                        g.movable=false
+                        g.riseCnt=len
                     end
                 end
             end
@@ -381,11 +428,11 @@ function GP:checkPosition(x,y)
             if len>=self.settings.diagonalLinkLen then
                 for i=-l,r do
                     local cx,cy=x+stepX*i,y+stepY*i
-                    local c=F[cy] and F[cy][cx]
-                    if c and not c.clearTimer then
-                        c.clearTimer=self.settings.clearDelay
-                        c.movable=false
-                        c.dropCnt=len
+                    local g=F[cy] and F[cy][cx]
+                    if g and not g.clearTimer then
+                        g.clearTimer=self.settings.clearDelay
+                        g.movable=false
+                        g.dropCnt=len
                     end
                 end
             end
@@ -545,13 +592,34 @@ function GP:update(dt)
                 g.moveTimer,g.moveDelay=nil
                 g.dx,g.dy=nil
                 g.movable=true
-                if self.settings.checkDelay==0 then
-                    self:checkPosition(x,y)
-                else
-                    g.checkTimer=self.settings.checkDelay
-                end
+                g.checkTimer=self.settings.checkDelay
             end
         end end end
+
+        for i=#self.movingGroups,1,-1 do
+            local group=self.movingGroups[i]
+            local fin
+            local legal=false
+            local posList=group.positions
+            for n=1,#posList,2 do
+                local g=F[posList[n+1]][posList[n]]
+                if not g then
+                    fin,legal=true,true
+                    break
+                elseif g.movable then
+                    fin=true
+                    if self:psedoCheckPos(posList[n],posList[n+1]) then
+                        legal=true
+                    end
+                end
+            end
+            if fin then
+                if not legal then
+                    self[group.mode](self,'auto',unpack(group.args))
+                end
+                rem(self.movingGroups,i)
+            end
+        end
 
         -- Update checkTimer
         for y=1,r do for x=1,r do local g=F[y][x] if g and g.checkTimer then
@@ -682,8 +750,8 @@ local baseEnv={
 
     swap=true,
     swapForce=true,
-    twistR=true,twistL=false,twistF=false,
-    spinForce=false,
+    twistR=true,twistL=true,twistF=true,
+    twistForce=true,
 
     skin='gem_default',
 
@@ -795,17 +863,14 @@ function GP:initialize()
     end
     self:freshGems()
 
+    self.movingGroups={}
+
     self.swapX,self.swapY=1,1
     self.twistX,self.twistY=1,1
 
     self.garbageBuffer={}
 
     self.actionHistory={}
-    self.keyBuffer={
-        move=false,
-        rotate=false,
-        hardDrop=false,
-    }
     self.texts=TEXT.new()
 
     -- Generate available actions
