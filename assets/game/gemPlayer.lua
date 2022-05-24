@@ -55,9 +55,8 @@ local defaultSoundFunc={
 }
 
 --[[ Gem tags:
-    int color (1~64)
+    int id (1~7)
     boolean movable
-    boolean moving
 
     int clearTimer
 
@@ -227,6 +226,17 @@ function GP:movePosition(dx,dy,k,da)
 end
 --------------------------------------------------------------
 -- Game methods
+function GP:printField()-- For debugging
+    local F=self.field
+    print('----------')
+    for y=self.settings.fieldSize,1,-1 do
+        local s="|"
+        for x=1,self.settings.fieldSize do
+            s=s..(F[y][x] and 'X' or '.')
+        end
+        print(s.."|")
+    end
+end
 function GP:triggerEvent(name,...)
     local L=self.event[name]
     if L then for i=1,#L do L[i](self,...) end end
@@ -249,8 +259,8 @@ function GP:setMoveBias(C,dx,dy)
     C.movable=false
     C.moveTimer=self.settings.moveDelay
     C.moveDelay=self.settings.moveDelay
-    C.dx=dx
-    C.dy=dy
+    C.dx=(C.dx or 0)+dx
+    C.dy=(C.dy or 0)+dy
 end
 function GP:swap(x,y,dx,dy)
     local F=self.field
@@ -296,7 +306,7 @@ local function linkLen(F,id,x,y,dx,dy)
     x,y=x+dx,y+dy
     while true do
         local C=F[y] and F[y][x]
-        if C and C.id==id and not C.clearTimer then
+        if C and C.id==id and C.movable and not C.clearTimer then
             x,y=x+dx,y+dy
             cnt=cnt+1
         else
@@ -313,11 +323,11 @@ function GP:checkPosition(x,y)
 
     if not F[y][x].lrCnt then
         local stepX,stepY=1,0
-        local left=linkLen(F,id,x,y,-stepX,-stepY)
-        local right=linkLen(F,id,x,y,stepX,stepY)
-        local len=1+left+right
+        local l=linkLen(F,id,x,y,-stepX,-stepY)
+        local r=linkLen(F,id,x,y,stepX,stepY)
+        local len=1+l+r
         if len>=self.settings.linkLen then
-            for i=-left,right do
+            for i=-l,r do
                 local cx,cy=x+stepX*i,y+stepY*i
                 local c=F[cy] and F[cy][cx]
                 if c and not c.clearTimer then
@@ -330,17 +340,17 @@ function GP:checkPosition(x,y)
     end
     if not F[y][x].udCnt then
         local stepX,stepY=0,1
-        local left=linkLen(F,id,x,y,-stepX,-stepY)
-        local right=linkLen(F,id,x,y,stepX,stepY)
-        local len=1+left+right
+        local l=linkLen(F,id,x,y,-stepX,-stepY)
+        local r=linkLen(F,id,x,y,stepX,stepY)
+        local len=1+l+r
         if len>=self.settings.linkLen then
-            for i=-left,right do
+            for i=-l,r do
                 local cx,cy=x+stepX*i,y+stepY*i
                 local c=F[cy] and F[cy][cx]
                 if c and not c.clearTimer then
                     c.clearTimer=self.settings.clearDelay
                     c.movable=false
-                    c.lrCnt=len
+                    c.udCnt=len
                 end
             end
         end
@@ -348,34 +358,34 @@ function GP:checkPosition(x,y)
     if self.settings.diagonalLinkLen then
         if not F[y][x].riseCnt then
             local stepX,stepY=1,1
-            local left=linkLen(F,id,x,y,-stepX,-stepY)
-            local right=linkLen(F,id,x,y,stepX,stepY)
-            local len=1+left+right
+            local l=linkLen(F,id,x,y,-stepX,-stepY)
+            local r=linkLen(F,id,x,y,stepX,stepY)
+            local len=1+l+r
             if len>=self.settings.diagonalLinkLen then
-                for i=-left,right do
+                for i=-l,r do
                     local cx,cy=x+stepX*i,y+stepY*i
                     local c=F[cy] and F[cy][cx]
                     if c and not c.clearTimer then
                         c.clearTimer=self.settings.clearDelay
                         c.movable=false
-                        c.lrCnt=len
+                        c.riseCnt=len
                     end
                 end
             end
         end
         if not F[y][x].dropCnt then
             local stepX,stepY=1,-1
-            local left=linkLen(F,id,x,y,-stepX,-stepY)
-            local right=linkLen(F,id,x,y,stepX,stepY)
-            local len=1+left+right
+            local l=linkLen(F,id,x,y,-stepX,-stepY)
+            local r=linkLen(F,id,x,y,stepX,stepY)
+            local len=1+l+r
             if len>=self.settings.diagonalLinkLen then
-                for i=-left,right do
+                for i=-l,r do
                     local cx,cy=x+stepX*i,y+stepY*i
                     local c=F[cy] and F[cy][cx]
                     if c and not c.clearTimer then
                         c.clearTimer=self.settings.clearDelay
                         c.movable=false
-                        c.lrCnt=len
+                        c.dropCnt=len
                     end
                 end
             end
@@ -385,14 +395,33 @@ end
 function GP:freshGems()
     local holes={}
     local F=self.field
-    for y=1,self.settings.fieldSize do
-        for x=1,self.settings.fieldSize do
+    for x=1,self.settings.fieldSize do
+        -- Drag gems down
+        for y=1,self.settings.fieldSize do
+            -- F[y][x] is a hole
             if not F[y][x] then
-                local g={
-                    movable=true,
-                }
-                F[y][x]=g
-                ins(holes,g)
+                -- Find a gem above the hole
+                for gY=y+1,self.settings.fieldSize do
+                    if F[gY][x] then
+                        -- Move it if it's movable
+                        if self:isMovable(x,gY) then
+                            F[y][x],F[gY][x]=F[gY][x],false
+                            self:setMoveBias(F[y][x],0,gY-y)
+                        end
+                        break
+                    end
+                end
+            end
+        end
+
+        -- Fill holes with new gems
+        for y=self.settings.fieldSize,1,-1 do
+            if not F[y][x] then
+                F[y][x]={}
+                self:setMoveBias(F[y][x],0,8)
+                ins(holes,F[y][x])
+            else
+                break
             end
         end
     end
@@ -507,32 +536,43 @@ function GP:update(dt)
         end
 
         local F=self.field
-        for y=1,self.settings.fieldSize do
-            for x=1,self.settings.fieldSize do
-                local g=F[y][x]
-                if g then
-                    if g.clearTimer then
-                        g.clearTimer=g.clearTimer-1
-                        if g.clearTimer==0 then
-                            F[y][x]=false
-                        end
-                    end
-                    if g.moveTimer then
-                        g.moveTimer=g.moveTimer-1
-                        if g.moveTimer==0 then
-                            g.moveTimer=nil
-                            g.movable=true
-                            g.checkTimer=self.settings.checkDelay
-                        end
-                    end
-                    if g.checkTimer then
-                        g.checkTimer=g.checkTimer-1
-                        if g.checkTimer==0 then
-                            self:checkPosition(x,y)
-                        end
-                    end
+        local r=self.settings.fieldSize
+
+        -- Update moveTimer
+        for y=1,r do for x=1,r do local g=F[y][x] if g and g.moveTimer then
+            g.moveTimer=g.moveTimer-1
+            if g.moveTimer<=0 then
+                g.moveTimer,g.moveDelay=nil
+                g.dx,g.dy=nil
+                g.movable=true
+                if self.settings.checkDelay==0 then
+                    self:checkPosition(x,y)
+                else
+                    g.checkTimer=self.settings.checkDelay
                 end
             end
+        end end end
+
+        -- Update checkTimer
+        for y=1,r do for x=1,r do local g=F[y][x] if g and g.checkTimer then
+            g.checkTimer=g.checkTimer-1
+            if g.checkTimer<=0 then
+                g.checkTimer=nil
+                self:checkPosition(x,y)
+            end
+        end end end
+
+        -- Update clearTimer
+        local cleared
+        for y=1,r do for x=1,r do local g=F[y][x] if g and g.clearTimer then
+            g.clearTimer=g.clearTimer-1
+            if g.clearTimer<=0 then
+                F[y][x]=false
+                cleared=true
+            end
+        end end end
+        if cleared then
+            self:freshGems()
         end
 
         -- Update garbage

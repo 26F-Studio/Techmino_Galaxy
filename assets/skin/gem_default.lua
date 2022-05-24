@@ -53,7 +53,7 @@ end
 
 local gemShapes={
     {-- Red Square
-        color={COLOR.hsv(0,1,1,.5)},
+        color={COLOR.hsv(0,1,1,.626)},
         coords={
             -16,-10,
             -10,-16,
@@ -66,7 +66,7 @@ local gemShapes={
         },
     },
     {-- Orange Hexagon
-        color={COLOR.hsv(.1,1,1,.5)},
+        color={COLOR.hsv(.1,1,1,.626)},
         coords=(function()
             local l={}
                 for i=0,5 do
@@ -77,7 +77,7 @@ local gemShapes={
         end)()
     },
     {-- Yellow Rhombus
-        color={COLOR.hsv(.17,1,1,.5)},
+        color={COLOR.hsv(.17,1,1,.626)},
         coords=(function()
             local l={}
                 for i=0,3 do
@@ -88,28 +88,28 @@ local gemShapes={
         end)()
     },
     {-- Green Octagon
-        color={COLOR.hsv(.33,1,1,.5)},
+        color={COLOR.hsv(.33,1,1,.626)},
         coords=(function()
             local l={}
-                for i=0,7 do
-                    table.insert(l,17*math.cos(MATH.tau*i/8))
-                    table.insert(l,17*math.sin(MATH.tau*i/8))
+                for i=0,5 do
+                    table.insert(l,18*math.cos(MATH.tau*i/6))
+                    table.insert(l,18*math.sin(MATH.tau*i/6))
                 end
             return l
         end)()
     },
     {-- Blue Diamond
-        color={COLOR.hsv(.6,1,1,.5)},
+        color={COLOR.hsv(.6,1,1,.626)},
         coords={
             0,18,
-            16,-5,
+            17,-5,
             8,-16,
             -8,-16,
-            -16 ,-5,
+            -17 ,-5,
         },
     },
     {-- Magenta Triangle
-        color={COLOR.hsv(.86,1,1,.5)},
+        color={COLOR.hsv(.86,1,1,.626)},
         coords={
             0,-15,
             16,15,
@@ -117,7 +117,7 @@ local gemShapes={
         },
     },
     {-- White Circle
-        color={COLOR.hsv(0,0,1,.5)},
+        color={COLOR.hsv(0,0,1,.626)},
         coords=(function()
             local l={}
                 for i=0,15 do
@@ -132,7 +132,8 @@ for i=1,#gemShapes do
     gemShapes[i].lineColor=TABLE.shift(gemShapes[i].color)
     gemShapes[i].lineColor[4]=nil
 end
-local function drawGem(id)
+local function drawGem(C)
+    local id=C.id
     gc_setColor(gemShapes[id].lineColor)
     gc_polygon('line',gemShapes[id].coords)
     gc_setColor(gemShapes[id].color)
@@ -151,7 +152,7 @@ function S.drawFieldCells(F)
             end
             cx,cy=45*cx-22.5,-45*cy+22.5
             gc_translate(cx,cy)
-            drawGem(C.id)
+            drawGem(C)
             gc_translate(-cx,-cy)
         end
     end end
