@@ -118,6 +118,7 @@ function actions.twist180(P)
 end
 actions.moveLeft={
     press=function(P)
+        P.mouseX,P.mouseY=false,false
         P.swapX=(P.swapX-2)%P.settings.fieldSize+1
         P.twistX=(P.twistX-2)%(P.settings.fieldSize-1)+1
     end,
@@ -126,6 +127,7 @@ actions.moveLeft={
 }
 actions.moveRight={
     press=function(P)
+        P.mouseX,P.mouseY=false,false
         P.swapX=P.swapX%P.settings.fieldSize+1
         P.twistX=P.twistX%(P.settings.fieldSize-1)+1
     end,
@@ -134,6 +136,7 @@ actions.moveRight={
 }
 actions.moveUp={
     press=function(P)
+        P.mouseX,P.mouseY=false,false
         P.swapY=P.swapY%P.settings.fieldSize+1
         P.twistY=P.twistY%(P.settings.fieldSize-1)+1
     end,
@@ -142,6 +145,7 @@ actions.moveUp={
 }
 actions.moveDown={
     press=function(P)
+        P.mouseX,P.mouseY=false,false
         P.swapY=(P.swapY-2)%P.settings.fieldSize+1
         P.twistY=(P.twistY-2)%(P.settings.fieldSize-1)+1
     end,
@@ -291,6 +295,7 @@ function GP:swap(mode,x,y,dx,dy)
     else
         self:playSound('move_failed')
     end
+    self:freshSwapCursor()
 end
 function GP:twist(mode,x,y,dir)
     local F=self.field
@@ -560,6 +565,81 @@ function GP:finish(reason)
 end
 --------------------------------------------------------------
 -- Press & Release & Update & Render
+function GP:getMousePos(x,y)
+    local pos=self.pos
+    x,y=((x-pos.x)/pos.k/360+1)/2,((pos.y-y)/pos.k/360+1)/2
+    if x>=0 and x<1 and y>=0 and y<1 then
+        return x,y
+    else
+        return false,false
+    end
+end
+function GP:getSwapPos(x,y)
+    local size=self.settings.fieldSize
+    x,y=floor(x*size+1),floor(y*size+1)
+    if x>=1 and x<=size and y>=1 and y<=size then return x,y end
+end
+function GP:freshSwapCursor()
+    self.swapLock=false
+    if self.mouseX then
+        local sx,sy=self:getSwapPos(self.mouseX,self.mouseY)
+        if sx and (self.swapX~=sx or self.swapY~=sy) then
+            self.swapX,self.swapY=sx,sy
+        end
+    end
+end
+function GP:getTwistPos(x,y)
+    local size=self.settings.fieldSize
+    x,y=floor(x*size+.5),floor(y*size+.5)
+    if x>=1 and x<=size and y>=1 and y<=size then return x,y end
+end
+function GP:freshTwistCursor()
+    if self.mouseX then
+        local tx,ty=self:getTwistPos(self.mouseX,self.mouseY)
+        if tx and (self.twistX~=tx or self.twistY~=ty) then
+            self.twistX,self.twistY=tx,ty
+        end
+    end
+end
+function GP:mouseDown(x,y,id)
+    if id==2 then
+        if self.swapLock then
+            self:freshSwapCursor()
+        end
+    else
+        self:mouseMove(x,y,0,0,id)
+        if self.swapLock then
+            local mx,my=self:getMousePos(x,y)
+            if mx then
+                local sx,sy=self:getSwapPos(mx,my)
+                if sx==self.swapX and math.abs(sy-self.swapY)==1 or sy==self.swapY and math.abs(sx-self.swapX)==1 then
+                    self:swap('action',self.swapX,self.swapY,sx-self.swapX,sy-self.swapY)
+                else
+                    if sx==self.swapX and sy==self.swapY then
+                        self:freshSwapCursor()
+                    else
+                        self.swapX,self.swapY=sx,sy
+                    end
+                end
+            end
+        else
+            self.swapLock=true
+        end
+    end
+end
+function GP:mouseMove(x,y,_,_,_)
+    self.mouseX,self.mouseY=self:getMousePos(x,y)
+
+    if self.mouseX then
+        if not self.swapLock then
+            self:freshSwapCursor()
+        end
+        self:freshTwistCursor()
+    end
+end
+function GP:mouseUp(_,_,_)
+    -- ?
+end
 function GP:press(act)
     self:triggerEvent('beforePress',act)
 
@@ -577,27 +657,6 @@ function GP:release(act)
     ins(self.actionHistory,{1,self.time,act})
     self.actions[act].release(self)
     self:triggerEvent('afterRelease',act)
-end
-function GP:mouseDown(_,_,_)
-    -- ?
-end
-function GP:mouseMove(x,y,_,_,_)
-    local pos=self.pos
-    local size=self.settings.fieldSize
-    local mx,my=(x-pos.x)/pos.k,(pos.y-y)/pos.k
-
-    local sx,sy=floor((mx+360)/720*size+1),floor((my+360)/720*size+1)
-    if sx>=1 and sx<=size and sy>=1 and sy<=size and self.swapX~=sx or self.swapY~=sy then
-        self.swapX,self.swapY=sx,sy
-    end
-
-    local tx,ty=floor((mx+360)/720*size+.5),floor((my+360)/720*size+.5)
-    if tx>=1 and tx<=size-1 and ty>=1 and ty<=size-1 and self.twistX~=tx or self.twistY~=ty then
-        self.twistX,self.twistY=tx,ty
-    end
-end
-function GP:mouseUp(_,_,_)
-    -- ?
 end
 function GP:update(dt)
     local df=floor((self.realTime+dt)*1000)-floor(self.realTime*1000)
@@ -766,7 +825,7 @@ function GP:render()
 
     -- Cursor(s)
     if self.settings.swap then
-        skin.drawSwapCursor(self.swapX,self.swapY)
+        skin.drawSwapCursor(self.swapX,self.swapY,self.swapLock)
     end
     if self.settings.twistR then
         skin.drawTwistCursor(self.twistX,self.twistY)
@@ -931,7 +990,9 @@ function GP:initialize()
 
     self.movingGroups={}
 
+    self.mouseX,self.mouseY=false,false
     self.swapX,self.swapY=1,1
+    self.swapLock=false
     self.twistX,self.twistY=1,1
 
     self.garbageBuffer={}

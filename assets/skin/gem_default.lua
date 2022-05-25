@@ -33,14 +33,14 @@ function S.drawFieldBackground(fieldSize)
     end end
 end
 
-function S.drawSwapCursor(cx,cy)
-    gc_setLineWidth(4)
-    gc_setColor(1,1,1,.6)
+function S.drawSwapCursor(cx,cy,lock)
+    gc_setLineWidth(lock and 4 or 2)
+    gc_setColor(1,1,1,lock and .8 or .6)
     gc_rectangle('line',cx*45-45,-cy*45,45,45)
 end
 
 function S.drawTwistCursor(sx,sy)
-    gc_setLineWidth(4)
+    gc_setLineWidth(2)
     gc_setColor(1,1,1,.6)
     gc_circle('line',sx*45,-sy*45,50)
 end
@@ -88,7 +88,7 @@ local gemShapes={
         end)()
     },
     {-- Green Octagon
-        color={COLOR.hsv(.33,.9,1,.5)},
+        color={COLOR.hsv(.33,.85,.9,.5)},
         coords=(function()
             local l={}
                 for i=0,5 do
@@ -99,7 +99,7 @@ local gemShapes={
         end)()
     },
     {-- Blue Diamond
-        color={COLOR.hsv(.6,.9,1,.5)},
+        color={COLOR.hsv(.58,1,1,.5)},
         coords={
             0,18,
             17,-5,
