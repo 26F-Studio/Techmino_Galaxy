@@ -578,6 +578,27 @@ function GP:release(act)
     self.actions[act].release(self)
     self:triggerEvent('afterRelease',act)
 end
+function GP:mouseDown(_,_,_)
+    -- ?
+end
+function GP:mouseMove(x,y,_,_,_)
+    local pos=self.pos
+    local size=self.settings.fieldSize
+    local mx,my=(x-pos.x)/pos.k,(pos.y-y)/pos.k
+
+    local sx,sy=floor((mx+360)/720*size+1),floor((my+360)/720*size+1)
+    if sx>=1 and sx<=size and sy>=1 and sy<=size and self.swapX~=sx or self.swapY~=sy then
+        self.swapX,self.swapY=sx,sy
+    end
+
+    local tx,ty=floor((mx+360)/720*size+.5),floor((my+360)/720*size+.5)
+    if tx>=1 and tx<=size-1 and ty>=1 and ty<=size-1 and self.twistX~=tx or self.twistY~=ty then
+        self.twistX,self.twistY=tx,ty
+    end
+end
+function GP:mouseUp(_,_,_)
+    -- ?
+end
 function GP:update(dt)
     local df=floor((self.realTime+dt)*1000)-floor(self.realTime*1000)
     self.realTime=self.realTime+dt
@@ -618,12 +639,12 @@ function GP:update(dt)
         end
 
         local F=self.field
-        local r=self.settings.fieldSize
+        local size=self.settings.fieldSize
         local needFresh=false
         local touch
 
         -- Update moveTimer
-        for y=1,r do for x=1,r do local g=F[y][x] if g and g.moveTimer then
+        for y=1,size do for x=1,size do local g=F[y][x] if g and g.moveTimer then
             g.moveTimer=g.moveTimer-1
             if g.moveTimer<=0 then
                 g.moveTimer,g.moveDelay=nil
@@ -669,7 +690,7 @@ function GP:update(dt)
         end
 
         -- Update checkTimer
-        for y=1,r do for x=1,r do local g=F[y][x] if g and g.checkTimer then
+        for y=1,size do for x=1,size do local g=F[y][x] if g and g.checkTimer then
             g.checkTimer=g.checkTimer-1
             if g.checkTimer<=0 then
                 g.checkTimer=nil
@@ -678,7 +699,7 @@ function GP:update(dt)
         end end end
 
         -- Update clearTimer
-        for y=1,r do for x=1,r do local g=F[y][x] if g and g.clearTimer then
+        for y=1,size do for x=1,size do local g=F[y][x] if g and g.clearTimer then
             g.clearTimer=g.clearTimer-1
             if g.clearTimer<=0 then
                 F[y][x]=false

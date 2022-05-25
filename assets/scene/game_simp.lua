@@ -46,13 +46,31 @@ function scene.keyUp(key)
 end
 
 function scene.touchDown(x,y,id)
-    if SETTINGS.system.touchControl then VCTRL.press(x,y,id) end
+    if GAME.mainPlayer then
+        if GAME.mainPlayer.gameMode=='mino' or GAME.mainPlayer.gameMode=='puyo' then
+            if SETTINGS.system.touchControl then VCTRL.press(x,y,id) end
+        elseif GAME.mainPlayer.gameMode=='gem' then
+            GAME.mainPlayer:mouseDown(x,y,id)
+        end
+    end
 end
-function scene.touchMove(x,y,_,_,id)
-    if SETTINGS.system.touchControl then VCTRL.move(x,y,id) end
+function scene.touchMove(x,y,dx,dy,id)
+    if GAME.mainPlayer then
+        if GAME.mainPlayer.gameMode=='mino' or GAME.mainPlayer.gameMode=='puyo' then
+            if SETTINGS.system.touchControl then VCTRL.move(x,y,id) end
+        elseif GAME.mainPlayer.gameMode=='gem' then
+            GAME.mainPlayer:mouseMove(x,y,dx,dy,id)
+        end
+    end
 end
-function scene.touchUp(_,_,id)
-    if SETTINGS.system.touchControl then VCTRL.release(id) end
+function scene.touchUp(x,y,id)
+    if GAME.mainPlayer then
+        if GAME.mainPlayer.gameMode=='mino' or GAME.mainPlayer.gameMode=='puyo' then
+            if SETTINGS.system.touchControl then VCTRL.release(id) end
+        elseif GAME.mainPlayer.gameMode=='gem' then
+            GAME.mainPlayer:mouseUp(x,y,id)
+        end
+    end
 end
 
 scene.mouseDown=scene.touchDown
