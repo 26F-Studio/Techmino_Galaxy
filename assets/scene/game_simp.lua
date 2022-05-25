@@ -15,7 +15,7 @@ function scene.keyDown(key,isRep)
     if isRep then return end
     local action
 
-    local p=GAME.playerMap[GAME.mainPID]
+    local p=GAME.mainPlayer
     if p then
         action=KEYMAP[p.gameMode]:getAction(key)
         if action then
@@ -35,7 +35,7 @@ end
 function scene.keyUp(key)
     local action
 
-    local p=GAME.playerMap[GAME.mainPID]
+    local p=GAME.mainPlayer
     if p then
         action=KEYMAP[p.gameMode]:getAction(key)
         if action then

@@ -95,7 +95,7 @@ do -- function layoutFuncs.default():
         },
     }
     function layoutFuncs.default()
-        local mode=GAME.mainPID and defaultPosList.alive or defaultPosList.dead
+        local mode=GAME.mainPlayer and defaultPosList.alive or defaultPosList.dead
         local minCap=MATH.inf
         for count in next,mode do
             if count<=minCap and count>=#GAME.playerList then
@@ -146,7 +146,9 @@ local GAME={
 
     seed=false,
     mode=false,
+
     mainPID=false,
+    mainPlayer=false,
 }
 
 function GAME.reset(mode,seed)
@@ -155,7 +157,7 @@ function GAME.reset(mode,seed)
 
     GAME.hitWaves={}
 
-    GAME.mainPID=false
+    GAME.mainPlayer=false
     GAME.seed=seed or math.random(2^16,2^26)
     GAME.mode=mode and getMode(mode) or NONE
     if GAME.mode.initialize then GAME.mode.initialize() end
@@ -187,13 +189,16 @@ function GAME.newPlayer(id,pType)
 end
 
 function GAME.setMain(id)
-    if GAME.mainPID then
-        GAME.playerMap[GAME.mainPID].isMain=false
+    if GAME.mainPlayer then
+        GAME.playerMap[GAME.mainPlayer].isMain=false
+        GAME.mainPID=false
+        GAME.mainPlayer=false
     end
     if GAME.playerMap[id] then
         GAME.mainPID=id
-        GAME.playerMap[id].isMain=true
-        GAME.playerMap[id].sound=true
+        GAME.mainPlayer=GAME.playerMap[id]
+        GAME.mainPlayer.isMain=true
+        GAME.mainPlayer.sound=true
     end
 end
 
@@ -201,10 +206,9 @@ function GAME.start()
     if #GAME.playerList==0 then
         MES.new('warn',"No players created in this mode")
     else
-        if GAME.mainPID then
-            local P=GAME.playerMap[GAME.mainPID]
-            local conf=SETTINGS["game_"..P.gameMode]
-            if conf then P:loadSettings(conf) end
+        if GAME.mainPlayer then
+            local conf=SETTINGS["game_"..GAME.mainPlayer.gameMode]
+            if conf then GAME.mainPlayer:loadSettings(conf) end
         end
         if GAME.mode.settings then
             for i=1,#GAME.playerList do
@@ -225,15 +229,19 @@ function GAME.start()
 end
 
 function GAME.press(action,id)
-    if not id then id=GAME.mainPID end
-    if not id then return end
-    GAME.playerMap[id or GAME.mainPID]:press(action)
+    if id then
+        GAME.playerMap[id]:press(action)
+    elseif GAME.mainPlayer then
+        GAME.mainPlayer:press(action)
+    end
 end
 
 function GAME.release(action,id)
-    if not id then id=GAME.mainPID end
-    if not id then return end
-    GAME.playerMap[id or GAME.mainPID]:release(action)
+    if id then
+        GAME.playerMap[id]:release(action)
+    elseif GAME.mainPlayer then
+        GAME.mainPlayer:release(action)
+    end
 end
 
 --[[ data:
