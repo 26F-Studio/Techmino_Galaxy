@@ -231,7 +231,7 @@ end
 for k,v in next,actions do actions[k]=_getActionObj(v) end
 --------------------------------------------------------------
 -- Effects
-function PP:shakeBoard(args,v)
+function PP:shakeBoard(args)
     local shake=self.settings.shakeness
     if args:sArg('-drop') then
         self.pos.vy=self.pos.vy+.2*shake
@@ -241,16 +241,6 @@ function PP:shakeBoard(args,v)
         self.pos.dx=self.pos.dx+.1*shake
     elseif args:sArg('-left') then
         self.pos.dx=self.pos.dx-.1*shake
-    elseif args:sArg('-cw') then
-        self.pos.va=self.pos.va+.002*shake
-    elseif args:sArg('-ccw') then
-        self.pos.va=self.pos.va-.002*shake
-    elseif args:sArg('-180') then
-        self.pos.vy=self.pos.vy+.1*shake
-        self.pos.va=self.pos.va+((self.handX+#self.hand.matrix[1]/2-1)/self.settings.fieldW-.5)*.0026*shake
-    elseif args:sArg('-clear') then
-        self.pos.dk=self.pos.dk*(1+shake)
-        self.pos.vk=self.pos.vk+.0002*shake*min(v^1.6,26)
     end
 end
 function PP:playSound(event,...)

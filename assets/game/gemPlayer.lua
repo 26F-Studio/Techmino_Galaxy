@@ -226,7 +226,7 @@ end
 for k,v in next,actions do actions[k]=_getActionObj(v) end
 --------------------------------------------------------------
 -- Effects
-function GP:shakeBoard(args,v)
+function GP:shakeBoard(args)
     local shake=self.settings.shakeness
     if args:sArg('-drop') then
         self.pos.vy=self.pos.vy+.2*shake
@@ -238,15 +238,6 @@ function GP:shakeBoard(args,v)
         self.pos.dx=self.pos.dx+.1*shake
     elseif args:sArg('-left') then
         self.pos.dx=self.pos.dx-.1*shake
-    elseif args:sArg('-cw') then
-        self.pos.va=self.pos.va+.002*shake
-    elseif args:sArg('-ccw') then
-        self.pos.va=self.pos.va-.002*shake
-    elseif args:sArg('-180') then
-        self.pos.vy=self.pos.vy+.1*shake
-    elseif args:sArg('-clear') then
-        self.pos.dk=self.pos.dk*(1+shake)
-        self.pos.vk=self.pos.vk+.0002*shake*min(v^1.6,26)
     end
 end
 function GP:playSound(event,...)
@@ -996,7 +987,7 @@ local baseEnv={
     diagonalLinkLen=false,
     refreshCount=0,
 
-    multiMove=false,
+    multiMove=true,
     swap=true,
     swapForce=true,
     twistR=false,twistL=false,twistF=false,
