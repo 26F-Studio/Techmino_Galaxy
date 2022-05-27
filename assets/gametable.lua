@@ -245,8 +245,8 @@ settings={
     },
     game_gem={
         -- Handling
-        das=100,
-        arr=30,
+        das=150,
+        arr=40,
 
         -- Video
         shakeness=.6,

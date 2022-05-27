@@ -32,11 +32,14 @@ local defaultSoundFunc={
             inst('bass',2.2-num/5,'A2','E3')
         end
     end,
-    swap=           function() SFX.play('move')             end,
-    twist=          function() SFX.play('rotate')           end,
-    move_failed=    function() SFX.play('tuck')             end,
-    move_back=      function() SFX.play('rotate_failed')    end,
-    touch=          function() SFX.play('lock')             end,
+    move=           function() SFX.play('move')          end,
+    move_failed=    function() SFX.play('move_failed')   end,
+    swap=           function() SFX.play('rotate')        end,
+    swap_failed=    function() SFX.play('tuck')          end,
+    twist=          function() SFX.play('rotate')        end,
+    twist_failed=   function() SFX.play('tuck')          end,
+    move_back=      function() SFX.play('rotate_failed') end,
+    touch=          function() SFX.play('lock')          end,
     clear=function(lines)
         SFX.play(
             lines==1 and 'clear_1' or
@@ -116,42 +119,78 @@ function actions.twist180(P)
         P:twist('action',P.twistX,P.twistY,'F')
     end
 end
-actions.moveLeft={
-    press=function(P)
-        P.mouseX,P.mouseY=false,false
-        P.swapX=(P.swapX-2)%P.settings.fieldSize+1
-        P.twistX=(P.twistX-2)%(P.settings.fieldSize-1)+1
-    end,
-    release=function(P)
+function actions.moveLeft(P)
+    P.mouseX,P.mouseY=false,false
+    P.moveDirH=-1
+    P.moveChargeH=0
+
+    if P.swapX>1 then
+        P.swapX=P.swapX-1
+        if P.twistX>1 then
+            P.twistX=P.twistX-1
+        end
+        P:playSound('move')
+    elseif P.twistX>1 then
+        P.twistX=P.twistX-1
+        P:playSound('move')
+    else
+        P:playSound('move_failed')
     end
-}
-actions.moveRight={
-    press=function(P)
-        P.mouseX,P.mouseY=false,false
-        P.swapX=P.swapX%P.settings.fieldSize+1
-        P.twistX=P.twistX%(P.settings.fieldSize-1)+1
-    end,
-    release=function(P)
+end
+function actions.moveRight(P)
+    P.mouseX,P.mouseY=false,false
+    P.moveDirH=1
+    P.moveChargeH=0
+
+    if P.swapX<P.settings.fieldSize then
+        P.swapX=P.swapX+1
+        if P.twistX<P.settings.fieldSize-1 then
+            P.twistX=P.twistX+1
+        end
+        P:playSound('move')
+    elseif P.twistX<P.settings.fieldSize-1 then
+        P.twistX=P.twistX+1
+        P:playSound('move')
+    else
+        P:playSound('move_failed')
     end
-}
-actions.moveUp={
-    press=function(P)
-        P.mouseX,P.mouseY=false,false
-        P.swapY=P.swapY%P.settings.fieldSize+1
-        P.twistY=P.twistY%(P.settings.fieldSize-1)+1
-    end,
-    release=function(P)
+end
+function actions.moveUp(P)
+    P.mouseX,P.mouseY=false,false
+    P.moveDirV=1
+    P.moveChargeV=0
+
+    if P.swapY<P.settings.fieldSize then
+        P.swapY=P.swapY+1
+        if P.twistY<P.settings.fieldSize-1 then
+            P.twistY=P.twistY+1
+        end
+        P:playSound('move')
+    elseif P.twistY<P.settings.fieldSize-1 then
+        P.twistY=P.twistY+1
+        P:playSound('move')
+    else
+        P:playSound('move_failed')
     end
-}
-actions.moveDown={
-    press=function(P)
-        P.mouseX,P.mouseY=false,false
-        P.swapY=(P.swapY-2)%P.settings.fieldSize+1
-        P.twistY=(P.twistY-2)%(P.settings.fieldSize-1)+1
-    end,
-    release=function(P)
+end
+function actions.moveDown(P)
+    P.mouseX,P.mouseY=false,false
+    P.moveDirV=-1
+    P.moveChargeV=0
+
+    if P.swapY>1 then
+        P.swapY=P.swapY-1
+        if P.twistY>1 then
+            P.twistY=P.twistY-1
+        end
+        P:playSound('move')
+    elseif P.twistY>1 then
+        P.twistY=P.twistY-1
+        P:playSound('move')
+    else
+        P:playSound('move_failed')
     end
-}
+end
 
 actions.func1=NULL
 actions.func2=NULL
@@ -193,6 +232,8 @@ function GP:shakeBoard(args,v)
         self.pos.vy=self.pos.vy+.2*shake
     elseif args:sArg('-down') then
         self.pos.dy=self.pos.dy+.1*shake
+    elseif args:sArg('-up') then
+        self.pos.dy=self.pos.dy-.1*shake
     elseif args:sArg('-right') then
         self.pos.dx=self.pos.dx+.1*shake
     elseif args:sArg('-left') then
@@ -203,7 +244,6 @@ function GP:shakeBoard(args,v)
         self.pos.va=self.pos.va-.002*shake
     elseif args:sArg('-180') then
         self.pos.vy=self.pos.vy+.1*shake
-        self.pos.va=self.pos.va+((self.handX+#self.hand.matrix[1]/2-1)/self.settings.fieldSize-.5)*.0026*shake
     elseif args:sArg('-clear') then
         self.pos.dk=self.pos.dk*(1+shake)
         self.pos.vk=self.pos.vk+.0002*shake*min(v^1.6,26)
@@ -292,7 +332,7 @@ function GP:swap(mode,x,y,dx,dy)
             self:playSound('move_back')
         end
     else
-        self:playSound('move_failed')
+        self:playSound('swap_failed')
     end
     self:freshSwapCursor()
 end
@@ -336,7 +376,7 @@ function GP:twist(mode,x,y,dir)
             self:playSound('move_back')
         end
     else
-        self:playSound('move_failed')
+        self:playSound('twist_failed')
     end
 end
 local function linkLen(F,id,x,y,dx,dy)
@@ -697,6 +737,86 @@ function GP:update(dt)
             self.time=self.time+1
         end
 
+        -- Auto shift
+        if self.moveDirH and (self.moveDirH==-1 and self.keyState.moveLeft or self.moveDirH==1 and self.keyState.moveRight) then
+            if self.swapX~=MATH.clamp(self.swapX+self.moveDirH,1,self.settings.fieldSize) then
+                local c0=self.moveChargeH
+                local c1=c0+1
+                self.moveChargeH=c1
+                local dist=0
+                if c0>=SET.das then
+                    c0=c0-SET.das
+                    c1=c1-SET.das
+                    if SET.arr==0 then
+                        dist=1e99
+                    else
+                        dist=floor(c1/SET.arr)-floor(c0/SET.arr)
+                    end
+                elseif c1>=SET.das then
+                    if SET.arr==0 then
+                        dist=1e99
+                    else
+                        dist=1
+                    end
+                end
+                if dist>0 then
+                    local moved
+                    local x0=self.swapX
+                    self.swapX=MATH.clamp(self.swapX+self.moveDirH*dist,1,self.settings.fieldSize)
+                    if self.swapX~=x0 then moved=true end
+                    x0=self.twistX
+                    self.twistX=MATH.clamp(self.twistX+self.moveDirH*dist,1,self.settings.fieldSize-1)
+                    if self.twistX~=x0 then moved=true end
+                    if moved then self:playSound('move') end
+                end
+            else
+                self.moveChargeH=SET.das
+                self:shakeBoard(self.moveDirH>0 and '-right' or '-left')
+            end
+        else
+            self.moveDirH=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
+            self.moveChargeH=0
+        end
+        if self.moveDirV and (self.moveDirV==-1 and self.keyState.moveDown or self.moveDirV==1 and self.keyState.moveUp) then
+            if self.swapY~=MATH.clamp(self.swapY+self.moveDirV,1,self.settings.fieldSize) then
+                local c0=self.moveChargeV
+                local c1=c0+1
+                self.moveChargeV=c1
+                local dist=0
+                if c0>=SET.das then
+                    c0=c0-SET.das
+                    c1=c1-SET.das
+                    if SET.arr==0 then
+                        dist=1e99
+                    else
+                        dist=floor(c1/SET.arr)-floor(c0/SET.arr)
+                    end
+                elseif c1>=SET.das then
+                    if SET.arr==0 then
+                        dist=1e99
+                    else
+                        dist=1
+                    end
+                end
+                if dist>0 then
+                    local moved
+                    local x0=self.swapY
+                    self.swapY=MATH.clamp(self.swapY+self.moveDirV*dist,1,self.settings.fieldSize)
+                    if self.swapY~=x0 then moved=true end
+                    x0=self.twistY
+                    self.twistY=MATH.clamp(self.twistY+self.moveDirV*dist,1,self.settings.fieldSize-1)
+                    if self.twistY~=x0 then moved=true end
+                    if moved then self:playSound('move') end
+                end
+            else
+                self.moveChargeV=SET.das
+                self:shakeBoard(self.moveDirV>0 and '-up' or '-down')
+            end
+        else
+            self.moveDirV=self.keyState.moveDown and -1 or self.keyState.moveUp and 1 or false
+            self.moveChargeV=0
+        end
+
         local F=self.field
         local size=self.settings.fieldSize
         local needFresh=false
@@ -720,6 +840,7 @@ function GP:update(dt)
 
         if touch then self:playSound('touch') end
 
+        -- Update movingGroups
         for i=#self.movingGroups,1,-1 do
             local group=self.movingGroups[i]
             local fin
@@ -995,6 +1116,11 @@ function GP:initialize()
     self.swapX,self.swapY=1,1
     self.swapLock=false
     self.twistX,self.twistY=1,1
+
+    self.moveDirH=-1
+    self.moveChargeH=0
+    self.moveDirV=1
+    self.moveChargeV=0
 
     self.garbageBuffer={}
 
