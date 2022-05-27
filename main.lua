@@ -268,7 +268,7 @@ KEYMAP.mino=KEYMAP.new{
     {act='rotateCCW',   keys={'down'}},
     {act='rotate180',   keys={'c'}},
     {act='softDrop',    keys={'x'}},
-    {act='hardDrop',    keys={'z'}},
+    {act='hardDrop',    keys={'f'}},
     {act='holdPiece',   keys={'space'}},
     {act='sonicDrop',   keys={'c'}},
     {act='sonicLeft',   keys={}},

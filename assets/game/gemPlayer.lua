@@ -82,37 +82,37 @@ local GP={}
 local actions={}
 
 function actions.swapLeft(P)
-    if P.settings.swap then
+    if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
         P:swap('action',P.swapX,P.swapY,-1,0)
     end
 end
 function actions.swapRight(P)
-    if P.settings.swap then
+    if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
         P:swap('action',P.swapX,P.swapY,1,0)
     end
 end
 function actions.swapUp(P)
-    if P.settings.swap then
+    if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
         P:swap('action',P.swapX,P.swapY,0,1)
     end
 end
 function actions.swapDown(P)
-    if P.settings.swap then
+    if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
         P:swap('action',P.swapX,P.swapY,0,-1)
     end
 end
 function actions.twistCW(P)
-    if P.settings.twistR then
+    if (P.settings.multiMove or #P.movingGroups==0) and P.settings.twistR then
         P:twist('action',P.twistX,P.twistY,'R')
     end
 end
 function actions.twistCCW(P)
-    if P.settings.twistL then
+    if (P.settings.multiMove or #P.movingGroups==0) and P.settings.twistL then
         P:twist('action',P.twistX,P.twistY,'L')
     end
 end
 function actions.twist180(P)
-    if P.settings.twistF then
+    if (P.settings.multiMove or #P.movingGroups==0) and P.settings.twistF then
         P:twist('action',P.twistX,P.twistY,'F')
     end
 end
@@ -280,13 +280,12 @@ function GP:swap(mode,x,y,dx,dy)
         self:setMoveBias('swap',F[y+dy][x+dx],dx,dy)
         F[y][x],F[y+dy][x+dx]=F[y+dy][x+dx],F[y][x]
         if mode=='action' then
-            if self.settings.swapForce then
-                ins(self.movingGroups,{
-                    mode='swap',
-                    args={x,y,dx,dy},
-                    positions={x,y,x+dx,y+dy},
-                })
-            end
+            ins(self.movingGroups,{
+                mode='swap',
+                force=self.settings.swapForce,
+                args={x,y,dx,dy},
+                positions={x,y,x+dx,y+dy},
+            })
             self:triggerEvent('legalMove','swap')
             self:playSound('swap')
         elseif mode=='auto' then
@@ -325,13 +324,12 @@ function GP:twist(mode,x,y,dir)
             F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y+1][x+1],F[y+1][x],F[y][x],F[y][x+1]
         end
         if mode=='action' then
-            if self.settings.twistForce then
-                ins(self.movingGroups,{
-                    mode='twist',
-                    args={x,y,dir=='R' and 'L' or dir=='L' and 'R' or 'F'},
-                    positions={x,y,x+1,y,x+1,y+1,x,y+1},
-                })
-            end
+            ins(self.movingGroups,{
+                mode='twist',
+                force=self.settings.swapForce,
+                args={x,y,dir=='R' and 'L' or dir=='L' and 'R' or 'F'},
+                positions={x,y,x+1,y,x+1,y+1,x,y+1},
+            })
             self:playSound('twist')
             self:triggerEvent('legalMove','twist')
         elseif mode=='auto' then
@@ -591,7 +589,7 @@ end
 function GP:getTwistPos(x,y)
     local size=self.settings.fieldSize
     x,y=floor(x*size+.5),floor(y*size+.5)
-    if x>=1 and x<=size and y>=1 and y<=size then return x,y end
+    if x>=1 and x<=size-1 and y>=1 and y<=size-1 then return x,y end
 end
 function GP:freshTwistCursor()
     if self.mouseX then
@@ -613,7 +611,9 @@ function GP:mouseDown(x,y,id)
             if mx then
                 local sx,sy=self:getSwapPos(mx,my)
                 if sx==self.swapX and math.abs(sy-self.swapY)==1 or sy==self.swapY and math.abs(sx-self.swapX)==1 then
-                    self:swap('action',self.swapX,self.swapY,sx-self.swapX,sy-self.swapY)
+                    if self.settings.multiMove or #self.movingGroups==0 then
+                        self:swap('action',self.swapX,self.swapY,sx-self.swapX,sy-self.swapY)
+                    end
                 else
                     if sx==self.swapX and sy==self.swapY then
                         self:freshSwapCursor()
@@ -738,7 +738,7 @@ function GP:update(dt)
                 end
             end
             if fin then
-                if not legal then
+                if group.force and not legal then
                     self[group.mode](self,'auto',unpack(group.args))
                     self:triggerEvent('illegalMove',group.mode)
                 else
@@ -875,6 +875,7 @@ local baseEnv={
     diagonalLinkLen=false,
     refreshCount=0,
 
+    multiMove=false,
     swap=true,
     swapForce=true,
     twistR=false,twistL=false,twistF=false,
