@@ -14,7 +14,10 @@ function scene.enter()
 
     TABLE.cut(keyButtons)
     for i=1,#scene.widgetList do
-        if scene.widgetList[i].name then
+        local n=scene.widgetList[i].name
+        if n=='test' then
+            scene.widgetList[i]:setVisible(keyMode~='sys')
+        elseif n then
             local visible=scene.widgetList[i].name==keyMode
             scene.widgetList[i]:setVisible(visible)
             if visible then
@@ -108,7 +111,7 @@ scene.widgetList={
     WIDGET.new{type='button', name='sys', x=140, y=490,  w=200,h=60,text=LANG"keyset_sys_select",      fontSize=20, color='lB',code=selAct('sys', 'select' )},
     WIDGET.new{type='button', name='sys', x=140, y=560,  w=200,h=60,text=LANG"keyset_sys_back",        fontSize=20, color='lB',code=selAct('sys', 'back'   )},
 
-    WIDGET.new{type='button', pos={1,1},x=-300,y=-80,    w=160,h=80,text=LANG'keyset_test', fontSize=45,code=function() SCN.go('game_simp',nil,'test_'..keyMode) end},
+    WIDGET.new{type='button', name='test',pos={1,1},x=-300,y=-80,    w=160,h=80,text=LANG'keyset_test',fontSize=45,code=function() SCN.go('game_simp',nil,'test_'..keyMode) end},
 
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
