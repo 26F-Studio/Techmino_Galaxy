@@ -637,6 +637,7 @@ function GP:mouseDown(x,y,id)
         end
     else
         self:mouseMove(x,y,0,0,id)
+        self.mousePressed=true
         if self.swapLock then
             local mx,my=self:getMousePos(x,y)
             if mx then
@@ -647,7 +648,7 @@ function GP:mouseDown(x,y,id)
                     end
                 else
                     if sx==self.swapX and sy==self.swapY then
-                        self:freshSwapCursor()
+                        self.swapLock=false
                     else
                         self.swapX,self.swapY=sx,sy
                     end
@@ -662,14 +663,29 @@ function GP:mouseMove(x,y,_,_,_)
     self.mouseX,self.mouseY=self:getMousePos(x,y)
 
     if self.mouseX then
-        if not self.swapLock then
+        if self.swapLock then
+            if self.mousePressed then
+                local sx,sy=self:getSwapPos(self.mouseX,self.mouseY)
+                if not (sx==self.swapX and sy==self.swapY) then
+                    if
+                        (
+                            sx==self.swapX and math.abs(sy-self.swapY)==1 or
+                            sy==self.swapY and math.abs(sx-self.swapX)==1
+                        ) and (self.settings.multiMove or #self.movingGroups==0) then
+                        self:swap('action',self.swapX,self.swapY,sx-self.swapX,sy-self.swapY)
+                    else
+                        self:freshSwapCursor()
+                    end
+                end
+            end
+        else
             self:freshSwapCursor()
         end
         self:freshTwistCursor()
     end
 end
 function GP:mouseUp(_,_,_)
-    -- ?
+    self.mousePressed=false
 end
 function GP:press(act)
     self:triggerEvent('beforePress',act)
@@ -1104,6 +1120,7 @@ function GP:initialize()
     self.movingGroups={}
 
     self.mouseX,self.mouseY=false,false
+    self.mousePressed=false
     self.swapX,self.swapY=1,1
     self.swapLock=false
     self.twistX,self.twistY=1,1
