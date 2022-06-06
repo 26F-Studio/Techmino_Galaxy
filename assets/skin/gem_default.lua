@@ -132,30 +132,39 @@ for i=1,#gemShapes do
     gemShapes[i].lineColor=TABLE.shift(gemShapes[i].color)
     gemShapes[i].lineColor[4]=nil
 end
-local function drawGem(C)
-    local id=C.id
+local function drawGem(g)
+    local id=g.id
     gc_setColor(gemShapes[id].lineColor)
     gc_polygon('line',gemShapes[id].coords)
     gc_setColor(gemShapes[id].color)
     gc_polygon('fill',gemShapes[id].coords)
+    if g.explodeStyle then
+        gc_setColor(g.explodeStyle==1 and COLOR.O or COLOR.lC)
+        gc_circle('line',0,0,5+.5*math.sin(S.getTime()*.01))
+    end
 end
 function S.drawFieldCells(F)
     gc_setLineWidth(2)
     for y=1,#F do for x=1,#F[1] do
-        local C=F[y][x]
-        if C then
+        local G=F[y][x]
+        if G then
             gc_push('transform')
-            if C.moveTimer then
-                local d=C.moveTimer/C.moveDelay
-                gc_translate(45*(x+d*C.dx)-22.5,-45*(y+d*C.dy)+22.5)
+            if G.moveTimer then
+                local d=G.moveTimer/G.moveDelay
+                if G.fall then
+                    d=-d*(d-2)
+                else
+                    d=-math.cos(d*math.pi)/2+.5
+                end
+                gc_translate(45*(x+d*G.dx)-22.5,-45*(y+d*G.dy)+22.5)
             else
                 gc_translate(45*x-22.5,-45*y+22.5)
             end
-            if C.clearTimer then
-                local i=C.clearTimer/C.clearDelay
+            if G.clearTimer and not G.generate then
+                local i=G.clearTimer/G.clearDelay
                 gc_scale(-2*i^2+3*i)
             end
-            drawGem(C)
+            drawGem(G)
             gc_pop()
         end
     end end
