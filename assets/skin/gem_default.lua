@@ -133,14 +133,27 @@ for i=1,#gemShapes do
     gemShapes[i].lineColor[4]=nil
 end
 local function drawGem(g)
-    local id=g.id
-    gc_setColor(gemShapes[id].lineColor)
-    gc_polygon('line',gemShapes[id].coords)
-    gc_setColor(gemShapes[id].color)
-    gc_polygon('fill',gemShapes[id].coords)
-    if g.explodeStyle then
-        gc_setColor(g.explodeStyle==1 and COLOR.O or COLOR.lC)
-        gc_circle('line',0,0,5+.5*math.sin(S.getTime()*.01))
+    if g.type=='gem' then
+        if g.appearance=='flame' then
+            gc_setColor(COLOR.O)
+            gc_circle('line',0,0,15+3*math.sin(S.getTime()*.01))
+        elseif g.appearance=='star' then
+            gc_setColor(COLOR.lC)
+            gc_circle('line',0,0,15+3*math.sin(S.getTime()*.01))
+        elseif g.appearance=='nova' then
+            gc_setColor(COLOR.L)
+            gc_circle('line',0,0,15+3*math.sin(S.getTime()*.01))
+        end
+        local color=g.color
+        gc_setColor(gemShapes[color].lineColor)
+        gc_polygon('line',gemShapes[color].coords)
+        gc_setColor(gemShapes[color].color)
+        gc_polygon('fill',gemShapes[color].coords)
+    elseif g.type=='cube' then
+        gc_setColor(COLOR.rainbow(S.getTime()*.01,.626))
+        gc_rectangle('fill',-12,-12,24,24)
+        gc_setColor(1,1,1)
+        gc_rectangle('line',-12,-12,24,24)
     end
 end
 function S.drawFieldCells(F)

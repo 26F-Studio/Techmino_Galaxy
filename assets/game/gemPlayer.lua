@@ -2,11 +2,39 @@ local gc=love.graphics
 
 local max,min=math.max,math.min
 local floor,ceil=math.floor,math.ceil
-local abs,rnd=math.abs,math.random
+local abs=math.abs
 local ins,rem=table.insert,table.remove
 
 local sign,expApproach=MATH.sign,MATH.expApproach
 local inst=SFX.playSample
+
+--[[ Gem tags:
+    int color <1~7>
+    string type <'gem','cube'>
+    boolean movable
+
+    string appearance <'flame'|'star'|'nova'>
+    table destroyed {
+        string mode <'explosion'|'lightning'|'color'>
+        if mode=='explosion' or 'lightning':
+            int radius <0|1|2|...>
+    }
+
+    boolean immediately
+    int clearTimer
+    int clearDelay
+
+    int moveTimer
+    int moveDelay
+    float dx
+    float dy
+    boolean fall
+
+    int lrCnt
+    int udCnt
+    int riseCnt
+    int dropCnt
+]]
 
 local defaultSoundFunc={
     countDown=function(num)
@@ -58,29 +86,6 @@ local defaultSoundFunc={
     win=         function() SFX.play('win')         end,
     fail=        function() SFX.play('fail')        end,
 }
-
---[[ Gem tags:
-    int id <1~7>
-    boolean movable
-
-    boolean explode
-    int explodeStyle <1=Rect|2=Cross>
-    int explodeRadius <0|1|2|...>
-
-    int clearTimer
-    int clearDelay
-
-    int moveTimer
-    int moveDelay
-    float dx
-    float dy
-    boolean fall
-
-    int lrCnt
-    int udCnt
-    int riseCnt
-    int dropCnt
-]]
 
 local GP={}
 
@@ -296,6 +301,14 @@ function GP:isMovable(x,y)
         return false
     end
 end
+function GP:getGem(data)
+    local G={
+        type='gem',
+        movable=true,
+    }
+    if data then TABLE.cover(data,G) end
+    return G
+end
 function GP:setMoveBias(mode,C,dx,dy)
     if not C then return end
     C.needCheck=nil
@@ -306,14 +319,34 @@ function GP:setMoveBias(mode,C,dx,dy)
     C.dy=(C.dy or 0)+dy
     if mode=='fall' then C.fall=true end
 end
-function GP:erasePosition(x,y)
+function GP:erasePosition(x,y,src)
     local F=self.field
     if F[y] then
         local g=F[y][x]
         if g then
             F[y][x]=false
-            if g.explodeStyle then
-                self:explode(x,y,g.explodeStyle,g.explodeRadius)
+            if g.destroyed then
+                local D=g.destroyed
+                if D.mode=='explosion' then
+                    for ey=y-D.radius,y+D.radius do for ex=x-D.radius,x+D.radius do
+                        self:erasePosition(ex,ey,g)
+                    end end
+                elseif D.mode=='lightning' then
+                    for ey=y-D.radius,y+D.radius do for ex=1,self.settings.fieldSize do
+                        self:erasePosition(ex,ey,g)
+                    end end
+                    for ey=1,self.settings.fieldSize do for ex=x-D.radius,x+D.radius do
+                        self:erasePosition(ex,ey,g)
+                    end end
+                elseif D.mode=='color' then
+                    for ey=1,self.settings.fieldSize do for ex=1,self.settings.fieldSize do
+                        if not src.color or F[ey][ex] and F[ey][ex].color==src.color then
+                            self:erasePosition(ex,ey,g)
+                        end
+                    end end
+                else
+                    error('Wrong destroy event mode')
+                end
             end
             if g.generate then
                 ins(self.generateBuffer,{
@@ -322,20 +355,6 @@ function GP:erasePosition(x,y)
                 })
             end
         end
-    end
-end
-function GP:explode(x,y,style,radius)
-    if style==1 then
-        for ey=y-radius,y+radius do for ex=x-radius,x+radius do
-            self:erasePosition(ex,ey)
-        end end
-    elseif style==2 then
-        for ey=y-radius,y+radius do for ex=1,self.settings.fieldSize do
-            self:erasePosition(ex,ey)
-        end end
-        for ey=1,self.settings.fieldSize do for ex=x-radius,x+radius do
-            self:erasePosition(ex,ey)
-        end end
     end
 end
 function GP:swap(mode,x,y,dx,dy)
@@ -406,12 +425,12 @@ function GP:twist(mode,x,y,dir)
         self:playSound('twist_failed')
     end
 end
-local function linkLen(F,id,x,y,dx,dy)
+local function linkLen(F,color,x,y,dx,dy)
     local cnt=0
     x,y=x+dx,y+dy
     while true do
         local G=F[y] and F[y][x]
-        if G and G.id==id and G.movable then
+        if G and G.color and G.color==color and G.movable then
             x,y=x+dx,y+dy
             cnt=cnt+1
         else
@@ -424,68 +443,61 @@ function GP:psedoCheckPos(x,y)
     local F=self.field
     if not F[y][x] then return end
 
-    local id=F[y][x].id
+    local color=F[y][x].color
 
     if not F[y][x].lrCnt then
         local stepX,stepY=1,0
-        if 1+linkLen(F,id,x,y,-stepX,-stepY)+linkLen(F,id,x,y,stepX,stepY)>=self.settings.linkLen then
+        if 1+linkLen(F,color,x,y,-stepX,-stepY)+linkLen(F,color,x,y,stepX,stepY)>=self.settings.linkLen then
             return true
         end
     end
     if not F[y][x].udCnt then
         local stepX,stepY=0,1
-        if 1+linkLen(F,id,x,y,-stepX,-stepY)+linkLen(F,id,x,y,stepX,stepY)>=self.settings.linkLen then
+        if 1+linkLen(F,color,x,y,-stepX,-stepY)+linkLen(F,color,x,y,stepX,stepY)>=self.settings.linkLen then
             return true
         end
     end
     if self.settings.diagonalLinkLen then
         if not F[y][x].riseCnt then
             local stepX,stepY=1,1
-            if 1+linkLen(F,id,x,y,-stepX,-stepY)+linkLen(F,id,x,y,stepX,stepY)>=self.settings.diagonalLinkLen then
+            if 1+linkLen(F,color,x,y,-stepX,-stepY)+linkLen(F,color,x,y,stepX,stepY)>=self.settings.diagonalLinkLen then
                 return true
             end
         end
         if not F[y][x].dropCnt then
             local stepX,stepY=1,-1
-            if 1+linkLen(F,id,x,y,-stepX,-stepY)+linkLen(F,id,x,y,stepX,stepY)>=self.settings.diagonalLinkLen then
+            if 1+linkLen(F,color,x,y,-stepX,-stepY)+linkLen(F,color,x,y,stepX,stepY)>=self.settings.diagonalLinkLen then
                 return true
             end
         end
     end
 end
 function GP:setClear(g,linkMode,len)
-    if g.shield then
-        g.shield=g.shield-1
-        if g.shield<=0 then
-            g.shield=nil
-        end
-    else
-        g.movable=false
-        g.clearTimer=g.explodeStyle and 0 or self.settings.clearDelay
-        g.clearDelay=self.settings.clearDelay
-        g[linkMode]=len
-    end
+    g.movable=false
+    g.clearTimer=g.immediately and 0 or self.settings.clearDelay
+    g.clearDelay=self.settings.clearDelay
+    g[linkMode]=len
 end
 function GP:checkPosition(x,y)
     local F=self.field
     if not F[y][x] then return end
 
     local g=F[y][x]
-    local id=g.id
+    local color=g.color
 
     local line=0
 
     if not g.lrCnt then
         local stepX,stepY=1,0
-        local l=linkLen(F,id,x,y,-stepX,-stepY)
-        local r=linkLen(F,id,x,y,stepX,stepY)
+        local l=linkLen(F,color,x,y,-stepX,-stepY)
+        local r=linkLen(F,color,x,y,stepX,stepY)
         local len=1+l+r
         if len>=self.settings.linkLen then
             for i=-l,r do
                 local cx,cy=x+stepX*i,y+stepY*i
                 local gi=F[cy] and F[cy][cx]
-                if gi and not gi.clearTimer then
-                    self:setClear(gi,'lrCnt',len,i)
+                if gi then
+                    self:setClear(gi,'lrCnt',len)
                 end
             end
             line=line+1
@@ -493,15 +505,15 @@ function GP:checkPosition(x,y)
     end
     if not g.udCnt then
         local stepX,stepY=0,1
-        local l=linkLen(F,id,x,y,-stepX,-stepY)
-        local r=linkLen(F,id,x,y,stepX,stepY)
+        local l=linkLen(F,color,x,y,-stepX,-stepY)
+        local r=linkLen(F,color,x,y,stepX,stepY)
         local len=1+l+r
         if len>=self.settings.linkLen then
             for i=-l,r do
                 local cx,cy=x+stepX*i,y+stepY*i
                 local gi=F[cy] and F[cy][cx]
-                if gi and not gi.clearTimer then
-                    self:setClear(gi,'udCnt',len,i)
+                if gi then
+                    self:setClear(gi,'udCnt',len)
                 end
             end
             line=line+1
@@ -510,15 +522,15 @@ function GP:checkPosition(x,y)
     if self.settings.diagonalLinkLen then
         if not g.riseCnt then
             local stepX,stepY=1,1
-            local l=linkLen(F,id,x,y,-stepX,-stepY)
-            local r=linkLen(F,id,x,y,stepX,stepY)
+            local l=linkLen(F,color,x,y,-stepX,-stepY)
+            local r=linkLen(F,color,x,y,stepX,stepY)
             local len=1+l+r
             if len>=self.settings.diagonalLinkLen then
                 for i=-l,r do
                     local cx,cy=x+stepX*i,y+stepY*i
                     local gi=F[cy] and F[cy][cx]
-                    if gi and not gi.clearTimer then
-                        self:setClear(gi,'riseCnt',len,i)
+                    if gi then
+                        self:setClear(gi,'riseCnt',len)
                     end
                 end
                 line=line+1
@@ -526,15 +538,15 @@ function GP:checkPosition(x,y)
         end
         if not g.dropCnt then
             local stepX,stepY=1,-1
-            local l=linkLen(F,id,x,y,-stepX,-stepY)
-            local r=linkLen(F,id,x,y,stepX,stepY)
+            local l=linkLen(F,color,x,y,-stepX,-stepY)
+            local r=linkLen(F,color,x,y,stepX,stepY)
             local len=1+l+r
             if len>=self.settings.diagonalLinkLen then
                 for i=-l,r do
                     local cx,cy=x+stepX*i,y+stepY*i
                     local gi=F[cy] and F[cy][cx]
-                    if gi and not gi.clearTimer then
-                        self:setClear(gi,'dropCnt',len,i)
+                    if gi then
+                        self:setClear(gi,'dropCnt',len)
                     end
                 end
                 line=line+1
@@ -543,7 +555,6 @@ function GP:checkPosition(x,y)
     end
 
     if g.clearTimer then
-        local gen
         local lineCount=0
         local maxLen=0
         if g.lrCnt   then lineCount=lineCount+1 maxLen=max(maxLen,g.lrCnt)   end
@@ -552,39 +563,45 @@ function GP:checkPosition(x,y)
         if g.dropCnt then lineCount=lineCount+1 maxLen=max(maxLen,g.dropCnt) end
         if maxLen>3 then
             if maxLen==4 then
-                gen={
-                    id=g.id,
-                    movable=true,
-                    explodeStyle=1,
-                    explodeRadius=1,
+                g.generate=self:getGem{
+                    color=g.color,
+                    appearance='flame',
+                    immediately=true,
+                    destroyed={
+                        mode='explosion',
+                        radius=1,
+                    }
                 }
             elseif maxLen==5 then
-                gen={
-                    id=g.id,
-                    movable=true,
-                    explodeStyle=2,
-                    explodeRadius=0,
+                g.generate=self:getGem{
+                    type='cube',
+                    destroyed={
+                        mode='color',
+                    }
                 }
             else
-                gen={
-                    id=g.id,
-                    movable=true,
-                    explodeStyle=2,
-                    explodeRadius=1,
+                g.generate=self:getGem{
+                    color=g.color,
+                    appearance='nova',
+                    immediately=true,
+                    destroyed={
+                        mode='lightning',
+                        radius=1,
+                    }
                 }
             end
         else
             if lineCount>1 then
-                gen={
-                    id=g.id,
-                    movable=true,
-                    explodeStyle=2,
-                    explodeRadius=0,
+                g.generate=self:getGem{
+                    color=g.color,
+                    appearance='star',
+                    immediately=true,
+                    destroyed={
+                        mode='lightning',
+                        radius=0,
+                    }
                 }
             end
-        end
-        if gen then
-            g.generate=gen
         end
     end
 
@@ -617,7 +634,7 @@ function GP:freshGems()
         -- Fill holes with new gems
         for y=self.settings.fieldSize,1,-1 do
             if not F[y][x] then
-                F[y][x]={}
+                F[y][x]=self:getGem()
                 self:setMoveBias('fall',F[y][x],0,8)
                 ins(holePos,F[y][x])
             else
@@ -629,7 +646,7 @@ function GP:freshGems()
     repeat
         for i=1,#holePos do
             local g=holePos[i]
-            g.id=self.seqRND:random(self.settings.colors)
+            g.color=self.seqRND:random(self.settings.colors)
         end
         freshTimes=freshTimes+1
     until freshTimes>=self.settings.refreshCount or self:hasMove()
@@ -972,15 +989,10 @@ function GP:update(dt)
             g.clearTimer=g.clearTimer-1
             if g.clearTimer<=0 then
                 g.clearTimer=nil
-                self:erasePosition(x,y)
+                self:erasePosition(x,y,g)
                 needFresh=true
             end
         end end end
-
-        -- Check explosions
-        while #self.explodeBuffer>0 do
-            self:explode(rem(self.explodeBuffer,1))
-        end
 
         -- Check generations
         while #self.generateBuffer>0 do
@@ -1211,7 +1223,6 @@ function GP:initialize()
     self:freshGems()
 
     self.movingGroups={}
-    self.explodeBuffer={}
     self.generateBuffer={}
 
     self.mouseX,self.mouseY=false,false
