@@ -31,5 +31,5 @@ runs:
         rm -rf squashfs-root/love.desktop squashfs-root/love.svg squashfs-root/.DirIcon
         mv .github/build/Linux/Techmino_Galaxy.desktop.template squashfs-root/Techmino_Galaxy.desktop
         mv ${{ inputs.icon }} squashfs-root/Techmino_Galaxy.png
-        cp squashfs-root/Techmino_Galaxy.png squashfs-root/.DirIcon
+        ln -s squashfs-root/Techmino_Galaxy.png squashfs-root/.DirIcon
         ./appimagetool-x86_64.AppImage squashfs-root ${{ inputs.file-path }}
