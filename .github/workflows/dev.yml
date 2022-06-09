@@ -54,7 +54,7 @@ jobs:
         path: love
 
   build-linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: get-info
     steps:
     - uses: actions/checkout@v2
@@ -70,7 +70,7 @@ jobs:
         path: Techmino_Galaxy.AppImage
 
   # build-android:
-  #   runs-on: ubuntu-20.04
+  #   runs-on: ubuntu-latest
   #   needs: get-info
   #   steps:
   #   - uses: actions/checkout@v2
@@ -97,7 +97,7 @@ jobs:
   #       path: Techmino_Snapshot.apk
   
   # build-android-mini:
-  #   runs-on: ubuntu-20.04
+  #   runs-on: ubuntu-latest
   #   needs: get-info
   #   steps:
   #   - uses: actions/checkout@v2
@@ -127,7 +127,7 @@ jobs:
   #       path: Techmino_Snapshot_Mini.apk
 
   # build-macOS:
-  #   runs-on: macos-10.15
+  #   runs-on: macos-latest
   #   needs: get-info
   #   steps:
   #   - uses: actions/checkout@v2
@@ -192,7 +192,7 @@ jobs:
   #       path: Techmino.ipa
 
   build-love:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: get-info
     steps:
     - uses: actions/checkout@v2

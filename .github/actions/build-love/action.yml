@@ -8,5 +8,5 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: 7z a -tzip ${{ inputs.file-path }} media parts Zframework conf.lua main.lua version.lua legals.md license.txt
+    - run: 7z a -tzip ${{ inputs.file-path }} assets Zenitha conf.lua main.lua version.lua
       shell: bash
