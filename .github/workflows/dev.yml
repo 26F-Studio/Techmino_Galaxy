@@ -2,9 +2,9 @@ name: Techmino Galaxy Develop CI
 
 on:
   push:
-    branches: [ main, ci* ]
+    branches: [main, ci*]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   get-info:
@@ -15,59 +15,59 @@ jobs:
       code: ${{ steps.actual-get-info.outputs.code }}
       commit: ${{ steps.actual-get-info.outputs.commit }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Install lua
-      run: |
-        sudo apt-get install lua5.3 -y
-    - name: Get Version
-      id: actual-get-info
-      run: |
-        # echo "::set-output name=name::$(lua .github/workflows/getVersion.lua -name)"
-        # echo "::set-output name=apkCode::$(lua .github/workflows/getVersion.lua -apkCode)"
-        # echo "::set-output name=code::$(lua .github/workflows/getVersion.lua -code)"
-        echo "::set-output name=commit::$(git rev-parse --short ${{ GITHUB.SHA }})"
+      - uses: actions/checkout@v2
+      - name: Install lua
+        run: |
+          sudo apt-get install lua5.3 -y
+      - name: Get Version
+        id: actual-get-info
+        run: |
+          # echo "::set-output name=name::$(lua .github/workflows/getVersion.lua -name)"
+          # echo "::set-output name=apkCode::$(lua .github/workflows/getVersion.lua -apkCode)"
+          # echo "::set-output name=code::$(lua .github/workflows/getVersion.lua -code)"
+          echo "::set-output name=commit::$(git rev-parse --short ${{ GITHUB.SHA }})"
 
   automatic-test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: 'recursive'
-    - uses: ./.github/actions/automatic-test
+      - uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
+      - uses: ./.github/actions/automatic-test
 
   build-windows:
     runs-on: windows-latest
     needs: get-info
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: 'recursive'
-    - uses: ./.github/actions/build-windows
-      with:
-        arch: win64
-        version: ${{ needs.get-info.outputs.name }}
-        icon: .\.github\build\Windows\icon_snapshot.ico
-    - name: Upload
-      uses: actions/upload-artifact@v2
-      with:
-        name: Techmino_Galaxy_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Windows
-        path: love
+      - uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
+      - uses: ./.github/actions/build-windows
+        with:
+          arch: win64
+          version: ${{ needs.get-info.outputs.name }}
+          icon: .\.github\build\Windows\icon_snapshot.ico
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: Techmino_Galaxy_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_Windows
+          path: love
 
   build-linux:
     runs-on: ubuntu-latest
     needs: get-info
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: 'recursive'
-    - uses: ./.github/actions/build-linux
-      with:
-        icon: .github/build/Linux/icon_snapshot.png
-    - name: Upload
-      uses: actions/upload-artifact@v2
-      with:
-        name: Techmino_Galaxy_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Linux
-        path: Techmino_Galaxy.AppImage
+      - uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
+      - uses: ./.github/actions/build-linux
+        with:
+          icon: .github/build/Linux/icon_snapshot.png
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: Techmino_Galaxy_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_Linux
+          path: Techmino_Galaxy.AppImage
 
   # build-android:
   #   runs-on: ubuntu-latest
@@ -93,9 +93,9 @@ jobs:
   #   - name: Upload
   #     uses: actions/upload-artifact@v2
   #     with:
-  #       name: Techmino_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Android
+  #       name: Techmino_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_Android
   #       path: Techmino_Snapshot.apk
-  
+
   # build-android-mini:
   #   runs-on: ubuntu-latest
   #   needs: get-info
@@ -123,7 +123,7 @@ jobs:
   #   - name: Upload
   #     uses: actions/upload-artifact@v2
   #     with:
-  #       name: Techmino_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Android_Mini
+  #       name: Techmino_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_AndroidMini
   #       path: Techmino_Snapshot_Mini.apk
 
   # build-macOS:
@@ -152,7 +152,7 @@ jobs:
   #   - name: Upload
   #     uses: actions/upload-artifact@v2
   #     with:
-  #       name: Techmino_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_macOS
+  #       name: Techmino_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_macOS
   #       path: Techmino.dmg
 
   # build-iOS:
@@ -188,22 +188,22 @@ jobs:
   #   - name: Upload
   #     uses: actions/upload-artifact@v2
   #     with:
-  #       name: Techmino_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_iOS
+  #       name: Techmino_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_iOS
   #       path: Techmino.ipa
 
   build-love:
     runs-on: ubuntu-latest
     needs: get-info
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: 'recursive'
-    - uses: ./.github/actions/update-version
-    - uses: ./.github/actions/build-love
-      with:
-        file-path: Techmino.love
-    - name: Upload
-      uses: actions/upload-artifact@v2
-      with:
-        name: Techmino_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Love
-        path: Techmino.love
+      - uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
+      - uses: ./.github/actions/update-version
+      - uses: ./.github/actions/build-love
+        with:
+          file-path: Techmino.love
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: Techmino_Galaxy_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_Bare
+          path: Techmino_Galaxy.love
