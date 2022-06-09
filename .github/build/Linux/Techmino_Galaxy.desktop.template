@@ -7,4 +7,5 @@ Type=Application
 Categories=Game;
 Terminal=false
 Icon=Techmino_Galaxy
-NoDisplay=true
+NoDisplay=false
+PrefersNonDefaultGPU=true
