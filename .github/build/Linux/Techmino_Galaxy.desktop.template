@@ -6,5 +6,5 @@ Exec=Techmino_Galaxy %f
 Type=Application
 Categories=Game;
 Terminal=false
-Icon=icon
+Icon=Techmino_Galaxy
 NoDisplay=true
