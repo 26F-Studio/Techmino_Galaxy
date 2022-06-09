@@ -22,9 +22,9 @@ jobs:
       - name: Get Version
         id: actual-get-info
         run: |
-          # echo "::set-output name=name::$(lua .github/workflows/getVersion.lua -name)"
-          # echo "::set-output name=apkCode::$(lua .github/workflows/getVersion.lua -apkCode)"
-          # echo "::set-output name=code::$(lua .github/workflows/getVersion.lua -code)"
+          echo "::set-output name=name::$(lua .github/workflows/getVersion.lua -name)"
+          echo "::set-output name=apkCode::$(lua .github/workflows/getVersion.lua -apkCode)"
+          echo "::set-output name=code::$(lua .github/workflows/getVersion.lua -code)"
           echo "::set-output name=commit::$(git rev-parse --short ${{ GITHUB.SHA }})"
 
   automatic-test:
