@@ -57,12 +57,14 @@ runs:
       else:
         print('All characters are present in the font.')
   - uses: ./.github/actions/build-love
-    with:
-      file-path: Techmino.love
   - name: Download love
     shell: bash
     run: |
-      curl -L https://github.com/love2d/love/releases/download/11.4/love-11.4-linux-x86_64.tar.gz | tar xz
+      curl -L https://github.com/love2d/love/releases/download/11.4/love-11.4-x86_64.AppImage
+  - name: Extract love
+    shell: bash
+    run: |
+      ./love-11.4-x86_64.AppImage --appimage-extract
   - name: Prepare PulseAudio
     shell: bash
     run: |
@@ -72,4 +74,4 @@ runs:
     uses: GabrielBB/xvfb-action@v1
     with:
       run: |
-        ./dest/love Techmino.love --test
+        ./squashfs-root/bin/love Techmino_Galaxy.love --test

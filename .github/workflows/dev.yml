@@ -44,7 +44,6 @@ jobs:
           submodules: "recursive"
       - uses: ./.github/actions/build-windows
         with:
-          arch: win64
           version: ${{ needs.get-info.outputs.name }}
           icon: .\.github\build\Windows\icon_snapshot.ico
       - name: Upload
@@ -200,8 +199,6 @@ jobs:
           submodules: "recursive"
       - uses: ./.github/actions/update-version
       - uses: ./.github/actions/build-love
-        with:
-          file-path: Techmino.love
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
