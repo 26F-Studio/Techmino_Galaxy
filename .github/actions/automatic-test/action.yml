@@ -56,22 +56,22 @@ runs:
         exit(1)
       else:
         print('All characters are present in the font.')
-  - uses: ./.github/actions/build-love
-  - name: Download love
-    shell: bash
-    run: |
-      curl -L https://github.com/love2d/love/releases/download/11.4/love-11.4-x86_64.AppImage
-  - name: Extract love
-    shell: bash
-    run: |
-      ./love-11.4-x86_64.AppImage --appimage-extract
-  - name: Prepare PulseAudio
-    shell: bash
-    run: |
-      sudo apt-get update
-      sudo apt-get install pulseaudio pulseaudio-utils pavucontrol alsa-oss alsa-utils -y
-  - name: Run automated test
-    uses: GabrielBB/xvfb-action@v1
-    with:
-      run: |
-        ./squashfs-root/bin/love Techmino_Galaxy.love --test
+  # - uses: ./.github/actions/build-love
+  # - name: Download love
+  #   shell: bash
+  #   run: |
+  #     curl -L https://github.com/love2d/love/releases/download/11.4/love-11.4-x86_64.AppImage
+  # - name: Extract love
+  #   shell: bash
+  #   run: |
+  #     ./love-11.4-x86_64.AppImage --appimage-extract
+  # - name: Prepare PulseAudio
+  #   shell: bash
+  #   run: |
+  #     sudo apt-get update
+  #     sudo apt-get install pulseaudio pulseaudio-utils pavucontrol alsa-oss alsa-utils -y
+  # - name: Run automated test
+  #   uses: GabrielBB/xvfb-action@v1
+  #   with:
+  #     run: |
+  #       ./squashfs-root/bin/love Techmino_Galaxy.love --test
