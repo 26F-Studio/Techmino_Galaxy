@@ -1,0 +1,50 @@
+name: 'build Windows'
+description: 'build Windows package'
+inputs:
+  version:
+    required: true
+    description: 'version of the product'
+  icon:
+    required: true
+    description: 'path to the icons'
+runs:
+  using: "composite"
+  steps:
+    - name: Download love
+      uses: ./.github/actions/get-unzip
+      with:
+        url: https://github.com/love2d/love/releases/download/11.4/love-11.4-win64.zip
+    - name: move love
+      shell: bash
+      run: mv love-11.4-win64 love
+    - name: Download ResourceHacker
+      uses: ./.github/actions/get-unzip
+      with:
+        url: http://www.angusj.com/resourcehacker/resource_hacker.zip
+    - uses: ./.github/actions/build-love
+    - name: update Windows template
+      shell: python
+      run: |
+        Version = '${{ inputs.version }}'.replace('V', '')
+        FileVersion = (f"{Version.replace('.', ',')},0")
+        with open('./.github/build/Windows/Techmino_Galaxy.rc.template', 'r', encoding='utf8') as file:
+          data = file.read()
+          data = data\
+            .replace('@FileVersion', FileVersion)\
+            .replace('@Version', Version)
+        with open('Techmino_Galaxy.rc', 'w+', encoding='utf8') as file:
+          file.write(data)
+    - name: Pack Techmino Galaxy
+      shell: pwsh
+      run: |
+        cmd /c copy /b .\love\love.exe + .\Techmino_Galaxy.love .\love\Techmino_Galaxy.exe
+        del .\love\love.exe
+        del .\love\lovec.exe
+        del .\love\game.ico
+        del .\love\love.ico
+        del .\love\changes.txt
+        del .\love\readme.txt
+        cmd /c '.\ResourceHacker.exe -open .\love\Techmino_Galaxy.exe -save .\love\Techmino_Galaxy.exe -action delete -mask ICONGROUP,,'
+        cmd /c '.\ResourceHacker.exe -open .\Techmino_Galaxy.rc -save .\Techmino_Galaxy.res -action compile'
+        cmd /c '.\ResourceHacker.exe -open .\love\Techmino_Galaxy.exe -save .\love\Techmino_Galaxy.exe -action addoverwrite -res "${{ inputs.icon }}" -mask ICONGROUP,1,'
+        cmd /c '.\ResourceHacker.exe -open .\love\Techmino_Galaxy.exe -save .\love\Techmino_Galaxy.exe -action addoverwrite -res ".\Techmino_Galaxy.res" -mask VERSIONINFO,1,'
