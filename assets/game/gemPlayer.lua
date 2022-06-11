@@ -313,11 +313,16 @@ function GP:setMoveBias(mode,C,dx,dy)
     if not C then return end
     C.needCheck=nil
     C.movable=false
-    C.moveTimer=self.settings.moveDelay
-    C.moveDelay=self.settings.moveDelay
     C.dx=(C.dx or 0)+dx
     C.dy=(C.dy or 0)+dy
-    if mode=='fall' then C.fall=true end
+    if mode=='fall' then
+        C.fall=true
+        C.moveTimer=self.settings.fallDelay
+        C.moveDelay=self.settings.fallDelay
+    else
+        C.moveTimer=self.settings.moveDelay
+        C.moveDelay=self.settings.moveDelay
+    end
 end
 function GP:erasePosition(x,y,src)
     local F=self.field
@@ -412,7 +417,7 @@ function GP:twist(mode,x,y,dir)
         if mode=='action' then
             ins(self.movingGroups,{
                 mode='twist',
-                force=self.settings.swapForce,
+                force=self.settings.twistForce,
                 args={x,y,dir=='R' and 'L' or dir=='L' and 'R' or 'F'},
                 positions={x,y,x+1,y,x+1,y+1,x,y+1},
             })
@@ -588,7 +593,6 @@ function GP:checkPosition(x,y)
                 setGenerate(self,g,{
                     color=g.color,
                     appearance='nova',
-                    immediately=true,
                     destroyed={
                         mode='lightning',
                         radius=1,
@@ -600,7 +604,6 @@ function GP:checkPosition(x,y)
                 setGenerate(self,g,{
                     color=g.color,
                     appearance='star',
-                    immediately=true,
                     destroyed={
                         mode='lightning',
                         radius=0,

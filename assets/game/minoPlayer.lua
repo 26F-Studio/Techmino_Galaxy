@@ -919,13 +919,11 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         i=i+1
     end
 
+    self.spawnTimer=self.settings.spawnDelay
+
     -- Fresh hand
-    if self.spawnTimer<=0 then
-        if self.clearTimer<=0 then
-            self:popNext()
-        end
-    else
-        self.spawnTimer=self.settings.spawnDelay
+    if self.spawnTimer<=0 and self.clearTimer<=0 then
+        self:popNext()
     end
 end
 function MP:lock()-- Put mino into field
@@ -1463,7 +1461,7 @@ local baseEnv={
     readyDelay=3000,
     dropDelay=1000,
     lockDelay=1000,
-    spawnDelay=0,
+    spawnDelay=1000,
     clearDelay=0,
     deathDelay=260,
 
