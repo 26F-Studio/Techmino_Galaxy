@@ -478,6 +478,11 @@ function GP:setClear(g,linkMode,len)
     g.clearDelay=self.settings.clearDelay
     g[linkMode]=len
 end
+local function setGenerate(self,g,gen)
+    g.immediately=true
+    g.clearTimer=0
+    g.generate=self:getGem(gen)
+end
 function GP:checkPosition(x,y)
     local F=self.field
     if not F[y][x] then return end
@@ -563,7 +568,7 @@ function GP:checkPosition(x,y)
         if g.dropCnt then lineCount=lineCount+1 maxLen=max(maxLen,g.dropCnt) end
         if maxLen>3 then
             if maxLen==4 then
-                g.generate=self:getGem{
+                setGenerate(self,g,{
                     color=g.color,
                     appearance='flame',
                     immediately=true,
@@ -571,16 +576,16 @@ function GP:checkPosition(x,y)
                         mode='explosion',
                         radius=1,
                     }
-                }
+                })
             elseif maxLen==5 then
-                g.generate=self:getGem{
+                setGenerate(self,g,{
                     type='cube',
                     destroyed={
                         mode='color',
                     }
-                }
+                })
             else
-                g.generate=self:getGem{
+                setGenerate(self,g,{
                     color=g.color,
                     appearance='nova',
                     immediately=true,
@@ -588,11 +593,11 @@ function GP:checkPosition(x,y)
                         mode='lightning',
                         radius=1,
                     }
-                }
+                })
             end
         else
             if lineCount>1 then
-                g.generate=self:getGem{
+                setGenerate(self,g,{
                     color=g.color,
                     appearance='star',
                     immediately=true,
@@ -600,7 +605,7 @@ function GP:checkPosition(x,y)
                         mode='lightning',
                         radius=0,
                     }
-                }
+                })
             end
         end
     end
