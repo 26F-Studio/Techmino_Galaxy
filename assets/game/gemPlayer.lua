@@ -317,8 +317,8 @@ function GP:setMoveBias(mode,C,dx,dy)
     C.dy=(C.dy or 0)+dy
     if mode=='fall' then
         C.fall=true
-        C.moveTimer=self.settings.fallDelay
-        C.moveDelay=self.settings.fallDelay
+        C.moveTimer=(C.moveTimer or 0)+floor(self.settings.fallDelay*dy^.5)
+        C.moveDelay=(C.moveDelay or 0)+floor(self.settings.fallDelay*dy^.5)
     else
         C.moveTimer=self.settings.moveDelay
         C.moveDelay=self.settings.moveDelay
@@ -618,7 +618,7 @@ function GP:checkPosition(x,y)
     end
 end
 function GP:freshGems()
-    local holePos={}
+    local newGems={}
     local F=self.field
     for x=1,self.settings.fieldSize do
         -- Drag gems down
@@ -640,20 +640,24 @@ function GP:freshGems()
         end
 
         -- Fill holes with new gems
-        for y=self.settings.fieldSize,1,-1 do
+        local lowestHole=9
+        for y=1,self.settings.fieldSize do
             if not F[y][x] then
-                F[y][x]=self:getGem()
-                self:setMoveBias('fall',F[y][x],0,8)
-                ins(holePos,F[y][x])
-            else
+                lowestHole=y
                 break
             end
+        end
+        for y=lowestHole,self.settings.fieldSize do
+            local g=self:getGem()
+            self:setMoveBias('fall',g,0,9-lowestHole)
+            ins(newGems,g)
+            F[y][x]=g
         end
     end
     local freshTimes=0
     repeat
-        for i=1,#holePos do
-            local g=holePos[i]
+        for i=1,#newGems do
+            local g=newGems[i]
             g.color=self.seqRND:random(self.settings.colors)
         end
         freshTimes=freshTimes+1
