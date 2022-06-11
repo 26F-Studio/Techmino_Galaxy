@@ -14,6 +14,8 @@ local inst=SFX.playSample
     boolean movable
 
     string appearance <'flame'|'star'|'nova'>
+    function moved
+    function aftermove
     table destroyed {
         string mode <'explosion'|'lightning'|'color'>
         if mode=='explosion' or 'lightning':
@@ -483,7 +485,7 @@ function GP:setClear(g,linkMode,len)
     g.clearDelay=self.settings.clearDelay
     g[linkMode]=len
 end
-local function setGenerate(self,g,gen)
+function GP:setGenerate(g,gen)
     g.immediately=true
     g.clearTimer=0
     g.generate=self:getGem(gen)
@@ -573,7 +575,7 @@ function GP:checkPosition(x,y)
         if g.dropCnt then lineCount=lineCount+1 maxLen=max(maxLen,g.dropCnt) end
         if maxLen>3 then
             if maxLen==4 then
-                setGenerate(self,g,{
+                self:setGenerate(g,{
                     color=g.color,
                     appearance='flame',
                     immediately=true,
@@ -583,14 +585,15 @@ function GP:checkPosition(x,y)
                     }
                 })
             elseif maxLen==5 then
-                setGenerate(self,g,{
+                self:setGenerate(g,{
                     type='cube',
+                    moved='destroy',
                     destroyed={
                         mode='color',
                     }
                 })
             else
-                setGenerate(self,g,{
+                self:setGenerate(g,{
                     color=g.color,
                     appearance='nova',
                     destroyed={
@@ -601,7 +604,7 @@ function GP:checkPosition(x,y)
             end
         else
             if lineCount>1 then
-                setGenerate(self,g,{
+                self:setGenerate(g,{
                     color=g.color,
                     appearance='star',
                     destroyed={
@@ -961,35 +964,6 @@ function GP:update(dt)
 
         if touch then self:playSound('touch') end
 
-        -- Update movingGroups
-        for i=#self.movingGroups,1,-1 do
-            local group=self.movingGroups[i]
-            local fin
-            local legal=false
-            local posList=group.positions
-            for n=1,#posList,2 do
-                local g=F[posList[n+1]][posList[n]]
-                if not g then
-                    fin,legal=true,true
-                    break
-                elseif g.movable then
-                    fin=true
-                    if self:psedoCheckPos(posList[n],posList[n+1]) then
-                        legal=true
-                    end
-                end
-            end
-            if fin then
-                if group.force and not legal then
-                    self[group.mode](self,'auto',unpack(group.args))
-                    self:triggerEvent('illegalMove',group.mode)
-                else
-                    self:triggerEvent('legalMove',group.mode)
-                end
-                rem(self.movingGroups,i)
-            end
-        end
-
         -- Update needCheck
         for y=1,size do for x=1,size do local g=F[y][x] if g and g.needCheck then
             g.needCheck=nil
@@ -1005,6 +979,41 @@ function GP:update(dt)
                 needFresh=true
             end
         end end end
+        -- Update movingGroups
+        for i=#self.movingGroups,1,-1 do
+            local group=self.movingGroups[i]
+            local fin
+            local state='illegal'
+            local posList=group.positions
+            for n=1,#posList,2 do
+                local g=F[posList[n+1]][posList[n]]
+                if not g then
+                    fin,state=true,'destroyed'
+                    break
+                elseif g.movable then
+                    fin=true
+                    if self:psedoCheckPos(posList[n],posList[n+1]) then
+                        state='legal'
+                    end
+                end
+            end
+            if fin then
+                if group.force and state=='illegal' then
+                    self[group.mode](self,'auto',unpack(group.args))
+                    self:triggerEvent('illegalMove',group.mode)
+                elseif state=='legal' then
+                    self:triggerEvent('legalMove',group.mode)
+                elseif state=='destroyed' then
+                    for n=1,#posList,2 do
+                        local g=F[posList[n+1]][posList[n]]
+                        if g then
+                            g.moveTimer=0
+                        end
+                    end
+                end
+                rem(self.movingGroups,i)
+            end
+        end
 
         -- Check generations
         while #self.generateBuffer>0 do
@@ -1109,7 +1118,7 @@ local baseEnv={
     fieldSize=8,
 
     readyDelay=3000,
-    moveDelay=200,
+    moveDelay=300,
     clearDelay=500,
     fallDelay=200,
 
