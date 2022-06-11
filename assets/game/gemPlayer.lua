@@ -449,35 +449,13 @@ end
 function GP:psedoCheckPos(x,y)
     local F=self.field
     if not F[y][x] then return end
-
     local color=F[y][x].color
-
-    if not F[y][x].lrCnt then
-        local stepX,stepY=1,0
-        if 1+linkLen(F,color,x,y,-stepX,-stepY)+linkLen(F,color,x,y,stepX,stepY)>=self.settings.linkLen then
-            return true
-        end
-    end
-    if not F[y][x].udCnt then
-        local stepX,stepY=0,1
-        if 1+linkLen(F,color,x,y,-stepX,-stepY)+linkLen(F,color,x,y,stepX,stepY)>=self.settings.linkLen then
-            return true
-        end
-    end
-    if self.settings.diagonalLinkLen then
-        if not F[y][x].riseCnt then
-            local stepX,stepY=1,1
-            if 1+linkLen(F,color,x,y,-stepX,-stepY)+linkLen(F,color,x,y,stepX,stepY)>=self.settings.diagonalLinkLen then
-                return true
-            end
-        end
-        if not F[y][x].dropCnt then
-            local stepX,stepY=1,-1
-            if 1+linkLen(F,color,x,y,-stepX,-stepY)+linkLen(F,color,x,y,stepX,stepY)>=self.settings.diagonalLinkLen then
-                return true
-            end
-        end
-    end
+    if not F[y][x].lrCnt   and 1+linkLen(F,color,x,y,-1,0)+ linkLen(F,color,x,y,1,0) >=self.settings.linkLen then return true end
+    if not F[y][x].udCnt   and 1+linkLen(F,color,x,y,0,-1)+ linkLen(F,color,x,y,0,1) >=self.settings.linkLen then return true end
+    if not self.settings.diagonalLinkLen then return false end
+    if not F[y][x].riseCnt and 1+linkLen(F,color,x,y,-1,-1)+linkLen(F,color,x,y,1,1) >=self.settings.diagonalLinkLen then return true end
+    if not F[y][x].dropCnt and 1+linkLen(F,color,x,y,-1,1)+ linkLen(F,color,x,y,1,-1)>=self.settings.diagonalLinkLen then return true end
+    return false
 end
 function GP:setClear(g,linkMode,len)
     g.movable=false
@@ -962,6 +940,32 @@ function GP:update(dt)
             end
         end end end
 
+        -- Update movingGroups (check auto-move-back)
+        for i=#self.movingGroups,1,-1 do
+            local group=self.movingGroups[i]
+            local fin
+            local leagl=false
+            local posList=group.positions
+            for n=1,#posList,2 do
+                local g=F[posList[n+1]][posList[n]]
+                if g.movable then
+                    fin=true
+                    if self:psedoCheckPos(posList[n],posList[n+1]) then
+                        leagl=true
+                    end
+                end
+            end
+            if fin then
+                if group.force and not leagl then
+                    self[group.mode](self,'auto',unpack(group.args))
+                    self:triggerEvent('illegalMove',group.mode)
+                elseif leagl then
+                    self:triggerEvent('legalMove',group.mode)
+                end
+                rem(self.movingGroups,i)
+            end
+        end
+
         if touch then self:playSound('touch') end
 
         -- Update needCheck
@@ -979,39 +983,22 @@ function GP:update(dt)
                 needFresh=true
             end
         end end end
-        -- Update movingGroups
+
+        -- Update movingGroups (check deestroyed)
         for i=#self.movingGroups,1,-1 do
             local group=self.movingGroups[i]
-            local fin
-            local state='illegal'
             local posList=group.positions
             for n=1,#posList,2 do
                 local g=F[posList[n+1]][posList[n]]
                 if not g then
-                    fin,state=true,'destroyed'
-                    break
-                elseif g.movable then
-                    fin=true
-                    if self:psedoCheckPos(posList[n],posList[n+1]) then
-                        state='legal'
-                    end
-                end
-            end
-            if fin then
-                if group.force and state=='illegal' then
-                    self[group.mode](self,'auto',unpack(group.args))
-                    self:triggerEvent('illegalMove',group.mode)
-                elseif state=='legal' then
-                    self:triggerEvent('legalMove',group.mode)
-                elseif state=='destroyed' then
-                    for n=1,#posList,2 do
-                        local g=F[posList[n+1]][posList[n]]
-                        if g then
-                            g.moveTimer=0
+                    for n2=1,#posList,2 do
+                        local g2=F[posList[n2+1]][posList[n2]]
+                        if g2 then
+                            g2.moveTimer=0
                         end
                     end
+                    break
                 end
-                rem(self.movingGroups,i)
             end
         end
 
