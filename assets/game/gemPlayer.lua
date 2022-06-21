@@ -14,6 +14,8 @@ local inst=SFX.playSample
     boolean movable
 
     string appearance <'flame'|'star'|'nova'>
+    function moved
+    function aftermove
     table destroyed {
         string mode <'explosion'|'lightning'|'color'>
         if mode=='explosion' or 'lightning':
@@ -313,11 +315,16 @@ function GP:setMoveBias(mode,C,dx,dy)
     if not C then return end
     C.needCheck=nil
     C.movable=false
-    C.moveTimer=self.settings.moveDelay
-    C.moveDelay=self.settings.moveDelay
     C.dx=(C.dx or 0)+dx
     C.dy=(C.dy or 0)+dy
-    if mode=='fall' then C.fall=true end
+    if mode=='fall' then
+        C.fall=true
+        C.moveTimer=(C.moveTimer or 0)+floor(self.settings.fallDelay*dy^.5)
+        C.moveDelay=(C.moveDelay or 0)+floor(self.settings.fallDelay*dy^.5)
+    else
+        C.moveTimer=self.settings.moveDelay
+        C.moveDelay=self.settings.moveDelay
+    end
 end
 function GP:erasePosition(x,y,src)
     local F=self.field
@@ -412,7 +419,7 @@ function GP:twist(mode,x,y,dir)
         if mode=='action' then
             ins(self.movingGroups,{
                 mode='twist',
-                force=self.settings.swapForce,
+                force=self.settings.twistForce,
                 args={x,y,dir=='R' and 'L' or dir=='L' and 'R' or 'F'},
                 positions={x,y,x+1,y,x+1,y+1,x,y+1},
             })
@@ -442,41 +449,24 @@ end
 function GP:psedoCheckPos(x,y)
     local F=self.field
     if not F[y][x] then return end
-
     local color=F[y][x].color
-
-    if not F[y][x].lrCnt then
-        local stepX,stepY=1,0
-        if 1+linkLen(F,color,x,y,-stepX,-stepY)+linkLen(F,color,x,y,stepX,stepY)>=self.settings.linkLen then
-            return true
-        end
-    end
-    if not F[y][x].udCnt then
-        local stepX,stepY=0,1
-        if 1+linkLen(F,color,x,y,-stepX,-stepY)+linkLen(F,color,x,y,stepX,stepY)>=self.settings.linkLen then
-            return true
-        end
-    end
-    if self.settings.diagonalLinkLen then
-        if not F[y][x].riseCnt then
-            local stepX,stepY=1,1
-            if 1+linkLen(F,color,x,y,-stepX,-stepY)+linkLen(F,color,x,y,stepX,stepY)>=self.settings.diagonalLinkLen then
-                return true
-            end
-        end
-        if not F[y][x].dropCnt then
-            local stepX,stepY=1,-1
-            if 1+linkLen(F,color,x,y,-stepX,-stepY)+linkLen(F,color,x,y,stepX,stepY)>=self.settings.diagonalLinkLen then
-                return true
-            end
-        end
-    end
+    if not F[y][x].lrCnt   and 1+linkLen(F,color,x,y,-1,0)+ linkLen(F,color,x,y,1,0) >=self.settings.linkLen then return true end
+    if not F[y][x].udCnt   and 1+linkLen(F,color,x,y,0,-1)+ linkLen(F,color,x,y,0,1) >=self.settings.linkLen then return true end
+    if not self.settings.diagonalLinkLen then return false end
+    if not F[y][x].riseCnt and 1+linkLen(F,color,x,y,-1,-1)+linkLen(F,color,x,y,1,1) >=self.settings.diagonalLinkLen then return true end
+    if not F[y][x].dropCnt and 1+linkLen(F,color,x,y,-1,1)+ linkLen(F,color,x,y,1,-1)>=self.settings.diagonalLinkLen then return true end
+    return false
 end
 function GP:setClear(g,linkMode,len)
     g.movable=false
     g.clearTimer=g.immediately and 0 or self.settings.clearDelay
     g.clearDelay=self.settings.clearDelay
     g[linkMode]=len
+end
+function GP:setGenerate(g,gen)
+    g.immediately=true
+    g.clearTimer=0
+    g.generate=self:getGem(gen)
 end
 function GP:checkPosition(x,y)
     local F=self.field
@@ -563,7 +553,7 @@ function GP:checkPosition(x,y)
         if g.dropCnt then lineCount=lineCount+1 maxLen=max(maxLen,g.dropCnt) end
         if maxLen>3 then
             if maxLen==4 then
-                g.generate=self:getGem{
+                self:setGenerate(g,{
                     color=g.color,
                     appearance='flame',
                     immediately=true,
@@ -571,36 +561,35 @@ function GP:checkPosition(x,y)
                         mode='explosion',
                         radius=1,
                     }
-                }
+                })
             elseif maxLen==5 then
-                g.generate=self:getGem{
+                self:setGenerate(g,{
                     type='cube',
+                    moved='destroy',
                     destroyed={
                         mode='color',
                     }
-                }
+                })
             else
-                g.generate=self:getGem{
+                self:setGenerate(g,{
                     color=g.color,
                     appearance='nova',
-                    immediately=true,
                     destroyed={
                         mode='lightning',
                         radius=1,
                     }
-                }
+                })
             end
         else
             if lineCount>1 then
-                g.generate=self:getGem{
+                self:setGenerate(g,{
                     color=g.color,
                     appearance='star',
-                    immediately=true,
                     destroyed={
                         mode='lightning',
                         radius=0,
                     }
-                }
+                })
             end
         end
     end
@@ -610,7 +599,7 @@ function GP:checkPosition(x,y)
     end
 end
 function GP:freshGems()
-    local holePos={}
+    local newGems={}
     local F=self.field
     for x=1,self.settings.fieldSize do
         -- Drag gems down
@@ -632,20 +621,24 @@ function GP:freshGems()
         end
 
         -- Fill holes with new gems
-        for y=self.settings.fieldSize,1,-1 do
+        local lowestHole=9
+        for y=1,self.settings.fieldSize do
             if not F[y][x] then
-                F[y][x]=self:getGem()
-                self:setMoveBias('fall',F[y][x],0,8)
-                ins(holePos,F[y][x])
-            else
+                lowestHole=y
                 break
             end
+        end
+        for y=lowestHole,self.settings.fieldSize do
+            local g=self:getGem()
+            self:setMoveBias('fall',g,0,9-lowestHole)
+            ins(newGems,g)
+            F[y][x]=g
         end
     end
     local freshTimes=0
     repeat
-        for i=1,#holePos do
-            local g=holePos[i]
+        for i=1,#newGems do
+            local g=newGems[i]
             g.color=self.seqRND:random(self.settings.colors)
         end
         freshTimes=freshTimes+1
@@ -947,36 +940,33 @@ function GP:update(dt)
             end
         end end end
 
-        if touch then self:playSound('touch') end
-
-        -- Update movingGroups
+        -- Update movingGroups (check auto-move-back)
         for i=#self.movingGroups,1,-1 do
             local group=self.movingGroups[i]
             local fin
-            local legal=false
+            local leagl=false
             local posList=group.positions
             for n=1,#posList,2 do
                 local g=F[posList[n+1]][posList[n]]
-                if not g then
-                    fin,legal=true,true
-                    break
-                elseif g.movable then
+                if g.movable then
                     fin=true
                     if self:psedoCheckPos(posList[n],posList[n+1]) then
-                        legal=true
+                        leagl=true
                     end
                 end
             end
             if fin then
-                if group.force and not legal then
+                if group.force and not leagl then
                     self[group.mode](self,'auto',unpack(group.args))
                     self:triggerEvent('illegalMove',group.mode)
-                else
+                elseif leagl then
                     self:triggerEvent('legalMove',group.mode)
                 end
                 rem(self.movingGroups,i)
             end
         end
+
+        if touch then self:playSound('touch') end
 
         -- Update needCheck
         for y=1,size do for x=1,size do local g=F[y][x] if g and g.needCheck then
@@ -993,6 +983,24 @@ function GP:update(dt)
                 needFresh=true
             end
         end end end
+
+        -- Update movingGroups (check deestroyed)
+        for i=#self.movingGroups,1,-1 do
+            local group=self.movingGroups[i]
+            local posList=group.positions
+            for n=1,#posList,2 do
+                local g=F[posList[n+1]][posList[n]]
+                if not g then
+                    for n2=1,#posList,2 do
+                        local g2=F[posList[n2+1]][posList[n2]]
+                        if g2 then
+                            g2.moveTimer=0
+                        end
+                    end
+                    break
+                end
+            end
+        end
 
         -- Check generations
         while #self.generateBuffer>0 do
@@ -1097,7 +1105,7 @@ local baseEnv={
     fieldSize=8,
 
     readyDelay=3000,
-    moveDelay=200,
+    moveDelay=300,
     clearDelay=500,
     fallDelay=200,
 
