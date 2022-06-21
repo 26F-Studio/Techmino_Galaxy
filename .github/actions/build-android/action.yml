@@ -88,7 +88,7 @@ runs:
         echo "${{ inputs.SIGNING_KEY }}" | base64 -d > love-android/app/android.keystore
         cd love-android/
         chmod +x ./gradlew
-        ./gradlew assembleEmbedRecordRelease
+        ./gradlew assembleEmbedRecordDebug
     - name: rename apk
       shell: bash
-      run: mv love-android/app/build/outputs/apk/embedRecordRelease/app-embed-record-release.apk ${{ inputs.file-path }}
+      run: mv love-android/app/build/outputs/apk/embedRecord/debug/app-embed-record-debug.apk ${{ inputs.file-path }}
