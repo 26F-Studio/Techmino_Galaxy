@@ -20,6 +20,8 @@ DEBUG.checkLoadTime("Load Zenitha")
 --------------------------------------------------------------
 -- Global Vars Declaration
 VERSION=require"version"
+MOBILE=SYSTEM=='Android' or SYSTEM=='iOS'
+
 --------------------------------------------------------------
 -- System setting
 math.randomseed(os.time()*626)

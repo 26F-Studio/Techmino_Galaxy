@@ -1461,7 +1461,7 @@ local baseEnv={
     readyDelay=3000,
     dropDelay=1000,
     lockDelay=1000,
-    spawnDelay=1000,
+    spawnDelay=0,
     clearDelay=0,
     deathDelay=260,
 
