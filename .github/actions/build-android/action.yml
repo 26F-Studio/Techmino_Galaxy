@@ -57,7 +57,7 @@ runs:
           data = file.read()
           data = data\
             .replace('LÖVE for Android', appName)\
-            .replace('landscape', 'userLandscape')\
+            .replace('landscape', 'sensorLandscape')\
             .replace('@drawable/love', f'@mipmap/{edition}')
           file.seek(0)
           file.truncate()
@@ -97,7 +97,7 @@ runs:
         echo "${{ inputs.SIGNING_KEY }}" | base64 -d > love-android/app/android.keystore
         cd love-android/
         chmod +x ./gradlew
-        ./gradlew assembleEmbedRecordDebug
+        ./gradlew assembleEmbedRecordRelease
     - name: rename apk
       shell: bash
-      run: mv love-android/app/build/outputs/apk/embedRecord/debug/app-embed-record-debug.apk ${{ inputs.file-path }}
+      run: mv love-android/app/build/outputs/apk/embedRecord/release/app-embed-record-release.apk ${{ inputs.file-path }}
