@@ -28,73 +28,57 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-java@v2
+    - name: Get Java
+      uses: actions/setup-java@v2
       with:
         distribution: 'adopt'
         java-version: '8'
     - name: Clone love-android
       shell: bash
       run: |
-        git clone --recurse-submodules https://github.com/26F-Studio/love-android -b CI --depth 1 --shallow-submodules
-    - uses: ./.github/actions/build-love
-      with:
-        file-path: love-android/app/src/main/assets/game.love
-    - name: Download ColdClear arm64-v8a
-      uses: ./.github/actions/get-cc
-      with:
-        arch: android_aarch64
-        dir: ColdClear/arm64-v8a
-    - name: Process ColdClear arm64-v8a
+        git clone --recurse-submodules https://github.com/love2d/love-android -b 11.4 --depth 1 --shallow-submodules
+    - name: Copy Resources
       shell: bash
       run: |
-        mkdir -p love-android/app/libs/arm64-v8a
-        mv ColdClear/arm64-v8a/love-11.3-android/lib/arm64-v8a/libcold_clear.so love-android/app/libs/arm64-v8a
-        mkdir -p libAndroid/arm64-v8a
-        mv ColdClear/arm64-v8a/libs/arm64-v8a/libCCloader.so libAndroid/arm64-v8a
-    - name: Download ColdClear armeabi-v7a
-      uses: ./.github/actions/get-cc
-      with:
-        arch: android_armv7
-        dir: ColdClear/armeabi-v7a
-    - name: Process ColdClear armeabi-v7a
-      shell: bash
-      run: |
-        mkdir -p love-android/app/libs/armeabi-v7a
-        mv ColdClear/armeabi-v7a/love-11.3-android/lib/armeabi-v7a/libcold_clear.so love-android/app/libs/armeabi-v7a
-        mkdir -p libAndroid/armeabi-v7a
-        mv ColdClear/armeabi-v7a/libs/armeabi-v7a/libCCloader.so libAndroid/armeabi-v7a
-    - name: Pack ColdClear
-      shell: bash
-      run: |
-        7z a -tzip love-android/app/src/main/assets/game.love libAndroid
+        cp -r -f ./.github/build/Android/res/* ./love-android/app/src/main/res/
+        cp -r -f ./assets/ ./Zenitha/ conf.lua main.lua version.lua ./love-android/app/src/embed/assets/
     - name: update Android information
       shell: python
       run: |
         if '${{ inputs.type }}' == 'release':
-          appName = 'Techmino'
-          packageName = 'org.love2d.MrZ.Techmino'
+          appName = 'Techmino Galaxy'
+          packageName = 'org.26f-studio.techmino_galaxy'
           edition = 'release'
         elif '${{ inputs.type }}' == 'snapshot':
-          appName = 'Techmino_Snapshot'
-          packageName = 'org.love2d.MrZ.Techmino.Snapshot'
+          appName = 'Techmino Galaxy Snapshot'
+          packageName = 'org.26f-studio.techmino_galaxy.snapshot'
           edition = 'snapshot'
         with open('./love-android/app/src/main/AndroidManifest.xml', "r+", encoding='utf-8') as file:
           data = file.read()
           data = data\
-            .replace('@appName', appName)\
-            .replace('@edition', edition)
+            .replace('LÖVE for Android', appName)\
+            .replace('@drawable/love', f'@mipmap/{edition}')
           file.seek(0)
           file.truncate()
           file.write(data)
         with open("./love-android/app/build.gradle", "r+", encoding='utf-8') as file:
           data = file.read()
           data = data\
-            .replace('@packageName', packageName)\
-            .replace('@versionCode', '${{ inputs.apkCode }}')\
-            .replace('@versionName', '${{ inputs.name }}')\
-            .replace('@storePassword', '${{ inputs.KEY_STORE_PASSWORD }}')\
-            .replace('@keyAlias', '${{ inputs.ALIAS }}')\
-            .replace('@keyPassword', '${{ inputs.KEY_PASSWORD }}')
+            .replace('org.love2d.android', packageName)\
+            .replace('30', '${{ inputs.apkCode }}')\
+            .replace('11.4', '${{ inputs.name }}')
+          insert_pos = data.find('\n', data.find('proguardFiles')) + 1
+          data = data[:insert_pos] + '            signingConfig signingConfigs.release\n' + data[insert_pos:]
+
+          insert_pos = data.find('buildTypes') - 4
+          data = data[:insert_pos] + "    signingConfigs {\n" \
+                                   "        release {\n" \
+                                   "            storeFile file('./android.keystore')\n" \
+                                   "            storePassword '${{ inputs.KEY_STORE_PASSWORD }}'\n" \
+                                   "            keyAlias '${{ inputs.ALIAS }}'\n" \
+                                   "            keyPassword '${{ inputs.KEY_PASSWORD }}'\n" \
+                                   "        }\n" \
+                                   "    }\n" + data[insert_pos:]
           file.seek(0)
           file.truncate()
           file.write(data)
@@ -102,9 +86,9 @@ runs:
       shell: bash
       run: |
         echo "${{ inputs.SIGNING_KEY }}" | base64 -d > love-android/app/android.keystore
-        chmod 777 love-android/gradlew
         cd love-android/
-        ./gradlew assembleRelease
+        chmod +x ./gradlew
+        ./gradlew assembleEmbedRecordRelease
     - name: rename apk
       shell: bash
-      run: mv love-android/app/build/outputs/apk/release/app-release.apk ${{ inputs.file-path }}
+      run: mv love-android/app/build/outputs/apk/embedRecordRelease/app-embed-record-release.apk ${{ inputs.file-path }}
