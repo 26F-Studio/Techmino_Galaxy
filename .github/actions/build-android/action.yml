@@ -57,8 +57,15 @@ runs:
           data = file.read()
           data = data\
             .replace('LÖVE for Android', appName)\
-            .replace('landscape', 'sensorLandscape')\
+            .replace('landscape', 'userLandscape')\
             .replace('@drawable/love', f'@mipmap/{edition}')
+          file.seek(0)
+          file.truncate()
+          file.write(data)
+        with open('./love-android/love/src/main/java/org/love2d/android/GameActivity.java', "r+", encoding='utf-8') as file:
+          data = file.read()
+          insert_pos = data.find('\n', data.find('super.onCreate')) + 1
+          data = data[:insert_pos] + '        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);\n' + data[insert_pos:]
           file.seek(0)
           file.truncate()
           file.write(data)
@@ -70,7 +77,6 @@ runs:
             .replace('11.4', '${{ inputs.name }}')
           insert_pos = data.find('\n', data.find('proguardFiles')) + 1
           data = data[:insert_pos] + '            signingConfig signingConfigs.release\n' + data[insert_pos:]
-
           insert_pos = data.find('buildTypes') - 4
           data = data[:insert_pos] + "    signingConfigs {\n" \
                                    "        release {\n" \
