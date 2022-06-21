@@ -47,11 +47,11 @@ runs:
       run: |
         if '${{ inputs.type }}' == 'release':
           appName = 'Techmino Galaxy'
-          packageName = 'org.26f-studio.techmino_galaxy'
+          packageName = 'org.26fstudio.techminogalaxy'
           edition = 'release'
         elif '${{ inputs.type }}' == 'snapshot':
           appName = 'Techmino Galaxy Snapshot'
-          packageName = 'org.26f-studio.techmino_galaxy.snapshot'
+          packageName = 'org.26fstudio.techminogalaxy.snapshot'
           edition = 'snapshot'
         with open('./love-android/app/src/main/AndroidManifest.xml', "r+", encoding='utf-8') as file:
           data = file.read()

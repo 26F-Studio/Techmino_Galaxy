@@ -8,4 +8,3 @@ Categories=Game;
 Terminal=false
 Icon=Techmino_Galaxy
 NoDisplay=false
-PrefersNonDefaultGPU=true
