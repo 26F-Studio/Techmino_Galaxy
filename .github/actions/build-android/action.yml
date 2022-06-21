@@ -64,6 +64,8 @@ runs:
           file.write(data)
         with open('./love-android/love/src/main/java/org/love2d/android/GameActivity.java', "r+", encoding='utf-8') as file:
           data = file.read()
+          insert_pos = data.find('\n', data.find('android.content.Intent')) + 1
+          data = data[:insert_pos] + 'import android.content.pm.ActivityInfo;\n' + data[insert_pos:]
           insert_pos = data.find('\n', data.find('super.onCreate')) + 1
           data = data[:insert_pos] + '        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);\n' + data[insert_pos:]
           file.seek(0)
