@@ -57,6 +57,7 @@ runs:
           data = file.read()
           data = data\
             .replace('LÖVE for Android', appName)\
+            .replace('landscape', 'sensorLandscape')\
             .replace('@drawable/love', f'@mipmap/{edition}')
           file.seek(0)
           file.truncate()
