@@ -1,38 +1,45 @@
-name: 'build Android'
-description: 'build Android package'
+name: "build Android"
+description: "build Android package"
 inputs:
   type:
     required: true
-    description: 'snapshot or release'
+    description: "snapshot or release"
   apkCode:
     required: true
-    description: 'apk code'
+    description: "apk code"
   name:
     required: true
-    description: 'name of the product'
+    description: "name of the product"
   file-path:
     required: true
-    description: 'path to the product'
-  SIGNING_KEY:
-    required: true
-    description: 'APK signing key'
-  KEY_STORE_PASSWORD:
-    required: true
-    description: 'APK key store password'
-  ALIAS:
-    required: true
-    description: 'APK key alias'
-  KEY_PASSWORD:
-    required: true
-    description: 'APK key password'
+    description: "path to the product"
+  # SIGNING_KEY:
+  #   required: true
+  #   description: "APK signing key"
+  # KEY_STORE_PASSWORD:
+  #   required: true
+  #   description: "APK key store password"
+  # ALIAS:
+  #   required: true
+  #   description: "APK key alias"
+  # KEY_PASSWORD:
+  #   required: true
+  #   description: "APK key password"
+
+# secrets:
+# ANDROID_KEYSTORE_ALIAS
+# ANDROID_KEYSTORE_BASE64
+# ANDROID_KEYSTORE_KEYPASSWORD
+# ANDROID_KEYSTORE_STOREPASSWORD
+
 runs:
   using: "composite"
   steps:
     - name: Get Java
       uses: actions/setup-java@v2
       with:
-        distribution: 'adopt'
-        java-version: '11'
+        distribution: "adopt"
+        java-version: "11"
     - name: Clone love-android
       shell: bash
       run: |
@@ -73,9 +80,9 @@ runs:
           data = data[:insert_pos] + "    signingConfigs {\n" \
                                    "        release {\n" \
                                    "            storeFile file('./android.keystore')\n" \
-                                   "            storePassword '${{ inputs.KEY_STORE_PASSWORD }}'\n" \
-                                   "            keyAlias '${{ inputs.ALIAS }}'\n" \
-                                   "            keyPassword '${{ inputs.KEY_PASSWORD }}'\n" \
+                                   "            keyAlias '${{ secrets.ANDROID_KEYSTORE_ALIAS }}'\n" \
+                                   "            keyPassword '${{ secrets.ANDROID_KEYSTORE_KEYPASSWORD }}'\n" \
+                                   "            storePassword '${{ secrets.ANDROID_KEYSTORE_STOREPASSWORD }}'\n" \
                                    "        }\n" \
                                    "    }\n" + data[insert_pos:]
           file.seek(0)
