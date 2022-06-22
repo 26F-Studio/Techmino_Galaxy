@@ -33,51 +33,68 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: "recursive"
-      - uses: ./.github/actions/automatic-test
+      - uses: .github/actions/automatic-test
 
   build-windows:
     runs-on: windows-latest
     needs: get-info
+    env:
+      PACKAGE_NAME: Techmino_Galaxy_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_Windows.zip
+    outputs:
+      download_url: ${{ steps.transfer.outputs.download_url }}
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: "recursive"
-      - uses: ./.github/actions/build-windows
+      - uses: .github/actions/build-windows
         with:
+          output: ${{ env.PACKAGE_NAME }}
           version: ${{ needs.get-info.outputs.name }}
-          icon: .\.github\build\Windows\icon_snapshot.ico
-      - name: Upload
+          icon: .github/build/Windows/icon_snapshot.ico
+      - name: Upload as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Techmino_Galaxy_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_Windows
-          path: love
-      - name: Discord Message
-        uses: Sniddl/discord-commits@v1.3
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          message: "Successful commit to **{{ github.context.payload.repository.owner.name }}/{{ github.context.payload.repository.name}}**.\nDiff: {{ github.context.payload.compare }}"
-          embed: '{ "title": "{{ commit.title }}", "description": "{{ commit.description }}", "url": "{{ commit.url }}", "author": { "name": "{{ commit.author.name }} ({{ commit.author.username }})", "icon_url": "https://avatars.io/gravatar/{{ commit.author.email }}"} }'
-          last-commit-only: false
+          path: ${{ env.PACKAGE_NAME }}
+      - name: Upload to WeTransfer
+        id: transfer
+        run: |
+          curl -fsSL git.io/file-transfer | sh
+          transfer wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1 | tee wetransfer.log
+          echo "::set-output name=download_url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
 
   build-linux:
     runs-on: ubuntu-latest
     needs: get-info
+    env:
+      PACKAGE_NAME: Techmino_Galaxy_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_Linux.AppImage
+    outputs:
+      download_url: ${{ steps.transfer.outputs.download_url }}
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: "recursive"
-      - uses: ./.github/actions/build-linux
+      - uses: .github/actions/build-linux
         with:
+          output: ${{ env.PACKAGE_NAME }}
           icon: .github/build/Linux/icon_snapshot.png
-      - name: Upload
+      - name: Upload as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Techmino_Galaxy_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_Linux
-          path: Techmino_Galaxy.AppImage
+          path: ${{ env.PACKAGE_NAME }}
+      - name: Upload to WeTransfer
+        id: transfer
+        run: |
+          curl -fsSL git.io/file-transfer | sh
+          ./transfer wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1 | tee wetransfer.log
+          echo "::set-output name=download_url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
 
   build-android:
     runs-on: ubuntu-latest
     needs: get-info
+    env:
+      PACKAGE_NAME: Techmino_Galaxy_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_Android.apk
+    outputs:
+      download_url: ${{ steps.transfer.outputs.download_url }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -87,46 +104,22 @@ jobs:
           type: snapshot
           apkCode: ${{ needs.get-info.outputs.apkCode }}
           name: ${{ needs.get-info.outputs.name }}
-          file-path: Techmino_Galaxy_Snapshot.apk
-          # SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-          # KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-          # ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
-          # KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      - name: Upload
+          output: ${{ env.PACKAGE_NAME }}
+
+          ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_KEYPASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEYPASSWORD }}
+          ANDROID_KEYSTORE_STOREPASSWORD: ${{ secrets.ANDROID_KEYSTORE_STOREPASSWORD }}
+      - name: Upload as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Techmino_Galaxy_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_Android
-          path: Techmino_Galaxy_Snapshot.apk
-
-  # build-android-mini:
-  #   runs-on: ubuntu-latest
-  #   needs: get-info
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #     with:
-  #       submodules: 'recursive'
-  #   - uses: ./.github/actions/update-version
-  #     with:
-  #       commit: ${{ needs.get-info.outputs.commit }}
-  #       type: snapshot
-  #   - name: remove media
-  #     run: |
-  #       rm -rf media/music media/effect media/vocal
-  #   - uses: ./.github/actions/build-android
-  #     with:
-  #       type: Snapshot
-  #       apkCode: ${{ needs.get-info.outputs.apkCode }}
-  #       name: ${{ needs.get-info.outputs.name }}
-  #       file-path: Techmino_Snapshot_Mini.apk
-  #       SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-  #       KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-  #       ALIAS: ${{ secrets.ALIAS }}
-  #       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-  #   - name: Upload
-  #     uses: actions/upload-artifact@v2
-  #     with:
-  #       name: Techmino_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_AndroidMini
-  #       path: Techmino_Snapshot_Mini.apk
+          path: ${{ env.PACKAGE_NAME }}
+      - name: Upload to WeTransfer
+        id: transfer
+        run: |
+          curl -fsSL git.io/file-transfer | sh
+          transfer wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1 | tee wetransfer.log
+          echo "::set-output name=download_url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
 
   # build-macOS:
   #   runs-on: macos-latest
@@ -196,14 +189,37 @@ jobs:
   build-love:
     runs-on: ubuntu-latest
     needs: get-info
+    env:
+      PACKAGE_NAME: Techmino_Galaxy_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_Bare.love
+    outputs:
+      download_url: ${{ steps.transfer.outputs.download_url }}
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: "recursive"
-      - uses: ./.github/actions/update-version
-      - uses: ./.github/actions/build-love
-      - name: Upload
+      - uses: .github/actions/build-love
+        with:
+          output: ${{ env.PACKAGE_NAME }}
+      - name: Upload as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Techmino_Galaxy_${{ needs.get-info.outputs.name }}_${{ needs.get-info.outputs.commit }}_#${{ GITHUB.RUN_NUMBER }}_Bare
-          path: Techmino_Galaxy.love
+          path: ${{ env.PACKAGE_NAME }}
+      - name: Upload to WeTransfer
+        id: transfer
+        run: |
+          curl -fsSL git.io/file-transfer | sh
+          transfer wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1 | tee wetransfer.log
+          echo "::set-output name=download_url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
+
+  discord-report:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      [automatic-test, build-windows, build-linux, build-android, build-love]
+    steps:
+      - name: Discord Message
+        uses: Sniddl/discord-commits@v1.3
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          message: "Github actions report from **${{ github.context.payload.repository.owner.name }}/${{ github.context.payload.repository.name }}**."
+          embed: '{"type":"rich","title":"Techmino Galaxy","description":"Here is the result of the CI triggered by commit `${{ needs.get-info.outputs.commit }}`","color":"0x047ef7","fields":[{"name":"Version","value":"${{ needs.get-info.outputs.name }}","inline":true},{"name":"Run Number","value":"${{ GITHUB.RUN_NUMBER }}","inline":true},{"name":"Changelog","value":"${{ commit.description }}"},{"name":"Status","value":"**Automatic Test:** ${{ needs.automatic-test.result }}\n**Windows:** ${{ needs.build-windows.result }}\n**Linux:** ${{ needs.build-linux.result }}\n**Android:** ${{ needs.build-android.result }}\n**Bare:** ${{ needs.build-love.result }}"},{"name":"Download Links","value":"**Windows:** ${{ needs.build-windows.outputs.download_url }}\n**Linux:** ${{ needs.build-linux.outputs.download_url }}\n**Android:** ${{ needs.build-android.outputs.download_url }}\n**Bare:** ${{ needs.build-love.outputs.download_url}}"}],"url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'

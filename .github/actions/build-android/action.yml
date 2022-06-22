@@ -1,5 +1,5 @@
-name: "build Android"
-description: "build Android package"
+name: "Build Android"
+description: "Build Android package"
 inputs:
   type:
     required: true
@@ -10,27 +10,21 @@ inputs:
   name:
     required: true
     description: "name of the product"
-  file-path:
+  output:
     required: true
-    description: "path to the product"
-  # SIGNING_KEY:
-  #   required: true
-  #   description: "APK signing key"
-  # KEY_STORE_PASSWORD:
-  #   required: true
-  #   description: "APK key store password"
-  # ALIAS:
-  #   required: true
-  #   description: "APK key alias"
-  # KEY_PASSWORD:
-  #   required: true
-  #   description: "APK key password"
-
-# secrets:
-# ANDROID_KEYSTORE_ALIAS
-# ANDROID_KEYSTORE_BASE64
-# ANDROID_KEYSTORE_KEYPASSWORD
-# ANDROID_KEYSTORE_STOREPASSWORD
+    description: 'Output path and name of the product'
+  ANDROID_KEYSTORE_ALIAS:
+    required: true
+    description: "Signing keystore's alias"
+  ANDROID_KEYSTORE_BASE64:
+    required: true
+    description: "Signing keystore's base64 content"
+  ANDROID_KEYSTORE_KEYPASSWORD:
+    required: true
+    description: "Signing keystore's key password"
+  ANDROID_KEYSTORE_STOREPASSWORD:
+    required: true
+    description: "Signing keystore's keystore password"
 
 runs:
   using: "composite"
@@ -44,12 +38,12 @@ runs:
       shell: bash
       run: |
         git clone --recurse-submodules https://github.com/love2d/love-android -b 11.4 --depth 1 --shallow-submodules
-    - name: Copy Resources
+    - name: Copy resources
       shell: bash
       run: |
-        cp -r -f ./.github/build/Android/res/* ./love-android/app/src/main/res/
-        cp -r -f ./assets/ ./Zenitha/ conf.lua main.lua version.lua ./love-android/app/src/embed/assets/
-    - name: update Android information
+        cp -r -f .github/build/Android/res/* love-android/app/src/main/res/
+        cp -r -f assets/ Zenitha/ conf.lua main.lua version.lua love-android/app/src/embed/assets/
+    - name: Update android information
       shell: python
       run: |
         if '${{ inputs.type }}' == 'release':
@@ -60,7 +54,7 @@ runs:
           appName = 'Techmino Galaxy Snapshot'
           packageName = 'org.f26_studio.techmino_galaxy.snapshot'
           edition = 'snapshot'
-        with open('./love-android/app/src/main/AndroidManifest.xml', "r+", encoding='utf-8') as file:
+        with open('love-android/app/src/main/AndroidManifest.xml', "r+", encoding='utf-8') as file:
           data = file.read()
           data = data\
             .replace('LÖVE for Android', appName)\
@@ -68,7 +62,7 @@ runs:
           file.seek(0)
           file.truncate()
           file.write(data)
-        with open("./love-android/app/build.gradle", "r+", encoding='utf-8') as file:
+        with open("love-android/app/build.gradle", "r+", encoding='utf-8') as file:
           data = file.read()
           data = data\
             .replace('org.love2d.android', packageName)\
@@ -79,22 +73,22 @@ runs:
           insert_pos = data.find('buildTypes') - 4
           data = data[:insert_pos] + "    signingConfigs {\n" \
                                    "        release {\n" \
-                                   "            storeFile file('./android.keystore')\n" \
-                                   "            keyAlias '${{ secrets.ANDROID_KEYSTORE_ALIAS }}'\n" \
-                                   "            keyPassword '${{ secrets.ANDROID_KEYSTORE_KEYPASSWORD }}'\n" \
-                                   "            storePassword '${{ secrets.ANDROID_KEYSTORE_STOREPASSWORD }}'\n" \
+                                   "            storeFile file('android.keystore')\n" \
+                                   "            keyAlias '${{ inputs.ANDROID_KEYSTORE_ALIAS }}'\n" \
+                                   "            keyPassword '${{ inputs.ANDROID_KEYSTORE_KEYPASSWORD }}'\n" \
+                                   "            storePassword '${{ inputs.ANDROID_KEYSTORE_STOREPASSWORD }}'\n" \
                                    "        }\n" \
                                    "    }\n" + data[insert_pos:]
           file.seek(0)
           file.truncate()
           file.write(data)
-    - name: Build Techmino
+    - name: Build Techmino Galaxy
       shell: bash
       run: |
-        echo "${{ inputs.SIGNING_KEY }}" | base64 -d > love-android/app/android.keystore
+        echo "${{ inputs.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > love-android/app/android.keystore
         cd love-android/
-        chmod +x ./gradlew
-        ./gradlew assembleEmbedRecordRelease
-    - name: rename apk
+        chmod +x gradlew
+        gradlew assembleEmbedRecordRelease
+    - name: Rename APK
       shell: bash
-      run: mv love-android/app/build/outputs/apk/embedRecord/release/app-embed-record-release.apk ${{ inputs.file-path }}
+      run: mv love-android/app/build/outputs/apk/embedRecord/release/app-embed-record-release.apk ${{ inputs.output }}
