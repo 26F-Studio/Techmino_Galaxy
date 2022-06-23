@@ -1,0 +1,17 @@
+name: "Remote Workflow Test"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-and-wait:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Send greeting
+      uses: convictional/trigger-workflow-and-wait@v1.6.1
+      with:
+        github_token: ${{ secrets.GH_ACCESS_TOKEN }}
+        owner: 26F-Studio
+        repo: 26F-CI
+        workflow_file_name: dev.yml
+        client_payload: '{"name": "Particle_G"}'

@@ -41,14 +41,14 @@ runs:
       shell: pwsh
       run: |
         cmd /c copy /b .\love\love.exe + .\Techmino_Galaxy.love .\love\Techmino_Galaxy.exe
-        del ./love/love.exe
-        del ./love/lovec.exe
-        del ./love/game.ico
-        del ./love/love.ico
-        del ./love/changes.txt
-        del ./love/readme.txt
-        ./ResourceHacker.exe -open ./love/Techmino_Galaxy.exe -save ./love/Techmino_Galaxy.exe -action delete -mask "ICONGROUP,,"
-        ./ResourceHacker.exe -open ./Techmino_Galaxy.rc -save ./Techmino_Galaxy.res -action compile
-        ./ResourceHacker.exe -open ./love/Techmino_Galaxy.exe -save ./love/Techmino_Galaxy.exe -action addoverwrite -res "${{ inputs.icon }}" -mask "ICONGROUP,1,"
-        ./ResourceHacker.exe -open ./love/Techmino_Galaxy.exe -save ./love/Techmino_Galaxy.exe -action addoverwrite -res "Techmino_Galaxy.res" -mask "VERSIONINFO,1,"
+        del .\love\love.exe
+        del .\love\lovec.exe
+        del .\love\game.ico
+        del .\love\love.ico
+        del .\love\changes.txt
+        del .\love\readme.txt
+        cmd /c '.\ResourceHacker.exe -open .\love\Techmino_Galaxy.exe -save .\love\Techmino_Galaxy.exe -action delete -mask ICONGROUP,,'
+        cmd /c '.\ResourceHacker.exe -open .\Techmino_Galaxy.rc -save .\Techmino_Galaxy.res -action compile'
+        cmd /c '.\ResourceHacker.exe -open .\love\Techmino_Galaxy.exe -save .\love\Techmino_Galaxy.exe -action addoverwrite -res "${{ inputs.icon }}" -mask ICONGROUP,1,'
+        cmd /c '.\ResourceHacker.exe -open .\love\Techmino_Galaxy.exe -save .\love\Techmino_Galaxy.exe -action addoverwrite -res ".\Techmino_Galaxy.res" -mask VERSIONINFO,1,'
         7z a -tzip ${{ inputs.output }} ./love
