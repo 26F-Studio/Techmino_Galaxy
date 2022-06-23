@@ -10,22 +10,27 @@ jobs:
   get-info:
     runs-on: ubuntu-latest
     outputs:
-      versionName: ${{ steps.actual-get-info.outputs.versionName }}
-      versionString: ${{ steps.actual-get-info.outputs.versionString }}
-      versionCode: ${{ steps.actual-get-info.outputs.versionCode }}
-      commitHash: ${{ steps.actual-get-info.outputs.commit }}
+      versionName: ${{ steps.info.outputs.versionName }}
+      versionString: ${{ steps.info.outputs.versionString }}
+      versionCode: ${{ steps.info.outputs.versionCode }}
+      commitHash: ${{ steps.info.outputs.commitHash }}
     steps:
       - uses: actions/checkout@v3
       - name: Install lua
         run: |
           sudo apt-get install lua5.3 -y
       - name: Get app info
-        id: get-info
+        id: info
         run: |
           echo "::set-output name=versionName::$(lua ./.github/workflows/getVersion.lua -versionName)"
           echo "::set-output name=versionString::$(lua ./.github/workflows/getVersion.lua -versionString)"
           echo "::set-output name=versionCode::$(lua ./.github/workflows/getVersion.lua -versionCode)"
-          echo "::set-output name=commit::$(git rev-parse --short ${{ GITHUB.SHA }})"
+          echo "::set-output name=commitHash::$(git rev-parse --short ${{ GITHUB.SHA }})"
+
+  remote-ci:
+    runs-on: ubuntu-latest
+    needs: get-info
+    steps:
       - name: Remote CI
         uses: convictional/trigger-workflow-and-wait@v1.6.1
         with:
@@ -34,10 +39,10 @@ jobs:
           repo: 26F-CI
           workflow_file_name: dev.yml
           client_payload: '{
-              "repository":"${{ github.repository }}",
-              "build_type":"dev",
-              "packageName":"Techmino_Galaxy_${{ needs.get-info.outputs.versionName }}_${{ needs.get-info.outputs.commitHash }}_#${{ GITHUB.RUN_NUMBER }}",
-              "versionName":"${{ needs.get-info.outputs.versionName }}",
-              "versionString":"${{ needs.get-info.outputs.versionString }}",
-              "versionCode":"${{ needs.get-info.outputs.versionCode }}"
+            "repository":"${{ github.repository }}",
+            "buildType":"dev",
+            "packageName":"Techmino_Galaxy_${{ needs.get-info.outputs.versionName }}_${{ needs.get-info.outputs.commitHash }}_#${{ GITHUB.RUN_NUMBER }}",
+            "versionName":"${{ needs.get-info.outputs.versionName }}",
+            "versionString":"${{ needs.get-info.outputs.versionString }}",
+            "versionCode":"${{ needs.get-info.outputs.versionCode }}"
             }'
