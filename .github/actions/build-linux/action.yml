@@ -1,0 +1,34 @@
+name: 'Build Linux'
+description: 'Build Linux package'
+inputs:
+  output:
+    required: true
+    description: 'Output path and name of the product'
+  icon:
+    required: true
+    description: 'Path to the icons'
+runs:
+  using: "composite"
+  steps:
+    - name: Download AppImageKit
+      shell: bash
+      run: |
+        curl -OL https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage
+        chmod a+x ./appimagetool-x86_64.AppImage
+    - name: Download love
+      shell: bash
+      run: |
+        curl -OL https://github.com/love2d/love/releases/download/11.4/love-11.4-x86_64.AppImage
+        chmod +x ./love-11.4-x86_64.AppImage
+        ./love-11.4-x86_64.AppImage --appimage-extract
+    - uses: ./.github/actions/build-love
+    - name: Pack Techmino Galaxy
+      shell: bash
+      run: |
+        cat ./squashfs-root/bin/love ./Techmino_Galaxy.love > ./squashfs-root/bin/Techmino_Galaxy
+        chmod +x ./squashfs-root/bin/Techmino_Galaxy
+        rm -rf ./squashfs-root/love.desktop ./squashfs-root/love.svg ./squashfs-root/.DirIcon
+        mv ./.github/build/Linux/Techmino_Galaxy.desktop.template ./squashfs-root/Techmino_Galaxy.desktop
+        mv ${{ inputs.icon }} ./squashfs-root/Techmino_Galaxy.png
+        ln -s ./squashfs-root/Techmino_Galaxy.png ./squashfs-root/.DirIcon
+        ./appimagetool-x86_64.AppImage ./squashfs-root ${{ inputs.output }}

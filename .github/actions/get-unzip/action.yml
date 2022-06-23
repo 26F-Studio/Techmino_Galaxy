@@ -1,0 +1,21 @@
+name: 'get and unzip'
+description: 'cURL and then 7-zip x'
+inputs:
+  url:
+    required: true
+    description: 'download URL of the archive'
+  dir:
+    required: false
+    description: 'output directory of the unzipped archive'
+    default: '.'
+  temp-file:
+    required: false
+    description: 'temporary file name'
+    default: temp.zip
+runs:
+  using: "composite"
+  steps:
+    - run: curl -L --retry 5 ${{ inputs.url }} -o ${{ inputs.temp-file }}
+      shell: bash
+    - run: 7z x ${{ inputs.temp-file }} -o${{ inputs.dir }}
+      shell: bash
