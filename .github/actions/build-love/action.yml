@@ -4,9 +4,9 @@ inputs:
   output:
     required: false
     description: 'Output path and name of the product'
-    default: Techmino_Galaxy.love
+    default: ./Techmino_Galaxy.love
 runs:
   using: "composite"
   steps:
-    - run: 7z a -tzip ${{ inputs.output }} assets/ Zenitha/ conf.lua main.lua version.lua
+    - run: 7z a -tzip ${{ inputs.output }} ./assets/ ./Zenitha/ ./conf.lua ./main.lua ./version.lua
       shell: bash

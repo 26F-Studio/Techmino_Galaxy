@@ -41,8 +41,8 @@ runs:
     - name: Copy resources
       shell: bash
       run: |
-        cp -r -f .github/build/Android/res/* love-android/app/src/main/res/
-        cp -r -f assets/ Zenitha/ conf.lua main.lua version.lua love-android/app/src/embed/assets/
+        cp -r -f ./.github/build/Android/res/* ./love-android/app/src/main/res/
+        cp -r -f ./assets/ ./Zenitha/ ./conf.lua ./main.lua ./version.lua ./love-android/app/src/embed/assets/
     - name: Update android information
       shell: python
       run: |
@@ -54,7 +54,7 @@ runs:
           appName = 'Techmino Galaxy Snapshot'
           packageName = 'org.f26_studio.techmino_galaxy.snapshot'
           edition = 'snapshot'
-        with open('love-android/app/src/main/AndroidManifest.xml', "r+", encoding='utf-8') as file:
+        with open('./love-android/app/src/main/AndroidManifest.xml', "r+", encoding='utf-8') as file:
           data = file.read()
           data = data\
             .replace('LÖVE for Android', appName)\
@@ -62,7 +62,7 @@ runs:
           file.seek(0)
           file.truncate()
           file.write(data)
-        with open("love-android/app/build.gradle", "r+", encoding='utf-8') as file:
+        with open("./love-android/app/build.gradle", "r+", encoding='utf-8') as file:
           data = file.read()
           data = data\
             .replace('org.love2d.android', packageName)\
@@ -73,7 +73,7 @@ runs:
           insert_pos = data.find('buildTypes') - 4
           data = data[:insert_pos] + "    signingConfigs {\n" \
                                    "        release {\n" \
-                                   "            storeFile file('android.keystore')\n" \
+                                   "            storeFile file('./android.keystore')\n" \
                                    "            keyAlias '${{ inputs.ANDROID_KEYSTORE_ALIAS }}'\n" \
                                    "            keyPassword '${{ inputs.ANDROID_KEYSTORE_KEYPASSWORD }}'\n" \
                                    "            storePassword '${{ inputs.ANDROID_KEYSTORE_STOREPASSWORD }}'\n" \
@@ -85,10 +85,10 @@ runs:
     - name: Build Techmino Galaxy
       shell: bash
       run: |
-        echo "${{ inputs.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > love-android/app/android.keystore
-        cd love-android/
-        chmod +x gradlew
-        gradlew assembleEmbedRecordRelease
+        echo "${{ inputs.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > ./love-android/app/android.keystore
+        cd ./love-android/
+        chmod +x ./gradlew
+        ./gradlew assembleEmbedRecordRelease
     - name: Rename APK
       shell: bash
-      run: mv love-android/app/build/outputs/apk/embedRecord/release/app-embed-record-release.apk ${{ inputs.output }}
+      run: mv ./love-android/app/build/outputs/apk/embedRecord/release/app-embed-record-release.apk ${{ inputs.output }}
