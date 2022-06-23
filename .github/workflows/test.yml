@@ -7,11 +7,11 @@ jobs:
   run-and-wait:
     runs-on: ubuntu-latest
     steps:
-    - name: Send greeting
+    - name: Remote CI
       uses: convictional/trigger-workflow-and-wait@v1.6.1
       with:
         github_token: ${{ secrets.GH_ACCESS_TOKEN }}
         owner: 26F-Studio
         repo: 26F-CI
         workflow_file_name: dev.yml
-        client_payload: '{"name": "Particle_G"}'
+        client_payload: '{"repository":"${{ github.repository }}","build_type":"dev","info_keys":["name","apkCode","code","commit"]}'
