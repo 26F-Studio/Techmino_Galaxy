@@ -51,10 +51,6 @@ jobs:
           output: ${{ env.PACKAGE_NAME }}
           version: ${{ needs.get-info.outputs.name }}
           icon: ./.github/build/Windows/snapshot.ico
-      - name: Upload as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          path: ${{ env.PACKAGE_NAME }}
       - name: Get transfer
         uses: ./.github/actions/get-unzip
         with:
@@ -62,7 +58,7 @@ jobs:
       - name: Upload to WeTransfer
         id: transfer
         run: |
-          ./transfer.exe wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1 | tee ./wetransfer.log
+          ./transfer.exe wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1>./wetransfer.log
           echo "::set-output name=download_url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
 
   build-linux:
@@ -80,15 +76,11 @@ jobs:
         with:
           output: ${{ env.PACKAGE_NAME }}
           icon: ./.github/build/Linux/snapshot.png
-      - name: Upload as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          path: ${{ env.PACKAGE_NAME }}
       - name: Upload to WeTransfer
         id: transfer
         run: |
           curl -fsSL git.io/file-transfer | sh
-          ./transfer wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1 | tee ./wetransfer.log
+          ./transfer wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1>./wetransfer.log
           echo "::set-output name=download_url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
 
   build-android:
@@ -113,15 +105,11 @@ jobs:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           ANDROID_KEYSTORE_KEYPASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEYPASSWORD }}
           ANDROID_KEYSTORE_STOREPASSWORD: ${{ secrets.ANDROID_KEYSTORE_STOREPASSWORD }}
-      - name: Upload as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          path: ${{ env.PACKAGE_NAME }}
       - name: Upload to WeTransfer
         id: transfer
         run: |
           curl -fsSL git.io/file-transfer | sh
-          ./transfer wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1 | tee ./wetransfer.log
+          ./transfer wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1>./wetransfer.log
           echo "::set-output name=download_url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
 
   # build-macOS:
@@ -203,15 +191,11 @@ jobs:
       - uses: ./.github/actions/build-love
         with:
           output: ${{ env.PACKAGE_NAME }}
-      - name: Upload as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          path: ${{ env.PACKAGE_NAME }}
       - name: Upload to WeTransfer
         id: transfer
         run: |
           curl -fsSL git.io/file-transfer | sh
-          ./transfer wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1 | tee ./wetransfer.log
+          ./transfer wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1>./wetransfer.log
           echo "::set-output name=download_url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
 
   discord-report:
