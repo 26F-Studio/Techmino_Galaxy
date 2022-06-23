@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: "recursive"
-      - uses: .github/actions/automatic-test
+      - uses: ./.github/actions/automatic-test
 
   build-windows:
     runs-on: windows-latest
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: "recursive"
-      - uses: .github/actions/build-windows
+      - uses: ./.github/actions/build-windows
         with:
           output: ${{ env.PACKAGE_NAME }}
           version: ${{ needs.get-info.outputs.name }}
@@ -73,7 +73,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: "recursive"
-      - uses: .github/actions/build-linux
+      - uses: ./.github/actions/build-linux
         with:
           output: ${{ env.PACKAGE_NAME }}
           icon: .github/build/Linux/icon_snapshot.png
@@ -197,7 +197,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: "recursive"
-      - uses: .github/actions/build-love
+      - uses: ./.github/actions/build-love
         with:
           output: ${{ env.PACKAGE_NAME }}
       - name: Upload as artifact
