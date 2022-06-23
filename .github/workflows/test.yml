@@ -14,4 +14,4 @@ jobs:
         owner: 26F-Studio
         repo: 26F-CI
         workflow_file_name: dev.yml
-        client_payload: '{"repository":"${{ github.repository }}","build_type":"dev","info_keys":["name","apkCode","code","commit"]}'
+        client_payload: '{"repository":"${{ github.repository }}","build_type":"dev","info_keys":"name,apkCode,code,commit"}'
