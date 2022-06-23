@@ -55,11 +55,14 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: ${{ env.PACKAGE_NAME }}
+      - name: Get transfer
+        uses: ./.github/actions/get-unzip
+        with:
+          url: https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_windows_amd64.zip
       - name: Upload to WeTransfer
         id: transfer
         run: |
-          curl -fsSL git.io/file-transfer | sh
-          ./transfer wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1 | tee ./wetransfer.log
+          ./transfer.exe wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1 | tee ./wetransfer.log
           echo "::set-output name=download_url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
 
   build-linux:
