@@ -10,6 +10,7 @@ jobs:
   get-info:
     runs-on: ubuntu-latest
     outputs:
+      appName: ${{ steps.info.outputs.appName }}
       versionName: ${{ steps.info.outputs.versionName }}
       versionString: ${{ steps.info.outputs.versionString }}
       versionCode: ${{ steps.info.outputs.versionCode }}
@@ -22,6 +23,7 @@ jobs:
       - name: Get app info
         id: info
         run: |
+          echo "::set-output name=appName::$('$(lua ./.github/workflows/getVersion.lua -appName)' | sed -r 's/[^[:alnum:]]+/-/g; s/^-|-$//')"
           echo "::set-output name=versionName::$(lua ./.github/workflows/getVersion.lua -versionName)"
           echo "::set-output name=versionString::$(lua ./.github/workflows/getVersion.lua -versionString)"
           echo "::set-output name=versionCode::$(lua ./.github/workflows/getVersion.lua -versionCode)"
@@ -40,6 +42,8 @@ jobs:
           workflow_file_name: dev.yml
           client_payload: '{
             "repository": "${{ github.repository }}",
+            "ref": "${ GITHUB_REF_NAME }",
+            "appName": "${{ needs.get-info.outputs.appName }}",
             "buildType": "dev",
             "buildList": "./assets/ ./Zenitha/ ./conf.lua ./main.lua ./version.lua",
             "packageName": "Techmino_Galaxy_${{ needs.get-info.outputs.versionName }}_${{ needs.get-info.outputs.commitHash }}_#${{ GITHUB.RUN_NUMBER }}",
