@@ -42,7 +42,7 @@ jobs:
           workflow_file_name: dev.yml
           client_payload: '{
             "repository": "${{ github.repository }}",
-            "ref": "${ GITHUB_REF_NAME }",
+            "ref": "${{ github.ref_name }}",
             "appName": "${{ needs.get-info.outputs.appName }}",
             "buildType": "dev",
             "buildList": "./assets/ ./Zenitha/ ./conf.lua ./main.lua ./version.lua",
