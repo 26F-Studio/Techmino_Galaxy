@@ -23,7 +23,7 @@ jobs:
       - name: Get app info
         id: info
         run: |
-          echo "::set-output name=appName::$('$(lua ./.github/workflows/getVersion.lua -appName)' | sed -r 's/[^[:alnum:]]+/-/g; s/^-|-$//')"
+          echo "::set-output name=appName::$(echo "$(lua ./.github/workflows/getVersion.lua -appName)" | sed -r 's/[^[:alnum:]]+/-/g; s/^-|-$//')"
           echo "::set-output name=versionName::$(lua ./.github/workflows/getVersion.lua -versionName)"
           echo "::set-output name=versionString::$(lua ./.github/workflows/getVersion.lua -versionString)"
           echo "::set-output name=versionCode::$(lua ./.github/workflows/getVersion.lua -versionCode)"
