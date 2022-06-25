@@ -1,10 +1,10 @@
 [Desktop Entry]
-Name=Techmino Galaxy
+Name=Techmino Galaxy Development
 Comment=Techmino Galaxy is awesome!
 MimeType=application/x-love-game;
-Exec=Techmino_Galaxy %f
+Exec=app %f
 Type=Application
 Categories=Game;
 Terminal=false
-Icon=Techmino_Galaxy
+Icon=icon
 NoDisplay=false
