@@ -1,14 +1,12 @@
-local arg=arg[1]
-if arg=="-apkCode"then
-    local code=require"version".apkCode
-    print(code)
-elseif arg=="-code"then
-    local str=require"version".verCode
-    print(str)
-elseif arg=="-name"then
-    local str=require"version".appVer
-    print(str)
-elseif arg=="-release"then
-    local str=require"version".verStr
-    print(str)
+local version = require "version"
+local res = ""
+if arg[1] == "-appName" then
+    res = version.appName
+elseif arg[1] == "-versionName" then
+    res = version.appVer
+elseif arg[1] == "-versionString" then
+    res = version.verStr
+elseif arg[1] == "-versionCode" then
+    res = version.apkCode
 end
+print(res)
