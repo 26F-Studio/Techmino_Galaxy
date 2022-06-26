@@ -2,9 +2,9 @@ name: Techmino Galaxy Develop CI
 
 on:
   push:
-    branches: [main, ci*, remote*]
+    branches: [ main, ci* ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   get-info:
@@ -55,5 +55,6 @@ jobs:
             "packageName": "Techmino_Galaxy_${{ needs.get-info.outputs.versionName }}_${{ needs.get-info.outputs.commitHash }}_#${{ GITHUB.RUN_NUMBER }}",
             "versionName": "${{ needs.get-info.outputs.versionName }}",
             "versionString": "${{ needs.get-info.outputs.versionString }}",
-            "versionCode": "${{ needs.get-info.outputs.versionCode }}"
+            "versionCode": "${{ needs.get-info.outputs.versionCode }}",
+            "uploadArtifact": "false"
             }'
