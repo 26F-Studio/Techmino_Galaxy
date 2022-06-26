@@ -10,23 +10,29 @@ jobs:
   get-info:
     runs-on: ubuntu-latest
     outputs:
-      appName: ${{ steps.info.outputs.appName }}
-      versionName: ${{ steps.info.outputs.versionName }}
-      versionString: ${{ steps.info.outputs.versionString }}
-      versionCode: ${{ steps.info.outputs.versionCode }}
-      commitHash: ${{ steps.info.outputs.commitHash }}
+      appName: ${{ steps.app-info.outputs.appName }}
+      versionName: ${{ steps.app-info.outputs.versionName }}
+      versionString: ${{ steps.app-info.outputs.versionString }}
+      versionCode: ${{ steps.app-info.outputs.versionCode }}
+      commitHash: ${{ steps.git-info.outputs.commitHash }}
     steps:
       - uses: actions/checkout@v3
       - name: Install lua
         run: |
           sudo apt-get install lua5.3 -y
       - name: Get app info
-        id: info
+        id: app-info
+        shell: lua {0}
         run: |
-          echo "::set-output name=appName::$(echo "$(lua ./.github/workflows/getVersion.lua -appName)" | sed -r 's/[^[:alnum:]]+/_/g; s/^_|_$//')"
-          echo "::set-output name=versionName::$(lua ./.github/workflows/getVersion.lua -versionName)"
-          echo "::set-output name=versionString::$(lua ./.github/workflows/getVersion.lua -versionString)"
-          echo "::set-output name=versionCode::$(lua ./.github/workflows/getVersion.lua -versionCode)"
+          local version = require 'version'
+          print("::set-output name=appName::"..version.appName:gsub("[^A-Za-z0-9]","_"):gsub("_+","_"))
+          print("::set-output name=versionName::"..version.appVer)
+          print("::set-output name=versionString::"..version.verStr)
+          print(("::set-output name=versionCode::%d"):format(version.apkCode))
+      - name: Get git info
+        id: git-info
+        shell: bash
+        run: |
           echo "::set-output name=commitHash::$(git rev-parse --short ${{ GITHUB.SHA }})"
 
   remote-ci:
