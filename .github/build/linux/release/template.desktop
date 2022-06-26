@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Techmino Galaxy Development
+Name=Techmino Galaxy
 Comment=Techmino Galaxy is awesome!
 MimeType=application/x-love-game;
 Exec=app %f
