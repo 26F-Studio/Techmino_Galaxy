@@ -45,7 +45,7 @@ jobs:
           github_token: ${{ secrets.GH_ACCESS_TOKEN }}
           owner: 26F-Studio
           repo: 26F-CI
-          workflow_file_name: dev.yml
+          workflow_file_name: main.yml
           client_payload: '{
             "repository": "${{ github.repository }}",
             "ref": "${{ github.ref_name }}",
