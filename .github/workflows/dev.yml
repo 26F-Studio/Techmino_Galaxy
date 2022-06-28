@@ -1,0 +1,60 @@
+name: Techmino Galaxy Develop CI
+
+on:
+  push:
+    branches: [ main, ci* ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  get-info:
+    runs-on: ubuntu-latest
+    outputs:
+      appName: ${{ steps.app-info.outputs.appName }}
+      versionName: ${{ steps.app-info.outputs.versionName }}
+      versionString: ${{ steps.app-info.outputs.versionString }}
+      versionCode: ${{ steps.app-info.outputs.versionCode }}
+      commitHash: ${{ steps.git-info.outputs.commitHash }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install lua
+        run: |
+          sudo apt-get install lua5.3 -y
+      - name: Get app info
+        id: app-info
+        shell: lua {0}
+        run: |
+          local version = require 'version'
+          print("::set-output name=appName::"..version.appName:gsub("[^A-Za-z0-9]","_"):gsub("_+","_"))
+          print("::set-output name=versionName::"..version.appVer)
+          print("::set-output name=versionString::"..version.verStr)
+          print(("::set-output name=versionCode::%d"):format(version.apkCode))
+      - name: Get git info
+        id: git-info
+        shell: bash
+        run: |
+          echo "::set-output name=commitHash::$(git rev-parse --short ${{ GITHUB.SHA }})"
+
+  remote-ci:
+    runs-on: ubuntu-latest
+    needs: get-info
+    steps:
+      - name: Remote CI
+        uses: convictional/trigger-workflow-and-wait@v1.6.1
+        with:
+          github_token: ${{ secrets.GH_ACCESS_TOKEN }}
+          owner: 26F-Studio
+          repo: 26F-CI
+          workflow_file_name: main.yml
+          client_payload: '{
+            "repository": "${{ github.repository }}",
+            "ref": "${{ github.ref_name }}",
+            "appName": "${{ needs.get-info.outputs.appName }}",
+            "buildType": "dev",
+            "buildList": "./assets/ ./Zenitha/ ./conf.lua ./main.lua ./version.lua",
+            "packageName": "Techmino_Galaxy_${{ needs.get-info.outputs.versionName }}_${{ needs.get-info.outputs.commitHash }}_#${{ GITHUB.RUN_NUMBER }}",
+            "versionName": "${{ needs.get-info.outputs.versionName }}",
+            "versionString": "${{ needs.get-info.outputs.versionString }}",
+            "versionCode": "${{ needs.get-info.outputs.versionCode }}",
+            "uploadArtifact": "false"
+            }'

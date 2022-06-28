@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Techmino Galaxy
+Comment=Techmino Galaxy is awesome!
+MimeType=application/x-love-game;
+Exec=app %f
+Type=Application
+Categories=Game;
+Terminal=false
+Icon=icon
+NoDisplay=false

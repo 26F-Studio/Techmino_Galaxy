@@ -1,0 +1,39 @@
+name: 'update version'
+description: 'common update logic for snapshot and release'
+inputs:
+  commit:
+    required: false
+    description: 'github commit hash'
+  type:
+    required: true
+    description: 'snapshot or release'
+runs:
+  using: "composite"
+  steps:
+    - shell: python
+      name: update snapshot saving folder
+      run: |
+        from io import open
+        if '${{ inputs.type }}'.lower() != 'snapshot':
+          exit(0)
+        with open('conf.lua', 'r+', encoding='utf-8') as file:
+          data = file.read()
+          data = data.replace("t.identity='Techmino_Galaxy'--Saving folder", "t.identity='Techmino_Galaxy_Snapshot'--Saving folder")
+          file.seek(0)
+          file.truncate()
+          file.flush()
+          file.write(data)
+    - shell: python
+      run: |
+        from io import open
+        import re
+        with open('version.lua', 'r+', encoding='utf-8') as file:
+          commitHash = '${{ inputs.commit }}'
+          if commitHash != '':
+            commitHash = '@' + commitHash[0:4]
+          data = file.read()
+          data = re.sub('(\d)"', r'\1' + commitHash + '"', data, 1)
+          file.seek(0)
+          file.truncate()
+          file.flush()
+          file.write(data)
