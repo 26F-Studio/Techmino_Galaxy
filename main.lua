@@ -20,8 +20,6 @@ DEBUG.checkLoadTime("Load Zenitha")
 --------------------------------------------------------------
 -- Global Vars Declaration
 VERSION=require"version"
-MOBILE=SYSTEM=='Android' or SYSTEM=='iOS'
-
 --------------------------------------------------------------
 -- System setting
 math.randomseed(os.time()*626)
@@ -232,19 +230,19 @@ SFX.loadSample{name='bass',path='assets/sample/bass',base='A2'}-- A2~A4
 SFX.loadSample{name='lead',path='assets/sample/lead',base='A3'}-- A3~A5
 
 SFX.load('assets/sfx/')
-BGM.load((function()
-    local path='assets/music'
+BGM.init((function()
+    local path='assets/music/'
     local L={}
     for _,dir in next,love.filesystem.getDirectoryItems(path) do
-        if love.filesystem.getInfo(path..'/'..dir).type=='directory' then
-            for _,file in next,love.filesystem.getDirectoryItems(path..'/'..dir) do
-                local fullPath=path..'/'..dir..'/'..file
+        if love.filesystem.getInfo(path..dir).type=='directory' then
+            for _,file in next,love.filesystem.getDirectoryItems(path..dir) do
+                local fullPath=path..dir..'/'..file
                 if FILE.isSafe(fullPath) then
                     L[dir..'/'..file:sub(1,-5)]=fullPath
                 end
             end
-        elseif love.filesystem.getInfo(path..'/'..dir).type=='file' then
-            local fullPath=path..'/'..dir
+        elseif love.filesystem.getInfo(path..dir).type=='file' then
+            local fullPath=path..dir
             if FILE.isSafe(fullPath) then
                 L[dir:sub(1,-5)]=fullPath
             end
