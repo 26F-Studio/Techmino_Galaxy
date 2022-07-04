@@ -25,7 +25,7 @@ jobs:
         shell: lua {0}
         run: |
           local version = require 'version'
-          print("::set-output name=appName::"..version.appName:gsub("[^A-Za-z0-9]","_"):gsub("_+","_"))
+          print("::set-output name=appName::"..version.appName)
           print("::set-output name=versionName::"..version.appVer)
           print("::set-output name=versionString::"..version.verStr)
           print(("::set-output name=versionCode::%d"):format(version.apkCode))
