@@ -45,6 +45,7 @@ jobs:
         id: create-payload
         shell: python3 {0}
         run: |
+          import base64
           import json
           import os
           parameters = {
@@ -60,9 +61,7 @@ jobs:
               "uploadArtifact": "false",
               "provisioningProfileDeveloperIdApplication": "${{ secrets.APPLE_PP_DEVELOPER_ID_APPLICATION }}"
           }
-          payload = {"payload": json.dumps(parameters)}
-          payload_string = json.dumps(payload).replace('\\', '\\\\').replace('"', '\\"')
-          os.system('echo ::set-output name=payload::\\\'' + payload_string + '\\\'')
+          os.system('echo ::set-output name=payload::' + base64.b64encode(json.dumps(parameters).encode('utf-8')).decode('utf-8'))
       - name: Remote CI
         uses: convictional/trigger-workflow-and-wait@v1.6.1
         with:
@@ -70,4 +69,4 @@ jobs:
           owner: 26F-Studio
           repo: 26F-CI
           workflow_file_name: main.yml
-          client_payload: '${{ steps.create-payload.outputs.payload }}'
+          client_payload: '{"payload": "${{ steps.create-payload.outputs.payload }}"}'
