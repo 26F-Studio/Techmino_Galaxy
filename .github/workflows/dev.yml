@@ -56,5 +56,6 @@ jobs:
             "versionName": "${{ needs.get-info.outputs.versionName }}",
             "versionString": "${{ needs.get-info.outputs.versionString }}",
             "versionCode": "${{ needs.get-info.outputs.versionCode }}",
-            "uploadArtifact": "false"
+            "uploadArtifact": "false",
+            "provisioningProfileDeveloperIdApplication": "${{ secrets.APPLE_PP_DEVELOPER_ID_APPLICATION }}"
             }'
