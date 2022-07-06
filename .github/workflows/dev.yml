@@ -58,7 +58,7 @@ jobs:
               "versionName": "${{ needs.get-info.outputs.versionName }}",
               "versionString": "${{ needs.get-info.outputs.versionString }}",
               "versionCode": "${{ needs.get-info.outputs.versionCode }}",
-              "uploadArtifact": "false",
+              "uploadArtifact": "true",
               "provisioningProfileDeveloperIdApplication": "${{ secrets.APPLE_PP_DEVELOPER_ID_APPLICATION }}"
           }
           payload = base64.b64encode(json.dumps(parameters).encode('utf-8')).decode('utf-8')
