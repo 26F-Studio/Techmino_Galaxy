@@ -2,19 +2,20 @@ name: Techmino Galaxy Develop CI
 
 on:
   push:
-    branches: [ main, ci* ]
+    branches: [main, ci*]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   get-info:
     runs-on: ubuntu-latest
     outputs:
-      appName: ${{ steps.app-info.outputs.appName }}
-      versionName: ${{ steps.app-info.outputs.versionName }}
-      versionString: ${{ steps.app-info.outputs.versionString }}
-      versionCode: ${{ steps.app-info.outputs.versionCode }}
-      commitHash: ${{ steps.git-info.outputs.commitHash }}
+      app-name: ${{ steps.app-info.outputs.app-name }}
+      bundle-id: ${{ steps.app-info.outputs.bundle-id }}
+      version-name: ${{ steps.app-info.outputs.version-name }}
+      version-string: ${{ steps.app-info.outputs.version-string }}
+      version-code: ${{ steps.app-info.outputs.version-code }}
+      commit-hash: ${{ steps.git-info.outputs.commit-hash }}
     steps:
       - uses: actions/checkout@v3
       - name: Install lua
@@ -25,10 +26,11 @@ jobs:
         shell: lua {0}
         run: |
           local version = require 'version'
-          print('::set-output name=appName::'..version.appName)
-          print('::set-output name=versionName::'..version.appVer)
-          print('::set-output name=versionString::'..version.verStr)
-          print(('::set-output name=versionCode::%d'):format(version.apkCode))
+          print('::set-output name=app-name::'..version.appName)
+          print('::set-output name=bundle-id::org.f26_studio.'..version.appName:gsub('[^A-Za-z0-9]+', '_'))
+          print('::set-output name=version-name::'..version.appVer)
+          print('::set-output name=version-string::'..version.verStr)
+          print(('::set-output name=version-code::%d'):format(version.apkCode))
       - name: Get git info
         id: git-info
         shell: bash
@@ -39,36 +41,25 @@ jobs:
   remote-ci:
     runs-on: ubuntu-latest
     needs: get-info
+    env:
+      BARE_PACKAGE_PATH: "./target.love"
     steps:
       - uses: actions/checkout@v3
-      - name: Create payload
-        id: create-payload
-        shell: python3 {0}
-        run: |
-          import base64
-          import json
-          import os
-          parameters = {
-              "repository": "${{ github.repository }}",
-              "ref": "${{ github.ref_name }}",
-              "appName": "${{ needs.get-info.outputs.appName }}",
-              "buildType": "dev",
-              "buildList": "./assets/ ./Zenitha/ ./conf.lua ./main.lua ./version.lua",
-              "packageName": "Techmino_Galaxy_${{ needs.get-info.outputs.versionName }}_${{ needs.get-info.outputs.commitHash }}_#${{ GITHUB.RUN_NUMBER }}",
-              "versionName": "${{ needs.get-info.outputs.versionName }}",
-              "versionString": "${{ needs.get-info.outputs.versionString }}",
-              "versionCode": "${{ needs.get-info.outputs.versionCode }}",
-              "uploadArtifact": "true",
-              "provisioningProfileDeveloperIdApplication": "${{ secrets.APPLE_PP_DEVELOPER_ID_APPLICATION }}"
-          }
-          payload = base64.b64encode(json.dumps(parameters).encode('utf-8')).decode('utf-8')
-          os.system('echo ::add-mask::' + payload)
-          os.system('echo ::set-output name=payload::' + payload)
-      - name: Remote CI
-        uses: convictional/trigger-workflow-and-wait@v1.6.1
+      - name: Build bare love package
+        uses: 26F-Studio/love-actions-core@v0.0.2-alpha
         with:
-          github_token: ${{ secrets.GH_ACCESS_TOKEN }}
-          owner: 26F-Studio
-          repo: 26F-CI
-          workflow_file_name: main.yml
-          client_payload: '{"payload": "${{ steps.create-payload.outputs.payload }}"}'
+          build-list: ./assets/ ./Zenitha/ ./conf.lua ./main.lua ./version.lua
+          package-path: ${{ env.BARE_PACKAGE_PATH }}
+      - name: Build love android
+        uses: 26F-Studio/love-actions-android@v0.0.3-alpha
+        with:
+          app-name: ${{ needs.get-info.outputs.app-name }}
+          bundle-id: ${{ needs.get-info.outputs.bundle-id }}
+          keystore-alias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+          keystore-base64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          keystore-key-password: ${{ secrets.ANDROID_KEYSTORE_KEYPASSWORD }}
+          keystore-store-password: ${{ secrets.ANDROID_KEYSTORE_STOREPASSWORD }}
+          love-package: ${{ env.BARE_PACKAGE_PATH }}
+          resource-path: ./.github/build/android/dev/res
+          version-string: ${{ needs.get-info.outputs.version-string }}
+          version-code: ${{ needs.get-info.outputs.version-code }}
