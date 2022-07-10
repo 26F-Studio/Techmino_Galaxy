@@ -68,4 +68,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Techmino_Galaxy_${{ needs.get-info.outputs.version-string }}_${{ needs.get-info.outputs.commit-hash }}_#${{ GITHUB.RUN_NUMBER }}_Android
-          path: ${{ steps.build-love.outputs.package-paths }}
+          path: ./build/*
