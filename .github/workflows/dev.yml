@@ -69,3 +69,13 @@ jobs:
         with:
           name: Techmino_Galaxy_${{ needs.get-info.outputs.version-string }}_${{ needs.get-info.outputs.commit-hash }}_#${{ GITHUB.RUN_NUMBER }}_Android
           path: ./build/*
+      - name: Upload to WeTransfer
+        id: transfer
+        run: |
+          curl -sL https://git.io/file-transfer | sh 
+          ./transfer wet -s -p 16 --no-progress ${{ steps.build-love.outputs.package-paths }} 2>&1>./wetransfer.log
+          echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
+      - name: Display download link
+        shell: bash
+        run: |
+          echo "::notice::Download link ${{ steps.transfer.outputs.download-url }}"
