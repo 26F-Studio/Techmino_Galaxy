@@ -108,7 +108,7 @@ jobs:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Build love android
         id: build-love-android
-        uses: 26F-Studio/love-actions-android@v1.0.4
+        uses: 26F-Studio/love-actions-android@v1.0.5
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ needs.get-info.outputs.bundle-id }}
