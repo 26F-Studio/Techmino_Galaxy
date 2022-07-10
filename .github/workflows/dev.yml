@@ -72,7 +72,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ needs.get-info.base-name }}_Core
+          name: ${{ needs.get-info.outputs.base-name }}_Core
           path: ${{ env.PACKAGE_NAME }}
       - name: Upload to WeTransfer
         id: transfer
@@ -123,7 +123,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ needs.get-info.base-name }}_Android
+          name: ${{ needs.get-info.outputs.base-name }}_Android
           path: ${{ env.OUTPUT_FOLDER }}/*
       - name: Upload to WeTransfer
         id: transfer
