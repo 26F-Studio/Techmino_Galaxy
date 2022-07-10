@@ -52,7 +52,7 @@ jobs:
           package-path: ${{ env.BARE_PACKAGE_PATH }}
       - name: Build love android
         id: build-love
-        uses: 26F-Studio/love-actions-android@v1.0.0
+        uses: 26F-Studio/love-actions-android@v1.0.1
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ needs.get-info.outputs.bundle-id }}
