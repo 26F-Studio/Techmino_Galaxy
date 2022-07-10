@@ -5,7 +5,9 @@ on:
     branches: [main, ci*]
   pull_request:
     branches: [main]
-
+env:
+  CORE_LOVE_PACKAGE_PATH: ./core.love
+  CORE_LOVE_ARTIFACT_NAME: core_love_package
 jobs:
   get-info:
     runs-on: ubuntu-latest
@@ -16,6 +18,7 @@ jobs:
       version-string: ${{ steps.app-info.outputs.version-string }}
       version-code: ${{ steps.app-info.outputs.version-code }}
       commit-hash: ${{ steps.git-info.outputs.commit-hash }}
+      base-name: ${{ steps.assemble-base-name.outputs.base-name }}
     steps:
       - uses: actions/checkout@v3
       - name: Install lua
@@ -37,15 +40,16 @@ jobs:
         run: |
           commitHash=$(git rev-parse --short ${{ GITHUB.SHA }})
           echo '::set-output name=commitHash::$commitHash'
-      - name: Set package base name
+      - name: Assemble package base name
+        id: assemble-base-name
         shell: bash
         run: |
-          echo '::set-env name=PACKAGE_BASE_NAME::Techmino_Galaxy_${{ steps.app-info.outputs.version-string }}_${{ steps.git-info.outputs.commit-hash }}_#${{ GITHUB.RUN_NUMBER }}'
+          echo '::set-output name=base-name::Techmino_Galaxy_${{ steps.app-info.outputs.version-string }}_${{ steps.git-info.outputs.commit-hash }}_#${{ GITHUB.RUN_NUMBER }}'
   build-core:
     runs-on: ubuntu-latest
-    needs: check-inputs
+    needs: get-info
     env:
-      PACKAGE_NAME: ./${{ env.PACKAGE_BASE_NAME }}_Bare.love
+      PACKAGE_NAME: ./${{ needs.get-info.base-name }}_Core.love
     outputs:
       download-url: ${{ steps.transfer.outputs.download-url }}
     steps:
@@ -56,18 +60,18 @@ jobs:
         uses: 26F-Studio/love-actions-core@v1.0.1
         with:
           build-list: ./assets/ ./Zenitha/ ./conf.lua ./main.lua ./version.lua
-          package-path: ${{ env.BARE_PACKAGE_PATH }}
+          package-path: ${{ env.CORE_LOVE_PACKAGE_PATH }}
       - name: Upload core love package
         uses: actions/upload-artifact@v3
         with:
-          name: core_love_package
-          path: ./game.love
+          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
+          path: ${{ env.CORE_LOVE_PACKAGE_PATH }}
       - name: Rename love package
-        run: mv./game.love ${{ env.PACKAGE_NAME }}
+        run: mv ${{ env.CORE_LOVE_PACKAGE_PATH }} ${{ env.PACKAGE_NAME }}
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.PACKAGE_BASE_NAME }}_Bare
+          name: ${{ needs.get-info.base-name }}_Core
           path: ${{ env.PACKAGE_NAME }}
       - name: Upload to WeTransfer
         id: transfer
@@ -88,7 +92,10 @@ jobs:
       #     sourceDir: ${{ env.SOURCE_DIR }}
   build-android:
     runs-on: ubuntu-latest
-    needs: get-info
+    needs: [get-info, build-core]
+    env:
+      OUTPUT_FOLDER: ./build
+      PACKAGE_NAME: ./${{ needs.get-info.base-name }}_Android.apk
     steps:
       - uses: actions/checkout@v3
         with:
@@ -96,9 +103,9 @@ jobs:
       - name: Download core love package
         uses: actions/download-artifact@v3
         with:
-          name: core_love_package
+          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Build love android
-        id: build-love
+        id: build-love-android
         uses: 26F-Studio/love-actions-android@v1.0.1
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
@@ -110,16 +117,17 @@ jobs:
           resource-path: ./.github/build/android/dev/res
           version-string: ${{ needs.get-info.outputs.version-string }}
           version-code: ${{ needs.get-info.outputs.version-code }}
+          output-folder: ${{ env.OUTPUT_FOLDER }}
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.PACKAGE_BASE_NAME }}_Android
-          path: ./build/*
+          name: ${{ needs.get-info.base-name }}_Android
+          path: ${{ env.OUTPUT_FOLDER }}/*
       - name: Upload to WeTransfer
         id: transfer
         run: |
           curl -sL https://git.io/file-transfer | sh 
-          ./transfer wet -s -p 16 --no-progress ${{ steps.build-love.outputs.package-paths }} 2>&1>./wetransfer.log
+          ./transfer wet -s -p 16 --no-progress ${{ steps.build-love-android.outputs.package-paths }} 2>&1>./wetransfer.log
           echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
       - name: Display download link
         shell: bash
@@ -140,4 +148,4 @@ jobs:
       - name: Cleanup
         uses: geekyeggo/delete-artifact@v1
         with:
-          name: core_love_package
+          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
