@@ -37,21 +37,66 @@ jobs:
         run: |
           commitHash=$(git rev-parse --short ${{ GITHUB.SHA }})
           echo '::set-output name=commitHash::$commitHash'
-
-  build-android:
+      - name: Set package base name
+        shell: bash
+        run: |
+          echo '::set-env name=PACKAGE_BASE_NAME::Techmino_Galaxy_${{ steps.app-info.outputs.version-string }}_${{ steps.git-info.outputs.commit-hash }}_#${{ GITHUB.RUN_NUMBER }}'
+  build-core:
     runs-on: ubuntu-latest
-    needs: get-info
+    needs: check-inputs
     env:
-      BARE_PACKAGE_PATH: "./target.love"
+      PACKAGE_NAME: ./${{ env.PACKAGE_BASE_NAME }}_Bare.love
+    outputs:
+      download-url: ${{ steps.transfer.outputs.download-url }}
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
-      - name: Build bare love package
+      - name: Build core love package
         uses: 26F-Studio/love-actions-core@v1.0.1
         with:
           build-list: ./assets/ ./Zenitha/ ./conf.lua ./main.lua ./version.lua
           package-path: ${{ env.BARE_PACKAGE_PATH }}
+      - name: Upload core love package
+        uses: actions/upload-artifact@v3
+        with:
+          name: core_love_package
+          path: ./game.love
+      - name: Rename love package
+        run: mv./game.love ${{ env.PACKAGE_NAME }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.PACKAGE_BASE_NAME }}_Bare
+          path: ${{ env.PACKAGE_NAME }}
+      - name: Upload to WeTransfer
+        id: transfer
+        run: |
+          curl -sL https://git.io/file-transfer | sh 
+          ./transfer wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1>./wetransfer.log
+          echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
+  auto-test:
+    runs-on: ubuntu-latest
+    needs: build-core
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      # - name: Run auto tests
+      #   uses: ./.github/actions/auto-test
+      #   with:
+      #     sourceDir: ${{ env.SOURCE_DIR }}
+  build-android:
+    runs-on: ubuntu-latest
+    needs: get-info
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Download core love package
+        uses: actions/download-artifact@v3
+        with:
+          name: core_love_package
       - name: Build love android
         id: build-love
         uses: 26F-Studio/love-actions-android@v1.0.1
@@ -62,14 +107,13 @@ jobs:
           keystore-base64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           keystore-key-password: ${{ secrets.ANDROID_KEYSTORE_KEYPASSWORD }}
           keystore-store-password: ${{ secrets.ANDROID_KEYSTORE_STOREPASSWORD }}
-          love-package: ${{ env.BARE_PACKAGE_PATH }}
           resource-path: ./.github/build/android/dev/res
           version-string: ${{ needs.get-info.outputs.version-string }}
           version-code: ${{ needs.get-info.outputs.version-code }}
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: Techmino_Galaxy_${{ needs.get-info.outputs.version-string }}_${{ needs.get-info.outputs.commit-hash }}_#${{ GITHUB.RUN_NUMBER }}_Android
+          name: ${{ env.PACKAGE_BASE_NAME }}_Android
           path: ./build/*
       - name: Upload to WeTransfer
         id: transfer
@@ -81,3 +125,19 @@ jobs:
         shell: bash
         run: |
           echo "::notice::Download link ${{ steps.transfer.outputs.download-url }}"
+  post-build:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      [
+        auto-test,
+        build-core,
+        build-android,
+      ]
+    steps:
+      - name: Initialize CI
+        uses: actions/checkout@v3
+      - name: Cleanup
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: core_love_package
