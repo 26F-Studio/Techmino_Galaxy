@@ -51,7 +51,8 @@ jobs:
           build-list: ./assets/ ./Zenitha/ ./conf.lua ./main.lua ./version.lua
           package-path: ${{ env.BARE_PACKAGE_PATH }}
       - name: Build love android
-        uses: 26F-Studio/love-actions-android@v0.0.6-alpha
+        id: build-love
+        uses: 26F-Studio/love-actions-android@v0.0.7-alpha
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ needs.get-info.outputs.bundle-id }}
@@ -63,3 +64,9 @@ jobs:
           resource-path: ./.github/build/android/dev/res
           version-string: ${{ needs.get-info.outputs.version-string }}
           version-code: ${{ needs.get-info.outputs.version-code }}
+      - name: List packages
+        shell: bash
+        run: |
+          for package_path in ${{ steps.build-love.outputs.package-paths }}; do
+            echo $package_path
+          done
