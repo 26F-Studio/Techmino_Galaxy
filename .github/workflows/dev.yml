@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       app-name: ${{ steps.app-info.outputs.app-name }}
-      bundle-id: ${{ steps.app-info.outputs.bundle-id }}
       version-name: ${{ steps.app-info.outputs.version-name }}
       version-string: ${{ steps.app-info.outputs.version-string }}
       version-code: ${{ steps.app-info.outputs.version-code }}
@@ -30,7 +29,6 @@ jobs:
         run: |
           local version = require "version"
           print("::set-output name=app-name::"..version.appName)
-          print("::set-output name=bundle-id::org.f26_studio."..version.appName:gsub("[^A-Za-z0-9]+", "_"))
           print("::set-output name=version-name::"..version.appVer)
           print("::set-output name=version-string::"..version.verStr)
           print(("::set-output name=version-code::%d"):format(version.apkCode))
@@ -80,6 +78,10 @@ jobs:
           curl -sL https://git.io/file-transfer | sh 
           ./transfer wet -s -p 16 --no-progress ${{ env.PACKAGE_NAME }} 2>&1>./wetransfer.log
           echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
+      - name: Display download link
+        shell: bash
+        run: |
+          echo "::notice::Download link: ${{ steps.transfer.outputs.download-url }}"
   auto-test:
     runs-on: ubuntu-latest
     needs: build-core
@@ -97,26 +99,34 @@ jobs:
     needs: [get-info, build-core]
     env:
       OUTPUT_FOLDER: ./build
-      PACKAGE_NAME: ./${{ needs.get-info.outputs.base-name }}_Android.apk
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
+      - name: Process app name
+        id: process-app-name
+        shell: python3 {0}
+        run: |
+          import os
+          import re
+          os.system("echo ::set-output name=bundle-id::org.f26_studio." + re.sub(r"[^A-Za-z0-9]+", "_", "${{ needs.get-info.outputs.app-name }}"))
+          os.system("echo ::set-output name=product-name::" + re.sub(r"[^A-Za-z0-9]+", "-", "${{ needs.get-info.outputs.app-name }}"))
       - name: Download core love package
         uses: actions/download-artifact@v3
         with:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Build love android
         id: build-love-android
-        uses: 26F-Studio/love-actions-android@v1.0.5
+        uses: 26F-Studio/love-actions-android@v1.0.6
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
-          bundle-id: ${{ needs.get-info.outputs.bundle-id }}
+          bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
           keystore-alias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
           keystore-base64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           keystore-key-password: ${{ secrets.ANDROID_KEYSTORE_KEYPASSWORD }}
           keystore-store-password: ${{ secrets.ANDROID_KEYSTORE_STOREPASSWORD }}
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
+          product-name: ${{ steps.process-app-name.outputs.product-name }}
           resource-path: ./.github/build/android/dev/res
           version-string: ${{ needs.get-info.outputs.version-string }}
           version-code: ${{ needs.get-info.outputs.version-code }}
@@ -135,7 +145,7 @@ jobs:
       - name: Display download link
         shell: bash
         run: |
-          echo "::notice::Download link ${{ steps.transfer.outputs.download-url }}"
+          echo "::notice::Download link: ${{ steps.transfer.outputs.download-url }}"
   post-build:
     runs-on: ubuntu-latest
     if: ${{ always() }}
