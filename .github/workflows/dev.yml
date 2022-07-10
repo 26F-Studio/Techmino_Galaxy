@@ -38,18 +38,19 @@ jobs:
         id: git-info
         shell: bash
         run: |
-          commitHash=$(git rev-parse --short ${{ GITHUB.SHA }})
-          echo '::set-output name=commitHash::$commitHash'
+          COMMIT_HASH=$(git rev-parse --short ${{ GITHUB.SHA }})
+          echo ::set-output name=commit-hash::$COMMIT_HASH
       - name: Assemble package base name
         id: assemble-base-name
         shell: bash
         run: |
-          echo '::set-output name=base-name::Techmino_Galaxy_${{ steps.app-info.outputs.version-string }}_${{ steps.git-info.outputs.commit-hash }}_#${{ GITHUB.RUN_NUMBER }}'
+          BASE_NAME=Techmino_Galaxy_${{ steps.app-info.outputs.version-string }}_${{ steps.git-info.outputs.commit-hash }}_#${{ GITHUB.RUN_NUMBER }}
+          echo ::set-output name=base-name::$BASE_NAME
   build-core:
     runs-on: ubuntu-latest
     needs: get-info
     env:
-      PACKAGE_NAME: ./${{ needs.get-info.base-name }}_Core.love
+      PACKAGE_NAME: ./${{ needs.get-info.outputs.base-name }}_Core.love
     outputs:
       download-url: ${{ steps.transfer.outputs.download-url }}
     steps:
@@ -95,7 +96,7 @@ jobs:
     needs: [get-info, build-core]
     env:
       OUTPUT_FOLDER: ./build
-      PACKAGE_NAME: ./${{ needs.get-info.base-name }}_Android.apk
+      PACKAGE_NAME: ./${{ needs.get-info.outputs.base-name }}_Android.apk
     steps:
       - uses: actions/checkout@v3
         with:
