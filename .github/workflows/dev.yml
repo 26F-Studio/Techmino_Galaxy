@@ -46,17 +46,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build bare love package
-        uses: 26F-Studio/love-actions-core@v0.0.2-alpha
+        uses: 26F-Studio/love-actions-core@v1.0.1
         with:
           build-list: ./assets/ ./Zenitha/ ./conf.lua ./main.lua ./version.lua
           package-path: ${{ env.BARE_PACKAGE_PATH }}
       - name: Build love android
         id: build-love
-        uses: 26F-Studio/love-actions-android@v0.0.8-alpha
+        uses: 26F-Studio/love-actions-android@v1.0.0
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ needs.get-info.outputs.bundle-id }}
-          # keystore-alias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+          keystore-alias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
           keystore-base64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           keystore-key-password: ${{ secrets.ANDROID_KEYSTORE_KEYPASSWORD }}
           keystore-store-password: ${{ secrets.ANDROID_KEYSTORE_STOREPASSWORD }}
