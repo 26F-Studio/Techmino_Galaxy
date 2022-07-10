@@ -45,6 +45,8 @@ jobs:
       BARE_PACKAGE_PATH: "./target.love"
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: recursive
       - name: Build bare love package
         uses: 26F-Studio/love-actions-core@v1.0.1
         with:
