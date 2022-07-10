@@ -64,9 +64,8 @@ jobs:
           resource-path: ./.github/build/android/dev/res
           version-string: ${{ needs.get-info.outputs.version-string }}
           version-code: ${{ needs.get-info.outputs.version-code }}
-      - name: List packages
-        shell: bash
-        run: |
-          for package_path in ${{ steps.build-love.outputs.package-paths }}; do
-            echo $package_path
-          done
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Techmino_Galaxy_${{ needs.get-info.outputs.version-string }}_${{ needs.get-info.outputs.commit-hash }}_#${{ GITHUB.RUN_NUMBER }}_Android
+          path: ${{ steps.build-love.outputs.package-paths }}
