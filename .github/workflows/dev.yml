@@ -191,6 +191,60 @@ jobs:
         shell: bash
         run: |
           echo "::notice::Download link: ${{ steps.transfer.outputs.download-url }}"
+  build-macos:
+    runs-on: macos-latest
+    needs: [get-info, build-core]
+    env:
+      OUTPUT_FOLDER: ./build
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Process app name
+        id: process-app-name
+        shell: python3 {0}
+        run: |
+          import os
+          import re
+          os.system("echo ::set-output name=bundle-id::org.26f-studio." + re.sub(r"[^A-Za-z0-9]+", "-", "${{ needs.get-info.outputs.app-name }}"))
+          os.system("echo ::set-output name=product-name::" + re.sub(r"[^A-Za-z0-9]+", "_", "${{ needs.get-info.outputs.app-name }}"))
+      - name: Download core love package
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
+      - name: Build macOS packages
+        id: build-packages
+        uses: 26F-Studio/love-actions-macos@v0.0.1-alpha
+        with:
+          app-name: ${{ needs.get-info.outputs.app-name }}
+          bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
+          copyright: "Copyright © 2019-2022 26F-Studio. Some Rights Reserved."
+          icon-path: ./.github/build/macOS/dev/icon.icns
+          love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
+          product-name: ${{ steps.process-app-name.outputs.product-name }}
+          version-string: ${{ needs.get-info.outputs.version-string }}
+          output-folder: ${{ env.OUTPUT_FOLDER }}
+          account-username: ${{ secrets.APPLE_ACCOUNT_USERNAME }}
+          account-password: ${{ secrets.APPLE_ACCOUNT_PASSWORD }}
+          certificate-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_APPLICATION }}
+          certificate-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_APPLICATION_PWD }}
+          certificate-type: "Developer ID Application"
+          team-id: "${{ secrets.APPLE_DEVELOPER_TEAM_ID }}"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_macOS
+          path: ${{ env.OUTPUT_FOLDER }}/*
+      - name: Upload to WeTransfer
+        id: transfer
+        run: |
+          curl -sL https://git.io/file-transfer | sh 
+          ./transfer wet -s -p 16 --no-progress ${{ steps.build-packages.outputs.package-paths }} 2>&1>./wetransfer.log
+          echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
+      - name: Display download link
+        shell: bash
+        run: |
+          echo "::notice::Download link: ${{ steps.transfer.outputs.download-url }}"
   post-build:
     runs-on: ubuntu-latest
     if: ${{ always() }}
@@ -200,6 +254,7 @@ jobs:
         build-core,
         build-android,
         build-linux,
+        build-macos,
       ]
     steps:
       - name: Initialize CI
