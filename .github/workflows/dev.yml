@@ -168,7 +168,7 @@ jobs:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Build Linux packages
         id: build-packages
-        uses: 26F-Studio/love-actions-linux@v0.0.3-alpha
+        uses: 26F-Studio/love-actions-linux@v0.0.4-alpha
         with:
           desktop-file-path: ./.github/build/linux/dev/template.desktop
           executable-name: app
