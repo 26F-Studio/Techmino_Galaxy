@@ -95,6 +95,8 @@ jobs:
     needs: [get-info, build-core]
     env:
       OUTPUT_FOLDER: ./build
+    outputs:
+      download-url: ${{ steps.transfer.outputs.download-url }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -143,6 +145,8 @@ jobs:
     needs: [get-info, build-core]
     env:
       OUTPUT_FOLDER: ./build
+    outputs:
+      download-url: ${{ steps.transfer.outputs.download-url }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -184,6 +188,8 @@ jobs:
     needs: [get-info, build-core]
     env:
       OUTPUT_FOLDER: ./build
+    outputs:
+      download-url: ${{ steps.transfer.outputs.download-url }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -234,6 +240,8 @@ jobs:
     needs: [get-info, build-core]
     env:
       OUTPUT_FOLDER: ./build
+    outputs:
+      download-url: ${{ steps.transfer.outputs.download-url }}
     steps:
       - uses: actions/checkout@v3
         with:
