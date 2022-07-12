@@ -267,7 +267,7 @@ jobs:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Build Windows packages
         id: build-packages
-        uses: 26F-Studio/love-actions-windows@v0.0.1-alpha
+        uses: 26F-Studio/love-actions-windows@v0.0.2-alpha
         with:
           icon-path: ./.github/build/windows/dev/icon.ico
           rc-path: ./.github/build/windows/dev/template.rc
