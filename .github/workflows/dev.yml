@@ -246,7 +246,7 @@ jobs:
         run: |
           echo "::notice::Download link: ${{ steps.transfer.outputs.download-url }}"
   build-windows:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: [get-info, build-core]
     env:
       OUTPUT_FOLDER: ./build
