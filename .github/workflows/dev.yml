@@ -208,7 +208,7 @@ jobs:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Build macOS packages
         id: build-packages
-        uses: 26F-Studio/love-actions-macos@v0.0.3-alpha
+        uses: 26F-Studio/love-actions-macos@v0.0.5-alpha
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
@@ -220,10 +220,20 @@ jobs:
           output-folder: ${{ env.OUTPUT_FOLDER }}
           account-username: ${{ secrets.APPLE_ACCOUNT_USERNAME }}
           account-password: ${{ secrets.APPLE_ACCOUNT_PASSWORD }}
-          certificate-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_APPLICATION }}
-          certificate-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_APPLICATION_PWD }}
-          certificate-type: "Developer ID Application"
+          developer-id-application-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_APPLICATION }}
+          developer-id-application-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_APPLICATION_PWD }}
           team-id: "${{ secrets.APPLE_DEVELOPER_TEAM_ID }}"
+          developer-id-installer-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER }}
+          developer-id-installer-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER_PWD }}
+          dmg-background-path: ./.github/build/macOS/dev/dmg.png
+          dmg-icon-position: "287 313"
+          dmg-icon-size: "128"
+          dmg-link-position: "734 313"
+          dmg-text-size: "12"
+          dmg-volume-icon-path: ./.github/build/macOS/dev/dmg.icns
+          dmg-volume-name: ${{ steps.process-app-name.outputs.product-name }}
+          dmg-window-position: "200 120"
+          dmg-window-size: "1024 604"
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
