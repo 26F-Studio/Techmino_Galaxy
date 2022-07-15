@@ -208,7 +208,7 @@ jobs:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Build macOS packages
         id: build-packages
-        uses: 26F-Studio/love-actions-macos@v0.2.0-alpha
+        uses: 26F-Studio/love-actions-macos@v1.0.0
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
