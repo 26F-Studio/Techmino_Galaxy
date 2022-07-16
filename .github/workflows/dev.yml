@@ -119,6 +119,7 @@ jobs:
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
+          icon-specifier: "@mipmap/icon"
           keystore-alias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
           keystore-base64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           keystore-key-password: ${{ secrets.ANDROID_KEYSTORE_KEYPASSWORD }}
@@ -183,7 +184,7 @@ jobs:
           curl -sL https://git.io/file-transfer | sh 
           ./transfer wet -s -p 16 --no-progress ${{ steps.build-packages.outputs.package-paths }} 2>&1>./wetransfer.log
           echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
-  build-macos:
+  build-macos-appstore:
     runs-on: macos-latest
     needs: [get-info, build-core]
     env:
@@ -208,7 +209,58 @@ jobs:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Build macOS packages
         id: build-packages
-        uses: 26F-Studio/love-actions-macos@v1.0.0
+        uses: 26F-Studio/love-actions-macos-appstore@main
+        with:
+          app-name: ${{ needs.get-info.outputs.app-name }}
+          bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
+          copyright: "Copyright © 2019-2022 26F-Studio. Some Rights Reserved."
+          icon-path: ./.github/build/macOS/dev/icon.icns
+          love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
+          product-name: ${{ steps.process-app-name.outputs.product-name }}
+          version-string: ${{ needs.get-info.outputs.version-string }}
+          output-folder: ${{ env.OUTPUT_FOLDER }}
+          account-username: ${{ secrets.APPLE_ACCOUNT_USERNAME }}
+          account-password: ${{ secrets.APPLE_ACCOUNT_PASSWORD }}
+          apple-distribution-base64: ${{ secrets.APPLE_CERT_APPLE_DISTRIBUTION }}
+          apple-distribution-password: ${{ secrets.APPLE_CERT_APPLE_DISTRIBUTION_PWD }}
+          team-id: "${{ secrets.APPLE_DEVELOPER_TEAM_ID }}"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_macOS_appstore
+          path: ${{ env.OUTPUT_FOLDER }}/*
+      - name: Upload to WeTransfer
+        id: transfer
+        run: |
+          wget -qO- https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_darwin_amd64.tar.gz | tar xvz
+          ./transfer wet -s -p 16 --no-progress ${{ steps.build-packages.outputs.package-paths }} 2>&1>./wetransfer.log
+          echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
+  build-macos-portable:
+    runs-on: macos-latest
+    needs: [get-info, build-core]
+    env:
+      OUTPUT_FOLDER: ./build
+    outputs:
+      download-url: ${{ steps.transfer.outputs.download-url }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Process app name
+        id: process-app-name
+        shell: python3 {0}
+        run: |
+          import os
+          import re
+          os.system("echo ::set-output name=bundle-id::org.26f-studio." + re.sub(r"[^A-Za-z0-9]+", "-", "${{ needs.get-info.outputs.app-name }}"))
+          os.system("echo ::set-output name=product-name::" + re.sub(r"[^A-Za-z0-9]+", "_", "${{ needs.get-info.outputs.app-name }}"))
+      - name: Download core love package
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
+      - name: Build macOS packages
+        id: build-packages
+        uses: 26F-Studio/love-actions-macos-portable@v1.0.1
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
@@ -237,7 +289,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ needs.get-info.outputs.base-name }}_macOS
+          name: ${{ needs.get-info.outputs.base-name }}_macOS_portable
           path: ${{ env.OUTPUT_FOLDER }}/*
       - name: Upload to WeTransfer
         id: transfer
@@ -305,7 +357,8 @@ jobs:
         build-core,
         build-android,
         build-linux,
-        build-macos,
+        build-macos-appstore,
+        build-macos-portable,
         build-windows,
       ]
     steps:
@@ -334,7 +387,7 @@ jobs:
             "fields":[
             {"name":"Version","value":"${{ needs.get-info.outputs.version-string }}","inline": true},
             {"name":"Package Name","value":"${{ needs.get-info.outputs.base-name }}","inline": true},
-            {"name":"Status","value":"**Automatic Test:** ${{ needs.auto-test.result }}\n**Core:** ${{ needs.build-core.result }}\n**Android:** ${{ needs.build-android.result }}\n**Linux:** ${{ needs.build-linux.result }}\n**macOS:** ${{ needs.build-macos.result }}\n**Windows:** ${{ needs.build-windows.result }}"},
-            {"name":"Download Links","value":"**Core:** ${{ needs.build-core.outputs.download-url}}\n**Android:** ${{ needs.build-android.outputs.download-url }}\n**Linux:** ${{ needs.build-linux.outputs.download-url }}\n**macOS:** ${{ needs.build-macos.outputs.download-url }}\n**Windows:** ${{ needs.build-windows.outputs.download-url}}"}
+            {"name":"Status","value":"**Automatic Test:** ${{ needs.auto-test.result }}\n**Core:** ${{ needs.build-core.result }}\n**Android:** ${{ needs.build-android.result }}\n**Linux:** ${{ needs.build-linux.result }}\n**macOS App Store:** ${{ needs.build-macos-appstore.result }}\n**macOS portable:** ${{ needs.build-macos-portable.result }}\n**Windows:** ${{ needs.build-windows.result }}"},
+            {"name":"Download Links","value":"**Core:** ${{ needs.build-core.outputs.download-url}}\n**Android:** ${{ needs.build-android.outputs.download-url }}\n**Linux:** ${{ needs.build-linux.outputs.download-url }}\n**macOS App Store:** ${{ needs.build-macos-appstore.outputs.download-url }}\n**macOS portable:** ${{ needs.build-macos-portable.outputs.download-url }}\n**Windows:** ${{ needs.build-windows.outputs.download-url}}"}
             ]
             }'
