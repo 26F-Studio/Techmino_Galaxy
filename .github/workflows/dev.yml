@@ -223,7 +223,9 @@ jobs:
           account-password: ${{ secrets.APPLE_ACCOUNT_PASSWORD }}
           apple-distribution-base64: ${{ secrets.APPLE_CERT_APPLE_DISTRIBUTION }}
           apple-distribution-password: ${{ secrets.APPLE_CERT_APPLE_DISTRIBUTION_PWD }}
-          team-id: "${{ secrets.APPLE_DEVELOPER_TEAM_ID }}"
+          team-id: ${{ secrets.APPLE_DEVELOPER_TEAM_ID }}
+          mac-installer-base64: ${{ secrets.APPLE_CERT_MAC_INSTALLER }}
+          mac-installer-password: ${{ secrets.APPLE_CERT_MAC_INSTALLER_PWD }}
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
