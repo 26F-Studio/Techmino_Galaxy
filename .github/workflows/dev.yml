@@ -8,6 +8,7 @@ on:
 env:
   CORE_LOVE_PACKAGE_PATH: ./core.love
   CORE_LOVE_ARTIFACT_NAME: core_love_package
+  DEBUG: "true"
 jobs:
   get-info:
     runs-on: ubuntu-latest
@@ -90,100 +91,102 @@ jobs:
         with:
           font-path: ./assets/fonts/proportional.otf
           language-folder: ./assets/language
-  # build-android:
-  #   runs-on: ubuntu-latest
-  #   needs: [get-info, build-core, auto-test]
-  #   env:
-  #     OUTPUT_FOLDER: ./build
-  #   outputs:
-  #     download-url: ${{ steps.transfer.outputs.download-url }}
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         submodules: recursive
-  #     - name: Process app name
-  #       id: process-app-name
-  #       shell: python3 {0}
-  #       run: |
-  #         import os
-  #         import re
-  #         os.system("echo ::set-output name=bundle-id::org.f26_studio." + re.sub(r"[^A-Za-z0-9]+", "_", "${{ needs.get-info.outputs.app-name }}"))
-  #         os.system("echo ::set-output name=product-name::" + re.sub(r"[^A-Za-z0-9]+", "-", "${{ needs.get-info.outputs.app-name }}"))
-  #     - name: Download core love package
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
-  #     - name: Build Android packages
-  #       id: build-packages
-  #       uses: 26F-Studio/love-actions-android@v1.1.0
-  #       with:
-  #         app-name: ${{ needs.get-info.outputs.app-name }}
-  #         bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
-  #         icon-specifier: "@mipmap/icon"
-  #         keystore-alias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
-  #         keystore-base64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-  #         keystore-key-password: ${{ secrets.ANDROID_KEYSTORE_KEYPASSWORD }}
-  #         keystore-store-password: ${{ secrets.ANDROID_KEYSTORE_STOREPASSWORD }}
-  #         love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
-  #         product-name: ${{ steps.process-app-name.outputs.product-name }}
-  #         resource-path: ./.github/build/android/dev/res
-  #         version-string: ${{ needs.get-info.outputs.version-string }}
-  #         version-code: ${{ needs.get-info.outputs.version-code }}
-  #         output-folder: ${{ env.OUTPUT_FOLDER }}
-  #     - name: Upload artifact
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: ${{ needs.get-info.outputs.base-name }}_Android
-  #         path: ${{ env.OUTPUT_FOLDER }}/*
-  #     - name: Upload to WeTransfer
-  #       id: transfer
-  #       run: |
-  #         curl -sL https://git.io/file-transfer | sh 
-  #         ./transfer wet -s -p 16 --no-progress ${{ steps.build-packages.outputs.package-paths }} 2>&1>./wetransfer.log
-  #         echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
-  # build-linux:
-  #   runs-on: ubuntu-latest
-  #   needs: [get-info, build-core, auto-test]
-  #   env:
-  #     OUTPUT_FOLDER: ./build
-  #   outputs:
-  #     download-url: ${{ steps.transfer.outputs.download-url }}
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         submodules: recursive
-  #     - name: Process app name
-  #       id: process-app-name
-  #       shell: python3 {0}
-  #       run: |
-  #         import os
-  #         import re
-  #         os.system("echo ::set-output name=product-name::" + re.sub(r"[^A-Za-z0-9]+", "_", "${{ needs.get-info.outputs.app-name }}"))
-  #     - name: Download core love package
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
-  #     - name: Build Linux packages
-  #       id: build-packages
-  #       uses: 26F-Studio/love-actions-linux@v1.0.3
-  #       with:
-  #         desktop-file-path: ./.github/build/linux/dev/template.desktop
-  #         executable-name: app
-  #         icon-path: ./.github/build/linux/dev/icon.png
-  #         love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
-  #         product-name: ${{ steps.process-app-name.outputs.product-name }}
-  #         output-folder: ${{ env.OUTPUT_FOLDER }}
-  #     - name: Upload artifact
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: ${{ needs.get-info.outputs.base-name }}_Linux
-  #         path: ${{ env.OUTPUT_FOLDER }}/*
-  #     - name: Upload to WeTransfer
-  #       id: transfer
-  #       run: |
-  #         curl -sL https://git.io/file-transfer | sh 
-  #         ./transfer wet -s -p 16 --no-progress ${{ steps.build-packages.outputs.package-paths }} 2>&1>./wetransfer.log
-  #         echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
+  build-android:
+    runs-on: ubuntu-latest
+    needs: [get-info, build-core, auto-test]
+    if: env.DEBUG != "true"
+    env:
+      OUTPUT_FOLDER: ./build
+    outputs:
+      download-url: ${{ steps.transfer.outputs.download-url }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Process app name
+        id: process-app-name
+        shell: python3 {0}
+        run: |
+          import os
+          import re
+          os.system("echo ::set-output name=bundle-id::org.f26_studio." + re.sub(r"[^A-Za-z0-9]+", "_", "${{ needs.get-info.outputs.app-name }}"))
+          os.system("echo ::set-output name=product-name::" + re.sub(r"[^A-Za-z0-9]+", "-", "${{ needs.get-info.outputs.app-name }}"))
+      - name: Download core love package
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
+      - name: Build Android packages
+        id: build-packages
+        uses: 26F-Studio/love-actions-android@v1.1.0
+        with:
+          app-name: ${{ needs.get-info.outputs.app-name }}
+          bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
+          icon-specifier: "@mipmap/icon"
+          keystore-alias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+          keystore-base64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          keystore-key-password: ${{ secrets.ANDROID_KEYSTORE_KEYPASSWORD }}
+          keystore-store-password: ${{ secrets.ANDROID_KEYSTORE_STOREPASSWORD }}
+          love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
+          product-name: ${{ steps.process-app-name.outputs.product-name }}
+          resource-path: ./.github/build/android/dev/res
+          version-string: ${{ needs.get-info.outputs.version-string }}
+          version-code: ${{ needs.get-info.outputs.version-code }}
+          output-folder: ${{ env.OUTPUT_FOLDER }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_Android
+          path: ${{ env.OUTPUT_FOLDER }}/*
+      - name: Upload to WeTransfer
+        id: transfer
+        run: |
+          curl -sL https://git.io/file-transfer | sh 
+          ./transfer wet -s -p 16 --no-progress ${{ steps.build-packages.outputs.package-paths }} 2>&1>./wetransfer.log
+          echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
+  build-linux:
+    runs-on: ubuntu-latest
+    needs: [get-info, build-core, auto-test]
+    if: env.DEBUG != "true"
+    env:
+      OUTPUT_FOLDER: ./build
+    outputs:
+      download-url: ${{ steps.transfer.outputs.download-url }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Process app name
+        id: process-app-name
+        shell: python3 {0}
+        run: |
+          import os
+          import re
+          os.system("echo ::set-output name=product-name::" + re.sub(r"[^A-Za-z0-9]+", "_", "${{ needs.get-info.outputs.app-name }}"))
+      - name: Download core love package
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
+      - name: Build Linux packages
+        id: build-packages
+        uses: 26F-Studio/love-actions-linux@v1.0.3
+        with:
+          desktop-file-path: ./.github/build/linux/dev/template.desktop
+          executable-name: app
+          icon-path: ./.github/build/linux/dev/icon.png
+          love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
+          product-name: ${{ steps.process-app-name.outputs.product-name }}
+          output-folder: ${{ env.OUTPUT_FOLDER }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_Linux
+          path: ${{ env.OUTPUT_FOLDER }}/*
+      - name: Upload to WeTransfer
+        id: transfer
+        run: |
+          curl -sL https://git.io/file-transfer | sh 
+          ./transfer wet -s -p 16 --no-progress ${{ steps.build-packages.outputs.package-paths }} 2>&1>./wetransfer.log
+          echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
   build-macos-appstore:
     runs-on: macos-latest
     needs: [get-info, build-core, auto-test]
@@ -237,118 +240,120 @@ jobs:
           wget -qO- https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_darwin_amd64.tar.gz | tar xvz
           ./transfer wet -s -p 16 --no-progress ${{ steps.build-packages.outputs.package-paths }} 2>&1>./wetransfer.log
           echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
-  # build-macos-portable:
-  #   runs-on: macos-latest
-  #   needs: [get-info, build-core, auto-test]
-  #   env:
-  #     OUTPUT_FOLDER: ./build
-  #   outputs:
-  #     download-url: ${{ steps.transfer.outputs.download-url }}
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         submodules: recursive
-  #     - name: Process app name
-  #       id: process-app-name
-  #       shell: python3 {0}
-  #       run: |
-  #         import os
-  #         import re
-  #         os.system("echo ::set-output name=bundle-id::org.26f-studio." + re.sub(r"[^A-Za-z0-9]+", "-", "${{ needs.get-info.outputs.app-name }}"))
-  #         os.system("echo ::set-output name=product-name::" + re.sub(r"[^A-Za-z0-9]+", "_", "${{ needs.get-info.outputs.app-name }}"))
-  #     - name: Download core love package
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
-  #     - name: Build macOS packages
-  #       id: build-packages
-  #       uses: 26F-Studio/love-actions-macos-portable@v1.0.1
-  #       with:
-  #         app-name: ${{ needs.get-info.outputs.app-name }}
-  #         bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
-  #         copyright: "Copyright © 2019-2022 26F-Studio. Some Rights Reserved."
-  #         icon-path: ./.github/build/macOS/dev/icon.icns
-  #         love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
-  #         product-name: ${{ steps.process-app-name.outputs.product-name }}
-  #         version-string: ${{ needs.get-info.outputs.version-string }}
-  #         output-folder: ${{ env.OUTPUT_FOLDER }}
-  #         account-username: ${{ secrets.APPLE_ACCOUNT_USERNAME }}
-  #         account-password: ${{ secrets.APPLE_ACCOUNT_PASSWORD }}
-  #         developer-id-application-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_APPLICATION }}
-  #         developer-id-application-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_APPLICATION_PWD }}
-  #         team-id: "${{ secrets.APPLE_DEVELOPER_TEAM_ID }}"
-  #         developer-id-installer-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER }}
-  #         developer-id-installer-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER_PWD }}
-  #         dmg-background-path: ./.github/build/macOS/dev/dmg.png
-  #         dmg-icon-position: "287 313"
-  #         dmg-icon-size: "128"
-  #         dmg-link-position: "734 313"
-  #         dmg-text-size: "12"
-  #         dmg-volume-icon-path: ./.github/build/macOS/dev/dmg.icns
-  #         dmg-volume-name: ${{ steps.process-app-name.outputs.product-name }}
-  #         dmg-window-position: "200 120"
-  #         dmg-window-size: "1024 604"
-  #     - name: Upload artifact
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: ${{ needs.get-info.outputs.base-name }}_macOS_portable
-  #         path: ${{ env.OUTPUT_FOLDER }}/*
-  #     - name: Upload to WeTransfer
-  #       id: transfer
-  #       run: |
-  #         wget -qO- https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_darwin_amd64.tar.gz | tar xvz
-  #         ./transfer wet -s -p 16 --no-progress ${{ steps.build-packages.outputs.package-paths }} 2>&1>./wetransfer.log
-  #         echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
-  # build-windows:
-  #   runs-on: windows-latest
-  #   needs: [get-info, build-core, auto-test]
-  #   env:
-  #     OUTPUT_FOLDER: ./build
-  #   outputs:
-  #     download-url: ${{ steps.transfer.outputs.download-url }}
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         submodules: recursive
-  #     - name: Process app name
-  #       id: process-app-name
-  #       shell: python3 {0}
-  #       run: |
-  #         import os
-  #         import re
-  #         os.system("echo ::set-output name=product-name::" + re.sub(r"[^A-Za-z0-9]+", "_", "${{ needs.get-info.outputs.app-name }}"))
-  #     - name: Download core love package
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
-  #     - name: Build Windows packages
-  #       id: build-packages
-  #       uses: 26F-Studio/love-actions-windows@v1.0.4
-  #       with:
-  #         icon-path: ./.github/build/windows/dev/icon.ico
-  #         rc-path: ./.github/build/windows/dev/template.rc
-  #         love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
-  #         product-name: ${{ steps.process-app-name.outputs.product-name }}
-  #         version-string: ${{ needs.get-info.outputs.version-string }}
-  #         output-folder: ${{ env.OUTPUT_FOLDER }}
-  #     - name: Upload artifact
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: ${{ needs.get-info.outputs.base-name }}_Windows
-  #         path: ${{ env.OUTPUT_FOLDER }}/*
-  #     - name: Get transfer
-  #       env:
-  #         TEMP_PATH: ./temp.zip
-  #       shell: bash
-  #       run: |
-  #         curl -L --retry 5 https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_windows_amd64.zip -o ${{ env.TEMP_PATH }}
-  #         7z x ${{ env.TEMP_PATH }} -o./
-  #         rm ${{ env.TEMP_PATH }}
-  #     - name: Upload to WeTransfer
-  #       id: transfer
-  #       run: |
-  #         ./transfer wet -s -p 16 --no-progress ${{ steps.build-packages.outputs.package-paths }} 2>&1>./wetransfer.log
-  #         echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
+  build-macos-portable:
+    runs-on: macos-latest
+    needs: [get-info, build-core, auto-test]
+    if: env.DEBUG != "true"
+    env:
+      OUTPUT_FOLDER: ./build
+    outputs:
+      download-url: ${{ steps.transfer.outputs.download-url }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Process app name
+        id: process-app-name
+        shell: python3 {0}
+        run: |
+          import os
+          import re
+          os.system("echo ::set-output name=bundle-id::org.26f-studio." + re.sub(r"[^A-Za-z0-9]+", "-", "${{ needs.get-info.outputs.app-name }}"))
+          os.system("echo ::set-output name=product-name::" + re.sub(r"[^A-Za-z0-9]+", "_", "${{ needs.get-info.outputs.app-name }}"))
+      - name: Download core love package
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
+      - name: Build macOS packages
+        id: build-packages
+        uses: 26F-Studio/love-actions-macos-portable@v1.0.1
+        with:
+          app-name: ${{ needs.get-info.outputs.app-name }}
+          bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
+          copyright: "Copyright © 2019-2022 26F-Studio. Some Rights Reserved."
+          icon-path: ./.github/build/macOS/dev/icon.icns
+          love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
+          product-name: ${{ steps.process-app-name.outputs.product-name }}
+          version-string: ${{ needs.get-info.outputs.version-string }}
+          output-folder: ${{ env.OUTPUT_FOLDER }}
+          account-username: ${{ secrets.APPLE_ACCOUNT_USERNAME }}
+          account-password: ${{ secrets.APPLE_ACCOUNT_PASSWORD }}
+          developer-id-application-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_APPLICATION }}
+          developer-id-application-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_APPLICATION_PWD }}
+          team-id: "${{ secrets.APPLE_DEVELOPER_TEAM_ID }}"
+          developer-id-installer-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER }}
+          developer-id-installer-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER_PWD }}
+          dmg-background-path: ./.github/build/macOS/dev/dmg.png
+          dmg-icon-position: "287 313"
+          dmg-icon-size: "128"
+          dmg-link-position: "734 313"
+          dmg-text-size: "12"
+          dmg-volume-icon-path: ./.github/build/macOS/dev/dmg.icns
+          dmg-volume-name: ${{ steps.process-app-name.outputs.product-name }}
+          dmg-window-position: "200 120"
+          dmg-window-size: "1024 604"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_macOS_portable
+          path: ${{ env.OUTPUT_FOLDER }}/*
+      - name: Upload to WeTransfer
+        id: transfer
+        run: |
+          wget -qO- https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_darwin_amd64.tar.gz | tar xvz
+          ./transfer wet -s -p 16 --no-progress ${{ steps.build-packages.outputs.package-paths }} 2>&1>./wetransfer.log
+          echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
+  build-windows:
+    runs-on: windows-latest
+    needs: [get-info, build-core, auto-test]
+    if: env.DEBUG != "true"
+    env:
+      OUTPUT_FOLDER: ./build
+    outputs:
+      download-url: ${{ steps.transfer.outputs.download-url }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Process app name
+        id: process-app-name
+        shell: python3 {0}
+        run: |
+          import os
+          import re
+          os.system("echo ::set-output name=product-name::" + re.sub(r"[^A-Za-z0-9]+", "_", "${{ needs.get-info.outputs.app-name }}"))
+      - name: Download core love package
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
+      - name: Build Windows packages
+        id: build-packages
+        uses: 26F-Studio/love-actions-windows@v1.0.4
+        with:
+          icon-path: ./.github/build/windows/dev/icon.ico
+          rc-path: ./.github/build/windows/dev/template.rc
+          love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
+          product-name: ${{ steps.process-app-name.outputs.product-name }}
+          version-string: ${{ needs.get-info.outputs.version-string }}
+          output-folder: ${{ env.OUTPUT_FOLDER }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_Windows
+          path: ${{ env.OUTPUT_FOLDER }}/*
+      - name: Get transfer
+        env:
+          TEMP_PATH: ./temp.zip
+        shell: bash
+        run: |
+          curl -L --retry 5 https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_windows_amd64.zip -o ${{ env.TEMP_PATH }}
+          7z x ${{ env.TEMP_PATH }} -o./
+          rm ${{ env.TEMP_PATH }}
+      - name: Upload to WeTransfer
+        id: transfer
+        run: |
+          ./transfer wet -s -p 16 --no-progress ${{ steps.build-packages.outputs.package-paths }} 2>&1>./wetransfer.log
+          echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
   post-build:
     runs-on: ubuntu-latest
     if: ${{ always() }}
