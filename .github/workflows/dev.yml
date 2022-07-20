@@ -8,7 +8,6 @@ on:
 env:
   CORE_LOVE_PACKAGE_PATH: ./core.love
   CORE_LOVE_ARTIFACT_NAME: core_love_package
-  DEBUG: "true"
 jobs:
   get-info:
     runs-on: ubuntu-latest
@@ -94,7 +93,7 @@ jobs:
   build-android:
     runs-on: ubuntu-latest
     needs: [get-info, build-core, auto-test]
-    if: env.DEBUG != "true"
+    if: ${{ !always() }}
     env:
       OUTPUT_FOLDER: ./build
     outputs:
@@ -146,7 +145,7 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     needs: [get-info, build-core, auto-test]
-    if: env.DEBUG != "true"
+    if: ${{ !always() }}
     env:
       OUTPUT_FOLDER: ./build
     outputs:
@@ -243,7 +242,7 @@ jobs:
   build-macos-portable:
     runs-on: macos-latest
     needs: [get-info, build-core, auto-test]
-    if: env.DEBUG != "true"
+    if: ${{ !always() }}
     env:
       OUTPUT_FOLDER: ./build
     outputs:
@@ -306,7 +305,7 @@ jobs:
   build-windows:
     runs-on: windows-latest
     needs: [get-info, build-core, auto-test]
-    if: env.DEBUG != "true"
+    if: ${{ !always() }}
     env:
       OUTPUT_FOLDER: ./build
     outputs:
@@ -356,7 +355,7 @@ jobs:
           echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
   post-build:
     runs-on: ubuntu-latest
-    if: ${{ always() }}
+    if: ${{ !always() }}
     needs:
       [
         get-info,
