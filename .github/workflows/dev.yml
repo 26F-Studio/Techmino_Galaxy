@@ -225,6 +225,7 @@ jobs:
           apple-distribution-password: ${{ secrets.APPLE_CERT_APPLE_DISTRIBUTION_PWD }}
           mac-installer-base64: ${{ secrets.APPLE_CERT_MAC_INSTALLER }}
           mac-installer-password: ${{ secrets.APPLE_CERT_MAC_INSTALLER_PWD }}
+          provision-profile-base64: ${{ secrets.APPLE_PP_MAC_APP_STORE }}
           account-username: ${{ secrets.APPLE_ACCOUNT_USERNAME }}
           account-password: ${{ secrets.APPLE_ACCOUNT_PASSWORD }}
           team-id: ${{ secrets.APPLE_DEVELOPER_TEAM_ID }}
