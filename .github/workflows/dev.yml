@@ -226,6 +226,7 @@ jobs:
           api-key-base64: ${{ secrets.APPLE_API_KEY }}
           api-key-id: ${{ secrets.APPLE_API_KEY_ID }}
           api-issuer-id: ${{ secrets.APPLE_API_ISSUER_ID }}
+          team-id: ${{ secrets.APPLE_DEVELOPER_TEAM_ID }}
           apple-id: ${{ secrets.APPLE_APPLE_ID }}
       - name: Upload artifact
         uses: actions/upload-artifact@v3
