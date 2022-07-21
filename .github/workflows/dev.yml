@@ -81,6 +81,7 @@ jobs:
   auto-test:
     runs-on: ubuntu-latest
     needs: build-core
+    if: ${{ !always() }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -189,6 +190,7 @@ jobs:
   build-macos-appstore:
     runs-on: macos-latest
     needs: [get-info, build-core, auto-test]
+    if: ${{ always() }}
     env:
       OUTPUT_FOLDER: ./build
     outputs:
