@@ -223,14 +223,9 @@ jobs:
           product-name: ${{ steps.process-app-name.outputs.product-name }}
           version-string: ${{ needs.get-info.outputs.version-string }}
           output-folder: ${{ env.OUTPUT_FOLDER }}
-          apple-distribution-base64: ${{ secrets.APPLE_CERT_APPLE_DISTRIBUTION }}
-          apple-distribution-password: ${{ secrets.APPLE_CERT_APPLE_DISTRIBUTION_PWD }}
-          mac-installer-base64: ${{ secrets.APPLE_CERT_MAC_INSTALLER }}
-          mac-installer-password: ${{ secrets.APPLE_CERT_MAC_INSTALLER_PWD }}
-          provision-profile-base64: ${{ secrets.APPLE_PP_MAC_APP_STORE }}
-          account-username: ${{ secrets.APPLE_ACCOUNT_USERNAME }}
-          account-password: ${{ secrets.APPLE_ACCOUNT_PASSWORD }}
-          team-id: ${{ secrets.APPLE_DEVELOPER_TEAM_ID }}
+          api-key-base64: ${{ secrets.APPLE_API_KEY }}
+          api-key-id: ${{ secrets.APPLE_API_KEY_ID }}
+          api-issuer-id: ${{ secrets.APPLE_API_ISSUER_ID }}
           apple-id: ${{ secrets.APPLE_APPLE_ID }}
       - name: Upload artifact
         uses: actions/upload-artifact@v3
