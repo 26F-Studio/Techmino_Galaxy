@@ -223,7 +223,7 @@ jobs:
           product-name: ${{ steps.process-app-name.outputs.product-name }}
           version-string: ${{ needs.get-info.outputs.version-string }}
           output-folder: ${{ env.OUTPUT_FOLDER }}
-          api-key-base64: ${{ secrets.APPLE_API_KEY }}
+          api-key: ${{ secrets.APPLE_API_KEY }}
           api-key-id: ${{ secrets.APPLE_API_KEY_ID }}
           api-issuer-id: ${{ secrets.APPLE_API_ISSUER_ID }}
           team-id: ${{ secrets.APPLE_DEVELOPER_TEAM_ID }}
