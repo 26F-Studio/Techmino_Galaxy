@@ -213,7 +213,7 @@ jobs:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Build macOS packages
         id: build-packages
-        uses: 26F-Studio/love-actions-macos-appstore@manual
+        uses: 26F-Studio/love-actions-macos-appstore@main
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
@@ -225,10 +225,6 @@ jobs:
           output-folder: ${{ env.OUTPUT_FOLDER }}
           apple-development-base64: ${{ secrets.APPLE_CERT_APPLE_DEVELOPMENT_BASE64 }}
           apple-development-password: ${{ secrets.APPLE_CERT_APPLE_DEVELOPMENT_PWD }}
-          apple-distribution-base64: ${{ secrets.APPLE_CERT_APPLE_DISTRIBUTION_BASE64 }}
-          apple-distribution-password: ${{ secrets.APPLE_CERT_APPLE_DISTRIBUTION_PWD }}
-          mac-installer-base64: ${{ secrets.APPLE_CERT_MAC_INSTALLER_BASE64 }}
-          mac-installer-password: ${{ secrets.APPLE_CERT_MAC_INSTALLER_PWD }}
           api-key: ${{ secrets.APPLE_API_KEY }}
           api-key-id: ${{ secrets.APPLE_API_KEY_ID }}
           api-issuer-id: ${{ secrets.APPLE_API_ISSUER_ID }}
