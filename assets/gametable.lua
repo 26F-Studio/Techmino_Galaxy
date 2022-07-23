@@ -2,7 +2,7 @@
 defaultMinoColor=setmetatable({2,22,42,6,52,12,32},{__index=function() return math.random(64) end})
 defaultPuyoColor=setmetatable({2,12,42,22,52},{__index=function() return math.random(64) end})
 
-do
+do-- bgmList
     bgmList={
         ['8-bit happiness']={
             base={'melody','bass'},

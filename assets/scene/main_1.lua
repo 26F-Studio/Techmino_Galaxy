@@ -16,7 +16,8 @@ function scene.keyDown(key,isRep)
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={.5,.75},  x=-500,w=120,fontSize=80, text=CHAR.icon.language,  code=WIDGET.c_goScn'setting_lang'},
+    WIDGET.new{type='button',pos={.5,.75},  x=-450,w=120,fontSize=80, text=CHAR.icon.language,  code=WIDGET.c_goScn'setting_lang'},
+    WIDGET.new{type='button',pos={.5,.75},  x=-600,w=120,fontSize=90, text=CHAR.icon.music,     code=WIDGET.c_goScn'musicroom'},
     WIDGET.new{type='button',pos={.20,.2},  w=420,h=200, fontSize=50, text='MARATHON', code=function() SCN.go('game_simp',nil,'mino_marathon') end},
     WIDGET.new{type='button',pos={.50,.2},  w=420,h=200, fontSize=70, text='SPRINT',   code=function() SCN.go('game_simp',nil,'mino_sprint') end},
     WIDGET.new{type='button',pos={.80,.2},  w=420,h=200, fontSize=50, text='ULTRA',    code=function() SCN.go('game_simp',nil,'mino_ultra') end},
