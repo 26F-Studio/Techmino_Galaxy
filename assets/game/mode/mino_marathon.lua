@@ -5,7 +5,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('push','-base')
+        playBgm('push','base')
     end,
     settings={mino={
         das=120,

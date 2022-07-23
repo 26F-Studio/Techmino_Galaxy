@@ -4,7 +4,7 @@ return {
         GAME.newPlayer(2,'mino')
         GAME.newPlayer(3,'puyo')
         GAME.setMain(1)
-        playBgm('battle','-base')
+        playBgm('battle','base')
     end,
     settings={
         mino={

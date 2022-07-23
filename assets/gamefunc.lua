@@ -18,22 +18,25 @@ function tryReset()
     lastResetTime=love.timer.getTime()
 end
 
-function playBgm(name,args)
+---@param mode
+---| 'full'
+---| 'simp'
+---| 'base'
+function playBgm(name,mode)
     if bgmList[name][1] then
-        BGM.play(bgmList[name],args)
+        BGM.play(bgmList[name],mode)
     else
-        if not args then args='-full' end
-        if args:sArg('-simp') then
-            BGM.play(bgmList[name].base,args)
-        elseif args:sArg('-base') then
+        if mode=='simp' then
+            BGM.play(bgmList[name].base,mode)
+        elseif mode=='base' then
             if not TABLE.compare(BGM.getPlaying(),bgmList[name].full) then
-                BGM.play(bgmList[name].full,args)
+                BGM.play(bgmList[name].full,mode)
                 BGM.set(bgmList[name].add,'volume',0,0)
             else
                 BGM.set(bgmList[name].add,'volume',0,1)
             end
-        elseif args:sArg('-full') then
-            BGM.play(bgmList[name].full,args)
+        elseif mode=='full' or true then
+            BGM.play(bgmList[name].full,mode)
         end
     end
 end

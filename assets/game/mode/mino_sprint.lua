@@ -4,7 +4,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('race','-base')
+        playBgm('race','base')
         BG.set('none')
     end,
     settings={mino={
