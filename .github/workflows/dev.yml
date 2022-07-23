@@ -223,6 +223,8 @@ jobs:
           product-name: ${{ steps.process-app-name.outputs.product-name }}
           version-string: ${{ needs.get-info.outputs.version-string }}
           output-folder: ${{ env.OUTPUT_FOLDER }}
+          apple-development-base64: ${{ secrets.APPLE_CERT_APPLE_DEVELOPMENT_BASE64 }}
+          apple-development-password: ${{ secrets.APPLE_CERT_APPLE_DEVELOPMENT_PWD }}
           apple-distribution-base64: ${{ secrets.APPLE_CERT_APPLE_DISTRIBUTION_BASE64 }}
           apple-distribution-password: ${{ secrets.APPLE_CERT_APPLE_DISTRIBUTION_PWD }}
           mac-installer-base64: ${{ secrets.APPLE_CERT_MAC_INSTALLER_BASE64 }}
