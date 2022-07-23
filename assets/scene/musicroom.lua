@@ -36,12 +36,12 @@ local musicListBox do
     musicListBox={type='listBox',pos={0,.5},x=100,y=-400,w=500,h=800,lineHeight=50}
     function musicListBox.drawFunc(name,n,sel)
         if sel then
-            gc.setColor(1,1,1,.2)
+            gc.setColor(COLOR.X)
             gc.rectangle('fill',0,0,500,50)
         end
         FONT.set(40)
         gc.setColor(COLOR.LD)
-        gc.print(n,10,-2)
+        gc.printf(n,0,-2,65,'right')
         gc.setColor(COLOR.L)
         gc.print(bigTitle[name],75,-2)
     end
