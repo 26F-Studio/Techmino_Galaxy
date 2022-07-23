@@ -70,8 +70,12 @@ end
 function scene.keyDown(key,isRep)
     if key=='space' or key=='return' then
         if not isRep then
-            selected=musicListBox:getSel()
-            playBgm(selected)
+            if BGM.isPlaying() and selected==musicListBox:getSel() then
+                BGM.stop()
+            else
+                selected=musicListBox:getSel()
+                playBgm(selected)
+            end
         end
     elseif key=='up' or key=='down' then
         musicListBox:arrowKey(key)
@@ -102,21 +106,22 @@ function scene.draw()
     gc.print(author[selected] or 'MrZ',700,230)
 
     if BGM.tell() then
+        gc.replaceTransform(SCR.xOy_l)
         FONT.set(20)
         gc.setColor(COLOR.L)
-        gc.print(STRING.time_simp(BGM.tell()%BGM.getDuration()).." / "..STRING.time_simp(BGM.getDuration()),630,750)
+        gc.print(STRING.time_simp(BGM.tell()%BGM.getDuration()).." / "..STRING.time_simp(BGM.getDuration()),630,230)
     end
 end
 
 scene.widgetList={
     musicListBox,
-    WIDGET.new{type='slider',x=630,y=720,w=600,
+    WIDGET.new{type='slider',pos={0,.5},x=630,y=200,w=600,
         valueShow='null',
         disp=function() return BGM.tell()/BGM.getDuration()%1 end,
         code=function(v) BGM.set('all','seek',v*BGM.getDuration()) end,
         visibleFunc=function() return BGM.isPlaying() end,
     },
-    WIDGET.new{type='button',pos={0,.5},x=720,y=350,w=180,h=90,text=CHAR.icon.play,fontSize=80,code=WIDGET.c_pressKey('space')},
+    WIDGET.new{type='button',pos={0,.5},x=720,y=350,w=180,h=90,text=CHAR.icon.play_pause,fontSize=80,code=WIDGET.c_pressKey('space')},
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
 
