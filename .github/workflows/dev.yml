@@ -30,8 +30,7 @@ jobs:
           local version = require "version"
           print("::set-output name=app-name::"..version.appName)
           print("::set-output name=version-name::"..version.appVer)
-          -- print("::set-output name=version-string::"..version.verStr)
-          print("::set-output name=version-string::0.1.0")
+          print("::set-output name=version-string::"..version.verStr)
           print(("::set-output name=version-code::%d"):format(version.apkCode))
       - name: Get git info
         id: git-info
@@ -82,7 +81,6 @@ jobs:
   auto-test:
     runs-on: ubuntu-latest
     needs: build-core
-    if: ${{ !always() }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -95,7 +93,6 @@ jobs:
   build-android:
     runs-on: ubuntu-latest
     needs: [get-info, build-core, auto-test]
-    if: ${{ !always() }}
     env:
       OUTPUT_FOLDER: ./build
     outputs:
@@ -147,7 +144,7 @@ jobs:
   build-ios:
     runs-on: macos-latest
     needs: [get-info, build-core, auto-test]
-    if: ${{ always() }}
+    if: ${{ !always() }}
     env:
       OUTPUT_FOLDER: ./build
     outputs:
@@ -201,7 +198,6 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     needs: [get-info, build-core, auto-test]
-    if: ${{ !always() }}
     env:
       OUTPUT_FOLDER: ./build
     outputs:
@@ -245,7 +241,6 @@ jobs:
   build-macos-appstore:
     runs-on: macos-latest
     needs: [get-info, build-core, auto-test]
-    if: ${{ always() }}
     env:
       OUTPUT_FOLDER: ./build
     outputs:
@@ -299,7 +294,6 @@ jobs:
   build-macos-portable:
     runs-on: macos-latest
     needs: [get-info, build-core, auto-test]
-    if: ${{ !always() }}
     env:
       OUTPUT_FOLDER: ./build
     outputs:
@@ -322,7 +316,7 @@ jobs:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Build macOS packages
         id: build-packages
-        uses: 26F-Studio/love-actions-macos-portable@v1.0.1
+        uses: 26F-Studio/love-actions-macos-portable@v1.0.2
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
@@ -362,7 +356,6 @@ jobs:
   build-windows:
     runs-on: windows-latest
     needs: [get-info, build-core, auto-test]
-    if: ${{ !always() }}
     env:
       OUTPUT_FOLDER: ./build
     outputs:
@@ -412,7 +405,7 @@ jobs:
           echo "::set-output name=download-url::$(cat ./wetransfer.log | grep https | cut -f3 -d" ")"
   post-build:
     runs-on: ubuntu-latest
-    if: ${{ !always() }}
+    if: ${{ always() }}
     needs:
       [
         get-info,
@@ -451,7 +444,7 @@ jobs:
             "fields":[
             {"name":"Version","value":"${{ needs.get-info.outputs.version-string }}","inline": true},
             {"name":"Package Name","value":"${{ needs.get-info.outputs.base-name }}","inline": true},
-            {"name":"Status","value":"**Automatic Test:** ${{ needs.auto-test.result }}\n**Core:** ${{ needs.build-core.result }}\n**Android:** ${{ needs.build-android.result }}\n**Linux:** ${{ needs.build-linux.result }}\n**macOS App Store:** ${{ needs.build-macos-appstore.result }}\n**macOS portable:** ${{ needs.build-macos-portable.result }}\n**Windows:** ${{ needs.build-windows.result }}"},
-            {"name":"Download Links","value":"**Core:** ${{ needs.build-core.outputs.download-url}}\n**Android:** ${{ needs.build-android.outputs.download-url }}\n**Linux:** ${{ needs.build-linux.outputs.download-url }}\n**macOS App Store:** ${{ needs.build-macos-appstore.outputs.download-url }}\n**macOS portable:** ${{ needs.build-macos-portable.outputs.download-url }}\n**Windows:** ${{ needs.build-windows.outputs.download-url}}"}
+            {"name":"Status","value":"**Automatic Test:** ${{ needs.auto-test.result }}\n**Core:** ${{ needs.build-core.result }}\n**Android:** ${{ needs.build-android.result }}\n**iOS:** ${{ needs.build-ios.result }}\n**Linux:** ${{ needs.build-linux.result }}\n**macOS App Store:** ${{ needs.build-macos-appstore.result }}\n**macOS portable:** ${{ needs.build-macos-portable.result }}\n**Windows:** ${{ needs.build-windows.result }}"},
+            {"name":"Download Links","value":"**Core:** ${{ needs.build-core.outputs.download-url}}\n**Android:** ${{ needs.build-android.outputs.download-url }}\n**iOS:** ${{ needs.build-ios.outputs.download-url }}\n**Linux:** ${{ needs.build-linux.outputs.download-url }}\n**macOS App Store:** ${{ needs.build-macos-appstore.outputs.download-url }}\n**macOS portable:** ${{ needs.build-macos-portable.outputs.download-url }}\n**Windows:** ${{ needs.build-windows.outputs.download-url}}"}
             ]
             }'
