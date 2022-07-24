@@ -30,7 +30,8 @@ jobs:
           local version = require "version"
           print("::set-output name=app-name::"..version.appName)
           print("::set-output name=version-name::"..version.appVer)
-          print("::set-output name=version-string::"..version.verStr)
+          -- print("::set-output name=version-string::"..version.verStr)
+          print("::set-output name=version-string::0.1.0")
           print(("::set-output name=version-code::%d"):format(version.apkCode))
       - name: Get git info
         id: git-info
@@ -244,7 +245,7 @@ jobs:
   build-macos-appstore:
     runs-on: macos-latest
     needs: [get-info, build-core, auto-test]
-    if: ${{ !always() }}
+    if: ${{ always() }}
     env:
       OUTPUT_FOLDER: ./build
     outputs:
