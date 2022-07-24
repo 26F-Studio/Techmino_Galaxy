@@ -39,11 +39,12 @@ local musicListBox do
             gc.setColor(1,1,1,.26)
             gc.rectangle('fill',0,0,500,50)
         end
+        FONT.set(30)
+        gc.setColor(COLOR.lS)
+        gc.printf(n,0,4,80,'center')
         FONT.set(40)
-        gc.setColor(COLOR.LD)
-        gc.printf(n,0,-2,65,'right')
         gc.setColor(COLOR.L)
-        gc.print(bigTitle[name],75,-2)
+        gc.print(bigTitle[name],75,-3)
     end
     musicListBox=WIDGET.new(musicListBox)
 
@@ -76,20 +77,24 @@ function scene.keyDown(key,isRep)
                 BGM.stop()
             else
                 selected=musicListBox:getSel()
-                playBgm(selected,fullband and 'full' or 'simp')
+                playBgm(selected,fullband and 'full' or 'base')
             end
         end
     elseif key=='up' or key=='down' then
         musicListBox:arrowKey(key)
+    elseif key=='tab'then
+        local w=scene.widgetList.fullband
+        if w._visible then
+            w.code()
+        end
     elseif key=='escape'then
         SCN.back()
     elseif #key==1 and key:find'[0-9a-z]'then
         local list=musicListBox:getList()
-        local sel=TABLE.find(list,selected)
+        local sel=TABLE.find(list,musicListBox:getSel())
         for _=1,#list do
             sel=sel%#list+1
             if list[sel]:sub(1,1)==key then
-                selected=list[sel]
                 musicListBox:select(sel)
                 break
             end
@@ -123,7 +128,8 @@ scene.widgetList={
         code=function(v) BGM.set('all','seek',v*BGM.getDuration()) end,
         visibleFunc=function() return BGM.isPlaying() end,
     },
-    WIDGET.new{type='checkBox',pos={0,.5},x=880,y=350,w=60,disp=function() return fullband end,
+    WIDGET.new{type='switch',pos={0,.5},x=880,y=350,h=40,disp=function() return fullband end,
+        name='fullband',text='',
         code=function()
             fullband=not fullband
             if BGM.isPlaying() then
