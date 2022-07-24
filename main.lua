@@ -157,12 +157,10 @@ do-- Zenitha.setDrawSysInfo
 end
 
 FONT.load{
-    norm='assets/fonts/proportional.otf',
-    mono='assets/fonts/monospaced.otf',
-    norm_jp='assets/fonts/japan.otf',
+    norm='assets/fonts/Inter-SemiBold.otf',
+    bold='assets/fonts/Inter-ExtraBold.otf',
 }
 FONT.setDefaultFont('norm')
-FONT.setDefaultFallback('norm')
 SCR.setSize(1600,1000)
 BGM.setMaxSources(20)
 VOC.setDiversion(.62)
