@@ -36,7 +36,7 @@ local musicListBox do
     musicListBox={type='listBox',pos={0,.5},x=100,y=-400,w=500,h=800,lineHeight=50}
     function musicListBox.drawFunc(name,n,sel)
         if sel then
-            gc.setColor(COLOR.X)
+            gc.setColor(1,1,1,.26)
             gc.rectangle('fill',0,0,500,50)
         end
         FONT.set(40)
@@ -56,10 +56,12 @@ local musicListBox do
 end
 
 local selected
+local fullband
 
 local scene={}
 
 function scene.enter()
+    fullband=true
     selected=getBgm()
     musicListBox:select(TABLE.find(musicListBox:getList(),selected))
 end
@@ -74,7 +76,7 @@ function scene.keyDown(key,isRep)
                 BGM.stop()
             else
                 selected=musicListBox:getSel()
-                playBgm(selected)
+                playBgm(selected,fullband and 'full' or 'simp')
             end
         end
     elseif key=='up' or key=='down' then
@@ -120,6 +122,17 @@ scene.widgetList={
         disp=function() return BGM.tell()/BGM.getDuration()%1 end,
         code=function(v) BGM.set('all','seek',v*BGM.getDuration()) end,
         visibleFunc=function() return BGM.isPlaying() end,
+    },
+    WIDGET.new{type='checkBox',pos={0,.5},x=880,y=350,w=60,disp=function() return fullband end,
+        code=function()
+            fullband=not fullband
+            if BGM.isPlaying() then
+                BGM.set(bgmList[selected].add,'volume',fullband and 1 or 0,.26)
+            end
+        end,
+        visibleFunc=function()
+            return type(bgmList[selected])=='table' and bgmList[selected].base
+        end,
     },
     WIDGET.new{type='button',pos={0,.5},x=720,y=350,w=180,h=90,text=CHAR.icon.play_pause,fontSize=80,code=WIDGET.c_pressKey('space')},
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
