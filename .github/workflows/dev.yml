@@ -86,7 +86,7 @@ jobs:
         with:
           submodules: recursive
       - name: Love actions for testing
-        uses: 26F-Studio/love-actions-test@v1.0.1
+        uses: 26F-Studio/love-actions-test@v1
         with:
           font-path: ./assets/fonts/Inter-SemiBold.otf
           language-folder: ./assets/language
