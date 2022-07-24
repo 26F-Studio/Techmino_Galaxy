@@ -174,7 +174,7 @@ jobs:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
           copyright: "Copyright © 2019-2022 26F-Studio. Some Rights Reserved."
-          icon-path: ./.github/build/macOS/dev/icon.icns
+          icon-path: ./.github/build/iOS/dev/icon
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
           product-name: ${{ steps.process-app-name.outputs.product-name }}
           version-string: ${{ needs.get-info.outputs.version-string }}
