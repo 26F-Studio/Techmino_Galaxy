@@ -144,7 +144,6 @@ jobs:
   build-ios:
     runs-on: macos-latest
     needs: [get-info, build-core, auto-test]
-    if: ${{ !always() }}
     env:
       OUTPUT_FOLDER: ./build
     outputs:
