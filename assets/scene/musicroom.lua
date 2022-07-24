@@ -128,7 +128,7 @@ scene.widgetList={
         code=function(v) BGM.set('all','seek',v*BGM.getDuration()) end,
         visibleFunc=function() return BGM.isPlaying() end,
     },
-    WIDGET.new{type='switch',pos={0,.5},x=880,y=350,h=40,disp=function() return fullband end,
+    WIDGET.new{type='switch',pos={0,.5},x=880,y=350,h=50,disp=function() return fullband end,
         name='fullband',text='',
         code=function()
             fullband=not fullband
