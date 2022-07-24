@@ -177,6 +177,8 @@ do-- bgmList
         ['empty']=true,
         ['jazz nihilism']=true,
         ['sakura']=true,
+        ['secret7th remix']=true,
+        ['secret8th remix']=true,
     }
     for name,song in next,bgmList do
         if type(song)=='table' then
