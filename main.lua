@@ -158,6 +158,7 @@ end
 
 FONT.load{
     norm='assets/fonts/Inter-SemiBold.otf',
+    thin='assets/fonts/Inter-Regular.otf',
     bold='assets/fonts/Inter-ExtraBold.otf',
 }
 FONT.setDefaultFont('norm')
