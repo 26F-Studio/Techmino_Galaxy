@@ -73,7 +73,7 @@ do-- bgmList
             full={'melody','accompany','decoration','bass','drum'},
         },
         ['overzero']={
-            base={'accompany','bass','sfx'},
+            base={'melody','bass','drum','sfx'},
             full={'melody','accompany','decoration','bass','drum','sfx'},
         },
         ['oxygen']={
@@ -161,7 +161,7 @@ do-- bgmList
             full={'melody1','melody2','accompany','bass','drum','sfx'},
         },
         ['waterfall']={
-            base={'accompany','bass','drum'},
+            base={'melody1','melody2','bass','drum'},
             full={'melody1','melody2','accompany','bass','drum','sfx'},
         },
         ['way']={
