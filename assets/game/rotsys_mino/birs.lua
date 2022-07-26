@@ -80,6 +80,7 @@ local function r(self,dir)
             local fdx,fdy=kickList[test][1]+dx,kickList[test][2]+dy
             if
                 dx*fdx>=0 and
+                (dy+.5)*fdy>=0 and
                 fdx^2+fdy^2<=5
             then
                 local x,y=ix+fdx,iy+fdy
