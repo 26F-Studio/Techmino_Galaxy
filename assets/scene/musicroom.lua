@@ -73,10 +73,10 @@ end
 function scene.keyDown(key,isRep)
     if key=='space' or key=='return' then
         if not isRep then
-            if BGM.isPlaying() and selected==musicListBox:getSel() then
+            if BGM.isPlaying() and selected==musicListBox:getItem() then
                 BGM.stop()
             else
-                selected=musicListBox:getSel()
+                selected=musicListBox:getItem()
                 playBgm(selected,fullband and 'full' or 'base')
             end
         end
@@ -91,7 +91,7 @@ function scene.keyDown(key,isRep)
         SCN.back()
     elseif #key==1 and key:find'[0-9a-z]'then
         local list=musicListBox:getList()
-        local sel=TABLE.find(list,musicListBox:getSel())
+        local sel=musicListBox:getSelect()
         for _=1,#list do
             sel=sel%#list+1
             if list[sel]:sub(1,1)==key then
