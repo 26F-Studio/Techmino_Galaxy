@@ -36,8 +36,8 @@ return {
     halfClear='Half Clear',
 
     -- Widget texts
-    main_1_play="开始",
-    main_1_setting="设置",
+    main_test_play="开始",
+    main_test_setting="设置",
 
     setting_mino="方块",
     setting_puyo="气泡",

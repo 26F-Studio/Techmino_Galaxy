@@ -1336,7 +1336,7 @@ function MP:render()
                 local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
                 if centerPos then
                     gc.setColor(1,1,1)
-                    GC.draw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40)
+                    GC.mDraw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40)
                 end
                 gc.translate(-movingX,-droppingY)
             end

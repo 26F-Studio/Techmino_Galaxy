@@ -369,7 +369,7 @@ function scene.draw()
                     rectangle('fill',x,y,r-6,r-6,15)
                     if N>=0 then
                         setColor(N<3 and COLOR.D or COLOR.L)
-                        GC.draw(tileText[N],x+r/2,y+r/2,nil,textScale)
+                        GC.mDraw(tileText[N],x+r/2,y+r/2,nil,textScale)
                     end
                 else
                     setColor(COLOR.DL)
@@ -381,7 +381,7 @@ function scene.draw()
                 rectangle('fill',x,y,r-6,r-6,15)
                 c=N<3 and 0 or 1
                 setColor(c,c,c,prevSpawnTime)
-                GC.draw(tileText[N],x+r/2,y+r/2,nil,textScale)
+                GC.mDraw(tileText[N],x+r/2,y+r/2,nil,textScale)
             end
         end
     end

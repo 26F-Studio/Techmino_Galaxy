@@ -1,8 +1,7 @@
 local scene={}
 
 function scene.enter()
-    -- BG.set('image')BG.send('image',.12,IMG.cover)
-    BG.set('galaxy')
+    BG.set('none')
     playBgm('blank','base')
 end
 
@@ -15,16 +14,23 @@ function scene.keyDown(key,isRep)
     end
 end
 
+function scene.draw()
+    GC.replaceTransform(SCR.xOy_m)
+    GC.setColor(1,1,1)
+    GC.mDraw(IMG.title.techmino,0,-288,0,.53)
+    FONT.set(30)
+    GC.mStr(VERSION.appVer,0,-180)
+end
+
 scene.widgetList={
-    WIDGET.new{type='button',pos={.5,.75},  x=-450,w=120,fontSize=80, text=CHAR.icon.language,  code=WIDGET.c_goScn'setting_lang'},
-    WIDGET.new{type='button',pos={.5,.75},  x=-600,w=120,fontSize=90, text=CHAR.icon.music,     code=WIDGET.c_goScn'musicroom'},
-    WIDGET.new{type='button',pos={.20,.2},  w=420,h=200, fontSize=50, text='MARATHON', code=function() SCN.go('game_simp',nil,'mino_marathon') end},
-    WIDGET.new{type='button',pos={.50,.2},  w=420,h=200, fontSize=70, text='SPRINT',   code=function() SCN.go('game_simp',nil,'mino_sprint') end},
-    WIDGET.new{type='button',pos={.80,.2},  w=420,h=200, fontSize=50, text='ULTRA',    code=function() SCN.go('game_simp',nil,'mino_ultra') end},
-    WIDGET.new{type='button',pos={.20,.45}, w=420,h=200, fontSize=70, text='BATTLE',   code=function() SCN.go('game_simp',nil,'battle') end},
-    WIDGET.new{type='button_fill',pos={.50,.45}, w=420,h=200, fontSize=70, text='',    code=NULL},
-    WIDGET.new{type='button_fill',pos={.80,.45}, w=420,h=200, fontSize=60, text='',    code=NULL},
-    WIDGET.new{type='button',pos={.5,.75},  w=626,h=200, fontSize=100,text=LANG'main_1_setting',code=WIDGET.c_goScn'setting_1'},
-    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=50,text=CHAR.icon.cross_thick,code=WIDGET.c_backScn},
+    WIDGET.new{type='button_fill',pos={.5,.5},x=-400,y=-20,w=360,h=140, color='R',text='Sprint',  fontSize=40,cornerR=0,code=function() SCN.go('game_simp',nil,'mino_sprint') end},
+    WIDGET.new{type='button_fill',pos={.5,.5},x=0,   y=-20,w=360,h=140, color='R',text='Marathon',fontSize=40,cornerR=0,code=function() SCN.go('game_simp',nil,'mino_marathon') end},
+    WIDGET.new{type='button_fill',pos={.5,.5},x=400, y=-20,w=360,h=140, color='R',text='Ultra',   fontSize=40,cornerR=0,code=function() SCN.go('game_simp',nil,'mino_ultra') end},
+    WIDGET.new{type='button_fill',pos={.5,.5},x=-200,y=160,w=360,h=140, color='B',text='',        fontSize=40,cornerR=0,code=NULL},
+    WIDGET.new{type='button_fill',pos={.5,.5},x=200, y=160,w=360,h=140, color='Y',text='',        fontSize=40,cornerR=0,code=NULL},
+
+    WIDGET.new{type='button',     pos={.5,.5},x=-400,y=320,w=360,h=100,text='Languages',          fontSize=40,cornerR=0,code=WIDGET.c_goScn'setting_lang'},
+    WIDGET.new{type='button',     pos={.5,.5},x=0,   y=320,w=360,h=100,text='Settings',           fontSize=40,cornerR=0,code=WIDGET.c_goScn'setting_1'},
+    WIDGET.new{type='button',     pos={.5,.5},x=400, y=320,w=360,h=100,text='Musicroom',          fontSize=40,cornerR=0,code=WIDGET.c_goScn'musicroom'},
 }
 return scene

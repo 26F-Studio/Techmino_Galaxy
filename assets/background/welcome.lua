@@ -28,10 +28,10 @@ function back.draw()
         gc.rotate(t+5*sin(.26*t)+5*sin(.626*t))
     end
     gc.setColor(.4,.6,1,.3)
-    GC.draw(textObj,4*sin(t*.7942),4*sin(t*.7355))
+    GC.mDraw(textObj,4*sin(t*.7942),4*sin(t*.7355))
     gc.setColor(.5,.7,1,.4)
-    GC.draw(textObj,2*sin(t*.77023),2*sin(t*.7026))
+    GC.mDraw(textObj,2*sin(t*.77023),2*sin(t*.7026))
     gc.setColor(1,1,1,.5)
-    GC.draw(textObj,3*sin(t*.7283),3*sin(t*.7626))
+    GC.mDraw(textObj,3*sin(t*.7283),3*sin(t*.7626))
 end
 return back

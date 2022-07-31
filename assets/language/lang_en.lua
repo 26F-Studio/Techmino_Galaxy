@@ -36,8 +36,8 @@ return {
     halfClear='Half Clear',
 
     -- Widget texts
-    main_1_play="Play",
-    main_1_setting="Setting",
+    main_test_play="Play",
+    main_test_setting="Setting",
 
     setting_mino="MINO",
     setting_puyo="PUYO",
