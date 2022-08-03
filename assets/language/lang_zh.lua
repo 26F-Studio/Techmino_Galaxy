@@ -53,6 +53,11 @@ return {
     setting_mainVol="主音量",
     setting_bgm="音乐",
     setting_sfx="音效",
+    setting_vib="振动",
+    setting_handling="控制参数...",
+    setting_keymapping="键位绑定...",
+    setting_enableTouching="启用触屏控制",
+    setting_touching="触屏控制...",
 
     setting_sysCursor="使用系统光标",
     setting_clickFX="点击动画",
@@ -66,7 +71,7 @@ return {
     setting_updRate="更新比率",
     setting_drawRate="绘制比率",
 
-    keyset_touch="触屏",
+    keyset_touch="触屏控制...",
     keyset_test="测试",
 
     -- Key setting

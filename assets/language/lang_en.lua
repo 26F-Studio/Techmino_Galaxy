@@ -53,6 +53,11 @@ return {
     setting_mainVol="Main Volume",
     setting_bgm="BGM",
     setting_sfx="SFX",
+    setting_vib="VIB",
+    setting_handling="Handling...",
+    setting_keymapping="Key mappings...",
+    setting_enableTouching="Enable touch control",
+    setting_touching="Touch controls...",
 
     setting_sysCursor="System cursor",
     setting_clickFX="Click FX",
@@ -66,7 +71,7 @@ return {
     setting_updRate="Update rate",
     setting_drawRate="Draw rate",
 
-    keyset_touch="Touch",
+    keyset_touch="Touch controls...",
     keyset_test="Test",
 
     -- Key setting

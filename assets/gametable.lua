@@ -206,6 +206,7 @@ settings={
         bgmVol=.8,
         sfxVol=1,
         vocVol=0,
+        vibVol=1,
 
         -- Video
         hitWavePower=.6,
@@ -218,7 +219,7 @@ settings={
         touchControl=false,
 
         -- Other
-        powerInfo=true,
+        powerInfo=false,
         sysCursor=false,
         showTouch=true,
         clickFX=true,
@@ -254,7 +255,7 @@ settings={
         shakeness=.6,
     },
 }
-local settingTriggers=setmetatable({-- Changing values in SETTINGS.system will trigger these functions (if exist).
+local settingTriggers={-- Changing values in SETTINGS.system will trigger these functions (if exist).
     -- Audio
     mainVol=        function(v) love.audio.setVolume(v) end,
     bgmVol=         function(v) BGM.setVol(v) end,
@@ -272,13 +273,15 @@ local settingTriggers=setmetatable({-- Changing values in SETTINGS.system will t
 
     -- Other
     locale=         function(v) Text=LANG.get(v) LANG.setTextFuncSrc(Text) end,
-},{__index=function() return NULL end})
+}
 settings.system=setmetatable({},{
     __index=settings._system,
     __newindex=function(_,k,v)
         if settings._system[k]~=v then
             settings._system[k]=v
-            settingTriggers[k](v)
+            if settingTriggers[k] then
+                settingTriggers[k](v)
+            end
         end
     end,
     __metatable=true,
