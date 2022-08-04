@@ -4,11 +4,11 @@ local function sliderShow_time(S) return S.disp().." ms"  end
 
 scene.widgetList={
     -- Handling
-    WIDGET.new{type='slider',     pos={0,0},x=260, y=100,w=1000, text=LANG'setting_das',       labelDistance=20,widthLimit=260,axis={0,260,1},smooth=true, disp=TABLE.func_getVal(SETTINGS.game_gem,'das'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_gem,'das')},
-    WIDGET.new{type='slider',     pos={0,0},x=260, y=180,w=1000, text=LANG'setting_arr',       labelDistance=20,widthLimit=260,axis={0,120,1},smooth=true, disp=TABLE.func_getVal(SETTINGS.game_gem,'arr'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_gem,'arr')},
+    WIDGET.new{type='slider',     pos={0,0},x=260, y=100,w=1000, text=LANG'setting_das',            widthLimit=260,axis={0,260,1},smooth=true, disp=TABLE.func_getVal(SETTINGS.game_gem,'das'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_gem,'das')},
+    WIDGET.new{type='slider',     pos={0,0},x=260, y=180,w=1000, text=LANG'setting_arr',            widthLimit=260,axis={0,120,1},smooth=true, disp=TABLE.func_getVal(SETTINGS.game_gem,'arr'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_gem,'arr')},
 
     -- Video
-    WIDGET.new{type='slider_fill',pos={0,0},x=260, y=260,w=500,h=30,  text=LANG'setting_shakeness', labelDistance=20,widthLimit=260,axis={0,1},                 disp=TABLE.func_getVal(SETTINGS.game_gem,'shakeness'),                             code=TABLE.func_setVal(SETTINGS.game_gem,'shakeness')},
+    WIDGET.new{type='slider_fill',pos={0,0},x=260, y=260,w=500,h=30,  text=LANG'setting_shakeness', widthLimit=260,axis={0,1},                 disp=TABLE.func_getVal(SETTINGS.game_gem,'shakeness'),                             code=TABLE.func_setVal(SETTINGS.game_gem,'shakeness')},
 
     -- Key setting & Test
     WIDGET.new{type='button',     pos={0,1},x=160,y=-80,w=160,h=80,   text=CHAR.key.keyboard,fontSize=60,code=function() SCN.go('keyset_list',nil,'gem') end},

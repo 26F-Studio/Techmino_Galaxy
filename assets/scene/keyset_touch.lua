@@ -60,12 +60,14 @@ function scene.mouseUp(x,y,k) if k==1 then scene.touchUp(x,y,1) end end
 function scene.draw() VCTRL.draw(true) end
 
 scene.widgetList={
-    WIDGET.new{type='button',  pos={.6,.1},  x=-260,w=100,                    fontSize=80,text='-',code=WIDGET.c_pressKey('-')},
-    WIDGET.new{type='text',    pos={.6,.1},  text=LANG'setting_touch_button', fontSize=40,widthLimit=400},
-    WIDGET.new{type='button',  pos={.6,.1},  x=260, w=100,                    fontSize=80,text='+',code=WIDGET.c_pressKey('+')},
+    WIDGET.new{type='button',   pos={0,.5},x=210,y=-360,w=200,h=80,cornerR=0,sound='back', fontSize=40,text='Back',           code=WIDGET.c_backScn},
 
-    WIDGET.new{type='button',  pos={.22,.1}, w=180,h=100, text=LANG'stick2_switch',code=WIDGET.c_pressKey('q')},
-    WIDGET.new{type='button',  pos={.22,.22},w=180,h=100, text=LANG'stick4_switch',code=WIDGET.c_pressKey('w')},
+    WIDGET.new{type='button',  pos={.6,0}, x=-260,y=150,w=100,                    fontSize=80,text='-',code=WIDGET.c_pressKey('-')},
+    WIDGET.new{type='text',    pos={.6,0}, x=0,y=150,text=LANG'setting_touch_button', fontSize=40,widthLimit=400},
+    WIDGET.new{type='button',  pos={.6,0}, x=260,y=150,w=100,                    fontSize=80,text='+',code=WIDGET.c_pressKey('+')},
+
+    WIDGET.new{type='button',  pos={.32,0}, x=0,y=150,w=200,h=100, fontSize=25,text=LANG'stick2_switch',code=WIDGET.c_pressKey('q')},
+    WIDGET.new{type='button',  pos={.32,0}, x=0,y=270,w=200,h=100, fontSize=25,text=LANG'stick4_switch',code=WIDGET.c_pressKey('w')},
 
     WIDGET.new{type='slider',  pos={.6,.22}, name='button1',  x=-300,w=600,axis={60,260,20},  text=LANG'setting_touch_buttonSize',  widthLimit=200, disp=function() return VCTRL.focus and VCTRL.focus.type=='button' and VCTRL.focus.r      end,code=function(v) if VCTRL.focus then VCTRL.focus.r=v     end end},
     WIDGET.new{type='button',  pos={.6,.33}, name='button2',  w=360,h=100,fontSize=40,        text=LANG'settinh_touch_buttonShape', code=WIDGET.c_pressKey('0')},
@@ -73,8 +75,6 @@ scene.widgetList={
     WIDGET.new{type='slider',  pos={.6,.3},  name='stick2_2', x=-300,w=600,axis={100,200,10}, text=LANG'setting_touch_ballSize',    widthLimit=200, disp=function() return VCTRL.focus.h    end,code=function(v) VCTRL.focus.h=v      end},
     WIDGET.new{type='slider',  pos={.6,.22}, name='stick4_1', x=-300,w=600,axis={100,250,25}, text=LANG'setting_touch_stickSize',   widthLimit=200, disp=function() return VCTRL.focus.r    end,code=function(v) VCTRL.focus.r=v      end},
     WIDGET.new{type='slider',  pos={.6,.3},  name='stick4_2', x=-300,w=600,axis={.1,.8,.1},   text=LANG'setting_touch_ballSize',    widthLimit=200, disp=function() return VCTRL.focus.ball end,code=function(v) VCTRL.focus.stickR=v end},
-
-    WIDGET.new{type='button',  pos={1,0},x=-120,y=80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
 
 return scene
