@@ -56,14 +56,13 @@ local musicListBox do
     musicListBox:setList(l)
 end
 
-local selected
-local fullband
+local selected,fullband
 
 local scene={}
 
 function scene.enter()
-    fullband=true
-    selected=getBgm()
+    selected,fullband=getBgm()
+    fullband=type(fullband)=='string' and fullband:find('full')
     musicListBox:select(TABLE.find(musicListBox:getList(),selected))
 end
 
@@ -129,7 +128,7 @@ scene.widgetList={
         visibleFunc=function() return BGM.isPlaying() end,
     },
     WIDGET.new{type='switch',pos={0,.5},x=880,y=350,h=50,disp=function() return fullband end,
-        name='fullband',text='',
+        name='fullband',text=LANG'musicroom_fullband',
         code=function()
             fullband=not fullband
             if BGM.isPlaying() then

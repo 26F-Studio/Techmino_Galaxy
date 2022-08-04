@@ -134,4 +134,6 @@ return {
     settinh_touch_buttonShape="Change button shape",
     setting_touch_stickSize="Stick length",
     setting_touch_ballSize="Stick size",
+
+    musicroom_fullband='Full Band',
 }

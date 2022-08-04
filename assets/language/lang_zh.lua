@@ -134,4 +134,6 @@ return {
     settinh_touch_buttonShape="更改形状",
     setting_touch_stickSize="摇杆尺寸",
     setting_touch_ballSize="摇把尺寸",
+
+    musicroom_fullband='全轨道',
 }

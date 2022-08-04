@@ -18,7 +18,7 @@ function tryReset()
     lastResetTime=love.timer.getTime()
 end
 
-local _bgmPlaying
+local _bgmPlaying,_bgmMode
 ---@param mode
 ---| 'full'
 ---| 'simp'
@@ -41,10 +41,10 @@ function playBgm(name,mode)
             BGM.play(bgmList[name].full,mode)
         end
     end
-    _bgmPlaying=name
+    _bgmPlaying,_bgmMode=name,mode
 end
 function getBgm()
-    return _bgmPlaying
+    return _bgmPlaying,_bgmMode
 end
 
 function saveSettings()
