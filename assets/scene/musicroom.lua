@@ -1,18 +1,5 @@
 local gc=love.graphics
 
-local author={
-    battle="Aether & MrZ",
-    moonbeam="Beethoven & MrZ",
-    empty="ERM",
-    ["sugar fairy"]="Tchaikovsky & MrZ",
-    ["secret7th remix"]="柒栎流星",
-    ["jazz nihilism"]="Trebor",
-    ["race remix"]="柒栎流星",
-    sakura="ZUN & C₂₉H₂₅N₃O₅",
-    ["1980s"]="C₂₉H₂₅N₃O₅",
-    lounge="Hailey (cudsys) & MrZ",
-    ['blank orchestra']='T0722',
-}
 local bigTitle=setmetatable({},{
     __index=function(self,name)
         local up=true
@@ -109,7 +96,7 @@ function scene.draw()
 
     FONT.set(50)
     gc.setColor(1,math.sin(t*2.6)*.5+.5,math.sin(t*2.6)*.5+.5)
-    gc.print(author[selected] or 'MrZ',700,230)
+    gc.print(bgmList[selected].author,700,230)
 
     if BGM.tell() then
         gc.replaceTransform(SCR.xOy_l)
