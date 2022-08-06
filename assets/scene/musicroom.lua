@@ -126,7 +126,7 @@ scene.widgetList={
             return type(bgmList[selected])=='table' and bgmList[selected].base
         end,
     },
-    WIDGET.new{type='button',pos={0,.5},x=720,y=350,w=180,h=90,text=CHAR.icon.play_pause,fontSize=80,code=WIDGET.c_pressKey('space')},
+    WIDGET.new{type='button',pos={0,.5},x=720,y=350,w=180,h=90,text=CHAR.icon.playPause,fontSize=60,code=WIDGET.c_pressKey('space')},
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
 

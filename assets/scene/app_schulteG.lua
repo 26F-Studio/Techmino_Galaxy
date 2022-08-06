@@ -170,7 +170,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',  x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry_spin,code=WIDGET.c_pressKey'space',visibleFunc=function() return state~=0 end},
+    WIDGET.new{type='button',  x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'space',visibleFunc=function() return state~=0 end},
     WIDGET.new{type='slider',  x=130,y=250,widthLimit=105,w=150,axis={3,6,1},valueShow=false,fontSize=40,disp=function() return rank end,code=function(v) rank=v end,visibleFunc=function() return state==0 end},
     WIDGET.new{type='checkBox',x=240,y=330,widthLimit=200,fontSize=40,disp=function() return invis end,code=WIDGET.c_pressKey'q',visibleFunc=function() return state~=1 end},
     WIDGET.new{type='checkBox',x=240,y=420,widthLimit=200,fontSize=40,disp=function() return disappear end,code=WIDGET.c_pressKey'w',visibleFunc=function() return state~=1 end},

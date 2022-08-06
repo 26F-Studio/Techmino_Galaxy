@@ -24,41 +24,41 @@ end
 -- cardText['5s+']={COLOR.R,'5'}
 
 local cardText={
-    m1={COLOR.D,CHAR.mahjong.m1Base,COLOR.R,CHAR.mahjong.mComb},
-    m2={COLOR.D,CHAR.mahjong.m2Base,COLOR.R,CHAR.mahjong.mComb},
-    m3={COLOR.D,CHAR.mahjong.m3Base,COLOR.R,CHAR.mahjong.mComb},
-    m4={COLOR.D,CHAR.mahjong.m4Base,COLOR.R,CHAR.mahjong.mComb},
-    m5={COLOR.D,CHAR.mahjong.m5Base,COLOR.R,CHAR.mahjong.mComb},
-    m6={COLOR.D,CHAR.mahjong.m6Base,COLOR.R,CHAR.mahjong.mComb},
-    m7={COLOR.D,CHAR.mahjong.m7Base,COLOR.R,CHAR.mahjong.mComb},
-    m8={COLOR.D,CHAR.mahjong.m8Base,COLOR.R,CHAR.mahjong.mComb},
-    m9={COLOR.D,CHAR.mahjong.m9Base,COLOR.R,CHAR.mahjong.mComb},
+    m1={COLOR.dR,CHAR.mahjong.m1},
+    m2={COLOR.dR,CHAR.mahjong.m2},
+    m3={COLOR.dR,CHAR.mahjong.m3},
+    m4={COLOR.dR,CHAR.mahjong.m4},
+    m5={COLOR.dR,CHAR.mahjong.m5},
+    m6={COLOR.dR,CHAR.mahjong.m6},
+    m7={COLOR.dR,CHAR.mahjong.m7},
+    m8={COLOR.dR,CHAR.mahjong.m8},
+    m9={COLOR.dR,CHAR.mahjong.m9},
     p1={COLOR.D,CHAR.mahjong.p1},
-    p2={COLOR.D,CHAR.mahjong.p2Base,COLOR.D,CHAR.mahjong.p2Comb},
-    p3={COLOR.D,CHAR.mahjong.p3Base,COLOR.R,CHAR.mahjong.p3Comb1,COLOR.D,CHAR.mahjong.p3Comb2},
-    p4={COLOR.D,CHAR.mahjong.p4Base,COLOR.D,CHAR.mahjong.p4Comb},
-    p5={COLOR.D,CHAR.mahjong.p5Base,COLOR.D,CHAR.mahjong.p5Comb1,COLOR.R,CHAR.mahjong.p5Comb2},
-    p6={COLOR.D,CHAR.mahjong.p6Base,COLOR.R,CHAR.mahjong.p6Comb},
-    p7={COLOR.D,CHAR.mahjong.p7Base,COLOR.R,CHAR.mahjong.p7Comb},
+    p2={COLOR.D,CHAR.mahjong.p2},
+    p3={COLOR.D,CHAR.mahjong.p3},
+    p4={COLOR.D,CHAR.mahjong.p4},
+    p5={COLOR.D,CHAR.mahjong.p5},
+    p6={COLOR.D,CHAR.mahjong.p6},
+    p7={COLOR.D,CHAR.mahjong.p7},
     p8={COLOR.D,CHAR.mahjong.p8},
-    p9={COLOR.D,CHAR.mahjong.p9Base,COLOR.R,CHAR.mahjong.p9Comb1,COLOR.D,CHAR.mahjong.p9Comb2},
-    s1={COLOR.D,CHAR.mahjong.s1jBase,COLOR.G,CHAR.mahjong.s1jComb},
-    s2={COLOR.G,CHAR.mahjong.s2},
-    s3={COLOR.G,CHAR.mahjong.s3},
-    s4={COLOR.G,CHAR.mahjong.s4},
-    s5={COLOR.G,CHAR.mahjong.s5Base,COLOR.R,CHAR.mahjong.s5Comb},
-    s6={COLOR.G,CHAR.mahjong.s6},
-    s7={COLOR.G,CHAR.mahjong.s7Base,COLOR.R,CHAR.mahjong.s7Comb},
-    s8={COLOR.G,CHAR.mahjong.s8},
-    s9={COLOR.G,CHAR.mahjong.s9Base,COLOR.R,CHAR.mahjong.s9Comb},
-    z1={COLOR.D,CHAR.mahjong.ton},
-    z2={COLOR.D,CHAR.mahjong.nan},
-    z3={COLOR.D,CHAR.mahjong.sha},
-    z4={COLOR.D,CHAR.mahjong.pe},
-    z5={COLOR.D,CHAR.mahjong.haku},
-    z6={COLOR.G,CHAR.mahjong.hatsu},
-    z7={COLOR.R,CHAR.mahjong.chun},
-} for _,v in next,cardText do ins(v,COLOR.D)ins(v,CHAR.mahjong.frameComb) end
+    p9={COLOR.D,CHAR.mahjong.p9},
+    s1={COLOR.dG,CHAR.mahjong.s1},
+    s2={COLOR.dG,CHAR.mahjong.s2},
+    s3={COLOR.dG,CHAR.mahjong.s3},
+    s4={COLOR.dG,CHAR.mahjong.s4},
+    s5={COLOR.dG,CHAR.mahjong.s5},
+    s6={COLOR.dG,CHAR.mahjong.s6},
+    s7={COLOR.dG,CHAR.mahjong.s7},
+    s8={COLOR.dG,CHAR.mahjong.s8},
+    s9={COLOR.dG,CHAR.mahjong.s9},
+    z1={COLOR.D,CHAR.mahjong.z1},
+    z2={COLOR.D,CHAR.mahjong.z2},
+    z3={COLOR.D,CHAR.mahjong.z3},
+    z4={COLOR.D,CHAR.mahjong.z4},
+    z5={COLOR.D,CHAR.mahjong.z5},
+    z6={COLOR.G,CHAR.mahjong.z6},
+    z7={COLOR.R,CHAR.mahjong.z7},
+}
 
 local deck,hand,pool
 local selected
@@ -158,7 +158,7 @@ function scene.draw()
     gc_print('余 '..#deck,1060,30)
 
     gc_setLineWidth(4)
-    FONT.set(85)
+    FONT.set(100)
     for i=1,#hand do
         local c=hand[i]
         local x,y,w,h=_getHandCardArea(i)
@@ -166,23 +166,23 @@ function scene.draw()
             gc_translate(0,-10)
         end
         gc_setColor(COLOR.L)
-        gc_rectangle('fill',x,y,w,h,12)
+        gc_rectangle('fill',x,y,w,h,6)
         if i==selected then
             gc_setColor(1,1,1,.4)
-            gc_rectangle('fill',x,y,w,h,12)
+            gc_rectangle('fill',x,y,w,h,6)
         end
         gc_setColor(1,1,1)
-        GC.mStr(cardText[c],x+w/2,y-17)
+        GC.mStr(cardText[c],x+w/2,y-24)
         if i==selected then gc_translate(0,10) end
     end
     for i=1,#pool do
         local c=pool[i]
         local x,y,w,h=_getPoolCardArea(i)
         gc_setColor(COLOR.L)
-        gc_rectangle('fill',x,y,w,h,12)
+        gc_rectangle('fill',x,y,w,h,6)
         if selected and hand[selected]==c then
             gc_setColor(1,.2,.2,.3)
-            gc_rectangle('fill',x,y,w,h,12)
+            gc_rectangle('fill',x,y,w,h,6)
         end
         gc_setColor(1,1,1)
         GC.mStr(cardText[c],x+w/2,y-17)
@@ -190,7 +190,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,0},x=160, y=100,w=180,h=100,color='lR',fontSize=60,text=CHAR.icon.retry_spin,code=WIDGET.c_pressKey'r'},
+    WIDGET.new{type='button',pos={0,0},x=160, y=100,w=180,h=100,color='lR',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
     WIDGET.new{type='button',          x=1150,y=370,w=140,h=80,fontSize=45,sound=false,text='自摸',code=WIDGET.c_pressKey'return'},
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }

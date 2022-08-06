@@ -156,6 +156,8 @@ do-- Zenitha.setDrawSysInfo
     end)
 end
 
+FONT.setDefaultFallback('symbols')
+FONT.setDefaultFont('norm')
 FONT.load{
     -- galaxy_black="assets/fonts/26FGalaxySans-Black.otf",
     -- galaxy_extrabold="assets/fonts/26FGalaxySans-ExtraBold.otf",
@@ -169,8 +171,8 @@ FONT.load{
     norm='assets/fonts/Inter-SemiBold.otf',
     thin='assets/fonts/Inter-Regular.otf',
     bold='assets/fonts/Inter-ExtraBold.otf',
+    symbols='assets/fonts/symbols.otf',
 }
-FONT.setDefaultFont('norm')
 SCR.setSize(1600,1000)
 BGM.setMaxSources(20)
 VOC.setDiversion(.62)

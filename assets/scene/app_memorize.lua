@@ -106,8 +106,8 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,0},     x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry_spin,code=WIDGET.c_pressKey'r'},
-    WIDGET.new{type='button',pos={0.5,0.95},x=-100,y=-100,w=90,fontSize=60,text=CHAR.key.clear,code=WIDGET.c_pressKey'backspace'},
+    WIDGET.new{type='button',pos={0,0},     x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
+    WIDGET.new{type='button',pos={0.5,0.95},x=-100,y=-100,w=90,fontSize=60,text=CHAR.key.clear_mac,code=WIDGET.c_pressKey'backspace'},
     WIDGET.new{type='button',pos={0.5,0.95},x=0,   y=-100,w=90,fontSize=60,text="0",code=WIDGET.c_pressKey'0'},
     WIDGET.new{type='button',pos={0.5,0.95},x=-100,y=-200,w=90,fontSize=60,text="1",code=WIDGET.c_pressKey'1'},
     WIDGET.new{type='button',pos={0.5,0.95},x=0,   y=-200,w=90,fontSize=60,text="2",code=WIDGET.c_pressKey'2'},

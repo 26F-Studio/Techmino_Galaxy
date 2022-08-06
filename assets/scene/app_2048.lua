@@ -481,7 +481,7 @@ local function visFunc1() return not tapControl end
 local function visFunc2() return state~=2 end
 local function visFunc3() return state~=2 and #repeater.seq[1]~=0 end
 scene.widgetList={
-    WIDGET.new{type='button',     pos={0,0},x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry_spin,code=WIDGET.c_pressKey'r'},
+    WIDGET.new{type='button',     pos={0,0},x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
     WIDGET.new{type='checkBox',   pos={0,0},x=300,y=220,widthLimit=270,fontSize=40,disp=function() return invis end,code=WIDGET.c_pressKey'q',visibleFunc=function() return state~=1 end},
     WIDGET.new{type='checkBox',   pos={0,0},x=300,y=300,widthLimit=270,fontSize=40,disp=function() return tapControl end,code=WIDGET.c_pressKey'w',visibleFunc=function() return state~=1 end},
 

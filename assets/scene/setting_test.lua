@@ -55,7 +55,7 @@ scene.widgetList={
     WIDGET.new{type='switch',     pos={1,0},x=-420,y=650,h=35,           text=LANG'setting_autoMute',    widthLimit=360,labelPos='right',             disp=TABLE.func_getVal(SETTINGS.system,'autoMute'),                            code=TABLE.func_revVal(SETTINGS.system,'autoMute')},
     WIDGET.new{type='switch',     pos={1,0},x=-420,y=700,h=35,           text=LANG'setting_showTouch',   widthLimit=360,labelPos='right',             disp=TABLE.func_getVal(SETTINGS.system,'showTouch'),                           code=TABLE.func_revVal(SETTINGS.system,'showTouch')},
 
-    WIDGET.new{type='button',     pos={0,1},x=160,y=-80,w=160,h=80,   text=CHAR.key.keyboard,fontSize=60,code=function() SCN.go('keyset_list',nil,'sys') end},
+    WIDGET.new{type='button',     pos={0,1},x=160,y=-80,w=160,h=80,   text=CHAR.icon.keyboard,fontSize=60,code=function() SCN.go('keyset_list',nil,'sys') end},
 
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
