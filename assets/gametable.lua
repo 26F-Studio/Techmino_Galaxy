@@ -6,11 +6,13 @@ do-- bgmList
     bgmList={
         ['8-bit happiness']={
             author="MrZ",
+            message="Can you feel the happiness?",
             base={'melody','bass'},
             full={'melody','accompany','bass','drum','sfx'}
         },
         ['8-bit sadness']={
             author="MrZ",
+            message="Can you feel the sadness?",
             base={'melody','bass'},
             full={'melody','decoration','bass','sfx'}
         },
@@ -21,16 +23,19 @@ do-- bgmList
         },
         ['blank']={
             author="MrZ",
+            message="We start from here",
             base={'melody','bass'},
             full={'melody','decoration','bass','drum'},
         },
         ['blox']={
             author="MrZ",
+            message="Another old song remix",
             base={'melody','decoration1','bass'},
             full={'melody','decoration1','decoration2','bass','drum','sfx'},
         },
         ['distortion']={
             author="MrZ",
+            message="Someone said that 'rectification' is too flat",
             base={'melody','bass','sfx1'},
             full={'melody','accompany1','accompany2','decoration','bass','sfx1','sfx2'},
         },
@@ -46,11 +51,13 @@ do-- bgmList
         },
         ['echo']={
             author="MrZ",
+            message="Canon experiment",
             base={'melody1','melody2','bass1'},
             full={'melody1','melody2','bass1','bass2','drum','sfx'},
         },
         ['exploration']={
             author="MrZ",
+            message="Let's explore the universe",
             base={'melody2','decoration','bass2','sfx'},
             full={'melody1','melody2','accompany','decoration','bass1','bass2','sfx'},
         },
@@ -71,16 +78,19 @@ do-- bgmList
         },
         ['lounge']={
             author="Hailey (cudsys) & MrZ",
-            base={'bass','drum','sfx'},
+            message="Welcome to Space Café",
+            base={'accompany','bass','drum'},
             full={'melody','accompany','bass','drum','sfx'},
         },
         ['minoes']={
             author="MrZ",
+            message="Another old song remix",
             base={'melody','bass','drum'},
             full={'melody','accompany','decoration','bass','drum','sfx'},
         },
         ['moonbeam']={
             author="Beethoven & MrZ",
+            message="A cool attempt!",
             base={'melody','bass'},
             full={'melody','accompany','bass','drum'},
         },
@@ -91,6 +101,7 @@ do-- bgmList
         },
         ['overzero']={
             author="MrZ",
+            message="Another title remix",
             base={'melody','bass','drum','sfx'},
             full={'melody','accompany','decoration','bass','drum','sfx'},
         },
@@ -101,6 +112,7 @@ do-- bgmList
         },
         ['peak']={
             author="MrZ",
+            message="3D pinball is fun!",
             base={'melody','bass','drum'},
             full={'melody','decoration','bass','drum','sfx'},
         },
@@ -126,21 +138,25 @@ do-- bgmList
         },
         ['rectification']={
             author="MrZ",
+            message="Someone said that 'Distortion' is too noisy",
             base={'melody','bass','drum'},
             full={'melody','accompany1','accompany2','decoration','bass','drum'},
         },
         ['reminiscence']={
             author="MrZ",
+            message="Nitrome games is fun!",
             base={'melody2','bass','drum'},
             full={'melody1','melody2','melody3','bass','drum'},
         },
         ['secret7th']={
             author="MrZ",
+            message="The 7th secret",
             base={'melody1','bass','drum'},
             full={'melody1','melody2','accompany','bass','drum','sfx'},
         },
         ['secret8th']={
             author="MrZ",
+            message="The 8th secret",
             base={'melody1','bass','drum1'},
             full={'melody1','melody2','melody3','bass','drum1','drum2'},
         },
@@ -151,26 +167,31 @@ do-- bgmList
         },
         ['sine']={
             author="MrZ",
+            message="~~~~~~",
             base={'melody1','bass','drum'},
             full={'melody1','melody2','accompany','bass','drum'},
         },
         ['space']={
             author="MrZ",
+            message="Another title remix",
             base={'melody1','melody2','bass'},
             full={'melody1','melody2','accompany','decoration','bass'},
         },
         ['spring festival']={
             author="MrZ",
+            message="Happy New Year!",
             base={'melody','accompany','drum1'},
             full={'melody','accompany','bass','drum1','drum2'},
         },
         ['storm']={
             author="MrZ",
+            message="Remake of a milestone",
             base={'accompany','bass','drum1','sfx'},
             full={'melody','accompany','bass','drum1','drum2','sfx'},
         },
         ['sugar fairy']={
             author="Tchaikovsky & MrZ",
+            message="A little dark remix",
             base={'melody','accompany'},
             full={'melody','accompany','bass','drum'},
         },
@@ -181,11 +202,13 @@ do-- bgmList
         },
         ['truth']={
             author="MrZ",
+            message="Inspired from Veritasium channel",
             base={'melody2','bass','drum'},
             full={'melody1','melody2','accompany','bass','drum','sfx1','sfx2'},
         },
         ['vapor']={
             author="MrZ",
+            message="Here is my water!",
             base={'melody','bass','sfx'},
             full={'melody','accompany','bass','drum','sfx'},
         },
@@ -211,33 +234,57 @@ do-- bgmList
         },
         ['xmas']={
             author="MrZ",
+            message="Merry Christmas!",
             base={'melody','bass','drum'},
             full={'melody','accompany1','accompany2','bass','drum'},
         },
-        ['1980s']={
-            author="C₂₉H₂₅N₃O₅",
+        ['empty']={
+            message="First remix from community",
+            author="ERM",
+        },
+        ["none"]={
+            author="MrZ",
+            message="Another title remix",
+        },
+        ["nil"]={
+            author="MrZ",
+            message="Another title remix",
+        },
+        ["null"]={
+            author="MrZ",
+            message="Another title remix",
+        },
+        ["vacuum"]={
+            author="MrZ",
+            message="Another title remix",
         },
         ['blank orchestra']={
             author="T0722",
-        },
-        ['empty']={
-            author="ERM",
+            message="A cool orchestral title remix",
         },
         ['jazz nihilism']={
             author="Trebor",
+            message="A cool jazz title remix",
         },
-        ['sakura']={
-            author="ZUN & C₂₉H₂₅N₃O₅",
-        },
-        ['secret7th remix']={
-            author="柒栎流星",
-        },
-        ['secret8th remix']={
+        ["beat5th"]={
             author="MrZ",
+            message="5/4 experiment",
         },
-        ["race remix"]={
-            author="柒栎流星"
+        ["super7th"]={
+            author="MrZ",
+            message="FL experiment",
         },
+        ["secret8th remix"]={author="MrZ"},
+        ["shift"]={author="MrZ"},
+        ["here"]={author="MrZ"},
+        ["there"]={author="MrZ"},
+        ['1980s']={
+            author="C₂₉H₂₅N₃O₅",
+            message="Another old song remix",
+        },
+        ['sakura']={author="ZUN & C₂₉H₂₅N₃O₅",},
+        ["race remix"]={author="柒栎流星"},
+        ['secret7th remix']={author="柒栎流星"},
     }
     for name,song in next,bgmList do
         if song.base and song.full then

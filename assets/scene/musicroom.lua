@@ -28,10 +28,10 @@ local musicListBox do
         end
         FONT.set(30)
         gc.setColor(COLOR.lS)
-        gc.printf(n,0,4,80,'center')
+        gc.printf(n,0,7,80,'center')
         FONT.set(40)
         gc.setColor(COLOR.L)
-        gc.print(bigTitle[name],75,-3)
+        gc.print(bigTitle[name],75,0)
     end
     musicListBox=WIDGET.new(musicListBox)
 
@@ -97,6 +97,11 @@ function scene.draw()
     FONT.set(50)
     gc.setColor(1,math.sin(t*2.6)*.5+.5,math.sin(t*2.6)*.5+.5)
     gc.print(bgmList[selected].author,700,230)
+    if bgmList[selected].message then
+        FONT.set(25)
+        gc.setColor(COLOR.LD)
+        gc.printf(bgmList[selected].message,650,320,800,'left')
+    end
 
     if BGM.tell() then
         gc.replaceTransform(SCR.xOy_l)
