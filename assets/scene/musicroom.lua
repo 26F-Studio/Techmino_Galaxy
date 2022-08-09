@@ -1,3 +1,5 @@
+local selected,fullband
+
 local bigTitle=setmetatable({},{
     __index=function(self,name)
         local up=true
@@ -31,6 +33,14 @@ local musicListBox do
         GC.setColor(COLOR.L)
         GC.print(bigTitle[name],75,0)
     end
+    musicListBox.code=function ()
+        if BGM.isPlaying() and selected==musicListBox:getItem() then
+            BGM.stop()
+        else
+            selected=musicListBox:getItem()
+            playBgm(selected,fullband and 'full' or 'base')
+        end
+    end
     musicListBox=WIDGET.new(musicListBox)
 
     local l={}
@@ -40,8 +50,6 @@ local musicListBox do
     table.sort(l)
     musicListBox:setList(l)
 end
-
-local selected,fullband
 
 local scene={}
 
@@ -57,12 +65,7 @@ end
 function scene.keyDown(key,isRep)
     if key=='space' or key=='return' then
         if not isRep then
-            if BGM.isPlaying() and selected==musicListBox:getItem() then
-                BGM.stop()
-            else
-                selected=musicListBox:getItem()
-                playBgm(selected,fullband and 'full' or 'base')
-            end
+            musicListBox.code()
         end
     elseif key=='up' or key=='down' then
         musicListBox:arrowKey(key)
@@ -130,7 +133,7 @@ scene.widgetList={
             return type(bgmList[selected])=='table' and bgmList[selected].base
         end,
     },
-    WIDGET.new{type='button',pos={0,.5},x=720,y=350,w=180,h=90,text=CHAR.icon.playPause,fontSize=60,code=WIDGET.c_pressKey('space')},
+    WIDGET.new{type='button',pos={0,.5},x=720,y=350,w=180,h=90,text=CHAR.icon.playPause,fontSize=60,code=musicListBox.code},
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
 
