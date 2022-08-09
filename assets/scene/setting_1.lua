@@ -15,10 +15,10 @@ scene.widgetList={
     WIDGET.new{type='checkBox', pos={0,.5},x=130,y=250, w=40,                 fontSize=40, text=LANG'setting_fullscreen',     disp=TABLE.func_getVal(SETTINGS.system,'fullscreen'), code=TABLE.func_revVal(SETTINGS.system,'fullscreen')},
     WIDGET.new{type='checkBox', pos={0,.5},x=130,y=350, w=40,                 fontSize=40, text=LANG'setting_autoMute',       disp=TABLE.func_getVal(SETTINGS.system,'autoMute'),   code=TABLE.func_revVal(SETTINGS.system,'autoMute')},
 
-    WIDGET.new{type='slider',   pos={1,.5},x=-550, y=-370,w=400, fontSize=40,text=LANG'setting_mainVol', widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'mainVol'),                             code=TABLE.func_setVal(SETTINGS.system,'mainVol')},
-    WIDGET.new{type='slider',   pos={1,.5},x=-550, y=-290,w=400, fontSize=40,text=LANG'setting_bgm',     widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),                              code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
-    WIDGET.new{type='slider',   pos={1,.5},x=-550, y=-210,w=400, fontSize=40,text=LANG'setting_sfx',     widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'sfxVol'),                              code=TABLE.func_setVal(SETTINGS.system,'sfxVol')},
-    WIDGET.new{type='slider',   pos={1,.5},x=-550, y=-130,w=400, fontSize=40,text=LANG'setting_vib',     widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'vibVol'),                              code=TABLE.func_setVal(SETTINGS.system,'vibVol')},
+    WIDGET.new{type='slider',   pos={1,.5},x=-550, y=-370,w=400, fontSize=40,text=LANG'setting_mainVol', widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'mainVol'), code=TABLE.func_setVal(SETTINGS.system,'mainVol')},
+    WIDGET.new{type='slider',   pos={1,.5},x=-550, y=-290,w=400, fontSize=40,text=LANG'setting_bgm',     widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),  code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
+    WIDGET.new{type='slider',   pos={1,.5},x=-550, y=-210,w=400, fontSize=40,text=LANG'setting_sfx',     widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'sfxVol'),  code=TABLE.func_setVal(SETTINGS.system,'sfxVol')},
+    WIDGET.new{type='slider',   pos={1,.5},x=-550, y=-130,w=400, fontSize=40,text=LANG'setting_vib',     widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'vibVol'),  code=TABLE.func_setVal(SETTINGS.system,'vibVol')},
 
     WIDGET.new{type='slider',   pos={1,.5},x=-800, y=50, w=650, text=LANG'setting_das',    widthLimit=260,axis={100,260,10},smooth=true, disp=TABLE.func_getVal(SETTINGS.game_mino,'das'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'das')},
     WIDGET.new{type='slider',   pos={1,.5},x=-800, y=150,w=650, text=LANG'setting_arr',    widthLimit=260,axis={20,120,10}, smooth=true, disp=TABLE.func_getVal(SETTINGS.game_mino,'arr'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'arr')},
