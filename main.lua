@@ -174,7 +174,7 @@ FONT.load{
     symbols='assets/fonts/symbols.otf',
 }
 SCR.setSize(1600,1000)
-BGM.setMaxSources(20)
+BGM.setMaxSources(16)
 VOC.setDiversion(.62)
 WIDGET.setDefaultButtonSound('button')
 WIDGET.setDefaultCheckBoxSound('check','uncheck')

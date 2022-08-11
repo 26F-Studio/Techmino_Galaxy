@@ -140,8 +140,8 @@ scene.widgetList={
             return type(bgmList[selected])=='table' and bgmList[selected].base
         end,
     },
-    WIDGET.new{type='button_invis',pos={.5,.5},y=350,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=musicListBox.code,visibleFunc=function() return not BGM.isPlaying() end},
-    WIDGET.new{type='button_invis',pos={.5,.5},y=350,w=160,cornerR=80,text=CHAR.icon.pause,fontSize=90,code=musicListBox.code,visibleFunc=function() return BGM.isPlaying() end},
+    WIDGET.new{type='button_invis',pos={.5,.5},y=350,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=function() playBgm(selected) end,visibleFunc=function() return not BGM.isPlaying() end},
+    WIDGET.new{type='button_invis',pos={.5,.5},y=350,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=function() BGM.stop() end,visibleFunc=function() return BGM.isPlaying() end},
     WIDGET.new{type='slider_progress',pos={1,.5},x=-350,y=350,w=250,text=CHAR.icon.volUp,fontSize=60,disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
 }
 
