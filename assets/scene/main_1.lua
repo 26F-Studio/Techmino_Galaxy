@@ -11,6 +11,8 @@ function scene.keyDown(key,isRep)
         SCN.go('game_simp',nil,'mino_sprint')
     elseif key=='c' then
         SCN.go('_console')
+    elseif key=='escape' then
+        sureCheck('quit')
     end
 end
 

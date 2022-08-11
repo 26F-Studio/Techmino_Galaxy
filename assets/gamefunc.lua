@@ -1,21 +1,16 @@
-local lastBackTime=-1e99
-function tryBack()
-    if love.timer.getTime()-lastBackTime<1 then
+local lastTime=setmetatable({},{
+    __index=function(self,k)
+        self[k]=-1e99
+        return self[k]
+    end,
+})
+function sureCheck(event)
+    if love.timer.getTime()-lastTime[event]<1 then
         SCN.back()
     else
-        MES.new('info',"Press again to quit")
+        MES.new('info',Text.sureText[event])
     end
-    lastBackTime=love.timer.getTime()
-end
-
-local lastResetTime=-1e99
-function tryReset()
-    if love.timer.getTime()-lastResetTime<1 then
-        return true
-    else
-        MES.new('info',"Press again to reset")
-    end
-    lastResetTime=love.timer.getTime()
+    lastTime[event]=love.timer.getTime()
 end
 
 local _bgmPlaying,_bgmMode

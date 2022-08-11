@@ -1,5 +1,10 @@
 return {
-    -- Clearing texts
+    sureText={
+        back="再按一次返回",
+        quit="再按一次退出",
+        reset="再按一次重置",
+    },
+
     clearName={
         "Single",
         "Double",

@@ -62,7 +62,7 @@ function scene.keyDown(key,isRep)
             state='move'
         end
     elseif key=='escape' then
-        tryBack()
+        sureCheck('back')
     end
 end
 function scene.mouseDown(_,_,k)

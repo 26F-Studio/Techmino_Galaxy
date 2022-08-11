@@ -1,5 +1,10 @@
 return {
-    -- Clearing texts
+    sureText={
+        back="Press again to Back",
+        quit="Press again to Quit",
+        reset="Press again to Reset",
+    },
+
     clearName={
         "Single",
         "Double",

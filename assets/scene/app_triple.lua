@@ -303,11 +303,11 @@ function scene.keyDown(key,isRep)
     elseif key=='z' or key=='q' then
         player:click(1,1)
     elseif key=='r' then
-        if player.state~=1 or tryReset() then
+        if player.state~=1 or sureCheck('reset') then
             player:reset()
         end
     elseif key=='escape' then
-        tryBack()
+        sureCheck('back')
     end
 end
 

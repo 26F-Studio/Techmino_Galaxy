@@ -41,7 +41,7 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return end
     if key=='escape' then
-        tryBack()
+        sureCheck('back')
     elseif key=='r' then
         _reset()
     elseif state==0 then

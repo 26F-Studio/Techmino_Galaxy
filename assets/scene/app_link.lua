@@ -251,14 +251,14 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return end
     if key=='r' then
-        if state~=1 or tryReset() then
+        if state~=1 or sureCheck('reset') then
             newGame()
         end
     elseif key=='z' or key=='x' then
         love.mousepressed(ms.getPosition())
     elseif key=='escape' then
         if state~=1 then
-            tryBack()
+            sureCheck('back')
         end
     elseif state==0 then
         if key=='q' then

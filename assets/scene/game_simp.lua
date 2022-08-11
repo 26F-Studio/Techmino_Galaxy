@@ -28,7 +28,7 @@ function scene.keyDown(key,isRep)
     if action=='restart' then
         scene.enter()
     elseif action=='back' then
-        SCN.back()
+        sureCheck('back')
     end
 end
 

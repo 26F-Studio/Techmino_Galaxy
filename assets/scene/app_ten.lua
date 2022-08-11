@@ -154,7 +154,7 @@ function scene.keyDown(key,isRep)
             fast=not fast
         end
     elseif key=='escape' then
-        tryBack()
+        sureCheck('back')
     end
 end
 function scene.mouseMove(x,y)
