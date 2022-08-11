@@ -52,7 +52,12 @@ local scene={}
 
 function scene.enter()
     selected,fullband=getBgm()
-    fullband=type(fullband)=='string' and fullband:find('full')
+    if selected then
+        fullband=type(fullband)=='string' and fullband:find('full')
+    else
+        selected='blank'
+        fullband=false
+    end
     musicListBox:select(TABLE.find(musicListBox:getList(),selected))
 end
 
