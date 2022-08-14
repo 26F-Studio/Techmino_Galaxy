@@ -111,7 +111,7 @@ scene.widgetList={
     WIDGET.new{type='button', name='sys', x=140, y=490,  w=200,h=60,text=LANG"keyset_sys_select",      fontSize=20, color='lB',code=selAct('sys', 'select' )},
     WIDGET.new{type='button', name='sys', x=140, y=560,  w=200,h=60,text=LANG"keyset_sys_back",        fontSize=20, color='lB',code=selAct('sys', 'back'   )},
 
-    WIDGET.new{type='button', name='test',pos={1,1},x=-300,y=-80,    w=160,h=80,text=LANG'keyset_test',fontSize=45,code=function() SCN.go('game_simp',nil,keyMode..'_test') end},
+    WIDGET.new{type='button', name='test',pos={1,1},x=-300,y=-80,    w=160,h=80,text=LANG'keyset_test',fontSize=45,code=function() SCN.go('game_simp',nil,keyMode..'/test') end},
 
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }

@@ -1,10 +1,8 @@
 local gc=love.graphics
 local gc_push,gc_pop=gc.push,gc.pop
-local gc_translate,gc_scale=gc.translate,gc.scale
+local gc_translate=gc.translate
 local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
-
-local min=math.min
 
 local S={}
 S.base='puyo_default'

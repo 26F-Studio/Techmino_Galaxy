@@ -29,7 +29,4 @@ return {
             end,
         },
     }},
-    checkFinish=function()
-        return true
-    end,
 }

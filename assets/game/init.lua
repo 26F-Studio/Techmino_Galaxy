@@ -117,24 +117,36 @@ do -- function layoutFuncs.default():
 end
 
 local modeLib={}
+local modeMeta={
+    __index={
+        initialize=NULL,
+        settings={},
+        layout='default',
+        checkFinish=function() return true end,
+        result=NULL,
+        scorePage=NULL,
+    },
+    __metatable=true,
+}
 local function getMode(name)
     if modeLib[name] then
         return modeLib[name]
     else
         local path='assets/game/mode/'..name..'.lua'
-        if FILE.isSafe(path) then
-            local M=FILE.load(path,'-lua -canskip')
-            if not M then error("No mode called "..tostring(name)) end
-            if M.initialize ==nil then M.initialize= NULL      else assert(type(M.initialize)         =='function',"[mode].initialize must be function") end
-            if M.settings   ==nil then M.settings=   {}        else assert(type(M.settings)           =='table',   "[mode].settings must be table (if exist)")       end
-            if M.layout     ==nil then M.layout=     'default' else assert(type(layoutFuncs[M.layout])=='funcion', "[mode].layout wrong")                            end
-            if M.checkFinish==nil then M.checkFinish=NULL      else assert(type(M.checkFinish)        =='function',"[mode].checkFinish must be function (if exist)") end
-            if M.result     ==nil then M.result=     NULL      else assert(type(M.result)             =='function',"[mode].result must be function (if exist)")      end
-            if M.scorePage  ==nil then M.scorePage=  NULL      else assert(type(M.scorePage)          =='function',"[mode].scorePage must be function (if exist)")   end
-            modeLib[name]=M
-            M.name=name
-            return M
-        end
+        assert(love.filesystem.getInfo(path) and FILE.isSafe(path),"No mode called "..tostring(name))
+        local M=FILE.load(path,'-lua -canskip')
+        assert(type(M)=='table')
+        setmetatable(M,modeMeta)
+        assert(type(M.initialize)         =='function',"[mode].initialize must be function")
+        assert(type(M.settings)           =='table',   "[mode].settings must be table")
+        assert(type(layoutFuncs[M.layout])=='function',"[mode].layout type wrong")
+        assert(type(M.checkFinish)        =='function',"[mode].checkFinish must be function")
+        assert(type(M.result)             =='function',"[mode].result must be function")
+        assert(type(M.scorePage)          =='function',"[mode].scorePage must be function")
+
+        M.name=name
+        modeLib[name]=M
+        return M
     end
 end
 

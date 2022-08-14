@@ -8,7 +8,7 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return end
     if key=='return' then
-        SCN.go('game_simp',nil,'mino_sprint')
+        SCN.go('game_simp',nil,'mino/sprint')
     elseif key=='c' then
         SCN.go('_console')
     elseif key=='escape' then
@@ -25,9 +25,9 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={.5,.5},x=-400,y=-20,w=360,h=140, color='R',text='Sprint',  fontSize=40,cornerR=0,code=function() SCN.go('game_simp',nil,'mino_sprint') end},
-    WIDGET.new{type='button_fill',pos={.5,.5},x=0,   y=-20,w=360,h=140, color='R',text='Marathon',fontSize=40,cornerR=0,code=function() SCN.go('game_simp',nil,'mino_marathon') end},
-    WIDGET.new{type='button_fill',pos={.5,.5},x=400, y=-20,w=360,h=140, color='R',text='Ultra',   fontSize=40,cornerR=0,code=function() SCN.go('game_simp',nil,'mino_ultra') end},
+    WIDGET.new{type='button_fill',pos={.5,.5},x=-400,y=-20,w=360,h=140, color='R',text='Sprint',  fontSize=40,cornerR=0,code=function() SCN.go('game_simp',nil,'mino/sprint') end},
+    WIDGET.new{type='button_fill',pos={.5,.5},x=0,   y=-20,w=360,h=140, color='R',text='Marathon',fontSize=40,cornerR=0,code=function() SCN.go('game_simp',nil,'mino/marathon') end},
+    WIDGET.new{type='button_fill',pos={.5,.5},x=400, y=-20,w=360,h=140, color='R',text='Ultra',   fontSize=40,cornerR=0,code=function() SCN.go('game_simp',nil,'mino/ultra') end},
     WIDGET.new{type='button_fill',pos={.5,.5},x=-200,y=160,w=360,h=140, color='B',text='Tutorial',fontSize=40,cornerR=0,code=WIDGET.c_goScn'tutorial_1'},
     WIDGET.new{type='button_fill',pos={.5,.5},x=200, y=160,w=360,h=140, color='Y',text='Sandbox', fontSize=40,cornerR=0,code=WIDGET.c_goScn'sandbox_1'},
 
