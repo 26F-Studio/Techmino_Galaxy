@@ -25,9 +25,9 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={.5,.5},x=-400,y=-20,w=360,h=140, color='R',text='Sprint',  fontSize=40,cornerR=0,code=function() SCN.go('game_simp',nil,'mino/sprint') end},
-    WIDGET.new{type='button_fill',pos={.5,.5},x=0,   y=-20,w=360,h=140, color='R',text='Marathon',fontSize=40,cornerR=0,code=function() SCN.go('game_simp',nil,'mino/marathon') end},
-    WIDGET.new{type='button_fill',pos={.5,.5},x=400, y=-20,w=360,h=140, color='R',text='Ultra',   fontSize=40,cornerR=0,code=function() SCN.go('game_simp',nil,'mino/ultra') end},
+    WIDGET.new{type='button_fill',pos={.5,.5},x=-400,y=-20,w=360,h=140, color='R',text='Sprint',  fontSize=40,cornerR=0,code=playMode'mino/sprint'},
+    WIDGET.new{type='button_fill',pos={.5,.5},x=0,   y=-20,w=360,h=140, color='R',text='Marathon',fontSize=40,cornerR=0,code=playMode'mino/marathon'},
+    WIDGET.new{type='button_fill',pos={.5,.5},x=400, y=-20,w=360,h=140, color='R',text='Ultra',   fontSize=40,cornerR=0,code=playMode'mino/ultra'},
     WIDGET.new{type='button_fill',pos={.5,.5},x=-200,y=160,w=360,h=140, color='B',text='Tutorial',fontSize=40,cornerR=0,code=WIDGET.c_goScn'tutorial_1'},
     WIDGET.new{type='button_fill',pos={.5,.5},x=200, y=160,w=360,h=140, color='Y',text='Sandbox', fontSize=40,cornerR=0,code=WIDGET.c_goScn'sandbox_1'},
 

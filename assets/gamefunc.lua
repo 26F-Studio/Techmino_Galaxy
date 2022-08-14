@@ -42,6 +42,11 @@ function getBgm()
     return _bgmPlaying,_bgmMode
 end
 
+local modeObjMeta={__call=function(self,...) SCN.go('game_simp',nil,self.name) end}
+function playMode(name)
+    return setmetatable({name=name},modeObjMeta)
+end
+
 function saveSettings()
     FILE.save({
         system=SETTINGS._system,

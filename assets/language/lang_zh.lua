@@ -142,10 +142,7 @@ return {
 
     musicroom_fullband='全轨道',
 
-    tutorial_1_move="移动和旋转",
-    tutorial_1_clear="消除",
-    tutorial_1_next="预览",
-    tutorial_1_hold="暂存",
+    tutorial_1_basic="基本规则",
+    tutorial_1_sequence="预览&暂存",
     tutorial_1_stack="堆叠",
-    tutorial_1_techrash="消四",
 }

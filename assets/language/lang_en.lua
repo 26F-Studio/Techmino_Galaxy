@@ -142,10 +142,7 @@ return {
 
     musicroom_fullband='Full Band',
 
-    tutorial_1_move="Movement & Rotation",
-    tutorial_1_clear="Clearing",
-    tutorial_1_next="Next",
-    tutorial_1_hold="Hold",
+    tutorial_1_basic="Basic Rule",
+    tutorial_1_sequence="Next & Hold",
     tutorial_1_stack="Stacking",
-    tutorial_1_techrash="Techrash",
 }
