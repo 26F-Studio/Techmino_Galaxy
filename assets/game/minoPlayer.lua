@@ -1604,6 +1604,7 @@ function MP.new()
         drawInField={},
         drawOnPlayer={},
     }
+    self.soundEvent=setmetatable({},soundEventMeta)
 
     return self
 end
@@ -1639,7 +1640,6 @@ function MP:loadSettings(settings)
     end
 end
 function MP:initialize()
-    self.soundEvent=setmetatable({},soundEventMeta)
     self.modeData=setmetatable({},modeDataMeta)
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 

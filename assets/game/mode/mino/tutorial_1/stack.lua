@@ -4,9 +4,9 @@ return {
         GAME.setMain(1)
     end,
     settings={mino={
-        readyDelay=1000,
+        skin='mino_simp',
+        shakeness=0,
         dropDelay=1e99,
         lockDelay=1e99,
-        holdSlot=0,
     }},
 }
