@@ -285,6 +285,7 @@ do-- bgmList
         ['sakura']={author="ZUN & C₂₉H₂₅N₃O₅",},
         ["race remix"]={author="柒栎流星"},
         ['secret7th remix']={author="柒栎流星"},
+        ['propel']={author="TetraCepra"},
     }
     for name,song in next,bgmList do
         if song.base and song.full then
