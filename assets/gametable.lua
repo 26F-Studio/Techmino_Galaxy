@@ -242,19 +242,19 @@ do-- bgmList
             message="First remix from community",
             author="ERM",
         },
-        ["none"]={
+        ['none']={
             author="MrZ",
             message="Another title remix",
         },
-        ["nil"]={
+        ['nil']={
             author="MrZ",
             message="Another title remix",
         },
-        ["null"]={
+        ['null']={
             author="MrZ",
             message="Another title remix",
         },
-        ["vacuum"]={
+        ['vacuum']={
             author="MrZ",
             message="Another title remix",
         },
@@ -266,24 +266,24 @@ do-- bgmList
             author="Trebor",
             message="A cool jazz title remix",
         },
-        ["beat5th"]={
+        ['beat5th']={
             author="MrZ",
             message="5/4 experiment",
         },
-        ["super7th"]={
+        ['super7th']={
             author="MrZ",
             message="FL experiment",
         },
-        ["secret8th remix"]={author="MrZ"},
-        ["shift"]={author="MrZ"},
-        ["here"]={author="MrZ"},
-        ["there"]={author="MrZ"},
+        ['secret8th remix']={author="MrZ"},
+        ['shift']={author="MrZ"},
+        ['here']={author="MrZ"},
+        ['there']={author="MrZ"},
         ['1980s']={
             author="C₂₉H₂₅N₃O₅",
             message="Another old song remix",
         },
         ['sakura']={author="ZUN & C₂₉H₂₅N₃O₅",},
-        ["race remix"]={author="柒栎流星"},
+        ['race remix']={author="柒栎流星"},
         ['secret7th remix']={author="柒栎流星"},
         ['propel']={author="TetraCepra"},
     }
