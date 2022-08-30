@@ -142,6 +142,14 @@ return {
 
     musicroom_fullband='全轨道',
 
+    main_1_sprint='竞速',
+    main_1_marathon='马拉松',
+    main_1_ultra='限时极限',
+    main_1_tutorial='教程',
+    main_1_sandbox='沙盒',
+    main_1_settings='设置',
+    main_1_musicroom='音乐室',
+
     tutorial_1_basic="基本规则",
     tutorial_1_sequence="预览&暂存",
     tutorial_1_stack="堆叠",

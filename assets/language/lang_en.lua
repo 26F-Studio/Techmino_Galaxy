@@ -142,6 +142,14 @@ return {
 
     musicroom_fullband='Full Band',
 
+    main_1_sprint='Sprint',
+    main_1_marathon='Marathon',
+    main_1_ultra='Ultra',
+    main_1_tutorial='Tutorial',
+    main_1_sandbox='Sandbox',
+    main_1_settings='Settings',
+    main_1_musicroom='Musicroom',
+
     tutorial_1_basic="Basic Rule",
     tutorial_1_sequence="Next & Hold",
     tutorial_1_stack="Stacking",
