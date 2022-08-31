@@ -258,7 +258,7 @@ function scene.keyDown(key,isRep)
         love.mousepressed(ms.getPosition())
     elseif key=='escape' then
         if state~=1 then
-            sureCheck('back')
+            if sureCheck('back') then SCN.back() end
         end
     elseif state==0 then
         if key=='q' then

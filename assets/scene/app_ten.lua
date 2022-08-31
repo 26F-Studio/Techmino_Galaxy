@@ -154,7 +154,7 @@ function scene.keyDown(key,isRep)
             fast=not fast
         end
     elseif key=='escape' then
-        sureCheck('back')
+        if sureCheck('back') then SCN.back() end
     end
 end
 function scene.mouseMove(x,y)

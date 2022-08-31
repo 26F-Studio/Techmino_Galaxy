@@ -45,7 +45,7 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return end
     if key=='escape' then
-        sureCheck('back')
+        if sureCheck('back') then SCN.back() end
     elseif key=='space' then
         if state==0 then-- main
             if timer==0 then

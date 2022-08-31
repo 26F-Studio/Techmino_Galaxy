@@ -12,7 +12,7 @@ function scene.keyDown(key,isRep)
     elseif key=='c' then
         SCN.go('_console')
     elseif key=='escape' then
-        sureCheck('quit')
+        if sureCheck('quit') then SCN.back() end
     end
 end
 

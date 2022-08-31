@@ -29,7 +29,7 @@ function scene.keyDown(key,isRep)
             vy=pow*sin(ang)/2.6
         end
     elseif key=='escape' then
-        sureCheck('back')
+        if sureCheck('back') then SCN.back() end
     end
 end
 function scene.mouseDown(_,_,k)

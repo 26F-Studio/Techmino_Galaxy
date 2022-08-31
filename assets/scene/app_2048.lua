@@ -331,7 +331,7 @@ function scene.keyDown(key,isRep)
         if repeater.focus then
             repeater.focus=false
         else
-            sureCheck('back')
+            if sureCheck('back') then SCN.back() end
         end
     end
 end

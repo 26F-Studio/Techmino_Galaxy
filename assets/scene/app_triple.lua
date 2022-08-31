@@ -307,7 +307,7 @@ function scene.keyDown(key,isRep)
             player:reset()
         end
     elseif key=='escape' then
-        sureCheck('back')
+        if sureCheck('back') then SCN.back() end
     end
 end
 

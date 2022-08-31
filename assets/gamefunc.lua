@@ -6,7 +6,7 @@ local lastTime=setmetatable({},{
 })
 function sureCheck(event)
     if love.timer.getTime()-lastTime[event]<1 then
-        SCN.back()
+        return true
     else
         MES.new('info',Text.sureText[event])
     end
