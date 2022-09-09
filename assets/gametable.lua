@@ -304,8 +304,7 @@ do-- bgmList
     end
 end
 
-local settings
-settings={
+local settings={
     _system={-- We just save values here, do not change them directly.
         -- Audio
         autoMute=false,

@@ -13,10 +13,10 @@ scene.widgetList={
     WIDGET.new{type='slider_fill',pos={0,0},x=260, y=420,w=500,h=30,  text=LANG'setting_shakeness', widthLimit=260,axis={0,1},                 disp=TABLE.func_getVal(SETTINGS.game_mino,'shakeness'),                             code=TABLE.func_setVal(SETTINGS.game_mino,'shakeness')},
 
     -- Key setting & Test
-    WIDGET.new{type='button',     pos={0,1},x=160,y=-80,w=160,h=80,   text=CHAR.icon.keyboard,fontSize=60,code=function() SCN.go('keyset_list',nil,'mino') end},
-    WIDGET.new{type='button',     pos={0,1},x=340,y=-80,w=160,h=80,   text=LANG'keyset_touch',fontSize=45,code=WIDGET.c_goScn'keyset_touch'},
-    WIDGET.new{type='switch',     pos={0,1},x=480,y=-80,h=50,         text='',disp=TABLE.func_getVal(SETTINGS.system,'touchControl'),code=TABLE.func_revVal(SETTINGS.system,'touchControl')},
-    WIDGET.new{type='button',     pos={1,1},x=-300,y=-80,w=160,h=80,  text=LANG'keyset_test',fontSize=45,code=playMode'mino/test'},
+    WIDGET.new{type='button',     pos={0,1},x=160,y=-80,w=160,h=80,           text=CHAR.icon.keyboard,fontSize=60,code=function() SCN.go('keyset_list',nil,'mino') end},
+    WIDGET.new{type='button',     pos={0,1},x=340,y=-80,w=160,h=80,           text=LANG'keyset_touch',fontSize=45,code=WIDGET.c_goScn'keyset_touch'},
+    WIDGET.new{type='switch',     pos={0,1},x=480,y=-80,h=50,labelPos='right',text='',disp=TABLE.func_getVal(SETTINGS.system,'touchControl'),code=TABLE.func_revVal(SETTINGS.system,'touchControl')},
+    WIDGET.new{type='button',     pos={1,1},x=-300,y=-80,w=160,h=80,          text=LANG'keyset_test',fontSize=45,code=playMode'mino/test'},
 
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
