@@ -51,6 +51,7 @@ jobs:
     needs: get-info
     env:
       OUTPUT_FOLDER: ./build
+      RELEASE_FOLDER: ./release
     outputs:
       download-url: ${{ steps.transfer.outputs.download-url }}
     steps:
@@ -83,12 +84,18 @@ jobs:
         with:
           name: ${{ needs.get-info.outputs.base-name }}_Core
           path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.love
+      - name: Prepare for release
+        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
+        shell: bash
+        run: |
+          mkdir -p ${{ env.RELEASE_FOLDER }}
+          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.love ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Bare.love
       - name: Upload release
         if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v1
         with:
           body: ${{ github.event.head_commit.message }}
-          files: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.love
+          files: ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Bare.love
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
       - name: Upload to WeTransfer
         id: transfer
@@ -113,6 +120,7 @@ jobs:
     needs: [get-info, build-core, auto-test]
     env:
       OUTPUT_FOLDER: ./build
+      RELEASE_FOLDER: ./release
     outputs:
       download-url: ${{ steps.transfer.outputs.download-url }}
     steps:
@@ -157,14 +165,14 @@ jobs:
         if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
         shell: bash
         run: |
-          mkdir -p release
-          mv ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}-release.apk release/${{ steps.process-app-name.outputs.product-name }}.apk
+          mkdir -p ${{ env.RELEASE_FOLDER }}
+          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}-release.apk ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Android.apk
       - name: Upload release
         if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v1
         with:
           body: ${{ github.event.head_commit.message }}
-          files: release/${{ steps.process-app-name.outputs.product-name }}.apk
+          files: ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Android.apk
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
       - name: Upload to WeTransfer
         id: transfer
@@ -177,6 +185,7 @@ jobs:
     needs: [get-info, build-core, auto-test]
     env:
       OUTPUT_FOLDER: ./build
+      RELEASE_FOLDER: ./release
     outputs:
       download-url: ${{ steps.transfer.outputs.download-url }}
     steps:
@@ -229,12 +238,18 @@ jobs:
         with:
           name: ${{ needs.get-info.outputs.base-name }}_iOS_ipa
           path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.ipa
+      - name: Prepare for release
+        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
+        shell: bash
+        run: |
+          mkdir -p ${{ env.RELEASE_FOLDER }}
+          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.ipa ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_iOS.ipa
       - name: Upload release
         if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v1
         with:
           body: ${{ github.event.head_commit.message }}
-          files: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.ipa
+          files: ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_iOS.ipa
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
       - name: Upload to WeTransfer
         id: transfer
@@ -247,6 +262,7 @@ jobs:
     needs: [get-info, build-core, auto-test]
     env:
       OUTPUT_FOLDER: ./build
+      RELEASE_FOLDER: ./release
     outputs:
       download-url: ${{ steps.transfer.outputs.download-url }}
     steps:
@@ -279,12 +295,18 @@ jobs:
         with:
           name: ${{ needs.get-info.outputs.base-name }}_Linux_AppImage
           path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.AppImage
+      - name: Prepare for release
+        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
+        shell: bash
+        run: |
+          mkdir -p ${{ env.RELEASE_FOLDER }}
+          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.AppImage ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Linux.AppImage
       - name: Upload release
         if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v1
         with:
           body: ${{ github.event.head_commit.message }}
-          files: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.AppImage
+          files: ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Linux.AppImage
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
       - name: Upload to WeTransfer
         id: transfer
@@ -297,6 +319,7 @@ jobs:
     needs: [get-info, build-core, auto-test]
     env:
       OUTPUT_FOLDER: ./build
+      RELEASE_FOLDER: ./release
     outputs:
       download-url: ${{ steps.transfer.outputs.download-url }}
     steps:
@@ -349,12 +372,18 @@ jobs:
         with:
           name: ${{ needs.get-info.outputs.base-name }}_macOS_appstore_pkg
           path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.pkg
+      - name: Prepare for release
+        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
+        shell: bash
+        run: |
+          mkdir -p ${{ env.RELEASE_FOLDER }}
+          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.pkg ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_macOS_appstore.pkg
       - name: Upload release
         if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v1
         with:
           body: ${{ github.event.head_commit.message }}
-          files: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.pkg
+          files: ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_macOS_appstore.pkg
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
       - name: Upload to WeTransfer
         id: transfer
@@ -367,6 +396,7 @@ jobs:
     needs: [get-info, build-core, auto-test]
     env:
       OUTPUT_FOLDER: ./build
+      RELEASE_FOLDER: ./release
     outputs:
       download-url: ${{ steps.transfer.outputs.download-url }}
     steps:
@@ -428,14 +458,21 @@ jobs:
         with:
           name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_bare
           path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.zip
+      - name: Prepare for release
+        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
+        shell: bash
+        run: |
+          mkdir -p ${{ env.RELEASE_FOLDER }}
+          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.pkg ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_macOS_portable.pkg
+          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.dmg ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_macOS_portable.dmg
       - name: Upload release
         if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v1
         with:
           body: ${{ github.event.head_commit.message }}
           files: |
-            ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.pkg
-            ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.dmg
+            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_macOS_portable.pkg
+            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_macOS_portable.dmg
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
       - name: Upload to WeTransfer
         id: transfer
@@ -448,6 +485,7 @@ jobs:
     needs: [get-info, build-core, auto-test]
     env:
       OUTPUT_FOLDER: ./build
+      RELEASE_FOLDER: ./release
     outputs:
       download-url: ${{ steps.transfer.outputs.download-url }}
     steps:
@@ -485,14 +523,21 @@ jobs:
         with:
           name: ${{ needs.get-info.outputs.base-name }}_Windows_x64
           path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x64.zip
+      - name: Prepare for release
+        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
+        shell: bash
+        run: |
+          mkdir -p ${{ env.RELEASE_FOLDER }}
+          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x86.zip ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_x86.zip
+          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x64.zip ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_x64.zip
       - name: Upload release
         if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v1
         with:
           body: ${{ github.event.head_commit.message }}
           files: |
-            ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x86.zip
-            ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x64.zip
+            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_x86.zip
+            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_x64.zip
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
       - name: Get transfer
         env:
