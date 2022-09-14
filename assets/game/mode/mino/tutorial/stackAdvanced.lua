@@ -6,10 +6,10 @@ return {
     settings={mino={
         skin='mino_simp',
         shakeness=0,
-        readyDelay=0,
+        readyDelay=1000,
         dropDelay=1e99,
         lockDelay=1e99,
-        holdSlot=0,
-        nextSlot=0,
+        deathDelay=0,
+        seqType='none',
     }},
 }

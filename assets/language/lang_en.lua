@@ -150,7 +150,10 @@ return {
     main_1_settings='Settings',
     main_1_musicroom='Musicroom',
 
-    tutorial_1_basic="Basic Rule",
-    tutorial_1_sequence="Next & Hold",
-    tutorial_1_stack="Stacking",
+    tutorial_basic="Basic Rule",
+    tutorial_sequence="Next & Hold",
+    tutorial_stackBasic="Basic Stacking",
+    tutorial_twoRotatingKey="2-way Rotating",
+    tutorial_stackAdvanced="Advanced Stacking",
+    tutorial_finesse="Finesse",
 }

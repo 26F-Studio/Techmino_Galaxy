@@ -150,7 +150,10 @@ return {
     main_1_settings='设置',
     main_1_musicroom='音乐室',
 
-    tutorial_1_basic="基本规则",
-    tutorial_1_sequence="预览&暂存",
-    tutorial_1_stack="堆叠",
+    tutorial_basic="基本规则",
+    tutorial_sequence="预览&暂存",
+    tutorial_stackBasic="堆叠(基础)",
+    tutorial_twoRotatingKey="双旋",
+    tutorial_stackAdvanced="堆叠(进阶)",
+    tutorial_finesse="极简操作",
 }
