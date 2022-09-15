@@ -1144,7 +1144,7 @@ function MP:runScript(line)
         end
     elseif type(line.c)=='function' then
         return line.c(self)
-    else
+    elseif line.c~=nil then
         error("WTF why scriptLine.c is "..type(line.c))
     end
 end
@@ -1168,11 +1168,10 @@ function MP:update(dt)
                     local res=self:runScript(l)
                     if not res then-- Step
                         self.scriptLine=self.scriptLine+1
-                        self.scriptWait=self.script[self.scriptLine].t or 0
                     elseif res~='stay' then
                         self.scriptLine=self.scriptLabels[res]
-                        self.scriptWait=0
                     end
+                    self.scriptWait=self.script[self.scriptLine].t or 0
                 else
                     self.scriptWait=self.scriptWait-1
                     break
