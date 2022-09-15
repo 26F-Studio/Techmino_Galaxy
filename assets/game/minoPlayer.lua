@@ -287,7 +287,7 @@ local function _getActionObj(a)
             self.press(P)
         end})
     elseif type(a)=='table' then
-        assert(type(a.press)=='function' and type(a.release)=='function',"wtf why action do not contain func press() & func release()")
+        if not (type(a.press)=='function' and type(a.release)=='function') then error("WTF why action do not contain func press() & func release()") end
         return setmetatable({
             press=a.press,
             release=a.release,
@@ -410,7 +410,7 @@ function MP:moveHand(action,a,b,c,d)
     elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
     else
-        error('wtf why action is '..tostring(action))
+        error('WTF why action is '..tostring(action))
     end
 
     if self.handX%1~=0 or self.handY%1~=0 then error('EUREKA! Decimal position.') end
@@ -616,7 +616,7 @@ function MP:freshDelay(reason)-- reason can be 'move' or 'drop' or 'spawn'
             self.freshTimeRemain=self.settings.maxFreshTime
         end
     else
-        error("wtf why settings.freshCondition is "..tostring(self.settings.freshCondition))
+        error("WTF why settings.freshCondition is "..tostring(self.settings.freshCondition))
     end
 end
 function MP:freshNextQueue()
@@ -752,7 +752,7 @@ end
 function MP:rotate(dir,ifInit)
     if not self.hand then return end
     local minoData=MinoRotSys[self.settings.rotSys][self.hand.shape]
-    if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F ("..tostring(dir)..")") end
+    if dir~='R' and dir~='L' and dir~='F' then error("WTF why dir isn't R/L/F ("..tostring(dir)..")") end
 
     if minoData.rotate then-- Custom rotate function
         minoData.rotate(self,dir,ifInit)
@@ -775,7 +775,7 @@ function MP:rotate(dir,ifInit)
                 baseX=preState.center[1]-afterState.center[1]
                 baseY=preState.center[2]-afterState.center[2]
             else
-                error('cannot get baseX/Y')
+                error('Cannot get baseX/Y')
             end
 
             for n=1,#kick.test do
@@ -791,7 +791,7 @@ function MP:rotate(dir,ifInit)
             self:freshDelay('rotate')
             self:playSound('rotate_failed')
         else
-            error("wtf why no state in minoData")
+            error("WTF why no state in minoData")
         end
     end
 end
@@ -807,7 +807,7 @@ function MP:hold(ifInit)
         mode=='hold' and 'hold_hold' or
         mode=='swap' and 'hold_swap' or
         mode=='float' and 'hold_float' or
-        error("wtf why hold mode is "..tostring(mode))
+        error("WTF why hold mode is "..tostring(mode))
     ](self)
 
     -- Recover data
@@ -1096,6 +1096,58 @@ function MP:release(act)
     self.actions[act].release(self)
     self:triggerEvent('afterRelease',act)
 end
+local function parseTime(str)
+    local num=tonumber(str:sub(str:find('[0-9.]+')))
+    local unit=str:sub(str:find('%a+'))
+    return
+        unit=='s'  and num*1000 or
+        unit=='ms' and num or
+        unit=='m'  and num*60000 or
+        error('WTF why time unit is not s/ms/m')
+end
+local _compOP={jmp=1,jz=1,jnz=1,jeq=1,jne=1,jge=1,jle=1,jg=1,jl=1}
+function MP:runScript(line)
+    local arg=line.a
+    if type(line.c)=='string' then
+        if line.c=='say' then
+            self.texts:add{
+                duration=parseTime(arg.len or 2600)/1000,
+                fontSize=arg.size or 60,
+                text=    arg.text or "[TEXT]",
+                x=arg.x or 0,
+                y=arg.y or 0,
+            }
+        elseif line.c=='set' then
+            self.scriptEnv[arg.v]=arg.c or
+                arg.d=='field_width' and self.field:getWidth() or
+                arg.d=='field_height' and self.field:getHeight() or
+                arg.d=='cell' and (self.field:getCell(arg.x,arg.y) and 1 or 0)
+        elseif _compOP[line.c] then
+            local v1=self.scriptEnv[arg.v]
+            local v2=arg.v2
+            if v2==nil then v2=arg.c end
+            if
+                line.c=='jmp'            or
+                line.c=='jz'  and v1==0  or
+                line.c=='jnz' and v1~=0  or
+                line.c=='jeq' and v1==v2 or
+                line.c=='jne' and v1~=v2 or
+                line.c=='jge' and v1>=v2 or
+                line.c=='jle' and v1<=v2 or
+                line.c=='jg'  and v1>v2  or
+                line.c=='jl'  and v1<v2
+            then
+                return arg.dest
+            end
+        else
+            error("Script command '"..line.c.."' not exist")
+        end
+    elseif type(line.c)=='function' then
+        return line.c(self)
+    else
+        error("WTF why scriptLine.c is "..type(line.c))
+    end
+end
 function MP:update(dt)
     local df=floor((self.realTime+dt)*1000)-floor(self.realTime*1000)
     self.realTime=self.realTime+dt
@@ -1104,6 +1156,29 @@ function MP:update(dt)
     for _=1,df do
         -- Step game time
         if self.timing then self.gameTime=self.gameTime+1 end
+
+        -- Script
+        if self.script then
+            while true do
+                local l=self.script[self.scriptLine]
+                if not l then break end-- EOF
+
+                if self.scriptWait<=0 then
+                    -- Execute command
+                    local res=self:runScript(l)
+                    if not res then-- Step
+                        self.scriptLine=self.scriptLine+1
+                        self.scriptWait=self.script[self.scriptLine].t or 0
+                    elseif res~='stay' then
+                        self.scriptLine=self.scriptLabels[res]
+                        self.scriptWait=0
+                    end
+                else
+                    self.scriptWait=self.scriptWait-1
+                    break
+                end
+            end
+        end
 
         self:triggerEvent('always')
 
@@ -1478,6 +1553,7 @@ local baseEnv={
     freshCondition='any',
     freshCount=15,
     maxFreshTime=6200,
+    script=false,
 
     -- Will be overrode with user setting
     das=162,
@@ -1723,10 +1799,10 @@ function MP:initialize()
                 if type(k)=='number' then
                     self.actions[v]=_getActionObj(v)
                 elseif type(k)=='string' then
-                    assert(actions[k],STRING.repD("no action called '$1'",k))
+                    assert(actions[k],STRING.repD("No action called '$1'",k))
                     self.actions[k]=_getActionObj(v)
                 else
-                    error(STRING.repD("wrong actionPack table format (type $1)",type(k)))
+                    error(STRING.repD("Wrong actionPack table format (type $1)",type(k)))
                 end
             end
         else
@@ -1737,6 +1813,26 @@ function MP:initialize()
         for k in next,self.actions do
             self.keyState[k]=false
         end
+    end
+
+    -- Load script
+    if self.settings.script then
+        self.script=self.settings.script
+        assert(type(self.script)=='table',"script must be table")
+        self.scriptEnv={}
+        self.scriptLabels={}
+        local i=1
+        while self.script[i] do
+            if self.script[i].t then
+                self.script[i].t=parseTime(self.script[i].t)
+            end
+            if self.script[i].label then
+                self.scriptLabels[self.script[i].label]=i
+            end
+            i=i+1
+        end
+        self.scriptLine=1
+        self.scriptWait=self.script[1].t or 0
     end
 
     self.particles={}

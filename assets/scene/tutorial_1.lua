@@ -36,13 +36,13 @@ end
 scene.widgetList={
     WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,cornerR=0,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 
-    B{name='T1_1',x=nil, y=-200,text=LANG'tutorial_basic',            code=playMode'mino/tutorial/basic'},
-    B{name='T1_2',x=nil, y= 0,  text=LANG'tutorial_sequence',         code=playMode'mino/tutorial/sequence'},
-    B{name='T1_3',x=nil, y= 200,text=LANG'tutorial_stackBasic',       code=playMode'mino/tutorial/stackBasic'},
+    B{name='T1_1',x=nil, y=-200,text=LANG'tutorial_basic',            code=playMode'mino/tutorial/1.basic'},
+    B{name='T1_2',x=nil, y= 0,  text=LANG'tutorial_sequence',         code=playMode'mino/tutorial/2.sequence'},
+    B{name='T1_3',x=nil, y= 200,text=LANG'tutorial_stackBasic',       code=playMode'mino/tutorial/3.stackBasic'},
 
-    B{name='T2_1',x=nil, y=-200,text=LANG'tutorial_twoRotatingKey',   code=playMode'mino/tutorial/twoRotatingKey'},
-    B{name='T2_2',x=nil, y= 0,  text=LANG'tutorial_stackAdvanced',    code=playMode'mino/tutorial/stackAdvanced'},
-    B{name='T2_3',x=nil, y= 200,text=LANG'tutorial_finesse',          code=playMode'mino/tutorial/finesse'},
+    B{name='T2_1',x=nil, y=-200,text=LANG'tutorial_twoRotatingKey',   code=playMode'mino/tutorial/4.twoRotatingKey'},
+    B{name='T2_2',x=nil, y= 0,  text=LANG'tutorial_stackAdvanced',    code=playMode'mino/tutorial/5.stackAdvanced'},
+    B{name='T2_3',x=nil, y= 200,text=LANG'tutorial_finesse',          code=playMode'mino/tutorial/6.finesse'},
 
     -- WIDGET.new{type='button_fill',x=-300,y=-160,w=540,h=150,color='B',fontSize=50,text=LANG'tutorial_2_0'},
     -- WIDGET.new{type='button_fill',x=300, y=-160,w=540,h=150,color='B',fontSize=50,text=LANG'tutorial_2_1'},
