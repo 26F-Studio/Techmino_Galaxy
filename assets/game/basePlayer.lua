@@ -131,15 +131,9 @@ function P:runScript(line)
                 y=arg.y or 0,
             }
         elseif line.c=='wait' then
-            if not self.modeData[arg.v] then
-                return 'suspended',parseTime(arg.i) or 0
+            if not (self.modeData[arg.v] and self.modeData[arg.v]~=0) then
+                return self.scriptLine
             end
-        elseif line.c=='set' then
-            self.modeData[arg.v]=arg.c or
-                arg.d=='field_width' and self.field:getWidth() or
-                arg.d=='field_height' and self.field:getHeight() or
-                arg.d=='cell' and (self.field:getCell(arg.x,arg.y) and 1 or 0) or
-                arg.d=='data' and self.modeData[arg.v]
         elseif _compOP[line.c] then
             local v1=arg.v  if v1~=nil then v1=self.modeData[v1] end
             local v2=arg.v2 if v2==nil then v2=arg.c end
@@ -156,6 +150,13 @@ function P:runScript(line)
             then
                 return self.scriptLabels[arg.d] or error("No label called '"..arg.d.."'")
             end
+        elseif line.c=='set' then
+            self.modeData[arg.v]=
+                arg.c or
+                arg.d and(
+                    arg.d=='data' and self.modeData[arg.v] or
+                    self:getScriptValue(arg)
+                )
         else
             error("Script command '"..line.c.."' not exist")
         end
@@ -442,6 +443,8 @@ function P:loadScript(script)
         if not line then break end
         if line.t then
             line.t=assert(parseTime(line.t),("line #$1: Wrong time stamp"):repD(n))
+        elseif line.c=='wait' then
+            line.t=1
         end
         if line.lbl then
             assert(type(line.lbl)=='string',("line #$1: Label type must be string"):repD(n))

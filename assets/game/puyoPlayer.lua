@@ -828,6 +828,12 @@ function PP:receive(data)
     }
     ins(self.garbageBuffer,B)
 end
+function PP:getScriptValue(arg)
+    return
+        arg.d=='field_width' and self.field:getWidth() or
+        arg.d=='field_height' and self.field:getHeight() or
+        arg.d=='cell' and (self.field:getCell(arg.x,arg.y) and 1 or 0)
+end
 --------------------------------------------------------------
 -- Press & Release & Update & Render
 function PP:updateFrame()
@@ -1150,6 +1156,7 @@ local baseEnv={
     freshCondition='fall',
     freshCount=15,
     maxFreshTime=6200,
+    script=false,
 
     -- Will be overrode with user setting
     das=162,
@@ -1307,6 +1314,8 @@ function PP:initialize()
             self.keyState[k]=false
         end
     end
+
+    self:loadScript(self.settings.script)
 
     self.particles={}
     for k,v in next,particleTemplate do

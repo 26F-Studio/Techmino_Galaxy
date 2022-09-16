@@ -997,6 +997,12 @@ function MP:receive(data)
     }
     ins(self.garbageBuffer,B)
 end
+function MP:getScriptValue(arg)
+    return
+        arg.d=='field_width' and self.field:getWidth() or
+        arg.d=='field_height' and self.field:getHeight() or
+        arg.d=='cell' and (self.field:getCell(arg.x,arg.y) and 1 or 0)
+end
 --------------------------------------------------------------
 -- Press & Release & Update & Render
 function MP:updateFrame()

@@ -617,6 +617,11 @@ function GP:receive(data)
     }
     ins(self.garbageBuffer,B)
 end
+function GP:getScriptValue(arg)
+    return
+        arg.d=='field_size' and self.settings.fieldSize or
+        arg.d=='cell' and (self.field[arg.y][arg.x] and 1 or 0)
+end
 --------------------------------------------------------------
 -- Press & Release & Update & Render
 function GP:getMousePos(x,y)
@@ -994,7 +999,9 @@ local baseEnv={
     swapForce=true,
     twistR=false,twistL=false,twistF=false,
     twistForce=false,
+    script=false,
 
+    -- Will be overrode with user setting
     skin='gem_default',
 
     shakeness=.26,
@@ -1103,6 +1110,8 @@ function GP:initialize()
             self.keyState[k]=false
         end
     end
+
+    self:loadScript(self.settings.script)
 
     self.particles={}
     for k,v in next,particleTemplate do
