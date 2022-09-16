@@ -118,14 +118,20 @@ local function parseTime(str)
         unit=='ms' and num or
         unit=='m'  and num*60000
 end
-local _compOP={j=1,jz=1,jnz=1,jeq=1,jne=1,jge=1,jle=1,jg=1,jl=1}
+local _jmpOP={j=1,jz=1,jnz=1,jeq=1,jne=1,jge=1,jle=1,jg=1,jl=1}
 function P:runScript(line)
     local arg=line.a
     if type(line.c)=='string' then
         if line.c=='say' then
+            if arg.t:sub(1,1)=='$' then
+                arg.t=Text[arg.t] or arg.t
+            elseif arg.t:sub(1,1)=='\\' then
+                arg.t=arg.t:sub(2)
+            end
             self.texts:add{
                 duration=parseTime(arg.d or 2600)/1000,
-                fontSize=arg.s or 60,
+                fontSize=arg.f or 60,
+                style=arg.s or 'appear',
                 text=    arg.t or "[TEXT]",
                 x=arg.x or 0,
                 y=arg.y or 0,
@@ -134,7 +140,7 @@ function P:runScript(line)
             if not (self.modeData[arg.v] and self.modeData[arg.v]~=0) then
                 return self.scriptLine
             end
-        elseif _compOP[line.c] then
+        elseif _jmpOP[line.c] then
             local v1=arg.v  if v1~=nil then v1=self.modeData[v1] end
             local v2=arg.v2 if v2==nil then v2=arg.c end
             if
@@ -154,7 +160,7 @@ function P:runScript(line)
             self.modeData[arg.v]=
                 arg.c or
                 arg.d and(
-                    arg.d=='data' and self.modeData[arg.v] or
+                    arg.d=='data' and self.modeData[arg.n] or
                     self:getScriptValue(arg)
                 )
         else
@@ -429,27 +435,87 @@ function P:loadSettings(settings)
         end
     end
 end
+local function decodeScript()
+    
+end
 function P:loadScript(script)
     if not script then return end
     assert(type(script)=='table',"script must be table")
     self.script=script
     self.scriptLabels={}
 
-    local n=0
-    local line
-    while true do
-        n=n+1
-        line=script[n]
+    for i=1,1e99 do
+        local line=script[i]
         if not line then break end
-        if line.t then
-            line.t=assert(parseTime(line.t),("line #$1: Wrong time stamp"):repD(n))
-        elseif line.c=='wait' then
-            line.t=1
-        end
-        if line.lbl then
-            assert(type(line.lbl)=='string',("line #$1: Label type must be string"):repD(n))
-            assert(not self.scriptLabels[line.lbl],("line #$1: Label '$1' already exist"):repD(n,line.lbl))
-            self.scriptLabels[line.lbl]=n
+        if type(line)=='string' then line=decodeScript(line) end
+
+        local errMsg="line #"..i..": "
+        if type(line)=='table' then
+            if line.lbl then
+                assert(type(line.lbl)=='string',errMsg.."Label must be string")
+                assert(not self.scriptLabels[line.lbl],errMsg.."Label '"..line.lbl.."' already exist")
+                self.scriptLabels[line.lbl]=i
+            end
+            if line.t then
+                line.t=assert(parseTime(line.t),errMsg.."Wrong time stamp")
+            end
+
+            local c=line.c
+            local arg=line.a
+            if type(c)=='string' then
+                if c=='say' then
+                    assert(arg.t~=nil,errMsg.."Need arg 't'")
+                    for k,v in next,arg do
+                        if     k=='d' then if not (type(v)=='string' or type(v)=='number' and v>0) then error(errMsg.."Wrong arg 'd', need >0") end
+                        elseif k=='f' then if not (type(v)=='number' and v>0 and v%5==0 and v<=120) then error(errMsg.."Wrong arg 's', need 5, 10, 15,... 120") end
+                        elseif k=='s' then if not (type(v)=='string') then error(errMsg.."Wrong arg 's', need string") end
+                        elseif k=='t' then if not (type(v)=='string') then error(errMsg.."Wrong arg 't', need string") end
+                        elseif k=='x' then if not (type(v)=='number') then error(errMsg.."Wrong arg 'x', need number") end
+                        elseif k=='y' then if not (type(v)=='number') then error(errMsg.."Wrong arg 'y', need number") end
+                        else error(errMsg.."Wrong arg name '"..k.."'")
+                        end
+                    end
+                elseif c=='wait' then
+                    assert(arg.v~=nil,errMsg.."Need arg 'v'")
+                    if not line.t then line.t=1 end
+                    for k,v in next,arg do
+                        if k=='v' then if not (type(v)=='string') then error(errMsg.."Wrong arg 'v', need string") end
+                        else error(errMsg.."Wrong arg name '"..k.."'")
+                        end
+                    end
+                elseif _jmpOP[c] then
+                    if c=='j' then
+                        if not (arg.v==nil and arg.v2==nil and arg.c==nil) then error(errMsg.."Command j need no arg") end
+                    else
+                        assert(arg.v~=nil,errMsg.."Need arg 'v'")
+                        if c=='jz' or c=='jnz' then
+                            if not (arg.v2==nil and arg.c==nil) then error(errMsg.."Command jz(jnz) need only arg 'v'") end
+                        else
+                            if not ((arg.v2==nil)~=(arg.c==nil)) then error(errMsg.."Command Jump-if-* not allow 'v2' and 'c' exist at same time") end
+                        end
+                    end
+                    for k,v in next,arg do
+                        if     k=='v'  then if not (type(v)=='string') then error(errMsg.."Wrong arg 'v', need string") end
+                        elseif k=='v2' then if not (type(v)=='string') then error(errMsg.."Wrong arg 'v2', need string") end
+                        elseif k=='c'  then if not (type(v)=='number') then error(errMsg.."Wrong arg 'c', need number") end
+                        elseif k=='d'  then if not (type(v)=='string') then error(errMsg.."Wrong arg 'd', need string") end
+                        else error(errMsg.."Wrong arg name '"..k.."'")
+                        end
+                    end
+                elseif c=='set' then
+                    for k,v in next,arg do
+                        if k=='v' or k=='d' or k=='n' then
+                            if not (type(v)=='string') then error(errMsg.."Wrong arg '"..k.."', need string") end
+                        elseif k=='c' then -- Do nothing, arg.c can be any value
+                        else error(errMsg.."Wrong arg name '"..k.."'")
+                        end
+                    end
+                end
+            elseif type(c)~='nil' and type(c)~='function' then
+                error(errMsg.."Wrong command type: "..type(c))
+            end
+        else
+            error(errMsg.."Wrong line type: "..type(line))
         end
     end
     self.scriptLine=1
