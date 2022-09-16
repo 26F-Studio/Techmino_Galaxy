@@ -1097,37 +1097,39 @@ function MP:release(act)
     self:triggerEvent('afterRelease',act)
 end
 local function parseTime(str)
-    local num=tonumber(str:sub(str:find('[0-9.]+')))
-    local unit=str:sub(str:find('%a+'))
+    local num,unit=str:cutUnit()
     return
         unit=='s'  and num*1000 or
         unit=='ms' and num or
-        unit=='m'  and num*60000 or
-        error('WTF why time unit is not s/ms/m')
+        unit=='m'  and num*60000
 end
-local _compOP={jmp=1,jz=1,jnz=1,jeq=1,jne=1,jge=1,jle=1,jg=1,jl=1}
+local _compOP={j=1,jz=1,jnz=1,jeq=1,jne=1,jge=1,jle=1,jg=1,jl=1}
 function MP:runScript(line)
     local arg=line.a
     if type(line.c)=='string' then
         if line.c=='say' then
             self.texts:add{
-                duration=parseTime(arg.len or 2600)/1000,
-                fontSize=arg.size or 60,
-                text=    arg.text or "[TEXT]",
+                duration=parseTime(arg.d or 2600)/1000,
+                fontSize=arg.s or 60,
+                text=    arg.t or "[TEXT]",
                 x=arg.x or 0,
                 y=arg.y or 0,
             }
+        elseif line.c=='wait' then
+            if not self.modeData[arg.v] then
+                return 'suspended',parseTime(arg.i) or 0
+            end
         elseif line.c=='set' then
-            self.scriptEnv[arg.v]=arg.c or
+            self.modeData[arg.v]=arg.c or
                 arg.d=='field_width' and self.field:getWidth() or
                 arg.d=='field_height' and self.field:getHeight() or
-                arg.d=='cell' and (self.field:getCell(arg.x,arg.y) and 1 or 0)
+                arg.d=='cell' and (self.field:getCell(arg.x,arg.y) and 1 or 0) or
+                arg.d=='data' and self.modeData[arg.v]
         elseif _compOP[line.c] then
-            local v1=self.scriptEnv[arg.v]
-            local v2=arg.v2
-            if v2==nil then v2=arg.c end
+            local v1=arg.v  if v1~=nil then v1=self.modeData[v1] end
+            local v2=arg.v2 if v2==nil then v2=arg.c end
             if
-                line.c=='jmp'            or
+                line.c=='j'              or
                 line.c=='jz'  and v1==0  or
                 line.c=='jnz' and v1~=0  or
                 line.c=='jeq' and v1==v2 or
@@ -1137,7 +1139,7 @@ function MP:runScript(line)
                 line.c=='jg'  and v1>v2  or
                 line.c=='jl'  and v1<v2
             then
-                return arg.dest
+                return self.scriptLabels[arg.d] or error("No label called '"..arg.d.."'")
             end
         else
             error("Script command '"..line.c.."' not exist")
@@ -1145,7 +1147,7 @@ function MP:runScript(line)
     elseif type(line.c)=='function' then
         return line.c(self)
     elseif line.c~=nil then
-        error("WTF why scriptLine.c is "..type(line.c))
+        error("WTF why script command is "..type(line.c))
     end
 end
 function MP:update(dt)
@@ -1154,9 +1156,6 @@ function MP:update(dt)
     local SET=self.settings
 
     for _=1,df do
-        -- Step game time
-        if self.timing then self.gameTime=self.gameTime+1 end
-
         -- Script
         if self.script then
             while true do
@@ -1165,12 +1164,8 @@ function MP:update(dt)
 
                 if self.scriptWait<=0 then
                     -- Execute command
-                    local res=self:runScript(l)
-                    if not res then-- Step
-                        self.scriptLine=self.scriptLine+1
-                    elseif res~='stay' then
-                        self.scriptLine=self.scriptLabels[res]
-                    end
+                    local nextPos=self:runScript(l)
+                    self.scriptLine=nextPos or self.scriptLine+1
                     self.scriptWait=self.script[self.scriptLine].t or 0
                 else
                     self.scriptWait=self.scriptWait-1
@@ -1179,6 +1174,8 @@ function MP:update(dt)
             end
         end
 
+        -- Step game time
+        if self.timing then self.gameTime=self.gameTime+1 end
         self:triggerEvent('always')
 
         -- Calculate board animation
@@ -1716,6 +1713,28 @@ function MP:loadSettings(settings)
         end
     end
 end
+function MP:loadScript(script)
+    if not script then return end
+    assert(type(script)=='table',"script must be table")
+    self.script=script
+    self.scriptLabels={}
+
+    local n=0
+    local line
+    while true do
+        n=n+1
+        line=script[n]
+        if not line then break end
+        if line.t then line.t=assert(parseTime(line.t),("line #$1: wrong time string '$1'"):repD(n)) end
+        if line.lbl then
+            assert(type(line.lbl)=='string',("line #$1: Label type must be string"):repD(n))
+            assert(not self.scriptLabels[line.lbl],("line #$1: Label '$1' already exist"):repD(n,line.lbl))
+            self.scriptLabels[line.lbl]=n
+        end
+    end
+    self.scriptLine=1
+    self.scriptWait=script[1].t or 0
+end
 function MP:initialize()
     self.modeData=setmetatable({},modeDataMeta)
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
@@ -1814,25 +1833,7 @@ function MP:initialize()
         end
     end
 
-    -- Load script
-    if self.settings.script then
-        self.script=self.settings.script
-        assert(type(self.script)=='table',"script must be table")
-        self.scriptEnv={}
-        self.scriptLabels={}
-        local i=1
-        while self.script[i] do
-            if self.script[i].t then
-                self.script[i].t=parseTime(self.script[i].t)
-            end
-            if self.script[i].label then
-                self.scriptLabels[self.script[i].label]=i
-            end
-            i=i+1
-        end
-        self.scriptLine=1
-        self.scriptWait=self.script[1].t or 0
-    end
+    self:loadScript(self.settings.script)
 
     self.particles={}
     for k,v in next,particleTemplate do
