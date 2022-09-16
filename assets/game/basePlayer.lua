@@ -156,13 +156,12 @@ function P:runScript(line)
             then
                 return self.scriptLabels[arg.d] or error("No label called '"..arg.d.."'")
             end
-        elseif line.c=='set' then
-            self.modeData[arg.v]=
-                arg.c or
-                arg.d and(
-                    arg.d=='data' and self.modeData[arg.n] or
-                    self:getScriptValue(arg)
-                )
+        elseif line.c=='setc' then
+            self.modeData[arg.v]=arg.c
+        elseif line.c=='setd' then
+            self.modeData[arg.v]=self.modeData[arg.n]
+        elseif line.c=='setg' then
+            self.modeData[arg.v]=self:getScriptValue(arg)
         else
             error("Script command '"..line.c.."' not exist")
         end
@@ -468,10 +467,10 @@ function P:loadScript(script)
                     for k,v in next,arg do
                         if     k=='d' then if not (type(v)=='string' or type(v)=='number' and v>0) then error(errMsg.."Wrong arg 'd', need >0") end
                         elseif k=='f' then if not (type(v)=='number' and v>0 and v%5==0 and v<=120) then error(errMsg.."Wrong arg 's', need 5, 10, 15,... 120") end
-                        elseif k=='s' then if not (type(v)=='string') then error(errMsg.."Wrong arg 's', need string") end
-                        elseif k=='t' then if not (type(v)=='string') then error(errMsg.."Wrong arg 't', need string") end
-                        elseif k=='x' then if not (type(v)=='number') then error(errMsg.."Wrong arg 'x', need number") end
-                        elseif k=='y' then if not (type(v)=='number') then error(errMsg.."Wrong arg 'y', need number") end
+                        elseif k=='s' then if type(v)~='string' then error(errMsg.."Wrong arg 's', need string") end
+                        elseif k=='t' then if type(v)~='string' then error(errMsg.."Wrong arg 't', need string") end
+                        elseif k=='x' then if type(v)~='number' then error(errMsg.."Wrong arg 'x', need number") end
+                        elseif k=='y' then if type(v)~='number' then error(errMsg.."Wrong arg 'y', need number") end
                         else error(errMsg.."Wrong arg name '"..k.."'")
                         end
                     end
@@ -479,7 +478,7 @@ function P:loadScript(script)
                     assert(arg.v~=nil,errMsg.."Need arg 'v'")
                     if not line.t then line.t=1 end
                     for k,v in next,arg do
-                        if k=='v' then if not (type(v)=='string') then error(errMsg.."Wrong arg 'v', need string") end
+                        if k=='v' then if type(v)~='string' then error(errMsg.."Wrong arg 'v', need string") end
                         else error(errMsg.."Wrong arg name '"..k.."'")
                         end
                     end
@@ -495,21 +494,23 @@ function P:loadScript(script)
                         end
                     end
                     for k,v in next,arg do
-                        if     k=='v'  then if not (type(v)=='string') then error(errMsg.."Wrong arg 'v', need string") end
-                        elseif k=='v2' then if not (type(v)=='string') then error(errMsg.."Wrong arg 'v2', need string") end
-                        elseif k=='c'  then if not (type(v)=='number') then error(errMsg.."Wrong arg 'c', need number") end
-                        elseif k=='d'  then if not (type(v)=='string') then error(errMsg.."Wrong arg 'd', need string") end
+                        if     k=='v'  then if type(v)~='string' then error(errMsg.."Wrong arg 'v', need string") end
+                        elseif k=='v2' then if type(v)~='string' then error(errMsg.."Wrong arg 'v2', need string") end
+                        elseif k=='c'  then if type(v)~='number' then error(errMsg.."Wrong arg 'c', need number") end
+                        elseif k=='d'  then if type(v)~='string' then error(errMsg.."Wrong arg 'd', need string") end
                         else error(errMsg.."Wrong arg name '"..k.."'")
                         end
                     end
-                elseif c=='set' then
-                    for k,v in next,arg do
-                        if k=='v' or k=='d' or k=='n' then
-                            if not (type(v)=='string') then error(errMsg.."Wrong arg '"..k.."', need string") end
-                        elseif k=='c' then -- Do nothing, arg.c can be any value
-                        else error(errMsg.."Wrong arg name '"..k.."'")
-                        end
-                    end
+                elseif c=='setc' then
+                    assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
+                    assert(arg.c~=nil,errMsg.."Need arg 'c'")
+                    for k in next,arg do if not (k=='v' or k~='c') then error(errMsg.."Wrong arg name '"..k.."'") end end
+                elseif c=='setd' then
+                    assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
+                    assert(arg.n~=nil,errMsg.."Need arg 'n'") assert(type(arg.n)=='string',errMsg.."Wrong arg 'n', need string")
+                    for k in next,arg do if not (k=='v' or k=='n') then error(errMsg.."Wrong arg name '"..k.."'") end end
+                elseif c=='setg' then
+                    assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
                 end
             elseif type(c)~='nil' and type(c)~='function' then
                 error(errMsg.."Wrong command type: "..type(c))
