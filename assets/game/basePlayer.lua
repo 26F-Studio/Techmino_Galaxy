@@ -434,8 +434,18 @@ function P:loadSettings(settings)
         end
     end
 end
-local function decodeScript()
-    
+local function decodeScript(line)
+    line=line:trim()
+    local L={}
+    if line:find('[_A-Za-z][_0-9A-Za-z]*:')==1 then
+        L.lbl=line:sub(1,line:find(':')-1)
+        line=line:sub(line:find(':')+1):trim()
+    end
+    if line:sub(1,1)=='[' and line:find(']') then
+        L.t=line:sub(2,line:find(']')-1)
+        line=line:sub(line:find(']')+1):trim()
+    end
+    return L
 end
 function P:loadScript(script)
     if not script then return end
@@ -446,7 +456,10 @@ function P:loadScript(script)
     for i=1,1e99 do
         local line=script[i]
         if not line then break end
-        if type(line)=='string' then line=decodeScript(line) end
+        if type(line)=='string' then
+            line=decodeScript(line)
+            script[i]=line
+        end
 
         local errMsg="line #"..i..": "
         if type(line)=='table' then
@@ -455,7 +468,7 @@ function P:loadScript(script)
                 assert(not self.scriptLabels[line.lbl],errMsg.."Label '"..line.lbl.."' already exist")
                 self.scriptLabels[line.lbl]=i
             end
-            if line.t then
+            if line.t and type(line.t)=='string' then
                 line.t=assert(parseTime(line.t),errMsg.."Wrong time stamp")
             end
 
