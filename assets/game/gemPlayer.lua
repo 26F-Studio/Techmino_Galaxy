@@ -1,11 +1,9 @@
 local gc=love.graphics
 
 local max,min=math.max,math.min
-local floor,ceil=math.floor,math.ceil
-local abs=math.abs
+local floor=math.floor
 local ins,rem=table.insert,table.remove
 
-local sign,expApproach=MATH.sign,MATH.expApproach
 local inst=SFX.playSample
 
 --[[ Gem tags:
@@ -89,7 +87,7 @@ local defaultSoundFunc={
     fail=        function() SFX.play('fail')        end,
 }
 
-local GP={}
+local GP=setmetatable({},{__index=require'assets.game.basePlayer'})
 
 --------------------------------------------------------------
 -- Actions
@@ -237,43 +235,6 @@ end
 for k,v in next,actions do actions[k]=_getActionObj(v) end
 --------------------------------------------------------------
 -- Effects
-function GP:shakeBoard(args)
-    local shake=self.settings.shakeness
-    if args:sArg('-drop') then
-        self.pos.vy=self.pos.vy+.2*shake
-    elseif args:sArg('-down') then
-        self.pos.dy=self.pos.dy+.1*shake
-    elseif args:sArg('-up') then
-        self.pos.dy=self.pos.dy-.1*shake
-    elseif args:sArg('-right') then
-        self.pos.dx=self.pos.dx+.1*shake
-    elseif args:sArg('-left') then
-        self.pos.dx=self.pos.dx-.1*shake
-    end
-end
-function GP:playSound(event,...)
-    if not self.sound then return end
-    if self.time-self.soundTimeHistory[event]>=15 then
-        self.soundTimeHistory[event]=self.time
-        if self.soundEvent[event] then
-            self.soundEvent[event](...)
-        else
-            MES.new('warn',"Unknown sound event: "..event)
-        end
-    end
-end
-function GP:setPosition(x,y,k,a)
-    self.pos.x=x or self.pos.x
-    self.pos.y=y or self.pos.y
-    self.pos.k=k or self.pos.k
-    self.pos.a=a or self.pos.a
-end
-function GP:movePosition(dx,dy,k,da)
-    self.pos.x=self.pos.x+(dx or 0)
-    self.pos.y=self.pos.y+(dy or 0)
-    self.pos.k=self.pos.k*(k or 1)
-    self.pos.a=self.pos.a+(da or 0)
-end
 --------------------------------------------------------------
 -- Game methods
 function GP:printField()-- For debugging
@@ -286,10 +247,6 @@ function GP:printField()-- For debugging
         end
         print(s.."|")
     end
-end
-function GP:triggerEvent(name,...)
-    local L=self.event[name]
-    if L then for i=1,#L do L[i](self,...) end end
 end
 function GP:isMovable(x,y)
     if x>=1 and x<=self.settings.fieldSize and y>=1 and y<=self.settings.fieldSize then
@@ -660,33 +617,6 @@ function GP:receive(data)
     }
     ins(self.garbageBuffer,B)
 end
-function GP:finish(reason)
-    --[[ Reason:
-        AC:  Win
-        WA:  No Moves
-        CE:  /
-        MLE: /
-        TLE: Time out
-        OLE: Invalid move
-        ILE: /
-        PE:  Mission failed
-        RE:  Other reason
-    ]]
-
-    if self.finished then return end
-    self.timing=false
-    self.finished=true
-
-    self:triggerEvent('gameOver',reason)
-    GAME.checkFinish()
-
-    -- <Temporarily>
-    if self.isMain then
-        MES.new(reason=='AC' and 'check' or 'error',reason,6.26)
-        self:playSound(reason=='AC' and 'win' or 'fail')
-    end
-    -- </Temporarily>
-end
 --------------------------------------------------------------
 -- Press & Release & Update & Render
 function GP:getMousePos(x,y)
@@ -782,246 +712,189 @@ end
 function GP:mouseUp(_,_,_)
     self.mousePressed=false
 end
-function GP:press(act)
-    self:triggerEvent('beforePress',act)
-
-    if not self.actions[act] or self.keyState[act] then return end
-    self.keyState[act]=true
-    ins(self.actionHistory,{0,self.time,act})
-    self.actions[act].press(self)
-
-    self:triggerEvent('afterPress',act)
-end
-function GP:release(act)
-    self:triggerEvent('beforeRelease',act)
-    if not self.actions[act] or not self.keyState[act] then return end
-    self.keyState[act]=false
-    ins(self.actionHistory,{1,self.time,act})
-    self.actions[act].release(self)
-    self:triggerEvent('afterRelease',act)
-end
-function GP:update(dt)
-    local df=floor((self.realTime+dt)*1000)-floor(self.realTime*1000)
-    self.realTime=self.realTime+dt
+function GP:updateFrame()
     local SET=self.settings
 
-    for _=1,df do
-        -- Step game time
-        if self.timing then self.gameTime=self.gameTime+1 end
-
-        self:triggerEvent('always')
-
-        -- Calculate board animation
-        local O=self.pos
-        --                     sticky           force          soft
-        O.vx=expApproach(O.vx,0,.02)-sign(O.dx)*.0001*abs(O.dx)^1.2
-        O.vy=expApproach(O.vy,0,.02)-sign(O.dy)*.0001*abs(O.dy)^1.1
-        O.va=expApproach(O.va,0,.02)-sign(O.da)*.0001*abs(O.da)^1.0
-        O.vk=expApproach(O.vk,0,.01)-sign(O.dk)*.0001*abs(O.dk)^1.0
-        O.dx=O.dx+O.vx
-        O.dy=O.dy+O.vy
-        O.da=O.da+O.va
-        O.dk=O.dk+O.vk
-
-        -- Step main time & Starting counter
-        if self.time<SET.readyDelay then
-            self.time=self.time+1
-            local d=SET.readyDelay-self.time
-            if floor((d+1)/1000)~=floor(d/1000) then
-                self:playSound('countDown',ceil(d/1000))
+    -- Auto shift
+    if self.moveDirH and (self.moveDirH==-1 and self.keyState.moveLeft or self.moveDirH==1 and self.keyState.moveRight) then
+        if self.swapX~=MATH.clamp(self.swapX+self.moveDirH,1,self.settings.fieldSize) then
+            local c0=self.moveChargeH
+            local c1=c0+1
+            self.moveChargeH=c1
+            local dist=0
+            if c0>=SET.das then
+                c0=c0-SET.das
+                c1=c1-SET.das
+                if SET.arr==0 then
+                    dist=1e99
+                else
+                    dist=floor(c1/SET.arr)-floor(c0/SET.arr)
+                end
+            elseif c1>=SET.das then
+                if SET.arr==0 then
+                    dist=1e99
+                else
+                    dist=1
+                end
             end
-            if d==0 then
-                self:playSound('countDown',0)
-                self:triggerEvent('gameStart')
-                self.timing=true
+            if dist>0 then
+                local moved
+                local x0=self.swapX
+                self.swapX=MATH.clamp(self.swapX+self.moveDirH*dist,1,self.settings.fieldSize)
+                if self.swapX~=x0 then moved=true end
+                x0=self.twistX
+                self.twistX=MATH.clamp(self.twistX+self.moveDirH*dist,1,self.settings.fieldSize-1)
+                if self.twistX~=x0 then moved=true end
+                if moved then self:playSound('move') end
             end
         else
-            self.time=self.time+1
+            self.moveChargeH=SET.das
+            self:shakeBoard(self.moveDirH>0 and '-right' or '-left')
         end
-
-        -- Auto shift
-        if self.moveDirH and (self.moveDirH==-1 and self.keyState.moveLeft or self.moveDirH==1 and self.keyState.moveRight) then
-            if self.swapX~=MATH.clamp(self.swapX+self.moveDirH,1,self.settings.fieldSize) then
-                local c0=self.moveChargeH
-                local c1=c0+1
-                self.moveChargeH=c1
-                local dist=0
-                if c0>=SET.das then
-                    c0=c0-SET.das
-                    c1=c1-SET.das
-                    if SET.arr==0 then
-                        dist=1e99
-                    else
-                        dist=floor(c1/SET.arr)-floor(c0/SET.arr)
-                    end
-                elseif c1>=SET.das then
-                    if SET.arr==0 then
-                        dist=1e99
-                    else
-                        dist=1
-                    end
+    else
+        self.moveDirH=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
+        self.moveChargeH=0
+    end
+    if self.moveDirV and (self.moveDirV==-1 and self.keyState.moveDown or self.moveDirV==1 and self.keyState.moveUp) then
+        if self.swapY~=MATH.clamp(self.swapY+self.moveDirV,1,self.settings.fieldSize) then
+            local c0=self.moveChargeV
+            local c1=c0+1
+            self.moveChargeV=c1
+            local dist=0
+            if c0>=SET.das then
+                c0=c0-SET.das
+                c1=c1-SET.das
+                if SET.arr==0 then
+                    dist=1e99
+                else
+                    dist=floor(c1/SET.arr)-floor(c0/SET.arr)
                 end
-                if dist>0 then
-                    local moved
-                    local x0=self.swapX
-                    self.swapX=MATH.clamp(self.swapX+self.moveDirH*dist,1,self.settings.fieldSize)
-                    if self.swapX~=x0 then moved=true end
-                    x0=self.twistX
-                    self.twistX=MATH.clamp(self.twistX+self.moveDirH*dist,1,self.settings.fieldSize-1)
-                    if self.twistX~=x0 then moved=true end
-                    if moved then self:playSound('move') end
+            elseif c1>=SET.das then
+                if SET.arr==0 then
+                    dist=1e99
+                else
+                    dist=1
                 end
-            else
-                self.moveChargeH=SET.das
-                self:shakeBoard(self.moveDirH>0 and '-right' or '-left')
+            end
+            if dist>0 then
+                local moved
+                local x0=self.swapY
+                self.swapY=MATH.clamp(self.swapY+self.moveDirV*dist,1,self.settings.fieldSize)
+                if self.swapY~=x0 then moved=true end
+                x0=self.twistY
+                self.twistY=MATH.clamp(self.twistY+self.moveDirV*dist,1,self.settings.fieldSize-1)
+                if self.twistY~=x0 then moved=true end
+                if moved then self:playSound('move') end
             end
         else
-            self.moveDirH=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
-            self.moveChargeH=0
+            self.moveChargeV=SET.das
+            self:shakeBoard(self.moveDirV>0 and '-up' or '-down')
         end
-        if self.moveDirV and (self.moveDirV==-1 and self.keyState.moveDown or self.moveDirV==1 and self.keyState.moveUp) then
-            if self.swapY~=MATH.clamp(self.swapY+self.moveDirV,1,self.settings.fieldSize) then
-                local c0=self.moveChargeV
-                local c1=c0+1
-                self.moveChargeV=c1
-                local dist=0
-                if c0>=SET.das then
-                    c0=c0-SET.das
-                    c1=c1-SET.das
-                    if SET.arr==0 then
-                        dist=1e99
-                    else
-                        dist=floor(c1/SET.arr)-floor(c0/SET.arr)
+    else
+        self.moveDirV=self.keyState.moveDown and -1 or self.keyState.moveUp and 1 or false
+        self.moveChargeV=0
+    end
+
+    local F=self.field
+    local size=self.settings.fieldSize
+    local needFresh=false
+    local touch
+
+    -- Update moveTimer
+    for y=1,size do for x=1,size do local g=F[y][x] if g and g.moveTimer then
+        g.moveTimer=g.moveTimer-1
+        if g.moveTimer<=0 then
+            g.moveTimer,g.moveDelay=nil
+            g.dx,g.dy=nil
+            g.movable=true
+            g.needCheck=true
+            needFresh=true
+            if g.fall then
+                g.fall=nil
+                touch=true
+            end
+        end
+    end end end
+
+    -- Update movingGroups (check auto-move-back)
+    for i=#self.movingGroups,1,-1 do
+        local group=self.movingGroups[i]
+        local fin
+        local leagl=false
+        local posList=group.positions
+        for n=1,#posList,2 do
+            local g=F[posList[n+1]][posList[n]]
+            if g.movable then
+                fin=true
+                if self:psedoCheckPos(posList[n],posList[n+1]) then
+                    leagl=true
+                end
+            end
+        end
+        if fin then
+            if group.force and not leagl then
+                self[group.mode](self,'auto',unpack(group.args))
+                self:triggerEvent('illegalMove',group.mode)
+            elseif leagl then
+                self:triggerEvent('legalMove',group.mode)
+            end
+            rem(self.movingGroups,i)
+        end
+    end
+
+    if touch then self:playSound('touch') end
+
+    -- Update needCheck
+    for y=1,size do for x=1,size do local g=F[y][x] if g and g.needCheck then
+        g.needCheck=nil
+        self:checkPosition(x,y)
+    end end end
+
+    -- Update clearTimer
+    for y=1,size do for x=1,size do local g=F[y][x] if g and g.clearTimer then
+        g.clearTimer=g.clearTimer-1
+        if g.clearTimer<=0 then
+            g.clearTimer=nil
+            self:erasePosition(x,y,g)
+            needFresh=true
+        end
+    end end end
+
+    -- Update movingGroups (check deestroyed)
+    for i=#self.movingGroups,1,-1 do
+        local group=self.movingGroups[i]
+        local posList=group.positions
+        for n=1,#posList,2 do
+            local g=F[posList[n+1]][posList[n]]
+            if not g then
+                for n2=1,#posList,2 do
+                    local g2=F[posList[n2+1]][posList[n2]]
+                    if g2 then
+                        g2.moveTimer=0
                     end
-                elseif c1>=SET.das then
-                    if SET.arr==0 then
-                        dist=1e99
-                    else
-                        dist=1
-                    end
                 end
-                if dist>0 then
-                    local moved
-                    local x0=self.swapY
-                    self.swapY=MATH.clamp(self.swapY+self.moveDirV*dist,1,self.settings.fieldSize)
-                    if self.swapY~=x0 then moved=true end
-                    x0=self.twistY
-                    self.twistY=MATH.clamp(self.twistY+self.moveDirV*dist,1,self.settings.fieldSize-1)
-                    if self.twistY~=x0 then moved=true end
-                    if moved then self:playSound('move') end
-                end
-            else
-                self.moveChargeV=SET.das
-                self:shakeBoard(self.moveDirV>0 and '-up' or '-down')
-            end
-        else
-            self.moveDirV=self.keyState.moveDown and -1 or self.keyState.moveUp and 1 or false
-            self.moveChargeV=0
-        end
-
-        local F=self.field
-        local size=self.settings.fieldSize
-        local needFresh=false
-        local touch
-
-        -- Update moveTimer
-        for y=1,size do for x=1,size do local g=F[y][x] if g and g.moveTimer then
-            g.moveTimer=g.moveTimer-1
-            if g.moveTimer<=0 then
-                g.moveTimer,g.moveDelay=nil
-                g.dx,g.dy=nil
-                g.movable=true
-                g.needCheck=true
-                needFresh=true
-                if g.fall then
-                    g.fall=nil
-                    touch=true
-                end
-            end
-        end end end
-
-        -- Update movingGroups (check auto-move-back)
-        for i=#self.movingGroups,1,-1 do
-            local group=self.movingGroups[i]
-            local fin
-            local leagl=false
-            local posList=group.positions
-            for n=1,#posList,2 do
-                local g=F[posList[n+1]][posList[n]]
-                if g.movable then
-                    fin=true
-                    if self:psedoCheckPos(posList[n],posList[n+1]) then
-                        leagl=true
-                    end
-                end
-            end
-            if fin then
-                if group.force and not leagl then
-                    self[group.mode](self,'auto',unpack(group.args))
-                    self:triggerEvent('illegalMove',group.mode)
-                elseif leagl then
-                    self:triggerEvent('legalMove',group.mode)
-                end
-                rem(self.movingGroups,i)
-            end
-        end
-
-        if touch then self:playSound('touch') end
-
-        -- Update needCheck
-        for y=1,size do for x=1,size do local g=F[y][x] if g and g.needCheck then
-            g.needCheck=nil
-            self:checkPosition(x,y)
-        end end end
-
-        -- Update clearTimer
-        for y=1,size do for x=1,size do local g=F[y][x] if g and g.clearTimer then
-            g.clearTimer=g.clearTimer-1
-            if g.clearTimer<=0 then
-                g.clearTimer=nil
-                self:erasePosition(x,y,g)
-                needFresh=true
-            end
-        end end end
-
-        -- Update movingGroups (check deestroyed)
-        for i=#self.movingGroups,1,-1 do
-            local group=self.movingGroups[i]
-            local posList=group.positions
-            for n=1,#posList,2 do
-                local g=F[posList[n+1]][posList[n]]
-                if not g then
-                    for n2=1,#posList,2 do
-                        local g2=F[posList[n2+1]][posList[n2]]
-                        if g2 then
-                            g2.moveTimer=0
-                        end
-                    end
-                    break
-                end
-            end
-        end
-
-        -- Check generations
-        while #self.generateBuffer>0 do
-            local gen=rem(self.generateBuffer,1)
-            F[gen.y][gen.x]=gen.gem
-        end
-
-        if needFresh then
-            self:freshGems()
-        end
-
-        -- Update garbage
-        for i=1,#self.garbageBuffer do
-            local g=self.garbageBuffer[i]
-            if g.mode==0 and g.time<g.time0 then
-                g.time=g.time+1
+                break
             end
         end
     end
-    for _,v in next,self.particles do v:update(dt) end
-    self.texts:update(dt)
+
+    -- Check generations
+    while #self.generateBuffer>0 do
+        local gen=rem(self.generateBuffer,1)
+        F[gen.y][gen.x]=gen.gem
+    end
+
+    if needFresh then
+        self:freshGems()
+    end
+
+    -- Update garbage
+    for i=1,#self.garbageBuffer do
+        local g=self.garbageBuffer[i]
+        if g.mode==0 and g.time<g.time0 then
+            g.time=g.time+1
+        end
+    end
 end
 function GP:render()
     local settings=self.settings
@@ -1171,37 +1044,6 @@ function GP.new()
     }
 
     return self
-end
-function GP:loadSettings(settings)
-    -- Load data & events from mode settings
-    for k,v in next,settings do
-        if k=='event' then
-            for name,E in next,v do
-                assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
-                if type(E)=='table' then
-                    for i=1,#E do
-                        ins(self.event[name],E[i])
-                    end
-                elseif type(E)=='function' then
-                    ins(self.event[name],E)
-                end
-            end
-        elseif k=='soundEvent' then
-            for name,E in next,v do
-                if type(E)=='function' then
-                    self.soundEvent[name]=E
-                else
-                    error("soundEvent must be function")
-                end
-            end
-        else
-            if type(v)=='table' then
-                self.settings[k]=TABLE.copy(v)
-            elseif v~=nil then
-                self.settings[k]=v
-            end
-        end
-    end
 end
 function GP:initialize()
     self.soundEvent=setmetatable({},soundEventMeta)
