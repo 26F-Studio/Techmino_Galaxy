@@ -15,14 +15,14 @@ end
 
 function scene.enter()
     local L=scene.widgetList
-    if SCN.args[1]==1 then
+    if PROGRESS.state==1 then
         L.T1_1.x,L.T1_2.x,L.T1_3.x=0,0,0
         L.T1_1.w,L.T1_2.w,L.T1_3.w=800,800,800
         L.T2_1:setVisible(false)
         L.T2_2:setVisible(false)
         L.T2_3:setVisible(false)
         WIDGET._reset()
-    elseif SCN.args[1]==2 then
+    else
         L.T1_1.x,L.T1_2.x,L.T1_3.x=-360,-360,-360
         L.T1_1.w,L.T1_2.w,L.T1_3.w=600,600,600
         L.T2_1.x,L.T2_2.x,L.T2_3.x=360,360,360
