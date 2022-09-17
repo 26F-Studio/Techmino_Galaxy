@@ -142,13 +142,13 @@ return {
 
     musicroom_fullband='全轨道',
 
-    main_1_sprint='竞速',
-    main_1_marathon='马拉松',
-    main_1_ultra='限时极限',
-    main_1_tutorial='教程',
-    main_1_sandbox='沙盒',
-    main_1_settings='设置',
-    main_1_musicroom='音乐室',
+    main_12_sprint='竞速',
+    main_12_marathon='马拉松',
+    main_12_ultra='限时极限',
+    main_12_tutorial='教程',
+    main_12_sandbox='沙盒',
+    main_12_settings='设置',
+    main_12_musicroom='音乐室',
 
     tutorial_basic="基本规则",
     tutorial_sequence="预览&暂存",
