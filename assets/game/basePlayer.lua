@@ -118,7 +118,11 @@ local function parseTime(str)
         unit=='ms' and num or
         unit=='m'  and num*60000
 end
-local _jmpOP={j=1,jz=1,jnz=1,jeq=1,jne=1,jge=1,jle=1,jg=1,jl=1}
+local _jmpOP={
+    j=0,
+    jz=1,jnz=1,
+    jeq=2,jne=2,jge=2,jle=2,jg=2,jl=2,
+}
 function P:runScript(line)
     local arg=line.a
     if type(line.c)=='string' then
@@ -159,7 +163,7 @@ function P:runScript(line)
         elseif line.c=='setc' then
             self.modeData[arg.v]=arg.c
         elseif line.c=='setd' then
-            self.modeData[arg.v]=self.modeData[arg.n]
+            self.modeData[arg.v]=self.modeData[arg.d]
         elseif line.c=='setg' then
             self.modeData[arg.v]=self:getScriptValue(arg)
         else
@@ -186,6 +190,7 @@ function P:update(dt)
                     -- Execute command
                     local nextPos=self:runScript(l)
                     self.scriptLine=nextPos or self.scriptLine+1
+                    if not self.script[self.scriptLine] then break end
                     self.scriptWait=self.script[self.scriptLine].t or 0
                 else
                     self.scriptWait=self.scriptWait-1
@@ -434,10 +439,10 @@ function P:loadSettings(settings)
         end
     end
 end
-local function decodeScript(line)
+local function decodeScript(line,errMsg)
     line=line:trim()
     local L={}
-    if line:find('[_A-Za-z][_0-9A-Za-z]*:')==1 then
+    if line:find('[_0-9A-Za-z]*:')==1 then
         L.lbl=line:sub(1,line:find(':')-1)
         line=line:sub(line:find(':')+1):trim()
     end
@@ -445,6 +450,49 @@ local function decodeScript(line)
         L.t=line:sub(2,line:find(']')-1)
         line=line:sub(line:find(']')+1):trim()
     end
+    if #line>0 then
+        local p=line:find('[^_0-9A-Za-z]')
+        local c=line:sub(1,p-1)
+        L.c=c
+
+        local arg=line:sub(p+1):split(',')
+        for i=1,#arg do arg[i]=arg[i]:trim() end
+        if c=='wait' then
+            assert(#arg==1)
+            L.a={v=arg[1]}
+        elseif _jmpOP[c] then
+            if #arg~=_jmpOP[c]+1 then error(errMsg.."Wrong arg count, "..c.." need "..(_jmpOP[c]+1).." args") end
+            L.a={d=arg[1],v=arg[2]}
+            if arg[3] then
+                if arg[3]:sub(1,1)==arg[3]:sub(-1,-1) and ([["']]):find(arg[3]:sub(1,1)) then
+                    L.a.c=arg[3]:sub(2,-2)
+                elseif tonumber(arg[3]) then
+                    L.a.c=tonumber(arg[3])
+                elseif arg[3]=='true' or arg[3]=='false' then
+                    L.a.c=arg[3]=='true'
+                else
+                    L.a.v2=arg[3]
+                end
+            end
+        elseif c=='setc' then
+            assert(#arg==2)
+            if arg[2]:sub(1,1)==arg[2]:sub(-1,-1) and ([["']]):find(arg[3]:sub(1,1)) then
+                arg[2]=arg[2]:sub(2,-2)
+            elseif arg[2]=='true' or arg[2]=='false' then
+                arg[2]=arg[2]=='true'
+            else
+                arg[2]=tonumber(arg[2])
+                if not arg[2] then errMsg(errMsg.."Wrong data") end
+            end
+            L.a={v=arg[1],c=arg[2]}
+        elseif c=='setd' then
+            assert(#arg==2)
+            L.a={v=arg[1],d=arg[2]}
+        else
+            error(errMsg.."No string command '"..c.."'")
+        end
+    end
+    print(TABLE.dump(L))
     return L
 end
 function P:loadScript(script)
@@ -456,12 +504,13 @@ function P:loadScript(script)
     for i=1,1e99 do
         local line=script[i]
         if not line then break end
+        local errMsg="line #"..i..": "
+
         if type(line)=='string' then
-            line=decodeScript(line)
+            line=decodeScript(line,errMsg)
             script[i]=line
         end
 
-        local errMsg="line #"..i..": "
         if type(line)=='table' then
             if line.lbl then
                 assert(type(line.lbl)=='string',errMsg.."Label must be string")
@@ -517,11 +566,11 @@ function P:loadScript(script)
                 elseif c=='setc' then
                     assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
                     assert(arg.c~=nil,errMsg.."Need arg 'c'")
-                    for k in next,arg do if not (k=='v' or k~='c') then error(errMsg.."Wrong arg name '"..k.."'") end end
+                    for k in next,arg do if not (k=='v' or k=='c') then error(errMsg.."Wrong arg name '"..k.."'") end end
                 elseif c=='setd' then
                     assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
-                    assert(arg.n~=nil,errMsg.."Need arg 'n'") assert(type(arg.n)=='string',errMsg.."Wrong arg 'n', need string")
-                    for k in next,arg do if not (k=='v' or k=='n') then error(errMsg.."Wrong arg name '"..k.."'") end end
+                    assert(arg.d~=nil,errMsg.."Need arg 'd'") assert(type(arg.d)=='string',errMsg.."Wrong arg 'd', need string")
+                    for k in next,arg do if not (k=='v' or k=='d') then error(errMsg.."Wrong arg name '"..k.."'") end end
                 elseif c=='setg' then
                     assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
                 end
