@@ -1,7 +1,7 @@
 local gc=love.graphics
 
 local max,min=math.max,math.min
-local floor=math.floor
+local floor,ceil=math.floor,math.ceil
 local rnd=math.random
 local ins,rem=table.insert,table.remove
 
@@ -440,7 +440,7 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
     return mino
 end
 function MP:resetPos()-- Move hand piece to the normal spawn position
-    self:moveHand('reset',floor(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
+    self:moveHand('reset',floor(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1+ceil(self.fieldDived/40))
     self.minY=self.handY
     self.ghostY=self.handY
     self:resetPosCheck()
