@@ -441,6 +441,7 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
 end
 function MP:resetPos()-- Move hand piece to the normal spawn position
     self:moveHand('reset',floor(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1+ceil(self.fieldDived/40))
+    while self:ifoverlap(self.hand.matrix,self.handX,self.handY) and self.handY<(self.settings.maxSpawnH or self.settings.spawnH)+1 do self.handY=self.handY+1 end
     self.minY=self.handY
     self.ghostY=self.handY
     self:resetPosCheck()
@@ -801,7 +802,7 @@ function MP:hold_float()
         h.handY,self.handY=self.handY,h.handY
         h.lastMovement,self.lastMovement=self.lastMovement,h.lastMovement
         h.minY,self.minY=self.minY,h.minY
-        while self:ifoverlap(self.hand.matrix,self.handX,self.handY) and self.handY<self.settings.spawnH+1 do self.handY=self.handY+1 end
+        while self:ifoverlap(self.hand.matrix,self.handX,self.handY) and self.handY<(self.settings.maxSpawnH or self.settings.spawnH)+1 do self.handY=self.handY+1 end
         self:resetPosCheck()
     else
         self.floatHolds[swapN]={
@@ -1348,6 +1349,7 @@ end
 local baseEnv={
     fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
     spawnH=20,
+    maxSpawnH=21,
     lockoutH=1e99,
     deathH=1e99,
 
