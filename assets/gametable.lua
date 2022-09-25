@@ -369,7 +369,7 @@ local settingTriggers={-- Changing values in SETTINGS.system will trigger these 
     vocVol=         function(v) VOC.setVol(v) end,
 
     -- Video
-    fullscreen=     function(v) love.window.setFullscreen(v) love.resize(love.graphics.getWidth(),love.graphics.getHeight()) end,
+    fullscreen=     function(v) love.window.setFullscreen(v); love.resize(love.graphics.getWidth(),love.graphics.getHeight()) end,
     maxFPS=         function(v) Zenitha.setMaxFPS(v) end,
     updRate=        function(v) Zenitha.setUpdateFreq(v) end,
     drawRate=       function(v) Zenitha.setDrawFreq(v) end,

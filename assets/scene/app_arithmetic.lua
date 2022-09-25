@@ -116,7 +116,7 @@ local levels={
         local a=rnd(17,floor(s/2))
         return {COLOR.J,b16(a),COLOR.L,"+",COLOR.J,b16(s-a)},s
     end,nil,nil,
-    function() timing=false return "Coming S∞n"..(rnd()<.5 and "" or " "),1e99 end,
+    function() timing=false; return "Coming S∞n"..(rnd()<.5 and "" or " "),1e99 end,
 }setmetatable(levels,{__index=function(self,k) return self[k-1] end})
 
 local level

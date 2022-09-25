@@ -58,8 +58,6 @@ Zenitha.setAppName('Techmino')
 Zenitha.setVersionText(VERSION.appVer)
 Zenitha.setFirstScene('main_12')
 Zenitha.setMaxFPS(260)
-Zenitha.setUpdateFreq(100)
-Zenitha.setDrawFreq(60/260*100)
 do-- Zenitha.setDrawCursor
     local gc=love.graphics
     Zenitha.setDrawCursor(function(_,x,y)
