@@ -14,6 +14,9 @@
 -- 4. Except "gcinfo" function of Lua itself, other "gc"s are short for "graphics";
 
 -------------------------------------------------------------
+--Var leak check
+-- setmetatable(_G,{__newindex=function(self,k,v)print('>>'..k..string.rep(" ",26-#k),debug.traceback():match("\n.-\n\t(.-): "))rawset(self,k,v)end})
+-------------------------------------------------------------
 -- Load Zenitha
 require("Zenitha")
 DEBUG.checkLoadTime("Load Zenitha")

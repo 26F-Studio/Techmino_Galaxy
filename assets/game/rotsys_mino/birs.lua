@@ -13,9 +13,9 @@ BiRS.centerTex=GC.load{10,10,
 local R={'+0+0','-1+0','-1-1','+0-1','-1+1','+1-1','+1+0','+0+1','+1+1','+0+2','-1+2','+1+2','-2+0','+2+0'}
 local L={'+0+0','+1+0','+1-1','+0-1','+1+1','-1-1','-1+0','+0+1','-1+1','+0+2','+1+2','-1+2','+2+0','-2+0'}
 local F={'+0+0','+0-1','+0+1','+0+2'}
-for i=1,#R do R[i]=MinoRotSys._strToVec(R[i]) end
-for i=1,#L do L[i]=MinoRotSys._strToVec(L[i]) end
-for i=1,#F do F[i]=MinoRotSys._strToVec(F[i]) end
+for i=1,#R do R[i]=minoRotSys._strToVec(R[i]) end
+for i=1,#L do L[i]=minoRotSys._strToVec(L[i]) end
+for i=1,#F do F[i]=minoRotSys._strToVec(F[i]) end
 local list={
     {[02]=L,[20]=R,[13]=R,[31]=L},-- Z
     {[02]=R,[20]=L,[13]=L,[31]=R},-- S
@@ -66,8 +66,8 @@ local function r(self,dir)
     local kickList=list[C.shape][C.direction*10+idir]
 
     local ix,iy do
-        local oldSC=MinoRotSys.BiRS[C.shape][C.direction].center
-        local newSC=MinoRotSys.BiRS[C.shape][idir].center
+        local oldSC=minoRotSys.BiRS[C.shape][C.direction].center
+        local newSC=minoRotSys.BiRS[C.shape][idir].center
         ix,iy=self.handX+oldSC[1]-newSC[1],self.handY+oldSC[2]-newSC[2]
     end
     local dx,dy=0,0 do

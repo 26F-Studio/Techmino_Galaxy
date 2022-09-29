@@ -10,7 +10,7 @@ SRS_plus.centerTex=GC.load{10,10,
     {'setCL',1,1,1},
     {'fCirc',5,5,2},
 }
-for i=1,5 do SRS_plus[i]=MinoRotSys.SRS[i] end
-for i=6,29 do SRS_plus[i]=MinoRotSys.TRS[i] end
+for i=1,5 do SRS_plus[i]=minoRotSys.SRS[i] end
+for i=6,29 do SRS_plus[i]=minoRotSys.TRS[i] end
 
 return SRS_plus

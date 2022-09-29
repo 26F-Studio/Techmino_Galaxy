@@ -1,4 +1,4 @@
-local atksys={}
+minoAtkSys={}
 
 local function _checkAtkSys(sys)
     assert(type(sys)=='table','AtkSys must be table')
@@ -7,10 +7,8 @@ local function _checkAtkSys(sys)
     return sys
 end
 
-atksys.None=    _checkAtkSys(require'assets.game.atksys_mino.none')
-atksys.Basic=   _checkAtkSys(require'assets.game.atksys_mino.basic')
-atksys.Modern=  _checkAtkSys(require'assets.game.atksys_mino.modern')
-atksys.Nextgen= _checkAtkSys(require'assets.game.atksys_mino.nextgen')
-atksys.Galaxy=  _checkAtkSys(require'assets.game.atksys_mino.galaxy')
-
-return atksys
+minoAtkSys.None=    _checkAtkSys(require'assets.game.atksys_mino.none')
+minoAtkSys.Basic=   _checkAtkSys(require'assets.game.atksys_mino.basic')
+minoAtkSys.Modern=  _checkAtkSys(require'assets.game.atksys_mino.modern')
+minoAtkSys.Nextgen= _checkAtkSys(require'assets.game.atksys_mino.nextgen')
+minoAtkSys.Galaxy=  _checkAtkSys(require'assets.game.atksys_mino.galaxy')

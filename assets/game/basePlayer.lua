@@ -293,7 +293,7 @@ function P:render()
 
                 skin.drawHand(CB,self.handX,self.handY)
 
-                local RS=MinoRotSys[settings.rotSys]
+                local RS=minoRotSys[settings.rotSys]
                 local minoData=RS[self.hand.shape]
                 local state=minoData[self.hand.direction]
                 local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)

@@ -1,7 +1,7 @@
-MinoRotSys={}
+minoRotSys={}
 
-MinoRotSys._defaultCenterTex=GC.load{1,1}-- No texture
-MinoRotSys._defaultCenterPos={
+minoRotSys._defaultCenterTex=GC.load{1,1}-- No texture
+minoRotSys._defaultCenterPos={
     common={-- For SRS-like RSs
         -- Tetromino
         {[0]={1.5,0.5}, [1]={0.5,1.5}, [2]={1.5,1.5}, [3]={1.5,1.5} },-- Z
@@ -45,16 +45,16 @@ MinoRotSys._defaultCenterPos={
     },
 }
 
-function MinoRotSys._strToVec(vecStr)
+function minoRotSys._strToVec(vecStr)
     return {tonumber(vecStr:sub(1,2)),tonumber(vecStr:sub(3,4))}
 end
 
-function MinoRotSys._normalizeKick(data,dir,fdir)
+function minoRotSys._normalizeKick(data,dir,fdir)
     local kick=data[dir][fdir]
     if kick then
         assert(type(kick)=='table',"KICK must be a table")
 
-        if kick.base then kick.base=MinoRotSys._strToVec(kick.base) end
+        if kick.base then kick.base=minoRotSys._strToVec(kick.base) end
         if not kick.test then kick.test={'+0+0'} end
         if not kick.target then
             kick.target=(dir+(
@@ -70,14 +70,14 @@ function MinoRotSys._normalizeKick(data,dir,fdir)
         for i=1,#kick.test do
             if type(kick.test[i])~='table' then
                 assert(type(kick.test[i])=='string','test[n] must be vecStr')
-                kick.test[i]=MinoRotSys._strToVec(kick.test[i])
+                kick.test[i]=minoRotSys._strToVec(kick.test[i])
             end
         end
     end
 end
 
 -- Use this to copy a symmetry set
-function MinoRotSys._flipList(O)
+function minoRotSys._flipList(O)
     if not O then return end
     local L={}
     for i,s in next,O do
@@ -86,24 +86,24 @@ function MinoRotSys._flipList(O)
     return L
 end
 
-function MinoRotSys._reflect(m)-- Only available for 4/2/1 state minoes
+function minoRotSys._reflect(m)-- Only available for 4/2/1 state minoes
     local m2=TABLE.copy(m)
     if m2[0] and m2[1] and m2[2] and m2[3] then
         m2[0].R.test,m2[0].L.test,m2[0].F.test,
         m2[1].R.test,m2[1].L.test,m2[1].F.test,
         m2[2].R.test,m2[2].L.test,m2[2].F.test,
         m2[3].R.test,m2[3].L.test,m2[3].F.test=
-        MinoRotSys._flipList(m2[0].L.test),MinoRotSys._flipList(m2[0].R.test),MinoRotSys._flipList(m2[0].F.test),
-        MinoRotSys._flipList(m2[3].L.test),MinoRotSys._flipList(m2[3].R.test),MinoRotSys._flipList(m2[3].F.test),
-        MinoRotSys._flipList(m2[2].L.test),MinoRotSys._flipList(m2[2].R.test),MinoRotSys._flipList(m2[2].F.test),
-        MinoRotSys._flipList(m2[1].L.test),MinoRotSys._flipList(m2[1].R.test),MinoRotSys._flipList(m2[1].F.test);
+        minoRotSys._flipList(m2[0].L.test),minoRotSys._flipList(m2[0].R.test),minoRotSys._flipList(m2[0].F.test),
+        minoRotSys._flipList(m2[3].L.test),minoRotSys._flipList(m2[3].R.test),minoRotSys._flipList(m2[3].F.test),
+        minoRotSys._flipList(m2[2].L.test),minoRotSys._flipList(m2[2].R.test),minoRotSys._flipList(m2[2].F.test),
+        minoRotSys._flipList(m2[1].L.test),minoRotSys._flipList(m2[1].R.test),minoRotSys._flipList(m2[1].F.test);
     elseif m2[0] and m2[1] then
         m2[0].R.test,m2[0].L.test,m2[0].F.test,
         m2[1].R.test,m2[1].L.test,m2[1].F.test=
-        MinoRotSys._flipList(m2[0].L.test),MinoRotSys._flipList(m2[0].R.test),MinoRotSys._flipList(m2[0].F.test),
-        MinoRotSys._flipList(m2[1].L.test),MinoRotSys._flipList(m2[1].R.test),MinoRotSys._flipList(m2[1].F.test);
+        minoRotSys._flipList(m2[0].L.test),minoRotSys._flipList(m2[0].R.test),minoRotSys._flipList(m2[0].F.test),
+        minoRotSys._flipList(m2[1].L.test),minoRotSys._flipList(m2[1].R.test),minoRotSys._flipList(m2[1].F.test);
     elseif m2[0] then
-        m2[0].R.test,m2[0].L.test,m2[0].F.test=MinoRotSys._flipList(m2[0].L.test),MinoRotSys._flipList(m2[0].R.test),MinoRotSys._flipList(m2[0].F.test)
+        m2[0].R.test,m2[0].L.test,m2[0].F.test=minoRotSys._flipList(m2[0].L.test),minoRotSys._flipList(m2[0].R.test),minoRotSys._flipList(m2[0].F.test)
     else
         error("wtf no minoData[0] to reflect")
     end
@@ -111,32 +111,32 @@ function MinoRotSys._reflect(m)-- Only available for 4/2/1 state minoes
 end
 
 love.graphics.setDefaultFilter('nearest','nearest')
-MinoRotSys.None=     require'assets.game.rotsys_mino.none'
-MinoRotSys.TRS=      require'assets.game.rotsys_mino.trs'
-MinoRotSys.SRS=      require'assets.game.rotsys_mino.srs'
-MinoRotSys.SRS_plus= require'assets.game.rotsys_mino.srs_plus'
-MinoRotSys.BiRS=     require'assets.game.rotsys_mino.birs'
-MinoRotSys.C2=       require'assets.game.rotsys_mino.c2'
-MinoRotSys.C2_sym=   require'assets.game.rotsys_mino.c2_sym'
-MinoRotSys.Classic=  require'assets.game.rotsys_mino.classic'
-MinoRotSys.ASC_plus= require'assets.game.rotsys_mino.asc_plus'
-MinoRotSys.ARS_plus= require'assets.game.rotsys_mino.ars_plus'
-MinoRotSys.DRS_weak= require'assets.game.rotsys_mino.drs_weak'
+minoRotSys.None=     require'assets.game.rotsys_mino.none'
+minoRotSys.TRS=      require'assets.game.rotsys_mino.trs'
+minoRotSys.SRS=      require'assets.game.rotsys_mino.srs'
+minoRotSys.SRS_plus= require'assets.game.rotsys_mino.srs_plus'
+minoRotSys.BiRS=     require'assets.game.rotsys_mino.birs'
+minoRotSys.C2=       require'assets.game.rotsys_mino.c2'
+minoRotSys.C2_sym=   require'assets.game.rotsys_mino.c2_sym'
+minoRotSys.Classic=  require'assets.game.rotsys_mino.classic'
+minoRotSys.ASC_plus= require'assets.game.rotsys_mino.asc_plus'
+minoRotSys.ARS_plus= require'assets.game.rotsys_mino.ars_plus'
+minoRotSys.DRS_weak= require'assets.game.rotsys_mino.drs_weak'
 love.graphics.setDefaultFilter('linear','linear')
 
-for name,rs in next,MinoRotSys do
+for name,rs in next,minoRotSys do
     if type(name)=='string' and name:sub(1,1)~='_' and type(rs)=='table' then
         for i=1,29 do
             if not rs[i] then
-                rs[i]=MinoRotSys.None[i]
+                rs[i]=minoRotSys.None[i]
             end
         end
 
         rs=TABLE.copy(rs)
 
-        if not rs.centerTex then rs.centerTex=MinoRotSys._defaultCenterTex end
+        if not rs.centerTex then rs.centerTex=minoRotSys._defaultCenterTex end
         if rs.centerPreset then
-            local set=MinoRotSys._defaultCenterPos[rs.centerPreset]
+            local set=minoRotSys._defaultCenterPos[rs.centerPreset]
             for i=1,29 do
                 if type(rs[i])=='table' then
                     local minoData=rs[i]
@@ -162,14 +162,14 @@ for name,rs in next,MinoRotSys do
                 end
                 for dir in next,minoData do
                     if type(dir)=='number' then
-                        MinoRotSys._normalizeKick(minoData,dir,'R')
-                        MinoRotSys._normalizeKick(minoData,dir,'L')
-                        MinoRotSys._normalizeKick(minoData,dir,'F')
+                        minoRotSys._normalizeKick(minoData,dir,'R')
+                        minoRotSys._normalizeKick(minoData,dir,'L')
+                        minoRotSys._normalizeKick(minoData,dir,'F')
                     end
                 end
             end
         end
 
     end
-    MinoRotSys[name]=rs
+    minoRotSys[name]=rs
 end

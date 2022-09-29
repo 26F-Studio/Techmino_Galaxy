@@ -393,7 +393,7 @@ function MP:moveHand(action,a,b,c,d)
             self:playSound('rotate_locked')
         end
         if self.settings.spin_corners then
-            local minoData=MinoRotSys[self.settings.rotSys][self.hand.shape]
+            local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
             local state=minoData[self.hand.direction]
             local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
             if centerPos then
@@ -702,7 +702,7 @@ function MP:moveDown()
 end
 function MP:rotate(dir,ifInit)
     if not self.hand then return end
-    local minoData=MinoRotSys[self.settings.rotSys][self.hand.shape]
+    local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
     if dir~='R' and dir~='L' and dir~='F' then error("WTF why dir isn't R/L/F ("..tostring(dir)..")") end
 
     if minoData.rotate then-- Custom rotate function
@@ -847,7 +847,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     end
 
     -- Attack
-    local atk=MinoAtkSys[self.settings.atkSys].drop(self)
+    local atk=minoAtkSys[self.settings.atkSys].drop(self)
     if atk then GAME.send(self,atk) end
 
     -- Discard hand
@@ -857,7 +857,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     -- Update & Release garbage
     local i=1
     while true do
-        g=self.garbageBuffer[i]
+        local g=self.garbageBuffer[i]
         if not g then break end
         if g.time==g.time0 then
             local r=self.rcvRND:random(10)
@@ -991,7 +991,7 @@ function MP:changeFieldWidth(w,origPos)
 end
 function MP:changeAtkSys(sys)
     self.atkSysData={}
-    if MinoAtkSys[sys].init then MinoAtkSys[sys].init(self) end
+    if minoAtkSys[sys].init then minoAtkSys[sys].init(self) end
 end
 function MP:receive(data)
     local B={
@@ -1229,7 +1229,7 @@ function MP:render()
 
                     skin.drawHand(CB,self.handX,self.handY)
 
-                    local RS=MinoRotSys[settings.rotSys]
+                    local RS=minoRotSys[settings.rotSys]
                     local minoData=RS[self.hand.shape]
                     local state=minoData[self.hand.direction]
                     local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)

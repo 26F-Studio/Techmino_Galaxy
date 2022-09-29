@@ -12,7 +12,7 @@ local Z={
     [2]={R={test=R},L={test=L},F={test=L}},
     [3]={R={test=R},L={test=L},F={test=R}},
 }
-local S=MinoRotSys._reflect(Z)
+local S=minoRotSys._reflect(Z)
 C2_sym[1]=Z-- Z
 C2_sym[2]=S-- S
 C2_sym[3]=Z-- J
