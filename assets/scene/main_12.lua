@@ -34,6 +34,6 @@ scene.widgetList={
     WIDGET.new{type='button',     pos={.5,.5},x=-400,y=320,w=360,h=100,text=CHAR.icon.language,               fontSize=70,cornerR=0,code=WIDGET.c_goScn'setting_lang'},
     WIDGET.new{type='button',     pos={.5,.5},x=0,   y=320,w=360,h=100,text=LANG'main_12_settings',           fontSize=40,cornerR=0,code=WIDGET.c_goScn'setting_1'},
     WIDGET.new{type='button',     pos={.5,.5},x=400, y=320,w=360,h=100,text=LANG'main_12_musicroom',          fontSize=40,cornerR=0,code=WIDGET.c_goScn'musicroom'},
-    WIDGET.new{type='button',     pos={.5,.5},x=600, y=400,w=100,h=100,text=CHAR.icon.console,                fontSize=70,cornerR=0,code=WIDGET.c_goScn'_console'},
+    WIDGET.new{type='button',     pos={.5,.5},x=800, y=400,w=100,h=100,text=CHAR.icon.console,                fontSize=70,cornerR=0,code=WIDGET.c_goScn'_console'},
 }
 return scene
