@@ -89,7 +89,7 @@ function scene.keyDown(key,isRep)
         local list=musicListBox:getList()
         local sel=musicListBox:getSelect()
         for _=1,#list do
-            sel=sel%#list+1
+            sel=(sel-1+(love.keyboard.isDown('lshift','rshift') and -1 or 1))%#list+1
             if list[sel]:sub(1,1)==key then
                 musicListBox:select(sel)
                 break
