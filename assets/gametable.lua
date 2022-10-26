@@ -6,13 +6,11 @@ do-- bgmList
     bgmList={
         ['8-bit happiness']={
             author="MrZ",
-            message="Can you feel the happiness?",
             base={'melody','bass'},
             full={'melody','accompany','bass','drum','sfx'}
         },
         ['8-bit sadness']={
             author="MrZ",
-            message="Can you feel the sadness?",
             base={'melody','bass'},
             full={'melody','decoration','bass','sfx'}
         },
@@ -239,24 +237,32 @@ do-- bgmList
             full={'melody','accompany1','accompany2','bass','drum'},
         },
         ['empty']={
-            message="First remix from community",
             author="ERM",
+            message="First remix from community",
         },
         ['none']={
             author="MrZ",
             message="Another title remix",
+            base={'melody1','melody2','accompany','drum','sfx'},
+            full={'melody1','melody2','melody3','accompany','decoration','bass','drum','sfx'},
         },
         ['nil']={
             author="MrZ",
             message="Another title remix",
+            base={'melody1','melody2','accompany1','decoration1','bass1','sfx'},
+            full={'melody1','melody2','accompany1','accompany2','accompany3','decoration1','decoration2','decoration3','bass1','bass2','sfx'},
         },
         ['null']={
             author="MrZ",
             message="Another title remix",
+            base={'melody1','accompany1','accompany3'},
+            full={'melody1','melody2','accompany1','accompany2','accompany3','bass'},
         },
         ['vacuum']={
             author="MrZ",
             message="Another title remix",
+            base={'melody1','melody2','accompany','bass'},
+            full={'melody1','melody2','melody3','accompany','bass','drum','sfx'},
         },
         ['blank orchestra']={
             author="T0722",
@@ -269,15 +275,33 @@ do-- bgmList
         ['beat5th']={
             author="MrZ",
             message="5/4 experiment",
+            base={'melody1','accompany1','decoration','bass'},
+            full={'melody1','melody2','accompany1','accompany2','decoration','bass','drum'},
         },
         ['super7th']={
             author="MrZ",
             message="FL experiment",
         },
-        ['secret8th remix']={author="MrZ"},
-        ['shift']={author="MrZ"},
-        ['here']={author="MrZ"},
-        ['there']={author="MrZ"},
+        ['secret8th remix']={
+            author="MrZ",
+            base={'melody1','melody2','accompany','bass1','drum'},
+            full={'melody1','melody2','melody3','melody4','accompany','bass1','bass2','drum','sfx'},
+        },
+        ['shift']={
+            author="MrZ",
+            base={'melody1','melody2','bass','drum'},
+            full={'melody1','melody2','melody3','accompany','bass','drum','sfx'},
+        },
+        ['here']={
+            author="MrZ",
+            base={'melody1','accompany1','accompany2','bass','drum'},
+            full={'melody1','melody2','accompany1','accompany2','accompany3','decoration','bass','drum'},
+        },
+        ['there']={
+            author="MrZ",
+            base={'melody1','melody2','accompany1','accompany2','drum'},
+            full={'melody1','melody2','accompany1','accompany2','decoration1','decoration2','decoration3','bass','drum','sfx'},
+        },
         ['1980s']={
             author="C₂₉H₂₅N₃O₅",
             message="Another old song remix",
@@ -285,7 +309,23 @@ do-- bgmList
         ['sakura']={author="ZUN & C₂₉H₂₅N₃O₅",},
         ['race remix']={author="柒栎流星"},
         ['secret7th remix']={author="柒栎流星"},
-        ['propel']={author="TetraCepra"},
+        ['propel']={
+            author="TetraCepra",
+            base={},
+            full={},
+        },
+        ['gallery']={
+            author="MrZ",
+            message="A venus remix",
+            base={'melody1','accompany2','decorate','bass'},
+            full={'melody1','melody2','accompany1','accompany2','decorate','bass','drum'},
+        },
+        ['subzero']={
+            author="TetraCepra",
+            message="A cool trance title remix",
+            base={'accompany1','accompany3','bass1','bass3','drum','melody1','melody2','sfx'},
+            full={'accompany1','accompany2','accompany3','accompany4','bass1','bass2','bass3','drum','melody1','melody2','sfx'},
+        },
     }
     for name,song in next,bgmList do
         if song.base and song.full then
@@ -378,6 +418,7 @@ local settingTriggers={-- Changing values in SETTINGS.system will trigger these 
     clean=          function(v) Zenitha.setCleanCanvas(v) end,
 
     -- Other
+    powerInfo=      function(v) MES.setSafeY(v and 27 or 0) end,
     locale=         function(v) Text=LANG.get(v) LANG.setTextFuncSrc(Text) end,
 }
 settings.system=setmetatable({},{
