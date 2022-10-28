@@ -1,16 +1,9 @@
-local lastTime=setmetatable({},{
-    __index=function(self,k)
-        self[k]=-1e99
-        return self[k]
-    end,
-})
 function sureCheck(event)
-    if love.timer.getTime()-lastTime[event]<1 then
-        return true
-    else
+    if TASK.lock('sureCheck_'..event,1) then
         MES.new('info',Text.sureText[event])
+    else
+        return true
     end
-    lastTime[event]=love.timer.getTime()
 end
 
 local _bgmPlaying,_bgmMode
