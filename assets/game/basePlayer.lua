@@ -124,9 +124,9 @@ local _jmpOP={
     jeq=2,jne=2,jge=2,jle=2,jg=2,jl=2,
 }
 function P:runScript(line)
-    local arg=line.a
-    if type(line.c)=='string' then
-        if line.c=='say' then
+    local arg=line.arg
+    if type(line.cmd)=='string' then
+        if line.cmd=='say' then
             if arg.t:sub(1,1)=='$' then
                 arg.t=Text[arg.t] or arg.t
             elseif arg.t:sub(1,1)=='\\' then
@@ -140,39 +140,39 @@ function P:runScript(line)
                 x=arg.x or 0,
                 y=arg.y or 0,
             }
-        elseif line.c=='wait' then
+        elseif line.cmd=='wait' then
             if not (self.modeData[arg.v] and self.modeData[arg.v]~=0) then
                 return self.scriptLine
             end
-        elseif _jmpOP[line.c] then
+        elseif _jmpOP[line.cmd] then
             local v1=arg.v  if v1~=nil then v1=self.modeData[v1] end
             local v2=arg.v2 if v2==nil then v2=arg.c end
             if
-                line.c=='j'              or
-                line.c=='jz'  and v1==0  or
-                line.c=='jnz' and v1~=0  or
-                line.c=='jeq' and v1==v2 or
-                line.c=='jne' and v1~=v2 or
-                line.c=='jge' and v1>=v2 or
-                line.c=='jle' and v1<=v2 or
-                line.c=='jg'  and v1>v2  or
-                line.c=='jl'  and v1<v2
+                line.cmd=='j'              or
+                line.cmd=='jz'  and v1==0  or
+                line.cmd=='jnz' and v1~=0  or
+                line.cmd=='jeq' and v1==v2 or
+                line.cmd=='jne' and v1~=v2 or
+                line.cmd=='jge' and v1>=v2 or
+                line.cmd=='jle' and v1<=v2 or
+                line.cmd=='jg'  and v1>v2  or
+                line.cmd=='jl'  and v1<v2
             then
                 return self.scriptLabels[arg.d] or error("No label called '"..arg.d.."'")
             end
-        elseif line.c=='setc' then
+        elseif line.cmd=='setc' then
             self.modeData[arg.v]=arg.c
-        elseif line.c=='setd' then
+        elseif line.cmd=='setd' then
             self.modeData[arg.v]=self.modeData[arg.d]
-        elseif line.c=='setg' then
+        elseif line.cmd=='setg' then
             self.modeData[arg.v]=self:getScriptValue(arg)
         else
-            error("Script command '"..line.c.."' not exist")
+            error("Script command '"..line.cmd.."' not exist")
         end
-    elseif type(line.c)=='function' then
-        return line.c(self)
-    elseif line.c~=nil then
-        error("WTF why script command is "..type(line.c))
+    elseif type(line.cmd)=='function' then
+        return line.cmd(self)
+    elseif line.cmd~=nil then
+        error("WTF why script command is "..type(line.cmd))
     end
 end
 function P:update(dt)
@@ -439,42 +439,42 @@ function P:loadSettings(settings)
         end
     end
 end
-local function decodeScript(line,errMsg)
-    line=line:trim()
-    local L={}
-    if line:find('[_0-9A-Za-z]*:')==1 then
-        L.lbl=line:sub(1,line:find(':')-1)
-        line=line:sub(line:find(':')+1):trim()
+local function decodeScript(str,errMsg)
+    str=str:trim()
+    local line={}
+    if str:find('[_0-9A-Za-z]*:')==1 then
+        line.lbl=str:sub(1,str:find(':')-1)
+        str=str:sub(str:find(':')+1):trim()
     end
-    if line:sub(1,1)=='[' and line:find(']') then
-        L.t=line:sub(2,line:find(']')-1)
-        line=line:sub(line:find(']')+1):trim()
+    if str:sub(1,1)=='[' and str:find(']') then
+        line.t=str:sub(2,str:find(']')-1)
+        str=str:sub(str:find(']')+1):trim()
     end
-    if #line>0 then
-        local p=line:find('[^_0-9A-Za-z]')
-        local c=line:sub(1,p-1)
-        L.c=c
+    if #str>0 then
+        local p=str:find('[^_0-9A-Za-z]')
+        local cmd=str:sub(1,p-1)
+        line.cmd=cmd
 
-        local arg=line:sub(p+1):split(',')
+        local arg=str:sub(p+1):split(',')
         for i=1,#arg do arg[i]=arg[i]:trim() end
-        if c=='wait' then
+        if cmd=='wait' then
             assert(#arg==1)
-            L.a={v=arg[1]}
-        elseif _jmpOP[c] then
-            if #arg~=_jmpOP[c]+1 then error(errMsg.."Wrong arg count, "..c.." need "..(_jmpOP[c]+1).." args") end
-            L.a={d=arg[1],v=arg[2]}
+            line.arg={v=arg[1]}
+        elseif _jmpOP[cmd] then
+            if #arg~=_jmpOP[cmd]+1 then error(errMsg.."Wrong arg count, "..cmd.." need "..(_jmpOP[cmd]+1).." args") end
+            line.arg={d=arg[1],v=arg[2]}
             if arg[3] then
                 if arg[3]:sub(1,1)==arg[3]:sub(-1,-1) and ([["']]):find(arg[3]:sub(1,1)) then
-                    L.a.c=arg[3]:sub(2,-2)
+                    line.arg.c=arg[3]:sub(2,-2)
                 elseif tonumber(arg[3]) then
-                    L.a.c=tonumber(arg[3])
+                    line.arg.c=tonumber(arg[3])
                 elseif arg[3]=='true' or arg[3]=='false' then
-                    L.a.c=arg[3]=='true'
+                    line.arg.c=arg[3]=='true'
                 else
-                    L.a.v2=arg[3]
+                    line.arg.v2=arg[3]
                 end
             end
-        elseif c=='setc' then
+        elseif cmd=='setc' then
             assert(#arg==2)
             if arg[2]:sub(1,1)==arg[2]:sub(-1,-1) and ([["']]):find(arg[3]:sub(1,1)) then
                 arg[2]=arg[2]:sub(2,-2)
@@ -484,16 +484,15 @@ local function decodeScript(line,errMsg)
                 arg[2]=tonumber(arg[2])
                 if not arg[2] then errMsg(errMsg.."Wrong data") end
             end
-            L.a={v=arg[1],c=arg[2]}
-        elseif c=='setd' then
+            line.arg={v=arg[1],c=arg[2]}
+        elseif cmd=='setd' then
             assert(#arg==2)
-            L.a={v=arg[1],d=arg[2]}
+            line.arg={v=arg[1],d=arg[2]}
         else
-            error(errMsg.."No string command '"..c.."'")
+            error(errMsg.."No string command '"..cmd.."'")
         end
     end
-    print(TABLE.dump(L))
-    return L
+    return line
 end
 function P:loadScript(script)
     if not script then return end
@@ -521,10 +520,10 @@ function P:loadScript(script)
                 line.t=assert(parseTime(line.t),errMsg.."Wrong time stamp")
             end
 
-            local c=line.c
-            local arg=line.a
-            if type(c)=='string' then
-                if c=='say' then
+            local cmd=line.cmd
+            local arg=line.arg
+            if type(cmd)=='string' then
+                if cmd=='say' then
                     assert(arg.t~=nil,errMsg.."Need arg 't'")
                     for k,v in next,arg do
                         if     k=='d' then if not (type(v)=='string' or type(v)=='number' and v>0) then error(errMsg.."Wrong arg 'd', need >0") end
@@ -536,7 +535,7 @@ function P:loadScript(script)
                         else error(errMsg.."Wrong arg name '"..k.."'")
                         end
                     end
-                elseif c=='wait' then
+                elseif cmd=='wait' then
                     assert(arg.v~=nil,errMsg.."Need arg 'v'")
                     if not line.t then line.t=1 end
                     for k,v in next,arg do
@@ -544,12 +543,12 @@ function P:loadScript(script)
                         else error(errMsg.."Wrong arg name '"..k.."'")
                         end
                     end
-                elseif _jmpOP[c] then
-                    if c=='j' then
+                elseif _jmpOP[cmd] then
+                    if cmd=='j' then
                         if not (arg.v==nil and arg.v2==nil and arg.c==nil) then error(errMsg.."Command j need no arg") end
                     else
                         assert(arg.v~=nil,errMsg.."Need arg 'v'")
-                        if c=='jz' or c=='jnz' then
+                        if cmd=='jz' or cmd=='jnz' then
                             if not (arg.v2==nil and arg.c==nil) then error(errMsg.."Command jz(jnz) need only arg 'v'") end
                         else
                             if not ((arg.v2==nil)~=(arg.c==nil)) then error(errMsg.."Command Jump-if-* not allow 'v2' and 'c' exist at same time") end
@@ -563,19 +562,19 @@ function P:loadScript(script)
                         else error(errMsg.."Wrong arg name '"..k.."'")
                         end
                     end
-                elseif c=='setc' then
+                elseif cmd=='setc' then
                     assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
                     assert(arg.c~=nil,errMsg.."Need arg 'c'")
                     for k in next,arg do if not (k=='v' or k=='c') then error(errMsg.."Wrong arg name '"..k.."'") end end
-                elseif c=='setd' then
+                elseif cmd=='setd' then
                     assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
                     assert(arg.d~=nil,errMsg.."Need arg 'd'") assert(type(arg.d)=='string',errMsg.."Wrong arg 'd', need string")
                     for k in next,arg do if not (k=='v' or k=='d') then error(errMsg.."Wrong arg name '"..k.."'") end end
-                elseif c=='setg' then
+                elseif cmd=='setg' then
                     assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
                 end
-            elseif type(c)~='nil' and type(c)~='function' then
-                error(errMsg.."Wrong command type: "..type(c))
+            elseif type(cmd)~='nil' and type(cmd)~='function' then
+                error(errMsg.."Wrong command type: "..type(cmd))
             end
         else
             error(errMsg.."Wrong line type: "..type(line))
