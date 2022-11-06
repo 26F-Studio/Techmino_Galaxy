@@ -48,7 +48,6 @@ function saveSettings()
         game_gem=SETTINGS.game_gem,
     },'conf/settings','-json')
 end
-
 function saveKey()
     FILE.save({
         mino=KEYMAP.mino:export(),
@@ -57,7 +56,6 @@ function saveKey()
         sys= KEYMAP.sys:export(),
     },'conf/keymap','-json')
 end
-
 function saveTouch()
     FILE.save(VCTRL.exportSettings(),'conf/touch','-json')
 end

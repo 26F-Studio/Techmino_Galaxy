@@ -15,7 +15,7 @@ end
 
 function scene.enter()
     local L=scene.widgetList
-    if PROGRESS.state==1 then
+    if PROGRESS.getTutorialPage()==1 then
         L.T1_1.x,L.T1_2.x,L.T1_3.x=0,0,0
         L.T1_1.w,L.T1_2.w,L.T1_3.w=800,800,800
         L.T2_1:setVisible(false)

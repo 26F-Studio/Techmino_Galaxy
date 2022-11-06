@@ -2,7 +2,7 @@ local scene={}
 
 function scene.enter()
     BG.set('none')
-    playBgm('blank',PROGRESS.state==1 and 'base' or 'full')
+    PROGRESS.playBgm_main_12()
 end
 
 function scene.keyDown(key,isRep)

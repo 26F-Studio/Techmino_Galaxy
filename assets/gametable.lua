@@ -434,7 +434,3 @@ settings.system=setmetatable({},{
     __metatable=true,
 })
 SETTINGS=settings
-
-PROGRESS={
-    state=1,
-}

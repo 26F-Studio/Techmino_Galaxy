@@ -14,8 +14,10 @@
 -- 4. Except "gcinfo" function of Lua itself, other "gc"s are short for "graphics";
 
 -------------------------------------------------------------
---Var leak check
+-- Var leak check
 -- setmetatable(_G,{__newindex=function(self,k,v)print('>>'..k..string.rep(" ",26-#k),debug.traceback():match("\n.-\n\t(.-): "))rawset(self,k,v)end})
+-- Visible collectgarbage
+-- local _gc=collectgarbage function collectgarbage()_gc()print(debug.traceback())end
 -------------------------------------------------------------
 -- Load Zenitha
 require("Zenitha")
@@ -47,13 +49,14 @@ end
 --------------------------------------------------------------
 -- Load modules
 GAME=require'assets.game'
+PROGRESS=require'assets.progress'
 VCTRL=require'assets.vctrl'
 KEYMAP=require'assets.keymap'
 SKIN=require'assets.skin'
 CHAR=require'assets.char'
 require'assets.gamefunc'
 require'assets.gametable'
-DEBUG.checkLoadTime("Load Assets")
+DEBUG.checkLoadTime("Load game modules")
 --------------------------------------------------------------
 -- Config Zenitha
 STRING.install()
@@ -270,11 +273,12 @@ LANG.add{
     en='assets/language/lang_en.lua',
     zh='assets/language/lang_zh.lua',
 }
-DEBUG.checkLoadTime("Configuring Zenitha")
+DEBUG.checkLoadTime("Load Zenitha resources")
 --------------------------------------------------------------
 -- Load saving data
 TABLE.coverR(FILE.load('conf/settings','-json -canskip') or {},SETTINGS)
 for k,v in next,SETTINGS._system do SETTINGS._system[k]=nil SETTINGS.system[k]=v end
+PROGRESS.load()
 VCTRL.importSettings(FILE.load('conf/touch','-json -canskip'))
 KEYMAP.mino=KEYMAP.new{
     {act='moveLeft',    keys={'left'}},
@@ -346,6 +350,7 @@ if keys then
     KEYMAP.gem :import(keys['gem'])
     KEYMAP.sys :import(keys['sys'])
 end
+DEBUG.checkLoadTime("Load settings & data")
 --------------------------------------------------------------
 -- Load SOURCE ONLY resources
 SHADER={}
@@ -373,6 +378,6 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/skin') do
         SKIN.add(skinName,require('assets/skin/'..skinName))
     end
 end
-DEBUG.checkLoadTime("Load shaders/backgrounds/scenes")
+DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins")
 --------------------------------------------------------------
 DEBUG.logLoadTime()
