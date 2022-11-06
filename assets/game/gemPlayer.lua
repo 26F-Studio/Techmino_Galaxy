@@ -987,7 +987,7 @@ local baseEnv={
     clearDelay=500,
     fallDelay=200,
 
-    atkSys='None',
+    atkSys='none',
 
     colors=7,
     linkLen=3,

@@ -7,8 +7,8 @@ local function _checkAtkSys(sys)
     return sys
 end
 
-minoAtkSys.None=    _checkAtkSys(require'assets.game.atksys_mino.none')
-minoAtkSys.Basic=   _checkAtkSys(require'assets.game.atksys_mino.basic')
-minoAtkSys.Modern=  _checkAtkSys(require'assets.game.atksys_mino.modern')
-minoAtkSys.Nextgen= _checkAtkSys(require'assets.game.atksys_mino.nextgen')
-minoAtkSys.Galaxy=  _checkAtkSys(require'assets.game.atksys_mino.galaxy')
+minoAtkSys.none=    _checkAtkSys(require'assets.game.atksys_mino.none')
+minoAtkSys.basic=   _checkAtkSys(require'assets.game.atksys_mino.basic')
+minoAtkSys.modern=  _checkAtkSys(require'assets.game.atksys_mino.modern')
+minoAtkSys.nextgen= _checkAtkSys(require'assets.game.atksys_mino.nextgen')
+minoAtkSys.galaxy=  _checkAtkSys(require'assets.game.atksys_mino.galaxy')

@@ -1150,7 +1150,7 @@ local baseEnv={
     deathDelay=260,
 
     seqType='double4color',
-    atkSys='None',
+    atkSys='none',
 
     clearGroupSize=4,
     freshCondition='fall',

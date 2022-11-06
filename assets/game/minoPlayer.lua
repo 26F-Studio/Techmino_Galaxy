@@ -1379,7 +1379,7 @@ local baseEnv={
     tuck=false,
     spin_immobile=false,
     spin_corners=false,
-    atkSys='None',
+    atkSys='none',
 
     freshCondition='any',
     freshCount=15,
