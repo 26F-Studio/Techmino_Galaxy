@@ -10,7 +10,7 @@ return {
         mino={
             dropDelay=1000,
             lockDelay=1000,
-            atkSys='Modern',
+            atkSys='modern',
         },
         puyo={
             dropDelay=1500,
