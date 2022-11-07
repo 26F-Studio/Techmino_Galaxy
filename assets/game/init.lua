@@ -195,6 +195,7 @@ function GAME.newPlayer(id,pType)
 
     P.gameMode=pType
     P.id=id
+    P.group=0
     P.isMain=false
     GAME.playerMap[id]=P
     table.insert(GAME.playerList,P)
@@ -211,6 +212,13 @@ function GAME.setMain(id)
         GAME.mainPlayer=GAME.playerMap[id]
         GAME.mainPlayer.isMain=true
         GAME.mainPlayer.sound=true
+    end
+end
+
+function GAME.setGroup(id,gid)
+    assert(type(gid)=='number' and gid>=0 and gid%1==gid,"Invalid group id")
+    if GAME.playerMap[id] then
+        GAME.playerMap[id].group=gid
     end
 end
 
@@ -292,19 +300,36 @@ function GAME.send(source,data)
     }
 
     -- Find target
-    local target=d.target
-    if not (target and GAME.playerMap[target]) and #GAME.playerList>1 then
-        local r=math.random(#GAME.playerList)
-        if GAME.playerList[r]==source then
-            r=math.random(#GAME.playerList-1)
-            if r>=(TABLE.find(GAME.playerList,source)) then r=r+1 end
+    if d.target==nil then
+        local l=GAME.playerList
+        if #l>1 then
+            local count=0
+            for i=1,#l do
+                if source.group==0 and l[i]~=source or source.group~=l[i].group then
+                    count=count+1
+                end
+            end
+            if count>0 then
+                count=math.random(count)
+                for i=1,#l do
+                    if source.group==0 and l[i]~=source or source.group~=l[i].group then
+                        count=count-1
+                        if count==0 then
+                            d.target=l[i]
+                            break
+                        end
+                    end
+                end
+            end
         end
-        target=GAME.playerList[r]
+    else
+        assert(type(d.target)=='number',"target not number")
+        d.target=GAME.playerMap[d.target]
     end
 
     -- Sending airmail
-    if target then
-        target:receive(d)
+    if d.target then
+        d.target:receive(d)
     end
 end
 
