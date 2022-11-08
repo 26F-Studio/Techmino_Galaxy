@@ -130,10 +130,10 @@ local baseScriptCmds={
         end
     end,
     say=function(self,arg)
-        if arg.t:sub(1,1)=='$' then
-            arg.t=Text[arg.t] or arg.t
-        elseif arg.t:sub(1,1)=='\\' then
+        if arg.t:sub(1,1)=='\\' then
             arg.t=arg.t:sub(2)
+        elseif arg.t:sub(1,1)=='@' then
+            arg.t=Text[arg.t] or arg.t
         end
         self.texts:add{
             duration=parseTime(arg.d or 2600)/1000,
