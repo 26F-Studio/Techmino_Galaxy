@@ -193,6 +193,11 @@ do-- bgmList
             base={'melody','accompany'},
             full={'melody','accompany','bass','drum'},
         },
+        ['subspace']={
+            author="MrZ",
+            base={'melody1','melody2','bass'},
+            full={'melody1','melody2','bass','drum1','drum2'},
+        },
         ['supercritical']={
             author="MrZ",
             base={'melody','bass','drum1'},
