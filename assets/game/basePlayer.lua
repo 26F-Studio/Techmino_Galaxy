@@ -130,18 +130,24 @@ local baseScriptCmds={
         end
     end,
     say=function(self,arg)
-        if arg.t:sub(1,1)=='\\' then
-            arg.t=arg.t:sub(2)
-        elseif arg.t:sub(1,1)=='@' then
-            arg.t=Text[arg.t] or arg.t
+        if type(arg.t)=='string' then
+            if arg.t:sub(1,1)=='\\' then
+                arg.t=arg.t:sub(2)
+            elseif arg.t:sub(1,1)=='@' then
+                arg.t=Text[arg.t] or arg.t
+            end
         end
         self.texts:add{
             duration=parseTime(arg.d or 2600)/1000,
             fontSize=arg.f or 60,
             style=arg.s or 'appear',
-            text=    arg.t or "[TEXT]",
+            text=arg.t or "[TEXT]",
             x=arg.x or 0,
             y=arg.y or 0,
+            r=arg.c and arg.c[1] or 1,
+            g=arg.c and arg.c[2] or 1,
+            b=arg.c and arg.c[3] or 1,
+            a=arg.c and arg.c[4] or 1,
         }
     end,
     wait=function(self,arg)
@@ -543,14 +549,15 @@ function P:loadScript(script)
             local arg=line.arg
             if type(cmd)=='string' then
                 if cmd=='say' then
-                    assert(arg.t~=nil,errMsg.."Need arg 't'")
+                    assert(arg.t,errMsg.."Need arg 't'")
                     for k,v in next,arg do
-                        if     k=='d' then if not (type(v)=='string' or type(v)=='number' and v>0) then error(errMsg.."Wrong arg 'd', need >0") end
+                        if     k=='t' then if type(arg.t)~='string' and type(arg.t)~='table' then error(errMsg.."t must be string or str-list") end
+                        elseif k=='d' then if not (type(v)=='string' or type(v)=='number' and v>0) then error(errMsg.."Wrong arg 'd', need >0") end
                         elseif k=='f' then if not (type(v)=='number' and v>0 and v%5==0 and v<=120) then error(errMsg.."Wrong arg 's', need 5, 10, 15,... 120") end
                         elseif k=='s' then if type(v)~='string' then error(errMsg.."Wrong arg 's', need string") end
-                        elseif k=='t' then if type(v)~='string' then error(errMsg.."Wrong arg 't', need string") end
                         elseif k=='x' then if type(v)~='number' then error(errMsg.."Wrong arg 'x', need number") end
                         elseif k=='y' then if type(v)~='number' then error(errMsg.."Wrong arg 'y', need number") end
+                        elseif k=='c' then if type(v)~='table'  then error(errMsg.."Wrong arg 'c', need table") end
                         else error(errMsg.."Wrong arg name '"..k.."'")
                         end
                     end
