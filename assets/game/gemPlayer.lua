@@ -6,6 +6,8 @@ local ins,rem=table.insert,table.remove
 
 local inst=SFX.playSample
 
+local GP=setmetatable({},{__index=require'assets.game.basePlayer'})
+
 --[[ Gem tags:
     int color <1~7>
     string type <'gem','cube'>
@@ -36,6 +38,8 @@ local inst=SFX.playSample
     int dropCnt
 ]]
 
+--------------------------------------------------------------
+-- Function tables
 local defaultSoundFunc={
     countDown=function(num)
         if num==0 then-- 6, 3+6+6
@@ -86,9 +90,9 @@ local defaultSoundFunc={
     win=         function() SFX.play('win')         end,
     fail=        function() SFX.play('fail')        end,
 }
-
-local GP=setmetatable({},{__index=require'assets.game.basePlayer'})
-
+local scriptCmd={
+    -- TODO
+}
 --------------------------------------------------------------
 -- Actions
 local actions={}

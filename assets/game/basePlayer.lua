@@ -123,56 +123,71 @@ local _jmpOP={
     jz=1,jnz=1,
     jeq=2,jne=2,jge=2,jle=2,jg=2,jl=2,
 }
-function P:runScript(line)
-    local arg=line.arg
-    if type(line.cmd)=='string' then
-        if line.cmd=='say' then
-            if arg.t:sub(1,1)=='$' then
-                arg.t=Text[arg.t] or arg.t
-            elseif arg.t:sub(1,1)=='\\' then
-                arg.t=arg.t:sub(2)
-            end
-            self.texts:add{
-                duration=parseTime(arg.d or 2600)/1000,
-                fontSize=arg.f or 60,
-                style=arg.s or 'appear',
-                text=    arg.t or "[TEXT]",
-                x=arg.x or 0,
-                y=arg.y or 0,
-            }
-        elseif line.cmd=='wait' then
-            if not (self.modeData[arg.v] and self.modeData[arg.v]~=0) then
-                return self.scriptLine
-            end
-        elseif _jmpOP[line.cmd] then
+local baseScriptCmds={
+    jm=function(self,arg)
+        if self.gameMode==arg.v then
+            return self.scriptLabels[arg.d] or error("No label called '"..arg.d.."'")
+        end
+    end,
+    say=function(self,arg)
+        if arg.t:sub(1,1)=='$' then
+            arg.t=Text[arg.t] or arg.t
+        elseif arg.t:sub(1,1)=='\\' then
+            arg.t=arg.t:sub(2)
+        end
+        self.texts:add{
+            duration=parseTime(arg.d or 2600)/1000,
+            fontSize=arg.f or 60,
+            style=arg.s or 'appear',
+            text=    arg.t or "[TEXT]",
+            x=arg.x or 0,
+            y=arg.y or 0,
+        }
+    end,
+    wait=function(self,arg)
+        if not (self.modeData[arg.v] and self.modeData[arg.v]~=0) then
+            return self.scriptLine
+        end
+    end,
+    setc=function(self,arg)
+        self.modeData[arg.v]=arg.c
+    end,
+    setd=function(self,arg)
+        self.modeData[arg.v]=self.modeData[arg.d]
+    end,
+    setg=function(self,arg)
+        self.modeData[arg.v]=self:getScriptValue(arg)
+    end,
+}
+function P:runScript(cmd,arg)
+    if type(cmd)=='string' then
+        if baseScriptCmds[cmd] then
+            return baseScriptCmds[cmd](self,arg)
+        elseif _jmpOP[cmd] then-- Sorry cannot move these jumps into `baseScriptCmds`
             local v1=arg.v  if v1~=nil then v1=self.modeData[v1] end
             local v2=arg.v2 if v2==nil then v2=arg.c end
             if
-                line.cmd=='j'              or
-                line.cmd=='jz'  and v1==0  or
-                line.cmd=='jnz' and v1~=0  or
-                line.cmd=='jeq' and v1==v2 or
-                line.cmd=='jne' and v1~=v2 or
-                line.cmd=='jge' and v1>=v2 or
-                line.cmd=='jle' and v1<=v2 or
-                line.cmd=='jg'  and v1>v2  or
-                line.cmd=='jl'  and v1<v2
+                cmd=='j'              or
+                cmd=='jz'  and v1==0  or
+                cmd=='jnz' and v1~=0  or
+                cmd=='jeq' and v1==v2 or
+                cmd=='jne' and v1~=v2 or
+                cmd=='jge' and v1>=v2 or
+                cmd=='jle' and v1<=v2 or
+                cmd=='jg'  and v1>v2  or
+                cmd=='jl'  and v1<v2
             then
                 return self.scriptLabels[arg.d] or error("No label called '"..arg.d.."'")
             end
-        elseif line.cmd=='setc' then
-            self.modeData[arg.v]=arg.c
-        elseif line.cmd=='setd' then
-            self.modeData[arg.v]=self.modeData[arg.d]
-        elseif line.cmd=='setg' then
-            self.modeData[arg.v]=self:getScriptValue(arg)
+        elseif self.scriptCmd[cmd] then
+            return self.scriptCmd[cmd](self,arg)
         else
-            error("Script command '"..line.cmd.."' not exist")
+            error("Script command '"..cmd.."' not exist")
         end
-    elseif type(line.cmd)=='function' then
-        return line.cmd(self)
-    elseif line.cmd~=nil then
-        error("WTF why script command is "..type(line.cmd))
+    elseif type(cmd)=='function' then
+        return cmd(self)
+    elseif cmd~=nil then
+        error("WTF why script command is "..type(cmd))
     end
 end
 function P:update(dt)
@@ -188,7 +203,7 @@ function P:update(dt)
 
                 if self.scriptWait<=0 then
                     -- Execute command
-                    local nextPos=self:runScript(l)
+                    local nextPos=self:runScript(l.cmd,l.arg)
                     self.scriptLine=nextPos or self.scriptLine+1
                     if not self.script[self.scriptLine] then break end
                     self.scriptWait=self.script[self.scriptLine].t or 0
@@ -458,8 +473,12 @@ local function decodeScript(str,errMsg)
         local arg=str:sub(p+1):split(',')
         for i=1,#arg do arg[i]=arg[i]:trim() end
         if cmd=='wait' then
-            assert(#arg==1)
+            assert(#arg==1,"How long to wait?")
             line.arg={v=arg[1]}
+        elseif cmd=='jm' then
+            assert(#arg==2,"Wrong arg count, need 2")
+            assert(arg[2]:match("^[a-z]+$") and ("mino|puyo|gem"):find(arg[2]),"Mode must be mino/puyo/gem")
+            line.arg={d=arg[1],v=arg[2]}
         elseif _jmpOP[cmd] then
             if #arg~=_jmpOP[cmd]+1 then error(errMsg.."Wrong arg count, "..cmd.." need "..(_jmpOP[cmd]+1).." args") end
             line.arg={d=arg[1],v=arg[2]}

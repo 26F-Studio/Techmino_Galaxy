@@ -7,6 +7,10 @@ local ins,rem=table.insert,table.remove
 
 local inst=SFX.playSample
 
+local PP=setmetatable({},{__index=require'assets.game.basePlayer'})
+
+--------------------------------------------------------------
+-- Function tables
 local defaultSoundFunc={
     countDown=function(num)
         if num==0 then-- 6, 3+6+6
@@ -90,9 +94,9 @@ local defaultSoundFunc={
     win=         function() SFX.play('win')         end,
     fail=        function() SFX.play('fail')        end,
 }
-
-local PP=setmetatable({},{__index=require'assets.game.basePlayer'})
-
+local scriptCmd={
+    -- TODO
+}
 --------------------------------------------------------------
 -- Actions
 local actions={}
