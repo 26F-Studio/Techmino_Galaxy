@@ -115,8 +115,44 @@ local defaultSoundFunc={
     win=         function() SFX.play('win')         end,
     fail=        function() SFX.play('fail')        end,
 }
-local scriptCmd={
-    -- TODO
+MP.scriptCmd={
+    setField=function(self,arg)
+        print(TABLE.dumpDeflate(arg))
+        local F=self.field
+        local w=F:getWidth()
+        local mat={}
+        for y=1,#arg do
+            mat[y]={}
+            for x=1,w do
+                local c=arg[y][x]
+                if type(c)=='number' then
+                    if arg.color=='template' then
+                        c=c%1==0 and c>=1 and c<=7 and defaultMinoColor[c]
+                    end
+                    if c and c%1==0 and c>=1 and c<=64 then
+                        mat[y][x]={color=c,nearby={}}
+                    else
+                        mat[y][x]=false
+                    end
+                end
+            end
+        end
+        for y=1,#arg do
+            for x=1,w do
+                if mat[y][x] then
+                    if mat[y]   and mat[y][x-1] then mat[y][x].nearby[mat[y][x-1]]=true   end
+                    if mat[y]   and mat[y][x+1] then mat[y][x].nearby[mat[y][x+1]]=true   end
+                    if mat[y-1] and mat[y-1][x] then mat[y][x].nearby[mat[y-1][x]]=true end
+                    if mat[y+1] and mat[y+1][x] then mat[y][x].nearby[mat[y+1][x]]=true end
+                end
+            end
+        end
+        TABLE.cut(F._matrix)
+        for y=1,#arg do
+            F._matrix[y]=mat[#arg+1-y]
+        end
+        self:freshGhost(true)
+    end,
 }
 --------------------------------------------------------------
 -- Actions

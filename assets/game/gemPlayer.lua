@@ -90,7 +90,7 @@ local defaultSoundFunc={
     win=         function() SFX.play('win')         end,
     fail=        function() SFX.play('fail')        end,
 }
-local scriptCmd={
+GP.scriptCmd={
     -- TODO
 }
 --------------------------------------------------------------
