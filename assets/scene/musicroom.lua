@@ -140,6 +140,7 @@ scene.widgetList={
     },
     WIDGET.new{type='switch',pos={.5,.5},x=-650,y=350,h=50,labelPos='right',disp=function() return fullband end,
         name='fullband',text=LANG'musicroom_fullband',
+        sound_on=false,sound_off=false,
         code=function()
             fullband=not fullband
             if BGM.isPlaying() then
