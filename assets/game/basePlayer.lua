@@ -124,12 +124,12 @@ local _jmpOP={
     jeq=2,jne=2,jge=2,jle=2,jg=2,jl=2,
 }
 local baseScriptCmds={
-    jm=function(self,arg)
+    jm=function(self,arg)-- Jump if gameMode match
         if self.gameMode==arg.v then
             return self.scriptLabels[arg.d] or error("No label called '"..arg.d.."'")
         end
     end,
-    say=function(self,arg)
+    say=function(self,arg)-- Show text
         if type(arg.t)=='string' then
             if arg.t:sub(1,1)=='\\' then
                 arg.t=arg.t:sub(2)
@@ -150,18 +150,18 @@ local baseScriptCmds={
             a=arg.c and arg.c[4] or 1,
         }
     end,
-    wait=function(self,arg)
+    wait=function(self,arg)-- Wait some time (by keep cursor to current line)
         if not (self.modeData[arg.v] and self.modeData[arg.v]~=0) then
             return self.scriptLine
         end
     end,
-    setc=function(self,arg)
+    setc=function(self,arg)-- Set constant
         self.modeData[arg.v]=arg.c
     end,
-    setd=function(self,arg)
+    setd=function(self,arg)-- Set data
         self.modeData[arg.v]=self.modeData[arg.d]
     end,
-    setg=function(self,arg)
+    setm=function(self,arg)-- Set mode value
         self.modeData[arg.v]=self:getScriptValue(arg)
     end,
 }
@@ -334,27 +334,30 @@ local function decodeScript(str,errMsg)-- Translate some string commands to lua-
             if #arg~=_jmpOP[cmd]+1 then error(errMsg.."Wrong arg count, "..cmd.." need "..(_jmpOP[cmd]+1).." args") end
             line.arg={d=arg[1],v=arg[2]}
             if arg[3] then
-                if arg[3]:sub(1,1)==arg[3]:sub(-1,-1) and ([["']]):find(arg[3]:sub(1,1)) then
-                    line.arg.c=arg[3]:sub(2,-2)
-                elseif tonumber(arg[3]) then
-                    line.arg.c=tonumber(arg[3])
-                elseif arg[3]=='true' or arg[3]=='false' then
-                    line.arg.c=arg[3]=='true'
+                local a3=arg[3]
+                if a3:byte(1)==a3:byte(-1) and (a3:sub(1,1)=='"' or a3:sub(1,1)=="'") then
+                    line.arg.c=a3:sub(2,-2)
+                elseif tonumber(a3) then
+                    line.arg.c=tonumber(a3)
+                elseif a3=='true' or a3=='false' then
+                    line.arg.c=a3=='true'
                 else
-                    line.arg.v2=arg[3]
+                    line.arg.v2=a3
                 end
             end
         elseif cmd=='setc' then
             assert(#arg==2)
-            if arg[2]:sub(1,1)==arg[2]:sub(-1,-1) and ([["']]):find(arg[3]:sub(1,1)) then
-                arg[2]=arg[2]:sub(2,-2)
-            elseif arg[2]=='true' or arg[2]=='false' then
-                arg[2]=arg[2]=='true'
+            local a2=arg[2]
+            if a2:byte(1)==a2:byte(-1) and (arg[3]:sub(1,1)=='"' or arg[3]:sub(1,1)=="'") then
+                a2=a2:sub(2,-2)
+            elseif a2=='true' or a2=='false' then
+                a2=a2=='true'
+            elseif tonumber(a2) then
+                a2=tonumber(a2)
             else
-                arg[2]=tonumber(arg[2])
-                if not arg[2] then errMsg(errMsg.."Wrong data") end
+                error(errMsg.."Wrong data")
             end
-            line.arg={v=arg[1],c=arg[2]}
+            line.arg={v=arg[1],c=a2}
         elseif cmd=='setd' then
             assert(#arg==2)
             line.arg={v=arg[1],d=arg[2]}
@@ -445,7 +448,7 @@ function P:loadScript(script)-- Parse time stamps and labels, check syntax of lu
                     assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
                     assert(arg.d~=nil,errMsg.."Need arg 'd'") assert(type(arg.d)=='string',errMsg.."Wrong arg 'd', need string")
                     for k in next,arg do if not (k=='v' or k=='d') then error(errMsg.."Wrong arg name '"..k.."'") end end
-                elseif cmd=='setg' then
+                elseif cmd=='setm' then
                     assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
                 end
             elseif type(cmd)~='nil' and type(cmd)~='function' then
