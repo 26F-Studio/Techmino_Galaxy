@@ -165,7 +165,7 @@ local baseScriptCmds={
         self.modeData[arg.v]=self:getScriptValue(arg)
     end,
 }
-function P:runScript(cmd,arg)
+function P:runScript(cmd,arg)-- Run single lua-table assembly command
     if type(cmd)=='string' then
         if baseScriptCmds[cmd] then
             return baseScriptCmds[cmd](self,arg)
@@ -203,6 +203,8 @@ function P:update(dt)
     for _=1,df do
         -- Script
         if self.script then
+            local loopCount=0
+            local minLoopLineNum,maxLoopLineNum
             while true do
                 local l=self.script[self.scriptLine]
                 if not l then break end-- EOF
@@ -216,6 +218,18 @@ function P:update(dt)
                 else
                     self.scriptWait=self.scriptWait-1
                     break
+                end
+                loopCount=loopCount+1
+                if loopCount>=2500 then
+                    if not minLoopLineNum then
+                        minLoopLineNum=26000
+                        maxLoopLineNum=0
+                    end
+                    minLoopLineNum=min(minLoopLineNum,self.scriptLine)
+                    maxLoopLineNum=min(maxLoopLineNum,self.scriptLine)
+                    if loopCount>=2600 then
+                        error(("Probably infinite loop in scropt. Last 100 cmds between #%d~%d"):format(minLoopLineNum,maxLoopLineNum))
+                    end
                 end
             end
         end
@@ -429,8 +443,7 @@ function P:render()
 end
 --------------------------------------------------------------
 -- Builder
-function P:loadSettings(settings)
-    -- Load data & events from mode settings
+function P:loadSettings(settings)-- Load data & events from mode settings
     for k,v in next,settings do
         if k=='event' then
             for name,E in next,v do
@@ -460,7 +473,7 @@ function P:loadSettings(settings)
         end
     end
 end
-local function decodeScript(str,errMsg)
+local function decodeScript(str,errMsg)-- Translate some string commands to lua-table assembly command
     str=str:trim()
     local line={}
     if str:find('[_0-9A-Za-z]*:')==1 then
@@ -519,7 +532,7 @@ local function decodeScript(str,errMsg)
     end
     return line
 end
-function P:loadScript(script)
+function P:loadScript(script)-- Parse time stamps and labels, check syntax of lua-table assembly commands
     if not script then return end
     assert(type(script)=='table',"script must be table")
     self.script=script
@@ -536,15 +549,19 @@ function P:loadScript(script)
         end
 
         if type(line)=='table' then
+            -- Load labels
             if line.lbl then
                 assert(type(line.lbl)=='string',errMsg.."Label must be string")
                 assert(not self.scriptLabels[line.lbl],errMsg.."Label '"..line.lbl.."' already exist")
                 self.scriptLabels[line.lbl]=i
             end
+
+            -- Parse time
             if line.t and type(line.t)=='string' then
                 line.t=assert(parseTime(line.t),errMsg.."Wrong time stamp")
             end
 
+            -- Check syntax
             local cmd=line.cmd
             local arg=line.arg
             if type(cmd)=='string' then
