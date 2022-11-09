@@ -153,7 +153,7 @@ MP.scriptCmd={
         local resetHand=arg.resetHand
         if resetHand==nil then resetHand=true end
         assert(type(resetHand)=='boolean' ,"keepHandPos must be boolean")
-        if resetHand==true or self.hand and self:ifoverlap(self.hand.matrix,self.handX,self.handY) then
+        if self.hand and (resetHand==true or self:ifoverlap(self.hand.matrix,self.handX,self.handY)) then
             self:resetPos()
         end
         self:freshGhost(true)
