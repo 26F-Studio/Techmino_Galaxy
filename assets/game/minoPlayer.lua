@@ -117,7 +117,6 @@ local defaultSoundFunc={
 }
 MP.scriptCmd={
     setField=function(self,arg)
-        print(TABLE.dumpDeflate(arg))
         local F=self.field
         local w=F:getWidth()
         local mat={}
@@ -140,8 +139,8 @@ MP.scriptCmd={
         for y=1,#arg do
             for x=1,w do
                 if mat[y][x] then
-                    if mat[y]   and mat[y][x-1] then mat[y][x].nearby[mat[y][x-1]]=true   end
-                    if mat[y]   and mat[y][x+1] then mat[y][x].nearby[mat[y][x+1]]=true   end
+                    if mat[y]   and mat[y][x-1] then mat[y][x].nearby[mat[y][x-1]]=true end
+                    if mat[y]   and mat[y][x+1] then mat[y][x].nearby[mat[y][x+1]]=true end
                     if mat[y-1] and mat[y-1][x] then mat[y][x].nearby[mat[y-1][x]]=true end
                     if mat[y+1] and mat[y+1][x] then mat[y][x].nearby[mat[y+1][x]]=true end
                 end
@@ -150,6 +149,12 @@ MP.scriptCmd={
         TABLE.cut(F._matrix)
         for y=1,#arg do
             F._matrix[y]=mat[#arg+1-y]
+        end
+        local resetHand=arg.resetHand
+        if resetHand==nil then resetHand=true end
+        assert(type(resetHand)=='boolean' ,"keepHandPos must be boolean")
+        if resetHand==true or self.hand and self:ifoverlap(self.hand.matrix,self.handX,self.handY) then
+            self:resetPos()
         end
         self:freshGhost(true)
     end,
