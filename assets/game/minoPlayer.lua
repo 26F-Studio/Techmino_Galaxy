@@ -126,9 +126,15 @@ MP.scriptCmd={
                 local c=arg[y][x]
                 if type(c)=='number' then
                     if arg.color=='template' then
-                        c=c%1==0 and c>=1 and c<=7 and defaultMinoColor[c]
+                        if c%1==0 and c>=1 and c<=7 then
+                            c=defaultMinoColor[c]
+                        elseif c==8 then
+                            c=0
+                        else
+                            c=false
+                        end
                     end
-                    if c and c%1==0 and c>=1 and c<=64 then
+                    if c and c%1==0 and c>=0 and c<=64 then
                         mat[y][x]={color=c,nearby={}}
                     else
                         mat[y][x]=false
