@@ -1,5 +1,3 @@
-local gc=love.graphics
-
 local max,min=math.max,math.min
 local floor,ceil=math.floor,math.ceil
 local abs=math.abs
@@ -129,6 +127,20 @@ local baseScriptCmds={
             return self.scriptLabels[arg.d] or error("No label called '"..arg.d.."'")
         end
     end,
+    setc=function(self,arg)-- Set constant
+        self.modeData[arg.v]=arg.c
+    end,
+    setd=function(self,arg)-- Set data
+        self.modeData[arg.v]=self.modeData[arg.d]
+    end,
+    setm=function(self,arg)-- Set mode value
+        self.modeData[arg.v]=self:getScriptValue(arg)
+    end,
+    wait=function(self,arg)-- Wait some time (by keep cursor to current line)
+        if not (self.modeData[arg.v] and self.modeData[arg.v]~=0) then
+            return self.scriptLine
+        end
+    end,
     say=function(self,arg)-- Show text
         local str=arg.text
         if type(str)=='string' then
@@ -160,19 +172,8 @@ local baseScriptCmds={
             a=arg.c and arg.c[4] or 1,
         }
     end,
-    wait=function(self,arg)-- Wait some time (by keep cursor to current line)
-        if not (self.modeData[arg.v] and self.modeData[arg.v]~=0) then
-            return self.scriptLine
-        end
-    end,
-    setc=function(self,arg)-- Set constant
-        self.modeData[arg.v]=arg.c
-    end,
-    setd=function(self,arg)-- Set data
-        self.modeData[arg.v]=self.modeData[arg.d]
-    end,
-    setm=function(self,arg)-- Set mode value
-        self.modeData[arg.v]=self:getScriptValue(arg)
+    sfx=function(_,arg)
+        SFX.play(unpack(arg))
     end,
 }
 function P:runScript(cmd,arg)-- Run single lua-table assembly command
@@ -411,7 +412,7 @@ function P:loadScript(script)-- Parse time stamps and labels, check syntax of lu
             local arg=line.arg
             if type(cmd)=='string' then
                 if cmd=='say' then
-                    assert(arg.text,errMsg.."Need arg 't'")
+                    assert(arg.text~=nil,errMsg.."Need arg 't'")
                     for k,v in next,arg do
                         if     k=='text'    then if type(arg.text)~='string' and type(arg.text)~='table' then error(errMsg.."Wrong arg 'text', need string or str-list") end
                         elseif k=='duration'then if not (type(v)=='string' or type(v)=='number' and v>0) then error(errMsg.."Wrong arg 'duration', need >0") end
@@ -420,6 +421,16 @@ function P:loadScript(script)-- Parse time stamps and labels, check syntax of lu
                         elseif k=='style'   then if type(v)~='string' then error(errMsg.."Wrong arg 'style', need string") end
                         elseif k=='i' or k=='o' or k=='x' or k=='y' then if type(v)~='number' then error(errMsg.."Wrong arg '"..k.."', need number") end
                         elseif k=='c'       then if type(v)~='table'  then error(errMsg.."Wrong arg 'c', need table") end
+                        else error(errMsg.."Wrong arg name '"..k.."'")
+                        end
+                    end
+                elseif cmd=='sfx' then
+                    assert(arg[1]~=nil,"Need arg #1 (name)")
+                    for k,v in next,arg do
+                        if     k==1 then if type(v)~='string' then error(errMsg.."Wrong arg #1 (name), need string") end
+                        elseif k==2 then if not (v==nil or type(v)=='number') then error(errMsg.."Wrong arg #2 (vol), need number") end
+                        elseif k==3 then if not (v==nil or type(v)=='number') then error(errMsg.."Wrong arg #3 (pos), need number") end
+                        elseif k==4 then if not (v==nil or type(v)=='number') then error(errMsg.."Wrong arg #4 (pitch), need number") end
                         else error(errMsg.."Wrong arg name '"..k.."'")
                         end
                     end
@@ -460,6 +471,7 @@ function P:loadScript(script)-- Parse time stamps and labels, check syntax of lu
                     for k in next,arg do if not (k=='v' or k=='d') then error(errMsg.."Wrong arg name '"..k.."'") end end
                 elseif cmd=='setm' then
                     assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
+                    for k in next,arg do if not k=='v' then error(errMsg.."Wrong arg name '"..k.."'") end end
                 end
             elseif type(cmd)~='nil' and type(cmd)~='function' then
                 error(errMsg.."Wrong command type: "..type(cmd))
