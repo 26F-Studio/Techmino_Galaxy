@@ -1247,11 +1247,11 @@ function MP:updateFrame()
     if self.fieldDived>0 then
         -- Update fieldRisingSpeed first
         if self.fieldRisingSpeed>SET.maxRisingSpeed then
-            self.fieldRisingSpeed=max(self.fieldRisingSpeed-SET.risingAcceleration,SET.maxRisingSpeed)
+            self.fieldRisingSpeed=max(self.fieldRisingSpeed-SET.risingDeceleration,SET.maxRisingSpeed)
         elseif self.fieldRisingSpeed<SET.minRisingSpeed then
             self.fieldRisingSpeed=min(self.fieldRisingSpeed+SET.risingAcceleration,SET.minRisingSpeed)
         end
-        self.fieldRisingSpeed=min((2*self.fieldDived*SET.risingAcceleration)^.5,self.fieldRisingSpeed)
+        self.fieldRisingSpeed=min((2*self.fieldDived*SET.risingDeceleration)^.5,self.fieldRisingSpeed)
 
         -- Change fieldDived
         self.fieldDived=self.fieldDived-self.fieldRisingSpeed
@@ -1459,7 +1459,7 @@ local baseEnv={
 
     initialRisingSpeed=0,
     risingAcceleration=.001,
-    risingDecelerate=.003,
+    risingDeceleration=.003,
     maxRisingSpeed=1,
     minRisingSpeed=1,
 
