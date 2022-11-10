@@ -130,20 +130,30 @@ local baseScriptCmds={
         end
     end,
     say=function(self,arg)-- Show text
-        if type(arg.t)=='string' then
-            if arg.t:sub(1,1)=='\\' then
-                arg.t=arg.t:sub(2)
-            elseif arg.t:sub(1,1)=='@' then
-                arg.t=Text[arg.t] or arg.t
+        local str=arg.text
+        if type(str)=='string' then
+            if str:sub(1,1)=='\\' then
+                str=str:sub(2)
+            elseif str:sub(1,1)=='@' then
+                str=Text[str] or str
             end
         end
+        local D=arg.duration
+        if type(D)=='string' then
+            D=parseTime(D)/1000
+        elseif not D then
+            D=2.6
+        end
         self.texts:add{
-            duration=parseTime(arg.d or 2600)/1000,
-            fontSize=arg.f or 60,
-            style=arg.s or 'appear',
-            text=arg.t or "[TEXT]",
+            duration=D,
+            text=str or "[TEXT]",
+            style=arg.style or 'appear',
+            fontSize=arg.size or 60,
+            fontType=arg.type or 'norm',
             x=arg.x or 0,
             y=arg.y or 0,
+            inPoint=(arg.i or 0.2)/D,
+            outPoint=(arg.o or 0.5)/D,
             r=arg.c and arg.c[1] or 1,
             g=arg.c and arg.c[2] or 1,
             b=arg.c and arg.c[3] or 1,
@@ -401,15 +411,15 @@ function P:loadScript(script)-- Parse time stamps and labels, check syntax of lu
             local arg=line.arg
             if type(cmd)=='string' then
                 if cmd=='say' then
-                    assert(arg.t,errMsg.."Need arg 't'")
+                    assert(arg.text,errMsg.."Need arg 't'")
                     for k,v in next,arg do
-                        if     k=='t' then if type(arg.t)~='string' and type(arg.t)~='table' then error(errMsg.."t must be string or str-list") end
-                        elseif k=='d' then if not (type(v)=='string' or type(v)=='number' and v>0) then error(errMsg.."Wrong arg 'd', need >0") end
-                        elseif k=='f' then if not (type(v)=='number' and v>0 and v%5==0 and v<=120) then error(errMsg.."Wrong arg 's', need 5, 10, 15,... 120") end
-                        elseif k=='s' then if type(v)~='string' then error(errMsg.."Wrong arg 's', need string") end
-                        elseif k=='x' then if type(v)~='number' then error(errMsg.."Wrong arg 'x', need number") end
-                        elseif k=='y' then if type(v)~='number' then error(errMsg.."Wrong arg 'y', need number") end
-                        elseif k=='c' then if type(v)~='table'  then error(errMsg.."Wrong arg 'c', need table") end
+                        if     k=='text'    then if type(arg.text)~='string' and type(arg.text)~='table' then error(errMsg.."Wrong arg 'text', need string or str-list") end
+                        elseif k=='duration'then if not (type(v)=='string' or type(v)=='number' and v>0) then error(errMsg.."Wrong arg 'duration', need >0") end
+                        elseif k=='size'    then if not (type(v)=='number' and v>0 and v%5==0 and v<=120) then error(errMsg.."Wrong arg 'size', need 5, 10, 15,... 120") end
+                        elseif k=='type' or k=='style' then if type(v)~='string' then error(errMsg.."Wrong arg 'type', need string") end
+                        elseif k=='style'   then if type(v)~='string' then error(errMsg.."Wrong arg 'style', need string") end
+                        elseif k=='i' or k=='o' or k=='x' or k=='y' then if type(v)~='number' then error(errMsg.."Wrong arg '"..k.."', need number") end
+                        elseif k=='c'       then if type(v)~='table'  then error(errMsg.."Wrong arg 'c', need table") end
                         else error(errMsg.."Wrong arg name '"..k.."'")
                         end
                     end
