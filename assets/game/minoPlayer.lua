@@ -117,53 +117,8 @@ local defaultSoundFunc={
 }
 MP.scriptCmd={
     setField=function(self,arg)
-        local F=self.field
-        local w=F:getWidth()
-        local mat={}
-        for y=1,#arg do
-            mat[y]={}
-            for x=1,w do
-                local c=arg[y][x]
-                if type(c)=='number' then
-                    if arg.color=='template' then
-                        if c%1==0 and c>=1 and c<=7 then
-                            c=defaultMinoColor[c]
-                        elseif c==8 then
-                            c=0
-                        else
-                            c=false
-                        end
-                    end
-                    if c and c%1==0 and c>=0 and c<=64 then
-                        mat[y][x]={color=c,nearby={}}
-                    else
-                        mat[y][x]=false
-                    end
-                end
-            end
-        end
-        for y=1,#arg do
-            for x=1,w do
-                if mat[y][x] then
-                    if mat[y]   and mat[y][x-1] then mat[y][x].nearby[mat[y][x-1]]=true end
-                    if mat[y]   and mat[y][x+1] then mat[y][x].nearby[mat[y][x+1]]=true end
-                    if mat[y-1] and mat[y-1][x] then mat[y][x].nearby[mat[y-1][x]]=true end
-                    if mat[y+1] and mat[y+1][x] then mat[y][x].nearby[mat[y+1][x]]=true end
-                end
-            end
-        end
-        TABLE.cut(F._matrix)
-        for y=1,#arg do
-            F._matrix[y]=mat[#arg+1-y]
-        end
-        local resetHand=arg.resetHand
-        if resetHand==nil then resetHand=true end
-        assert(type(resetHand)=='boolean' ,"keepHandPos must be boolean")
-        if self.hand and (resetHand==true or self:ifoverlap(self.hand.matrix,self.handX,self.handY)) then
-            self:resetPos()
-        end
-        self:freshGhost(true)
-    end,
+        self:setField(arg)
+    end
 }
 --------------------------------------------------------------
 -- Actions
@@ -944,6 +899,12 @@ function MP:lock()-- Put mino into field
         y=self.handY,
     })
 end
+function MP:diveDown(cells)
+    if self.fieldDived==0 then
+        self.fieldRisingSpeed=self.settings.initialRisingSpeed
+    end
+    self.fieldDived=self.fieldDived+cells*40
+end
 function MP:riseGarbage(holePos)
     local F=self.field
     local w=F:getWidth()
@@ -974,10 +935,7 @@ function MP:riseGarbage(holePos)
     ins(F._matrix,1,L)
 
     -- Update buried depth and rising speed
-    if self.fieldDived==0 then
-        self.fieldRisingSpeed=self.settings.initialRisingSpeed
-    end
-    self.fieldDived=self.fieldDived+40
+    self:diveDown(1)
 
     -- Update hand position (if exist)
     if self.hand then
@@ -985,6 +943,87 @@ function MP:riseGarbage(holePos)
         self.ghostY=self.ghostY+1
         self.minY=self.minY+1
     end
+end
+--[[arg table={
+    string? color <'template'|'absolute'>,
+    boolean? resetHand
+    boolean? sudden
+
+    -- map matrix (will display as you see, any height)
+    {7,7,7,7,0,0,0,0,1,1},
+    {4,6,6,3,0,0,0,1,1,5},
+    {4,6,6,3,0,0,2,2,5,5},
+    {4,4,3,3,0,0,0,2,2,5},
+}]]
+function MP:setField(arg)
+    local F=self.field
+    local w=F:getWidth()
+    local f={}
+
+    local color=arg.color
+    if color==nil then color='template' end
+    assert(color=='template' or color=='absolute',"arg.color must be <'template'|'absolute'>")
+
+    local sudden=arg.sudden
+    if sudden==nil then sudden=true end
+    assert(type(sudden)=='boolean' ,"arg.sudden must be boolean")
+
+    local resetHand=arg.resetHand
+    if resetHand==nil then resetHand=true end
+    assert(type(resetHand)=='boolean' ,"arg.resetHand must be boolean")
+
+    -- Translate field matrix
+    for y=1,#arg do
+        f[y]={}
+        for x=1,w do
+            local c=arg[y][x]
+            if type(c)=='number' then
+                if color=='template' then
+                    if c%1==0 and c>=1 and c<=7 then
+                        c=defaultMinoColor[c]
+                    elseif c==8 then
+                        c=0
+                    else
+                        c=false
+                    end
+                end
+                if c and c%1==0 and c>=0 and c<=64 then
+                    f[y][x]={color=c,nearby={}}
+                else
+                    f[y][x]=false
+                end
+            end
+        end
+    end
+
+    -- Create connection
+    for y=1,#arg do
+        for x=1,w do
+            if f[y][x] then
+                if f[y]   and f[y][x-1] then f[y][x].nearby[f[y][x-1]]=true end
+                if f[y]   and f[y][x+1] then f[y][x].nearby[f[y][x+1]]=true end
+                if f[y-1] and f[y-1][x] then f[y][x].nearby[f[y-1][x]]=true end
+                if f[y+1] and f[y+1][x] then f[y][x].nearby[f[y+1][x]]=true end
+            end
+        end
+    end
+
+    -- Apply field
+    TABLE.cut(F._matrix)
+    for y=1,#arg do
+        F._matrix[y]=f[#arg+1-y]
+    end
+
+    -- Field rising animation
+    self.fieldRisingSpeed=0
+    self.fieldDived=0
+    if not sudden then self:diveDown(#arg) end
+
+    -- Reset current block
+    if self.hand and (resetHand==true or self:ifoverlap(self.hand.matrix,self.handX,self.handY)) then
+        self:resetPos()
+    end
+    self:freshGhost(true)
 end
 function MP:checkField()
     local lineClear={}
