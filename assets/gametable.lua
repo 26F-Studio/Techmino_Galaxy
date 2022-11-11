@@ -316,8 +316,8 @@ do-- bgmList
         ['secret7th remix']={author="柒栎流星"},
         ['propel']={
             author="TetraCepra",
-            base={},
-            full={},
+            base={'melody','accompany2','bass1','bass2'},
+            full={'melody','accompany1','accompany2','accompany3','bass1','bass2','bass3','drum'},
         },
         ['gallery']={
             author="MrZ",
