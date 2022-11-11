@@ -21,13 +21,13 @@ do-- bgmList
         },
         ['blank']={
             author="MrZ",
-            message="We start from here",
+            message="The beginning",
             base={'melody','bass'},
             full={'melody','decoration','bass','drum'},
         },
         ['blox']={
             author="MrZ",
-            message="Another old song remix",
+            message="Old song remix",
             base={'melody','decoration1','bass'},
             full={'melody','decoration1','decoration2','bass','drum','sfx'},
         },
@@ -82,13 +82,12 @@ do-- bgmList
         },
         ['minoes']={
             author="MrZ",
-            message="Another old song remix",
+            message="Old song remix",
             base={'melody','bass','drum'},
             full={'melody','accompany','decoration','bass','drum','sfx'},
         },
         ['moonbeam']={
             author="Beethoven & MrZ",
-            message="A cool attempt!",
             base={'melody','bass'},
             full={'melody','accompany','bass','drum'},
         },
@@ -99,7 +98,7 @@ do-- bgmList
         },
         ['overzero']={
             author="MrZ",
-            message="Another title remix",
+            message="Blank remix",
             base={'melody','bass','drum','sfx'},
             full={'melody','accompany','decoration','bass','drum','sfx'},
         },
@@ -171,7 +170,7 @@ do-- bgmList
         },
         ['space']={
             author="MrZ",
-            message="Another title remix",
+            message="Blank remix",
             base={'melody1','melody2','bass'},
             full={'melody1','melody2','accompany','decoration','bass'},
         },
@@ -247,35 +246,35 @@ do-- bgmList
         },
         ['none']={
             author="MrZ",
-            message="Another title remix",
+            message="Blank remix",
             base={'melody1','melody2','accompany','drum','sfx'},
             full={'melody1','melody2','melody3','accompany','decoration','bass','drum','sfx'},
         },
         ['nil']={
             author="MrZ",
-            message="Another title remix",
+            message="Blank remix",
             base={'melody1','melody2','accompany1','decoration1','bass1','sfx'},
             full={'melody1','melody2','accompany1','accompany2','accompany3','decoration1','decoration2','decoration3','bass1','bass2','sfx'},
         },
         ['null']={
             author="MrZ",
-            message="Another title remix",
+            message="Blank remix",
             base={'melody1','accompany1','accompany3'},
             full={'melody1','melody2','accompany1','accompany2','accompany3','bass'},
         },
         ['vacuum']={
             author="MrZ",
-            message="Another title remix",
+            message="Blank remix",
             base={'melody1','melody2','accompany','bass'},
             full={'melody1','melody2','melody3','accompany','bass','drum','sfx'},
         },
         ['blank orchestra']={
             author="T0722",
-            message="A cool orchestral title remix",
+            message="A cool blank remix",
         },
         ['jazz nihilism']={
             author="Trebor",
-            message="A cool jazz title remix",
+            message="A cool blank remix",
         },
         ['beat5th']={
             author="MrZ",
@@ -309,13 +308,14 @@ do-- bgmList
         },
         ['1980s']={
             author="C₂₉H₂₅N₃O₅",
-            message="Another old song remix",
+            message="Old song remix",
         },
         ['sakura']={author="ZUN & C₂₉H₂₅N₃O₅",},
         ['race remix']={author="柒栎流星"},
         ['secret7th remix']={author="柒栎流星"},
         ['propel']={
             author="TetraCepra",
+            message="A cool push remix",
             base={'melody','accompany2','bass1','bass2'},
             full={'melody','accompany1','accompany2','accompany3','bass1','bass2','bass3','drum'},
         },
@@ -327,7 +327,7 @@ do-- bgmList
         },
         ['subzero']={
             author="TetraCepra",
-            message="A cool trance title remix",
+            message="A cool blank remix",
             base={'accompany1','accompany3','bass1','bass3','drum','melody1','melody2','sfx'},
             full={'accompany1','accompany2','accompany3','accompany4','bass1','bass2','bass3','drum','melody1','melody2','sfx'},
         },
