@@ -116,6 +116,7 @@ local defaultSoundFunc={
     fail=        function() SFX.play('fail')        end,
 }
 MP.scriptCmd={
+    clearHold=function(P) P:clearHold() end,
     clearNext=function(P) P:clearNext() end,
     pushNext=function(P,arg) P:pushNext(arg) end,
     setField=function(P,arg) P:setField(arg) end,
@@ -590,6 +591,9 @@ function MP:freshNextQueue()
             break
         end
     end
+end
+function MP:clearHold()
+    TABLE.cut(self.holdQueue)
 end
 function MP:clearNext()
     TABLE.cut(self.nextQueue)
@@ -1476,6 +1480,8 @@ end
 function MP:decodeScript(line,errMsg)
     if line.cmd=='setField' then
     elseif line.cmd=='switchAction' then
+    elseif line.cmd=='clearHold' then
+        line.arg=nil
     elseif line.cmd=='clearNext' then
         line.arg=nil
     elseif line.cmd=='pushNext' then
@@ -1493,6 +1499,8 @@ function MP:checkScriptSyntax(cmd,arg,errMsg)
         -- TODO
     elseif cmd=='switchAction' then
         assert(actions[arg],"Invalid action name '"..arg.."'")
+    elseif cmd=='clearHold' then
+        assert(arg==nil,errMsg.."No arg needed")
     elseif cmd=='clearNext' then
         assert(arg==nil,errMsg.."No arg needed")
     elseif cmd=='pushNext' then
