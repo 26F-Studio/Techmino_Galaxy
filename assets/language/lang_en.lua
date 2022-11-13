@@ -163,4 +163,10 @@ return {
     tutorial_basic_4="Press harddrop key to place hand piece",
     tutorial_basic_5="You can also rotate hand piece",
     tutorial_basic_6="PASS",
+
+    tutorial_sequence_1="2.Next & Hold",
+    tutorial_sequence_2="Oops, this shape doesn't fit",
+    tutorial_sequence_3="Now you can know what will come next",
+    tutorial_sequence_4="Use hold key to change piece order a bit",
+    tutorial_sequence_5="PASS",
 }

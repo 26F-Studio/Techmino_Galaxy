@@ -163,4 +163,10 @@ return {
     tutorial_basic_4="按下硬降键放置当前方块",
     tutorial_basic_5="你也可以旋转当前方块",
     tutorial_basic_6="PASS",
+
+    tutorial_sequence_1="2.预览&暂存",
+    tutorial_sequence_2="哎呀 这个块的形状和坑对不上",
+    tutorial_sequence_3="现在你可以看到之后会来什么块了",
+    tutorial_sequence_4="使用暂存键来调整方块的顺序",
+    tutorial_sequence_5="PASS",
 }
