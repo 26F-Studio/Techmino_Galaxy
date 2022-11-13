@@ -33,7 +33,10 @@ function PROGRESS.getTutorialPage()
     return prgs.tutorial
 end
 function PROGRESS.playBgm_main_12()
-    playBgm('blank',prgs.main==1 and 'base' or 'full')
+    playBgm('blank',prgs.main==1 and 'simp' or 'full')
+end
+function PROGRESS.playBgm_tutorial_12()
+    playBgm('space',prgs.main==1 and 'simp' or 'full')
 end
 function PROGRESS.setCoolWaitTemplate()
     local list={}
