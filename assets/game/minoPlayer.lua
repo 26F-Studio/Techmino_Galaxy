@@ -116,9 +116,10 @@ local defaultSoundFunc={
     fail=        function() SFX.play('fail')        end,
 }
 MP.scriptCmd={
-    setField=function(self,arg)
-        self:setField(arg)
-    end
+    clearNext=function(P) P:clearNext() end,
+    pushNext=function(P,arg) P:pushNext(arg) end,
+    setField=function(P,arg) P:setField(arg) end,
+    switchAction=function(P,arg) P:switchAction(arg) end,
 }
 --------------------------------------------------------------
 -- Actions
@@ -590,6 +591,28 @@ function MP:freshNextQueue()
         end
     end
 end
+function MP:clearNext()
+    TABLE.cut(self.nextQueue)
+end
+function MP:pushNext(arg)
+    if type(arg)=='string' then
+        for i=1,#arg do
+            self:getMino(assert(
+                Minoes[arg:sub(i,i)],
+                "Invalid mino name '"..arg:sub(i,i).."'"
+            ).id)
+        end
+    elseif type(arg)=='table' then
+        for i=1,#arg do
+            self:getMino(assert(
+                Minoes[arg[i]],
+                "Invalid mino name '"..arg[i].."'"
+            ) and arg[i])
+        end
+    else
+        error("arg must be string or table")
+    end
+end
 function MP:popNext()
     if self.nextQueue[1] then-- Most cases there is pieces in next queue
         self.hand=rem(self.nextQueue,1)
@@ -620,6 +643,7 @@ function MP:popNext()
     end
 end
 function MP:getMino(shapeID)
+    assert(type(shapeID)=='number',"shapeID must be number")
     self.pieceCount=self.pieceCount+1
     local shape=TABLE.shift(Minoes[shapeID].shape)
 
@@ -955,6 +979,19 @@ end
     {4,6,6,3,0,0,2,2,5,5},
     {4,4,3,3,0,0,0,2,2,5},
 }]]
+function MP:switchAction(act,state)
+    assert(actions[act],"Invalid action name '"..act.."'")
+    if state==nil or state==not self.actions[act] then
+        if self.actions[act] then
+            self:release(act)
+            self.keyState[act]=nil
+            self.actions[act]=nil
+        else
+            self.actions[act]=_getActionObj(act)
+            self.keyState[act]=false
+        end
+    end
+end
 function MP:setField(arg)
     local F=self.field
     local w=F:getWidth()
@@ -1435,6 +1472,40 @@ function MP:render()
     gc.pop()
 end
 --------------------------------------------------------------
+-- Other
+function MP:decodeScript(line,errMsg)
+    if line.cmd=='setField' then
+    elseif line.cmd=='switchAction' then
+    elseif line.cmd=='clearNext' then
+        line.arg=nil
+    elseif line.cmd=='pushNext' then
+        if line.arg:find(",") then
+            line.arg=line.arg:split(",")
+        else
+            assert(not line.arg:find("[^0-9a-zA-Z]"),errMsg.."Wrong arg")
+        end
+    else
+        error(errMsg.."No string command '"..line.cmd.."'")
+    end
+end
+function MP:checkScriptSyntax(cmd,arg,errMsg)
+    if cmd=='setField' then
+        -- TODO
+    elseif cmd=='switchAction' then
+        assert(actions[arg],"Invalid action name '"..arg.."'")
+    elseif cmd=='clearNext' then
+        assert(arg==nil,errMsg.."No arg needed")
+    elseif cmd=='pushNext' then
+        if type(arg)=='string' then
+            -- TODO
+        elseif type(arg)=='table' then
+            for i=1,#arg do
+                assert(Minoes[arg[i]],errMsg.."Invalid mino id '"..arg[i].."'")
+            end
+        end
+    end
+end
+--------------------------------------------------------------
 -- Builder
 local baseEnv={
     fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
@@ -1681,10 +1752,10 @@ function MP:initialize()
         self.actions={}
         local pack=self.settings.actionPack
         if type(pack)=='string' then
-            pack=actionPacks[pack]
-            assert(pack,STRING.repD("Invalid actionPack '$1'",pack))
-            for i=1,#pack do
-                self.actions[pack[i]]=_getActionObj(pack[i])
+            local p=actionPacks[pack]
+            assert(p,STRING.repD("Invalid actionPack '$1'",pack))
+            for i=1,#p do
+                self.actions[p[i]]=_getActionObj(p[i])
             end
         elseif type(pack)=='table' then
             for k,v in next,pack do

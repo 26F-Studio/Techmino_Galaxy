@@ -982,6 +982,15 @@ function GP:render()
     gc.pop()
 end
 --------------------------------------------------------------
+-- Other
+function GP:decodeScript(line,errMsg)
+    -- TODO
+    -- error(errMsg.."No string command '"..cmd.."'")
+end
+function GP:checkScriptSyntax(cmd,arg,errMsg)
+    -- TODO
+end
+--------------------------------------------------------------
 -- Builder
 local baseEnv={
     fieldSize=8,

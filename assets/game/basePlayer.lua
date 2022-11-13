@@ -57,6 +57,7 @@ end
 --------------------------------------------------------------
 -- Game methods
 function P:triggerEvent(name,...)
+    -- if name~='always' and name:sub(1,4)~='draw' then print(name) end
     local L=self.event[name]
     if L then for i=1,#L do L[i](self,...) end end
 end
@@ -122,11 +123,6 @@ local _jmpOP={
     jeq=2,jne=2,jge=2,jle=2,jg=2,jl=2,
 }
 local baseScriptCmds={
-    jm=function(self,arg)-- Jump if gameMode match
-        if self.gameMode==arg.v then
-            return self.scriptLabels[arg.d] or error("No label called '"..arg.d.."'")
-        end
-    end,
     setc=function(self,arg)-- Set constant
         self.modeData[arg.v]=arg.c
     end,
@@ -136,9 +132,11 @@ local baseScriptCmds={
     setm=function(self,arg)-- Set mode value
         self.modeData[arg.v]=self:getScriptValue(arg)
     end,
-    wait=function(self,arg)-- Wait some time (by keep cursor to current line)
-        if not (self.modeData[arg.v] and self.modeData[arg.v]~=0) then
-            return self.scriptLine
+    wait=function(self,arg)-- Wait until modeData value(s) all not 0 (by keep cursor to current line)
+        for i=1,#arg do
+            if self.modeData[arg[i]]==0 then
+                return self.scriptLine
+            end
         end
     end,
     say=function(self,arg)-- Show text
@@ -174,6 +172,9 @@ local baseScriptCmds={
     end,
     sfx=function(_,arg)
         SFX.play(unpack(arg))
+    end,
+    finish=function(self,arg)
+        self:finish(arg)
     end,
 }
 function P:runScript(cmd,arg)-- Run single lua-table assembly command
@@ -239,7 +240,7 @@ function P:update(dt)
                     minLoopLineNum=min(minLoopLineNum,self.scriptLine)
                     maxLoopLineNum=min(maxLoopLineNum,self.scriptLine)
                     if loopCount>=2600 then
-                        error(("Probably infinite loop in scropt. Last 100 cmds between #%d~%d"):format(minLoopLineNum,maxLoopLineNum))
+                        error(("Probably infinite loop in script. Last 100 cmds between #%d~%d"):format(minLoopLineNum,maxLoopLineNum))
                     end
                 end
             end
@@ -329,18 +330,14 @@ local function decodeScript(str,errMsg)-- Translate some string commands to lua-
     end
     if #str>0 then
         local p=str:find('[^_0-9A-Za-z]')
-        local cmd=str:sub(1,p-1)
+        local cmd=p and str:sub(1,p-1) or str
         line.cmd=cmd
 
-        local arg=str:sub(p+1):split(',')
+        local arg=p and str:sub(p+1):split(',') or {}
         for i=1,#arg do arg[i]=arg[i]:trim() end
         if cmd=='wait' then
-            assert(#arg==1,"How long to wait?")
-            line.arg={v=arg[1]}
-        elseif cmd=='jm' then
-            assert(#arg==2,"Wrong arg count, need 2")
-            assert(arg[2]:match("^[a-z]+$") and ("mino|puyo|gem"):find(arg[2]),"Mode must be mino/puyo/gem")
-            line.arg={d=arg[1],v=arg[2]}
+            assert(#arg>0,errMsg.."Wait which var(s)?")
+            line.arg=arg
         elseif _jmpOP[cmd] then
             if #arg~=_jmpOP[cmd]+1 then error(errMsg.."Wrong arg count, "..cmd.." need "..(_jmpOP[cmd]+1).." args") end
             line.arg={d=arg[1],v=arg[2]}
@@ -357,9 +354,9 @@ local function decodeScript(str,errMsg)-- Translate some string commands to lua-
                 end
             end
         elseif cmd=='setc' then
-            assert(#arg==2)
+            assert(#arg==2,errMsg.."Wrong arg count, need 2")
             local a2=arg[2]
-            if a2:byte(1)==a2:byte(-1) and (arg[3]:sub(1,1)=='"' or arg[3]:sub(1,1)=="'") then
+            if a2:byte(1)==a2:byte(-1) and (a2:sub(1,1)=='"' or a2:sub(1,1)=="'") then
                 a2=a2:sub(2,-2)
             elseif a2=='true' or a2=='false' then
                 a2=a2=='true'
@@ -370,10 +367,18 @@ local function decodeScript(str,errMsg)-- Translate some string commands to lua-
             end
             line.arg={v=arg[1],c=a2}
         elseif cmd=='setd' then
-            assert(#arg==2)
+            assert(#arg==2,errMsg.."Wrong arg count, need 2")
             line.arg={v=arg[1],d=arg[2]}
+        elseif cmd=='sfx' then
+            assert(#arg>=1 and #arg<=4,errMsg.."Wrong arg count, need 1~4")
+            line.arg=arg
+        elseif cmd=='finish' then
+            assert(#arg==1,errMsg.."Wrong arg count, need 1")
+            line.arg=arg[1]
         else
-            error(errMsg.."No string command '"..cmd.."'")
+            line.cmd=cmd
+            line.arg=p and str:sub(p+1) or ""
+            line._notbasic=true
         end
     end
     return line
@@ -391,6 +396,15 @@ function P:loadScript(script)-- Parse time stamps and labels, check syntax of lu
 
         if type(line)=='string' then
             line=decodeScript(line,errMsg)
+            if line._notbasic then
+                local cmd=line.cmd
+                if self.decodeScript then
+                    line._notbasic=nil
+                    self:decodeScript(line,errMsg)
+                else
+                    error(errMsg.."No string command '"..cmd.."'")
+                end
+            end
             script[i]=line
         end
 
@@ -412,6 +426,7 @@ function P:loadScript(script)-- Parse time stamps and labels, check syntax of lu
             local arg=line.arg
             if type(cmd)=='string' then
                 if cmd=='say' then
+                    assert(type(arg)=='table',errMsg.."arg must be table")
                     assert(arg.text~=nil,errMsg.."Need arg 't'")
                     for k,v in next,arg do
                         if     k=='text'    then if type(arg.text)~='string' and type(arg.text)~='table' then error(errMsg.."Wrong arg 'text', need string or str-list") end
@@ -425,7 +440,8 @@ function P:loadScript(script)-- Parse time stamps and labels, check syntax of lu
                         end
                     end
                 elseif cmd=='sfx' then
-                    assert(arg[1]~=nil,"Need arg #1 (name)")
+                    assert(type(arg)=='table',errMsg.."arg must be table")
+                    assert(arg[1]~=nil,errMsg.."Need arg #1 (name)")
                     for k,v in next,arg do
                         if     k==1 then if type(v)~='string' then error(errMsg.."Wrong arg #1 (name), need string") end
                         elseif k==2 then if not (v==nil or type(v)=='number') then error(errMsg.."Wrong arg #2 (vol), need number") end
@@ -434,15 +450,14 @@ function P:loadScript(script)-- Parse time stamps and labels, check syntax of lu
                         else error(errMsg.."Wrong arg name '"..k.."'")
                         end
                     end
+                elseif cmd=='finish' then
+                    assert(type(arg)=='string',errMsg.."arg must be string")
                 elseif cmd=='wait' then
-                    assert(arg.v~=nil,errMsg.."Need arg 'v'")
+                    assert(type(arg)=='table',errMsg.."arg must be table")
+                    assert(#arg>0,errMsg.."Wait which var(s)?")
                     if not line.t then line.t=1 end
-                    for k,v in next,arg do
-                        if k=='v' then if type(v)~='string' then error(errMsg.."Wrong arg 'v', need string") end
-                        else error(errMsg.."Wrong arg name '"..k.."'")
-                        end
-                    end
                 elseif _jmpOP[cmd] then
+                    assert(type(arg)=='table',errMsg.."arg must be table")
                     if cmd=='j' then
                         if not (arg.v==nil and arg.v2==nil and arg.c==nil) then error(errMsg.."Command j need no arg") end
                     else
@@ -456,22 +471,27 @@ function P:loadScript(script)-- Parse time stamps and labels, check syntax of lu
                     for k,v in next,arg do
                         if     k=='v'  then if type(v)~='string' then error(errMsg.."Wrong arg 'v', need string") end
                         elseif k=='v2' then if type(v)~='string' then error(errMsg.."Wrong arg 'v2', need string") end
-                        elseif k=='c'  then if type(v)~='number' then error(errMsg.."Wrong arg 'c', need number") end
+                        elseif k=='c'  then
                         elseif k=='d'  then if type(v)~='string' then error(errMsg.."Wrong arg 'd', need string") end
                         else error(errMsg.."Wrong arg name '"..k.."'")
                         end
                     end
                 elseif cmd=='setc' then
+                    assert(type(arg)=='table',errMsg.."arg must be table")
                     assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
                     assert(arg.c~=nil,errMsg.."Need arg 'c'")
                     for k in next,arg do if not (k=='v' or k=='c') then error(errMsg.."Wrong arg name '"..k.."'") end end
                 elseif cmd=='setd' then
+                    assert(type(arg)=='table',errMsg.."arg must be table")
                     assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
                     assert(arg.d~=nil,errMsg.."Need arg 'd'") assert(type(arg.d)=='string',errMsg.."Wrong arg 'd', need string")
                     for k in next,arg do if not (k=='v' or k=='d') then error(errMsg.."Wrong arg name '"..k.."'") end end
                 elseif cmd=='setm' then
+                    assert(type(arg)=='table',errMsg.."arg must be table")
                     assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
                     for k in next,arg do if not k=='v' then error(errMsg.."Wrong arg name '"..k.."'") end end
+                elseif self.checkScriptLine then
+                    self:checkScriptSyntax(cmd,arg,errMsg)
                 end
             elseif type(cmd)~='nil' and type(cmd)~='function' then
                 error(errMsg.."Wrong command type: "..type(cmd))

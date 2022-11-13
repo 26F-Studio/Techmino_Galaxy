@@ -1137,6 +1137,15 @@ function PP:render()
     gc.pop()
 end
 --------------------------------------------------------------
+-- Other
+function PP:decodeScript(line,errMsg)
+    -- TODO
+    -- error(errMsg.."No string command '"..cmd.."'")
+end
+function PP:checkScriptSyntax(cmd,arg,errMsg)
+    -- TODO
+end
+--------------------------------------------------------------
 -- Builder
 local baseEnv={
     fieldW=6,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
