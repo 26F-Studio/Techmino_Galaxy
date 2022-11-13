@@ -145,7 +145,7 @@ local baseScriptCmds={
             if str:sub(1,1)=='\\' then
                 str=str:sub(2)
             elseif str:sub(1,1)=='@' then
-                str=Text[str] or str
+                str=Text[str:sub(2)] or str
             end
         end
         local D=arg.duration
