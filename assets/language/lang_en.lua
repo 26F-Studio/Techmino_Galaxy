@@ -158,7 +158,7 @@ return {
     tutorial_finesse="Finesse",
 
     tutorial_basic_1="Welcome to Techmino",
-    tutorial_basic_2="1.Basic game rules",
+    tutorial_basic_2="1.Basic rule",
     tutorial_basic_3="Use left/right to move hand piece",
     tutorial_basic_4="Press harddrop key to place hand piece",
     tutorial_basic_5="You can also rotate hand piece",

@@ -22,35 +22,35 @@ return {
             countDown=NULL,
         },
         event={
-            gameStart=function(MP)
-                MP.spawnTimer=6500
+            gameStart=function(P)
+                P.spawnTimer=6500
             end,
-            afterLock=function(MP)
-                if MP.modeData.quest==1 then
-                    if #MP.nextQueue==0 then
-                        MP.modeData.signal=MP.field:getHeight()<=2
+            afterLock=function(P)
+                if P.modeData.quest==1 then
+                    if #P.nextQueue==0 then
+                        P.modeData.signal=P.field:getHeight()<=2
                     end
-                elseif MP.modeData.quest==2 then
-                    if #MP.nextQueue==1 then
-                        if MP.field:getHeight()>2 then
-                            MP.modeData.signal=false
+                elseif P.modeData.quest==2 then
+                    if #P.nextQueue==1 then
+                        if P.field:getHeight()>2 then
+                            P.modeData.signal=false
                         end
-                    elseif #MP.nextQueue==0 then
-                        MP.modeData.signal=MP.field:getHeight()<=2
+                    elseif #P.nextQueue==0 then
+                        P.modeData.signal=P.field:getHeight()<=2
                     end
-                elseif MP.modeData.quest==3 then
-                    if #MP.nextQueue==1 then
-                        if MP.field:getHeight()>2 then
-                            MP.modeData.signal=false
+                elseif P.modeData.quest==3 then
+                    if #P.nextQueue==1 then
+                        if P.field:getHeight()>2 then
+                            P.modeData.signal=false
                         end
-                    elseif #MP.nextQueue==0 then
-                        MP.modeData.signal=MP.field:getHeight()<=1
+                    elseif #P.nextQueue==0 then
+                        P.modeData.signal=P.field:getHeight()<=1
                     end
                 else
-                    if #MP.nextQueue==0 then
-                        MP.modeData.signal=MP.field:getHeight()<=2
-                        if MP.modeData.signal then
-                            MP.settings.spawnDelay=1e99
+                    if #P.nextQueue==0 then
+                        P.modeData.signal=P.field:getHeight()<=2
+                        if P.modeData.signal then
+                            P.settings.spawnDelay=1e99
                         end
                     end
                 end
@@ -90,7 +90,6 @@ return {
                 d[1][r],d[2][r],d[1][r+1],d[2][r+1]=0,0,0,0
                 P:setField(d)
             end},
-
             "wait signal",
             "jeq quest1,signal,false",
             "sfx win",
@@ -114,7 +113,6 @@ return {
                 d[1][r],d[2][r],d[1][r+1],d[2][r+1]=0,0,0,0
                 P:setField(d)
             end},
-
             "wait signal",
             "jeq quest2,signal,false",
             "sfx win",
@@ -137,7 +135,6 @@ return {
                 for i=0,3 do d[1][r2+i]=0 end
                 P:setField(d)
             end},
-
             "wait signal",
             "jeq quest3,signal,false",
             "sfx win",
@@ -162,7 +159,6 @@ return {
                 d[1][r-1],d[1][r],d[1][r+1],d[2][r]=0,0,0,0
                 P:setField(d)
             end},
-
             "wait signal",
             "jeq quest4,signal,false",
             "sfx win",
