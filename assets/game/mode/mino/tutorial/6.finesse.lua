@@ -2,6 +2,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
+        playBgm('space','full')
     end,
     settings={mino={
         skin='mino_simp',

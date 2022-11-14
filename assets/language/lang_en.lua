@@ -142,9 +142,8 @@ return {
 
     musicroom_fullband='Full Band',
 
-    main_12_sprint='Sprint',
+    main_12_sprint='40 Lines',
     main_12_marathon='Marathon',
-    main_12_ultra='Ultra',
     main_12_tutorial='Tutorial',
     main_12_sandbox='Sandbox',
     main_12_settings='Settings',

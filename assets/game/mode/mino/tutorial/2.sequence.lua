@@ -2,6 +2,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
+        playBgm('space','simp')
     end,
     settings={mino={
         skin='mino_simp',
@@ -198,7 +199,9 @@ return {
             "j end",
             "extra:",
             {cmd='say',arg={duration='6.26s',text="@tutorial_sequence_5",size=120,type='bold',style='beat',c=COLOR.lY,y=-30}},
-            "end:finish AC",
+            "end:",
+            {cmd=function(MP) if MP.isMain then PROGRESS.tutorialPassed(2) end end},
+            "finish AC",
         },
     }},
 }

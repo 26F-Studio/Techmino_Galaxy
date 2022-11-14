@@ -5,7 +5,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('push','base')
+        playBgm('push',PROGRESS.data.main==1 and 'simp' or 'base')
     end,
     settings={mino={
         das=120,
@@ -22,7 +22,7 @@ return {
                 P.modeData.line=math.min(P.modeData.line+P.clearHistory[#P.clearHistory].line,200)
                 if P.modeData.line>=P.modeData.target then
                     if P.modeData.target<200 then
-                        if P.isMain and P.modeData.target<=150 then
+                        if PROGRESS.data.main>1 and P.modeData.target<=150 and P.isMain then
                             BGM.set(bgmList['push'].add,'volume',(P.modeData.target/150)^2,2.6)
                         end
                         P.settings.dropDelay=dropSpeed[P.modeData.target/10+1]

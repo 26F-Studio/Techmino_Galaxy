@@ -1,6 +1,6 @@
 local prgs={
     main=1,
-    tutorial=1,
+    tutorial='000000',
     bgmUnlocked={},
 }
 
@@ -29,21 +29,21 @@ function PROGRESS.load()
     local t=FILE.load('conf/progress','-json -canskip')
     if t then
         if t.hash==PROGRESS.getHash(t) then
-            TABLE.cover(t,prgs)
+            TABLE.coverR(t,prgs)
         else
             MES.new('info',"Hash not match")
         end
     end
 end
 
-function PROGRESS.getTutorialPage()
-    return prgs.tutorial
-end
 function PROGRESS.playBGM_main_12()
     playBgm('blank',prgs.main==1 and 'simp' or 'full')
 end
-function PROGRESS.playBGM_tutorial_12()
-    playBgm('space',prgs.main==1 and 'simp' or 'full')
+function PROGRESS.tutorialPassed(n)
+    if prgs.tutorial:sub(n,n)=='0' then
+        prgs.tutorial=prgs.tutorial:sub(1,n-1)..'1'..prgs.tutorial:sub(n+1)
+        PROGRESS.save()
+    end
 end
 function PROGRESS.setCoolWaitTemplate()
     local list={}

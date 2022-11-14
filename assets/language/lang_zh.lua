@@ -142,9 +142,8 @@ return {
 
     musicroom_fullband='全轨道',
 
-    main_12_sprint='竞速',
+    main_12_sprint='40行',
     main_12_marathon='马拉松',
-    main_12_ultra='限时极限',
     main_12_tutorial='教程',
     main_12_sandbox='沙盒',
     main_12_settings='设置',
