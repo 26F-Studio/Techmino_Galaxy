@@ -11,6 +11,7 @@ function scene.enter()
 end
 
 function scene.keyDown(key,isRep)
+    if key=='s' then SCN.swapTo('main_3','none') end
     if isRep then return end
     if key=='return' then
         SCN.go('game_simp',nil,'mino/sprint')

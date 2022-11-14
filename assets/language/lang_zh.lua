@@ -142,12 +142,21 @@ return {
 
     musicroom_fullband='全频带',
 
-    main_12_sprint='40行',
-    main_12_marathon='马拉松',
-    main_12_tutorial='教程',
-    main_12_sandbox='沙盒',
-    main_12_settings='设置',
-    main_12_musicroom='音乐室',
+    main_12_sprint="40行",
+    main_12_marathon="马拉松",
+    main_12_tutorial="教程",
+    main_12_sandbox="沙盒",
+    main_12_settings="设置",
+    main_12_musicroom="音乐室",
+
+    main_3_setting_3="设置",
+    main_3_stat="统计",
+    main_3_dict="词典",
+    main_3_setting_lang="语言",
+    main_3_musicroom="音乐室",
+    main_3_about="系统信息",
+    main_3_single="单人游戏",
+    main_3_multi="多人游戏",
 
     tutorial_basic="基本规则",
     tutorial_sequence="预览&暂存",

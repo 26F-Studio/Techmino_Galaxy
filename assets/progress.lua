@@ -48,6 +48,9 @@ end
 function PROGRESS.playBGM_main_12()
     playBgm('blank',prgs.main==1 and 'simp' or 'full')
 end
+function PROGRESS.playBGM_main_3()
+    playBgm('nil',1 and 'simp' or 'full')
+end
 function PROGRESS.tutorialPassed(n)
     if prgs.tutorial:sub(n,n)=='0' then
         prgs.tutorial=prgs.tutorial:sub(1,n-1)..'1'..prgs.tutorial:sub(n+1)

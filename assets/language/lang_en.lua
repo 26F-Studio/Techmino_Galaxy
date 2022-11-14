@@ -142,12 +142,21 @@ return {
 
     musicroom_fullband='Full Band',
 
-    main_12_sprint='40 Lines',
-    main_12_marathon='Marathon',
-    main_12_tutorial='Tutorial',
-    main_12_sandbox='Sandbox',
-    main_12_settings='Settings',
-    main_12_musicroom='Musicroom',
+    main_12_sprint="40 Lines",
+    main_12_marathon="Marathon",
+    main_12_tutorial="Tutorial",
+    main_12_sandbox="Sandbox",
+    main_12_settings="Settings",
+    main_12_musicroom="Musicroom",
+
+    main_3_setting_3="Settings",
+    main_3_stat="Statistics",
+    main_3_dict="Dictionary",
+    main_3_setting_lang="Language",
+    main_3_musicroom="Musicroom",
+    main_3_about="System info",
+    main_3_single="Single player",
+    main_3_multi="Multiplayer",
 
     tutorial_basic="The Basics",
     tutorial_sequence="Next & Hold",
