@@ -140,7 +140,7 @@ return {
     setting_touch_stickSize="摇杆尺寸",
     setting_touch_ballSize="摇把尺寸",
 
-    musicroom_fullband='全轨道',
+    musicroom_fullband='全频带',
 
     main_12_sprint='40行',
     main_12_marathon='马拉松',
