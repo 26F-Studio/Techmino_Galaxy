@@ -44,7 +44,7 @@ local musicListBox do
             else
                 fullband=nil
             end
-            playBgm(selected,fullband and 'full' or 'base')
+            playBgm(selected,fullband==nil and 'simp' or fullband and 'full' or 'base')
         end
     end
     musicListBox=WIDGET.new(musicListBox)
@@ -54,11 +54,11 @@ local scene={}
 
 function scene.enter()
     selected,fullband=getBgm()
-    if selected then
-        fullband=type(fullband)=='string' and fullband:find('full')
+    if not selected then selected='blank' end
+    if PROGRESS.data.bgmUnlocked[selected]==2 then
+        fullband=fullband=='full'
     else
-        selected='blank'
-        fullband=false
+        fullband=nil
     end
     local l={}
     for k in next,bgmList do

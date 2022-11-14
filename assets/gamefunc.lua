@@ -13,11 +13,16 @@ local _bgmPlaying,_bgmMode
 ---| 'base'
 ---| nil
 function playBgm(name,mode)
+    assert(mode,"Mode not assigned")
     if bgmList[name][1] then
         PROGRESS.unlockBGM(name,1)
         BGM.play(bgmList[name],mode)
     else
-        PROGRESS.unlockBGM(name,mode=='simp' and 1 or 2)
+        if mode=='simp' and PROGRESS.data.bgmUnlocked[name]==2 then
+            mode='base'
+        else
+            PROGRESS.unlockBGM(name,mode=='simp' and 1 or 2)
+        end
         if mode=='simp' then
             BGM.play(bgmList[name].base,mode)
         elseif mode=='base' then
