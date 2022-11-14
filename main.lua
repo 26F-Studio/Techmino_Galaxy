@@ -37,7 +37,7 @@ if MOBILE then
 end
 --------------------------------------------------------------
 -- Create directories
-for _,v in next,{'conf','progress','record','replay','cache','lib'} do
+for _,v in next,{'conf','progress','replay','cache','lib'} do
     local info=love.filesystem.getInfo(v)
     if not info then
         love.filesystem.createDirectory(v)
