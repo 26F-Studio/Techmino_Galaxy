@@ -1,13 +1,24 @@
 local prgs={
     main=1,
     tutorial=1,
+    bgmUnlocked={},
 }
 
-local PROGRESS={}
+local PROGRESS={data=prgs}
 
 function PROGRESS.getHash(t)
     local list={}
-    for k,v in next,t do table.insert(list,k..v) end
+    for k,v in next,t do
+        if type(v)=='number' or type(v)=='string' or type(v)=='boolean' then
+            table.insert(list,k..v)
+        elseif type(v)=='table' then
+            local c=0
+            for _ in next,v do
+                c=c+1
+            end
+            table.insert(list,k..c)
+        end
+    end
     table.sort(list)
     return STRING.digezt(table.concat(list))
 end
@@ -32,10 +43,10 @@ end
 function PROGRESS.getTutorialPage()
     return prgs.tutorial
 end
-function PROGRESS.playBgm_main_12()
+function PROGRESS.playBGM_main_12()
     playBgm('blank',prgs.main==1 and 'simp' or 'full')
 end
-function PROGRESS.playBgm_tutorial_12()
+function PROGRESS.playBGM_tutorial_12()
     playBgm('space',prgs.main==1 and 'simp' or 'full')
 end
 function PROGRESS.setCoolWaitTemplate()
@@ -52,6 +63,14 @@ function PROGRESS.setCoolWaitTemplate()
         )
         GC.setBlendMode('alpha')
     end)
+end
+
+function PROGRESS.unlockBGM(name,state)
+    local l=math.max(prgs.bgmUnlocked[name] or 0,state)
+    if l>(prgs.bgmUnlocked[name] or 0) then
+        prgs.bgmUnlocked[name]=l
+        PROGRESS.save()
+    end
 end
 
 return PROGRESS

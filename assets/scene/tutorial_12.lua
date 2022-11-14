@@ -31,7 +31,7 @@ function scene.enter()
         L.T2_3:setVisible(true)
         WIDGET._reset()
     end
-    PROGRESS.playBgm_tutorial_12()
+    PROGRESS.playBGM_tutorial_12()
 end
 
 scene.widgetList={

@@ -332,7 +332,9 @@ do-- bgmList
             full={'accompany1','accompany2','accompany3','accompany4','bass1','bass2','bass3','drum','melody1','melody2','sfx'},
         },
     }
+    bgmCount=0
     for name,song in next,bgmList do
+        bgmCount=bgmCount+1
         if song.base and song.full then
             song.add=TABLE.shift(song.full)
             TABLE.subtract(song.add,song.base)

@@ -1,4 +1,5 @@
 local selected,fullband
+local collectCount=0
 
 local bigTitle=setmetatable({},{
     __index=function(self,name)
@@ -21,14 +22,14 @@ local bigTitle=setmetatable({},{
 
 local musicListBox do
     musicListBox={type='listBox',pos={1,.5},x=-800,y=-400,w=700,h=500,lineHeight=80}
-    function musicListBox.drawFunc(name,n,sel)
+    function musicListBox.drawFunc(name,_,sel)
         if sel then
             GC.setColor(1,1,1,.26)
             GC.rectangle('fill',0,0,700,80)
         end
         FONT.set(60)
         GC.setColor(name==selected and COLOR.L or COLOR.LD)
-        GC.print(('%02d'):format(n)..'. '..bigTitle[name],20,4)
+        GC.print(bigTitle[name].." - "..bgmList[name].author,20,4)
         if sel and name~=selected then
             FONT.set(100)
             GC.setColor(COLOR.L)
@@ -38,17 +39,15 @@ local musicListBox do
     function musicListBox.code()
         if selected~=musicListBox:getItem() then
             selected=musicListBox:getItem()
+            if PROGRESS.data.bgmUnlocked[selected] then
+                fullband=PROGRESS.data.bgmUnlocked[selected]==2 and fullband or false
+            else
+                fullband=nil
+            end
             playBgm(selected,fullband and 'full' or 'base')
         end
     end
     musicListBox=WIDGET.new(musicListBox)
-
-    local l={}
-    for k in next,bgmList do
-        table.insert(l,k)
-    end
-    table.sort(l)
-    musicListBox:setList(l)
 end
 
 local scene={}
@@ -61,6 +60,15 @@ function scene.enter()
         selected='blank'
         fullband=false
     end
+    local l={}
+    for k in next,bgmList do
+        if PROGRESS.data.bgmUnlocked[k] then
+            table.insert(l,k)
+        end
+    end
+    table.sort(l)
+    collectCount=#l
+    musicListBox:setList(l)
     musicListBox:select(TABLE.find(musicListBox:getList(),selected))
 end
 
@@ -122,12 +130,16 @@ function scene.draw()
     end
 
     if BGM.tell() then
-        GC.replaceTransform(SCR.xOy_l)
+        GC.replaceTransform(SCR.xOy_m)
         FONT.set(30)
         GC.setColor(COLOR.L)
-        GC.printf(STRING.time_simp(BGM.tell()%BGM.getDuration()),100,230,626,'left')
-        GC.printf(STRING.time_simp(BGM.getDuration()),1500-626,230,626,'right')
+        GC.printf(STRING.time_simp(BGM.tell()%BGM.getDuration()),-700,230,626,'left')
+        GC.printf(STRING.time_simp(BGM.getDuration()),700-626,230,626,'right')
     end
+
+    GC.replaceTransform(SCR.xOy_r)
+    FONT.set(30)
+    GC.printf(collectCount.."/"..bgmCount,-100-626,-450,626,'right')
 end
 
 scene.widgetList={
@@ -138,7 +150,7 @@ scene.widgetList={
         code=function(v) BGM.set('all','seek',v*BGM.getDuration()) end,
         visibleFunc=function() return BGM.isPlaying() end,
     },
-    WIDGET.new{type='switch',pos={.5,.5},x=-650,y=350,h=50,labelPos='right',disp=function() return fullband end,
+    WIDGET.new{type='switch',pos={0,.5},x=150,y=350,h=50,labelPos='right',disp=function() return fullband end,
         name='fullband',text=LANG'musicroom_fullband',
         sound_on=false,sound_off=false,
         code=function()
@@ -148,7 +160,7 @@ scene.widgetList={
             end
         end,
         visibleFunc=function()
-            return type(bgmList[selected])=='table' and bgmList[selected].base
+            return fullband~=nil and bgmList[selected].base
         end,
     },
     WIDGET.new{type='button_invis',pos={.5,.5},y=350,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=function() playBgm(selected,fullband and 'full' or 'base') end,visibleFunc=function() return not BGM.isPlaying() end},
