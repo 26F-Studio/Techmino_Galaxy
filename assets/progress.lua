@@ -9,18 +9,16 @@ local PROGRESS={data=prgs}
 function PROGRESS.getHash(t)
     local list={}
     for k,v in next,t do
-        if type(v)=='number' or type(v)=='string' or type(v)=='boolean' then
-            table.insert(list,k..v)
-        elseif type(v)=='table' then
-            local c=0
-            for _ in next,v do
-                c=c+1
+        if k~='hash' then
+            if type(v)=='number' or type(v)=='string' or type(v)=='boolean' then
+                table.insert(list,k..v)
+            elseif type(v)=='table' then
+                table.insert(list,k)
             end
-            table.insert(list,k..c)
         end
     end
     table.sort(list)
-    return STRING.digezt(table.concat(list))
+    return love.data.encode('string','base64',STRING.digezt(table.concat(list)))
 end
 function PROGRESS.save()
     prgs.rnd=math.random(26,2e6)
@@ -30,9 +28,7 @@ end
 function PROGRESS.load()
     local t=FILE.load('conf/progress','-json -canskip')
     if t then
-        local hash=t.hash
-        t.hash=nil
-        if hash==PROGRESS.getHash(t) then
+        if t.hash==PROGRESS.getHash(t) then
             TABLE.cover(t,prgs)
         else
             MES.new('info',"Hash not match")

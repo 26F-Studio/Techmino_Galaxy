@@ -39,8 +39,8 @@ local musicListBox do
     function musicListBox.code()
         if selected~=musicListBox:getItem() then
             selected=musicListBox:getItem()
-            if PROGRESS.data.bgmUnlocked[selected] then
-                fullband=PROGRESS.data.bgmUnlocked[selected]==2 and fullband or false
+            if PROGRESS.data.bgmUnlocked[selected] and PROGRESS.data.bgmUnlocked[selected]==2 then
+                fullband=fullband==true
             else
                 fullband=nil
             end
