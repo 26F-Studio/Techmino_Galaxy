@@ -62,7 +62,7 @@ DEBUG.checkLoadTime("Load game modules")
 STRING.install()
 Zenitha.setAppName('Techmino')
 Zenitha.setVersionText(VERSION.appVer)
-Zenitha.setFirstScene('main_12')
+Zenitha.setFirstScene('load')
 Zenitha.setMaxFPS(260)
 do-- Zenitha.setDrawCursor
     local gc=love.graphics

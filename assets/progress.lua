@@ -36,6 +36,15 @@ function PROGRESS.load()
     end
 end
 
+function PROGRESS.swapMainScene()
+    if prgs.main<=2 then
+        SCN.swapTo('main_12')
+    elseif prgs.main==3 then
+        SCN.swapTo('main_3')
+    else
+        -- TODO
+    end
+end
 function PROGRESS.playBGM_main_12()
     playBgm('blank',prgs.main==1 and 'simp' or 'full')
 end

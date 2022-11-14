@@ -24,9 +24,12 @@ end
 function scene.draw()
     GC.replaceTransform(SCR.xOy_m)
     GC.setColor(1,1,1)
-    GC.mDraw(IMG.title.techmino,0,-288,0,.53)
     FONT.set(30)
     GC.mStr(VERSION.appVer,0,-180)
+    FONT.set(100)
+    GC.scale(2)
+    GC.print("echmino",-180,-200)
+    GC.print("T",-235,-200)
 end
 
 scene.widgetList={
