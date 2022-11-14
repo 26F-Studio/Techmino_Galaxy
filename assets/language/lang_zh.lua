@@ -157,8 +157,8 @@ return {
     tutorial_stackAdvanced="堆叠(进阶)",
     tutorial_finesse="极简操作",
 
-    tutorial_basic_1="欢迎来到Techmino!",
-    tutorial_basic_2="基本规则",
+    tutorial_basic_1="欢迎来到Techmino",
+    tutorial_basic_2="1. 基本规则",
     tutorial_basic_3="用左/右键移动当前方块",
     tutorial_basic_4="按下硬降键放置当前方块",
     tutorial_basic_5="你也可以旋转当前方块",
