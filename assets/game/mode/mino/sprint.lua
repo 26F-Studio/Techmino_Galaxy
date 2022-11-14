@@ -13,7 +13,10 @@ return {
         event={
             afterClear=function(P)
                 P.modeData.line=math.min(P.modeData.line+P.clearHistory[#P.clearHistory].line,40)
-                if P.modeData.line>=40 then P:finish('AC') end
+                if P.modeData.line>=40 then
+                    P:finish('AC')
+                    PROGRESS.setMain(2)
+                end
                 if PROGRESS.data.main>1 and P.modeData.line>10 and P.isMain then
                     BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-10)/20,1),2.6)
                 end

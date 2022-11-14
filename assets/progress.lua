@@ -42,6 +42,24 @@ end
 function PROGRESS.tutorialPassed(n)
     if prgs.tutorial:sub(n,n)=='0' then
         prgs.tutorial=prgs.tutorial:sub(1,n-1)..'1'..prgs.tutorial:sub(n+1)
+        if prgs.tutorial=='111111' then
+            PROGRESS.setMain(3)
+        elseif prgs.tutorial:sub(1,3)=='111' then
+            PROGRESS.setMain(2)
+        end
+        PROGRESS.save()
+    end
+end
+function PROGRESS.setMain(n)
+    if n>prgs.main then
+        while prgs.main<n do
+            prgs.main=prgs.main+1
+            if prgs.main==2 then
+                prgs.tutorial='111'..prgs.tutorial:sub(4)
+            elseif prgs.main==3 then
+                prgs.tutorial='111111'
+            end
+        end
         PROGRESS.save()
     end
 end

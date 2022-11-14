@@ -165,7 +165,7 @@ return {
             "sfx win",
 
             {cmd='say',arg={duration='6.26s',text="@tutorial_basic_6",size=120,type='bold',style='beat',c=COLOR.lG,y=-30}},
-            {cmd=function(MP) if MP.isMain then PROGRESS.tutorialPassed(1) end end},
+            {cmd=function(P) if P.isMain then PROGRESS.tutorialPassed(1) end end},
             "finish AC",
         },
     }},
