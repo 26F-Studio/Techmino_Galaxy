@@ -18,8 +18,9 @@ return {
                 if P.modeData.line>=40 then
                     P:finish('AC')
                     PROGRESS.setMain(2)
+                    PROGRESS.setInteriorScore('sprint',P.gameTime)
                 end
-                if PROGRESS.getMain()>1 and P.modeData.line>10 and P.isMain then
+                if PROGRESS.getMain()>=2 and P.modeData.line>10 and P.isMain then
                     BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-10)/20,1),2.6)
                 end
             end,

@@ -1,6 +1,10 @@
 local prgs={
     main=1,
     tutorial='000000',
+    interiorScore={
+        sprint=0,
+        marathon=0,
+    },
     bgmUnlocked={},
 }
 
@@ -134,6 +138,30 @@ function PROGRESS.setTutorialPassed(n)
         elseif prgs.tutorial:sub(1,3)=='111' then
             PROGRESS.setMain(2)
         end
+        PROGRESS.save()
+    end
+end
+function PROGRESS.setInteriorScore(mode,score)
+    if mode=='sprint' then
+        if score<30e3 then
+            score=150
+        elseif score<=120e3 then
+            score=MATH.interpolate(score,30e3,150,120e3,60)
+        else
+            score=MATH.interpolate(score,120e3,60,300e3,0)
+        end
+    elseif mode=='marathon' then
+        if score<=100 then
+            score=MATH.interpolate(score,0,0,100,80)
+        elseif score<=200 then
+            score=MATH.interpolate(score,100,80,200,120)
+        else
+            score=120
+        end
+    end
+    score=math.max(0,math.floor(score))
+    if score>prgs.interiorScore[mode] then
+        prgs.interiorScore[mode]=score
         PROGRESS.save()
     end
 end

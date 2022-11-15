@@ -24,13 +24,14 @@ return {
                 P.modeData.line=math.min(P.modeData.line+P.clearHistory[#P.clearHistory].line,200)
                 if P.modeData.line>=P.modeData.target then
                     if P.modeData.target<200 then
-                        if PROGRESS.getMain()>1 and P.modeData.target<=150 and P.isMain then
+                        if PROGRESS.getMain()>=2 and P.modeData.target<=150 and P.isMain then
                             BGM.set(bgmList['push'].add,'volume',(P.modeData.target/150)^2,2.6)
                         end
                         P.settings.dropDelay=dropSpeed[P.modeData.target/10+1]
                         P.modeData.target=P.modeData.target+10
                         P:playSound('reach')
                     else
+                        PROGRESS.setInteriorScore('marathon',P.modeData.line)
                         P:finish('AC')
                     end
                 end
