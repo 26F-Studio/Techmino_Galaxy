@@ -85,7 +85,7 @@ function PROGRESS.quit()
             end,
             draw=function()
                 GC.replaceTransform(SCR.origin)
-                GC.setColor(0,0,0,.626)
+                GC.setColor(.1,.1,.1,.626)
                 GC.rectangle('fill',0,0,SCR.w,SCR.h)
             end,
         }
@@ -101,6 +101,9 @@ function PROGRESS.getMain()
 end
 function PROGRESS.getBgmUnlocked(name)
     return prgs.bgmUnlocked[name]
+end
+function PROGRESS.getTutorialPassed(n)
+    return prgs.tutorial:sub(n,n)=='1'
 end
 
 function PROGRESS.setMain(n)
