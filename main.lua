@@ -373,10 +373,19 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
         SCN.add(sceneName,require('assets/scene/'..sceneName))
     end
 end
-for _,v in next,love.filesystem.getDirectoryItems('assets/skin') do
-    if v~='init.lua' and FILE.isSafe('assets/skin/'..v) then
-        local skinName=v:sub(1,-5)
-        SKIN.add(skinName,require('assets/skin/'..skinName))
+for _,v in next,{
+    'mino_default',-- Shouldn't be used
+    'mino_plastic',
+    'mino_simp',
+    'mino_interior',
+
+    'puyo_default',-- Shouldn't be used
+    'puyo_jelly',
+
+    'gem_default',
+} do
+    if FILE.isSafe('assets/skin/'..v..'.lua') then
+        SKIN.add(v,require('assets.skin.'..v))
     end
 end
 DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins")

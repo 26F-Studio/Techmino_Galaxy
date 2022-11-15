@@ -8,6 +8,8 @@ return {
         BG.set('none')
     end,
     settings={mino={
+        skin='mino_interior',
+        shakeness=0,
         dropDelay=1000,
         lockDelay=1000,
         event={

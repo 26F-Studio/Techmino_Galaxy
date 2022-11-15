@@ -5,7 +5,7 @@ return {
         playBgm('space','simp')
     end,
     settings={mino={
-        skin='mino_simp',
+        skin='mino_interior',
         shakeness=0,
         readyDelay=1,
         spawnDelay=260,

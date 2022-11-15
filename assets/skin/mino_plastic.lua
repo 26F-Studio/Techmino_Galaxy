@@ -1,3 +1,7 @@
+--[[
+    Base on mino_default:
+    Connected cells
+]]
 local gc=love.graphics
 local gc_push,gc_pop=gc.push,gc.pop
 local gc_translate,gc_scale=gc.translate,gc.scale

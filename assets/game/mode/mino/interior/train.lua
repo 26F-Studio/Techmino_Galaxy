@@ -4,6 +4,7 @@ return {
         GAME.setMain(1)
     end,
     settings={mino={
+        skin='mino_interior',
         dropDelay=1e99,
         lockDelay=1e99,
         infHold=true,

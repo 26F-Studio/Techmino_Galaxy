@@ -8,6 +8,8 @@ return {
         playBgm('push',PROGRESS.getMain()==1 and 'simp' or 'base')
     end,
     settings={mino={
+        skin='mino_interior',
+        shakeness=0.1,
         das=120,
         arr=16,
         sdarr=16,

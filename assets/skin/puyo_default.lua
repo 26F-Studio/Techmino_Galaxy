@@ -68,7 +68,4 @@ function S.drawNext(n,B)
     gc_pop()
 end
 
-
-
-
 return S
