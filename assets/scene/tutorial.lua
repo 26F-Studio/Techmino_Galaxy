@@ -31,7 +31,7 @@ function scene.enter()
         L.T2_3:setVisible(true)
         WIDGET._reset()
     end
-    PROGRESS.playBGM_main_12()
+    PROGRESS.playBGM_main_in()
 end
 
 scene.widgetList={

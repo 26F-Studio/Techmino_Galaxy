@@ -38,18 +38,22 @@ end
 
 function PROGRESS.swapMainScene()
     if prgs.main<=2 then
-        SCN.swapTo('main_12')
-    elseif prgs.main==3 then
-        SCN.swapTo('main_3')
+        SCN.swapTo('main_in','fastFade')
+    elseif prgs.main<=4 then
+        PROGRESS.applyCoolWaitTemplate()
+        SCN.swapTo('main_out')
     else
         -- TODO
     end
 end
-function PROGRESS.playBGM_main_12()
+function PROGRESS.playBGM_main_in()
     playBgm('blank',prgs.main==1 and 'simp' or 'full')
 end
-function PROGRESS.playBGM_main_3()
-    playBgm('nil',1 and 'simp' or 'full')
+function PROGRESS.setBG_main_out()
+    BG.set(prgs.main==3 and 'space' or 'galaxy')
+end
+function PROGRESS.playBGM_main_out()
+    playBgm('nil',prgs.main==3 and 'simp' or 'full')
 end
 function PROGRESS.applyCoolWaitTemplate()
     local list={}
@@ -65,6 +69,31 @@ function PROGRESS.applyCoolWaitTemplate()
         )
         GC.setBlendMode('alpha')
     end)
+end
+
+function PROGRESS.quit()
+    if prgs.main<=2 then
+        local t=0
+        WAIT.setDefaultDraw(NULL)
+        WAIT.setCoverAlpha(0)
+        WAIT{
+            update=function(dt)
+                t=t+dt
+                if t>.626 then
+                    love.event.quit()
+                end
+            end,
+            draw=function()
+                GC.replaceTransform(SCR.origin)
+                GC.setColor(0,0,0,.626)
+                GC.rectangle('fill',0,0,SCR.w,SCR.h)
+            end,
+        }
+    elseif prgs.main<=4 then
+        Zenitha._quit('slowFade')
+    else
+        -- TODO
+    end
 end
 
 function PROGRESS.getMain()

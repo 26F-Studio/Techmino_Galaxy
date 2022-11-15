@@ -8,7 +8,7 @@ end
 
 function scene.update(dt)
     t=t+dt
-    if t>=1.26 then
+    if t>=1 then
         PROGRESS.swapMainScene()
     end
 end
