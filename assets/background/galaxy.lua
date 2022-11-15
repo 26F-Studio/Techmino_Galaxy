@@ -16,8 +16,8 @@ function back.init()
     end
 end
 function back.update()
-    camX=.026*math.sin(love.timer.getTime()*.26)
-    camY=.012*math.sin(love.timer.getTime()*.62)
+    camX=.026*math.sin(love.timer.getTime()*.12)
+    camY=.012*math.sin(love.timer.getTime()*.26)
 end
 function back.draw()
     GC.clear(.06,.06,.06)
