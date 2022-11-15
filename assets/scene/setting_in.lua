@@ -1,5 +1,22 @@
 local scene={}
 
+function scene.enter()
+    local L=scene.widgetList
+    if PROGRESS.getMain()==1 then
+        L.das.y=250
+        L.arr.y=350
+        L.sdarr._visible=false
+        L.dascut._visible=false
+    else
+        L.das.y=50
+        L.arr.y=150
+        L.sdarr.y=250
+        L.dascut.y=350
+        L.sdarr._visible=true
+        L.dascut._visible=true
+    end
+    WIDGET._reset()
+end
 function scene.leave()
     saveSettings()
 end
@@ -20,9 +37,9 @@ scene.widgetList={
     WIDGET.new{type='slider',   pos={1,.5},x=-550, y=-210,w=400, fontSize=40,text=LANG'setting_sfx',     widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'sfxVol'),  code=TABLE.func_setVal(SETTINGS.system,'sfxVol')},
     WIDGET.new{type='slider',   pos={1,.5},x=-550, y=-130,w=400, fontSize=40,text=LANG'setting_vib',     widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'vibVol'),  code=TABLE.func_setVal(SETTINGS.system,'vibVol')},
 
-    WIDGET.new{type='slider',   pos={1,.5},x=-800, y=50, w=650, text=LANG'setting_das',    widthLimit=260,axis={100,260,10},disp=TABLE.func_getVal(SETTINGS.game_mino,'das'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'das')},
-    WIDGET.new{type='slider',   pos={1,.5},x=-800, y=150,w=650, text=LANG'setting_arr',    widthLimit=260,axis={20,120,10}, disp=TABLE.func_getVal(SETTINGS.game_mino,'arr'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'arr')},
-    WIDGET.new{type='slider',   pos={1,.5},x=-800, y=250,w=650, text=LANG'setting_sdarr',  widthLimit=260,axis={20,100,10}, disp=TABLE.func_getVal(SETTINGS.game_mino,'sdarr'),      valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'sdarr')},
-    WIDGET.new{type='slider',   pos={1,.5},x=-800, y=350,w=650, text=LANG'setting_dascut', widthLimit=260,axis={0,100,10},  disp=TABLE.func_getVal(SETTINGS.game_mino,'dascut'),     valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'dascut')},
+    WIDGET.new{type='slider',   name='das',    pos={1,.5},x=-800, y=50, w=650, text=LANG'setting_das',    widthLimit=260,axis={100,260,10},disp=TABLE.func_getVal(SETTINGS.game_mino,'das'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'das')},
+    WIDGET.new{type='slider',   name='arr',    pos={1,.5},x=-800, y=150,w=650, text=LANG'setting_arr',    widthLimit=260,axis={20,120,10}, disp=TABLE.func_getVal(SETTINGS.game_mino,'arr'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'arr')},
+    WIDGET.new{type='slider',   name='sdarr',  pos={1,.5},x=-800, y=250,w=650, text=LANG'setting_sdarr',  widthLimit=260,axis={20,100,10}, disp=TABLE.func_getVal(SETTINGS.game_mino,'sdarr'),      valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'sdarr')},
+    WIDGET.new{type='slider',   name='dascut', pos={1,.5},x=-800, y=350,w=650, text=LANG'setting_dascut', widthLimit=260,axis={0,100,10},  disp=TABLE.func_getVal(SETTINGS.game_mino,'dascut'),     valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'dascut')},
 }
 return scene
