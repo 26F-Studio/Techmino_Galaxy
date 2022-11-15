@@ -15,20 +15,25 @@ end
 
 function scene.enter()
     local L=scene.widgetList
+    for _,v in next,scene.widgetList do
+        if v.name then
+            v.color=PROGRESS.getTutorialPassed(tonumber(v.name:sub(-1))) and 'lG' or 'B'
+        end
+    end
     if PROGRESS.getMain()==1 then
-        L.T1_1.x,L.T1_2.x,L.T1_3.x=0,0,0
-        L.T1_1.w,L.T1_2.w,L.T1_3.w=800,800,800
-        L.T2_1:setVisible(false)
-        L.T2_2:setVisible(false)
-        L.T2_3:setVisible(false)
+        L.T1.x,L.T2.x,L.T3.x=0,0,0
+        L.T1.w,L.T2.w,L.T3.w=800,800,800
+        L.T4:setVisible(false)
+        L.T5:setVisible(false)
+        L.T6:setVisible(false)
         WIDGET._reset()
     else
-        L.T1_1.x,L.T1_2.x,L.T1_3.x=-360,-360,-360
-        L.T1_1.w,L.T1_2.w,L.T1_3.w=600,600,600
-        L.T2_1.x,L.T2_2.x,L.T2_3.x=360,360,360
-        L.T2_1:setVisible(true)
-        L.T2_2:setVisible(true)
-        L.T2_3:setVisible(true)
+        L.T1.x,L.T2.x,L.T3.x=-360,-360,-360
+        L.T1.w,L.T2.w,L.T3.w=600,600,600
+        L.T4.x,L.T5.x,L.T6.x=360,360,360
+        L.T4:setVisible(true)
+        L.T5:setVisible(true)
+        L.T6:setVisible(true)
         WIDGET._reset()
     end
     PROGRESS.playBGM_main_in()
@@ -37,19 +42,12 @@ end
 scene.widgetList={
     WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,cornerR=0,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 
-    B{name='T1_1',x=nil, y=-200,text=LANG'tutorial_basic',            code=playMode'mino/tutorial/1.basic'},
-    B{name='T1_2',x=nil, y= 0,  text=LANG'tutorial_sequence',         code=playMode'mino/tutorial/2.sequence'},
-    B{name='T1_3',x=nil, y= 200,text=LANG'tutorial_stackBasic',       code=playMode'mino/tutorial/3.stackBasic'},
+    B{name='T1',x=nil, y=-200,text=LANG'tutorial_basic',            code=playMode'mino/tutorial/1.basic'},
+    B{name='T2',x=nil, y= 0,  text=LANG'tutorial_sequence',         code=playMode'mino/tutorial/2.sequence'},
+    B{name='T3',x=nil, y= 200,text=LANG'tutorial_stackBasic',       code=playMode'mino/tutorial/3.stackBasic'},
 
-    B{name='T2_1',x=nil, y=-200,text=LANG'tutorial_twoRotatingKey',   code=playMode'mino/tutorial/4.twoRotatingKey'},
-    B{name='T2_2',x=nil, y= 0,  text=LANG'tutorial_stackAdvanced',    code=playMode'mino/tutorial/5.stackAdvanced'},
-    B{name='T2_3',x=nil, y= 200,text=LANG'tutorial_finesse',          code=playMode'mino/tutorial/6.finesse'},
-
-    -- WIDGET.new{type='button_fill',x=-300,y=-160,w=540,h=150,color='B',fontSize=50,text=LANG'tutorial_2_0'},
-    -- WIDGET.new{type='button_fill',x=300, y=-160,w=540,h=150,color='B',fontSize=50,text=LANG'tutorial_2_1'},
-    -- WIDGET.new{type='button_fill',x=-300,y=40,  w=540,h=150,color='B',fontSize=50,text=LANG'tutorial_2_2'},
-    -- WIDGET.new{type='button_fill',x=300, y=40,  w=540,h=150,color='B',fontSize=50,text=LANG'tutorial_2_3'},
-    -- WIDGET.new{type='button_fill',x=-300,y=240, w=540,h=150,color='B',fontSize=50,text=LANG'tutorial_2_4'},
-    -- WIDGET.new{type='button_fill',x=300, y=240, w=540,h=150,color='B',fontSize=50,text=LANG'tutorial_2_5'},
+    B{name='T4',x=nil, y=-200,text=LANG'tutorial_twoRotatingKey',   code=playMode'mino/tutorial/4.twoRotatingKey'},
+    B{name='T5',x=nil, y= 0,  text=LANG'tutorial_stackAdvanced',    code=playMode'mino/tutorial/5.stackAdvanced'},
+    B{name='T6',x=nil, y= 200,text=LANG'tutorial_finesse',          code=playMode'mino/tutorial/6.finesse'},
 }
 return scene
