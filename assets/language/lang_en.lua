@@ -1,10 +1,13 @@
 return {
+    -- Info
     sureText={
         back="Press again to Back",
         quit="Press again to Quit",
         reset="Press again to Reset",
     },
+    noMode="Cannot load mode '$1': $2",
 
+    -- Game
     clearName={
         "Single",
         "Double",
@@ -39,45 +42,6 @@ return {
 
     allClear='ALL CLEAR',
     halfClear='Half Clear',
-
-    -- Widget texts
-    main_test_play="Play",
-    main_test_setting="Setting",
-
-    setting_mino="MINO",
-    setting_puyo="PUYO",
-    setting_gem="GEM",
-
-    setting_das="DAS",
-    setting_arr="ARR",
-    setting_sdarr="SDARR",
-    setting_dascut="DAS Cut",
-    setting_shakeness="Shakeness",
-    setting_hitWavePower="Hitwave Power",
-
-    setting_mainVol="Main Volume",
-    setting_bgm="BGM",
-    setting_sfx="SFX",
-    setting_vib="VIB",
-    setting_handling="Handling...",
-    setting_keymapping="Key mappings...",
-    setting_enableTouching="Enable touch control",
-    setting_touching="Touch controls...",
-
-    setting_sysCursor="System cursor",
-    setting_clickFX="Click FX",
-    setting_power="Battery Info",
-    setting_clean="Quick Draw",
-    setting_fullscreen="Fullscreen",
-    setting_autoMute="Mute while unfocused",
-    setting_showTouch="Show touches",
-
-    setting_maxFPS="Max FPS",
-    setting_updRate="Update rate",
-    setting_drawRate="Draw rate",
-
-    keyset_touch="Touch controls...",
-    keyset_test="Test",
 
     -- Key setting
     keyset_mino_moveLeft=   "Move Left",
@@ -140,8 +104,45 @@ return {
     setting_touch_stickSize="Stick length",
     setting_touch_ballSize="Stick size",
 
-    musicroom_fullband='Full Band',
+    -- Widget texts
+    main_demo_setting="Setting",
 
+    setting_mino="MINO",
+    setting_puyo="PUYO",
+    setting_gem="GEM",
+
+    setting_das="DAS",
+    setting_arr="ARR",
+    setting_sdarr="SDARR",
+    setting_dascut="DAS Cut",
+    setting_shakeness="Shakeness",
+    setting_hitWavePower="Hitwave Power",
+
+    setting_mainVol="Main Volume",
+    setting_bgm="BGM",
+    setting_sfx="SFX",
+    setting_vib="VIB",
+    setting_handling="Handling...",
+    setting_keymapping="Key mappings...",
+    setting_enableTouching="Enable touch control",
+    setting_touching="Touch controls...",
+
+    setting_sysCursor="System cursor",
+    setting_clickFX="Click FX",
+    setting_power="Battery Info",
+    setting_clean="Quick Draw",
+    setting_fullscreen="Fullscreen",
+    setting_autoMute="Mute while unfocused",
+    setting_showTouch="Show touches",
+
+    setting_maxFPS="Max FPS",
+    setting_updRate="Update rate",
+    setting_drawRate="Draw rate",
+
+    keyset_touch="Touch controls...",
+    keyset_test="Test",
+
+    main_in_dig="Dig Practice",
     main_in_sprint="40 Lines",
     main_in_marathon="Marathon",
     main_in_tutorial="Tutorial",
@@ -158,6 +159,9 @@ return {
     main_out_single="Single player",
     main_out_multi="Multiplayer",
 
+    musicroom_fullband='Full Band',
+
+    -- Level
     tutorial_basic="The Basics",
     tutorial_sequence="Next & Hold",
     tutorial_stackBasic="Basic Stacking",

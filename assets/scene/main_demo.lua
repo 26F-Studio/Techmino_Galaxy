@@ -22,7 +22,7 @@ scene.widgetList={
     WIDGET.new{type='button',pos={.20,.45}, w=420,h=200, fontSize=70, text='BATTLE',   code=playMode'battle'},
     WIDGET.new{type='button_fill',pos={.50,.45}, w=420,h=200, fontSize=70, text='',    code=NULL},
     WIDGET.new{type='button_fill',pos={.80,.45}, w=420,h=200, fontSize=60, text='',    code=NULL},
-    WIDGET.new{type='button',pos={.5,.75},  w=626,h=200, fontSize=100,text=LANG'main_test_setting',code=WIDGET.c_goScn'setting_test'},
+    WIDGET.new{type='button',pos={.5,.75},  w=626,h=200, fontSize=100,text=LANG'main_demo_setting',code=WIDGET.c_goScn'setting_test'},
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=50,text=CHAR.icon.cross_big,code=WIDGET.c_backScn},
 }
 return scene

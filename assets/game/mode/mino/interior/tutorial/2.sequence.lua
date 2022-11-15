@@ -117,7 +117,7 @@ return {
             "setc quest,2",
             "quest2:",
             "setc signal,0",
-            {cmd='say',arg={duration='3s',text="@tutorial_sequence_3",size=50,y=40,y=-60}},
+            {cmd='say',arg={duration='3s',text="@tutorial_sequence_3",size=50,y=-60}},
             "clearNext",
             {cmd=function(P) P:pushNext('T'..P.modeData.wrongPiece) end},
             {cmd=function(P)
@@ -146,7 +146,7 @@ return {
             "setc quest,3",
             "quest3:",
             "setc signal,0",
-            {cmd='say',arg={duration='3s',text="@tutorial_sequence_4",size=50,y=40,y=-60}},
+            {cmd='say',arg={duration='3s',text="@tutorial_sequence_4",size=50,y=-60}},
             "clearHold",
             "clearNext",
             {cmd=function(P) P:pushNext(P.modeData.wrongPiece..'T') end},

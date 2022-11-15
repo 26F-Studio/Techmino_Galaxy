@@ -31,7 +31,6 @@ return {
                         P.modeData.target=P.modeData.target+10
                         P:playSound('reach')
                     else
-                        PROGRESS.setInteriorScore('marathon',P.modeData.line)
                         P:finish('AC')
                     end
                 end
@@ -42,6 +41,9 @@ return {
                 GC.mStr(P.modeData.line,-300,-110)
                 gc.rectangle('fill',-380,-2,160,4)
                 GC.mStr(P.modeData.target,-300,0)
+            end,
+            gameOver=function(P)
+                PROGRESS.setInteriorScore('marathon',P.modeData.line)
             end,
         },
     }},

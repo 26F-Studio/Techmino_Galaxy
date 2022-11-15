@@ -42,7 +42,14 @@ function getBgm()
     return _bgmPlaying,_bgmMode
 end
 
-local modeObjMeta={__call=function(self,...) SCN.go('game_simp',nil,self.name) end}
+local modeObjMeta={__call=function(self,...)
+    local success,errInfo=pcall(GAME.getMode,self.name)
+    if success then
+        SCN.go('game_simp',nil,self.name)
+    else
+        MES.new('warn',Text.noMode:repD(tostring(self.name),errInfo))
+    end
+end}
 function playMode(name)
     return setmetatable({name=name},modeObjMeta)
 end

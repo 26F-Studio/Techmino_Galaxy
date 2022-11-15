@@ -128,7 +128,21 @@ local modeMeta={
     },
     __metatable=true,
 }
-local function getMode(name)
+
+local GAME={
+    playerList=false,
+    playerMap=false,
+
+    hitWaves={},
+
+    seed=false,
+    mode=false,
+
+    mainPID=false,
+    mainPlayer=false,
+}
+
+function GAME.getMode(name)
     if modeLib[name] then
         return modeLib[name]
     else
@@ -150,19 +164,6 @@ local function getMode(name)
     end
 end
 
-local GAME={
-    playerList=false,
-    playerMap=false,
-
-    hitWaves={},
-
-    seed=false,
-    mode=false,
-
-    mainPID=false,
-    mainPlayer=false,
-}
-
 function GAME.reset(mode,seed)
     GAME.playerList={}
     GAME.playerMap={}
@@ -171,7 +172,7 @@ function GAME.reset(mode,seed)
 
     GAME.mainPlayer=false
     GAME.seed=seed or math.random(2^16,2^26)
-    GAME.mode=mode and getMode(mode) or NONE
+    GAME.mode=mode and GAME.getMode(mode) or NONE
     if GAME.mode.initialize then GAME.mode.initialize() end
 end
 

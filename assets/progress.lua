@@ -2,6 +2,7 @@ local prgs={
     main=1,
     tutorial='000000',
     interiorScore={
+        dig=0,
         sprint=0,
         marathon=0,
     },
@@ -108,6 +109,9 @@ function PROGRESS.getBgmUnlocked(name)
 end
 function PROGRESS.getTutorialPassed(n)
     return prgs.tutorial:sub(n,n)=='1'
+end
+function PROGRESS.getInteriorScore(mode)
+    return prgs.interiorScore[mode]
 end
 
 function PROGRESS.setMain(n)
