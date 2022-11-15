@@ -149,10 +149,10 @@ return {
     main_in_settings="Settings",
     main_in_musicroom="Musicroom",
 
-    main_out_setting_out="Settings",
+    main_out_settings="Settings",
     main_out_stat="Statistics",
     main_out_dict="Dictionary",
-    main_out_setting_lang="Language",
+    main_out_lang="Language",
     main_out_musicroom="Musicroom",
     main_out_about="System info",
     main_out_single="Single player",

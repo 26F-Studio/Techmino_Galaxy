@@ -149,10 +149,10 @@ return {
     main_in_settings="设置",
     main_in_musicroom="音乐室",
 
-    main_out_setting_out="设置",
+    main_out_settings="设置",
     main_out_stat="统计",
     main_out_dict="词典",
-    main_out_setting_lang="语言",
+    main_out_lang="语言",
     main_out_musicroom="音乐室",
     main_out_about="系统信息",
     main_out_single="单人游戏",

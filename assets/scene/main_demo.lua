@@ -14,7 +14,7 @@ function scene.keyDown(key,isRep)
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={.5,.75},  x=-450,w=120,fontSize=80, text=CHAR.icon.language,  code=WIDGET.c_goScn'setting_lang'},
+    WIDGET.new{type='button',pos={.5,.75},  x=-450,w=120,fontSize=80, text=CHAR.icon.language,  code=WIDGET.c_goScn'lang_out'},
     WIDGET.new{type='button',pos={.5,.75},  x=-600,w=120,fontSize=90, text=CHAR.icon.music,     code=WIDGET.c_goScn'musicroom'},
     WIDGET.new{type='button',pos={.20,.2},  w=420,h=200, fontSize=50, text='MARATHON', code=playMode'mino/marathon'},
     WIDGET.new{type='button',pos={.50,.2},  w=420,h=200, fontSize=70, text='SPRINT',   code=playMode'mino/sprint'},

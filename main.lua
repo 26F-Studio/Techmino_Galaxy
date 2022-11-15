@@ -183,6 +183,7 @@ VOC.setDiversion(.62)
 WIDGET.setDefaultButtonSound('button')
 WIDGET.setDefaultCheckBoxSound('check','uncheck')
 WIDGET.setDefaultSelectorSound('selector')
+WIDGET._prototype.base.lineWidth=2
 
 --[Attention] Not loading IMG/SFX/BGM files here, just read file paths
 IMG.init{
