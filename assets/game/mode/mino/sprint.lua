@@ -4,7 +4,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('race',PROGRESS.data.main==1 and 'simp' or 'base')
+        playBgm('race',PROGRESS.getMain()==1 and 'simp' or 'base')
         BG.set('none')
     end,
     settings={mino={
@@ -17,7 +17,7 @@ return {
                     P:finish('AC')
                     PROGRESS.setMain(2)
                 end
-                if PROGRESS.data.main>1 and P.modeData.line>10 and P.isMain then
+                if PROGRESS.getMain()>1 and P.modeData.line>10 and P.isMain then
                     BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-10)/20,1),2.6)
                 end
             end,

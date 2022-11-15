@@ -200,7 +200,7 @@ return {
             "extra:",
             {cmd='say',arg={duration='6.26s',text="@tutorial_sequence_5",size=120,type='bold',style='beat',c=COLOR.lY,y=-30}},
             "end:",
-            {cmd=function(P) if P.isMain then PROGRESS.tutorialPassed(2) end end},
+            {cmd=function(P) if P.isMain then PROGRESS.setTutorialPassed(2) end end},
             "finish AC",
         },
     }},

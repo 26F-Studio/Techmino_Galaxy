@@ -39,7 +39,7 @@ local musicListBox do
     function musicListBox.code()
         if selected~=musicListBox:getItem() then
             selected=musicListBox:getItem()
-            if PROGRESS.data.bgmUnlocked[selected] and PROGRESS.data.bgmUnlocked[selected]==2 then
+            if PROGRESS.getBgmUnlocked(selected) and PROGRESS.getBgmUnlocked(selected)==2 then
                 fullband=fullband==true
             else
                 fullband=nil
@@ -55,14 +55,14 @@ local scene={}
 function scene.enter()
     selected,fullband=getBgm()
     if not selected then selected='blank' end
-    if PROGRESS.data.bgmUnlocked[selected]==2 then
+    if PROGRESS.getBgmUnlocked(selected)==2 then
         fullband=fullband=='full'
     else
         fullband=nil
     end
     local l={}
     for k in next,bgmList do
-        if PROGRESS.data.bgmUnlocked[k] then
+        if PROGRESS.getBgmUnlocked(k) then
             table.insert(l,k)
         end
     end

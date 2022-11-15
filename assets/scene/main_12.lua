@@ -5,7 +5,7 @@ function scene.enter()
     PROGRESS.playBGM_main_12()
     for _,v in next,scene.widgetList do
         if v.name then
-            v._visible=v.name==tostring(PROGRESS.data.main)
+            v._visible=v.name==tostring(PROGRESS.getMain())
         end
     end
 end
