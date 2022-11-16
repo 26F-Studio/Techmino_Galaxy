@@ -6,7 +6,7 @@ function scene.enter()
             v._visible=v.name==tostring(PROGRESS.getMain())
         end
     end
-    if PROGRESS.getMain()<=2 and (PROGRESS.getMaxInteriorScore()>=200 or PROGRESS.getTotalInteriorScore()>=300) then
+    if PROGRESS.getMain()<=2 and (PROGRESS.getInteriorScore('sprint')>=200 or PROGRESS.getTotalInteriorScore()>=300) then
         PROGRESS.transendTo(3)
     elseif PROGRESS.getMain()==1 and PROGRESS.getTotalInteriorScore()>=150 then
         PROGRESS.transendTo(2)
@@ -23,15 +23,13 @@ function scene.keyDown(key,isRep)
     end
 end
 
-local function scoreColor(score)
-    if score>150 then
-        GC.setColor(COLOR.lY)
-    elseif score>100 then
-        GC.setColor(3-score/50,score/626,score/50-2)
-    elseif score>50 then
-        GC.setColor(1,2-score/50,2-score/50)
-    else
+local function scoreColor(x,score)
+    if score<160 then
         GC.setColor(1,1,1)
+        GC.rectangle('fill',x,36,320*score/160,7)
+    else
+        GC.setColor(1,5-score/40,5-score/40)
+        GC.rectangle('fill',x,36,320,7)
     end
 end
 function scene.draw()
@@ -39,10 +37,9 @@ function scene.draw()
 
     -- Draw progress bar
     if PROGRESS.getMain()>=2 then
-        local p
-        p=PROGRESS.getInteriorScore('dig');      scoreColor(p); GC.rectangle('fill',-520,36,320*math.min(p,50)/50,7)
-        p=PROGRESS.getInteriorScore('sprint');   scoreColor(p); GC.rectangle('fill',-160,36,320*math.min(p,50)/50,7)
-        p=PROGRESS.getInteriorScore('marathon'); scoreColor(p); GC.rectangle('fill',200, 36,320*math.min(p,50)/50,7)
+        scoreColor(-520,PROGRESS.getInteriorScore('dig'))
+        scoreColor(-160,PROGRESS.getInteriorScore('sprint'))
+        scoreColor(200, PROGRESS.getInteriorScore('marathon'))
     end
 
     -- Draw logo & verNum

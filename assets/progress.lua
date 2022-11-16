@@ -121,6 +121,7 @@ function PROGRESS.setCursor(state)
     end
 end
 function PROGRESS.transendTo(n)
+    MES.clear()
     if n==2 then
         WAIT{
             coverAlpha=0,
@@ -224,9 +225,6 @@ function PROGRESS.getTutorialPassed(n)
 end
 function PROGRESS.getInteriorScore(mode)
     return prgs.interiorScore[mode]
-end
-function PROGRESS.getMaxInteriorScore()
-    return math.max(prgs.interiorScore.dig,prgs.interiorScore.sprint,prgs.interiorScore.marathon)
 end
 function PROGRESS.getTotalInteriorScore()
     return prgs.interiorScore.dig+prgs.interiorScore.sprint+prgs.interiorScore.marathon
