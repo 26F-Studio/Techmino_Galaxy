@@ -23,7 +23,7 @@ function scene.draw()
     GC.replaceTransform(SCR.xOy)
     GC.setColor(1,1,1)
     GC.draw(IMG.title.techmino,100,180,nil,.55)
-    GC.setColor(.06,.06,.06)
+    GC.setColor(.08,.08,.084)
     for a=0,MATH.tau,MATH.tau/20 do
         GC.draw(IMG.title.galaxy,550+10*math.cos(a),310+10*math.sin(a),nil,.7)
     end
