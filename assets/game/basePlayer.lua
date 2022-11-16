@@ -61,19 +61,17 @@ function P:triggerEvent(name,...)
     local L=self.event[name]
     if L then for i=1,#L do L[i](self,...) end end
 end
+---@param reason
+---| 'AC'  Win
+---| 'WA'  Block out
+---| 'CE'  Lock out
+---| 'MLE' Top out
+---| 'TLE' Time out
+---| 'OLE' Finesse fault
+---| 'ILE' Ran out pieces
+---| 'PE'  Mission failed
+---| 'UKE' Other reason
 function P:finish(reason)
-    --[[ Reason:
-        AC:  Win
-        WA:  Block out
-        CE:  Lock out
-        MLE: Top out
-        TLE: Time out
-        OLE: Finesse fault
-        ILE: Ran out pieces
-        PE:  Mission failed
-        RE:  Other reason
-    ]]
-
     if self.finished then return end
     self.timing=false
     self.finished=true
