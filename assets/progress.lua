@@ -37,13 +37,17 @@ function PROGRESS.save()
     FILE.save(prgs,'conf/progress','-json')
 end
 function PROGRESS.load()
-    local t=FILE.load('conf/progress','-json -canskip')
-    if t then
-        if t.hash==PROGRESS.getHash(t) then
-            TABLE.coverR(t,prgs)
-        else
-            MES.new('info',"Hash not match")
+    local success,res=pcall(FILE.load,'conf/progress','-json -canskip')
+    if success then
+        if res then
+            if res.hash==PROGRESS.getHash(res) then
+                TABLE.coverR(res,prgs)
+            else
+                MES.new('info',"Hash not match")
+            end
         end
+    else
+        MES.new('info',"Load progress failed: "..res)
     end
 end
 
@@ -88,7 +92,6 @@ function PROGRESS.setCursor(state)
                 gc.setColor(1,1,1)
                 gc.setLineWidth(2)
                 gc.translate(x,y)
-                gc.rotate(love.timer.getTime()%MATH.tau)
                 gc.rectangle('line',-10,-10,20,20)
                 if love.mouse.isDown(1) then gc.rectangle('line',-6,-6,12,12) end
                 if love.mouse.isDown(2) then gc.rectangle('fill',-4,-4,8,8) end
