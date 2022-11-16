@@ -11,7 +11,6 @@ function scene.update(dt)
     if TASK.getLock('drawBegin') then
         t=t+math.min(dt,.026)
         if t>=1 then
-            PROGRESS.setCursor(PROGRESS.getMain()<=2 and 'interior' or 'exterior')
             PROGRESS.swapMainScene()
         end
     end

@@ -108,62 +108,6 @@ do-- Zenitha.setOnFocus
         end
     end)
 end
-do-- Zenitha.setDrawSysInfo
-    local gc=love.graphics
-    Zenitha.setDrawSysInfo(function()
-        if not SETTINGS.system.powerInfo then return end
-        gc.replaceTransform(SCR.xOy_ur)
-        gc.translate(-130,0)
-
-        -- Box
-        gc.setColor(0,0,0,.42)
-        gc.polygon('fill',0,0,130,0,130,50,25,50,0,35)
-
-        -- Time
-        gc.setColor(1,1,1)
-        FONT.set(25,'thin')
-        gc.printf(os.date("%I:%M %p"),0,0,125,'right')
-
-        gc.translate(90,28)
-
-        -- Battery
-        gc.setLineWidth(1)
-        gc.rectangle('fill',33,4,3,10)
-        gc.rectangle('line',-1,-1,34,20)
-        local state,pow=love.system.getPowerInfo()
-        if state=='unknown' then
-            FONT.set(20,'thin')
-            gc.print("?",16,9,love.timer.getTime()*2.6,nil,nil,5,11)
-        elseif state=='nobattery' then
-            FONT.set(15,'thin')
-            gc.print("x x",6,-3)
-            gc.print("_",13,-1)
-        elseif pow then
-            FONT.set(20,'thin')
-            gc.printf(pow.."%",-64,-2,60,'right')
-
-            gc.setColor(
-                pow>60 and COLOR.L or
-                pow>26 and COLOR.lY or
-                COLOR.R
-            )
-            -- Inside-area: 30*16, (1,1)~(31,17)
-            local x=10
-            local r=7*math.floor(pow%x/2)*2/x
-            gc.rectangle('fill',1,1,30*math.floor(pow/x)*x/100,16)
-            gc.rectangle('fill',1+30*math.floor(pow/x)*x/100,8-r,30/100*x,2*r)
-            if state=='charging' then
-                gc.setColor(COLOR.lG)
-                for i=1,math.ceil(pow/x) do
-                    local a=6.2*math.sin(-love.timer.getTime()*5+i*.626)
-                    gc.rectangle('fill',3*i-2,9-1.5+a,3,3)
-                    gc.rectangle('fill',3*i-2,9-1.5-a,3,3)
-                end
-            end
-        end
-
-    end)
-end
 
 FONT.setDefaultFallback('symbols')
 FONT.setDefaultFont('norm')

@@ -1,5 +1,6 @@
 local scene={}
 function scene.enter()
+    PROGRESS.setCursor('interior')
     BG.set('none')
     for _,v in next,scene.widgetList do
         if v.name then
