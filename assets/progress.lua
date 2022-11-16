@@ -214,6 +214,12 @@ function PROGRESS.quit()
         -- TODO
     end
 end
+function PROGRESS.drawExteriorHeadbox()
+    GC.replaceTransform(SCR.origin)
+    GC.setColor(.26,.26,.26)
+    GC.rectangle('fill',0,0,SCR.w,100*SCR.k)
+    GC.rectangle('fill',0,0,SCR.w,100*SCR.k)
+end
 
 function PROGRESS.getMain()
     return prgs.main

@@ -4,8 +4,13 @@ function scene.leave()
     saveSettings()
 end
 
+function scene.draw()
+    PROGRESS.drawExteriorHeadbox()
+end
+
 local function sliderShow_time(S) return S.disp().." ms"  end
 
+scene.scrollHeight=800
 scene.widgetList={
     WIDGET.new{type='button',   pos={0,.5},x=210,y=-360,w=200,h=80,cornerR=0,sound='back', fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 

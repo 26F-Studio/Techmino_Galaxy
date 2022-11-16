@@ -372,7 +372,7 @@ local settings={
         touchControl=false,
 
         -- Other
-        powerInfo=false,
+        powerInfo=true,
         sysCursor=false,
         showTouch=true,
         clickFX=true,

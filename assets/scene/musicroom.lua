@@ -108,6 +108,8 @@ end
 
 local objText,titleTextObj='',GC.newText(FONT.get(90,'bold'))
 function scene.draw()
+    PROGRESS.drawExteriorHeadbox()
+
     GC.replaceTransform(SCR.xOy_l)
 
     -- Song title

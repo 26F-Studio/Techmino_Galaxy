@@ -18,6 +18,9 @@ function scene.keyDown(key,isRep)
 end
 
 function scene.draw()
+    PROGRESS.drawExteriorHeadbox()
+
+    GC.replaceTransform(SCR.xOy)
     GC.setColor(1,1,1)
     GC.draw(IMG.title.techmino,100,180,nil,.55)
     GC.setColor(.06,.06,.06)
