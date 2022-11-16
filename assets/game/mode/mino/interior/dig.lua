@@ -10,6 +10,11 @@ return {
         shakeness=0,
         dropDelay=1000,
         lockDelay=1000,
+        soundEvent={
+            countDown=function(num)
+                SFX.playSample('lead',num>0 and 'A3' or 'A4')
+            end,
+        },
         event={
             playerInit=function(P)
                 local phase=P.seqRND:random(0,9)

@@ -92,13 +92,12 @@ function PROGRESS.setCursor(state)
                 gc.setColor(1,1,1)
                 gc.setLineWidth(2)
                 gc.translate(x,y)
-                gc.rectangle('line',-10,-10,20,20)
-                if love.mouse.isDown(1) then gc.rectangle('line',-6,-6,12,12) end
-                if love.mouse.isDown(2) then gc.rectangle('fill',-4,-4,8,8) end
-                if love.mouse.isDown(3) then gc.line(-8,-8,8,8) gc.line(-8,8,8,-8) end
+                if love.mouse.isDown(1) then gc.rectangle('fill',-5,-5,10,10) end
+                if love.mouse.isDown(2) then gc.rectangle('line',-8,-8,16,16) end
                 gc.setColor(1,1,1,.626)
-                gc.line(0,-20,0,20)
-                gc.line(-20,0,20,0)
+                gc.setLineWidth(4)
+                gc.line(0,-15,0,15)
+                gc.line(-15,0,15,0)
             end
         end)
     elseif state=='exterior' then
@@ -109,8 +108,8 @@ function PROGRESS.setCursor(state)
                 gc.translate(x,y)
                 gc.rotate(love.timer.getTime()%MATH.tau)
                 gc.rectangle('line',-10,-10,20,20)
-                if love.mouse.isDown(1) then gc.rectangle('line',-6,-6,12,12) end
-                if love.mouse.isDown(2) then gc.rectangle('fill',-4,-4,8,8) end
+                if love.mouse.isDown(1) then gc.rectangle('fill',-4,-4,8,8) end
+                if love.mouse.isDown(2) then gc.rectangle('line',-6,-6,12,12) end
                 if love.mouse.isDown(3) then gc.line(-8,-8,8,8) gc.line(-8,8,8,-8) end
                 gc.setColor(1,1,1,.626)
                 gc.line(0,-20,0,20)
@@ -153,7 +152,6 @@ function PROGRESS.transendTo(n)
             noDefaultDraw=true,
             init=function()
                 Zenitha.setDrawCursor(NULL)
-                SETTINGS.system.sysCursor=false
             end,
             update=function(dt,t)
                 if t<1.626 then
@@ -168,7 +166,6 @@ function PROGRESS.transendTo(n)
                 if WAIT.state=='wait' and t>=2.6 then
                     PROGRESS.setMain(3)
                     PROGRESS.setCursor('exterior')
-                    SETTINGS.system.sysCursor=true
                     SCN.swapTo('main_out','none')
                     PROGRESS.applyCoolWaitTemplate()
                     WAIT.interrupt()

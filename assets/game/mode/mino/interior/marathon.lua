@@ -15,6 +15,11 @@ return {
         sdarr=16,
         spawnDelay=130,
         clearDelay=300,
+        soundEvent={
+            countDown=function(num)
+                SFX.playSample('lead',num>0 and 'A3' or 'A4')
+            end,
+        },
         event={
             playerInit=function(P)
                 P.settings.dropDelay=dropSpeed[1]
