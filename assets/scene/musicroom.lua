@@ -108,8 +108,6 @@ end
 
 local objText,titleTextObj='',GC.newText(FONT.get(90,'bold'))
 function scene.draw()
-    PROGRESS.drawExteriorHeadbox()
-
     GC.replaceTransform(SCR.xOy_l)
 
     -- Song title
@@ -141,7 +139,10 @@ function scene.draw()
 
     GC.replaceTransform(SCR.xOy_r)
     FONT.set(30)
-    GC.printf(collectCount.."/"..bgmCount,-100-626,-450,626,'right')
+    GC.setColor(COLOR.L)
+    GC.printf(collectCount.."/"..bgmCount,-105-626,-442,626,'right')
+    GC.setLineWidth(2)
+    GC.line(-99,-400,-99,-445,-235,-445,-255,-400)
 end
 
 scene.widgetList={
