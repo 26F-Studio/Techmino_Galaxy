@@ -75,5 +75,5 @@ function saveTouch()
 end
 
 function backText()
-    return CHAR.key.left..' '..Text.button_back
+    return CHAR.icon.back_chevron..' '..Text.button_back
 end

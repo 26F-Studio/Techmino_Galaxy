@@ -2,9 +2,10 @@ local scene={}
 function scene.enter()
     PROGRESS.setCursor('interior')
     BG.set('none')
+    local visibleButtonName=PROGRESS.getMain()==1 and '1' or '2'
     for _,v in next,scene.widgetList do
         if v.name then
-            v._visible=v.name==tostring(PROGRESS.getMain())
+            v._visible=v.name==visibleButtonName
         end
     end
     if PROGRESS.getMain()<=2 and (PROGRESS.getInteriorScore('sprint')>=200 or PROGRESS.getTotalInteriorScore()>=350) then
@@ -54,6 +55,8 @@ function scene.draw()
 end
 
 scene.widgetList={
+    WIDGET.new{type='button_fill',pos={0,0},x=60,y=60,w=80,color='R',cornerR=0,sound='back',fontSize=70,text=CHAR.icon.back_chevron,code=WIDGET.c_backScn()},
+
     WIDGET.new{name='1',type='button_fill',pos={.5,.5},x=-270,y=-40,w=500,h=140, color='F',text=LANG'main_in_sprint',  fontSize=40,cornerR=0,code=playMode'mino/interior/sprint'},
     WIDGET.new{name='1',type='button_fill',pos={.5,.5},x=270, y=-40,w=500,h=140, color='F',text=LANG'main_in_marathon',fontSize=40,cornerR=0,code=playMode'mino/interior/marathon'},
 
