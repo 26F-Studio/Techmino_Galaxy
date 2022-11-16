@@ -12,7 +12,7 @@ local prgs={
 --[[
     I/II:
         Sum>=100 → II
-        Single>=200 or Sum>=300 → III
+        Single>=200 or Sum>=350 → III
 ]]
 
 local PROGRESS={}

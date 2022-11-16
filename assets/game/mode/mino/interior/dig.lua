@@ -19,7 +19,7 @@ return {
             playerInit=function(P)
                 local phase=P.seqRND:random(0,9)
                 local dir=P.seqRND:random(0,1)*2-1
-                for i=0,9 do P:riseGarbage((phase+i)*dir%10+1) end
+                for i=1,12 do P:riseGarbage((phase+i)*dir%10+1) end
                 P.fieldDived=0
             end,
             afterLock=function(P)

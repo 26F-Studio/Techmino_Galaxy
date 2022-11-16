@@ -6,7 +6,7 @@ function scene.enter()
             v._visible=v.name==tostring(PROGRESS.getMain())
         end
     end
-    if PROGRESS.getMain()<=2 and (PROGRESS.getInteriorScore('sprint')>=200 or PROGRESS.getTotalInteriorScore()>=300) then
+    if PROGRESS.getMain()<=2 and (PROGRESS.getInteriorScore('sprint')>=200 or PROGRESS.getTotalInteriorScore()>=350) then
         PROGRESS.transendTo(3)
     elseif PROGRESS.getMain()==1 and PROGRESS.getTotalInteriorScore()>=150 then
         PROGRESS.transendTo(2)
