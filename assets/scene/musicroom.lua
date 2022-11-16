@@ -21,7 +21,7 @@ local bigTitle=setmetatable({},{
 })
 
 local musicListBox do
-    musicListBox={type='listBox',pos={1,.5},x=-800,y=-400,w=700,h=500,lineHeight=80}
+    musicListBox={type='listBox',pos={1,.5},x=-800,y=-320,w=700,h=500,lineHeight=80}
     function musicListBox.drawFunc(name,_,sel)
         if sel then
             GC.setColor(1,1,1,.26)
@@ -92,7 +92,7 @@ function scene.keyDown(key,isRep)
             w.code()
         end
     elseif key=='escape'then
-        SCN.back()
+        SCN.back('fadeHeader')
     elseif #key==1 and key:find'[0-9a-z]'then
         local list=musicListBox:getList()
         local sel=musicListBox:getSelect()
@@ -108,6 +108,8 @@ end
 
 local objText,titleTextObj='',GC.newText(FONT.get(90,'bold'))
 function scene.draw()
+    PROGRESS.drawExteriorHeader()
+
     GC.replaceTransform(SCR.xOy_l)
 
     -- Song title
@@ -133,27 +135,36 @@ function scene.draw()
         GC.replaceTransform(SCR.xOy_m)
         FONT.set(30)
         GC.setColor(COLOR.L)
-        GC.printf(STRING.time_simp(BGM.tell()%BGM.getDuration()),-700,230,626,'left')
-        GC.printf(STRING.time_simp(BGM.getDuration()),700-626,230,626,'right')
+        GC.printf(STRING.time_simp(BGM.tell()%BGM.getDuration()),-700,260,626,'left')
+        GC.printf(STRING.time_simp(BGM.getDuration()),700-626,260,626,'right')
     end
 
     GC.replaceTransform(SCR.xOy_r)
+    GC.setLineWidth(2)
+    GC.line(-99,-320,-99,-365,-235,-365,-255,-320)
     FONT.set(30)
     GC.setColor(COLOR.L)
-    GC.printf(collectCount.."/"..bgmCount,-105-626,-442,626,'right')
-    GC.setLineWidth(2)
-    GC.line(-99,-400,-99,-445,-235,-445,-255,-400)
+    GC.printf(collectCount.."/"..bgmCount,-105-626,-362,626,'right')
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=2,cornerR=26,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound='back',fontSize=40,text=backText,code=WIDGET.c_backScn('fadeHeader')},
+
     musicListBox,
-    WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=200,w=1400,
+
+    -- Time bar
+    WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1400,
         disp=function() return BGM.tell()/BGM.getDuration()%1 end,
         code=function(v) BGM.set('all','seek',v*BGM.getDuration()) end,
         visibleFunc=function() return BGM.isPlaying() end,
     },
-    WIDGET.new{type='switch',pos={0,.5},x=150,y=350,h=50,labelPos='right',disp=function() return fullband end,
+
+    -- Play/Stop
+    WIDGET.new{type='button_invis',pos={.5,.5},y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=function() playBgm(selected,fullband and 'full' or 'base') end,visibleFunc=function() return not BGM.isPlaying() end},
+    WIDGET.new{type='button_invis',pos={.5,.5},y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=function() BGM.stop() end,visibleFunc=function() return BGM.isPlaying() end},
+
+    -- Fullband Switch
+    WIDGET.new{type='switch',pos={0,.5},x=150,y=360,h=50,labelPos='right',disp=function() return fullband end,
         name='fullband',text=LANG'musicroom_fullband',
         sound_on=false,sound_off=false,
         code=function()
@@ -166,9 +177,9 @@ scene.widgetList={
             return fullband~=nil and bgmList[selected].base
         end,
     },
-    WIDGET.new{type='button_invis',pos={.5,.5},y=350,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=function() playBgm(selected,fullband and 'full' or 'base') end,visibleFunc=function() return not BGM.isPlaying() end},
-    WIDGET.new{type='button_invis',pos={.5,.5},y=350,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=function() BGM.stop() end,visibleFunc=function() return BGM.isPlaying() end},
-    WIDGET.new{type='slider_progress',pos={1,.5},x=-350,y=350,w=250,text=CHAR.icon.volUp,fontSize=60,disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
+
+    -- Volume slider
+    WIDGET.new{type='slider_progress',pos={1,.5},x=-350,y=360,w=250,text=CHAR.icon.volUp,fontSize=60,disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
 }
 
 return scene

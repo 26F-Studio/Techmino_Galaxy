@@ -42,10 +42,10 @@ scene.widgetList={
     WIDGET.new{type='button',   x=895,  y=520,w=530,h=100,text=function() return CHAR.icon.people    ..' '..Text.main_out_multi     end, fontSize=40,cornerR=26,code=WIDGET.c_goScn''},
 
     WIDGET.new{type='button',   x=230,  y=660,w=340,h=100,text=function() return CHAR.icon.settings  ..' '..Text.main_out_settings  end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('setting_out','fadeHeader')},
-    WIDGET.new{type='button',   x=610,  y=660,w=340,h=100,text=function() return CHAR.icon.statistics..' '..Text.main_out_stat      end, fontSize=40,cornerR=26,code=WIDGET.c_goScn'stat'},
-    WIDGET.new{type='button',   x=990,  y=660,w=340,h=100,text=function() return CHAR.icon.bookmark  ..' '..Text.main_out_dict      end, fontSize=40,cornerR=26,code=WIDGET.c_goScn'dict'},
-    WIDGET.new{type='button',   x=230,  y=800,w=340,h=100,text=function() return CHAR.icon.language  ..' '..Text.main_out_lang      end, fontSize=40,cornerR=26,code=WIDGET.c_goScn'lang_out'},
-    WIDGET.new{type='button',   x=610,  y=800,w=340,h=100,text=function() return CHAR.icon.music     ..' '..Text.main_out_musicroom end, fontSize=40,cornerR=26,code=WIDGET.c_goScn'musicroom'},
-    WIDGET.new{type='button',   x=990,  y=800,w=340,h=100,text=function() return CHAR.icon.info_circ ..' '..Text.main_out_about     end, fontSize=40,cornerR=26,code=WIDGET.c_goScn'about'},
+    WIDGET.new{type='button',   x=610,  y=660,w=340,h=100,text=function() return CHAR.icon.statistics..' '..Text.main_out_stat      end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('stat','fadeHeader')},
+    WIDGET.new{type='button',   x=990,  y=660,w=340,h=100,text=function() return CHAR.icon.bookmark  ..' '..Text.main_out_dict      end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('dict','fadeHeader')},
+    WIDGET.new{type='button',   x=230,  y=800,w=340,h=100,text=function() return CHAR.icon.language  ..' '..Text.main_out_lang      end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('lang_out','fadeHeader')},
+    WIDGET.new{type='button',   x=610,  y=800,w=340,h=100,text=function() return CHAR.icon.music     ..' '..Text.main_out_musicroom end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('musicroom','fadeHeader')},
+    WIDGET.new{type='button',   x=990,  y=800,w=340,h=100,text=function() return CHAR.icon.info_circ ..' '..Text.main_out_about     end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('about','fadeHeader')},
 }
 return scene
