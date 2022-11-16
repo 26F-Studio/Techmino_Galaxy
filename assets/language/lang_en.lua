@@ -6,6 +6,7 @@ return {
         reset="Press again to Reset",
     },
     noMode="Cannot load mode '$1': $2",
+    interior_crash="Sandbox crashed: performance rate overflow",
 
     -- Game
     clearName={

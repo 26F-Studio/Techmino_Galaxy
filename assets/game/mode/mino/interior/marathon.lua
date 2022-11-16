@@ -43,7 +43,14 @@ return {
                 GC.mStr(P.modeData.target,-300,0)
             end,
             gameOver=function(P)
-                PROGRESS.setInteriorScore('marathon',P.modeData.line)
+                PROGRESS.setInteriorScore('sprint',math.min(P.modeData.line*4/3,40))
+                PROGRESS.setInteriorScore('marathon',
+                    P.modeData.line>=200 and 200 or
+                    P.modeData.line>=130 and MATH.interpolate(P.modeData.line,130,140,200,200) or
+                    P.modeData.line>=80  and MATH.interpolate(P.modeData.line,80,90,130,140) or
+                    P.modeData.line>=40  and MATH.interpolate(P.modeData.line,40,40,80,90) or
+                    MATH.interpolate(P.modeData.line,0,0,40,40)
+                )
             end,
         },
     }},

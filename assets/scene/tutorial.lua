@@ -20,7 +20,7 @@ function scene.enter()
             v.color=PROGRESS.getTutorialPassed(tonumber(v.name:sub(-1))) and 'lG' or 'B'
         end
     end
-    if PROGRESS.getMain()==1 then
+    if not (PROGRESS.getTutorialPassed(1) and PROGRESS.getTutorialPassed(2) and PROGRESS.getTutorialPassed(3)) then
         L.T1.x,L.T2.x,L.T3.x=0,0,0
         L.T1.w,L.T2.w,L.T3.w=800,800,800
         L.T4:setVisible(false)
