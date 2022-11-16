@@ -972,7 +972,7 @@ function MP:riseGarbage(holePos)
         self.minY=self.minY+1
     end
 end
---[[arg table={
+--[[ arg table={
     string? color <'template'|'absolute'>,
     boolean? resetHand
     boolean? sudden

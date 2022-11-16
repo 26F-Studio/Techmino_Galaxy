@@ -111,7 +111,7 @@ end
 do-- Zenitha.setDrawSysInfo
     local gc=love.graphics
     Zenitha.setDrawSysInfo(function()
-        -- if not SETTINGS.system.powerInfo then return end
+        if not SETTINGS.system.powerInfo then return end
         gc.replaceTransform(SCR.xOy_ur)
         gc.translate(-130,0)
 
@@ -393,6 +393,24 @@ for _,v in next,{
         SKIN.add(v,require('assets.skin.'..v))
     end
 end
+SCN.addSwap('fadeHeader',{
+    duration=.5,changeTime=.25,
+    draw=function(t)
+        GC.setColor(.1,.1,.1,t>.25 and 2-t*4 or t*4)
+        GC.rectangle('fill',0,120*SCR.k,SCR.w,SCR.h-120*SCR.k)
+        GC.setColor(.26,.26,.26,t>.25 and 2-t*4 or t*4)
+        GC.rectangle('fill',0,0,SCR.w,120*SCR.k)
+    end,
+})
+SCN.addSwap('fastFadeHeader',{
+    duration=.2,changeTime=.1,
+    draw=function(t)
+        GC.setColor(.1,.1,.1,t>.1 and 2-t*10 or t*10)
+        GC.rectangle('fill',0,120*SCR.k,SCR.w,SCR.h-120*SCR.k)
+        GC.setColor(.26,.26,.26,t>.1 and 2-t*10 or t*10)
+        GC.rectangle('fill',0,0,SCR.w,120*SCR.k)
+    end,
+})
 DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins")
 --------------------------------------------------------------
 DEBUG.logLoadTime()

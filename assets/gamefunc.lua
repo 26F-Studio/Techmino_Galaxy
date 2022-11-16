@@ -73,3 +73,7 @@ end
 function saveTouch()
     FILE.save(VCTRL.exportSettings(),'conf/touch','-json')
 end
+
+function backText()
+    return CHAR.key.left..' '..Text.button_back
+end

@@ -106,6 +106,9 @@ return {
     setting_touch_ballSize="摇把尺寸",
 
     -- Widget texts
+    button_back="返回",
+    text_settings="设置",
+
     main_demo_setting="设置",
 
     setting_mino="方块",

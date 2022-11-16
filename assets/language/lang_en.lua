@@ -106,6 +106,9 @@ return {
     setting_touch_ballSize="Stick size",
 
     -- Widget texts
+    button_back="Back",
+    text_settings="Settings",
+
     main_demo_setting="Setting",
 
     setting_mino="MINO",
@@ -130,7 +133,7 @@ return {
 
     setting_sysCursor="System cursor",
     setting_clickFX="Click FX",
-    setting_power="Battery Info",
+    setting_power="Time & Battery",
     setting_clean="Quick Draw",
     setting_fullscreen="Fullscreen",
     setting_autoMute="Mute while unfocused",
