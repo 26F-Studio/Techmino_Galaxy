@@ -147,6 +147,7 @@ function PROGRESS.transendTo(n)
             end,
         }
     elseif n==3 then
+        PROGRESS.setBgmUnlocked('blank',2)-- Or it can be skiped if sub 60 in 40L at first play
         local sumT=0
         WAIT{
             coverAlpha=0,
