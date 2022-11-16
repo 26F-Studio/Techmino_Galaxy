@@ -65,7 +65,7 @@ scene.widgetList={
     WIDGET.new{type='button_fill',    x=1250,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text='',          color='B'},
     WIDGET.new{type='button_fill',    x=1250,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text='',          color='P'},
 
-    WIDGET.new{type='button',x=1250,y=760,w=390,h=100,sound='back',lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
+    WIDGET.new{type='button',x=1250,y=760,w=390,h=100,sound='back',lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 
 return scene

@@ -299,7 +299,7 @@ scene.widgetList={
     WIDGET.new{type='checkBox',x=240,y=235,widthLimit=200,fontSize=40,disp=function() return nexts end,code=WIDGET.c_pressKey'q',visibleFunc=function() return state~=1 end},
     WIDGET.new{type='checkBox',x=240,y=305,widthLimit=200,fontSize=40,disp=function() return invis end,code=WIDGET.c_pressKey'w',visibleFunc=function() return state~=1 end},
     WIDGET.new{type='checkBox',x=240,y=375,widthLimit=200,fontSize=30,disp=function() return fast end,code=WIDGET.c_pressKey'e',visibleFunc=function() return state~=1 end},
-    WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
+    WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 
 return scene

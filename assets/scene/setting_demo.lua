@@ -57,6 +57,6 @@ scene.widgetList={
 
     WIDGET.new{type='button',     pos={0,1},x=160,y=-80,w=160,h=80, text=CHAR.icon.keyboard,fontSize=60,code=function() SCN.go('keyset_list',nil,'sys') end},
 
-    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
+    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 return scene

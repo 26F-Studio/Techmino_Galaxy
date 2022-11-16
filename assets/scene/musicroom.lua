@@ -146,7 +146,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=2,cornerR=26,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
+    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=2,cornerR=26,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
     musicListBox,
     WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=200,w=1400,
         disp=function() return BGM.tell()/BGM.getDuration()%1 end,

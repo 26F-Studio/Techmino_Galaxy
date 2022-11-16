@@ -494,7 +494,7 @@ scene.widgetList={
     WIDGET.new{type='button',     pos={1,.5},x=-140,y=30,w=250,h=50,                      color='lX',code=WIDGET.c_pressKey'2',   visibleFunc=visFunc2},
     WIDGET.new{type='button_fill',pos={1,.5},x=-300,y=-30,w=50,      text="!",fontSize=50,color='R',code=WIDGET.c_pressKey'c1',   visibleFunc=visFunc3},
     WIDGET.new{type='button_fill',pos={1,.5},x=-300,y=30,w=50,       text="!",fontSize=50,color='R',code=WIDGET.c_pressKey'c2',   visibleFunc=visFunc3},
-    WIDGET.new{type='button',     pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
+    WIDGET.new{type='button',     pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 
 return scene

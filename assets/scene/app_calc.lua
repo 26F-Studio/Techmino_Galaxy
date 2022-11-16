@@ -153,7 +153,7 @@ scene.widgetList={
     WIDGET.new{type='button',x=445,y=600,w=90,sound=false,text="/",color='lB',fontSize=50,code=WIDGET.c_pressKey'/'},
     WIDGET.new{type='button',x=545,y=300,w=90,sound=false,text=CHAR.key.backspace,color='lR',fontSize=50,code=WIDGET.c_pressKey'backspace'},
     WIDGET.new{type='button',x=545,y=400,w=90,sound=false,text="=",color='lY',fontSize=50,code=WIDGET.c_pressKey'return'},
-    WIDGET.new{type='button',x=1135,y=640,w=170,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
+    WIDGET.new{type='button',x=1135,y=640,w=170,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 
 return scene

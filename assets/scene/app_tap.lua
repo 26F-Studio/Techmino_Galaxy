@@ -73,7 +73,7 @@ end
 
 scene.widgetList={
     WIDGET.new{type='button',x=640,y=540,w=626,h=260,sound='touch',text="TAP",color='L',fontSize=100,code=function(i) love.keypressed('b'..i) end},
-    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
+    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 
 return scene
