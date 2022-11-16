@@ -1770,7 +1770,7 @@ function MP:initialize()
                 if type(k)=='number' then
                     self.actions[v]=_getActionObj(v)
                 elseif type(k)=='string' then
-                    assert(actions[k],STRING.repD("No action called '$1'",k))
+                    assert(actions[k],STRING.repD("No action named '$1'",k))
                     self.actions[k]=_getActionObj(v)
                 else
                     error(STRING.repD("Wrong actionPack table format (type $1)",type(k)))

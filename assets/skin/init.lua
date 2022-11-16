@@ -14,7 +14,7 @@ function SKIN.add(name,data)
     assert(not data.getTime,"Skin mustn't define 'getTime'")
     data.getTime=_getTime
 
-    setmetatable(data,{__index=data.base and assert(skinLib[data.base],"no base skin called "..tostring(data.base))})
+    setmetatable(data,{__index=data.base and assert(skinLib[data.base],"no base skin named "..tostring(data.base))})
 
     skinLib[name]=data
 end

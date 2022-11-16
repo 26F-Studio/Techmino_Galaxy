@@ -193,7 +193,7 @@ function P:runScript(cmd,arg)-- Run single lua-table assembly command
                 cmd=='jg'  and v1>v2  or
                 cmd=='jl'  and v1<v2
             then
-                return self.scriptLabels[arg.d] or error("No label called '"..arg.d.."'")
+                return self.scriptLabels[arg.d] or error("No label named '"..arg.d.."'")
             end
         elseif self.scriptCmd[cmd] then
             return self.scriptCmd[cmd](self,arg)

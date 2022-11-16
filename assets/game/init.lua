@@ -147,7 +147,7 @@ function GAME.getMode(name)
         return modeLib[name]
     else
         local path='assets/game/mode/'..name..'.lua'
-        assert(love.filesystem.getInfo(path) and FILE.isSafe(path),"No mode called "..tostring(name))
+        assert(love.filesystem.getInfo(path) and FILE.isSafe(path),"No mode named "..tostring(name))
         local M=FILE.load(path,'-lua -canskip')
         assert(type(M)=='table')
         setmetatable(M,modeMeta)
