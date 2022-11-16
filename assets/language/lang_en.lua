@@ -4,6 +4,7 @@ return {
         back="Press again to Back",
         quit="Press again to Quit",
         reset="Press again to Reset",
+        enter="Press again to Enter",
     },
     noMode="Cannot load mode '$1': $2",
     interior_crash="Sandbox crashed: performance rate overflow",
@@ -107,7 +108,8 @@ return {
 
     -- Widget texts
     button_back="Back",
-    text_settings="Settings",
+    title_settings="Settings",
+    title_musicroom="Musicroom",
 
     main_demo_setting="Setting",
 
@@ -152,13 +154,11 @@ return {
     main_in_tutorial="Tutorial",
     main_in_sandbox="Sandbox",
     main_in_settings="Settings",
-    main_in_musicroom="Musicroom",
 
     main_out_settings="Settings",
     main_out_stat="Statistics",
     main_out_dict="Dictionary",
     main_out_lang="Language",
-    main_out_musicroom="Musicroom",
     main_out_about="System info",
     main_out_single="Single player",
     main_out_multi="Multiplayer",

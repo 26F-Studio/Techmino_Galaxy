@@ -4,6 +4,7 @@ return {
         back="再按一次返回",
         quit="再按一次退出",
         reset="再按一次重置",
+        enter="再按一次进入",
     },
     noMode="无法加载模式 '$1': $2",
     interior_crash="沙箱崩溃: 性能评分溢出",
@@ -107,7 +108,8 @@ return {
 
     -- Widget texts
     button_back="返回",
-    text_settings="设置",
+    title_settings="设置",
+    title_musicroom="音乐室",
 
     main_demo_setting="设置",
 
@@ -152,13 +154,11 @@ return {
     main_in_tutorial="教程",
     main_in_sandbox="沙盒",
     main_in_settings="设置",
-    main_in_musicroom="音乐室",
 
     main_out_settings="设置",
     main_out_stat="统计",
     main_out_dict="词典",
     main_out_lang="语言",
-    main_out_musicroom="音乐室",
     main_out_about="系统信息",
     main_out_single="单人游戏",
     main_out_multi="多人游戏",
