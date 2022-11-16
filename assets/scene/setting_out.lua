@@ -21,7 +21,6 @@ function scene.enter()
     WIDGET._reset()
     BG.set('none')
 end
-
 function scene.leave()
     saveSettings()
 end
@@ -42,13 +41,13 @@ local function sliderShow_fps(S)  return S.disp().." FPS" end
 local function sliderShow_mul(S)  return S.disp().."%"    end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound='back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound='back',fontSize=40,text=backText,code=WIDGET.c_backScn('fadeHeader')},
 
     WIDGET.new{type='text',pos={0,0},x=400,y=60,fontType='bold',fontSize=60,text=LANG'text_settings'},
-    WIDGET.new{name='S1',type='button_invis',pos={1,0},x=-800,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.settings,  code=function() if page~='1'then SCN.swapTo('setting_out','fastFadeHeader',1) end end},
-    WIDGET.new{name='S2',type='button_invis',pos={1,0},x=-600,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.volUp,     code=function() if page~='2'then SCN.swapTo('setting_out','fastFadeHeader',2) end end},
-    WIDGET.new{name='S3',type='button_invis',pos={1,0},x=-400,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.video,     code=function() if page~='3'then SCN.swapTo('setting_out','fastFadeHeader',3) end end},
-    WIDGET.new{name='S4',type='button_invis',pos={1,0},x=-200,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.controller,code=function() if page~='4'then SCN.swapTo('setting_out','fastFadeHeader',4) end end},
+    WIDGET.new{name='S1',type='button_invis',pos={1,0},x=-800,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.settings,  code=function() if page~='1'then SCN.swapTo('setting_out','none',1) end end},
+    WIDGET.new{name='S2',type='button_invis',pos={1,0},x=-600,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.volUp,     code=function() if page~='2'then SCN.swapTo('setting_out','none',2) end end},
+    WIDGET.new{name='S3',type='button_invis',pos={1,0},x=-400,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.video,     code=function() if page~='3'then SCN.swapTo('setting_out','none',3) end end},
+    WIDGET.new{name='S4',type='button_invis',pos={1,0},x=-200,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.controller,code=function() if page~='4'then SCN.swapTo('setting_out','none',4) end end},
 
     -- Controls
     WIDGET.new{name='1',type='button', pos={0,0},x=500, y=270,w=360,h=80,cornerR=10,fontSize=40, text=LANG'setting_keymapping',     code=function() SCN.go('keyset_list',nil,'mino') end},
@@ -79,7 +78,6 @@ scene.widgetList={
     WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=570,h=45,      text=LANG'setting_showTouch',   widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'showTouch'),   code=TABLE.func_revVal(SETTINGS.system,'showTouch')},
 
     -- Gameplay
-
     -- ?
 }
 return scene

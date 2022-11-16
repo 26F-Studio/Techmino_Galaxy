@@ -39,8 +39,8 @@ function scene.draw()
         GC.scale(1.25,2*(2-x)*x)
         GC.shear(-.26,0)
         FONT.set(100)
-        GC.setColor(1,1,1,t)
-        GC.mStr('Welcome',0,-70)
+        GC.setColor(1,1,1)
+        GC.mStr("Welcome",0,-70)
     end
 end
 

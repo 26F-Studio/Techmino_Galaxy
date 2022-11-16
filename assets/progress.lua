@@ -209,7 +209,38 @@ function PROGRESS.quit()
             end,
         }
     elseif prgs.main<=4 then
-        Zenitha._quit('slowFade')
+        local t=1
+        WAIT.setDefaultDraw(NULL)
+        WAIT{
+            coverAlpha=0,
+            update=function(dt)
+                t=t-dt
+                if t<=0 then
+                    love.event.quit()
+                end
+            end,
+            draw=function()
+                GC.replaceTransform(SCR.origin)
+                GC.setColor(.1,.1,.1,(1-t)/.26)
+                GC.rectangle('fill',0,0,SCR.w,SCR.h)
+
+                GC.replaceTransform(SCR.xOy_m)
+                GC.scale(1.6,1)
+                GC.setLineWidth(9.5)
+                for i=0,62 do
+                    GC.setColor(1,1,1,math.min(t/.26,1)*(62-i)/62*.04)
+                    GC.circle('line',0,0,i*10)
+                end
+                GC.setColor(1,1,1,math.min(t/.26,1)*.04)
+                GC.circle('fill',0,0,5)
+                local x=t<.26 and 0 or math.min((t-.26)/.26,1)
+                GC.scale(1.25,2*(2-x)*x)
+                GC.shear(-.26,0)
+                FONT.set(100)
+                GC.setColor(1,1,1,(1-t)/.26)
+                GC.mStr('Bye',0,-70)
+            end,
+        }
     else
         -- TODO
     end

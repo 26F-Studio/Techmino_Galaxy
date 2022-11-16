@@ -34,6 +34,8 @@ function scene.draw()
 end
 
 scene.widgetList={
+    WIDGET.new{type='button_fill',pos={0,0},x=60,y=60,w=80,color='R',cornerR=15,sound='back',fontSize=70,text=CHAR.icon.power,code=WIDGET.c_pressKey'escape',visibleFunc=function() return SYSTEM~='iOS' end},
+
     WIDGET.new{type='button',   x=325,  y=520,w=530,h=100,text=function() return CHAR.icon.person    ..' '..Text.main_out_single    end, fontSize=40,cornerR=26,code=WIDGET.c_goScn''},
     WIDGET.new{type='button',   x=895,  y=520,w=530,h=100,text=function() return CHAR.icon.people    ..' '..Text.main_out_multi     end, fontSize=40,cornerR=26,code=WIDGET.c_goScn''},
 
