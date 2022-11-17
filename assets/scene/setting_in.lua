@@ -5,15 +5,15 @@ function scene.enter()
     if PROGRESS.getMain()==1 then
         L.das.y=250
         L.arr.y=350
-        L.sdarr._visible=false
-        L.dascut._visible=false
+        L.sdarr:setVisible(false)
+        L.dascut:setVisible(false)
     else
         L.das.y=50
         L.arr.y=150
         L.sdarr.y=250
         L.dascut.y=350
-        L.sdarr._visible=true
-        L.dascut._visible=true
+        L.sdarr:setVisible(true)
+        L.dascut:setVisible(true)
     end
     WIDGET._reset()
 end
@@ -26,7 +26,7 @@ local function sliderShow_time(S) return S.disp().." ms"  end
 scene.widgetList={
     WIDGET.new{type='button',   pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound='back', fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 
-    WIDGET.new{type='button',   pos={0,.5},x=290,y=-180,w=360,h=80,lineWidth=4,cornerR=0,        fontSize=40, text=LANG'setting_keymapping',     code=function() SCN.go('keyset_list',nil,'mino') end},
+    WIDGET.new{type='button',   pos={0,.5},x=290,y=-180,w=360,h=80,lineWidth=4,cornerR=0,        fontSize=40, text=LANG'setting_keymapping',     code=WIDGET.c_goScn'keyset_in'},
     WIDGET.new{type='checkBox', pos={0,.5},x=130,y=-60, w=40,      lineWidth=4,labelPos='right', fontSize=40, text=LANG'setting_enableTouching', disp=TABLE.func_getVal(SETTINGS.system,'touchControl'),code=TABLE.func_revVal(SETTINGS.system,'touchControl')},
     WIDGET.new{type='button',   pos={0,.5},x=290,y=20,  w=360,h=80,lineWidth=4,cornerR=0,        fontSize=40, text=LANG'setting_touching',       code=WIDGET.c_goScn'keyset_touch',visibleFunc=TABLE.func_getVal(SETTINGS.system,'touchControl')},
     WIDGET.new{type='checkBox', pos={0,.5},x=130,y=250, w=40,      lineWidth=4,labelPos='right', fontSize=40, text=LANG'setting_fullscreen',     disp=TABLE.func_getVal(SETTINGS.system,'fullscreen'), code=TABLE.func_revVal(SETTINGS.system,'fullscreen')},

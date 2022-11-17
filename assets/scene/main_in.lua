@@ -5,7 +5,7 @@ function scene.enter()
     local visibleButtonName=PROGRESS.getMain()==1 and '1' or '2'
     for _,v in next,scene.widgetList do
         if v.name then
-            v._visible=v.name==visibleButtonName
+            v:setVisible(v.name==visibleButtonName)
         end
     end
     if PROGRESS.getMain()<=2 and (PROGRESS.getInteriorScore('sprint')>=200 or PROGRESS.getTotalInteriorScore()>=350) then

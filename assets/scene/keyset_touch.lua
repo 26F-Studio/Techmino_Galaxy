@@ -2,19 +2,19 @@ local scene={}
 
 local function updateWidgetVisible()
     if VCTRL.focus then
-        scene.widgetList.button1._visible=VCTRL.focus.type=='button'
-        scene.widgetList.button2._visible=VCTRL.focus.type=='button'
-        scene.widgetList.stick2_1._visible=VCTRL.focus.type=='stick2way'
-        scene.widgetList.stick2_2._visible=VCTRL.focus.type=='stick2way'
-        scene.widgetList.stick4_1._visible=VCTRL.focus.type=='stick4way'
-        scene.widgetList.stick4_2._visible=VCTRL.focus.type=='stick4way'
+        scene.widgetList.button1:setVisible(VCTRL.focus.type=='button')
+        scene.widgetList.button2:setVisible(VCTRL.focus.type=='button')
+        scene.widgetList.stick2_1:setVisible(VCTRL.focus.type=='stick2way')
+        scene.widgetList.stick2_2:setVisible(VCTRL.focus.type=='stick2way')
+        scene.widgetList.stick4_1:setVisible(VCTRL.focus.type=='stick4way')
+        scene.widgetList.stick4_2:setVisible(VCTRL.focus.type=='stick4way')
     else
-        scene.widgetList.button1._visible=false
-        scene.widgetList.button2._visible=false
-        scene.widgetList.stick2_1._visible=false
-        scene.widgetList.stick2_2._visible=false
-        scene.widgetList.stick4_1._visible=false
-        scene.widgetList.stick4_2._visible=false
+        scene.widgetList.button1:setVisible(false)
+        scene.widgetList.button2:setVisible(false)
+        scene.widgetList.stick2_1:setVisible(false)
+        scene.widgetList.stick2_2:setVisible(false)
+        scene.widgetList.stick4_1:setVisible(false)
+        scene.widgetList.stick4_2:setVisible(false)
     end
 end
 
