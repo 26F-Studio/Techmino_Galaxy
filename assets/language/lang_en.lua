@@ -108,10 +108,10 @@ return {
 
     -- Widget texts
     button_back="Back",
-    title_settings="Settings",
-    title_musicroom="Musicroom",
 
-    main_demo_setting="Setting",
+    main_demo_setting="Settings",
+
+    title_settings="Settings",
 
     setting_mino="MINO",
     setting_puyo="PUYO",
@@ -163,7 +163,14 @@ return {
     main_out_single="Single player",
     main_out_multi="Multiplayer",
 
+    title_musicroom="Musicroom",
     musicroom_fullband='Full Band',
+
+    about_title="About",
+    about_love="Terminal UI powered by LÖVE",
+    about_module="Modules:",
+    about_toolchain="Toolchain:",
+    about_peopleLost="You lost $1 !",
 
     -- Level
     tutorial_basic="The Basics",

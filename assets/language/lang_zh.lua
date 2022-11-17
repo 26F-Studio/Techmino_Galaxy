@@ -108,10 +108,10 @@ return {
 
     -- Widget texts
     button_back="返回",
-    title_settings="设置",
-    title_musicroom="音乐室",
 
     main_demo_setting="设置",
+
+    title_settings="设置",
 
     setting_mino="方块",
     setting_puyo="气泡",
@@ -163,7 +163,14 @@ return {
     main_out_single="单人游戏",
     main_out_multi="多人游戏",
 
+    title_musicroom="音乐室",
     musicroom_fullband='全频带',
+
+    about_title="关于",
+    about_love="操作界面使用LÖVE引擎",
+    about_module="模块:",
+    about_toolchain="工具链:",
+    about_peopleLost="你弄丢了 $1 !",
 
     -- Level
     tutorial_basic="基本规则",

@@ -59,7 +59,7 @@ local function _setLang(lid)
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound='back',fontSize=40,text=backText,code=WIDGET.c_backScn('fadeHeader')},
+    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound='back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
 
     WIDGET.new{type='button',         x=350,y=310,w=390,h=100,cornerR=26,fontSize=40, text=langList.en, color='LR', sound='check',code=function() _setLang('en') end},
     WIDGET.new{type='button_fill',    x=350,y=460,w=390,h=100,cornerR=26,fontSize=40, text='',          color='LF'},
