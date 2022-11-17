@@ -425,7 +425,6 @@ local settingTriggers={-- Changing values in SETTINGS.system will trigger these 
     clean=          function(v) Zenitha.setCleanCanvas(v) end,
 
     -- Other
-    powerInfo=      function(v) MES.setSafeY(v and 27 or 0) end,
     locale=         function(v) Text=LANG.get(v) LANG.setTextFuncSrc(Text) end,
 }
 settings.system=setmetatable({},{
