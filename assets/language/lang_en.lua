@@ -167,7 +167,7 @@ return {
     musicroom_fullband='Full Band',
 
     about_title="About",
-    about_love="Terminal UI powered by LÖVE",
+    about_love="Z-UI powered by LÖVE",
     about_module="Modules:",
     about_toolchain="Toolchain:",
     about_peopleLost="You lost $1 !",

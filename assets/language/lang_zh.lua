@@ -167,7 +167,7 @@ return {
     musicroom_fullband='全频带',
 
     about_title="关于",
-    about_love="操作界面使用LÖVE引擎",
+    about_love="Z-UI使用LÖVE引擎",
     about_module="模块:",
     about_toolchain="工具链:",
     about_peopleLost="你弄丢了 $1 !",
