@@ -309,6 +309,7 @@ function PP:resetPos()-- Move hand piece to the normal spawn position
     self.minY=self.handY
     self.ghostY=self.handY
     self:resetPosCheck()
+    self:triggerEvent('afterResetPos')
 end
 function PP:resetPosCheck()
     local suffocated-- Cancel deathTimer temporarily, or we cannot apply IMS when hold in suffcating
@@ -1235,6 +1236,7 @@ function PP.new()
 
         -- Drop
         afterSpawn={},
+        afterResetPos={},
         afterDrop={},
         afterLock={},
         afterClear={},
