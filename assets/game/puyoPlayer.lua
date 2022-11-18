@@ -1333,7 +1333,7 @@ function PP:initialize()
     self:loadScript(self.settings.script)
 
     self.particles={}
-    for k,v in next,particleTemplate do
+    for k,v in next,particleSystemTemplate do
         self.particles[k]=v:clone()
     end
 end

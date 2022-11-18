@@ -8,7 +8,7 @@ local ins,rem=table.insert,table.remove
 local inst=SFX.playSample
 
 local MP=setmetatable({},{__index=require'assets.game.basePlayer'})
-local minoAtkSys=require'assests.game.atksys_mino'
+local minoAtkSys=require'assets.game.atksys_mino'
 
 --------------------------------------------------------------
 -- Function tables
@@ -1792,7 +1792,7 @@ function MP:initialize()
     self:loadScript(self.settings.script)
 
     self.particles={}
-    for k,v in next,particleTemplate do
+    for k,v in next,particleSystemTemplate do
         self.particles[k]=v:clone()
     end
 end
