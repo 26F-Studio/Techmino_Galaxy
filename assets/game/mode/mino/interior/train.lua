@@ -37,6 +37,15 @@ return {
                 -- P.handX,P.handY,P.ghostY=P.modeData.x,P.modeData.y,P.modeData.y
                 -- P:minoDropped()
             end,
+            afterLock=function(P)
+                if P.field:getHeight()>=18 then
+                    for y=1,P.field:getHeight()-17 do for x=1,10 do
+                        if not P.field:getCell(x,y) then
+                            P.field:setCell({},x,y)
+                        end
+                    end end
+                end
+            end,
             drawBelowMarks=function(P)
                 local m=P.modeData.shape
                 if type(m)=='table' then

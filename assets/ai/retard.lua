@@ -63,7 +63,7 @@ function retard.calculateFieldScore(field,cb,cy)
         end
     end
 
-    return -rowB-colB
+    return clear,rowB,colB
 end
 
 local directions={'0','R','F','L'}
@@ -80,8 +80,9 @@ function retard.findPosition(field,shape)
             local cy,colH=simulateDrop(F,shape,cx)
             local score=0
 
-            score=score+retard.calculateFieldScore(field,shape,cy)
-            score=score-cy*.6
+            local clear,rowB,colB=retard.calculateFieldScore(field,shape,cy)
+            score=score+clear*2-rowB*3-colB*2
+            score=score-cy
             local minH=math.min(unpack(colH))
             for i=1,#colH do
                 score=score-(colH[i]-minH)*1.26
