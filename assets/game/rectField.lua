@@ -15,6 +15,18 @@ function F:fresh()
         end
     end
 end
+function F:export_table_simp()
+    local t={}
+
+    for y=1,#self._matrix do
+        t[y]={}
+        for x=1,#self._width do
+            t[y][x]=self._matrix[y][x] and true or false
+        end
+    end
+
+    return t
+end
 function F:export_string_simp()
     local str=''
 
