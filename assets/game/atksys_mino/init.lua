@@ -12,3 +12,5 @@ minoAtkSys.basic=   _checkAtkSys(require'assets.game.atksys_mino.basic')
 minoAtkSys.modern=  _checkAtkSys(require'assets.game.atksys_mino.modern')
 minoAtkSys.nextgen= _checkAtkSys(require'assets.game.atksys_mino.nextgen')
 minoAtkSys.galaxy=  _checkAtkSys(require'assets.game.atksys_mino.galaxy')
+
+return minoAtkSys

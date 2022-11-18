@@ -8,6 +8,7 @@ local ins,rem=table.insert,table.remove
 local inst=SFX.playSample
 
 local MP=setmetatable({},{__index=require'assets.game.basePlayer'})
+local minoAtkSys=require'assests.game.atksys_mino'
 
 --------------------------------------------------------------
 -- Function tables
