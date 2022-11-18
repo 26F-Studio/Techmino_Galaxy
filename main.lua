@@ -49,6 +49,7 @@ end
 --------------------------------------------------------------
 -- Misc modules
 GAME=require'assets.game'
+AI=require'assets.ai'
 PROGRESS=require'assets.progress'
 VCTRL=require'assets.vctrl'
 KEYMAP=require'assets.keymap'
