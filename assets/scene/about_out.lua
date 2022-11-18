@@ -27,6 +27,7 @@ end
 local obj={}
 
 function scene.enter()
+    TABLE.cut(obj)
     timer,score=12.6,0
 end
 
@@ -42,7 +43,7 @@ function scene.mouseDown(x,y)
             o.vx=(o.vx+(o.x-x)*6.26)*.626
             o.vy=math.min((o.vy+math.random(620,1260))*.8,600)
             o.va=o.va+(o.x-x)/26*(.8+.4*math.random())
-            score=score+o.score+math.random(2,6)
+            score=score+o.score+(60-o.r/1.62)+math.random(2,6)
             break
         end
     end
@@ -56,7 +57,9 @@ function scene.update(dt)
             x=math.random(-500,500),y=-20,
             vx=math.random(-200,200),vy=math.random(926,1260),
             r=math.random(25,45),
-            a=0,va=0,
+            a=math.random()*MATH.tau,va=10*math.random()-5,
+            mino=CHAR.mino[Minoes[math.random(#Minoes)].name],
+            minoColor=math.random()*MATH.tau,
         }
         if MATH.roll(.026) then
             setName(o)
@@ -72,7 +75,7 @@ function scene.update(dt)
         if o.y<-260 then
             if o.name then
                 if score>=2600 then
-                    score=math.max(math.floor(score*.9),2600)
+                    score=math.max(score*.9,2600)
                 end
                 MES.new('warn',Text.about_peopleLost:repD(o.name),2)
             end
@@ -82,12 +85,14 @@ function scene.update(dt)
 end
 
 function scene.draw()
+    local t=love.timer.getTime()
+
     if score>2600 then
         GC.replaceTransform(SCR.xOy_m)
         GC.scale(math.min(math.log10(score),4.2))
         FONT.set(80)
         GC.setColor(1,1,1,math.min((score-2600)/1260,1)^2*.126)
-        GC.mStr(score,0,-30)
+        GC.mStr(math.floor(score),0,-30)
     end
     GC.replaceTransform(SCR.xOy_d)
     GC.setLineWidth(4)
@@ -101,14 +106,14 @@ function scene.draw()
             )
             GC.mDraw(o.text,o.x,-o.y,o.a,o.r/42)
         else
-            GC.setColor(.1,.1,.1,.26)
-            GC.rectangle('fill',o.x-o.r,-o.y-o.r,2*o.r,2*o.r)
-            GC.setColor(.6,.6,.6,.26)
-            GC.rectangle('line',o.x-o.r,-o.y-o.r,2*o.r,2*o.r)
+            -- GC.setColor(.6,.6,.6,.26)
+            -- GC.rectangle('line',o.x-o.r,-o.y-o.r,2*o.r,2*o.r)
+            GC.setColor(COLOR.rainbow(o.minoColor))
+            FONT.set(60)
+            GC.printf(o.mino,o.x,-o.y,100,'center',o.a,o.r/16,nil,50,41)
         end
     end
 
-    local t=love.timer.getTime()
     PROGRESS.drawExteriorHeader()
     GC.replaceTransform(SCR.xOy)
 
