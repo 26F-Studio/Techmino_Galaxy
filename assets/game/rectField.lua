@@ -20,7 +20,7 @@ function F:export_table_simp()
 
     for y=1,#self._matrix do
         t[y]={}
-        for x=1,#self._width do
+        for x=1,self._width do
             t[y][x]=self._matrix[y][x] and true or false
         end
     end
@@ -32,7 +32,7 @@ function F:export_string_simp()
 
     for y=1,#self._matrix do
         local buf=''
-        for x=1,#self._width do
+        for x=1,self._width do
             buf=buf..(self._matrix[y][x] and 'x' or '_')
         end
         str=str..buf..'/'
@@ -45,7 +45,7 @@ function F:export_string_color()
 
     for y=1,#self._matrix do
         local buf=''
-        for x=1,#self._width do
+        for x=1,self._width do
             buf=buf..STRING.base64[self._matrix[y][x].color]
         end
         str=str..buf..'/'
