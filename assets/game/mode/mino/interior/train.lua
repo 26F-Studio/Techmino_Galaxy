@@ -38,23 +38,24 @@ return {
                 -- P:minoDropped()
             end,
             afterLock=function(P)
-                if P.field:getHeight()>=18 then
-                    for y=1,P.field:getHeight()-17 do for x=1,10 do
+                if P.field:getHeight()>=19 then
+                    for y=1,P.field:getHeight()-18 do for x=1,10 do
                         if not P.field:getCell(x,y) then
                             P.field:setCell({},x,y)
                         end
                     end end
+                    P:playSound('desuffocate')
                 end
             end,
             drawBelowMarks=function(P)
                 local m=P.modeData.shape
                 if type(m)=='table' then
-                    GC.setColor(1,1,1,.26*(math.min(P.modeData.waitTime/62,1)-math.cos(P.modeData.waitTime*.012)))
+                    GC.setColor(1,1,1,.42*(math.min(P.modeData.waitTime/126,1)+.42*math.sin(P.modeData.waitTime*.01)))
                     GC.setLineWidth(6)
                     for y=1,#m do for x=1,#m[1] do
                         local C=m[y][x]
                         if C then
-                            GC.rectangle('line',(P.modeData.x+x-2)*40+5,-(P.modeData.y+y-1)*40+5,30,30)
+                            GC.rectangle('line',(P.modeData.x+x-2)*40+7,-(P.modeData.y+y-1)*40+7,26,26)
                         end
                     end end
                 end
