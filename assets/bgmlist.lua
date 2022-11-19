@@ -14,7 +14,7 @@ local bgmList={
         base={'melody','bass','drum'},
         full={'melody','decoration1','decoration2','bass','drum','sfx'},
     },
-    ['blank']={
+    ['blank']={-- Interior main menu
         author="MrZ",
         message="The beginning",
         base={'melody','bass'},
@@ -113,12 +113,12 @@ local bgmList={
         base={'melody1','decoration','bass'},
         full={'melody1','melody2','accompany','decoration','bass','drum1','drum2'},
     },
-    ['push']={
+    ['push']={-- Interior marathon
         author="MrZ",
         base={'accompany','decoration','bass'},
         full={'melody','accompany','decoration','bass','sfx'},
     },
-    ['race']={
+    ['race']={-- Interior sprint
         author="MrZ",
         base={'melody','accompany1'},
         full={'melody','accompany1','accompany2','decoration','drum'},
@@ -163,7 +163,7 @@ local bgmList={
         base={'melody1','bass','drum'},
         full={'melody1','melody2','accompany','bass','drum'},
     },
-    ['space']={
+    ['space']={-- Inetrior tutorials
         author="MrZ",
         message="Blank remix",
         base={'melody1','melody2','bass'},
@@ -189,6 +189,7 @@ local bgmList={
     },
     ['subspace']={
         author="MrZ",
+        message="Blank remix",
         base={'melody1','melody2','bass'},
         full={'melody1','melody2','bass','drum1','drum2'},
     },
@@ -224,7 +225,7 @@ local bgmList={
         base={'melody1','melody2','bass','drum'},
         full={'melody1','melody2','accompany','bass','drum','sfx'},
     },
-    ['way']={
+    ['way']={-- Interior dig
         author="MrZ",
         base={'melody1','bass','drum'},
         full={'melody1','melody2','bass','drum'},
@@ -257,7 +258,7 @@ local bgmList={
         base={'melody1','accompany1','accompany3'},
         full={'melody1','melody2','accompany1','accompany2','accompany3','bass'},
     },
-    ['vacuum']={
+    ['vacuum']={-- Exterior main menu
         author="MrZ",
         message="Blank remix",
         base={'melody1','melody2','accompany','bass'},
@@ -305,10 +306,16 @@ local bgmList={
         author="C₂₉H₂₅N₃O₅",
         message="Old song remix",
     },
-    ['sakura']={author="ZUN & C₂₉H₂₅N₃O₅",},
-    ['race remix']={author="柒栎流星"},
-    ['secret7th remix']={author="柒栎流星"},
-    ['propel']={
+    ['sakura']={-- Exterior ultra (TODO)
+        author="ZUN & C₂₉H₂₅N₃O₅",
+    },
+    ['race remix']={
+        author="柒栎流星",
+    },
+    ['secret7th remix']={
+        author="柒栎流星",
+    },
+    ['propel']={-- Exterior marathon
         author="TetraCepra",
         message="A cool push remix",
         base={'melody','accompany2','bass1','bass2'},

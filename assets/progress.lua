@@ -69,7 +69,7 @@ function PROGRESS.setBG_main_out()
     BG.set(prgs.main==3 and 'space' or 'galaxy')
 end
 function PROGRESS.playBGM_main_out()
-    playBgm('nil',prgs.main==3 and 'simp' or 'full')
+    playBgm('vacuum',prgs.main==3 and 'simp' or 'full')
 end
 function PROGRESS.applyCoolWaitTemplate()
     local list={}
