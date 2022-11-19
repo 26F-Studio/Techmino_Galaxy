@@ -713,14 +713,14 @@ end
 function MP:moveLeft()
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
         self:moveHand('moveX',-1)
-        self:freshGhost()
+        self:freshGhost(self.deathTimer)
         return true
     end
 end
 function MP:moveRight()
     if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
         self:moveHand('moveX',1)
-        self:freshGhost()
+        self:freshGhost(self.deathTimer)
         return true
     end
 end
@@ -769,7 +769,7 @@ function MP:rotate(dir,ifInit)
                     self.hand.matrix=icb
                     self.hand.direction=kick.target
                     self:moveHand('rotate',ix,iy,dir,ifInit)
-                    self:freshGhost()
+                    self:freshGhost(self.deathTimer)
                     return
                 end
             end
