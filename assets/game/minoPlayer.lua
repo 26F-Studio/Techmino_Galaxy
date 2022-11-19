@@ -432,7 +432,7 @@ function MP:moveHand(action,a,b,c,d)
 
     if self.deathTimer then
         local t=self.deathTimer
-        self.deathTimer=false
+        self.deathTimer=false-- Cancel deathTimer temporarily, prevent ifoverlap method treat anything as air
         if self:ifoverlap(self.hand.matrix,self.handX,self.handY) then
             self.deathTimer=t
         else
@@ -457,10 +457,10 @@ function MP:resetPos()-- Move hand piece to the normal spawn position
     self:triggerEvent('afterResetPos')
 end
 function MP:resetPosCheck()
-    local suffocated-- Cancel deathTimer temporarily, or we cannot apply IMS when hold in suffcating
+    local suffocated
     if self.deathTimer then
         local bufferedDeathTimer=self.deathTimer
-        self.deathTimer=false
+        self.deathTimer=false-- Cancel deathTimer temporarily, or we cannot apply IMS when hold in suffcating
         suffocated=self:ifoverlap(self.hand.matrix,self.handX,self.handY)
         self.deathTimer=bufferedDeathTimer
     else
@@ -643,9 +643,7 @@ function MP:popNext()
 
     if self.keyBuffer.hardDrop then-- IHdS
         self.keyBuffer.hardDrop=false
-        if not self.deathTimer then
-            self:minoDropped()
-        end
+        self:minoDropped()
     end
 end
 function MP:getMino(shapeID)
@@ -853,7 +851,7 @@ function MP:hold_float()
     end
 end
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
-    if not self.hand then return end
+    if not self.hand or self.deathTimer then return end
 
     -- Move down
     if self.handY>self.ghostY then
