@@ -601,6 +601,11 @@ function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
     self:playSound('lock')
     self:triggerEvent('afterLock')
 
+    -- Lockout check
+    if self.handY>self.settings.lockoutH then
+        self:finish('CE')
+    end
+
     -- Update & Release garbage
     local i=1
     while true do
@@ -1062,10 +1067,12 @@ function PP:render()
 
 
         -- Height lines
-        skin.drawHeightLines(
-            settings.fieldW*40, -- (pixels) Field Width
-            settings.spawnH*40, -- (pixels) Spawning height
-            620*40              -- (pixels) Void height
+        skin.drawHeightLines(-- All unit are pixel
+            settings.fieldW*40,  -- Field Width
+            settings.spawnH*40,  -- Spawning height
+            settings.lockoutH*40,-- Lock-out height
+            settings.deathH*40,  -- Death height
+            settings.voidH*40    -- Void height
         )
 
 
@@ -1151,7 +1158,10 @@ end
 local baseEnv={
     fieldW=6,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
     spawnH=11,
-    connH=12,-- standard 12
+    lockoutH=1e99,
+    deathH=1e99,
+    voidH=620,
+    connH=12,-- Default to 12
 
     nextSlot=6,
 

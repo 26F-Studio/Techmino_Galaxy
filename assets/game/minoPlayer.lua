@@ -874,12 +874,30 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     self:triggerEvent('afterLock')
 
     -- Clear
-    local clear=self:checkField()
-    self.lastMovement.clear=clear
-    if clear then
-        self:playSound('clear',clear.line)
-        self:createFrenzyParticle(clear.line*26)
+    local lineClear=self:checkField()
+
+    if lineClear then
+        self.lastMovement.clear=lineClear
+        self.combo=self.combo+1
+        self.clearTimer=self.settings.clearDelay
+        local h={
+            combo=self.combo,
+            line=#lineClear,
+            lines=lineClear,
+            time=self.time,
+        }
+        ins(self.clearHistory,h)
+        self:shakeBoard('-clear',#lineClear)
+        self:playSound('clear',#lineClear)
+        self:createFrenzyParticle(#lineClear*26)
         self:triggerEvent('afterClear',self.lastMovement)
+    else
+        self.combo=0
+    end
+
+    -- Lockout check
+    if self.handY>self.settings.lockoutH and (self.settings.strictLockout or not lineClear)  then
+        self:finish('CE')
     end
 
     -- Attack
@@ -1084,25 +1102,9 @@ function MP:checkField()
             ins(lineClear,y)
         end
     end
-    if #lineClear>0 then
-        self.combo=self.combo+1
-        self.clearTimer=self.settings.clearDelay
-        local h={
-            combo=self.combo,
-            line=#lineClear,
-            lines=lineClear,
-            time=self.time,
-        }
-        ins(self.clearHistory,h)
-        self:shakeBoard('-clear',#lineClear)
-        return h
-    else
-        self.combo=0
-        if self.settings.lockout and self.handY>self.settings.lockoutH then
-            self:finish('CE')
-        end
+    if #lineClear >0 then
+        return lineClear
     end
-    return false
 end
 function MP:changeFieldWidth(w,origPos)
     if w>0 and w%1==0 then
@@ -1389,12 +1391,12 @@ function MP:render()
         gc.translate(0,-self.fieldDived)
 
         -- Height lines
-        skin.drawHeightLines(
-            settings.fieldW*40,  -- (pixels) Field Width
-            settings.spawnH*40,  -- (pixels) Spawning height
-            settings.lockoutH*40,-- (pixels) lock-out height
-            settings.deathH*40,  -- (pixels) Death height
-            1260*40              -- (pixels) Void height
+        skin.drawHeightLines(-- All unit are pixel
+            settings.fieldW*40,  -- Field Width
+            settings.spawnH*40,  -- Spawning height
+            settings.lockoutH*40,-- Lock-out height
+            settings.deathH*40,  -- Death height
+            settings.voidH*40    -- Void height
         )
 
 
@@ -1523,6 +1525,7 @@ local baseEnv={
     maxSpawnH=21,
     lockoutH=1e99,
     deathH=1e99,
+    voidH=1260,
 
     nextSlot=6,
 
@@ -1553,6 +1556,7 @@ local baseEnv={
     atkSys='none',
 
     freshCondition='any',
+    strictLockout=false,
     freshCount=15,
     maxFreshTime=6200,
     script=false,

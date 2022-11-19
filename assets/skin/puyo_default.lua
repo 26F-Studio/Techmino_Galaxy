@@ -25,11 +25,6 @@ function S.drawFieldCells(F)
     end end
 end
 
-function S.drawHeightLines(fieldW,spawnH,voidH)
-    gc_setColor(.0,.4,1.,.8) gc_rectangle('fill',0,-spawnH -1 ,fieldW,2 )
-    gc_setColor(.0,.0,.0,.6) gc_rectangle('fill',0,-voidH  -40,fieldW,40)
-end
-
 function S.drawGhost(B,handX,ghostY)
     gc_setColor(1,1,1,.162)
     for y=1,#B do for x=1,#B[1] do

@@ -81,12 +81,11 @@ function P:finish(reason)
     self:triggerEvent('gameOver',reason)
     GAME.checkFinish()
 
-    -- <Temporarily>
+    -- TODO: Just for temporary use
     if self.isMain then
         MES.new(reason=='AC' and 'check' or 'error',reason,6.26)
         self:playSound(reason=='AC' and 'win' or 'fail')
     end
-    -- </Temporarily>
 end
 --------------------------------------------------------------
 -- Press & Release & Update & Render
