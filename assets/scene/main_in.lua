@@ -9,7 +9,7 @@ function scene.enter()
     end
     if PROGRESS.getMain()<=2 and (PROGRESS.getInteriorScore('sprint')>=200 or PROGRESS.getTotalInteriorScore()>=350) then
         PROGRESS.transendTo(3)
-    elseif PROGRESS.getMain()==1 and PROGRESS.getTotalInteriorScore()>=150 then
+    elseif PROGRESS.getMain()==1 and (PROGRESS.getTotalInteriorScore()>=150 or PROGRESS.getTutorialPassed()) then
         PROGRESS.transendTo(2)
     end
 end
@@ -61,8 +61,9 @@ scene.widgetList={
     WIDGET.new{name='2',type='button_fill',pos={.5,.5},x=0,   y=-40,w=320,h=140, color='R',text=LANG'main_in_sprint',  fontSize=40,cornerR=0,code=playMode'mino/interior/sprint'},
     WIDGET.new{name='2',type='button_fill',pos={.5,.5},x=360, y=-40,w=320,h=140, color='R',text=LANG'main_in_marathon',fontSize=40,cornerR=0,code=playMode'mino/interior/marathon'},
 
-    WIDGET.new{type='button_fill',pos={.5,.5},x=-270,y=140,w=500,h=140, color='B',text=LANG'main_in_tutorial',fontSize=40,cornerR=0,code=WIDGET.c_goScn'tutorial'},
-    WIDGET.new{type='button_fill',pos={.5,.5},x=270, y=140,w=500,h=140, color='Y',text=LANG'main_in_sandbox', fontSize=40,cornerR=0,code=playMode'mino/interior/train'},
+    WIDGET.new{name='1',type='button_fill',pos={.5,.5},x=0,   y=140,w=500,h=140, color='B',text=LANG'main_in_tutorial',fontSize=40,cornerR=0,code=WIDGET.c_goScn'tutorial'},
+    WIDGET.new{name='2',type='button_fill',pos={.5,.5},x=-270,y=140,w=500,h=140, color='B',text=LANG'main_in_tutorial',fontSize=40,cornerR=0,code=WIDGET.c_goScn'tutorial'},
+    WIDGET.new{name='2',type='button_fill',pos={.5,.5},x=270, y=140,w=500,h=140, color='Y',text=LANG'main_in_sandbox', fontSize=40,cornerR=0,code=playMode'mino/interior/train'},
 
     WIDGET.new{type='button',     pos={.5,.5},x=-270,y=320,w=400,h=100,text=CHAR.icon.language,               fontSize=70,lineWidth=4,cornerR=0,code=WIDGET.c_goScn'lang_in'},
     WIDGET.new{type='button',     pos={.5,.5},x=270, y=320,w=400,h=100,text=LANG'main_in_settings',           fontSize=40,lineWidth=4,cornerR=0,code=WIDGET.c_goScn'setting_in'},

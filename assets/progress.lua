@@ -314,7 +314,11 @@ function PROGRESS.getBgmUnlocked(name)
     return prgs.bgmUnlocked[name]
 end
 function PROGRESS.getTutorialPassed(n)
-    return prgs.tutorial:sub(n,n)=='1'
+    if n then
+        return prgs.tutorial:sub(n,n)=='1'
+    else
+        return prgs.tutorial=='111111'
+    end
 end
 function PROGRESS.getInteriorScore(mode)
     return prgs.interiorScore[mode]
@@ -346,9 +350,6 @@ end
 function PROGRESS.setTutorialPassed(n)
     if prgs.tutorial:sub(n,n)=='0' then
         prgs.tutorial=prgs.tutorial:sub(1,n-1)..'1'..prgs.tutorial:sub(n+1)
-        if prgs.tutorial=='111111' then
-            PROGRESS.setMain(2)
-        end
         PROGRESS.save()
     end
 end
