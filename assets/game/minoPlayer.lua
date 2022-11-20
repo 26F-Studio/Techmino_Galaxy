@@ -859,8 +859,9 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         self:shakeBoard('-drop')
         self:playSound('drop')
     end
-    self:createLockParticle(self.handX,self.handY)
     self:triggerEvent('afterDrop')
+    if not self.hand then return end
+    self:createLockParticle(self.handX,self.handY)
 
     -- Lock to field
     self:lock()
