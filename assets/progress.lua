@@ -1,5 +1,10 @@
 local gc=love.graphics
 
+--[[
+    I/II:
+        Sum>=100 → II
+        Single>=200 or Sum>=350 → III
+]]
 local prgs={
     main=1,
     tutorial='000000',
@@ -11,11 +16,58 @@ local prgs={
     bgmUnlocked={},
 }
 
---[[
-    I/II:
-        Sum>=100 → II
-        Single>=200 or Sum>=350 → III
-]]
+local function sysInfoFunc()
+    if not SETTINGS.system.powerInfo then return end
+    gc.replaceTransform(SCR.xOy_ur)
+    gc.translate(-130,0)
+
+    -- Box
+    gc.setColor(0,0,0,.42)
+    gc.polygon('fill',0,0,130,0,130,50,25,50,0,35)
+
+    -- Time
+    gc.setColor(1,1,1)
+    FONT.set(25,'thin')
+    gc.printf(os.date("%I:%M %p"),0,0,125,'right')
+
+    gc.translate(90,28)
+
+    -- Battery
+    gc.setLineWidth(1)
+    gc.rectangle('fill',33,4,3,10)
+    gc.rectangle('line',-1,-1,34,20)
+    local state,pow=love.system.getPowerInfo()
+    if state=='unknown' then
+        FONT.set(20,'thin')
+        gc.print("?",16,9,love.timer.getTime()*2.6,nil,nil,5,11)
+    elseif state=='nobattery' then
+        FONT.set(15,'thin')
+        gc.print("x x",6,-3)
+        gc.print("_",13,-1)
+    elseif pow then
+        FONT.set(20,'thin')
+        gc.printf(pow.."%",-64,-2,60,'right')
+
+        gc.setColor(
+            pow>60 and COLOR.L or
+            pow>26 and COLOR.lY or
+            COLOR.R
+        )
+        -- Inside-area: 30*16, (1,1)~(31,17)
+        local x=10
+        local r=7*math.floor(pow%x/2)*2/x
+        gc.rectangle('fill',1,1,30*math.floor(pow/x)*x/100,16)
+        gc.rectangle('fill',1+30*math.floor(pow/x)*x/100,8-r,30/100*x,2*r)
+        if state=='charging' then
+            gc.setColor(COLOR.lG)
+            for i=1,math.ceil(pow/x) do
+                local a=6.2*math.sin(-love.timer.getTime()*5+i*.626)
+                gc.rectangle('fill',3*i-2,9-1.5+a,3,3)
+                gc.rectangle('fill',3*i-2,9-1.5-a,3,3)
+            end
+        end
+    end
+end
 
 local PROGRESS={}
 
@@ -62,15 +114,6 @@ function PROGRESS.swapMainScene()
         -- TODO
     end
 end
-function PROGRESS.playBGM_main_in()
-    playBgm('blank',prgs.main==1 and 'simp' or 'full')
-end
-function PROGRESS.setBG_main_out()
-    BG.set(prgs.main==3 and 'space' or 'galaxy')
-end
-function PROGRESS.playBGM_main_out()
-    playBgm('vacuum',prgs.main==3 and 'simp' or 'full')
-end
 function PROGRESS.applyCoolWaitTemplate()
     local list={}
     for i=1,52 do list[i]=('assets/image/loading/%d.png'):format(i) end
@@ -86,8 +129,17 @@ function PROGRESS.applyCoolWaitTemplate()
         GC.setBlendMode('alpha')
     end)
 end
-function PROGRESS.setCursor(state)
-    if state=='interior' then
+function PROGRESS.playInteriorBGM()
+    playBgm('blank',prgs.main==1 and 'simp' or 'full')
+end
+function PROGRESS.playExteriorBGM()
+    playBgm('vacuum',prgs.main==3 and 'simp' or 'full')
+end
+function PROGRESS.setEnv(env)
+    if env=='interior' then
+        BG.set('none')
+        PROGRESS.playInteriorBGM()
+        Zenitha.setClickFX(true)
         Zenitha.setDrawCursor(function(_,x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)
@@ -101,7 +153,10 @@ function PROGRESS.setCursor(state)
                 gc.line(-15,0,15,0)
             end
         end)
-    elseif state=='exterior' then
+    elseif env=='exterior' then
+        BG.set(prgs.main==3 and 'space' or 'galaxy')
+        PROGRESS.playExteriorBGM()
+        Zenitha.setClickFX(function(x,y) SYSFX.new('glow',2,x,y,20) end)
         Zenitha.setDrawCursor(function(_,x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)
@@ -117,64 +172,10 @@ function PROGRESS.setCursor(state)
                 gc.line(-20,0,20,0)
             end
         end)
+        Zenitha.setDrawSysInfo(sysInfoFunc)
     else
         error("?")
     end
-end
-function PROGRESS.setSysInfo()
-    Zenitha.setDrawSysInfo(function()
-        if not SETTINGS.system.powerInfo then return end
-        gc.replaceTransform(SCR.xOy_ur)
-        gc.translate(-130,0)
-
-        -- Box
-        gc.setColor(0,0,0,.42)
-        gc.polygon('fill',0,0,130,0,130,50,25,50,0,35)
-
-        -- Time
-        gc.setColor(1,1,1)
-        FONT.set(25,'thin')
-        gc.printf(os.date("%I:%M %p"),0,0,125,'right')
-
-        gc.translate(90,28)
-
-        -- Battery
-        gc.setLineWidth(1)
-        gc.rectangle('fill',33,4,3,10)
-        gc.rectangle('line',-1,-1,34,20)
-        local state,pow=love.system.getPowerInfo()
-        if state=='unknown' then
-            FONT.set(20,'thin')
-            gc.print("?",16,9,love.timer.getTime()*2.6,nil,nil,5,11)
-        elseif state=='nobattery' then
-            FONT.set(15,'thin')
-            gc.print("x x",6,-3)
-            gc.print("_",13,-1)
-        elseif pow then
-            FONT.set(20,'thin')
-            gc.printf(pow.."%",-64,-2,60,'right')
-
-            gc.setColor(
-                pow>60 and COLOR.L or
-                pow>26 and COLOR.lY or
-                COLOR.R
-            )
-            -- Inside-area: 30*16, (1,1)~(31,17)
-            local x=10
-            local r=7*math.floor(pow%x/2)*2/x
-            gc.rectangle('fill',1,1,30*math.floor(pow/x)*x/100,16)
-            gc.rectangle('fill',1+30*math.floor(pow/x)*x/100,8-r,30/100*x,2*r)
-            if state=='charging' then
-                gc.setColor(COLOR.lG)
-                for i=1,math.ceil(pow/x) do
-                    local a=6.2*math.sin(-love.timer.getTime()*5+i*.626)
-                    gc.rectangle('fill',3*i-2,9-1.5+a,3,3)
-                    gc.rectangle('fill',3*i-2,9-1.5-a,3,3)
-                end
-            end
-        end
-    end)
-    PROGRESS.setSysInfo=NULL
 end
 function PROGRESS.transendTo(n)
     MES.clear()

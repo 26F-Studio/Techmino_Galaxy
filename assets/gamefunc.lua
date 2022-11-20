@@ -45,7 +45,7 @@ end
 local modeObjMeta={__call=function(self,...)
     local success,errInfo=pcall(GAME.getMode,self.name)
     if success then
-        SCN.go('game_simp',nil,self.name)
+        SCN.go('game_in',nil,self.name)
     else
         MES.new('warn',Text.noMode:repD(tostring(self.name),errInfo))
     end

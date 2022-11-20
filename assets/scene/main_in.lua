@@ -1,7 +1,6 @@
 local scene={}
 function scene.enter()
-    PROGRESS.setCursor('interior')
-    BG.set('none')
+    PROGRESS.setEnv('interior')
     local visibleButtonName=PROGRESS.getMain()==1 and '1' or '2'
     for _,v in next,scene.widgetList do
         if v.name then
@@ -12,8 +11,6 @@ function scene.enter()
         PROGRESS.transendTo(3)
     elseif PROGRESS.getMain()==1 and PROGRESS.getTotalInteriorScore()>=150 then
         PROGRESS.transendTo(2)
-    else
-        PROGRESS.playBGM_main_in()
     end
 end
 

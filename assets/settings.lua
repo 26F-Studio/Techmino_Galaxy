@@ -22,7 +22,6 @@ local settings={
         powerInfo=true,
         sysCursor=false,
         showTouch=true,
-        clickFX=true,
         clean=false,
         locale='en',
     },
@@ -68,7 +67,6 @@ local settingTriggers={-- Changing values in SETTINGS.system will trigger these 
     updRate=        function(v) Zenitha.setUpdateFreq(v) end,
     drawRate=       function(v) Zenitha.setDrawFreq(v) end,
     sysCursor=      function(v) love.mouse.setVisible(v) end,
-    clickFX=        function(v) Zenitha.setClickFX(v) end,
     clean=          function(v) Zenitha.setCleanCanvas(v) end,
 
     -- Other

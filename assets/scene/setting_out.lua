@@ -72,11 +72,10 @@ scene.widgetList={
     WIDGET.new{name='3',type='slider',     pos={0,0},x=340, y=380,w=500,     text=LANG'setting_updRate',     widthLimit=380,axis={20,100,10},             disp=TABLE.func_getVal(SETTINGS.system,'updRate'),  valueShow=sliderShow_mul,  code=TABLE.func_setVal(SETTINGS.system,'updRate')},
     WIDGET.new{name='3',type='slider',     pos={0,0},x=340, y=460,w=500,     text=LANG'setting_drawRate',    widthLimit=380,axis={20,100,10},             disp=TABLE.func_getVal(SETTINGS.system,'drawRate'), valueShow=sliderShow_mul,  code=TABLE.func_setVal(SETTINGS.system,'drawRate')},
     WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=220,h=45,      text=LANG'setting_sysCursor',   widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'sysCursor'),   code=TABLE.func_revVal(SETTINGS.system,'sysCursor')},
-    WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=290,h=45,      text=LANG'setting_clickFX',     widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'clickFX'),     code=TABLE.func_revVal(SETTINGS.system,'clickFX')},
-    WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=360,h=45,      text=LANG'setting_power',       widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'powerInfo'),   code=TABLE.func_revVal(SETTINGS.system,'powerInfo')},
-    WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=430,h=45,      text=LANG'setting_clean',       widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'cleanCanvas'), code=TABLE.func_revVal(SETTINGS.system,'cleanCanvas')},
-    WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=500,h=45,      text=LANG'setting_fullscreen',  widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'fullscreen'),  code=TABLE.func_revVal(SETTINGS.system,'fullscreen')},
-    WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=570,h=45,      text=LANG'setting_showTouch',   widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'showTouch'),   code=TABLE.func_revVal(SETTINGS.system,'showTouch')},
+    WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=290,h=45,      text=LANG'setting_power',       widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'powerInfo'),   code=TABLE.func_revVal(SETTINGS.system,'powerInfo')},
+    WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=360,h=45,      text=LANG'setting_clean',       widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'cleanCanvas'), code=TABLE.func_revVal(SETTINGS.system,'cleanCanvas')},
+    WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=430,h=45,      text=LANG'setting_fullscreen',  widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'fullscreen'),  code=TABLE.func_revVal(SETTINGS.system,'fullscreen')},
+    WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=500,h=45,      text=LANG'setting_showTouch',   widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'showTouch'),   code=TABLE.func_revVal(SETTINGS.system,'showTouch')},
 
     -- Gameplay
     -- ?

@@ -4,10 +4,7 @@ local versionText=GC.newText(FONT.get(35,'bold'))
 local terminalName=GC.newText(FONT.get(35,'thin'))
 
 function scene.enter()
-    PROGRESS.setCursor('exterior')
-    PROGRESS.setSysInfo()
-    PROGRESS.setBG_main_out()
-    PROGRESS.playBGM_main_out()
+    PROGRESS.setEnv('exterior')
     versionText:set(VERSION.appVer)
     terminalName:set(("TERM[%s]"):format(SYSTEM:sub(1,3):upper()))
 end
