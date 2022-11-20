@@ -585,7 +585,7 @@ function MP:freshNextQueue()
         local shapeID=self:seqGen()
         if shapeID then
             if type(shapeID)=='number' then
-                self:getMino(shapeID)
+                self:pushNext(shapeID)
             else
                 break
             end
@@ -601,19 +601,22 @@ function MP:clearNext()
     TABLE.cut(self.nextQueue)
 end
 function MP:pushNext(arg)
-    if type(arg)=='string' then
+    if type(arg)=='number' then
+        ins(self.nextQueue,self:getMino(assert(
+            Minoes[arg],
+            "Invalid mino name '"..arg.."'"
+        ) and arg))
+    elseif type(arg)=='string' then
         for i=1,#arg do
-            self:getMino(assert(
+            ins(self.nextQueue,self:getMino(assert(
                 Minoes[arg:sub(i,i)],
                 "Invalid mino name '"..arg:sub(i,i).."'"
-            ).id)
+            ).id))
         end
     elseif type(arg)=='table' then
         for i=1,#arg do
-            self:getMino(assert(
-                Minoes[arg[i]],
-                "Invalid mino name '"..arg[i].."'"
-            ) and arg[i])
+            assert(type(arg[i])=='number' or type(arg[i])=='string',"Must be simple table")
+            self:pushNext(arg[i])
         end
     else
         error("arg must be string or table")
@@ -686,7 +689,7 @@ function MP:getMino(shapeID)
         matrix=shape,
     }
     mino._origin=TABLE.copy(mino,0)
-    ins(self.nextQueue,mino)
+    return mino
 end
 function MP:ifoverlap(CB,cx,cy)
     local F=self.field
@@ -1085,18 +1088,20 @@ function MP:setField(arg)
     end
     self:freshGhost(true)
 end
+function MP:checkLineFull(y)
+    local F=self.field
+    for x=1,F:getWidth() do
+        if not F:getCell(x,y) then
+            return false
+        end
+    end
+    return true
+end
 function MP:checkField()
     local lineClear={}
     local F=self.field
     for y=F:getHeight(),1,-1 do
-        local hasHole
-        for x=1,F:getWidth() do
-            if not F:getCell(x,y) then
-                hasHole=true
-                break
-            end
-        end
-        if not hasHole then
+        if self:checkLineFull(y) then
             F:removeLine(y)
             ins(lineClear,y)
         end
