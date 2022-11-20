@@ -95,7 +95,6 @@ local defaultSoundFunc={
     fail=        function() SFX.play('fail')        end,
 }
 PP.scriptCmd={
-    -- TODO
 }
 --------------------------------------------------------------
 -- Actions

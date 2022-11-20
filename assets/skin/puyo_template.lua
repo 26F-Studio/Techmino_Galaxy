@@ -6,7 +6,7 @@ local gc_rectangle=gc.rectangle
 local gc_setLineWidth=gc.setLineWidth
 
 local S={}
-S.base='mino_default'
+S.base='mino_template'
 
 function S.drawFieldBackground(fieldW)
     gc_setColor(0,0,0,.42)

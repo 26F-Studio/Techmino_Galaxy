@@ -7,15 +7,14 @@ local bigTitle=setmetatable({},{
         local s=''
         for c in name:gmatch'.' do
             if up then
-                s=s..c:upper()
+                c=c:upper()
                 up=false
             else
                 up=c:match'%s'
-                s=s..c
             end
+            s=s..c
         end
         self[name]=s
-        -- self[k]=k:sub(1,1):upper()..k:sub(2)
         return self[name]
     end
 })
@@ -29,7 +28,9 @@ local musicListBox do
         end
         FONT.set(60)
         GC.setColor(name==selected and COLOR.L or COLOR.LD)
-        GC.print(bigTitle[name].." - "..bgmList[name].author,20,4)
+        GC.print(bigTitle[name],20,4)
+        FONT.set(20)
+        GC.printf(bgmList[name].author,0,45,685,'right')
         if sel and name~=selected then
             FONT.set(100)
             GC.setColor(COLOR.L)

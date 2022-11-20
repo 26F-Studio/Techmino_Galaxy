@@ -5,7 +5,7 @@ local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 
 local S={}
-S.base='puyo_default'
+S.base='puyo_template'
 
 local function drawSide(B,x,y,bx,by)
     local c=B[y][x].color

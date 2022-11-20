@@ -56,7 +56,7 @@ end
 function F:export_fumen()
     local str=''
 
-    -- TODO, but anyone interested? I won't
+    -- Anyone interested? I don't
     error('Not implemented yet')
 
     return str

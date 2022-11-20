@@ -1,5 +1,5 @@
 --[[
-    Base on mino_default:
+    Base on mino_template:
     Remove HeightLines
     Remove DelayIndicator
     Static starting counter
@@ -11,7 +11,7 @@ local gc_line=gc.line
 local COLOR=COLOR
 
 local S={}
-S.base='mino_default'
+S.base='mino_template'
 
 function S.drawFieldBorder()
     gc_setLineWidth(2)

@@ -328,15 +328,15 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
     end
 end
 for _,v in next,{
-    'mino_default',-- Shouldn't be used
+    'mino_template',-- Shouldn't be used
     'mino_plastic',
     'mino_simp',
     'mino_interior',
 
-    'puyo_default',-- Shouldn't be used
+    'puyo_template',-- Shouldn't be used
     'puyo_jelly',
 
-    'gem_default',
+    'gem_template',
 } do
     if FILE.isSafe('assets/skin/'..v..'.lua') then
         SKIN.add(v,require('assets.skin.'..v))

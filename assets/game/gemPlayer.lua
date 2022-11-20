@@ -91,7 +91,6 @@ local defaultSoundFunc={
     fail=        function() SFX.play('fail')        end,
 }
 GP.scriptCmd={
-    -- TODO
 }
 --------------------------------------------------------------
 -- Actions
@@ -1015,7 +1014,7 @@ local baseEnv={
     script=false,
 
     -- Will be overrode with user setting
-    skin='gem_default',
+    skin='gem_template',
 
     shakeness=.26,
 }

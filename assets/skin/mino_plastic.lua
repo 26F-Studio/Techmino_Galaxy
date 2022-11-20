@@ -1,5 +1,5 @@
 --[[
-    Base on mino_default:
+    Base on mino_template:
     Connected cells
 ]]
 local gc=love.graphics
@@ -13,7 +13,7 @@ local min=math.min
 local COLOR=COLOR
 
 local S={}
-S.base='mino_default'
+S.base='mino_template'
 
 local X=3-- Border width
 
