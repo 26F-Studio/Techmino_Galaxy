@@ -59,7 +59,7 @@ return {
                         end
                     end end
                 end
-            end
+            end,
         },
     }},
 }

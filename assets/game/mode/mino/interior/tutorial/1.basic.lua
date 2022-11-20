@@ -26,33 +26,30 @@ return {
             gameStart=function(P)
                 P.spawnTimer=6500
             end,
-            afterLock=function(P)
+            afterDrop=function(P)
                 if P.modeData.quest==1 then
-                    if #P.nextQueue==0 then
-                        P.modeData.signal=P.field:getHeight()<=2
-                    end
+                    if P.handY~=1 then P.hand=false end
+                    P.modeData.signal=P.handY==1
                 elseif P.modeData.quest==2 then
-                    if #P.nextQueue==1 then
-                        if P.field:getHeight()>2 then
-                            P.modeData.signal=false
-                        end
+                    if P.handY~=1 then
+                        P.hand=false
+                        P.modeData.signal=false
                     elseif #P.nextQueue==0 then
-                        P.modeData.signal=P.field:getHeight()<=2
+                        P.modeData.signal=true
                     end
                 elseif P.modeData.quest==3 then
-                    if #P.nextQueue==1 then
-                        if P.field:getHeight()>2 then
-                            P.modeData.signal=false
-                        end
+                    if P.handY~=1 then
+                        P.hand=false
+                        P.modeData.signal=false
                     elseif #P.nextQueue==0 then
-                        P.modeData.signal=P.field:getHeight()<=1
+                        P.modeData.signal=true
                     end
                 else
-                    if #P.nextQueue==0 then
-                        P.modeData.signal=P.field:getHeight()<=2
-                        if P.modeData.signal then
-                            P.settings.spawnDelay=1e99
-                        end
+                    if P.handY==1 and P.hand.direction==2 then
+                        P.modeData.signal=true
+                    else
+                        P.hand=false
+                        P.modeData.signal=false
                     end
                 end
             end,

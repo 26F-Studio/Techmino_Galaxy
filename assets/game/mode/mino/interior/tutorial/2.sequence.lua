@@ -22,55 +22,63 @@ return {
             gameStart=function(P)
                 P.spawnTimer=1800
             end,
-            afterLock=function(P)
-                local F=P.field
+            afterDrop=function(P)
                 if P.modeData.quest==1 then
-                    if F:getHeight()~=4 then
+                    if P.handY~=1 then
+                        P.hand=false
                         P.modeData.signal=false
-                    else
-                        for i=1,10 do
-                            if not F:getCell(i,1) then
-                                P.modeData.wrongPiece=
-                                    i==10 and 'J' or
-                                    F:getCell(i+1,4) and 'J' or
-                                    'L'
-                                P:pushNext(P.modeData.wrongPiece)
-                                break
-                            end
-                        end
-                        P.modeData.signal=true
                     end
                 elseif P.modeData.quest==2 then
-                    if #P.nextQueue==1 then
-                        if F:getHeight()~=4 then
-                            P.modeData.signal=false
-                        end
-                    else
-                        P.modeData.signal=F:getHeight()==3
+                    if P.handY~=1 then
+                        P.hand=false
+                        P.modeData.signal=false
                     end
                 elseif P.modeData.quest==3 then
-                    if F:getHeight()>4 then
+                    if P.handY~=1 then
+                        P.hand=false
                         P.modeData.signal=false
-                    elseif #P.nextQueue+#P.holdQueue==0 then
-                        P.modeData.signal=F:getHeight()==3
                     end
                 elseif P.modeData.quest==4 then
                     if #P.nextQueue+#P.holdQueue==0 then
-                        local hasHole
-                        for y=F:getHeight(),1,-1 do
-                            for x=1,F:getWidth() do
-                                if not F:getCell(x,y) then
-                                    hasHole=true
-                                    break
-                                end
-                            end
-                        end
-                        if not hasHole then
-                            P.modeData.signal=true
-                            P.modeData.extra=F:getHeight()==2
-                        else
+                        if P.handY~=1 then
+                            P.hand=false
                             P.modeData.signal=false
                         end
+                    end
+                end
+            end,
+            afterLock=function(P)
+                local F=P.field
+                if P.modeData.quest==1 then
+                    for i=1,10 do
+                        if not F:getCell(i,1) then
+                            P.modeData.wrongPiece=
+                                i==10 and 'J' or
+                                F:getCell(i+1,4) and 'J' or
+                                'L'
+                            P:pushNext(P.modeData.wrongPiece)
+                            break
+                        end
+                    end
+                    P.modeData.signal=true
+                elseif P.modeData.quest==2 then
+                    if #P.nextQueue+#P.holdQueue==0 then
+                        P.modeData.signal=true
+                    end
+                elseif P.modeData.quest==3 then
+                    if #P.nextQueue+#P.holdQueue==0 then
+                        P.modeData.signal=true
+                    end
+                elseif P.modeData.quest==4 then
+                    if #P.nextQueue+#P.holdQueue==0 then
+                        for y=F:getHeight(),1,-1 do
+                            if not P:checkLineFull(y) then
+                                P.modeData.signal=false
+                                return
+                            end
+                        end
+                        P.modeData.signal=true
+                        P.modeData.extra=F:getHeight()==2
                     end
                 end
             end,
