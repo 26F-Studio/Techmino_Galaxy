@@ -132,6 +132,7 @@ return {
     setting_keymapping="键位绑定...",
     setting_enableTouching="启用触屏控制",
     setting_touching="触屏控制...",
+    setting_test="测试",
 
     setting_sysCursor="使用系统光标",
     setting_clickFX="点击动画",
@@ -144,9 +145,6 @@ return {
     setting_maxFPS="最大帧数",
     setting_updRate="更新比率",
     setting_drawRate="绘制比率",
-
-    keyset_touch="触屏控制...",
-    keyset_test="测试",
 
     main_in_dig="挖掘练习",
     main_in_sprint="40行",

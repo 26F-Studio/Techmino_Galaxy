@@ -118,7 +118,7 @@ local bgmList={
         base={'accompany','decoration','bass'},
         full={'melody','accompany','decoration','bass','sfx'},
     },
-    ['race']={-- Interior sprint
+    ['race']={-- Interior/Exterior sprint
         author="MrZ",
         base={'melody','accompany1'},
         full={'melody','accompany1','accompany2','decoration','drum'},

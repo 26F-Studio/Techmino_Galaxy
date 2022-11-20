@@ -132,6 +132,7 @@ return {
     setting_keymapping="Key mappings...",
     setting_enableTouching="Enable touch control",
     setting_touching="Touch controls...",
+    setting_test="Test",
 
     setting_sysCursor="System cursor",
     setting_clickFX="Click FX",
@@ -144,9 +145,6 @@ return {
     setting_maxFPS="Max FPS",
     setting_updRate="Update rate",
     setting_drawRate="Draw rate",
-
-    keyset_touch="Touch controls...",
-    keyset_test="Test",
 
     main_in_dig="Dig Practice",
     main_in_sprint="40 Lines",
