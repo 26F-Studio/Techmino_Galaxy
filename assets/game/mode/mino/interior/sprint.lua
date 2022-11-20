@@ -22,6 +22,7 @@ return {
                 P.modeData.line=math.min(P.modeData.line+P.clearHistory[#P.clearHistory].line,40)
                 if P.modeData.line>=40 then
                     P:finish('AC')
+                    PROGRESS.setInteriorScore('marathon',30)
                     PROGRESS.setInteriorScore('sprint',
                         P.gameTime<60e3  and 200 or
                         P.gameTime<90e3  and MATH.interpolate(P.gameTime,90e3,140,60e3,200) or
