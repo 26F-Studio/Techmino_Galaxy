@@ -5,7 +5,6 @@ return {
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
         playBgm('race','base')
-        BG.set('none')
     end,
     settings={mino={
         dropDelay=1000,

@@ -11,12 +11,14 @@ local _bgmPlaying,_bgmMode
 ---| 'full'
 ---| 'simp'
 ---| 'base'
+---| ''
 ---| nil
-function playBgm(name,mode)
-    assert(mode,"Mode not assigned")
+---@param arg string
+---| nil
+function playBgm(name,mode,arg)
     if bgmList[name][1] then
         PROGRESS.setBgmUnlocked(name,1)
-        BGM.play(bgmList[name],mode)
+        BGM.play(bgmList[name],arg)
     else
         if mode=='simp' and PROGRESS.getBgmUnlocked(name)==2 then
             mode='base'
@@ -24,16 +26,16 @@ function playBgm(name,mode)
             PROGRESS.setBgmUnlocked(name,mode=='simp' and 1 or 2)
         end
         if mode=='simp' then
-            BGM.play(bgmList[name].base,mode)
+            BGM.play(bgmList[name].base,arg)
         elseif mode=='base' then
             if not TABLE.compare(BGM.getPlaying(),bgmList[name].full) then
-                BGM.play(bgmList[name].full,mode)
+                BGM.play(bgmList[name].full,arg)
                 BGM.set(bgmList[name].add,'volume',0,0)
             else
                 BGM.set(bgmList[name].add,'volume',0,1)
             end
-        elseif mode=='full' or true then
-            BGM.play(bgmList[name].full,mode)
+        else--if mode=='full' then
+            BGM.play(bgmList[name].full,arg)
         end
     end
     _bgmPlaying,_bgmMode=name,mode
