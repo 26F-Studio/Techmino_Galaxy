@@ -142,7 +142,6 @@ return {
 
             "switchAction rotateCW",
             "switchAction rotateCCW",
-            "switchAction rotate180",
             "setc quest,4",
             "quest4:",
             "setc signal,0",
