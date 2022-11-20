@@ -91,13 +91,13 @@ Zenitha.setDebugInfo{
 do-- Zenitha.setOnFocus
     local function task_autoSoundOff()
         repeat
-            local v=math.max(love.audio.getVolume()-coroutine.yield(),0)
+            local v=math.max(love.audio.getVolume()-coroutine.yield()/.26,0)
             love.audio.setVolume(v*SETTINGS.system.mainVol)
         until v==0
     end
     local function task_autoSoundOn()
         repeat
-            local v=math.min(love.audio.getVolume()+coroutine.yield(),1)
+            local v=math.min(love.audio.getVolume()+coroutine.yield()/.626,1)
             love.audio.setVolume(v*SETTINGS.system.mainVol)
         until v==1
     end
