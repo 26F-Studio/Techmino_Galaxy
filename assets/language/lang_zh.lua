@@ -190,4 +190,13 @@ return {
     tutorial_sequence_3="现在你可以看到之后会来什么块了",
     tutorial_sequence_4="使用暂存键来调整方块的顺序",
     tutorial_sequence_5="PASS",
+
+    tutorial_stackBasic_1="3.堆叠(基础)",
+    tutorial_stackBasic_m1="请按照提示摆块",
+    tutorial_stackBasic_m2="刚开始学习时，一般都推荐尽量“让地形平坦”",
+    tutorial_stackBasic_m3="方块通常会尽量摆成平躺的方向，很少竖着",
+    tutorial_stackBasic_m4="保持地形的顶部平坦比较好持续，不容易出现空洞",
+    tutorial_stackBasic_m5="通常的规则里用棍子一次消四行往往会有较大的收益，再做一个消四试试看",
+    tutorial_stackBasic_m6="尝试不借助提示把消四最后几块补完整吧",
+    tutorial_stackBasic_2="PASS",
 }

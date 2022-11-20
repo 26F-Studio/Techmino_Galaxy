@@ -190,4 +190,13 @@ return {
     tutorial_sequence_3="…but now, you can see what pieces are coming next. ",
     tutorial_sequence_4="Use the hold key to adjust the order of the pieces.",
     tutorial_sequence_5="PASS",
+
+    tutorial_stackBasic_1="3. Basic Stacking",
+    tutorial_stackBasic_m1="Please follow the guide",
+    tutorial_stackBasic_m2="At first, it's recommened to keep the upper surface flatter",
+    tutorial_stackBasic_m3="Pieces are often placed on lying position, not standing position",
+    tutorial_stackBasic_m4="Flat upper surface is easier to keep, avoid making holes",
+    tutorial_stackBasic_m5="You were usually awarded more at clearing four lines at one time, try make another one",
+    tutorial_stackBasic_m6="Try to finish the Techrash using the last pieces without guide",
+    tutorial_stackBasic_2="PASS",
 }
