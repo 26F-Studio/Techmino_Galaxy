@@ -54,6 +54,45 @@ function P:movePosition(dx,dy,k,da)
     self.pos.k=self.pos.k*(k or 1)
     self.pos.a=self.pos.a+(da or 0)
 end
+local function parseTime(str)
+    local num,unit=str:cutUnit()
+    return
+        unit=='s'  and num*1000 or
+        unit=='ms' and num or
+        unit=='m'  and num*60000
+end
+function P:say(arg)
+    local str=arg.text
+    if type(str)=='string' then
+        if str:sub(1,1)=='\\' then
+            str=str:sub(2)
+        elseif str:sub(1,1)=='@' then
+            str=Text[str:sub(2)] or str
+        end
+    end
+    local D=arg.duration
+    if type(D)=='string' then
+        D=parseTime(D)/1000
+    elseif not D then
+        D=2.6
+    end
+    arg.duration=D
+    self.texts:add{
+        duration=D,
+        text=str or "[TEXT]",
+        style=arg.style or 'appear',
+        fontSize=arg.size or 60,
+        fontType=arg.type or 'norm',
+        x=arg.x or 0,
+        y=arg.y or 0,
+        inPoint=(arg.i or 0.2)/D,
+        outPoint=(arg.o or 0.5)/D,
+        r=arg.c and arg.c[1] or 1,
+        g=arg.c and arg.c[2] or 1,
+        b=arg.c and arg.c[3] or 1,
+        a=arg.c and arg.c[4] or 1,
+    }
+end
 --------------------------------------------------------------
 -- Game methods
 function P:triggerEvent(name,...)
@@ -107,13 +146,6 @@ function P:release(act)
     self.actions[act].release(self)
     self:triggerEvent('afterRelease',act)
 end
-local function parseTime(str)
-    local num,unit=str:cutUnit()
-    return
-        unit=='s'  and num*1000 or
-        unit=='ms' and num or
-        unit=='m'  and num*60000
-end
 local _jmpOP={
     j=0,
     jz=1,jnz=1,
@@ -137,35 +169,7 @@ local baseScriptCmds={
         end
     end,
     say=function(self,arg)-- Show text
-        local str=arg.text
-        if type(str)=='string' then
-            if str:sub(1,1)=='\\' then
-                str=str:sub(2)
-            elseif str:sub(1,1)=='@' then
-                str=Text[str:sub(2)] or str
-            end
-        end
-        local D=arg.duration
-        if type(D)=='string' then
-            D=parseTime(D)/1000
-        elseif not D then
-            D=2.6
-        end
-        self.texts:add{
-            duration=D,
-            text=str or "[TEXT]",
-            style=arg.style or 'appear',
-            fontSize=arg.size or 60,
-            fontType=arg.type or 'norm',
-            x=arg.x or 0,
-            y=arg.y or 0,
-            inPoint=(arg.i or 0.2)/D,
-            outPoint=(arg.o or 0.5)/D,
-            r=arg.c and arg.c[1] or 1,
-            g=arg.c and arg.c[2] or 1,
-            b=arg.c and arg.c[3] or 1,
-            a=arg.c and arg.c[4] or 1,
-        }
+        self:say(arg)
     end,
     sfx=function(_,arg)
         SFX.play(unpack(arg))
