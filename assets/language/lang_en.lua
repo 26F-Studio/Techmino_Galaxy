@@ -178,18 +178,18 @@ return {
     tutorial_stackAdvanced="Advanced Stacking",
     tutorial_finesse="Finesse",
 
+    tutorial_pass="PASS",
+
     tutorial_basic_1="Welcome to Techmino!",
     tutorial_basic_2="1. The Basics",
     tutorial_basic_3="Use the left and right keys to move your current piece.",
     tutorial_basic_4="Press the hard drop key to place the piece into the field.",
     tutorial_basic_5="You can also rotate the piece using the rotation keys.",
-    tutorial_basic_6="PASS",
 
     tutorial_sequence_1="2. Next & Hold",
     tutorial_sequence_2="Oops, seems that this piece does not fit into the hole…",
     tutorial_sequence_3="…but now, you can see what pieces are coming next. ",
     tutorial_sequence_4="Use the hold key to adjust the order of the pieces.",
-    tutorial_sequence_5="PASS",
 
     tutorial_stackBasic_1="3. Basic Stacking",
     tutorial_stackBasic_m1="Please follow the guide",
@@ -198,5 +198,4 @@ return {
     tutorial_stackBasic_m4="Flat upper surface is easier to keep, avoid making holes",
     tutorial_stackBasic_m5="You were usually awarded more at clearing four lines at one time, try make another one",
     tutorial_stackBasic_m6="Try to finish the Techrash using the last pieces without guide",
-    tutorial_stackBasic_2="PASS",
 }

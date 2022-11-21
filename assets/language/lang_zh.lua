@@ -178,18 +178,18 @@ return {
     tutorial_stackAdvanced="堆叠(进阶)",
     tutorial_finesse="极简操作",
 
+    tutorial_pass="PASS",
+
     tutorial_basic_1="欢迎来到Techmino",
     tutorial_basic_2="1. 基本规则",
     tutorial_basic_3="用左/右键移动当前方块",
     tutorial_basic_4="按下硬降键放置当前方块",
     tutorial_basic_5="你也可以旋转当前方块",
-    tutorial_basic_6="PASS",
 
     tutorial_sequence_1="2. 预览&暂存",
     tutorial_sequence_2="哎呀 这个块的形状和坑对不上",
     tutorial_sequence_3="现在你可以看到之后会来什么块了",
     tutorial_sequence_4="使用暂存键来调整方块的顺序",
-    tutorial_sequence_5="PASS",
 
     tutorial_stackBasic_1="3.堆叠(基础)",
     tutorial_stackBasic_m1="请按照提示摆块",
@@ -198,5 +198,4 @@ return {
     tutorial_stackBasic_m4="保持地形的顶部平坦比较好持续，不容易出现空洞",
     tutorial_stackBasic_m5="通常的规则里用棍子一次消四行往往会有较大的收益，再做一个消四试试看",
     tutorial_stackBasic_m6="尝试不借助提示把消四最后几块补完整吧",
-    tutorial_stackBasic_2="PASS",
 }
