@@ -67,6 +67,9 @@ return {
                     end
                 else
                     P.modeData.shape=false
+                    if P.modeData.quest==2 then
+                        P.modeData.signal=true
+                    end
                 end
             end,
             afterDrop=function(P)
@@ -110,30 +113,32 @@ return {
             "[1.5s]",
 
             "setc quest,1",
-            "quest1:",
             "setc signal,0",
-            "clearNext",
             "pushNext JIZOTLSJZTSI",
-            {cmd=function(P) P:setField{} end},
             "wait signal",
-            "jeq quest1,signal,false",
-            "sfx win",
 
             "setc quest,2",
-            "j skipQuest2field",
-            "quest2:",
-            {cmd=function(P) P:setField{
-                sudden=false,
-                {0,0,0,0,0,0,0,0,0,0},
-                {5,0,0,0,0,0,0,2,0,0},
-                {5,5,0,0,0,1,1,2,2,0},
-            } end},
-            "skipQuest2field:",
             "setc signal,0",
-            "clearNext",
             "pushNext LOOSTJZLI",
             "wait signal",
-            "jeq quest2,signal,false",
+
+            "setc quest,3",
+            "j skipResetQueue",
+            "quest3:",
+            "pushNext JZLI",
+            "skipResetQueue:",
+            "setc signal,0",
+            {cmd=function(P)
+                P:setField{
+                    sudden=true,
+                    {2,0,0,0,0,0,0,0,5,0},
+                    {2,2,6,6,0,6,6,5,5,0},
+                    {5,2,6,6,4,6,6,2,5,0},
+                    {5,5,4,4,4,1,1,2,2,0},
+                }
+            end},
+            "wait signal",
+            "jeq quest3,signal,false",
             "sfx win",
 
             "setc msg,false",
