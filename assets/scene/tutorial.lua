@@ -39,6 +39,14 @@ function scene.enter()
     PROGRESS.playInteriorBGM()
 end
 
+function scene.draw()
+    if PROGRESS.getMain()>1 then
+        GC.replaceTransform(SCR.xOy_m)
+        GC.setColor(1,1,1,.42)
+        GC.rectangle('fill',-7,-250,4,540)
+    end
+end
+
 scene.widgetList={
     WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 
