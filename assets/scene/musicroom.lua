@@ -1,5 +1,6 @@
 local selected,fullband
 local collectCount=0
+local noProgress=false
 
 local bigTitle=setmetatable({},{
     __index=function(self,name)
@@ -40,12 +41,12 @@ local musicListBox do
     function musicListBox.code()
         if selected~=musicListBox:getItem() then
             selected=musicListBox:getItem()
-            if PROGRESS.getBgmUnlocked(selected) and PROGRESS.getBgmUnlocked(selected)==2 then
+            if noProgress or PROGRESS.getBgmUnlocked(selected)==2 then
                 fullband=fullband==true
             else
                 fullband=nil
             end
-            playBgm(selected,fullband==nil and 'simp' or fullband and 'full' or 'base')
+            playBgm(selected,fullband==nil and 'simp' or fullband and 'full' or 'base','',noProgress)
         end
     end
     musicListBox=WIDGET.new(musicListBox)
@@ -63,7 +64,7 @@ function scene.enter()
     end
     local l={}
     for k in next,bgmList do
-        if PROGRESS.getBgmUnlocked(k) then
+        if noProgress or PROGRESS.getBgmUnlocked(k) then
             table.insert(l,k)
         end
     end
@@ -73,28 +74,25 @@ function scene.enter()
     musicListBox:select(TABLE.find(musicListBox:getList(),selected))
 end
 
-function scene.keyDown(key,isRep)
-    if isRep and not (key=='up' or key=='down') then return end
+function scene.keyDown(key,isRep)print(key,isRep)
     if key=='space' then
         if BGM.isPlaying() then
             BGM.stop()
         else
-            playBgm(selected,fullband and 'full' or 'base')
+            playBgm(selected,fullband and 'full' or 'base','',noProgress)
         end
-    elseif key=='return' then
-        if selected~=musicListBox:getItem() then
-            musicListBox.code()
-        end
-    elseif key=='up' or key=='down' then
-        musicListBox:arrowKey(key)
-    elseif key=='tab'then
+    elseif key=='tab' then
         local w=scene.widgetList.fullband
         if w._visible then
             w.code()
         end
-    elseif key=='escape'then
-        SCN.back('fadeHeader')
-    elseif #key==1 and key:find'[0-9a-z]'then
+    elseif key=='up' or key=='down' then
+        musicListBox:arrowKey(key)
+    elseif key=='return' then
+        if selected~=musicListBox:getItem() then
+            musicListBox.code()
+        end
+    elseif #key==1 and key:find'[0-9a-z]' then
         local list=musicListBox:getList()
         local sel=musicListBox:getSelect()
         for _=1,#list do
@@ -104,6 +102,11 @@ function scene.keyDown(key,isRep)
                 break
             end
         end
+    elseif key=='`' and love.keyboard.isDown('lalt','ralt') then
+        noProgress=true
+        scene.enter()
+    elseif key=='escape' then
+        SCN.back('fadeHeader')
     end
 end
 
@@ -141,10 +144,10 @@ function scene.draw()
     end
 
     GC.replaceTransform(SCR.xOy_r)
+    GC.setColor(COLOR.L)
     GC.setLineWidth(2)
     GC.line(-99,-320,-99,-365,-235,-365,-255,-320)
     FONT.set(30)
-    GC.setColor(COLOR.L)
     GC.printf(collectCount.."/"..bgmCount,-105-626,-362,626,'right')
 end
 
@@ -162,7 +165,7 @@ scene.widgetList={
     },
 
     -- Play/Stop
-    WIDGET.new{type='button_invis',pos={.5,.5},y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=function() playBgm(selected,fullband and 'full' or 'base') end,visibleFunc=function() return not BGM.isPlaying() end},
+    WIDGET.new{type='button_invis',pos={.5,.5},y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=function() playBgm(selected,fullband and 'full' or 'base','',noProgress) end,visibleFunc=function() return not BGM.isPlaying() end},
     WIDGET.new{type='button_invis',pos={.5,.5},y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=function() BGM.stop() end,visibleFunc=function() return BGM.isPlaying() end},
 
     -- Fullband Switch

@@ -15,15 +15,19 @@ local _bgmPlaying,_bgmMode
 ---| nil
 ---@param arg string
 ---| nil
-function playBgm(name,mode,arg)
+function playBgm(name,mode,arg,noProgress)
     if bgmList[name][1] then
-        PROGRESS.setBgmUnlocked(name,1)
+        if not noProgress then
+            PROGRESS.setBgmUnlocked(name,1)
+        end
         BGM.play(bgmList[name],arg)
     else
         if mode=='simp' and PROGRESS.getBgmUnlocked(name)==2 then
             mode='base'
         else
-            PROGRESS.setBgmUnlocked(name,mode=='simp' and 1 or 2)
+            if not noProgress then
+                PROGRESS.setBgmUnlocked(name,mode=='simp' and 1 or 2)
+            end
         end
         if mode=='simp' then
             BGM.play(bgmList[name].base,arg)
