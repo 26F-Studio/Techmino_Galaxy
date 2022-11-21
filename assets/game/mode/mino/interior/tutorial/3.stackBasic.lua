@@ -32,7 +32,7 @@ return {
         skin='mino_interior',
         shakeness=0,
         readyDelay=1,
-        spawnDelay=100,
+        spawnDelay=62,
         dropDelay=1e99,
         lockDelay=1e99,
         nextSlot=3,
@@ -42,13 +42,13 @@ return {
             countDown=NULL,
         },
         event={
-            always=function(P)
-                P.modeData.waitTime=P.modeData.waitTime+1
-                P.modeData.msgTimer=P.modeData.msgTimer+1
-            end,
             gameStart=function(P)
                 P.spawnTimer=2600
                 P.modeData.msg=false
+            end,
+            always=function(P)
+                P.modeData.waitTime=P.modeData.waitTime+1
+                P.modeData.msgTimer=P.modeData.msgTimer+1
             end,
             afterResetPos=function(P)
                 local ans=P.modeData.quest==1 and correctPositions[1][12-#P.nextQueue] or correctPositions[2][9-#P.nextQueue]
@@ -106,10 +106,10 @@ return {
                     GC.setColor(1,.75,.7,math.min(P.modeData.msgTimer/260,1))
                     GC.mStr(Text[P.modeData.msg],0,-30)
                 end
-            end
+            end,
         },
         script={
-            {cmd='say',arg={duration='3s',text="@tutorial_stackBasic_1",size=80,type='bold',style='beat',y=-60}},
+            {cmd='say',arg={duration='1.5s',text="@tutorial_stackBasic_1",y=-60}},
             "[1.5s]",
 
             "setc quest,1",
