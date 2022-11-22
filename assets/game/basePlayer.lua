@@ -163,7 +163,7 @@ local baseScriptCmds={
     end,
     wait=function(self,arg)-- Wait until modeData value(s) all not 0 (by keep cursor to current line)
         for i=1,#arg do
-            if self.modeData[arg[i]]==0 then
+            if self.modeData[arg[i]]==nil then
                 return self.scriptLine
             end
         end
@@ -359,6 +359,8 @@ local function decodeScript(str,errMsg)-- Translate some string commands to lua-
             local a2=arg[2]
             if a2:byte(1)==a2:byte(-1) and (a2:sub(1,1)=='"' or a2:sub(1,1)=="'") then
                 a2=a2:sub(2,-2)
+            elseif a2=='nil' then
+                a2=nil
             elseif a2=='true' or a2=='false' then
                 a2=a2=='true'
             elseif tonumber(a2) then
@@ -480,7 +482,6 @@ function P:loadScript(script)-- Parse time stamps and labels, check syntax of lu
                 elseif cmd=='setc' then
                     assert(type(arg)=='table',errMsg.."arg must be table")
                     assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
-                    assert(arg.c~=nil,errMsg.."Need arg 'c'")
                     for k in next,arg do if not (k=='v' or k=='c') then error(errMsg.."Wrong arg name '"..k.."'") end end
                 elseif cmd=='setd' then
                     assert(type(arg)=='table',errMsg.."arg must be table")

@@ -15,8 +15,10 @@ return {
                 SFX.playSample('lead',num>0 and 'A3' or 'A4')
             end,
         },
-        event={
-            -- Display ghost at not-bad places to help new players learn stacking
+        event={-- Display ghost at not-bad places to help new players learn stacking
+            playerInit=function(P)
+                P.modeData.waitTime=0
+            end,
             always=function(P)
                 P.modeData.waitTime=P.modeData.waitTime+1
             end,
@@ -49,7 +51,7 @@ return {
             end,
             drawBelowMarks=function(P)
                 local m=P.modeData.shape
-                if type(m)=='table' then
+                if m then
                     GC.setColor(1,1,1,.42*(math.min(P.modeData.waitTime/126,1)+.42*math.sin(P.modeData.waitTime*.01)))
                     GC.setLineWidth(6)
                     for y=1,#m do for x=1,#m[1] do

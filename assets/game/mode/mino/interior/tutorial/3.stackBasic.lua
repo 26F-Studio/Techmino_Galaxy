@@ -42,6 +42,10 @@ return {
             countDown=NULL,
         },
         event={
+            playerInit=function(P)
+                P.modeData.waitTime=0
+                P.modeData.msgTimer=0
+            end,
             gameStart=function(P)
                 P.spawnTimer=2600
                 P.modeData.msg=false
@@ -113,12 +117,12 @@ return {
             "[1.5s]",
 
             "setc quest,1",
-            "setc signal,0",
+            "setc signal,nil",
             "pushNext JIZOTLSJZTSI",
             "wait signal",
 
             "setc quest,2",
-            "setc signal,0",
+            "setc signal,nil",
             "pushNext LOOSTJZLI",
             "wait signal",
 
@@ -127,7 +131,7 @@ return {
             "quest3:",
             "pushNext JZLI",
             "skipResetQueue:",
-            "setc signal,0",
+            "setc signal,nil",
             {cmd=function(P)
                 P:setField{
                     sudden=true,

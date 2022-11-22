@@ -1214,11 +1214,6 @@ local seqGenerators={
         end
     end,
 }
-local modeDataMeta={
-    __index=function(self,k) rawset(self,k,0) return 0 end,
-    __newindex=function(self,k,v) rawset(self,k,v) end,
-    __metatable=true,
-}
 local soundTimeMeta={
     __index=function(self,k) rawset(self,k,0) return -1e99 end,
     __metatable=true,
@@ -1265,7 +1260,7 @@ function PP.new()
 end
 function PP:initialize()
     self.soundEvent=setmetatable({},soundEventMeta)
-    self.modeData=setmetatable({},modeDataMeta)
+    self.modeData={}
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 
     self.rcvRND=love.math.newRandomGenerator(GAME.seed+434)

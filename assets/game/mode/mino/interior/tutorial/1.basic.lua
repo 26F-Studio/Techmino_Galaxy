@@ -69,12 +69,12 @@ return {
 
             "switchAction hardDrop",
             "setc quest,1",
-            "setc signal,0",
+            "setc signal,nil",
             "j skipFirstO",
 
             "setc quest,1",
             "quest1:",
-            "setc signal,0",
+            "setc signal,nil",
             "pushNext O",
             "skipFirstO:",
             {cmd=function(P)
@@ -94,7 +94,7 @@ return {
 
             "setc quest,2",
             "quest2:",
-            "setc signal,0",
+            "setc signal,nil",
             "clearNext",
             "pushNext OO",
             {cmd=function(P)
@@ -117,7 +117,7 @@ return {
 
             "setc quest,3",
             "quest3:",
-            "setc signal,0",
+            "setc signal,nil",
             "clearNext",
             "pushNext OI",
             {cmd=function(P)
@@ -141,7 +141,7 @@ return {
             "switchAction rotateCCW",
             "setc quest,4",
             "quest4:",
-            "setc signal,0",
+            "setc signal,nil",
             {cmd='say',arg={duration='3s',text="@tutorial_basic_5",size=50,y=40}},
             "clearNext",
             "pushNext T",
