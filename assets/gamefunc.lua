@@ -53,7 +53,7 @@ local modeObjMeta={__call=function(self,...)
     if success then
         SCN.go('game_in',nil,self.name)
     else
-        MES.new('warn',Text.noMode:repD(tostring(self.name),errInfo))
+        MES.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
     end
 end}
 function playMode(name)
