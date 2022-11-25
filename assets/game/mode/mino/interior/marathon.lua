@@ -23,6 +23,7 @@ return {
         event={
             playerInit=function(P)
                 P.settings.dropDelay=dropSpeed[1]
+                P.modeData.line=0
                 P.modeData.target=10
             end,
             afterClear=function(P)
