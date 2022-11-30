@@ -15,6 +15,8 @@ local _bgmPlaying,_bgmMode
 ---| nil
 ---@param arg string
 ---| nil
+---@param noProgress boolean
+---| nil
 function playBgm(name,mode,arg,noProgress)
     if bgmList[name][1] then
         if not noProgress then
