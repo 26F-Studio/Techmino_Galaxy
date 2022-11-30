@@ -70,7 +70,6 @@ return {
                         P.modeData.msgTimer=0
                     end
                 else
-                    P.modeData.shape=false
                     if P.modeData.quest==2 then
                         P.modeData.signal=true
                     end
@@ -80,6 +79,8 @@ return {
                 if P.modeData.shape and not (P.handX==P.modeData.x and P.handY==P.modeData.y and TABLE.find(P.modeData.dir,P.hand.direction)) then
                     table.insert(P.nextQueue,1,P:getMino(Minoes[P.hand.name].id))
                     P.hand=false
+                else
+                    P.modeData.shape=false
                 end
             end,
             afterLock=function(P)
