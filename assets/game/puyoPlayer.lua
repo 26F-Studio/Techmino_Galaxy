@@ -295,13 +295,13 @@ function PP:moveHand(action,a,b,c)
         end
     end
 end
-function PP:restoreMinoState(mino)-- Restore a mino object's state (only inside, like shape, name, direction)
-    if mino._origin then
-        for k,v in next,mino._origin do
-            mino[k]=v
+function PP:restorePuyoState(puyo)-- Restore a puyo object's state (only inside, like shape, name, direction)
+    if puyo._origin then
+        for k,v in next,puyo._origin do
+            puyo[k]=v
         end
     end
-    return mino
+    return puyo
 end
 function PP:resetPos()-- Move hand piece to the normal spawn position
     self:moveHand('reset',floor(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
@@ -953,7 +953,7 @@ function PP:updateFrame()
                 break
             end
 
-            -- Try spawn mino if don't have one
+            -- Try spawn puyo if don't have one
             if self.spawnTimer>0 then
                 self.spawnTimer=self.spawnTimer-1
                 if self.spawnTimer<=0 then
@@ -964,7 +964,7 @@ function PP:updateFrame()
                 self:popNext()
             end
 
-            -- Try lock/drop mino
+            -- Try lock/drop puyo
             if self.handY==self.ghostY then
                 self.lockTimer=self.lockTimer-1
                 if self.lockTimer<=0 then
@@ -981,7 +981,7 @@ function PP:updateFrame()
                             self:playSound('touch')
                         end
                     end
-                elseif self.handY~=self.ghostY then-- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
+                elseif self.handY~=self.ghostY then-- If switch to 20G during game, puyo won't dropped to bottom instantly so we force fresh it
                     self:freshDelay('drop')
                 end
             end
