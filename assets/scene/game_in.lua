@@ -25,7 +25,7 @@ function scene.keyDown(key,isRep)
     if action=='restart' then
         scene.enter()
     elseif action=='back' then
-        if sureCheck('back') then SCN.back() end
+        if sureCheck('back') then SCN.back('none') end
     end
 end
 
@@ -86,6 +86,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
 }
 return scene
