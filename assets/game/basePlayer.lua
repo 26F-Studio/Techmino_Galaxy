@@ -61,6 +61,16 @@ local function parseTime(str)
         unit=='ms' and num or
         unit=='m'  and num*60000
 end
+--[[arg:
+    text ("[TEXT]")
+    duration ('2.6s')
+    style ('appear')
+    size (60)
+    type ('norm')
+    x,y (0,0)
+    i,o (0.2,0.5)
+    c ({1,1,1,1})
+]]
 function P:say(arg)
     local str=arg.text
     if type(str)=='string' then
