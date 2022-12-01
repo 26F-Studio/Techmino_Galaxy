@@ -74,24 +74,11 @@ function scene.enter()
     musicListBox:select(TABLE.find(musicListBox:getList(),selected))
 end
 
-function scene.keyDown(key,isRep)print(key,isRep)
-    if key=='space' then
-        if BGM.isPlaying() then
-            BGM.stop()
-        else
-            playBgm(selected,fullband and 'full' or 'base','',noProgress)
-        end
-    elseif key=='tab' then
-        local w=scene.widgetList.fullband
-        if w._visible then
-            w.code()
-        end
-    elseif key=='up' or key=='down' then
+function scene.keyDown(key,isRep)
+    if key=='up' or key=='down' then
         musicListBox:arrowKey(key)
-    elseif key=='return' then
-        if selected~=musicListBox:getItem() then
-            musicListBox.code()
-        end
+    elseif key=='left' or key=='right' then
+        BGM.set('all','seek',key=='left' and math.max(BGM.tell()-5,0) or (BGM.tell()+5)%BGM.getDuration())
     elseif #key==1 and key:find'[0-9a-z]' then
         local list=musicListBox:getList()
         local sel=musicListBox:getSelect()
@@ -102,11 +89,30 @@ function scene.keyDown(key,isRep)print(key,isRep)
                 break
             end
         end
-    elseif key=='`' and love.keyboard.isDown('lalt','ralt') then
-        noProgress=true
-        scene.enter()
-    elseif key=='escape' then
-        SCN.back('fadeHeader')
+    elseif not isRep then
+        if key=='space' then
+            if BGM.isPlaying() then
+                BGM.stop()
+            else
+                playBgm(selected,fullband and 'full' or 'base','',noProgress)
+            end
+        elseif key=='tab' then
+            local w=scene.widgetList.fullband
+            if w._visible then
+                w.code()
+            end
+        elseif key=='return' then
+            if selected~=musicListBox:getItem() then
+                musicListBox.code()
+            end
+        elseif key=='home' then
+            BGM.set('all','seek',0)
+        elseif key=='`' and love.keyboard.isDown('lalt','ralt') then
+            noProgress=true
+            scene.enter()
+        elseif key=='escape' then
+            SCN.back('fadeHeader')
+        end
     end
 end
 
