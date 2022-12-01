@@ -157,7 +157,7 @@ TRS[6]={
 
                                 -- Overwrite origin state (keep shape when hold)
                                 C._origin.shape=test.shape
-                                C._origin.direction=test.direcion
+                                C._origin.direction=0
                                 C._origin.matrix=test.direcion==0 and newMatrix or test.direcion==2 and TABLE.rotate(newMatrix,'F') or error("Oh I forgot this")
 
                                 self:moveHand('rotate',x,y,dir,ifInit)
