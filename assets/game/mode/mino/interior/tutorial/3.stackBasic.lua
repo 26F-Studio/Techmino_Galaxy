@@ -69,10 +69,6 @@ return {
                         P.modeData.msg=ans.msg
                         P.modeData.msgTimer=0
                     end
-                else
-                    if P.modeData.quest==2 then
-                        P.modeData.signal=true
-                    end
                 end
             end,
             afterDrop=function(P)
@@ -89,7 +85,7 @@ return {
                         P:checkLineFull(1) and
                         P:checkLineFull(2) and
                         P:checkLineFull(3) and
-                        P:checkLineFull(4)
+                        P:checkLineFull(4) or false
                 end
             end,
             drawBelowMarks=function(P)
@@ -126,12 +122,10 @@ return {
             "setc signal,nil",
             "pushNext LOOSTJZLI",
             "wait signal",
+            "jeq win,signal,true",
 
-            "setc quest,3",
-            "j skipResetQueue",
-            "quest3:",
+            "rewind:",
             "pushNext JZLI",
-            "skipResetQueue:",
             "setc signal,nil",
             {cmd=function(P)
                 P:setField{
@@ -143,7 +137,9 @@ return {
                 }
             end},
             "wait signal",
-            "jeq quest3,signal,false",
+            "jeq rewind,signal,false",
+
+            "win:",
             "sfx win",
 
             "setc msg,false",
