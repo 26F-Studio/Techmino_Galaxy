@@ -174,7 +174,7 @@ return {
     tutorial_basic="The Basics",
     tutorial_sequence="Next & Hold",
     tutorial_stackBasic="Basic Stacking",
-    tutorial_twoRotatingKey="2-way Rotating",
+    tutorial_twoRotatingKey="Two-way Rotating",
     tutorial_stackAdvanced="Advanced Stacking",
     tutorial_finesse="Finesse",
 
@@ -187,7 +187,7 @@ return {
     tutorial_basic_5="You can also rotate the piece using the rotation keys.",
 
     tutorial_sequence_1="2. Next & Hold",
-    tutorial_sequence_2="Oops, seems that this piece does not fit into the hole…",
+    tutorial_sequence_2="Oops, this piece seems doesn't fit into the hole…",
     tutorial_sequence_3="…but now, you can see what pieces are coming next. ",
     tutorial_sequence_4="Use the hold key to adjust the order of the pieces.",
 
@@ -198,4 +198,11 @@ return {
     tutorial_stackBasic_m4="Flat upper surface is easier to keep, avoid making holes",
     tutorial_stackBasic_m5="You were usually awarded more at clearing four lines at one time, try make another one",
     tutorial_stackBasic_m6="Try to finish the Techrash using the last pieces without guide",
+
+    tutorial_twoRotatingKey_1="4. Two-way Rotating",
+    tutorial_twoRotatingKey_m1="Please follow the guide, but rotating least times",
+    tutorial_twoRotatingKey_m2="If you can rotate CCW one time, don't rotate CCW three times",
+    tutorial_twoRotatingKey_m3="Not only waste effort, it slows down your speed",
+    tutorial_twoRotatingKey_m4="You should already decided where to place, do not rely on shadow piece.",
+    tutorial_twoRotatingKey_unnecessaryRotation="Redundant Rotation",
 }

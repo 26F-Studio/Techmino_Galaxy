@@ -198,4 +198,11 @@ return {
     tutorial_stackBasic_m4="保持地形的顶部平坦比较好持续，不容易出现空洞",
     tutorial_stackBasic_m5="通常的规则里用棍子一次消四行往往会有较大的收益，再做一个消四试试看",
     tutorial_stackBasic_m6="尝试不借助提示把消四最后几块补完整吧",
+
+    tutorial_twoRotatingKey_1="4. 双旋",
+    tutorial_twoRotatingKey_m1="如果可以逆时针旋转一次到位，那么就不需要顺时针转三次",
+    tutorial_twoRotatingKey_m2="不仅浪费力气，还会减慢操作速度",
+    tutorial_twoRotatingKey_m3="你需要先想好放在哪然后开始操作，而不是依赖影子去对地形",
+    tutorial_twoRotatingKey_m4="请按照提示摆块，但旋转的次数必须尽可能少",
+    tutorial_twoRotatingKey_unnecessaryRotation="多余旋转",
 }
