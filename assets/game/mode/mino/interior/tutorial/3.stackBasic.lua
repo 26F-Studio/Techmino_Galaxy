@@ -47,7 +47,7 @@ return {
                 P.modeData.msgTimer=0
             end,
             gameStart=function(P)
-                P.spawnTimer=2600
+                P.spawnTimer=1500
                 P.modeData.msg=false
             end,
             always=function(P)
@@ -111,7 +111,6 @@ return {
         },
         script={
             {cmd='say',arg={duration='1.5s',text="@tutorial_stackBasic_1",y=-60}},
-            "[1.5s]",
 
             "setc quest,1",
             "setc signal,nil",
