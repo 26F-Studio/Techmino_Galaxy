@@ -13,10 +13,10 @@ local _minoData={-- This is a template MINODATA for SZJLT
         -- If field 'center' exist(center={x,y}, origin is left-down), will draw spin center and be used for calculate base X/Y bias
         -- There is ".centerPreset='common'" so no need to set center here
 
-        -- These are KICKs
+        -- These are MOVE
         -- Default target=([current dir]+1)%4
         -- Default test={'+0+0'}
-        -- Can include base='+1+1', overwrite center-offset-calculation
+        -- Can include base='+1+1', override center-offset-calculation
         R={test={'+0+0','-1+0','-1+1','+0-2','-1-2'}},
         L={test={'+0+0','+1+0','+1+1','+0-2','+1-2'}},
         F={},

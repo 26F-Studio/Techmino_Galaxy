@@ -51,9 +51,7 @@ local list={
 }
 for i=1,29 do
     local a,b=R,L
-    if i==6 or i==18 then
-        a,b=b,a
-    end
+    if i==6 or i==18 then a,b=b,a end
     list[i][01]=a; list[i][10]=b; list[i][03]=b; list[i][30]=a
     list[i][12]=a; list[i][21]=b; list[i][32]=b; list[i][23]=a
 end
@@ -65,16 +63,17 @@ local function r(self,dir)
 
     local kickList=list[C.shape][C.direction*10+idir]
 
-    local ix,iy do
+    local nx,ny do
         local oldSC=minoRotSys.BiRS[C.shape][C.direction].center
         local newSC=minoRotSys.BiRS[C.shape][idir].center
-        ix,iy=self.handX+oldSC[1]-newSC[1],self.handY+oldSC[2]-newSC[2]
+        nx,ny=self.handX+oldSC[1]-newSC[1],self.handY+oldSC[2]-newSC[2]
     end
     local dx,dy=0,0 do
         if self.keyState.moveLeft  and self:ifoverlap(C.matrix,self.handX-1,self.handY) then dx=dx-1 end
         if self.keyState.moveRight and self:ifoverlap(C.matrix,self.handX+1,self.handY) then dx=dx+1 end
         if self.keyState.softDrop  and self:ifoverlap(C.matrix,self.handX,self.handY-1) then dy=  -1 end
     end
+
     while true do
         for test=1,#kickList do
             local fdx,fdy=kickList[test][1]+dx,kickList[test][2]+dy
@@ -83,18 +82,18 @@ local function r(self,dir)
                 (dy+.5)*fdy>=0 and
                 fdx^2+fdy^2<=5
             then
-                local x,y=ix+fdx,iy+fdy
-                if not self:ifoverlap(icb,x,y) then
+                local ix,iy=nx+fdx,ny+fdy
+                if not self:ifoverlap(icb,ix,iy) then
                     C.matrix=icb
                     C.direction=idir
-                    self:moveHand('rotate',x,y,dir)
+                    self:moveHand('rotate',ix,iy,dir)
                     self:freshGhost()
                     return
                 end
             end
         end
 
-        -- Try release left/right, then softdrop, failed to rotate otherwise
+        -- Try release left/right, then release softdrop, then give up
         if dx~=0 then
             dx=0
         elseif dy~=0 then
@@ -103,8 +102,13 @@ local function r(self,dir)
             break
         end
     end
+
+    -- Failed to rotate
     self:freshDelay('rotate')
     self:playSound('rotate_failed')
 end
-for i=1,29 do BiRS[i]={[0]={},[1]={},[2]={},[3]={},rotate=r} end
+
+local t={[0]={},[1]={},[2]={},[3]={},rotate=r}
+for i=1,29 do BiRS[i]=t end
+
 return BiRS
