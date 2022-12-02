@@ -12,7 +12,7 @@ function love.conf(t)
     local W=t.window
     W.title=require"version".appName.."  "..require"version".appVer
     W.width,W.height=1440,900
-    W.minwidth,W.minheight=320,180
+    W.minwidth,W.minheight=288,180
     W.borderless=false
     W.resizable=true
     W.fullscreen=false
