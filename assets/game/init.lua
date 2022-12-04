@@ -123,7 +123,7 @@ local modeMeta={
         layout='default',
         checkFinish=function() return true end,
         result=NULL,
-        scorePage=NULL,
+        resultPage=NULL,
     },
     __metatable=true,
 }
@@ -155,7 +155,7 @@ function GAME.getMode(name)
         assert(type(layoutFuncs[M.layout])=='function',"[mode].layout type wrong")
         assert(type(M.checkFinish)        =='function',"[mode].checkFinish must be function")
         assert(type(M.result)             =='function',"[mode].result must be function")
-        assert(type(M.scorePage)          =='function',"[mode].scorePage must be function")
+        assert(type(M.resultPage)         =='function',"[mode].resultPage must be function")
 
         M.name=name
         modeLib[name]=M
