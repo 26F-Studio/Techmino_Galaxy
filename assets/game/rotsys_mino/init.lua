@@ -50,27 +50,28 @@ function minoRotSys._strToVec(vecStr)
 end
 
 function minoRotSys._normalizeKick(data,dir,fdir)
-    local kick=data[dir][fdir]
-    if kick then
-        assert(type(kick)=='table',"KICK must be a table")
+    local move=data[dir][fdir]
+    if move then
+        assert(type(move)=='table',"KICK must be a table")
 
-        if kick.base then kick.base=minoRotSys._strToVec(kick.base) end
-        if not kick.test then kick.test={'+0+0'} end
-        if not kick.target then
-            kick.target=(dir+(
+        if move.base then move.base=minoRotSys._strToVec(move.base) end
+        if not move.test then move.test={'+0+0'} end
+        if not move.target then
+            move.target=(dir+(
                 fdir=='R' and 1 or
                 fdir=='L' and 3 or
-                fdir=='F' and 2
+                fdir=='F' and 2 or
+                error("WTF why dir isn't R/L/F ("..tostring(dir)..")")
             ))%4
         end
 
-        assert(data[kick.target],"Target state ["..kick.target.."] not exist")
-        assert(type(kick.test)=='table','[KICK].test must be a table')
+        assert(data[move.target],"Target state ["..move.target.."] not exist")
+        assert(type(move.test)=='table','[KICK].test must be a table')
 
-        for i=1,#kick.test do
-            if type(kick.test[i])~='table' then
-                assert(type(kick.test[i])=='string','test[n] must be vecStr')
-                kick.test[i]=minoRotSys._strToVec(kick.test[i])
+        for i=1,#move.test do
+            if type(move.test[i])~='table' then
+                assert(type(move.test[i])=='string','test[n] must be vecStr')
+                move.test[i]=minoRotSys._strToVec(move.test[i])
             end
         end
     end
