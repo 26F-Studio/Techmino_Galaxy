@@ -50,16 +50,28 @@ function getBgm()
     return _bgmPlaying,_bgmMode
 end
 
-local modeObjMeta={__call=function(self)
+local interiorModeMeta={__call=function(self)
     local success,errInfo=pcall(GAME.getMode,self.name)
     if success then
-        SCN.go('game_in',self.swap,self.name)
+        SCN.go('game_in','none',self.name)
     else
         MES.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
     end
 end}
-function playMode(name,swap)
-    return setmetatable({name=name,swap=swap},modeObjMeta)
+function playInterior(name)
+    return setmetatable({name=name},interiorModeMeta)
+end
+
+local exteriorModeMeta={__call=function(self)
+    local success,errInfo=pcall(GAME.getMode,self.name)
+    if success then
+        SCN.go('game_out','fade',self.name)
+    else
+        MES.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+    end
+end}
+function playExterior(name)
+    return setmetatable({name=name},exteriorModeMeta)
 end
 
 function saveSettings()
