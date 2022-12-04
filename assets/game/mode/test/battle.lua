@@ -17,7 +17,4 @@ return {
             lockDelay=1500,
         }
     },
-    checkFinish=function()
-        return #GAME.playerList==1
-    end,
 }

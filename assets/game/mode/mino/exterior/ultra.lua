@@ -36,12 +36,4 @@ return {
             end,
         },
     }},
-    checkFinish=function()
-        for i=1,#GAME.playerList do
-            if not GAME.playerList[i].finished then
-                return false
-            end
-        end
-        return true
-    end,
 }
