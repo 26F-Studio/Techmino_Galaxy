@@ -48,16 +48,18 @@ return {
                 gc.rectangle('fill',-380,-2,160,4)
                 GC.mStr(P.modeData.target,-300,0)
             end,
-            gameOver=function(P)
-                PROGRESS.setInteriorScore('sprint',math.min(P.modeData.line*4/3,40))
-                PROGRESS.setInteriorScore('marathon',
-                    P.modeData.line>=200 and 160 or
-                    P.modeData.line>=130 and MATH.interpolate(P.modeData.line,130,120,200,160) or
-                    P.modeData.line>=80  and MATH.interpolate(P.modeData.line,80,90,130,120) or
-                    P.modeData.line>=40  and MATH.interpolate(P.modeData.line,40,40,80,90) or
-                    MATH.interpolate(P.modeData.line,0,0,40,40)
-                )
-            end,
         },
     }},
+    result=function()
+        local P=GAME.mainPlayer
+        if not P then return end
+        PROGRESS.setInteriorScore('sprint',math.min(P.modeData.line*4/3,40))
+        PROGRESS.setInteriorScore('marathon',
+            P.modeData.line>=200 and 160 or
+            P.modeData.line>=130 and MATH.interpolate(P.modeData.line,130,120,200,160) or
+            P.modeData.line>=80  and MATH.interpolate(P.modeData.line,80,90,130,120) or
+            P.modeData.line>=40  and MATH.interpolate(P.modeData.line,40,40,80,90) or
+            MATH.interpolate(P.modeData.line,0,0,40,40)
+        )
+    end,
 }
