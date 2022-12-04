@@ -115,7 +115,6 @@ love.graphics.setDefaultFilter('nearest','nearest')
 minoRotSys.None=     require'assets.game.rotsys_mino.none'
 minoRotSys.TRS=      require'assets.game.rotsys_mino.trs'
 minoRotSys.SRS=      require'assets.game.rotsys_mino.srs'
-minoRotSys.SRS_plus= require'assets.game.rotsys_mino.srs_plus'
 minoRotSys.BiRS=     require'assets.game.rotsys_mino.birs'
 minoRotSys.C2_plus=  require'assets.game.rotsys_mino.c2_plus'
 minoRotSys.Classic=  require'assets.game.rotsys_mino.classic'

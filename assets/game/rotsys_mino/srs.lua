@@ -37,9 +37,15 @@ local _minoData={-- This is a template MINODATA for SZJLT
         F={test={'+0+0','-2+0'}},
     },
 }
-for i=1,29 do
+for i=1,5 do
     SRS[i]=_minoData-- Don't worry about duplicating object, I will deep copy all of them later
 end
+SRS[6]={-- O
+    [0]={R={},L={},F={}},
+    [1]={R={},L={},F={}},
+    [2]={R={},L={},F={}},
+    [3]={R={},L={},F={}},
+}
 SRS[7]={-- I
     [0]={
         R={test={'+0+0','-2+0','+1+0','-2-1','+1+2'}},
@@ -62,4 +68,6 @@ SRS[7]={-- I
         F={test={'+0+0','+0-3','+0+3'}},
     },
 }
+for i=8,29 do SRS[i]=minoRotSys.TRS[i] end-- Add non-tetrominos' rotations
+
 return SRS
