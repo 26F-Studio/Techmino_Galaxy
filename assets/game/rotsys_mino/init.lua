@@ -122,6 +122,7 @@ minoRotSys.Classic=  require'assets.game.rotsys_mino.classic'
 minoRotSys.ASC_plus= require'assets.game.rotsys_mino.asc_plus'
 minoRotSys.ARS_plus= require'assets.game.rotsys_mino.ars_plus'
 minoRotSys.DRS_weak= require'assets.game.rotsys_mino.drs_weak'
+minoRotSys.Physical= require'assets.game.rotsys_mino.physical'
 love.graphics.setDefaultFilter('linear','linear')
 
 for name,rs in next,minoRotSys do
