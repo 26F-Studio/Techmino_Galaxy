@@ -123,7 +123,7 @@ end
 function P:finish(reason)
     if self.finished then return end
     self.timing=false
-    self.finished=true
+    self.finished=reason
     self.hand=false
     self.spawnTimer=1e99
 
