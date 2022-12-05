@@ -60,7 +60,7 @@ function scene.mouseUp(x,y,k) if k==1 then scene.touchUp(x,y,1) end end
 function scene.draw() VCTRL.draw(true) end
 
 scene.widgetList={
-    WIDGET.new{type='button',  pos={0,.5},x=210,y=-360,w=200,h=80,cornerR=0,sound='back', fontSize=40,text='Back',code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',  pos={0,.5},x=210,y=-360,w=200,h=80,cornerR=0,sound='back',fontSize=40,text='Back',code=WIDGET.c_backScn()},
 
     WIDGET.new{type='button',  pos={.6,0}, x=-260,y=150,w=100,                        fontSize=80,text='-',code=WIDGET.c_pressKey('-')},
     WIDGET.new{type='text',    pos={.6,0}, x=0,y=150,text=LANG'setting_touch_button', fontSize=40,widthLimit=400},
