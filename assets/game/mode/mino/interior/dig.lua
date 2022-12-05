@@ -12,7 +12,7 @@ return {
         lockDelay=1000,
         soundEvent={
             countDown=function(num)
-                SFX.playSample('lead',num>0 and 'A3' or 'A4')
+                SFX.playSample('lead',num>0 and 'E4' or 'E5')
             end,
         },
         event={
