@@ -62,4 +62,23 @@ return {
             MATH.interpolate(P.modeData.line,0,0,40,40)
         )
     end,
+    resultPage=function(time)
+        local P=GAME.mainPlayer
+        if not P then return end
+
+        local line=math.min(P.modeData.line,math.floor(math.max(time-.26,0)*162))
+
+        -- XX/200
+        FONT.set(100)
+        GC.setColor(COLOR.L)
+        GC.mStr(line.." / 200",800,350)
+
+        -- Bar frame
+        GC.setLineWidth(6)
+        GC.rectangle('line',800-400-15,550-50-15,800+30,100+30)
+
+        -- Filling bar
+        GC.setColor(.2,.4,1,.8)
+        GC.rectangle('fill',800-400,550-50,math.floor(line/10)*10/200*800,100)
+    end,
 }

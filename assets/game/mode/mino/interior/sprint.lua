@@ -54,4 +54,34 @@ return {
             PROGRESS.setInteriorScore('sprint',P.modeData.line)
         end
     end,
+    resultPage=function(time)
+        local P=GAME.mainPlayer
+        if not P then return end
+
+        local line=math.min(P.modeData.line,math.floor(math.max(time-.26,0)*62))
+
+        -- XX/40
+        FONT.set(100)
+        GC.setColor(COLOR.L)
+        GC.mStr(line.." / 40",800,350)
+
+        -- Bar frame
+        GC.setLineWidth(6)
+        GC.rectangle('line',800-300-15,550-50-15,600+30,100+30)
+
+        -- Filling bar
+        if line==40 then
+            GC.setColor(.2,1,.4,.626)
+        else
+            GC.setColor(1,1,1,.626)
+        end
+        GC.rectangle('fill',800-300,550-50,math.floor(line/4)*4/40*600,100)
+
+        -- Timer
+        if line==40 and time>1.26 then
+            FONT.set(60)
+            GC.setColor(COLOR.L)
+            GC.mStr(STRING.time(P.gameTime/1000),800,510)
+        end
+    end,
 }

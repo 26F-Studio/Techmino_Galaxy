@@ -21,9 +21,11 @@ return {
                 local dir=P.seqRND:random(0,1)*2-1
                 for i=1,12 do P:riseGarbage((phase+i)*dir%10+1) end
                 P.fieldDived=0
+                P.modeData.garbageRemain=12
             end,
             afterLock=function(P)
-                if P.dropHistory[#P.dropHistory].y==1 then
+                P.modeData.garbageRemain=math.min(P.modeData.garbageRemain,P.dropHistory[#P.dropHistory].y-1)
+                if P.modeData.garbageRemain==0 then
                     P:finish('AC')
                 end
             end,
@@ -39,5 +41,35 @@ return {
                 MATH.interpolate(P.gameTime,200e3,40,120e3,90)
             )
         end
-    end
+    end,
+    resultPage=function(time)
+        local P=GAME.mainPlayer
+        if not P then return end
+
+        local line=math.min(12-P.modeData.garbageRemain,math.floor(math.max(time-.26,0)*16))
+
+        -- XX/12
+        FONT.set(100)
+        GC.setColor(COLOR.L)
+        GC.mStr(line.." / 12",800,350)
+
+        -- Bar frame
+        GC.setLineWidth(6)
+        GC.rectangle('line',800-200-15,550-50-15,400+30,100+30)
+
+        -- Filling bar
+        if line==12 then
+            GC.setColor(1,.4,.4,.8)
+        else
+            GC.setColor(1,1,1,.626)
+        end
+        GC.rectangle('fill',800-200,550-50,line/12*400,100)
+
+        -- Timer
+        if line==12 and time>1.26 then
+            FONT.set(60)
+            GC.setColor(COLOR.L)
+            GC.mStr(STRING.time(P.gameTime/1000),800,510)
+        end
+    end,
 }
