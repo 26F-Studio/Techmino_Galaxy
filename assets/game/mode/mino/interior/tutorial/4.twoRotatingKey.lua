@@ -172,4 +172,5 @@ return {
             "finish AC",
         },
     }},
+    result=interiorTutorial_result,
 }

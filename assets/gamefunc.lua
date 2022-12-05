@@ -74,6 +74,17 @@ function playExterior(name)
     return setmetatable({name=name},exteriorModeMeta)
 end
 
+function interiorTutorial_result()
+    TASK.new(function()
+        local time=love.timer.getTime()
+        repeat
+            if SCN.swapping then return end
+            coroutine.yield()
+        until love.timer.getTime()-time>1.26
+        SCN.back('none')
+    end)
+end
+
 function saveSettings()
     FILE.save({
         system=SETTINGS._system,

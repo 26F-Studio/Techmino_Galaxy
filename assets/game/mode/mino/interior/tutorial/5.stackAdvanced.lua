@@ -14,4 +14,5 @@ return {
         deathDelay=0,
         seqType='none',
     }},
+    result=interiorTutorial_result,
 }
