@@ -134,12 +134,12 @@ return {
     setting_touching="触屏控制...",
     setting_test="测试",
 
-    setting_sysCursor="使用系统光标",
+    setting_sysCursor="使用外部光标",
     setting_clickFX="点击动画",
-    setting_power="电量和时间",
-    setting_clean="绘制优化",
+    setting_power="终端状态",
+    setting_clean="移动端高性能绘制",
     setting_fullscreen="全屏",
-    setting_autoMute="失去焦点自动静音",
+    setting_autoMute="闲时静音",
     setting_showTouch="显示触摸位置",
 
     setting_maxFPS="最大帧数",

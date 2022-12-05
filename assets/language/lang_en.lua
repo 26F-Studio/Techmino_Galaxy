@@ -134,12 +134,12 @@ return {
     setting_touching="Touch controls...",
     setting_test="Test",
 
-    setting_sysCursor="System cursor",
+    setting_sysCursor="External cursor",
     setting_clickFX="Click FX",
-    setting_power="Time & Battery",
-    setting_clean="Quick Draw",
+    setting_power="Terminal State",
+    setting_clean="Mobile Rendering-Boost",
     setting_fullscreen="Fullscreen",
-    setting_autoMute="Mute while unfocused",
+    setting_autoMute="Mute when idle",
     setting_showTouch="Show touches",
 
     setting_maxFPS="Max FPS",
