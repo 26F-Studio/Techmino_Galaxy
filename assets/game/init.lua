@@ -352,7 +352,9 @@ function GAME.checkFinish()
     if GAME.playing and GAME.mode.checkFinish() then
         GAME.playing=false
         GAME.mode.result()
-        TASK.new(task_switchToResult)
+        if GAME.mode.resultPage~=NULL then
+            TASK.new(task_switchToResult)
+        end
     end
 end
 
