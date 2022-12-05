@@ -7,10 +7,12 @@ function scene.enter()
 end
 
 function scene.keyDown(key)
-    if key=='escape' then
+    local action=KEYMAP.sys:getAction(key)
+    if action=='restart' then
+        SCN.pop()
+        SCN.go('game_in','none',GAME.mode.name)
+    elseif action=='back' then
         SCN.back('none')
-    else
-        return true
     end
 end
 
