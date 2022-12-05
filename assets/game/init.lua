@@ -129,6 +129,8 @@ local modeMeta={
 }
 
 local GAME={
+    playing=false,
+
     playerList=false,
     playerMap=false,
 
@@ -164,6 +166,7 @@ function GAME.getMode(name)
 end
 
 function GAME.reset(mode,seed)
+    GAME.playing=true
     GAME.playerList={}
     GAME.playerMap={}
 
@@ -333,9 +336,23 @@ function GAME.send(source,data)
     end
 end
 
+local function task_switchToResult()
+    local time=love.timer.getTime()
+    repeat
+        if SCN.swapping then return end
+        coroutine.yield()
+    until love.timer.getTime()-time>1.26
+    if SCN.cur=='game_in' then
+        SCN.swapTo('result_in','none')
+    elseif SCN.cur=='game_out' then
+        SCN.swapTo('result_out','none')
+    end
+end
 function GAME.checkFinish()
-    if GAME.mode.checkFinish() then
+    if GAME.playing and GAME.mode.checkFinish() then
+        GAME.playing=false
         GAME.mode.result()
+        TASK.new(task_switchToResult)
     end
 end
 
