@@ -64,4 +64,5 @@ return {
             end,
         },
     }},
+    result=task_interiorAutoQuit,
 }

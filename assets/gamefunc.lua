@@ -74,7 +74,7 @@ function playExterior(name)
     return setmetatable({name=name},exteriorModeMeta)
 end
 
-function interiorTutorial_result()
+function task_interiorAutoQuit()
     TASK.new(function()
         local time=love.timer.getTime()
         repeat
