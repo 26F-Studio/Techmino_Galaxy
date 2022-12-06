@@ -24,9 +24,12 @@ return {
                 P.modeData.garbageRemain=12
             end,
             afterLock=function(P)
-                P.modeData.garbageRemain=math.min(P.modeData.garbageRemain,P.dropHistory[#P.dropHistory].y-1)
-                if P.modeData.garbageRemain==0 then
-                    P:finish('AC')
+                local remain=P.dropHistory[#P.dropHistory].y-1
+                if remain<P.modeData.garbageRemain then
+                    P.modeData.garbageRemain=remain
+                    if remain==0 then
+                        P:finish('AC')
+                    end
                 end
             end,
         },
