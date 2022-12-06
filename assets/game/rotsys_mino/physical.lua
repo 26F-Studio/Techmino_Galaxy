@@ -10,8 +10,8 @@ Physical[1]={-- Z
         F={target=0,base='+0-1',test={'+0+0','+1+0','-1+1','+0+1'}},
     },
     [1]={
-        R={target=0,base='+0+0',test={'+0+0','-1+0','+0-1','+0+1','-1+1','+1+0','+0+2','-1+2'}},
-        L={target=0,base='-1+0',test={'+0+0','+1+0','+0-1','+0+1','+1+1','-1+0','+0+2','+1+2'}},
+        R={target=0,base='-1+0',test={'+0+0','+1+0','+1-1','+0+1','+1+1','-1+0','+0+2','+1+2'}},
+        L={target=0,base='+0+0',test={'+0+0','-1+0','+0-1','-1-1','-1+1','+0+1','-1+2','+0+2'}},
         F={target=1,base='-1+0',test={'+0+0','+0-1','+1+1','+1+0'}},
     },
 }
@@ -22,8 +22,8 @@ Physical[2]={-- S
         F={target=0,base='+0-1',test=minoRotSys._flipList(Physical[1][0].F.test)},
     },
     [1]={
-        R={target=0,base='+0+0',test=minoRotSys._flipList(Physical[1][1].L.test)},
-        L={target=0,base='-1+0',test=minoRotSys._flipList(Physical[1][1].R.test)},
+        R={target=0,base='-1+0',test=minoRotSys._flipList(Physical[1][1].L.test)},
+        L={target=0,base='+0+0',test=minoRotSys._flipList(Physical[1][1].R.test)},
         F={target=1,base='+1+0',test=minoRotSys._flipList(Physical[1][1].F.test)},
     },
 }
