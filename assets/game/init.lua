@@ -345,7 +345,7 @@ local function task_switchToResult()
     if SCN.cur=='game_in' then
         SCN.swapTo('result_in','none')
     elseif SCN.cur=='game_out' then
-        SCN.swapTo('result_out','none')
+        SCN.swapTo('result_out')
     end
 end
 function GAME.checkFinish()
