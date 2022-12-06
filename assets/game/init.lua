@@ -128,6 +128,19 @@ local modeMeta={
     __metatable=true,
 }
 
+local function task_switchToResult()
+    if SCN.cur=='game_in' then
+        SCN.swapTo('result_in','none')
+    elseif SCN.cur=='game_out' then
+        local time=love.timer.getTime()
+        repeat
+            if SCN.swapping then return end
+            coroutine.yield()
+        until love.timer.getTime()-time>1.26
+        SCN.swapTo('result_out')
+    end
+end
+
 local GAME={
     playing=false,
 
@@ -176,6 +189,7 @@ function GAME.reset(mode,seed)
     GAME.seed=seed or math.random(2^16,2^26)
     GAME.mode=mode and GAME.getMode(mode) or NONE
     if GAME.mode.initialize then GAME.mode.initialize() end
+    TASK.removeTask_code(task_switchToResult)
 end
 
 function GAME.newPlayer(id,pType)
@@ -336,18 +350,6 @@ function GAME.send(source,data)
     end
 end
 
-local function task_switchToResult()
-    local time=love.timer.getTime()
-    repeat
-        if SCN.swapping then return end
-        coroutine.yield()
-    until love.timer.getTime()-time>1.26
-    if SCN.cur=='game_in' then
-        SCN.swapTo('result_in','none')
-    elseif SCN.cur=='game_out' then
-        SCN.swapTo('result_out')
-    end
-end
 function GAME.checkFinish()
     if GAME.playing and GAME.mode.checkFinish() then
         GAME.playing=false
