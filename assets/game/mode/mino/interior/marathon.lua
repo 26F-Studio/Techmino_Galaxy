@@ -44,9 +44,9 @@ return {
             drawOnPlayer=function(P)
                 gc.setColor(COLOR.L)
                 FONT.set(80)
-                GC.mStr(P.modeData.line,-300,-110)
+                GC.mStr(P.modeData.line,-300,-100)
                 gc.rectangle('fill',-380,-2,160,4)
-                GC.mStr(P.modeData.target,-300,0)
+                GC.mStr(P.modeData.target,-300,10)
             end,
         },
     }},
