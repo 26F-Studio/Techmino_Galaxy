@@ -137,7 +137,7 @@ local function task_switchToResult()
             if SCN.swapping then return end
             coroutine.yield()
         until love.timer.getTime()-time>1.26
-        SCN.swapTo('result_out')
+        SCN.swapTo('result_out','none')
     end
 end
 
