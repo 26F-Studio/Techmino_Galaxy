@@ -945,8 +945,10 @@ function MP:lock()-- Put mino into field
     end end
     ins(self.dropHistory,{
         id=self.hand.id,
+        direction=self.hand.direction,
         x=self.handX,
         y=self.handY,
+        time=self.time,
     })
 end
 function MP:diveDown(cells)

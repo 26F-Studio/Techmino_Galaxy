@@ -654,8 +654,10 @@ function PP:lock()-- Put puyo into field
 
     ins(self.dropHistory,{
         id=self.hand.id,
+        direction=self.hand.direction,
         x=self.handX,
         y=self.handY,
+        time=self.time,
     })
 end
 function PP:getGroup(x,y,cell,set)
