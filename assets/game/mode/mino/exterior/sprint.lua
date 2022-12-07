@@ -85,7 +85,7 @@ return {
         if not P then return end
         if not P.modeData.finalTime then
             FONT.set(100)
-            GC.setColor(1,1,1,math.min(time,.26))
+            GC.setColor(1,1,1,math.min(time*2.6,1))
             GC.mStr(P.modeData.line.." / 40",800,400)
             return
         end
