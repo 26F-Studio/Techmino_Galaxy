@@ -59,8 +59,6 @@ return {
             table.insert(dropInfo,{
                 x=(d.time-3000)/finalTime*finRate,
                 y=i/#P.dropHistory*finRate,
-                dir=d.direction,
-                pos=(d.x-1)/9,
                 choke=math.min(averageTime/(d.time-lastPieceTime),1),
                 key=P.modeData.keyCount[i] or 0,
             })
