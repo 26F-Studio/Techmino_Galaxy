@@ -24,7 +24,7 @@ function scene.draw()
     SCN.scenes['game_out'].draw()
 
     GC.setCanvas(Zenitha.getBigCanvas('result'))
-    GC.clear(1,1,1,0)
+    GC.clear(0,0,0,0)
     GAME.mode.resultPage(time)
     GC.setCanvas()
 
