@@ -490,7 +490,7 @@ function MP:resetPosCheck()
             self.keyBuffer.move=false
         end
 
-        self:freshGhost(true)
+        self:freshGhost()
         self:freshDelay('spawn')
     end
 
@@ -503,7 +503,7 @@ function MP:resetPosCheck()
         self.moveCharge=self.moveCharge-self.settings.dascut
     end
 end
-function MP:freshGhost(justFreshGhost)
+function MP:freshGhost()
     if self.hand then
         self.ghostY=min(self.field:getHeight()+1,self.handY)
 
@@ -512,14 +512,13 @@ function MP:freshGhost(justFreshGhost)
             self.ghostY=self.ghostY-1
         end
 
-        if not justFreshGhost then
-            if (self.settings.dropDelay<=0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then-- if (temp) 20G on
-                self:moveHand('drop',self.ghostY-self.handY)
-                self:freshDelay('drop')
-                self:shakeBoard('-drop')
-            else
-                self:freshDelay('move')
-            end
+        -- 20G check
+        if (self.settings.dropDelay<=0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then
+            self:moveHand('drop',self.ghostY-self.handY)
+            self:freshDelay('drop')
+            self:shakeBoard('-drop')
+        else
+            self:freshDelay('move')
         end
     end
 end
@@ -1088,7 +1087,7 @@ function MP:setField(arg)
     if self.hand and (resetHand==true or self:ifoverlap(self.hand.matrix,self.handX,self.handY)) then
         self:resetPos()
     end
-    self:freshGhost(true)
+    self:freshGhost()
 end
 function MP:checkLineFull(y)
     local F=self.field
