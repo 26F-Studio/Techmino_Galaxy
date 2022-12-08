@@ -1,34 +1,34 @@
 local levels={
-    {drop=1000,lock=1000,spawn=150},
-    {drop=730, lock=1000,spawn=150},
-    {drop=533, lock=1000,spawn=150},
-    {drop=389, lock=1000,spawn=150},
-    {drop=284, lock=1000,spawn=150},
-    {drop=207, lock=800 ,spawn=130},
-    {drop=151, lock=800 ,spawn=130},
-    {drop=110, lock=800 ,spawn=130},
-    {drop=81,  lock=800 ,spawn=130},
-    {drop=59,  lock=800 ,spawn=130},
-    {drop=43,  lock=700 ,spawn=110},
-    {drop=31,  lock=700 ,spawn=110},
-    {drop=23,  lock=700 ,spawn=110},
-    {drop=17,  lock=700 ,spawn=110},
-    {drop=12,  lock=700 ,spawn=110},
-    {drop=9,   lock=600 ,spawn=90 },
-    {drop=7,   lock=600 ,spawn=90 },
-    {drop=5,   lock=600 ,spawn=90 },
-    {drop=3,   lock=600 ,spawn=90 },
-    {drop=2,   lock=600 ,spawn=90 },
-    {drop=0,   lock=590 ,spawn=75 },
-    {drop=0,   lock=580 ,spawn=75 },
-    {drop=0,   lock=570 ,spawn=75 },
-    {drop=0,   lock=560 ,spawn=75 },
-    {drop=0,   lock=550 ,spawn=75 },
-    {drop=0,   lock=540 ,spawn=70 },
-    {drop=0,   lock=530 ,spawn=70 },
-    {drop=0,   lock=520 ,spawn=70 },
-    {drop=0,   lock=510 ,spawn=70 },
-    {drop=0,   lock=500 ,spawn=70 },
+    {drop=1000,lock=1000,spawn=150, par=999},
+    {drop=730, lock=1000,spawn=150, par=909},
+    {drop=533, lock=1000,spawn=150, par=833},
+    {drop=389, lock=1000,spawn=150, par=714},
+    {drop=284, lock=1000,spawn=150, par=666},
+    {drop=207, lock=800 ,spawn=130, par=625},
+    {drop=151, lock=800 ,spawn=130, par=588},
+    {drop=110, lock=800 ,spawn=130, par=555},
+    {drop=81,  lock=800 ,spawn=130, par=526},
+    {drop=59,  lock=800 ,spawn=130, par=500},
+    {drop=43,  lock=700 ,spawn=110, par=454},
+    {drop=31,  lock=700 ,spawn=110, par=416},
+    {drop=23,  lock=700 ,spawn=110, par=384},
+    {drop=17,  lock=700 ,spawn=110, par=357},
+    {drop=12,  lock=700 ,spawn=110, par=333},
+    {drop=9,   lock=600 ,spawn=90,  par=312},
+    {drop=7,   lock=600 ,spawn=90,  par=294},
+    {drop=5,   lock=600 ,spawn=90,  par=277},
+    {drop=3,   lock=600 ,spawn=90,  par=263},
+    {drop=2,   lock=600 ,spawn=90,  par=250},
+    {drop=0,   lock=590 ,spawn=75,  par=238},
+    {drop=0,   lock=580 ,spawn=75,  par=227},
+    {drop=0,   lock=570 ,spawn=75,  par=217},
+    {drop=0,   lock=560 ,spawn=75,  par=200},
+    {drop=0,   lock=550 ,spawn=75,  par=185},
+    {drop=0,   lock=540 ,spawn=70,  par=172},
+    {drop=0,   lock=530 ,spawn=70,  par=161},
+    {drop=0,   lock=520 ,spawn=70,  par=147},
+    {drop=0,   lock=510 ,spawn=70,  par=142},
+    {drop=0,   lock=500 ,spawn=70,  par=133},
 }
 local gc=love.graphics
 
@@ -67,17 +67,18 @@ return {
                 if P.modeData.line>=P.modeData.target then
                     if P.modeData.target<200 then
                         local autoLevel=P.modeData.level
-                        local averagePieceTime=(P.gameTime-P.modeData.levelStartTime-P.settings.clearDelay*3)/P.modeData.levelPieces-P.settings.spawnDelay
-                        while 1/(levels[autoLevel].drop*15)<averagePieceTime do
+                        local averageDropTime=(P.gameTime-P.modeData.levelStartTime-P.settings.clearDelay*3)/P.modeData.levelPieces-P.settings.spawnDelay
+                        while averageDropTime<levels[autoLevel].par and autoLevel<30 do
                             autoLevel=autoLevel+1
                         end
                         local _level=P.modeData.level
-                        P.modeData.level=math.min(math.max(P.modeData.level+1,math.min(P.modeData.level+4,autoLevel-5)),30)
+                        P.modeData.level=math.min(math.max(P.modeData.level+1,math.min(P.modeData.level+3,autoLevel)),30)
                         if _level<=10 and P.modeData.level>10 then
                             P.modeData.transition1=#P.dropHistory
                         elseif _level<=20 and P.modeData.level>20 then
                             P.modeData.transition2=#P.dropHistory
                         end
+
                         P.settings.dropDelay=levels[P.modeData.level].drop
                         P.settings.lockDelay=levels[P.modeData.level].lock
                         P.settings.spawnDelay=levels[P.modeData.level].spawn
