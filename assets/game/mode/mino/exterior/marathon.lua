@@ -115,12 +115,11 @@ return {
         local dropInfo={}
 
         local finalTime=P.time-3000
-        local finRate=P.modeData.line/200
 
         for i,d in next,P.dropHistory do
             table.insert(dropInfo,{
-                x=(d.time-3000)/finalTime*finRate,
-                y=i/#P.dropHistory*finRate,
+                x=(d.time-3000)/finalTime,
+                y=i/#P.dropHistory,
             })
         end
 
