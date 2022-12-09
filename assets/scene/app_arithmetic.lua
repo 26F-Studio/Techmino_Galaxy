@@ -155,7 +155,6 @@ local scene={}
 
 function scene.enter()
     reset()
-    BGM.play('truth')
 end
 
 function scene.keyDown(key,isRep)

@@ -14,7 +14,6 @@ function scene.enter()
     keyTime={} for i=1,40 do keyTime[i]=-1e99 end
     BG.set('fixColor')
     BG.send('fixColor',.26,.26,.26)
-    BGM.play('push')
 end
 
 function scene.keyDown(key,isRep)

@@ -233,7 +233,6 @@ function scene.enter()
         tileText[i]=gc.newText(FONT.get(80,'_basic'),tileName[i])
     end
     BG.set('cubes')
-    BGM.play('truth')
 
     invis=false
     tapControl=false

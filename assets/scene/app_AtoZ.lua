@@ -31,7 +31,6 @@ local frameKeyCount,mistake
 
 function scene.enter()
     BG.set('rgb')
-    BGM.play('way')
     levelName="A_Z"
     targetString=levels.A_Z
     progress=1

@@ -56,8 +56,6 @@ function scene.enter()
     score=0
     sunH,color,rot=0,{.878,.752,0},0
 
-    gc.setLineJoin('bevel')
-    BGM.play('push')
     BG.set('none')
 end
 

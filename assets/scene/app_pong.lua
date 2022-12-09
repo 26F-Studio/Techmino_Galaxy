@@ -16,7 +16,6 @@ local p1,p2-- Player data
 
 function scene.enter()
     BG.set('none')
-    BGM.play('way')
     state=0
 
     bx,by=640,360

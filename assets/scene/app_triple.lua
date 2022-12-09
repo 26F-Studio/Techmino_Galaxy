@@ -266,7 +266,6 @@ local scene={}
 
 function scene.enter()
     player:reset()
-    BGM.play('truth')
 end
 
 function scene.mouseClick(x,y)

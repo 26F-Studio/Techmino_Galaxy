@@ -13,7 +13,6 @@ local tapFX,mistake
 
 function scene.enter()
     BG.set('space')
-    BGM.play('way')
     board={}
     rank=3
     invis=false

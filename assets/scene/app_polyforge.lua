@@ -39,7 +39,6 @@ function scene.enter()
         dist[c],dist[c+1]=226,126
     end
     BG.set('none')
-    BGM.play('dream')
 end
 
 function scene.keyDown(key,isRep)

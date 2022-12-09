@@ -48,7 +48,6 @@ end
 function back.draw()
     gc.clear(.06,.06,.06)
     gc.setColor(.12,.10,.08)
-    gc.setLineJoin('bevel')
     gc.setLineWidth(14*SCR.k)
     local W,H=SCR.w,SCR.h
     gc.line(.018*W,.567*H,.101*W,.512*H,.202*W,.369*H,.260*W,.212*H)

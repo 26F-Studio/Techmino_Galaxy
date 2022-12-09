@@ -245,7 +245,6 @@ local scene={}
 function scene.enter()
     invis=false
     newGame()
-    BGM.play('truth')
 end
 
 function scene.keyDown(key,isRep)

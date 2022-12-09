@@ -96,7 +96,6 @@ local scene={}
 
 function scene.enter()
     restart()
-    BGM.play('truth')
     BG.set('rainbow')
 end
 

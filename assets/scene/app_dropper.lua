@@ -36,7 +36,6 @@ end
 function scene.enter()
     restart()
     state='menu'
-    BGM.play('hang out')
     BG.set('space')
 end
 

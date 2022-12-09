@@ -17,7 +17,6 @@ local colorSelector=WIDGET.new{type='selector',pos={0,0},x=150,y=240,w=200,text=
 
 function scene.enter()
     BG.set('rainbow2')
-    BGM.play('push')
     board={{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,16}}
     cx,cy=4,4
     startTime=0

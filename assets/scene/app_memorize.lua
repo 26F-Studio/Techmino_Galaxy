@@ -35,7 +35,6 @@ function scene.enter()
     level=0
     input=''
     showNum='memoriZe'
-    BGM.play('reason')
 end
 
 function scene.keyDown(key,isRep)

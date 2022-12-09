@@ -53,7 +53,6 @@ local function reset()
 end
 function scene.enter()
     BG.set('rainbow2')
-    BGM.play('truth')
     preview={}
     board={{},{},{},{},{}}
     cx,cy=3,3
