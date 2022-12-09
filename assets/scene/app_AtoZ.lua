@@ -30,7 +30,7 @@ local state,progress=0
 local frameKeyCount,mistake
 
 function scene.enter()
-    BG.set('bg2')
+    BG.set('rgb')
     BGM.play('way')
     levelName="A_Z"
     targetString=levels.A_Z
@@ -40,6 +40,7 @@ function scene.enter()
     startTime=0
     time=0
     state=0
+    scene.widgetList.keyboard:setVisible(MOBILE)
 end
 
 function scene.keyDown(key,isRep)
@@ -49,7 +50,14 @@ function scene.keyDown(key,isRep)
             if key:upper():byte()==targetString:byte(progress) then
                 progress=progress+1
                 frameKeyCount=frameKeyCount+1
-                TEXT:add(key:upper(),rnd(320,960),rnd(100,240),90,'score',2.6)
+                TEXT:add{
+                    text=key:upper(),
+                    x=rnd(300,1300),y=rnd(650,900),
+                    a=.626,
+                    fontSize=90,
+                    style='score',
+                    duration=.4,
+                }
                 SFX.play('touch')
                 if progress==2 then
                     state=1
@@ -66,7 +74,7 @@ function scene.keyDown(key,isRep)
         end
     elseif key=='left' or key=='right' then
         if state==0 then
-            scene.widgetList.level:scroll(key=='left' and -1 or 1)
+            scene.widgetList.level:scroll(key=='left' and 1 or -1,0)
         end
     elseif key=='space' then
         progress=1
@@ -116,9 +124,9 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='selector',x=640,y=640,w=200,list={'A_Z','Z_A','Tech1','Tech2','KeyTest1','KeyTest2','Hello','Roll1','Roll2','Roll3','ZZZ','ZXZX','ZMZM','Stair','Stair2','Stair3','BPW'},disp=function() return levelName end,code=function(i) levelName=i; targetString=levels[i] end,visibleFunc=function() return state==0 end},
+    WIDGET.new{type='selector',name='level',text='Text',x=640,y=640,w=200,list={'A_Z','Z_A','Tech1','Tech2','KeyTest1','KeyTest2','Hello','Roll1','Roll2','Roll3','ZZZ','ZXZX','ZMZM','Stair','Stair2','Stair3','BPW'},disp=function() return levelName end,code=function(i) levelName=i; targetString=levels[i] end,visibleFunc=function() return state==0 end},
     WIDGET.new{type='button',  x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'space'},
-    WIDGET.new{type='button',  x=160,y=210,w=180,h=100,code=function() love.keyboard.setTextInput(true,0,select(2,SCR.xOy:transformPoint(0,500)),1,1) end,visibleFunc=function() return MOBILE end},
+    WIDGET.new{type='button',  name='keyboard',x=160,y=210,w=180,h=100,fontSize=60,text=CHAR.icon.keyboard,code=function() love.keyboard.setTextInput(true,0,select(2,SCR.xOy:transformPoint(0,500)),1,1) end},
     WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 

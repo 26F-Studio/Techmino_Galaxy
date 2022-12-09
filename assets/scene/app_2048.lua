@@ -3,8 +3,6 @@ local setColor,rectangle=gc.setColor,gc.rectangle
 
 local floor,abs=math.floor,math.abs
 local rnd,min=math.random,math.min
-local ins=table.insert
-local setFont=FONT.set
 
 local scene={}
 
@@ -82,7 +80,14 @@ local function newTile()
 
     -- Fresh score
     score=score+2^nextTile
-    TEXT:add("+"..2^nextTile,field.x+field.w+180+rnd(-90,90),770+rnd(-40,40),40,'score',1.5)
+    TEXT:add{
+        text="+"..2^nextTile,
+        x=field.x+field.w+180+rnd(-90,90),
+        y=770+rnd(-40,40),
+        fontSize=40,
+        style='score',
+        duration=.626,
+    }
 
     -- Generate next number
     nextCD=nextCD-1
@@ -122,7 +127,7 @@ local function freshMaxTile()
         skipper.cd=0
     end
     SFX.play('reach')
-    ins(progress,("%s - %.3fs"):format(tileName[maxTile],love.timer.getTime()-startTime))
+    table.insert(progress,("%s - %.3fs"):format(tileName[maxTile],love.timer.getTime()-startTime))
 end
 local function squash(L)
     local p1,p2=1
@@ -309,7 +314,13 @@ function scene.keyDown(key,isRep)
                     end
                 end
                 newTile()
-                TEXT:add(arrows[key],field.mx,field.my,100,'beat',3)
+                TEXT:add{
+                    text=arrows[key],
+                    x=field.mx,y=field.my,
+                    fontSize=100,
+                    style='beat',
+                    duration=.26,
+                }
                 move=move+1
                 if not autoPressing then
                     SFX.play('touch')
@@ -394,20 +405,20 @@ function scene.draw()
     rectangle('line',field.x+field.r*(x-1)+3-d,field.y+field.r*(y-1)+3-d,field.r-6+2*d,field.r-6+2*d,15)
 
     -- Time and moves
-    setFont(50)
+    FONT.set(50)
     setColor(1,1,1)
     gc.print(("%.3f"):format(time),1300,10)
     gc.print(move,1300,60)
 
     -- Progress time list
-    setFont(20)
+    FONT.set(20)
     setColor(.6,.6,.6)
     for i=1,#progress do
         gc.print(progress[i],1300,120+20*i)
     end
 
     -- Score
-    setFont(40)
+    FONT.set(40)
     setColor(1,.7,.7)
     GC.mStr(score,field.x+field.w+180,700)
 
@@ -432,14 +443,14 @@ function scene.draw()
     gc.replaceTransform(SCR.xOy_dl)
     setColor(1,1,.5)
     if skipper.cd and skipper.cd>0 then
-        setFont(50)
+        FONT.set(50)
         GC.mStr(skipper.cd,180,-420)
     end
 
     -- Repeater
     gc.replaceTransform(SCR.xOy_r)
     gc.setLineWidth(6)
-    setFont(30)
+    FONT.set(30)
     for i=1,2 do
         setColor(COLOR[
             repeater.focus==i and (
@@ -456,10 +467,10 @@ function scene.draw()
 
     -- Next & Next indicator
     gc.replaceTransform(SCR.xOy_l)
-    setFont(60)
+    FONT.set(60)
     gc.print("Next",50,-35)
     if nextTile>1 then setColor(1,.5,.4) end
-    setFont(100)
+    FONT.set(100)
     GC.mStr(tileName[nextTile],270,-65)
 
     if nextCD<=12 then
@@ -478,23 +489,20 @@ function scene.draw()
 end
 
 local function visFunc1() return not tapControl end
-local function visFunc2() return state~=2 end
-local function visFunc3() return state~=2 and #repeater.seq[1]~=0 end
 scene.widgetList={
-    WIDGET.new{type='button',     pos={0,0},x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
-    WIDGET.new{type='checkBox',   pos={0,0},x=300,y=220,widthLimit=270,fontSize=40,disp=function() return invis end,code=WIDGET.c_pressKey'q',visibleFunc=function() return state~=1 end},
-    WIDGET.new{type='checkBox',   pos={0,0},x=300,y=300,widthLimit=270,fontSize=40,disp=function() return tapControl end,code=WIDGET.c_pressKey'w',visibleFunc=function() return state~=1 end},
+    WIDGET.new{type='button',  pos={0,0},x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
+    WIDGET.new{type='checkBox',pos={0,0},x=300,y=220,text="Invis",widthLimit=270,fontSize=40,disp=function() return invis end,code=WIDGET.c_pressKey'q',visibleFunc=function() return state~=1 end},
+    WIDGET.new{type='checkBox',pos={0,0},x=300,y=300,text="Tap",widthLimit=270,fontSize=40,disp=function() return tapControl end,code=WIDGET.c_pressKey'w',visibleFunc=function() return state~=1 end},
 
-    WIDGET.new{type='button',     pos={0,1},x=180,y=-280,w=100,      text="↑",fontSize=50,color='Y',code=WIDGET.c_pressKey'up',   visibleFunc=visFunc1},
-    WIDGET.new{type='button',     pos={0,1},x=180,y=-80, w=100,      text="↓",fontSize=50,color='Y',code=WIDGET.c_pressKey'down', visibleFunc=visFunc1},
-    WIDGET.new{type='button',     pos={0,1},x=80, y=-180,w=100,      text="←",fontSize=50,color='Y',code=WIDGET.c_pressKey'left', visibleFunc=visFunc1},
-    WIDGET.new{type='button',     pos={0,1},x=280,y=-180,w=100,      text="→",fontSize=50,color='Y',code=WIDGET.c_pressKey'right',visibleFunc=visFunc1},
-    WIDGET.new{type='button',     pos={0,1},x=180,y=-390,w=100,      text="S",fontSize=50,color='Y',code=WIDGET.c_pressKey'space',visibleFunc=function() return state==1 and skipper.cd==0 end},
-    WIDGET.new{type='button',     pos={1,.5},x=-140,y=-30,w=250,h=50,                     color='lX',code=WIDGET.c_pressKey'1',   visibleFunc=visFunc2},
-    WIDGET.new{type='button',     pos={1,.5},x=-140,y=30,w=250,h=50,                      color='lX',code=WIDGET.c_pressKey'2',   visibleFunc=visFunc2},
-    WIDGET.new{type='button_fill',pos={1,.5},x=-300,y=-30,w=50,      text="!",fontSize=50,color='R',code=WIDGET.c_pressKey'c1',   visibleFunc=visFunc3},
-    WIDGET.new{type='button_fill',pos={1,.5},x=-300,y=30,w=50,       text="!",fontSize=50,color='R',code=WIDGET.c_pressKey'c2',   visibleFunc=visFunc3},
-    WIDGET.new{type='button',     pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',  pos={0,1},x=180,y=-280,w=100,text="↑",fontSize=50,color='Y',code=WIDGET.c_pressKey'up',   visibleFunc=visFunc1},
+    WIDGET.new{type='button',  pos={0,1},x=180,y=-80, w=100,text="↓",fontSize=50,color='Y',code=WIDGET.c_pressKey'down', visibleFunc=visFunc1},
+    WIDGET.new{type='button',  pos={0,1},x=80, y=-180,w=100,text="←",fontSize=50,color='Y',code=WIDGET.c_pressKey'left', visibleFunc=visFunc1},
+    WIDGET.new{type='button',  pos={0,1},x=280,y=-180,w=100,text="→",fontSize=50,color='Y',code=WIDGET.c_pressKey'right',visibleFunc=visFunc1},
+    WIDGET.new{type='button',  pos={0,1},x=180,y=-390,w=100,text="S",fontSize=50,color='Y',code=WIDGET.c_pressKey'space',visibleFunc=function() return state==1 and skipper.cd==0 end},
+    WIDGET.new{type='button',  pos={1,.5},x=-140,y=-30,w=250,h=50,               color='lX',code=WIDGET.c_pressKey'1',   visibleFunc=function() return state~=2 end},
+    WIDGET.new{type='button',  pos={1,.5},x=-140,y=30,w=250,h=50,                color='lX',code=WIDGET.c_pressKey'2',   visibleFunc=function() return state~=2 end},
+    WIDGET.new{type='button',  pos={1,.5},x=-300,y=-30,w=50,text=">",fontSize=50,color='R',code=WIDGET.c_pressKey'c1',   visibleFunc=function() return state~=2 and #repeater.seq[1]~=0 end},
+    WIDGET.new{type='button',  pos={1,.5},x=-300,y=30,w=50, text=">",fontSize=50,color='R',code=WIDGET.c_pressKey'c2',   visibleFunc=function() return state~=2 and #repeater.seq[2]~=0 end},
+    WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
-
 return scene
