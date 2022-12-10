@@ -105,7 +105,7 @@ local gemShapes={
             17,-5,
             8,-16,
             -8,-16,
-            -17 ,-5,
+            -17,-5,
         },
     },
     {-- Magenta Triangle
