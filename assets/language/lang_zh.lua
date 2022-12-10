@@ -109,8 +109,7 @@ return {
     -- Widget texts
     button_back="返回",
 
-    main_demo_setting="设置",
-
+    title_positioning="定位",
     title_settings="设置",
 
     setting_mino="方块",
@@ -158,8 +157,8 @@ return {
     main_out_dict="词典",
     main_out_lang="语言",
     main_out_about="系统信息",
-    main_out_single="单人游戏",
-    main_out_multi="多人游戏",
+    main_out_single="单人",
+    main_out_multi="多人",
 
     title_musicroom="音乐室",
     musicroom_fullband='全频带',

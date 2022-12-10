@@ -109,8 +109,7 @@ return {
     -- Widget texts
     button_back="Back",
 
-    main_demo_setting="Settings",
-
+    title_positioning="Positioning",
     title_settings="Settings",
 
     setting_mino="MINO",
@@ -158,8 +157,8 @@ return {
     main_out_dict="Dictionary",
     main_out_lang="Language",
     main_out_about="System info",
-    main_out_single="Single player",
-    main_out_multi="Multiplayer",
+    main_out_single="Single",
+    main_out_multi="Multiple",
 
     title_musicroom="Musicroom",
     musicroom_fullband='Full Band',
