@@ -57,7 +57,7 @@ scene.widgetList={
     WIDGET.new{name='1',type='button', pos={0,0},x=500, y=580,w=360, h=80,cornerR=10,fontSize=40, text=LANG'setting_keymapping',     code=function() SCN.go('keyset_list',nil,'mino') end},
     WIDGET.new{name='1',type='switch', pos={0,0},x=360, y=700,h=40,  labelPos='right',fontSize=40,text=LANG'setting_enableTouching', disp=TABLE.func_getVal(SETTINGS.system,'touchControl'),code=TABLE.func_revVal(SETTINGS.system,'touchControl')},
     WIDGET.new{name='1',type='button', pos={0,0},x=500, y=780,w=360, h=80,cornerR=10,fontSize=40, text=LANG'setting_touching',       code=WIDGET.c_goScn'keyset_touch',visibleFunc=function() return page=='1' and SETTINGS.system.touchControl end},
-    WIDGET.new{name='1',type='button', pos={0,0},x=400, y=910,w=160,h=80,cornerR=10,fontSize=40, text=LANG'setting_test',           code=playInterior'mino/exterior/test'},
+    WIDGET.new{name='1',type='button', pos={0,0},x=400, y=910,w=160, h=80,cornerR=10,fontSize=40, text=LANG'setting_test',           code=playInterior'mino/exterior/test'},
 
     -- Audio
     WIDGET.new{name='2',type='slider', pos={0,0},x=340, y=220,w=650, fontSize=40,text=LANG'setting_mainVol', widthLimit=380, disp=TABLE.func_getVal(SETTINGS.system,'mainVol'), code=TABLE.func_setVal(SETTINGS.system,'mainVol')},

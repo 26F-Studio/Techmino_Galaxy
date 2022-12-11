@@ -134,10 +134,11 @@ FONT.load{
 SCR.setSize(1600,1000)
 BGM.setMaxSources(16)
 VOC.setDiversion(.62)
-WIDGET.setDefaultButtonSound('button')
-WIDGET.setDefaultCheckBoxSound('check','uncheck')
-WIDGET.setDefaultSelectorSound('selector')
 WIDGET._prototype.base.lineWidth=2
+WIDGET._prototype.button.sound='button'
+WIDGET._prototype.checkBox.sound_on='check'
+WIDGET._prototype.checkBox.sound_off='uncheck'
+WIDGET._prototype.selector.sound='selector'
 
 --[Attention] Not loading IMG/SFX/BGM files here, just read file paths
 IMG.init{
