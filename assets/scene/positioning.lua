@@ -1,8 +1,7 @@
 local subject={
     {-- Puyo
         trigger=function()
-            playExterior('mino/exterior/ultra')()
-            -- SCN.go('mode_puyo','fade')
+            SCN.go('mode_puyo','fade')
         end,
         draw=function()
             GC.setColor(COLOR.R)
@@ -13,7 +12,7 @@ local subject={
     },
     {-- Mino
         trigger=function()
-            playExterior('mino/exterior/sprint')()
+            SCN.go('mode_mino','fade')
         end,
         draw=function()
             GC.setColor(COLOR.P)
@@ -33,8 +32,7 @@ local subject={
     },
     {-- Gem
         trigger=function()
-            playExterior('mino/exterior/marathon')()
-            -- SCN.go('mode_gem','fade')
+            SCN.go('mode_gem','fade')
         end,
         draw=function()
             GC.setColor(COLOR.B)
