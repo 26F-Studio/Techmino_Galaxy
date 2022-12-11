@@ -37,7 +37,7 @@ scene.widgetList={
     WIDGET.new{type='button_fill',pos={0,0},x=60,y=60,w=80,color='R',cornerR=15,sound='back',fontSize=70,text=CHAR.icon.power,code=WIDGET.c_pressKey'escape',visibleFunc=function() return SYSTEM~='iOS' end},
 
     WIDGET.new{type='button_invis',pos={1,0},x=-250,y=60,w=80,cornerR=20,fontSize=65,text=CHAR.icon.console,   sound='move',code=function() if sureCheck('enter') then SCN.go('_console') end end},
-    WIDGET.new{type='button_invis',pos={1,0},x=-400,y=60,w=80,cornerR=20,fontSize=65,text=CHAR.icon.home,      sound='move',code=WIDGET.c_goScn('main_in','none')},
+    WIDGET.new{type='button_invis',pos={1,0},x=-400,y=60,w=80,cornerR=20,fontSize=65,text=CHAR.icon.video,     sound='move',code=WIDGET.c_goScn('main_in','none')},
     WIDGET.new{type='button_invis',pos={1,0},x=-550,y=60,w=80,cornerR=20,fontSize=65,text=CHAR.icon.info_circ, sound='move',code=WIDGET.c_goScn('about_out','fadeHeader')},
     WIDGET.new{type='button_invis',pos={1,0},x=-700,y=60,w=80,cornerR=20,fontSize=65,text=CHAR.icon.music,     sound='move',code=WIDGET.c_goScn('musicroom','fadeHeader')},
     WIDGET.new{type='button_invis',pos={1,0},x=-850,y=60,w=80,cornerR=20,fontSize=65,text=CHAR.icon.language,  sound='move',code=WIDGET.c_goScn('lang_out','fadeHeader')},
