@@ -13,6 +13,9 @@ local prgs={
         sprint=0,
         marathon=0,
     },
+    puyoUnlocked=false,
+    minoUnlocked=true,
+    gemUnlocked=false,
     bgmUnlocked={},
 }
 
@@ -129,12 +132,8 @@ function PROGRESS.applyCoolWaitTemplate()
         GC.setBlendMode('alpha')
     end)
 end
-function PROGRESS.playInteriorBGM()
-    playBgm('blank',prgs.main==1 and 'simp' or 'full')
-end
-function PROGRESS.playExteriorBGM()
-    playBgm('vacuum',prgs.main==3 and 'simp' or 'full')
-end
+function PROGRESS.playInteriorBGM() playBgm('blank',prgs.main==1 and 'simp' or 'full') end
+function PROGRESS.playExteriorBGM() playBgm('vacuum',prgs.main==3 and 'simp' or 'full') end
 function PROGRESS.setEnv(env)
     if env=='interior' then
         BG.set('none')
@@ -307,12 +306,8 @@ function PROGRESS.drawExteriorHeader(h)
     GC.rectangle('fill',0,0,SCR.w,(h or 120)*SCR.k)
 end
 
-function PROGRESS.getMain()
-    return prgs.main
-end
-function PROGRESS.getBgmUnlocked(name)
-    return prgs.bgmUnlocked[name]
-end
+function PROGRESS.getMain() return prgs.main end
+function PROGRESS.getBgmUnlocked(name) return prgs.bgmUnlocked[name] end
 function PROGRESS.getTutorialPassed(n)
     if n then
         return prgs.tutorial:sub(n,n)=='1'
@@ -320,12 +315,11 @@ function PROGRESS.getTutorialPassed(n)
         return prgs.tutorial=='111111'
     end
 end
-function PROGRESS.getInteriorScore(mode)
-    return prgs.interiorScore[mode]
-end
-function PROGRESS.getTotalInteriorScore()
-    return prgs.interiorScore.dig+prgs.interiorScore.sprint+prgs.interiorScore.marathon
-end
+function PROGRESS.getInteriorScore(mode) return prgs.interiorScore[mode] end
+function PROGRESS.getTotalInteriorScore() return prgs.interiorScore.dig+prgs.interiorScore.sprint+prgs.interiorScore.marathon end
+function PROGRESS.getPuyoUnlocked() return prgs.puyoUnlocked end
+function PROGRESS.getMinoUnlocked() return prgs.minoUnlocked end
+function PROGRESS.getGemUnlocked() return prgs.gemUnlocked end
 
 function PROGRESS.setMain(n)
     if n>prgs.main then
@@ -360,5 +354,8 @@ function PROGRESS.setInteriorScore(mode,score)
         PROGRESS.save()
     end
 end
+function PROGRESS.setPuyoUnlocked(bool) prgs.puyoUnlocked=bool end
+function PROGRESS.setMinoUnlocked(bool) prgs.minoUnlocked=bool end
+function PROGRESS.setGemUnlocked(bool) prgs.gemUnlocked=bool end
 
 return PROGRESS

@@ -90,7 +90,7 @@ local defaultSoundFunc={
     allClear=    function() SFX.play('all_clear')   end,
     suffocate=   function() SFX.play('suffocate')   end,
     desuffocate= function() SFX.play('desuffocate') end,
-    reach=       function() SFX.play('beep_1')      end,
+    reach=       function() SFX.play('beep_rise')      end,
     win=         function() SFX.play('win')         end,
     fail=        function() SFX.play('fail')        end,
 }

@@ -21,12 +21,12 @@ function scene.keyDown(key,isRep)
         local L=KEYMAP[map]:getKeys(act)
         if L then TABLE.cut(L) end
         result=Text.keyset_deleted
-        SFX.play('beep_2')
+        SFX.play('beep_down')
     else
         result=key
         KEYMAP[map]:remKey(key)
         KEYMAP[map]:addKey(act,key)
-        SFX.play('beep_1')
+        SFX.play('beep_rise')
     end
 end
 
