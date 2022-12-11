@@ -79,7 +79,7 @@ function PROGRESS.getHash(t)
     for k,v in next,t do
         if k~='hash' then
             if type(v)=='number' or type(v)=='string' or type(v)=='boolean' then
-                table.insert(list,k..v)
+                table.insert(list,k..tostring(v))
             elseif type(v)=='table' then
                 table.insert(list,k)
             end
