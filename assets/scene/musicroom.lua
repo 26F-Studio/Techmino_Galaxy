@@ -78,7 +78,9 @@ function scene.keyDown(key,isRep)
     if key=='up' or key=='down' then
         musicListBox:arrowKey(key)
     elseif key=='left' or key=='right' then
-        BGM.set('all','seek',key=='left' and math.max(BGM.tell()-5,0) or (BGM.tell()+5)%BGM.getDuration())
+        if BGM.isPlaying() then
+            BGM.set('all','seek',key=='left' and math.max(BGM.tell()-5,0) or (BGM.tell()+5)%BGM.getDuration())
+        end
     elseif #key==1 and key:find'[0-9a-z]' then
         local list=musicListBox:getList()
         local sel=musicListBox:getSelect()
