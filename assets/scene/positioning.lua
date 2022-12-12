@@ -116,8 +116,10 @@ function scene.keyDown(key,isRep)
         end
     elseif key=='up' or key=='return' then
         if subjectFocused then
-            subject[subjectFocused].trigTimer=subject[subjectFocused].trigTimer or 0
-            SFX.play('position_selected')
+            if not subject[subjectFocused].trigTimer then
+                subject[subjectFocused].trigTimer=0
+                SFX.play('position_selected')
+            end
         end
     elseif key=='escape' then
         SCN.back('fadeHeader')
@@ -130,10 +132,10 @@ function scene.update(dt)
             s.active=MATH.expApproach(s.active,i==subjectFocused and 1 or 0,dt*26)
             s.size=390+120*s.active
             if s.trigTimer then
-                s.trigTimer=s.trigTimer+dt
-                if s.trigTimer>.62 then
+                if s.trigTimer<.62 and s.trigTimer+dt>.62 then
                     s.trigger()
                 end
+                s.trigTimer=s.trigTimer+dt
             end
         end
     end
@@ -174,7 +176,7 @@ end
 
 scene.widgetList={
     WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound='back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
-    WIDGET.new{type='text',pos={.5,0},x=0,y=60,alignX='center',fontType='bold',fontSize=60,text=LANG'title_positioning'},
+    WIDGET.new{type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'title_positioning'},
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 return scene
