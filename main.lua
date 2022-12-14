@@ -106,7 +106,7 @@ do-- Zenitha.setOnFocus
             if f then
                 TASK.removeTask_code(task_autoSoundOff)
                 TASK.new(task_autoSoundOn)
-            else
+            elseif SCN.cur~='musicroom' then
                 TASK.removeTask_code(task_autoSoundOn)
                 TASK.new(task_autoSoundOff)
             end
