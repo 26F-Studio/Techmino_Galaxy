@@ -112,10 +112,6 @@ return {
     title_positioning="Positioning",
     title_settings="Settings",
 
-    setting_mino="MINO",
-    setting_puyo="PUYO",
-    setting_gem="GEM",
-
     setting_das="DAS",
     setting_arr="ARR",
     setting_sdarr="SDARR",

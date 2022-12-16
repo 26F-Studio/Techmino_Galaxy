@@ -225,11 +225,11 @@ BGM.init((function()
     return L
 end)())
 VOC.init{}
-LANG.setDefault('en')
 LANG.add{
     en='assets/language/lang_en.lua',
     zh='assets/language/lang_zh.lua',
 }
+LANG.setDefault('en')
 DEBUG.checkLoadTime("Load Zenitha resources")
 --------------------------------------------------------------
 -- Load saving data

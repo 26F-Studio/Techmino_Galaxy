@@ -51,6 +51,7 @@ scene.widgetList={
     WIDGET.new{type='button', x=600,y=800,w=200,h=70,cornerR=0,text=LANG"keyset_mino_sonicLeft", fontSize=20,color='lG',code=selAct('mino','sonicLeft' )},
     WIDGET.new{type='button', x=600,y=880,w=200,h=70,cornerR=0,text=LANG"keyset_mino_sonicRight",fontSize=20,color='lG',code=selAct('mino','sonicRight')},
 
-    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
+    WIDGET.new{type='button', name='test',pos={1,1},x=-300,y=-80,w=160,h=80,cornerR=0,text=LANG"setting_test",fontSize=40,code=playInterior'mino/interior/test'},
+    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',cornerR=0,fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
 }
 return scene

@@ -112,10 +112,6 @@ return {
     title_positioning="定位",
     title_settings="设置",
 
-    setting_mino="方块",
-    setting_puyo="气泡",
-    setting_gem="宝石",
-
     setting_das="DAS",
     setting_arr="ARR",
     setting_sdarr="SDARR",
