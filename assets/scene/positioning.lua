@@ -1,3 +1,5 @@
+-- Game mode selecting for exterior menu
+
 local subject={
     {-- Puyo
         trigger=function()

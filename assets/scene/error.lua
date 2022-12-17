@@ -1,3 +1,5 @@
+-- A macOS-style error scene
+
 local time,err,img
 local imgW,imgH
 local texts={

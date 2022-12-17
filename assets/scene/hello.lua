@@ -1,3 +1,5 @@
+-- Welcome scene with animation
+
 local t
 local scene={}
 
