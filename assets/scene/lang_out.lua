@@ -48,11 +48,10 @@ local function _setLang(lid)
     TEXT:clear()
     TEXT:add{
         text=langList[lid],
-        x=800,
-        y=500,
+        x=800,y=500,a=.626,
         fontSize=100,
-        style='appear',
-        duration=1.6,
+        style='zoomout',
+        duration=1.26,
     }
     collectgarbage()
     WIDGET.resize()
