@@ -3,7 +3,7 @@
 local subject={
     {-- Puyo
         trigger=function()
-            SCN.go('mode_puyo','fade')
+            SCN.go('mode_puyo','fadeHeader')
         end,
         draw=function()
             GC.setColor(COLOR.R)
@@ -14,7 +14,7 @@ local subject={
     },
     {-- Mino
         trigger=function()
-            SCN.go('mode_mino','fade')
+            SCN.go('mode_mino','fadeHeader')
         end,
         draw=function()
             GC.setColor(COLOR.P)
@@ -34,7 +34,7 @@ local subject={
     },
     {-- Gem
         trigger=function()
-            SCN.go('mode_gem','fade')
+            SCN.go('mode_gem','fadeHeader')
         end,
         draw=function()
             GC.setColor(COLOR.B)
@@ -179,6 +179,5 @@ end
 scene.widgetList={
     WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound='back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
     WIDGET.new{type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'title_positioning'},
-    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 return scene
