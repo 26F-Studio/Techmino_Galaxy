@@ -34,11 +34,11 @@ local function sliderShow_time(S) return S.disp().." ms"  end
 scene.widgetList={
     WIDGET.new{type='button',   pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
 
-    WIDGET.new{type='button',   pos={0,.5},x=290,y=-180,w=360,h=80,lineWidth=4,cornerR=0,        fontSize=40, text=LANG'setting_keymapping',     code=WIDGET.c_goScn('keyset_in','none')},
-    WIDGET.new{type='checkBox', pos={0,.5},x=130,y=-60, w=40,      lineWidth=4,labelPos='right', fontSize=40, text=LANG'setting_enableTouching', disp=TABLE.func_getVal(SETTINGS.system,'touchControl'),code=TABLE.func_revVal(SETTINGS.system,'touchControl')},
-    WIDGET.new{type='button',   pos={0,.5},x=290,y=20,  w=360,h=80,lineWidth=4,cornerR=0,        fontSize=40, text=LANG'setting_touching',       code=WIDGET.c_goScn('keyset_touch','none'),visibleFunc=TABLE.func_getVal(SETTINGS.system,'touchControl')},
-    WIDGET.new{type='checkBox', pos={0,.5},x=130,y=250, w=40,      lineWidth=4,labelPos='right', fontSize=40, text=LANG'setting_fullscreen',     disp=TABLE.func_getVal(SETTINGS.system,'fullscreen'), code=TABLE.func_revVal(SETTINGS.system,'fullscreen')},
-    WIDGET.new{type='checkBox', pos={0,.5},x=130,y=350, w=40,      lineWidth=4,labelPos='right', fontSize=40, text=LANG'setting_autoMute',       disp=TABLE.func_getVal(SETTINGS.system,'autoMute'),   code=TABLE.func_revVal(SETTINGS.system,'autoMute')},
+    WIDGET.new{type='button',   pos={0,.5},x=290,y=-180,w=360,h=80,lineWidth=4,cornerR=0,                  fontSize=40, text=LANG'setting_keymapping',     code=WIDGET.c_goScn('keyset_in','none')},
+    WIDGET.new{type='checkBox', pos={0,.5},x=130,y=-60, w=40,      lineWidth=4,cornerR=0,labelPos='right', fontSize=40, text=LANG'setting_enableTouching', disp=TABLE.func_getVal(SETTINGS.system,'touchControl'),code=TABLE.func_revVal(SETTINGS.system,'touchControl')},
+    WIDGET.new{type='button',   pos={0,.5},x=290,y=20,  w=360,h=80,lineWidth=4,cornerR=0,                  fontSize=40, text=LANG'setting_touching',       code=WIDGET.c_goScn('keyset_touch','none'),visibleFunc=TABLE.func_getVal(SETTINGS.system,'touchControl')},
+    WIDGET.new{type='checkBox', pos={0,.5},x=130,y=250, w=40,      lineWidth=4,cornerR=0,labelPos='right', fontSize=40, text=LANG'setting_fullscreen',     disp=TABLE.func_getVal(SETTINGS.system,'fullscreen'), code=TABLE.func_revVal(SETTINGS.system,'fullscreen')},
+    WIDGET.new{type='checkBox', pos={0,.5},x=130,y=350, w=40,      lineWidth=4,cornerR=0,labelPos='right', fontSize=40, text=LANG'setting_autoMute',       disp=TABLE.func_getVal(SETTINGS.system,'autoMute'),   code=TABLE.func_revVal(SETTINGS.system,'autoMute')},
 
     WIDGET.new{type='slider',   pos={1,.5},x=-550, y=-370,w=400, fontSize=40,text=LANG'setting_mainVol', widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'mainVol'), code=TABLE.func_setVal(SETTINGS.system,'mainVol')},
     WIDGET.new{type='slider',   pos={1,.5},x=-550, y=-290,w=400, fontSize=40,text=LANG'setting_bgm',     widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),  code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
