@@ -132,7 +132,7 @@ return {
     setting_sysCursor="External cursor",
     setting_clickFX="Click FX",
     setting_power="Terminal State",
-    setting_clean="Mobile Rendering-Boost",
+    setting_clean="VRAM Boost",
     setting_fullscreen="Fullscreen",
     setting_autoMute="Mute when idle",
     setting_showTouch="Show touches",
