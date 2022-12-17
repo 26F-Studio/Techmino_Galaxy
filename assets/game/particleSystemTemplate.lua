@@ -58,6 +58,7 @@ do-- Background light of mino map
     p.minoMapBack:setSizes(26)
     p.minoMapBack:setColors(1,1,1,0,1,1,1,.062,1,1,1,.162,1,1,1,.26,1,1,1,0)
     p.minoMapBack:setRotation(0,MATH.tau)
+    p.minoMapBack:setSpin(-.26,.26)
     p.minoMapBack:setSpread(2.6)
     p.minoMapBack:setParticleLifetime(5.62,7.26)
     p.minoMapBack:setSpeed(620,1260)
