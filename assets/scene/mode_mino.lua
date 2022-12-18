@@ -116,7 +116,8 @@ local function _enterMode(m)
         SCN.go('game_out','fade','mino/exterior/'..m.mode)
     end
 end
-function scene.mouseDown(x,y,k)
+function scene.mouseClick(x,y,k)
+    cam.cursor=false
     if k==1 then
         local m=_onMode(x,y)
         if m and m==modeSelected then
@@ -127,6 +128,7 @@ function scene.mouseDown(x,y,k)
     end
 end
 function scene.mouseMove(x,y,dx,dy)
+    cam.cursor=false
     if love.mouse.isDown(1) then
         cam:move(dx,dy)
     else
@@ -134,11 +136,24 @@ function scene.mouseMove(x,y,dx,dy)
     end
 end
 function scene.wheelMoved(dx,dy)
+    cam.cursor=false
     if love.keyboard.isDown('lctrl','rctrl') then
         cam:rotate(-(dx+dy)*.26)
     else
         cam:scale(1.1^(dx+dy))
     end
+end
+function scene.touchMove(_,_,dx,dy)
+    cam.cursor=false
+    cam:move(dx,dy)
+end
+function scene.touchDown(x,y)
+    cam.cursor=false
+    scene.touchMove(x,y)
+end
+function scene.touchClick(x,y)
+    cam.cursor=false
+    scene.mouseClick(x,y,1)
 end
 function scene.keyDown(key,isRep)
     if isRep then return end
@@ -181,7 +196,9 @@ function scene.update(dt)
     if enterFX.timer then
         enterFX.timer=enterFX.timer+dt
     end
-    modeFocused=_onMode(800,600)
+    if cam.cursor then
+        modeFocused=_onMode(800,600)
+    end
 end
 
 function scene.draw()
