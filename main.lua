@@ -48,18 +48,19 @@ for _,v in next,{'conf','progress','replay','cache','lib'} do
 end
 --------------------------------------------------------------
 -- Misc modules
+defaultMinoColor=setmetatable({2,22,42,6,52,12,32},{__index=function() return math.random(64) end})
+defaultPuyoColor=setmetatable({2,12,42,22,52},{__index=function() return math.random(64) end})
+particleSystemTemplate=require'assets.game.particleSystemTemplate'
 GAME=require'assets.game'
 AI=require'assets.ai'
 PROGRESS=require'assets.progress'
+MINOMAP=require'assets.game.minomap'
 VCTRL=require'assets.vctrl'
 KEYMAP=require'assets.keymap'
 SKIN=require'assets.skin'
 CHAR=require'assets.char'
 SETTINGS=require'assets.settings'
 bgmList=require'assets.bgmlist'
-defaultMinoColor=setmetatable({2,22,42,6,52,12,32},{__index=function() return math.random(64) end})
-defaultPuyoColor=setmetatable({2,12,42,22,52},{__index=function() return math.random(64) end})
-particleSystemTemplate=require'assets.game.particleSystemTemplate'
 require'assets.gamefunc'
 DEBUG.checkLoadTime("Load game modules")
 --------------------------------------------------------------
