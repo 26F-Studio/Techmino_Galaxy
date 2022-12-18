@@ -127,7 +127,7 @@ function scene.keyDown(key,isRep)
         if subjectFocused then
             if not subject[subjectFocused].trigTimer then
                 subject[subjectFocused].trigTimer=0
-                SFX.play('position_selected')
+                SFX.play('position_select')
             end
         end
     elseif key=='escape' then
