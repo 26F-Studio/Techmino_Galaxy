@@ -110,6 +110,7 @@ return {
     button_back="Back",
 
     title_positioning="Positioning",
+    title_mode_mino="Graph",-- Traslating note: from "Knowledge Graph" from AI domain
     title_settings="Settings",
 
     setting_das="DAS",

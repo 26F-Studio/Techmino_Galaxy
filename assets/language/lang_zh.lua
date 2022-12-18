@@ -110,6 +110,7 @@ return {
     button_back="返回",
 
     title_positioning="定位",
+    title_mode_mino="图谱",-- 翻译注意：取自人工智能领域的“知识图谱”
     title_settings="设置",
 
     setting_das="DAS",
