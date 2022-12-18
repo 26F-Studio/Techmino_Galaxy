@@ -64,19 +64,26 @@ function scene.enter()
         s.size=nil
         s.trigTimer=false
     end
+    subjectFocused=false
     subject[1].valid=PROGRESS.getPuyoUnlocked()
     subject[2].valid=PROGRESS.getMinoUnlocked()
     subject[3].valid=PROGRESS.getGemUnlocked()
     scene.update(0)
     PROGRESS.playExteriorBGM()
+    if SCN.prev=='main_out' then
+        if subject[2].valid and not (subject[1].valid or subject[3].valid) then
+            subjectFocused=2
+            scene.keyDown('return')
+        end
+    end
 end
-
 local function onSubject(x,y)
     for i,s in next,subject do
         if s.valid and x>s.x and y>s.y and x<s.x+s.size and y<s.y+s.size then
             return i
         end
     end
+    return false
 end
 
 function scene.mouseMove(x,y)
@@ -131,7 +138,7 @@ end
 function scene.update(dt)
     for i,s in next,subject do
         if s.valid then
-            s.active=MATH.expApproach(s.active,i==subjectFocused and 1 or 0,dt*26)
+            s.active=MATH.expApproach(s.active,(s.trigTimer or i==subjectFocused) and 1 or 0,dt*26)
             s.size=390+120*s.active
             if s.trigTimer then
                 if s.trigTimer<.62 and s.trigTimer+dt>.62 then
