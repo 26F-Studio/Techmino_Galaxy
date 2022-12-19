@@ -266,12 +266,21 @@ function map:draw()
             GC.translate(m.x,m.y)
             GC.scale(1+m.active*.1)
             GC.rotate(-cam.a)
+
+            -- Outline
             GC.setLineWidth(8)
             GC.setColor(1,1,1,.42)
             GC.regPolygon('line',0,0,m.r,6,tau/12)
-            GC.setLineWidth(2)
             GC.setColor(1,1,1)
+            GC.setLineWidth(2)
             GC.regPolygon('line',0,0,m.r,6,tau/12)
+
+            -- Name
+            FONT.set(30)
+            GC.setColor(COLOR.L)
+            GC.mStr(m.name,0,-21)
+
+            -- Selecting frame
             if m==selected or m.active>.001 then
                 local rb=m==selected and .42 or 1
                 GC.setLineWidth(8)
