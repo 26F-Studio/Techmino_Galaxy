@@ -237,6 +237,7 @@ DEBUG.checkLoadTime("Load Zenitha resources")
 TABLE.coverR(FILE.load('conf/settings','-json -canskip') or {},SETTINGS)
 for k,v in next,SETTINGS._system do SETTINGS._system[k]=nil SETTINGS.system[k]=v end
 PROGRESS.load()
+MINOMAP:loadUnlocked(PROGRESS.getMinoModeUnlocked())
 VCTRL.importSettings(FILE.load('conf/touch','-json -canskip'))
 KEYMAP.mino=KEYMAP.new{
     {act='moveLeft',    keys={'left'}},

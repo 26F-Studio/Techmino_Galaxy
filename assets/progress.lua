@@ -17,6 +17,11 @@ local prgs={
     minoUnlocked=true,
     gemUnlocked=false,
     bgmUnlocked={},
+    minoModeUnlocked={
+        'sprint',
+        'marathon',
+        'ultra',
+    },
 }
 
 local function sysInfoFunc()
@@ -320,6 +325,9 @@ function PROGRESS.getTotalInteriorScore() return prgs.interiorScore.dig+prgs.int
 function PROGRESS.getPuyoUnlocked() return prgs.puyoUnlocked end
 function PROGRESS.getMinoUnlocked() return prgs.minoUnlocked end
 function PROGRESS.getGemUnlocked() return prgs.gemUnlocked end
+-- function PROGRESS.getPuyoModeUnlocked() return prgs.puyoModeUnlocked end
+function PROGRESS.getMinoModeUnlocked() return prgs.minoModeUnlocked end
+-- function PROGRESS.getGemModeUnlocked() return prgs.gemModeUnlocked end
 
 function PROGRESS.setMain(n)
     if n>prgs.main then
@@ -357,5 +365,8 @@ end
 function PROGRESS.setPuyoUnlocked(bool) prgs.puyoUnlocked=bool end
 function PROGRESS.setMinoUnlocked(bool) prgs.minoUnlocked=bool end
 function PROGRESS.setGemUnlocked(bool) prgs.gemUnlocked=bool end
+-- function PROGRESS.setPuyoModeUnlocked(name) table.insert(prgs.puyoModeUnlocked,name)  end
+function PROGRESS.setMinoModeUnlocked(name) table.insert(prgs.minoModeUnlocked,name)  end
+-- function PROGRESS.setGemModeUnlocked(name) table.insert(prgs.gemModeUnlocked,name)  end
 
 return PROGRESS

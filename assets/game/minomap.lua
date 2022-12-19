@@ -2,9 +2,9 @@
 --  *
 --  Z
 local modes={
-    {pos={1,1,0},     path='mino/exterior/',name='marathon',       connect={'ultra','sprint'}},
-    {pos={1,0,1},     path='mino/exterior/',name='ultra',          connect={'marathon','sprint'}},
-    {pos={0,1,1},     path='mino/exterior/',name='sprint',         connect={'marathon','ultra'}},
+    {pos={1,1,0},     path='mino/exterior/',name='marathon',       connect={'ultra'}},
+    {pos={1,0,1},     path='mino/exterior/',name='ultra',          connect={'sprint'}},
+    {pos={0,1,1},     path='mino/exterior/',name='sprint',         connect={'marathon'}},
 }
 
 local pSys={} for i=1,3 do pSys[i]=particleSystemTemplate.minoMapBack:clone() end
@@ -68,7 +68,7 @@ local map={}
 
 -- Initialize modes' graphic values
 for _,m in next,modes do
-    m.valid=true
+    m.valid=false
     m.active=0
     m.x=260*(m.pos[1]-m.pos[2])*(3^.5/2)
     m.y=260*(m.pos[3]-(m.pos[1]+m.pos[2])*.5)
@@ -76,12 +76,62 @@ for _,m in next,modes do
 end
 
 -- Generate string-mode pairs
-local mode_str={} for i=1,#modes do mode_str[modes[i].name]=modes[i] end
+local modes_str={} for i=1,#modes do modes_str[modes[i].name]=modes[i] end
 
 -- Bridges connecting modes
 local bridges={}
 
+local function _newBridge(m1,m2)
+    local x1,y1=m1.x,m1.y
+    local x2,y2=m2.x,m2.y
+    local dist=MATH.distance(x1,y1,x2,y2)
+
+    -- Cut in-mode parts
+    local p1,p2=(m1.r*1.2)/dist,1-(m2.r*1.2)/dist
+    x1,y1,x2,y2=
+        x1*(1-p1)+x2*p1,
+        y1*(1-p1)+y2*p1,
+        x1*(1-p2)+x2*p2,
+        y1*(1-p2)+y2*p2
+
+    table.insert(bridges,{
+        timer=0,
+        x1=x1,y1=y1,
+        x2=x2,y2=y2,
+        q1x=x1*.25+x2*.75,q1y=y1*.25+y2*.75,
+        q2x=x1*.50+x2*.50,q2y=y1*.50+y2*.50,
+        q3x=x1*.75+x2*.25,q3y=y1*.75+y2*.25,
+    })
+end
+
 -- Map methods
+function map:loadUnlocked(modeList)
+    assert(type(modeList)=='table',"WTF why modeList isn't table")
+
+    -- Unlock modes
+    for _,v in next,modeList do
+        local m=modes_str[v]
+        assert(m,"WTF mode '"..tostring(v).."' doesn't exist")
+        m.valid=true
+        for _,name in next,m.connect do
+            assert(modes_str[name],"WTF mode '"..tostring(name).."' doesn't exist")
+        end
+    end
+
+    -- Create bridges
+    for _,m1 in next,modes do
+        if m1.valid then
+            for _,name in next,m1.connect do
+                local m2=modes_str[name]
+                assert(m2,"WTF mode '"..tostring(name).."' doesn't exist")
+                if m2.valid then
+                    _newBridge(m1,m2)
+                end
+            end
+        end
+    end
+end
+
 function map:reset()
     for i=1,3 do
         pSys[i]:reset()
@@ -161,6 +211,9 @@ function map:update(dt)
             m.active=MATH.expApproach(m.active,(m==selected or m==focused) and 1 or 0,dt*6)
         end
     end
+    for _,b in next,bridges do
+        b.timer=b.timer+dt
+    end
     if love.keyboard.isDown('up','down','left','right') then
         self:showCursor()
         if love.keyboard.isDown('lctrl','rctrl') then
@@ -188,31 +241,22 @@ end
 
 local tau=MATH.tau
 function map:draw()
-    -- Move to middle screen
     GC.replaceTransform(SCR.xOy_m)
-
-    -- Draw cam center (for keyboard)
-    if cam.cursor then
-        GC.push('transform')
-        GC.translate(0,100)
-        GC.rotate(-cam.a)
-        GC.setColor(COLOR.L)
-        GC.setLineWidth(4)
-        GC.line(0,-10,0,-30)
-        GC.line(8.62,5,26,15)
-        GC.line(-8.62,5,-26,15)
-        GC.pop()
-    end
-
-    -- Move camera
     GC.applyTransform(cam.transform)
 
-    -- Draw mode connections
-    GC.setLineWidth(10)
-    GC.setColor(1,1,1,.26)
+    -- Draw bridges
+    GC.setColor(1,1,1,.8)
+    GC.setLineWidth(30)
+    for _,b in next,bridges do GC.line(b.x1,b.y1,b.x2,b.y2) end
+    GC.setColor(0,0,0,.6)
+    GC.setLineWidth(20)
+    for _,b in next,bridges do GC.line(b.x1,b.y1,b.x2,b.y2) end
     for _,b in next,bridges do
-        local m1,m2=b[1],b[2]
-        GC.line(m1.x,m1.y,m2.x,m2.y)
+        for i=0,.75,.25 do
+            local t=(b.timer/2.6+i)%1
+            GC.setColor(1,1,1,-t*(t-1)*4)
+            GC.circle('fill',MATH.interpolate(t,0,b.x1,1,b.x2),MATH.interpolate(t,0,b.y1,1,b.y2),6,6)
+        end
     end
 
     -- Draw modes
@@ -252,6 +296,20 @@ function map:draw()
     GC.rotate(tau/3) GC.setColor(1,.26,.26)GC.draw(pSys[1])
     GC.rotate(tau/3) GC.setColor(.26,1,.26)GC.draw(pSys[2])
     GC.rotate(tau/3) GC.setColor(.26,.26,1)GC.draw(pSys[3])
+
+    -- Draw keyboard cursor
+    GC.replaceTransform(SCR.xOy_m)
+    if cam.cursor then
+        GC.push('transform')
+        GC.translate(0,100)
+        GC.rotate(-cam.a)
+        GC.setColor(COLOR.L)
+        GC.setLineWidth(4)
+        GC.line(0,-10,0,-30)
+        GC.line(8.62,5,26,15)
+        GC.line(-8.62,5,-26,15)
+        GC.pop()
+    end
 end
 
 return map
