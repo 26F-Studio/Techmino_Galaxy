@@ -1,6 +1,6 @@
 function sureCheck(event)
     if TASK.lock('sureCheck_'..event,1) then
-        MES.new('info',Text.sureText[event])
+        MES.new('info',Text.sureText[event],1)
     else
         return true
     end
