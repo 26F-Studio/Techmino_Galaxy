@@ -46,7 +46,10 @@ function scene.keyDown(key,isRep)
     if key=='space' or key=='return' then
         MINOMAP:keyboardSelect()
     elseif key=='escape' then
-        SCN.back('fadeHeader')
+        if PROGRESS.getMinoUnlocked() and not PROGRESS.getPuyoUnlocked() and not PROGRESS.getGemUnlocked() then
+            SCN.pop()
+            SCN.back('fadeHeader')
+        end
     end
 end
 
@@ -61,7 +64,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound='back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound='back',fontSize=40,text=backText,code=WIDGET.c_pressKey'escape'},
     WIDGET.new{type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'title_mode_mino'},
 }
 return scene
