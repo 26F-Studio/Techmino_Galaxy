@@ -6,6 +6,7 @@ return {
         reset="Press again to Reset",
         enter="Press again to Enter",
     },
+    setting_needRestart="This setting takes effect after restart",
     noMode="Cannot load mode '$1': $2",
     interior_crash="Sandbox crashed: performance rate overflow",
 
@@ -141,6 +142,7 @@ return {
     setting_maxFPS="Max FPS",
     setting_updRate="Update rate",
     setting_drawRate="Draw rate",
+    setting_msaa="MSAA",
 
     main_in_dig="Dig Practice",
     main_in_sprint="40 Lines",

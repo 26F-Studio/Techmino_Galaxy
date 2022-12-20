@@ -14,6 +14,7 @@ local settings={
         maxFPS=300,
         updRate=100,
         drawRate=30,
+        msaa=4,
 
         -- Gameplay
         touchControl=false,
