@@ -11,6 +11,7 @@ local settings={
         -- Video
         hitWavePower=.6,
         fullscreen=true,
+        portrait=false,
         maxFPS=300,
         updRate=100,
         drawRate=30,

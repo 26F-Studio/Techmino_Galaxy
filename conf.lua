@@ -1,6 +1,8 @@
 function love.conf(t)
     local identity='Techmino_Galaxy'
+    local mobile=love._os=='Android' or love._os=='iOS'
     local msaa=4
+    local portrait=false
 
     local fs=love.filesystem
     fs.setIdentity(identity)
@@ -8,6 +10,7 @@ function love.conf(t)
         local fileData=fs.read('conf/settings')
         if fileData then
             msaa=tonumber(fileData:match('"msaa":(%d+)')) or 0
+            portrait=mobile and fileData:find('"portrait":true') and true
         end
     end
 
@@ -23,11 +26,13 @@ function love.conf(t)
 
     local W=t.window
     W.title=require"version".appName.."  "..require"version".appVer
-    W.width,W.height=1440,900
-    W.minwidth,W.minheight=288,180
-    W.borderless=false
-    W.resizable=true
-    W.fullscreen=false
+    if portrait then
+        W.width,W.height=900,1440
+        W.minwidth,W.minheight=180,288
+    else
+        W.width,W.height=1440,900
+        W.minwidth,W.minheight=288,180
+    end
     W.vsync=0-- Unlimited FPS
     W.msaa=msaa-- Multi-sampled antialiasing
     W.depth=0-- Bits/samp of depth buffer
@@ -38,6 +43,16 @@ function love.conf(t)
 
     if fs.getInfo('assets/image/icon.png') then
         W.icon='assets/image/icon.png'
+    end
+
+    if mobile then
+        W.borderless=true
+        W.resizable=false
+        W.fullscreen=true
+    else
+        W.borderless=false
+        W.resizable=true
+        W.fullscreen=false
     end
 
     local M=t.modules

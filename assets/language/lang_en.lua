@@ -136,6 +136,7 @@ return {
     setting_power="Terminal State",
     setting_clean="VRAM Boost",
     setting_fullscreen="Fullscreen",
+    setting_portrait="Portrait",
     setting_autoMute="Mute when idle",
     setting_showTouch="Show touches",
 

@@ -7,6 +7,8 @@ local page
     4 = Gameplay
 ]]
 
+local mobile=SYSTEM=='Android' or SYSTEM=='iOS'
+
 function scene.enter()
     page=tostring(SCN.args[1] or 1)
     for _,v in next,scene.widgetList do
@@ -14,9 +16,13 @@ function scene.enter()
             if v.name:sub(1,1)=='S' then
                 v.color=v.name:sub(2,2)==page and 'L' or 'LD'
             else
-                v:setVisible(v.name==page)
+                v:setVisible(type(v.name)=='string' and v.name:sub(1,1)==page)
             end
         end
+    end
+    if page=="3" then
+        scene.widgetList["3f"]:setVisible(not mobile)
+        scene.widgetList["3p"]:setVisible(mobile)
     end
     WIDGET._reset()
     BG.set('none')
@@ -64,7 +70,7 @@ scene.widgetList={
     WIDGET.new{name='2',type='slider_fill',pos={0,0},x=340, y=300,w=650, fontSize=40,text=LANG'setting_bgm',     widthLimit=380, disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),  code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
     WIDGET.new{name='2',type='slider_fill',pos={0,0},x=340, y=380,w=650, fontSize=40,text=LANG'setting_sfx',     widthLimit=380, disp=TABLE.func_getVal(SETTINGS.system,'sfxVol'),  code=TABLE.func_setVal(SETTINGS.system,'sfxVol')},
     WIDGET.new{name='2',type='slider_fill',pos={0,0},x=340, y=460,w=650, fontSize=40,text=LANG'setting_vib',     widthLimit=380, disp=TABLE.func_getVal(SETTINGS.system,'vibVol'),  code=TABLE.func_setVal(SETTINGS.system,'vibVol')},
-    WIDGET.new{name='2',type='switch',     pos={0,0},x=390, y=540,h=45,  fontSize=40,text=LANG'setting_autoMute',widthLimit=550,labelPos='right',             disp=TABLE.func_getVal(SETTINGS.system,'autoMute'),                            code=TABLE.func_revVal(SETTINGS.system,'autoMute')},
+    WIDGET.new{name='2',type='switch',     pos={0,0},x=390, y=540,h=45,  fontSize=40,text=LANG'setting_autoMute',widthLimit=550,labelPos='right',             disp=TABLE.func_getVal(SETTINGS.system,'autoMute'),                        code=TABLE.func_revVal(SETTINGS.system,'autoMute')},
 
     -- Video
     WIDGET.new{name='3',type='slider_fill',pos={0,0},x=340, y=220,w=500,h=30,text=LANG'setting_hitWavePower',widthLimit=380,axis={0,1},                   disp=TABLE.func_getVal(SETTINGS.system,'hitWavePower'),                        code=TABLE.func_setVal(SETTINGS.system,'hitWavePower')},
@@ -75,7 +81,8 @@ scene.widgetList={
     WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=220,h=45,      text=LANG'setting_sysCursor',   widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'sysCursor'),   code=TABLE.func_revVal(SETTINGS.system,'sysCursor')},
     WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=290,h=45,      text=LANG'setting_power',       widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'powerInfo'),   code=TABLE.func_revVal(SETTINGS.system,'powerInfo')},
     WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=360,h=45,      text=LANG'setting_clean',       widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'cleanCanvas'), code=TABLE.func_revVal(SETTINGS.system,'cleanCanvas')},
-    WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=430,h=45,      text=LANG'setting_fullscreen',  widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'fullscreen'),  code=TABLE.func_revVal(SETTINGS.system,'fullscreen')},
+    WIDGET.new{name='3f',type='switch',     pos={1,0},x=-500,y=430,h=45,      text=LANG'setting_fullscreen',  widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'fullscreen'),  code=TABLE.func_revVal(SETTINGS.system,'fullscreen')},
+    WIDGET.new{name='3p',type='switch',     pos={1,0},x=-500,y=430,h=45,      text=LANG'setting_portrait',    widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'portrait'),    code=function() SETTINGS.system.portrait = not SETTINGS.system.portrait; saveSettings(); if TASK.lock('warnMessage',6.26) then MES.new('warn',Text.setting_needRestart,6.26) end end},
     WIDGET.new{name='3',type='switch',     pos={1,0},x=-500,y=500,h=45,      text=LANG'setting_showTouch',   widthLimit=380,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'showTouch'),   code=TABLE.func_revVal(SETTINGS.system,'showTouch')},
 
     -- Gameplay

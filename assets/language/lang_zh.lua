@@ -136,6 +136,7 @@ return {
     setting_power="终端状态",
     setting_clean="显存回收加速",
     setting_fullscreen="全屏",
+    setting_portrait="竖屏",
     setting_autoMute="闲时静音",
     setting_showTouch="显示触摸位置",
 
