@@ -1,9 +1,11 @@
 local scene={}
 
+local textOffset=6
 local versionText=GC.newText(FONT.get(35,'bold'))
 local terminalName=GC.newText(FONT.get(35,'thin'))
 
 function scene.enter()
+    if MATH.roll(.026) then textOffset=26 end
     PROGRESS.setEnv('exterior')
     versionText:set(VERSION.appVer)
     terminalName:set(("TERM[%s]"):format(SYSTEM:sub(1,3):upper()))
@@ -16,19 +18,23 @@ function scene.keyDown(key,isRep)
     end
 end
 
+function scene.update(dt)
+    textOffset=MATH.expApproach(textOffset,0,6.26*dt)
+end
+
 function scene.draw()
     PROGRESS.drawExteriorHeader()
 
     GC.replaceTransform(SCR.xOy)
     GC.translate(100,210)
     GC.setColor(1,1,1)
-    GC.draw(IMG.title.techmino,0,0,nil,.55)
+    GC.draw(IMG.title.techmino,-textOffset,0,nil,.55)
     GC.setColor(.08,.08,.084)
     for a=0,MATH.tau,MATH.tau/20 do
-        GC.draw(IMG.title.galaxy,450+10*math.cos(a),130+10*math.sin(a),nil,.7)
+        GC.draw(IMG.title.galaxy,450+10*math.cos(a)+textOffset,130+10*math.sin(a),nil,.7)
     end
     GC.setColor(1,1,1)
-    GC.draw(IMG.title.galaxy,450,130,nil,.7)
+    GC.draw(IMG.title.galaxy,450+textOffset,130,nil,.7)
     GC.draw(versionText,40,190)
     GC.draw(terminalName,60+versionText:getWidth(),190)
 end
