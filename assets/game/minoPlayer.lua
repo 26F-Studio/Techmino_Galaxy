@@ -1369,7 +1369,7 @@ function MP:render()
                     -- Smooth
                     local movingX,droppingY=0,0
                     if self.moveDir and self.moveCharge<self.settings.das then
-                        movingX=15*self.moveDir*(self.moveCharge/self.settings.das-.5)
+                        movingX=15*self.moveDir*(math.max(self.moveCharge,0)/self.settings.das-.5)
                     end
                     if self.handY>self.ghostY then
                         droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
