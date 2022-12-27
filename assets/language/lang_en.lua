@@ -9,6 +9,7 @@ return {
     setting_needRestart="This setting takes effect after restart",
     noMode="Cannot load mode '$1': $2",
     interior_crash="Sandbox crashed: performance rate overflow",
+    musicroom_lowVolume="Please turn up BGM volume (At bottom right)",
 
     -- Game
     clearName={

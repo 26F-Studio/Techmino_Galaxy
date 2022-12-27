@@ -72,6 +72,10 @@ function scene.enter()
     collectCount=#l
     musicListBox:setList(l)
     musicListBox:select(TABLE.find(musicListBox:getList(),selected))
+
+    if SETTINGS.system.bgmVol<.0626 then
+        MES.new('warn',Text.musicroom_lowVolume)
+    end
 end
 
 function scene.keyDown(key,isRep)
