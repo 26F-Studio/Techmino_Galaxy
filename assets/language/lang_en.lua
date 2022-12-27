@@ -117,7 +117,9 @@ return {
     setting_das="DAS",
     setting_arr="ARR",
     setting_sdarr="SDARR",
-    setting_dascut="DAS Cut",
+    setting_dasHalt="DAS halt",
+    setting_hdLockA="Auto hard-drop lock",
+    setting_hdLockM="Manual hard-drop lock",
     setting_shakeness="Shakeness",
     setting_hitWavePower="Hitwave Power",
 

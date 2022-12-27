@@ -32,7 +32,9 @@ local settings={
         das=120,
         arr=20,
         sdarr=20,
-        dascut=26,
+        dasHalt=26,
+        hdLockA=100,
+        hdLockM=62,
 
         -- Video
         shakeness=.6,
@@ -42,7 +44,9 @@ local settings={
         das=120,
         arr=20,
         sdarr=20,
-        dascut=26,
+        dasHalt=26,
+        hdLockA=100,
+        hdLockM=62,
 
         -- Video
         shakeness=.6,

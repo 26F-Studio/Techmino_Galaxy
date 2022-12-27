@@ -6,14 +6,11 @@ function scene.enter()
         L.das.y=250
         L.arr.y=350
         L.sdarr:setVisible(false)
-        L.dascut:setVisible(false)
     else
-        L.das.y=50
-        L.arr.y=150
-        L.sdarr.y=250
-        L.dascut.y=350
+        L.das.y=150
+        L.arr.y=250
+        L.sdarr.y=350
         L.sdarr:setVisible(true)
-        L.dascut:setVisible(true)
     end
     WIDGET._reset()
 end
@@ -48,6 +45,5 @@ scene.widgetList={
     WIDGET.new{type='slider',   name='das',    pos={1,.5},x=-800, y=50, w=650, text=LANG'setting_das',    widthLimit=260,axis={100,260,10},disp=TABLE.func_getVal(SETTINGS.game_mino,'das'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'das')},
     WIDGET.new{type='slider',   name='arr',    pos={1,.5},x=-800, y=150,w=650, text=LANG'setting_arr',    widthLimit=260,axis={20,120,10}, disp=TABLE.func_getVal(SETTINGS.game_mino,'arr'),        valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'arr')},
     WIDGET.new{type='slider',   name='sdarr',  pos={1,.5},x=-800, y=250,w=650, text=LANG'setting_sdarr',  widthLimit=260,axis={20,100,10}, disp=TABLE.func_getVal(SETTINGS.game_mino,'sdarr'),      valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'sdarr')},
-    WIDGET.new{type='slider',   name='dascut', pos={1,.5},x=-800, y=350,w=650, text=LANG'setting_dascut', widthLimit=260,axis={0,100,10},  disp=TABLE.func_getVal(SETTINGS.game_mino,'dascut'),     valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'dascut')},
 }
 return scene

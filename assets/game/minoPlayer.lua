@@ -217,7 +217,9 @@ function actions.softDrop(P)
 end
 actions.hardDrop={
     press=function(P)
-        if P.hand and not P.deathTimer then
+        if P.hdLockMTimer~=0 then return end
+        if P.hdLockATimer==0 and P.hand and not P.deathTimer then
+            P.hdLockMTimer=P.settings.hdLockM
             P:minoDropped()
         else
             P.keyBuffer.hardDrop=true
@@ -499,8 +501,8 @@ function MP:resetPosCheck()
         self.keyBuffer.rotate=false
     end
 
-    if self.settings.dascut>0 then--DAS cut
-        self.moveCharge=self.moveCharge-self.settings.dascut
+    if self.settings.dasHalt>0 then--DAS cut
+        self.moveCharge=self.moveCharge-self.settings.dasHalt
     end
 end
 function MP:freshGhost()
@@ -1155,7 +1157,22 @@ end
 function MP:updateFrame()
     local SET=self.settings
 
-    -- Controlling piece
+    -- Hard-drop lock
+    if self.hdLockATimer>0 then
+        self.hdLockATimer=self.hdLockATimer-1
+        if self.hdLockATimer==0 and self.keyBuffer.hardDrop then
+            if self.hand and not self.deathTimer then
+                self.hdLockMTimer=self.settings.hdLockM
+                self:minoDropped()
+            end
+            self.keyBuffer.hardDrop=false
+        end
+    end
+    if self.hdLockMTimer>0 then
+        self.hdLockMTimer=self.hdLockMTimer-1
+    end
+
+    -- Current controlling piece
     if not self.deathTimer then
         -- Auto shift
         if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then
@@ -1236,7 +1253,8 @@ function MP:updateFrame()
             self.downCharge=false
         end
 
-        repeat-- Update hand
+        -- Update hand
+        repeat
             -- Wait clearing animation
             if self.clearTimer>0 then
                 self.clearTimer=self.clearTimer-1
@@ -1258,6 +1276,7 @@ function MP:updateFrame()
             if self.handY==self.ghostY then
                 self.lockTimer=self.lockTimer-1
                 if self.lockTimer<=0 then
+                    self.hdLockATimer=self.settings.hdLockA
                     self:minoDropped()
                 end
                 break
@@ -1570,7 +1589,9 @@ local baseEnv={
     das=162,
     arr=26,
     sdarr=12,
-    dascut=0,
+    dasHalt=0,
+    hdLockA=1000,
+    hdLockM=100,
     skin='mino_plastic',
 
     shakeness=.26,
@@ -1750,6 +1771,9 @@ function MP:initialize()
     self.moveDir=false
     self.moveCharge=0
     self.downCharge=false
+
+    self.hdLockATimer=0
+    self.hdLockMTimer=0
 
     self.actionHistory={}
     self.keyBuffer={

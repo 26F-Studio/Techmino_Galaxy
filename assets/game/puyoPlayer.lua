@@ -190,7 +190,9 @@ function actions.softDrop(P)
 end
 actions.hardDrop={
     press=function(P)
-        if P.hand and not P.deathTimer then
+        if P.hdLockMTimer~=0 then return end
+        if P.hdLockATimer==0 and P.hand and not P.deathTimer then
+            P.hdLockMTimer=P.settings.hdLockM
             P:puyoDropped()
         else
             P.keyBuffer.hardDrop=true
@@ -353,8 +355,8 @@ function PP:resetPosCheck()
         self.keyBuffer.rotate=false
     end
 
-    if self.settings.dascut>0 then--DAS cut
-        self.moveCharge=self.moveCharge-self.settings.dascut
+    if self.settings.dasHalt>0 then--DAS cut
+        self.moveCharge=self.moveCharge-self.settings.dasHalt
     end
 end
 function PP:freshGhost(justFreshGhost)
@@ -850,6 +852,21 @@ end
 function PP:updateFrame()
     local SET=self.settings
 
+    -- Hard-drop lock
+    if self.hdLockATimer>0 then
+        self.hdLockATimer=self.hdLockATimer-1
+        if self.hdLockATimer==0 and self.keyBuffer.hardDrop then
+            if self.hand and not self.deathTimer then
+                self.hdLockMTimer=self.settings.hdLockM
+                self:minoDropped()
+            end
+            self.keyBuffer.hardDrop=false
+        end
+    end
+    if self.hdLockMTimer>0 then
+        self.hdLockMTimer=self.hdLockMTimer-1
+    end
+
     -- Controlling piece
     if not self.deathTimer then
         -- Auto shift
@@ -931,7 +948,8 @@ function PP:updateFrame()
             self.downCharge=false
         end
 
-        repeat-- Update hand
+        -- Update hand
+        repeat
             -- Wait falling & clearing animation
             if self.fallTimer>0 then
                 self.fallTimer=self.fallTimer-1
@@ -970,6 +988,7 @@ function PP:updateFrame()
             if self.handY==self.ghostY then
                 self.lockTimer=self.lockTimer-1
                 if self.lockTimer<=0 then
+                    self.hdLockATimer=self.settings.hdLockA
                     self:puyoDropped()
                 end
                 break
@@ -1187,7 +1206,9 @@ local baseEnv={
     das=162,
     arr=26,
     sdarr=12,
-    dascut=0,
+    dasHalt=0,
+    hdLockA=1000,
+    hdLockM=100,
     skin='puyo_jelly',
 
     shakeness=.26,
@@ -1312,6 +1333,9 @@ function PP:initialize()
     self.moveDir=false
     self.moveCharge=0
     self.downCharge=false
+
+    self.hdLockATimer=0
+    self.hdLockMTimer=0
 
     self.actionHistory={}
     self.keyBuffer={

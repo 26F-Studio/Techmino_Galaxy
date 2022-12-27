@@ -117,7 +117,9 @@ return {
     setting_das="DAS",
     setting_arr="ARR",
     setting_sdarr="SDARR",
-    setting_dascut="DAS Cut",
+    setting_dasHalt="DAS停顿",
+    setting_hdLockA="自动硬降锁",
+    setting_hdLockM="手动硬降锁",
     setting_shakeness="场地晃动",
     setting_hitWavePower="冲击波强度",
 
