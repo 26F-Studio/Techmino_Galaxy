@@ -1,10 +1,11 @@
 -- Y X
 --  *
 --  Z
+local exPath='mino/exterior/'
 local modes={
-    {pos={1,1,0},     path='mino/exterior/',name='marathon',       connect={'ultra'}},
-    {pos={1,0,1},     path='mino/exterior/',name='ultra',          connect={'sprint'}},
-    {pos={0,1,1},     path='mino/exterior/',name='sprint',         connect={'marathon'}},
+    {pos={1,1,0},     path=exPath,name='marathon',      connect={'ultra'}},
+    {pos={1,0,1},     path=exPath,name='ultra',         connect={'sprint'}},
+    {pos={0,1,1},     path=exPath,name='sprint',        connect={'marathon'}},
 }
 
 local pSys={} for i=1,3 do pSys[i]=particleSystemTemplate.minoMapBack:clone() end
@@ -14,6 +15,13 @@ local mapPoly={
     12400,0,
     6200,-10738.715,
 }
+local modeStateColor={
+    COLOR.B,
+    COLOR.G,
+    COLOR.Y,
+    COLOR.F,
+    COLOR.M,
+}
 local enterFX={
     timer=false,
     x=false,
@@ -22,7 +30,7 @@ local enterFX={
 }
 local cam={
     x0=0,y0=0,k0=.9,a0=0,
-    x=0,y=0,k=2,a=.26,
+    x=0,y=0,k=2,a=0,
     swing=0,
     cursor=false,
     transform=love.math.newTransform(),
@@ -109,12 +117,13 @@ function map:loadUnlocked(modeList)
     assert(type(modeList)=='table',"WTF why modeList isn't table")
 
     -- Unlock modes
-    for _,v in next,modeList do
-        local m=modes_str[v]
-        assert(m,"WTF mode '"..tostring(v).."' doesn't exist")
-        m.valid=true
-        for _,name in next,m.connect do
-            assert(modes_str[name],"WTF mode '"..tostring(name).."' doesn't exist")
+    for name,state in next,modeList do
+        local mode=modes_str[name]
+        assert(mode,"WTF mode '"..tostring(name).."' doesn't exist")
+        mode.valid=true
+        mode.state=state
+        for _,name2 in next,mode.connect do
+            assert(modes_str[name2],"WTF mode '"..tostring(name2).."' doesn't exist")
         end
     end
 
@@ -267,13 +276,25 @@ function map:draw()
             GC.scale(1+m.active*.1)
             GC.rotate(-cam.a)
 
-            -- Outline
-            GC.setLineWidth(8)
-            GC.setColor(1,1,1,.42)
-            GC.regPolygon('line',0,0,m.r,6,tau/12)
-            GC.setColor(1,1,1)
-            GC.setLineWidth(2)
-            GC.regPolygon('line',0,0,m.r,6,tau/12)
+            -- Outline, decided by if-passed or rank reached
+            if m.state<0 then
+                GC.setLineWidth(10)
+                GC.setColor(1,1,1,.42)
+                GC.regPolygon('line',0,0,m.r,6,tau/12)
+                GC.setColor(1,1,1)
+                GC.setLineWidth(4)
+                GC.regPolygon('line',0,0,m.r,6,tau/12)
+            else
+                GC.setColor(1,1,1,.626)
+                GC.setLineWidth(2)
+                GC.regPolygon('line',0,0,m.r-11,6,tau/12)
+                GC.regPolygon('line',0,0,m.r+5,6,tau/12)
+                if m.state>0 then
+                    GC.setLineWidth(10)
+                    GC.setColor(modeStateColor[m.state] or COLOR.lD)
+                    GC.regPolygon('line',0,0,m.r-3,6,tau/12)
+                end
+            end
 
             -- Name
             FONT.set(30)

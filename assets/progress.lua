@@ -18,9 +18,10 @@ local prgs={
     gemUnlocked=false,
     bgmUnlocked={},
     minoModeUnlocked={
-        'sprint',
-        'marathon',
-        'ultra',
+        -- -2 = not passed, -1 = passed, 0,1,2,... = rank reached
+        sprint=0,
+        marathon=0,
+        ultra=0,
     },
 }
 
@@ -311,6 +312,7 @@ function PROGRESS.drawExteriorHeader(h)
     GC.rectangle('fill',0,0,SCR.w,(h or 120)*SCR.k)
 end
 
+-- Get
 function PROGRESS.getMain() return prgs.main end
 function PROGRESS.getBgmUnlocked(name) return prgs.bgmUnlocked[name] end
 function PROGRESS.getTutorialPassed(n)
@@ -325,10 +327,11 @@ function PROGRESS.getTotalInteriorScore() return prgs.interiorScore.dig+prgs.int
 function PROGRESS.getPuyoUnlocked() return prgs.puyoUnlocked end
 function PROGRESS.getMinoUnlocked() return prgs.minoUnlocked end
 function PROGRESS.getGemUnlocked() return prgs.gemUnlocked end
--- function PROGRESS.getPuyoModeUnlocked() return prgs.puyoModeUnlocked end
-function PROGRESS.getMinoModeUnlocked() return prgs.minoModeUnlocked end
--- function PROGRESS.getGemModeUnlocked() return prgs.gemModeUnlocked end
+-- function PROGRESS.getPuyoModeUnlocked(name) return name and prgs.puyoModeUnlocked[name] or prgs.puyoModeUnlocked end
+function PROGRESS.getMinoModeUnlocked(name) return name and prgs.minoModeUnlocked[name] or prgs.minoModeUnlocked end
+-- function PROGRESS.getGemModeUnlocked(name) return name and prgs.gemModeUnlocked[name] or prgs.gemModeUnlocked end
 
+-- Set
 function PROGRESS.setMain(n)
     if n>prgs.main then
         while prgs.main<n do
@@ -365,8 +368,8 @@ end
 function PROGRESS.setPuyoUnlocked(bool) prgs.puyoUnlocked=bool end
 function PROGRESS.setMinoUnlocked(bool) prgs.minoUnlocked=bool end
 function PROGRESS.setGemUnlocked(bool) prgs.gemUnlocked=bool end
--- function PROGRESS.setPuyoModeUnlocked(name) table.insert(prgs.puyoModeUnlocked,name)  end
-function PROGRESS.setMinoModeUnlocked(name) table.insert(prgs.minoModeUnlocked,name)  end
--- function PROGRESS.setGemModeUnlocked(name) table.insert(prgs.gemModeUnlocked,name)  end
+-- function PROGRESS.setPuyoModeUnlocked(name,state) prgs.puyoModeUnlocked[name]=state or 0  end
+function PROGRESS.setMinoModeUnlocked(name,state) prgs.minoModeUnlocked[name]=state or 0  end
+-- function PROGRESS.setGemModeUnlocked(name,state) prgs.gemModeUnlocked[name]=state or 0  end
 
 return PROGRESS
