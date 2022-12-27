@@ -208,7 +208,7 @@ end
 function map:update(dt)
     for _,m in next,modes do
         if m.valid then
-            m.active=MATH.expApproach(m.active,(m==selected or m==focused) and 1 or 0,dt*6)
+            m.active=MATH.expApproach(m.active,(m==focused) and 1 or 0,dt*6)
         end
     end
     for _,b in next,bridges do
