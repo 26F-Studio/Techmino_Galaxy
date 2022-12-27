@@ -33,7 +33,7 @@ local settings={
         arr=20,
         sdarr=20,
         dasHalt=26,
-        hdLockA=100,
+        hdLockA=200,
         hdLockM=62,
 
         -- Video
@@ -45,7 +45,7 @@ local settings={
         arr=20,
         sdarr=20,
         dasHalt=26,
-        hdLockA=100,
+        hdLockA=200,
         hdLockM=62,
 
         -- Video
