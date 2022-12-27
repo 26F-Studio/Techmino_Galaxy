@@ -190,8 +190,9 @@ function actions.softDrop(P)
 end
 actions.hardDrop={
     press=function(P)
-        if P.hdLockMTimer~=0 then return end
-        if P.hdLockATimer==0 and P.hand and not P.deathTimer then
+        if P.hdLockMTimer~=0 or P.hdLockATimer~=0 then
+            P:playSound('rotate_failed')
+        elseif P.hand and not P.deathTimer then
             P.hdLockMTimer=P.settings.hdLockM
             P:puyoDropped()
         else
@@ -853,19 +854,8 @@ function PP:updateFrame()
     local SET=self.settings
 
     -- Hard-drop lock
-    if self.hdLockATimer>0 then
-        self.hdLockATimer=self.hdLockATimer-1
-        if self.hdLockATimer==0 and self.keyBuffer.hardDrop then
-            if self.hand and not self.deathTimer then
-                self.hdLockMTimer=self.settings.hdLockM
-                self:minoDropped()
-            end
-            self.keyBuffer.hardDrop=false
-        end
-    end
-    if self.hdLockMTimer>0 then
-        self.hdLockMTimer=self.hdLockMTimer-1
-    end
+    if self.hdLockATimer>0 then self.hdLockATimer=self.hdLockATimer-1 end
+    if self.hdLockMTimer>0 then self.hdLockMTimer=self.hdLockMTimer-1 end
 
     -- Controlling piece
     if not self.deathTimer then
