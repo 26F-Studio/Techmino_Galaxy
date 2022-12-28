@@ -3,10 +3,68 @@
 --  Z
 local exPath='mino/exterior/'
 local modes={
-    {pos={1,1,0},     path=exPath,name='marathon',      connect={'ultra'}},
-    {pos={1,0,1},     path=exPath,name='ultra',         connect={'sprint'}},
-    {pos={0,1,1},     path=exPath,name='sprint',        connect={'marathon'}},
+    {pos={10,10,0}, path=exPath,name='marathon',            connect={'dig_practice'}},
+    {pos={10,25,0}, path=exPath,name='techrash_practice'},
+    {pos={10,40,0}, path=exPath,name='classic_lo'},
+    {pos={10,50,0}, path=exPath,name='classic_hi'},
+    {pos={25,25,0}, path=exPath,name='lightspeed_lo'},
+    {pos={35,35,0}, path=exPath,name='lightspeed_hi'},
+    {pos={55,55,0}, path=exPath,name='lightspeed_ti'},
+    {pos={35,45,0}, path=exPath,name='lightspeed_hd'},
+    {pos={45,55,0}, path=exPath,name='lightspeed_ex'},
+    {pos={25,10,0}, path=exPath,name='combo_practice'},
+    {pos={40,10,0}, path=exPath,name='tsd_practice'},
+    {pos={50,10,0}, path=exPath,name='tsd_easy'},
+    {pos={60,10,0}, path=exPath,name='tsd_hard'},
+    {pos={40,25,0}, path=exPath,name='pc_practice'},
+    {pos={50,25,0}, path=exPath,name='pc_easy'},
+    {pos={60,25,0}, path=exPath,name='pc_hard'},
+    {pos={70,70,0}, path=exPath,name='exam_marathon'},
+    {pos={10,0,10}, path=exPath,name='dig_practice',        connect={'sprint_40'}},
+    {pos={30,0,30}, path=exPath,name='dig_40'},
+    {pos={40,0,40}, path=exPath,name='dig_100'},
+    {pos={50,0,50}, path=exPath,name='dig_400'},
+    {pos={30,0,10}, path=exPath,name='dig_shale'},
+    {pos={40,0,10}, path=exPath,name='dig_slate'},
+    {pos={40,0,20}, path=exPath,name='dig_checker'},
+    {pos={10,0,30}, path=exPath,name='survivor_cheese'},
+    {pos={10,0,40}, path=exPath,name='survivor_b2b'},
+    {pos={10,0,50}, path=exPath,name='survivor_spike'},
+    {pos={20,0,50}, path=exPath,name='backfire_100'},
+    {pos={20,0,60}, path=exPath,name='backfire_amplify_100'},
+    {pos={30,0,60}, path=exPath,name='backfire_cheese_100'},
+    {pos={70,0,70}, path=exPath,name='exam_dig'},
+    {pos={0,10,10}, path=exPath,name='sprint_40',           connect={'marathon'}},
+    {pos={0,30,10}, path=exPath,name='sprint_10'},
+    {pos={0,40,20}, path=exPath,name='sprint_obstacle_4'},
+    {pos={0,40,10}, path=exPath,name='sprint_200'},
+    {pos={0,50,20}, path=exPath,name='sprint_1000'},
+    {pos={0,55,35}, path=exPath,name='sprint_drought_40'},
+    {pos={0,65,35}, path=exPath,name='sprint_flood_40'},
+    {pos={0,75,35}, path=exPath,name='sprint_penta_40'},
+    {pos={0,85,45}, path=exPath,name='sprint_sym_40'},
+    {pos={0,65,45}, path=exPath,name='sprint_mph_40'},
+    {pos={0,75,45}, path=exPath,name='sprint_lock_20'},
+    {pos={0,75,55}, path=exPath,name='sprint_fix_20'},
+    {pos={0,30,30}, path=exPath,name='sprint_hide_40'},
+    {pos={0,40,40}, path=exPath,name='sprint_invis_40'},
+    {pos={0,50,50}, path=exPath,name='sprint_blind_40'},
+    {pos={0,10,30}, path=exPath,name='sprint_big_100'},
+    {pos={0,10,40}, path=exPath,name='sprint_low_40'},
+    {pos={0,10,50}, path=exPath,name='sprint_randctrl_40'},
+    {pos={0,20,50}, path=exPath,name='sprint_flip_40'},
+    {pos={0,20,60}, path=exPath,name='sprint_dizzy_40'},
+    {pos={0,70,70}, path=exPath,name='exam_rule'},
 }
+-- Initialize modes' graphic values
+for _,m in next,modes do
+    m.valid=false
+    m.state=-2
+    m.active=0
+    m.x=30*(m.pos[1]-m.pos[2])*(3^.5/2)
+    m.y=30*(m.pos[3]-(m.pos[1]+m.pos[2])*.5)
+    m.r=100
+end
 
 local pSys={} for i=1,3 do pSys[i]=particleSystemTemplate.minoMapBack:clone() end
 local mapPoly={
@@ -32,6 +90,9 @@ local cam={
     x0=0,y0=0,k0=.9,a0=0,
     x=0,y=0,k=2,a=0,
     swing=0,
+
+    maxDist=2600,-- Max 4000
+    minK=.42,-- Max .2
     cursor=false,
     transform=love.math.newTransform(),
 }
@@ -39,10 +100,10 @@ function cam:move(dx,dy)
     self.x0=self.x0+dx
     self.y0=self.y0+dy
     local dist=MATH.distance(0,0,self.x0,self.y0)/self.k0
-    if dist>4000 then
+    if dist>self.maxDist then
         local angle=math.atan2(self.y0,self.x0)
-        self.x0=4000*math.cos(angle)*self.k0
-        self.y0=4000*math.sin(angle)*self.k0
+        self.x0=self.maxDist*math.cos(angle)*self.k0
+        self.y0=self.maxDist*math.sin(angle)*self.k0
     end
 end
 function cam:rotate(da)
@@ -50,37 +111,18 @@ function cam:rotate(da)
 end
 function cam:scale(dk)
     local k0=self.k0
-    self.k0=MATH.clamp(self.k0*dk,.2,1.26)
+    self.k0=MATH.clamp(self.k0*dk,self.minK,1.26)
     dk=self.k0/k0
     self.x0,self.y0=self.x0*dk,self.y0*dk
 end
 function cam:update(dt)
-    self.swing=.026*math.sin(love.timer.getTime()/1.26)
+    self.swing=.00626*math.sin(love.timer.getTime()/1.26)
 
     self.x=MATH.expApproach(self.x,self.x0,dt*16)
     self.y=MATH.expApproach(self.y,self.y0,dt*16)
     self.k=MATH.expApproach(self.k,self.k0,dt*16)
     self.a=MATH.expApproach(self.a,self.a0+self.swing,dt*6.26)
     self.transform:setTransformation(self.x,100+self.y,self.a,self.k)
-end
-
----@type table
----| false
-local focused=false
-
----@type table
----| false
-local selected=false
-
-local map={}
-
--- Initialize modes' graphic values
-for _,m in next,modes do
-    m.valid=false
-    m.active=0
-    m.x=260*(m.pos[1]-m.pos[2])*(3^.5/2)
-    m.y=260*(m.pos[3]-(m.pos[1]+m.pos[2])*.5)
-    m.r=100
 end
 
 -- Generate string-mode pairs
@@ -112,6 +154,16 @@ local function _newBridge(m1,m2)
     })
 end
 
+---@type table
+---| false
+local focused=false
+
+---@type table
+---| false
+local selected=false
+
+local map={}
+
 -- Map methods
 function map:loadUnlocked(modeList)
     assert(type(modeList)=='table',"WTF why modeList isn't table")
@@ -122,14 +174,16 @@ function map:loadUnlocked(modeList)
         assert(mode,"WTF mode '"..tostring(name).."' doesn't exist")
         mode.valid=true
         mode.state=state
-        for _,name2 in next,mode.connect do
-            assert(modes_str[name2],"WTF mode '"..tostring(name2).."' doesn't exist")
+        if mode.connect then
+            for _,name2 in next,mode.connect do
+                assert(modes_str[name2],"WTF mode '"..tostring(name2).."' doesn't exist")
+            end
         end
     end
 
     -- Create bridges
     for _,m1 in next,modes do
-        if m1.valid then
+        if m1.valid and m1.connect then
             for _,name in next,m1.connect do
                 local m2=modes_str[name]
                 assert(m2,"WTF mode '"..tostring(name).."' doesn't exist")
@@ -215,6 +269,15 @@ function map:keyboardSelect()
 end
 
 function map:update(dt)
+    -- if selected then
+    --     selected.pos={
+    --         selected.pos[1]+.026*((love.keyboard.isDown('w') and 1 or 0)-(love.keyboard.isDown('s') and 1 or 0)),
+    --         selected.pos[2]+.026*((love.keyboard.isDown('a') and 1 or 0)-(love.keyboard.isDown('d') and 1 or 0)),
+    --         selected.pos[3]+.026*((love.keyboard.isDown('q') and 1 or 0)-(love.keyboard.isDown('e') and 1 or 0)),
+    --     }
+    --     selected.x=30*(selected.pos[1]-selected.pos[2])*(3^.5/2)
+    --     selected.y=30*(selected.pos[3]-(selected.pos[1]+selected.pos[2])*.5)
+    -- end
     for _,m in next,modes do
         if m.valid then
             m.active=MATH.expApproach(m.active,(m==focused) and 1 or 0,dt*6)
@@ -339,6 +402,12 @@ function map:draw()
         GC.line(8.62,5,26,15)
         GC.line(-8.62,5,-26,15)
         GC.pop()
+    end
+end
+
+function map:_printModePos()
+    for _,m in next,modes do
+        print(("pos={%d,%d,%d}, name='%s',"):format(m.pos[1],m.pos[2],m.pos[3],m.name))
     end
 end
 

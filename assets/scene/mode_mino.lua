@@ -49,6 +49,8 @@ function scene.keyDown(key,isRep)
             SCN.pop()
             SCN.back('fadeHeader')
         end
+    -- elseif key=='z' then
+    --     MINOMAP:_printModePos()
     end
 end
 

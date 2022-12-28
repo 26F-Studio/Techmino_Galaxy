@@ -19,9 +19,9 @@ local prgs={
     bgmUnlocked={},
     minoModeUnlocked={
         -- -2 = not passed, -1 = passed, 0,1,2,... = rank reached
-        sprint=0,
+        sprint_40=0,
         marathon=0,
-        ultra=0,
+        dig_practice=0,
     },
 }
 
