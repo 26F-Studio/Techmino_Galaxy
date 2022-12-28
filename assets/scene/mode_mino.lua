@@ -33,9 +33,8 @@ function scene.touchMove(_,_,dx,dy)
     MINOMAP:hideCursor()
     MINOMAP:moveCam(dx,dy)
 end
-function scene.touchDown(x,y)
+function scene.touchDown()
     MINOMAP:hideCursor()
-    scene.touchMove(x,y)
 end
 function scene.touchClick(x,y)
     MINOMAP:hideCursor()
