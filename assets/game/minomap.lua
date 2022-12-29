@@ -1,69 +1,128 @@
 -- Y X
 --  *
 --  Z
-local exPath='mino/exterior/'
 local modes={
-    {pos={10,10,0}, path=exPath,name='marathon',            connect={'dig_practice'}},
-    {pos={10,25,0}, path=exPath,name='techrash_practice'},
-    {pos={10,40,0}, path=exPath,name='classic_lo'},
-    {pos={10,50,0}, path=exPath,name='classic_hi'},
-    {pos={25,25,0}, path=exPath,name='lightspeed_lo'},
-    {pos={35,35,0}, path=exPath,name='lightspeed_hi'},
-    {pos={55,55,0}, path=exPath,name='lightspeed_ti'},
-    {pos={35,45,0}, path=exPath,name='lightspeed_hd'},
-    {pos={45,55,0}, path=exPath,name='lightspeed_ex'},
-    {pos={25,10,0}, path=exPath,name='combo_practice'},
-    {pos={40,10,0}, path=exPath,name='tsd_practice'},
-    {pos={50,10,0}, path=exPath,name='tsd_easy'},
-    {pos={60,10,0}, path=exPath,name='tsd_hard'},
-    {pos={40,25,0}, path=exPath,name='pc_practice'},
-    {pos={50,25,0}, path=exPath,name='pc_easy'},
-    {pos={60,25,0}, path=exPath,name='pc_hard'},
-    {pos={70,70,0}, path=exPath,name='exam_marathon'},
-    {pos={10,0,10}, path=exPath,name='dig_practice',        connect={'sprint_40'}},
-    {pos={30,0,30}, path=exPath,name='dig_40'},
-    {pos={40,0,40}, path=exPath,name='dig_100'},
-    {pos={50,0,50}, path=exPath,name='dig_400'},
-    {pos={30,0,10}, path=exPath,name='dig_shale'},
-    {pos={40,0,10}, path=exPath,name='dig_slate'},
-    {pos={40,0,20}, path=exPath,name='dig_checker'},
-    {pos={10,0,30}, path=exPath,name='survivor_cheese'},
-    {pos={10,0,40}, path=exPath,name='survivor_b2b'},
-    {pos={10,0,50}, path=exPath,name='survivor_spike'},
-    {pos={20,0,50}, path=exPath,name='backfire_100'},
-    {pos={20,0,60}, path=exPath,name='backfire_amplify_100'},
-    {pos={30,0,60}, path=exPath,name='backfire_cheese_100'},
-    {pos={70,0,70}, path=exPath,name='exam_dig'},
-    {pos={0,10,10}, path=exPath,name='sprint_40',           connect={'marathon'}},
-    {pos={0,30,10}, path=exPath,name='sprint_10'},
-    {pos={0,40,20}, path=exPath,name='sprint_obstacle_4'},
-    {pos={0,40,10}, path=exPath,name='sprint_200'},
-    {pos={0,50,20}, path=exPath,name='sprint_1000'},
-    {pos={0,55,35}, path=exPath,name='sprint_drought_40'},
-    {pos={0,65,35}, path=exPath,name='sprint_flood_40'},
-    {pos={0,75,35}, path=exPath,name='sprint_penta_40'},
-    {pos={0,85,45}, path=exPath,name='sprint_sym_40'},
-    {pos={0,65,45}, path=exPath,name='sprint_mph_40'},
-    {pos={0,75,45}, path=exPath,name='sprint_lock_20'},
-    {pos={0,75,55}, path=exPath,name='sprint_fix_20'},
-    {pos={0,30,30}, path=exPath,name='sprint_hide_40'},
-    {pos={0,40,40}, path=exPath,name='sprint_invis_40'},
-    {pos={0,50,50}, path=exPath,name='sprint_blind_40'},
-    {pos={0,10,30}, path=exPath,name='sprint_big_100'},
-    {pos={0,10,40}, path=exPath,name='sprint_low_40'},
-    {pos={0,10,50}, path=exPath,name='sprint_randctrl_40'},
-    {pos={0,20,50}, path=exPath,name='sprint_flip_40'},
-    {pos={0,20,60}, path=exPath,name='sprint_dizzy_40'},
-    {pos={0,70,70}, path=exPath,name='exam_rule'},
+    {pos={10,10,0},name='marathon'},
+    {pos={10,25,0},name='techrash_practice'},
+    {pos={10,40,0},name='classic_lo'},
+    {pos={10,50,0},name='classic_hi'},
+    {pos={25,25,0},name='lightspeed_lo'},
+    {pos={35,35,0},name='lightspeed_hi'},
+    {pos={55,55,0},name='lightspeed_ti'},
+    {pos={35,45,0},name='lightspeed_hd'},
+    {pos={45,55,0},name='lightspeed_ex'},
+    {pos={25,10,0},name='combo_practice'},
+    {pos={40,10,0},name='tsd_practice'},
+    {pos={50,10,0},name='tsd_easy'},
+    {pos={60,10,0},name='tsd_hard'},
+    {pos={40,25,0},name='pc_practice'},
+    {pos={50,25,0},name='pc_easy'},
+    {pos={60,25,0},name='pc_hard'},
+    {pos={70,70,0},name='exam_marathon'},
+    {pos={10,0,10},name='dig_practice'},
+    {pos={30,0,30},name='dig_40'},
+    {pos={40,0,40},name='dig_100'},
+    {pos={50,0,50},name='dig_400'},
+    {pos={30,0,10},name='dig_shale'},
+    {pos={40,0,10},name='dig_slate'},
+    {pos={40,0,20},name='dig_checker'},
+    {pos={10,0,30},name='survivor_cheese'},
+    {pos={10,0,40},name='survivor_b2b'},
+    {pos={10,0,50},name='survivor_spike'},
+    {pos={20,0,50},name='backfire_100'},
+    {pos={20,0,60},name='backfire_amplify_100'},
+    {pos={30,0,60},name='backfire_cheese_100'},
+    {pos={70,0,70},name='exam_dig'},
+    {pos={0,10,10},name='sprint_40'},
+    {pos={0,30,10},name='sprint_10'},
+    {pos={0,40,20},name='sprint_obstacle_4'},
+    {pos={0,40,10},name='sprint_200'},
+    {pos={0,50,20},name='sprint_1000'},
+    {pos={0,55,35},name='sprint_drought_40'},
+    {pos={0,65,35},name='sprint_flood_40'},
+    {pos={0,75,35},name='sprint_penta_40'},
+    {pos={0,85,45},name='sprint_sym_40'},
+    {pos={0,65,45},name='sprint_mph_40'},
+    {pos={0,75,45},name='sprint_wind_20'},
+    {pos={0,85,55},name='sprint_fix_20'},
+    {pos={0,75,55},name='sprint_lock_20'},
+    {pos={0,30,30},name='sprint_hide_40'},
+    {pos={0,40,40},name='sprint_invis_40'},
+    {pos={0,50,50},name='sprint_blind_40'},
+    {pos={0,10,30},name='sprint_big_100'},
+    {pos={0,10,40},name='sprint_low_40'},
+    {pos={0,10,50},name='sprint_randctrl_40'},
+    {pos={0,20,50},name='sprint_flip_40'},
+    {pos={0,20,60},name='sprint_dizzy_40'},
+    {pos={0,70,70},name='exam_rule'},
 }
 -- Initialize modes' graphic values
 for _,m in next,modes do
-    m.valid=false
+    m.enable=false
     m.state=-2
     m.active=0
     m.x=30*(m.pos[1]-m.pos[2])*(3^.5/2)
     m.y=30*(m.pos[3]-(m.pos[1]+m.pos[2])*.5)
     m.r=100
+end
+
+-- Generate string-mode pairs
+local modes_str={} for i=1,#modes do modes_str[modes[i].name]=modes[i] end
+
+local bridgeLinks={
+    'marathon - dig_practice - sprint_40 - marathon',
+    'marathon - techrash_practice - classic_lo - classic_hi',
+    'marathon - lightspeed_lo - lightspeed_hi - lightspeed_hd - lightspeed_ex',
+    'lightspeed_hi - lightspeed_ti',
+    'marathon - combo_practice - pc_practice - pc_easy - pc_hard',
+    'combo_practice - tsd_practice - tsd_easy - tsd_hard',
+    'dig_practice - dig_shale - dig_slate',
+    'dig_shale - dig_checker',
+    'dig_practice - dig_40 - dig_100 - dig_400',
+    'dig_practice - survivor_cheese - survivor_b2b - survivor_spike',
+    'survivor_b2b - backfire_100 - backfire_cheese_100',
+    'backfire_100 - backfire_amplify_100',
+    'sprint_40 - sprint_10 - sprint_200 - sprint_1000',
+    'sprint_10 - sprint_obstacle_4 - sprint_drought_40 - sprint_flood_40 - sprint_penta_40 - sprint_sym_40',
+    'sprint_40 - sprint_hide_40 - sprint_invis_40 - sprint_blind_40',
+    'sprint_drought_40 - sprint_mph_40 - sprint_lock_20',
+    'sprint_mph_40 - sprint_wind_20 - sprint_fix_20',
+    'sprint_40 - sprint_big_100 - sprint_low_40 - sprint_randctrl_40',
+    'sprint_low_40 - sprint_flip_40 - sprint_dizzy_40',
+}
+local bridges={}
+local function _newBridge(m1,m2)
+    local x1,y1=m1.x,m1.y
+    local x2,y2=m2.x,m2.y
+    local dist=MATH.distance(x1,y1,x2,y2)
+
+    -- Cut in-mode parts
+    local p1,p2=(m1.r*1.2)/dist,1-(m2.r*1.2)/dist
+    x1,y1,x2,y2=
+        x1*(1-p1)+x2*p1,
+        y1*(1-p1)+y2*p1,
+        x1*(1-p2)+x2*p2,
+        y1*(1-p2)+y2*p2
+
+    table.insert(bridges,{
+        enable=false,
+        m1=m1,m2=m2,
+        timer=0,
+        x1=x1,y1=y1,
+        x2=x2,y2=y2,
+        q1x=x1*.25+x2*.75,q1y=y1*.25+y2*.75,
+        q2x=x1*.50+x2*.50,q2y=y1*.50+y2*.50,
+        q3x=x1*.75+x2*.25,q3y=y1*.75+y2*.25,
+    })
+end
+for _,link in next,bridgeLinks do
+    local b=STRING.split(link," - ")
+    for i=1,#b-1 do
+        _newBridge(
+            assert(modes_str[b[i]],"Mode "..b[i].." doesn't exist"),
+            assert(modes_str[b[i+1]],"Mode "..b[i+1].." doesn't exist")
+        )
+    end
 end
 
 local pSys={} for i=1,3 do pSys[i]=particleSystemTemplate.minoMapBack:clone() end
@@ -125,35 +184,6 @@ function cam:update(dt)
     self.transform:setTransformation(self.x,100+self.y,self.a,self.k)
 end
 
--- Generate string-mode pairs
-local modes_str={} for i=1,#modes do modes_str[modes[i].name]=modes[i] end
-
--- Bridges connecting modes
-local bridges={}
-
-local function _newBridge(m1,m2)
-    local x1,y1=m1.x,m1.y
-    local x2,y2=m2.x,m2.y
-    local dist=MATH.distance(x1,y1,x2,y2)
-
-    -- Cut in-mode parts
-    local p1,p2=(m1.r*1.2)/dist,1-(m2.r*1.2)/dist
-    x1,y1,x2,y2=
-        x1*(1-p1)+x2*p1,
-        y1*(1-p1)+y2*p1,
-        x1*(1-p2)+x2*p2,
-        y1*(1-p2)+y2*p2
-
-    table.insert(bridges,{
-        timer=0,
-        x1=x1,y1=y1,
-        x2=x2,y2=y2,
-        q1x=x1*.25+x2*.75,q1y=y1*.25+y2*.75,
-        q2x=x1*.50+x2*.50,q2y=y1*.50+y2*.50,
-        q3x=x1*.75+x2*.25,q3y=y1*.75+y2*.25,
-    })
-end
-
 ---@type table
 ---| false
 local focused=false
@@ -172,25 +202,14 @@ function map:loadUnlocked(modeList)
     for name,state in next,modeList do
         local mode=modes_str[name]
         assert(mode,"WTF mode '"..tostring(name).."' doesn't exist")
-        mode.valid=true
+        mode.enable=true
         mode.state=state
-        if mode.connect then
-            for _,name2 in next,mode.connect do
-                assert(modes_str[name2],"WTF mode '"..tostring(name2).."' doesn't exist")
-            end
-        end
     end
 
     -- Create bridges
-    for _,m1 in next,modes do
-        if m1.valid and m1.connect then
-            for _,name in next,m1.connect do
-                local m2=modes_str[name]
-                assert(m2,"WTF mode '"..tostring(name).."' doesn't exist")
-                if m2.valid then
-                    _newBridge(m1,m2)
-                end
-            end
+    for _,b in next,bridges do
+        if b.m1.enable and b.m2.enable then
+            b.enable=true
         end
     end
 end
@@ -213,7 +232,7 @@ local function _onMode(x,y)
     x,y=SCR.xOy_m:inverseTransformPoint(x,y)
     x,y=cam.transform:inverseTransformPoint(x,y)
     for _,m in next,modes do
-        if m.valid and MATH.distance(x,y,m.x,m.y)<m.r*1.26 then
+        if m.enable and MATH.distance(x,y,m.x,m.y)<m.r*1.26 then
             return m
         end
     end
@@ -230,7 +249,7 @@ local function _enterMode(m)
         enterFX.timer=0
         enterFX.x,enterFX.y,enterFX.r=m.x,m.y,m.r
         SFX.play('mode_enter')
-        SCN.go('game_out','fade',m.path..m.name)
+        SCN.go('game_out','fade','mino/exterior/'..m.name)
     end
 end
 
@@ -279,7 +298,7 @@ function map:update(dt)
     --     selected.y=30*(selected.pos[3]-(selected.pos[1]+selected.pos[2])*.5)
     -- end
     for _,m in next,modes do
-        if m.valid then
+        if m.enable then
             m.active=MATH.expApproach(m.active,(m==focused) and 1 or 0,dt*6)
         end
     end
@@ -317,23 +336,25 @@ function map:draw()
     GC.applyTransform(cam.transform)
 
     -- Draw bridges
-    GC.setColor(1,1,1,.8)
-    GC.setLineWidth(30)
-    for _,b in next,bridges do GC.line(b.x1,b.y1,b.x2,b.y2) end
-    GC.setColor(0,0,0,.6)
-    GC.setLineWidth(20)
-    for _,b in next,bridges do GC.line(b.x1,b.y1,b.x2,b.y2) end
     for _,b in next,bridges do
-        for i=0,.75,.25 do
-            local t=(b.timer/2.6+i)%1
-            GC.setColor(1,1,1,-t*(t-1)*4)
-            GC.circle('fill',MATH.interpolate(t,0,b.x1,1,b.x2),MATH.interpolate(t,0,b.y1,1,b.y2),6,6)
+        if b.enable then
+            GC.setColor(1,1,1,.8)
+            GC.setLineWidth(30)
+            GC.line(b.x1,b.y1,b.x2,b.y2)
+            GC.setColor(0,0,0,.6)
+            GC.setLineWidth(20)
+            GC.line(b.x1,b.y1,b.x2,b.y2)
+            for i=0,.75,.25 do
+                local t=(b.timer/2.6+i)%1
+                GC.setColor(1,1,1,-t*(t-1)*4)
+                GC.circle('fill',MATH.interpolate(t,0,b.x1,1,b.x2),MATH.interpolate(t,0,b.y1,1,b.y2),6,6)
+            end
         end
     end
 
     -- Draw modes
     for _,m in next,modes do
-        if m.valid then
+        if m.enable then
             GC.push('transform')
             GC.translate(m.x,m.y)
             GC.scale(1+m.active*.1)
