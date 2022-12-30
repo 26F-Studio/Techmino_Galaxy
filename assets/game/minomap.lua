@@ -388,7 +388,7 @@ function map:draw()
             -- Name
             FONT.set(30)
             GC.setColor(COLOR.L)
-            GC.mStr(m.name,0,-21)
+            GC.mStr(Text.exteriorModeInfo[m.name][1],0,-21)
 
             -- Selecting frame
             if m==selected or m.active>.001 then
