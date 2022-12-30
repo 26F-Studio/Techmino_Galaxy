@@ -1,6 +1,69 @@
+local panel={
+    selected=false,
+    timer=2.6,
+    modeNameText=GC.newText(FONT.get(45),""),
+    modeInfoText='',
+    update=function(self,dt)
+        self.timer=self.timer+dt
+    end,
+    setSel=function(self,tar)
+        if self.selected~=tar then
+            if tar then
+                if not self.selected then
+                    self.timer=0
+                end
+                local info=Text.exteriorModeInfo[tar.name]
+                if type(info)~='table' then info={'?','?'} end
+                self.modeNameText:set(info[1])
+                self.modeInfoText=info[2]
+            elseif self.selected then
+                self.timer=0
+            end
+            self.selected=tar
+        end
+    end,
+    poly={
+        26,-340,
+        -320,-340,
+        -360,-270,
+        -360,310,
+        -320,380,
+        26,380,
+    },
+    draw=function(self)
+        local a=0
+        if self.selected then
+            if self.timer>.1 or self.timer>.02 and self.timer<.05 then
+                a=1
+            end
+        elseif self.timer<.126 then
+            a=1-self.timer/.126
+        end
+        if a==0 then return end
+
+        GC.replaceTransform(SCR.xOy_r)
+        if not self.selected then
+            GC.translate(62*(self.timer*6.26)^2,0)
+        end
+
+        GC.setColor(.26,.26,.26,.8*a)
+        GC.polygon('fill',self.poly)
+
+        GC.setColor(1,1,1,.8*a)
+        GC.setLineWidth(4)
+        GC.polygon('line',self.poly)
+
+        GC.setColor(.99,.99,.99,a)
+        GC.draw(self.modeNameText,-170,-320,nil,math.min(1,310/self.modeNameText:getWidth()),1,self.modeNameText:getWidth()/2,0)
+        FONT.set(25,'thin')
+        GC.printf(self.modeInfoText,-340,-260,320,'center')
+    end
+}
+
 local scene={}
 
 function scene.enter()
+    panel:setSel(false)
     MINOMAP:reset()
     PROGRESS.playExteriorBGM()
 end
@@ -18,7 +81,7 @@ function scene.mouseClick(x,y,k)
     MINOMAP:hideCursor()
     if k==1 then
         x,y=SCR.xOy:transformPoint(x,y)
-        MINOMAP:mouseClick(x,y)
+        panel:setSel(MINOMAP:mouseClick(x,y))
     end
 end
 function scene.wheelMoved(dx,dy)
@@ -43,7 +106,7 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return end
     if key=='space' or key=='return' then
-        MINOMAP:keyboardSelect()
+        panel:setSel(MINOMAP:keyboardSelect())
     elseif key=='escape' then
         if PROGRESS.getMinoUnlocked() and not PROGRESS.getPuyoUnlocked() and not PROGRESS.getGemUnlocked() then
             SCN.pop()
@@ -57,10 +120,12 @@ end
 function scene.update(dt)
     MINOMAP:update(dt)
     MINOMAP:keyboardMove(SCR.xOy:transformPoint(800,600))
+    panel:update(dt)
 end
 
 function scene.draw()
     MINOMAP:draw()
+    panel:draw()
     PROGRESS.drawExteriorHeader()
 end
 

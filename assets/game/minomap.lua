@@ -50,10 +50,12 @@ local modes={
     {pos={0,40,40},name='sprint_invis_40'},
     {pos={0,50,50},name='sprint_blind_40'},
     {pos={0,10,30},name='sprint_big_100'},
+    {pos={0,20,40},name='sprint_small_20'},
     {pos={0,10,40},name='sprint_low_40'},
-    {pos={0,10,50},name='sprint_randctrl_40'},
-    {pos={0,20,50},name='sprint_flip_40'},
+    {pos={0,10,50},name='sprint_flip_40'},
     {pos={0,20,60},name='sprint_dizzy_40'},
+    {pos={0,20,50},name='sprint_float_40'},
+    {pos={0,30,60},name='sprint_randctrl_40'},
     {pos={0,70,70},name='exam_rule'},
 }
 -- Initialize modes' graphic values
@@ -66,7 +68,7 @@ for _,m in next,modes do
     m.r=100
 end
 
--- Generate string-mode pairs
+-- Generate name-mode pairs
 local modes_str={} for i=1,#modes do modes_str[modes[i].name]=modes[i] end
 
 local bridgeLinks={
@@ -84,11 +86,12 @@ local bridgeLinks={
     'backfire_100 - backfire_amplify_100',
     'sprint_40 - sprint_10 - sprint_200 - sprint_1000',
     'sprint_10 - sprint_obstacle_4 - sprint_drought_40 - sprint_flood_40 - sprint_penta_40 - sprint_sym_40',
-    'sprint_40 - sprint_hide_40 - sprint_invis_40 - sprint_blind_40',
     'sprint_drought_40 - sprint_mph_40 - sprint_lock_20',
     'sprint_mph_40 - sprint_wind_20 - sprint_fix_20',
-    'sprint_40 - sprint_big_100 - sprint_low_40 - sprint_randctrl_40',
-    'sprint_low_40 - sprint_flip_40 - sprint_dizzy_40',
+    'sprint_40 - sprint_hide_40 - sprint_invis_40 - sprint_blind_40',
+    'sprint_40 - sprint_big_100 - sprint_small_20',
+    'sprint_big_100 - sprint_low_40 - sprint_flip_40 - sprint_dizzy_40',
+    'sprint_low_40 - sprint_float_40 - sprint_randctrl_40',
 }
 local bridges={}
 local function _newBridge(m1,m2)
@@ -151,7 +154,7 @@ local cam={
     swing=0,
 
     maxDist=2600,-- Max 4000
-    minK=.42,-- Max .2
+    minK=.4,-- Max .2
     cursor=false,
     transform=love.math.newTransform(),
 }
@@ -177,9 +180,9 @@ end
 function cam:update(dt)
     self.swing=.00626*math.sin(love.timer.getTime()/1.26)
 
-    self.x=MATH.expApproach(self.x,self.x0,dt*16)
-    self.y=MATH.expApproach(self.y,self.y0,dt*16)
-    self.k=MATH.expApproach(self.k,self.k0,dt*16)
+    self.x=MATH.expApproach(self.x,self.x0,dt*26)
+    self.y=MATH.expApproach(self.y,self.y0,dt*26)
+    self.k=MATH.expApproach(self.k,self.k0,dt*26)
     self.a=MATH.expApproach(self.a,self.a0+self.swing,dt*6.26)
     self.transform:setTransformation(self.x,100+self.y,self.a,self.k)
 end
@@ -208,7 +211,7 @@ function map:loadUnlocked(modeList)
 
     -- Create bridges
     for _,b in next,bridges do
-        if b.m1.enable and b.m2.enable then
+        if not b.enable and b.m1.enable and b.m2.enable then
             b.enable=true
         end
     end
@@ -272,6 +275,7 @@ function map:mouseClick(x,y)
         _enterMode(m)
     else
         _selectMode(m)
+        return m
     end
 end
 function map:keyboardMove(x,y)
@@ -284,6 +288,7 @@ function map:keyboardSelect()
         _enterMode(selected)
     else
         _selectMode(focused)
+        return focused
     end
 end
 
