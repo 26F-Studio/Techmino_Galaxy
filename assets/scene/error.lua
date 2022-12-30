@@ -37,6 +37,13 @@ function scene.enter()
     Zenitha.setVersionText("")
 end
 
+function scene.keyDown(key,isRep)
+    if isRep then return end
+    if key=='escape' then
+        PROGRESS.quit()
+    end
+end
+
 function scene.update(dt)
     if not img and time<5 then
         time=time+dt
@@ -90,7 +97,7 @@ end
 
 scene.widgetList={
     WIDGET.new{type='button',pos={.5,1},x=-130,y=-100,w=220,h=100,fontSize=75,text=CHAR.icon.console,code=WIDGET.c_goScn'_console'},
-    WIDGET.new{type='button',pos={.5,1},x=130,y=-100,w=220,h=100,fontSize=70,text=CHAR.icon.cross_big,code=love.event.quit},
+    WIDGET.new{type='button',pos={.5,1},x=130,y=-100,w=220,h=100,fontSize=70,text=CHAR.icon.cross_big,code=WIDGET.c_pressKey'escape'},
 }
 
 return scene
