@@ -973,8 +973,12 @@ function MP:riseGarbage(holePos)
     end
 
     -- Generate hole
-    if L[holePos] then
+    if type(holePos)=='number' then
         L[holePos]=false
+    elseif type(holePos)=='table' then
+        for i=1,#holePos do
+            L[holePos[i]]=false
+        end
     else
         L[rnd(w)]=false
     end
@@ -1110,7 +1114,7 @@ function MP:checkField()
             ins(lineClear,y)
         end
     end
-    if #lineClear >0 then
+    if #lineClear>0 then
         return lineClear
     end
 end
