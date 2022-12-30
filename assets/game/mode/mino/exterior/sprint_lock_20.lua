@@ -9,6 +9,7 @@ return {
         playBgm('race','base')
     end,
     settings={mino={
+        dropDelay=1200,
         actionPack={
             'moveLeft',
             'moveRight',

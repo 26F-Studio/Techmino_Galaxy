@@ -9,6 +9,7 @@ return {
         playBgm('race','base')
     end,
     settings={mino={
+        freshCount=30,
         actionPack={
             'rotateCW',
             'rotateCCW',
