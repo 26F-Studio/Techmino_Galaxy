@@ -1,5 +1,7 @@
 local gc=love.graphics
 local lineTarget=40
+local bgmTransBegin,bgmTransFinish=10,30
+
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -25,8 +27,8 @@ return {
                 if P.modeData.line>=lineTarget then
                     P:finish('AC')
                 end
-                if P.modeData.line>10 and P.modeData.line<34 and P.isMain then
-                    BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-10)/20,1),2.6)
+                if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
+                    BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
                 end
             end,
             drawInField=function(P)

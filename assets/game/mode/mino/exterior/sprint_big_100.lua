@@ -1,5 +1,6 @@
 local gc=love.graphics
 local lineTarget=100
+local bgmTransBegin,bgmTransFinish=50,80
 
 return {
     initialize=function()
@@ -19,8 +20,8 @@ return {
                 if P.modeData.line>=lineTarget then
                     P:finish('AC')
                 end
-                if P.modeData.line>50 and P.modeData.line<84 and P.isMain then
-                    BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-50)/40,1),2.6)
+                if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
+                    BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
                 end
             end,
             drawInField=function(P)
