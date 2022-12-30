@@ -16,8 +16,8 @@ return {
             playerInit=function(P)
                 P.modeData.line=0
             end,
-            afterClear=function(P)
-                P.modeData.line=math.min(P.modeData.line+P.clearHistory[#P.clearHistory].line,lineTarget)
+            afterClear=function(P,movement)
+                P.modeData.line=math.min(P.modeData.line+#movement.clear,lineTarget)
                 if P.modeData.line>=lineTarget then
                     P:finish('AC')
                 end
