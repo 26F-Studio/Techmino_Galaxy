@@ -8,8 +8,6 @@ return {
         playBgm('race','base')
     end,
     settings={mino={
-        dropDelay=1000,
-        lockDelay=1000,
         event={
             playerInit=function(P)
                 P.modeData.line=0

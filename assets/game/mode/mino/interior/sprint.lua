@@ -10,8 +10,6 @@ return {
     settings={mino={
         skin='mino_interior',
         shakeness=0,
-        dropDelay=1000,
-        lockDelay=1000,
         soundEvent={
             countDown=function(num)
                 SFX.playSample('lead',num>0 and 'E4' or 'E5')

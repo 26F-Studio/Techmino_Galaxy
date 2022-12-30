@@ -8,8 +8,6 @@ return {
         BGM.set('all','seek',0)
     end,
     settings={mino={
-        dropDelay=1000,
-        lockDelay=1000,
         event={
             always=function(P)
                 if P.gameTime>=120000 then

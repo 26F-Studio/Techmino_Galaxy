@@ -7,8 +7,6 @@ return {
         playBgm('race','base')
     end,
     settings={mino={
-        dropDelay=1000,
-        lockDelay=1000,
         event={
             playerInit=function(P)
                 P.modeData.keyCount={}
@@ -27,7 +25,7 @@ return {
                 if P.modeData.line>=lineTarget then
                     P:finish('AC')
                 end
-                if P.modeData.line>10 and P.isMain then
+                if P.modeData.line>10 and P.modeData.line<34 and P.isMain then
                     BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-10)/20,1),2.6)
                 end
             end,
