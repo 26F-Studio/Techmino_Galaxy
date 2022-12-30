@@ -1,0 +1,37 @@
+local gc=love.graphics
+local lineTarget=1000
+
+return {
+    initialize=function()
+        GAME.newPlayer(1,'mino')
+        GAME.setMain(1)
+        playBgm('race','base')
+    end,
+    settings={mino={
+        dropDelay=1000,
+        lockDelay=1000,
+        event={
+            playerInit=function(P)
+                P.modeData.line=0
+            end,
+            afterClear=function(P)
+                P.modeData.line=math.min(P.modeData.line+P.clearHistory[#P.clearHistory].line,lineTarget)
+                if P.modeData.line>=lineTarget then
+                    P:finish('AC')
+                end
+                if P.modeData.line>750 and P.modeData.line<904 and P.isMain then
+                    BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-750)/150,1),2.6)
+                end
+            end,
+            drawInField=function(P)
+                gc.setColor(1,1,1,.26)
+                gc.rectangle('fill',0,(P.modeData.line-lineTarget)*40-2,P.settings.fieldW*40,4)
+            end,
+            drawOnPlayer=function(P)
+                gc.setColor(COLOR.L)
+                FONT.set(80)
+                GC.mStr(lineTarget-P.modeData.line,-300,-55)
+            end,
+        },
+    }},
+}

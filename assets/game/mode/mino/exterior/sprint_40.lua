@@ -1,5 +1,5 @@
 local gc=love.graphics
-
+local lineTarget=40
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -23,22 +23,22 @@ return {
                 P.modeData.curKeyCount=0
             end,
             afterClear=function(P)
-                P.modeData.line=math.min(P.modeData.line+P.clearHistory[#P.clearHistory].line,40)
-                if P.modeData.line>=40 then
+                P.modeData.line=math.min(P.modeData.line+P.clearHistory[#P.clearHistory].line,lineTarget)
+                if P.modeData.line>=lineTarget then
                     P:finish('AC')
                 end
-                if PROGRESS.getMain()>=2 and P.modeData.line>10 and P.isMain then
+                if P.modeData.line>10 and P.isMain then
                     BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-10)/20,1),2.6)
                 end
             end,
             drawInField=function(P)
                 gc.setColor(1,1,1,.26)
-                gc.rectangle('fill',0,(P.modeData.line-40)*40-2,P.settings.fieldW*40,4)
+                gc.rectangle('fill',0,(P.modeData.line-lineTarget)*40-2,P.settings.fieldW*40,4)
             end,
             drawOnPlayer=function(P)
                 gc.setColor(COLOR.L)
                 FONT.set(80)
-                GC.mStr(40-P.modeData.line,-300,-55)
+                GC.mStr(lineTarget-P.modeData.line,-300,-55)
             end,
         },
     }},
@@ -51,7 +51,7 @@ return {
         local clearInfo={}
 
         local finalTime=P.time-3000
-        local finRate=P.modeData.line/40
+        local finRate=P.modeData.line/lineTarget
         local averageTime=finalTime/#P.dropHistory
 
         local lastPieceTime=3000
@@ -67,10 +67,10 @@ return {
 
         local _cleared=0
         for _,d in next,P.clearHistory do
-            _cleared=math.min(_cleared+d.line,40)
+            _cleared=math.min(_cleared+d.line,lineTarget)
             table.insert(clearInfo,{
                 x=(d.time-3000)/finalTime*finRate,
-                y=_cleared/40*(100/#P.dropHistory)*finRate,
+                y=_cleared/lineTarget*(100/#P.dropHistory)*finRate,
             })
         end
 
@@ -84,7 +84,7 @@ return {
         if not P.modeData.finalTime then
             FONT.set(100)
             GC.setColor(1,1,1,math.min(time*2.6,1))
-            GC.mStr(P.modeData.line.." / 40",800,400)
+            GC.mStr(P.modeData.line.." / "..lineTarget,800,400)
             return
         end
 
@@ -98,7 +98,7 @@ return {
         -- Reference line
         GC.setLineWidth(6)
         GC.setColor(1,1,.626,.5)
-        if P.modeData.line==40 then
+        if P.modeData.line==lineTarget then
             GC.line(0,0,800*t,(100/#P.dropHistory)*600*t)
         else
             GC.line(0,0,800*t,600*t)
