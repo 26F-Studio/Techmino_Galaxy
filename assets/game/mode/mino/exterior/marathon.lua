@@ -63,32 +63,33 @@ return {
                 P.modeData.levelPieces=P.modeData.levelPieces+1
             end,
             afterClear=function(P)
-                P.modeData.line=math.min(P.modeData.line+P.clearHistory[#P.clearHistory].line,200)
-                if P.modeData.line>=P.modeData.target then
-                    if P.modeData.target<200 then
-                        local autoLevel=P.modeData.level
-                        local averageDropTime=(P.gameTime-P.modeData.levelStartTime-P.settings.clearDelay*3)/P.modeData.levelPieces-P.settings.spawnDelay
+                local md=P.modeData
+                md.line=math.min(md.line+P.clearHistory[#P.clearHistory].line,200)
+                if md.line>=md.target then
+                    if md.target<200 then
+                        local autoLevel=md.level
+                        local averageDropTime=(P.gameTime-md.levelStartTime-P.settings.clearDelay*3)/md.levelPieces-P.settings.spawnDelay
                         while averageDropTime<levels[autoLevel].par and autoLevel<30 do
                             autoLevel=autoLevel+1
                         end
-                        local _level=P.modeData.level
-                        P.modeData.level=math.min(math.max(P.modeData.level+1,math.min(P.modeData.level+3,autoLevel)),30)
-                        if _level<=10 and P.modeData.level>10 then
-                            P.modeData.transition1=#P.dropHistory
-                        elseif _level<=20 and P.modeData.level>20 then
-                            P.modeData.transition2=#P.dropHistory
+                        local _level=md.level
+                        md.level=math.min(math.max(md.level+1,math.min(md.level+3,autoLevel)),30)
+                        if _level<=10 and md.level>10 then
+                            md.transition1=#P.dropHistory
+                        elseif _level<=20 and md.level>20 then
+                            md.transition2=#P.dropHistory
                         end
 
-                        P.settings.dropDelay=levels[P.modeData.level].drop
-                        P.settings.lockDelay=levels[P.modeData.level].lock
-                        P.settings.spawnDelay=levels[P.modeData.level].spawn
+                        P.settings.dropDelay=levels[md.level].drop
+                        P.settings.lockDelay=levels[md.level].lock
+                        P.settings.spawnDelay=levels[md.level].spawn
 
-                        P.modeData.target=P.modeData.target+10
-                        P.modeData.levelPieces=0
-                        P.modeData.levelStartTime=P.gameTime
+                        md.target=md.target+10
+                        md.levelPieces=0
+                        md.levelStartTime=P.gameTime
 
                         if P.isMain then
-                            BGM.set(bgmList['propel'].add,'volume',math.min(P.modeData.level/15,1)^2)
+                            BGM.set(bgmList['propel'].add,'volume',math.min(md.level/15,1)^2)
                         end
                         P:playSound('reach')
                     else

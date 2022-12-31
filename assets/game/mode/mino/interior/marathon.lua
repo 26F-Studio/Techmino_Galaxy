@@ -27,14 +27,15 @@ return {
                 P.modeData.target=10
             end,
             afterClear=function(P)
-                P.modeData.line=math.min(P.modeData.line+P.clearHistory[#P.clearHistory].line,200)
-                if P.modeData.line>=P.modeData.target then
-                    if P.modeData.target<200 then
-                        if PROGRESS.getMain()>=2 and P.modeData.target<=150 and P.isMain then
-                            BGM.set(bgmList['push'].add,'volume',(P.modeData.target/150)^2,2.6)
+                local md=P.modeData
+                md.line=math.min(md.line+P.clearHistory[#P.clearHistory].line,200)
+                if md.line>=md.target then
+                    if md.target<200 then
+                        if PROGRESS.getMain()>=2 and md.target<=150 and P.isMain then
+                            BGM.set(bgmList['push'].add,'volume',(md.target/150)^2,2.6)
                         end
-                        P.settings.dropDelay=dropSpeed[P.modeData.target/10+1]
-                        P.modeData.target=P.modeData.target+10
+                        P.settings.dropDelay=dropSpeed[md.target/10+1]
+                        md.target=md.target+10
                         P:playSound('reach')
                     else
                         P:finish('AC')

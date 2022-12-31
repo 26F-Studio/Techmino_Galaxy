@@ -27,32 +27,34 @@ return {
                 table.sort(P.modeData.invertTimes)
             end,
             always=function(P)
+                local md=P.modeData
                 if not P.timing then return end
-                P.modeData.windStrength=P.modeData.windStrength+MATH.sign(P.modeData.windTargetStrength-P.modeData.windStrength)
-                P.modeData.windCounter=P.modeData.windCounter+P.modeData.windStrength
-                if math.abs(P.modeData.windCounter)>=62000 then
+                md.windStrength=md.windStrength+MATH.sign(md.windTargetStrength-md.windStrength)
+                md.windCounter=md.windCounter+md.windStrength
+                if math.abs(md.windCounter)>=62000 then
                     if P.hand then
-                        P[P.modeData.windCounter<0 and 'moveLeft' or 'moveRight'](P)
+                        P[md.windCounter<0 and 'moveLeft' or 'moveRight'](P)
                     end
-                    P.modeData.windCounter=P.modeData.windCounter-MATH.sign(P.modeData.windCounter)*62000
+                    md.windCounter=md.windCounter-MATH.sign(md.windCounter)*62000
                 end
             end,
             afterLock=function(P)
                 P.settings.dropDelay=math.max(P.settings.dropDelay-2,100)
             end,
             afterClear=function(P,movement)
-                P.modeData.line=math.min(P.modeData.line+#movement.clear,lineTarget)
-                if #P.modeData.invertTimes>0 and P.modeData.line>P.modeData.invertTimes[1] then
-                    while #P.modeData.invertTimes>0 and P.modeData.line>P.modeData.invertTimes[1] do
-                        table.remove(P.modeData.invertTimes,1)
+                local md=P.modeData
+                md.line=math.min(md.line+#movement.clear,lineTarget)
+                if #md.invertTimes>0 and md.line>md.invertTimes[1] then
+                    while #md.invertTimes>0 and md.line>md.invertTimes[1] do
+                        table.remove(md.invertTimes,1)
                     end
-                    P.modeData.windTargetStrength=-MATH.sign(P.modeData.windTargetStrength)*P.seqRND:random(1260,1600)
+                    md.windTargetStrength=-MATH.sign(md.windTargetStrength)*P.seqRND:random(1260,1600)
                 end
-                if P.modeData.line>=lineTarget then
+                if md.line>=lineTarget then
                     P:finish('AC')
                 end
-                if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
-                    BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
+                if md.line>bgmTransBegin and md.line<bgmTransFinish+4 and P.isMain then
+                    BGM.set(bgmList['race'].add,'volume',math.min((md.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
                 end
             end,
             drawInField=function(P)
