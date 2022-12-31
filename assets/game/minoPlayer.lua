@@ -659,11 +659,21 @@ function MP:getMino(shapeID)
     -- Generate matrix
     for y=1,#shape do for x=1,#shape[1] do
         if shape[y][x] then
-            shape[y][x]={
+            local c={
                 id=self.pieceCount,
                 color=defaultMinoColor[shapeID],
+                alpha=1,
                 nearby={},
             }
+            if self.settings.pieceVisibleTimer then
+                if self.settings.pieceVisibleTimer==0 then
+                    c.alpha=0
+                else
+                    c.visibleTimer=self.settings.pieceVisibleTimer
+                    c.disappearTime=self.settings.pieceDisappearTime
+                end
+            end
+            shape[y][x]=c
         end
     end end
 
@@ -1306,6 +1316,22 @@ function MP:updateFrame()
         end
     end
 
+    -- Update field cells' visiblity
+    local F=self.field._matrix
+    for y=1,#F do for x=1,#F[1] do
+        local C=F[y][x]
+        if C and  C.visibleTimer then
+            C.visibleTimer=C.visibleTimer-1
+            if C.visibleTimer>0 then
+                C.alpha=math.min(C.visibleTimer/C.disappearTime,1)
+            else-- Set to invisible, remove timers
+                C.alpha=0
+                C.visibleTimer=nil
+                C.disappearTime=nil
+            end
+        end
+    end end
+
     -- Update field depth
     if self.fieldDived>0 then
         -- Update fieldRisingSpeed first
@@ -1564,6 +1590,9 @@ local baseEnv={
     risingDeceleration=.003,
     maxRisingSpeed=1,
     minRisingSpeed=1,
+
+    pieceVisibleTimer=false,
+    pieceDisappearTime=1000,
 
     actionPack='Normal',
     seqType='bag7',

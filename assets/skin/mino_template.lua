@@ -52,7 +52,8 @@ function S.drawFieldCells(F)
     for y=1,#F do for x=1,#F[1] do
         local C=F[y][x]
         if C then
-            gc_setColor(ColorTable[C.color])
+            local r,g,b=unpack(ColorTable[C.color])
+            gc_setColor(r,g,b,C.alpha)
             gc_rectangle('fill',(x-1)*40,-y*40,40,40)
         end
     end end
