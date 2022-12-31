@@ -1739,7 +1739,11 @@ function MP:initialize()
     self.garbageBuffer={}
 
     self.nextQueue={}
-    self.seqGen=coroutine.wrap(seqGenerators[self.settings.seqType])
+    self.seqGen=coroutine.wrap(
+        type(self.settings.seqType)=='string' and seqGenerators[self.settings.seqType] or
+        type(self.settings.seqType)=='function' and self.settings.seqType or
+        seqGenerators.bag7
+    )
     self:freshNextQueue()
 
     self.holdQueue={}
