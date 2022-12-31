@@ -25,10 +25,13 @@ end
 function scene.draw()
     PROGRESS.drawExteriorHeader()
 
+    -- Title with animation
     GC.replaceTransform(SCR.xOy)
     GC.translate(100,210)
+    -- Techmino
     GC.setColor(1,1,1)
     GC.draw(IMG.title.techmino,-textOffset,0,nil,.55)
+    -- Galaxy
     GC.setColor(.08,.08,.084)
     for a=0,MATH.tau,MATH.tau/20 do
         GC.draw(IMG.title.galaxy,450+10*math.cos(a)+textOffset,130+10*math.sin(a),nil,.7)

@@ -1,7 +1,10 @@
-require'assets.game.rotsys_mino'
-require'assets.game.atksys_mino'
 Minoes=require'assets.game.minoes'
 ColorTable=require'assets.game.colorTable'
+defaultMinoColor=setmetatable({2,22,42,6,52,12,32},{__index=function() return math.random(64) end})
+defaultPuyoColor=setmetatable({2,12,42,22,52},{__index=function() return math.random(64) end})
+particleSystemTemplate=require'assets.game.particleSystemTemplate'
+require'assets.game.rotsys_mino'
+require'assets.game.atksys_mino'
 
 local gc=love.graphics
 
