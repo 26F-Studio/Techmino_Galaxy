@@ -27,15 +27,14 @@ return {
                 table.sort(P.modeData.invertTimes)
             end,
             always=function(P)
-                if P.timing then
-                    P.modeData.windStrength=P.modeData.windStrength+MATH.sign(P.modeData.windTargetStrength-P.modeData.windStrength)
-                    P.modeData.windCounter=P.modeData.windCounter+P.modeData.windStrength
-                    if math.abs(P.modeData.windCounter)>=62000 then
-                        if P.hand then
-                            P[P.modeData.windCounter<0 and 'moveLeft' or 'moveRight'](P)
-                        end
-                        P.modeData.windCounter=P.modeData.windCounter-MATH.sign(P.modeData.windCounter)*62000
+                if not P.timing then return end
+                P.modeData.windStrength=P.modeData.windStrength+MATH.sign(P.modeData.windTargetStrength-P.modeData.windStrength)
+                P.modeData.windCounter=P.modeData.windCounter+P.modeData.windStrength
+                if math.abs(P.modeData.windCounter)>=62000 then
+                    if P.hand then
+                        P[P.modeData.windCounter<0 and 'moveLeft' or 'moveRight'](P)
                     end
+                    P.modeData.windCounter=P.modeData.windCounter-MATH.sign(P.modeData.windCounter)*62000
                 end
             end,
             afterLock=function(P)
