@@ -227,7 +227,7 @@ return {
         sprint_flip_40=        {"Sprint 40 Flip","Clear 40 lines with flipping field\n*Angular Momentum*"},
         sprint_dizzy_40=       {"Sprint 40 Dizzy","Clear 40 lines with strange direction\n*Hello Cleveland*"},
         sprint_float_40=       {"Sprint 40 Float","Clear 40 lines without gravity"},
-        sprint_randctrl_40=    {"Sprint 40 Randctrl","Clear 40 lines with broken input device"},
+        sprint_randctrl_40=    {"Sprint 40 Random","Clear 40 lines with broken input device"},
         exam_rule=             {"Exam Rule","Exam_03"},
     },
 
