@@ -215,7 +215,7 @@ return {
         sprint_penta_40=       {"Sprint 40 Penta","Clear 40 lines with pentominoes"},
         sprint_sym_40=         {"Sprint 40 Sym","Clear 40 lines with symmetry field"},
         sprint_mph_40=         {"Sprint 40 MPH","Clear 40 lines without sequence information"},
-        sprint_wind_20=        {"Sprint 20 Wind","Clear 20 lines under strong wind"},
+        sprint_wind_40=        {"Sprint 40 Wind","Clear 40 lines under strong wind"},
         sprint_lock_20=        {"Sprint 20 Lock","Clear 20 lines without rotating piece"},
         sprint_fix_20=         {"Sprint 20 Fix","Clear 20 lines without moving piece"},
         sprint_hide_40=        {"Sprint 40 Hide","Clear 40 lines with disappearing field"},
