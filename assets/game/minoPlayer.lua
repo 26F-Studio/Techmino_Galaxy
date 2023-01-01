@@ -875,7 +875,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         self:playSound('drop')
     end
     self:triggerEvent('afterDrop')
-    if not self.hand then return end
+    if not self.hand or self.finished then return end
     self:createLockParticle(self.handX,self.handY)
 
     -- Lock to field
@@ -886,13 +886,15 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     end
     self:playSound('lock')
     self:triggerEvent('afterLock')
+    if self.finished then return end
 
     -- Clear
     local lineClear=self:checkField()
 
     if lineClear then
-        self.lastMovement.clear=lineClear
         self.combo=self.combo+1
+        self.lastMovement.clear=lineClear
+        self.lastMovement.combo=self.combo
         self.clearTimer=self.settings.clearDelay
         local h={
             combo=self.combo,
@@ -905,18 +907,24 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         self:playSound('clear',#lineClear)
         self:createFrenzyParticle(#lineClear*26)
         self:triggerEvent('afterClear',self.lastMovement)
+        if self.finished then return end
     else
         self.combo=0
+    end
+
+    -- Attack
+    local atk=minoAtkSys[self.settings.atkSys].drop(self)
+    if atk then
+        GAME.send(self,atk)
+        self:triggerEvent('afterSend',atk)
+        if self.finished then return end
     end
 
     -- Lockout check
     if self.handY>self.settings.lockoutH and (self.settings.strictLockout or not lineClear)  then
         self:finish('CE')
+        return
     end
-
-    -- Attack
-    local atk=minoAtkSys[self.settings.atkSys].drop(self)
-    if atk then GAME.send(self,atk) end
 
     -- Discard hand
     self.hand=false
@@ -1722,6 +1730,7 @@ function MP.new()
         afterDrop={},
         afterLock={},
         afterClear={},
+        afterSend={},
 
         -- Update
         always={},
