@@ -309,7 +309,10 @@ end
 function PROGRESS.drawExteriorHeader(h)
     GC.replaceTransform(SCR.origin)
     GC.setColor(.26,.26,.26)
-    GC.rectangle('fill',0,0,SCR.w,(h or 120)*SCR.k)
+    local y=(h or 120)*SCR.k
+    GC.rectangle('fill',0,0,SCR.w,y)
+    GC.setColor(1,1,1)
+    GC.rectangle('fill',0,y,SCR.w,1)
 end
 
 -- Get
