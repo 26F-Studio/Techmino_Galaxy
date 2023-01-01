@@ -1,15 +1,15 @@
 return {
     drop=function(self)
         if self.lastMovement.clear then
-            local C=self.lastMovement.clear
+            local lines=#self.lastMovement.clear.line
             self.texts:add{
-                text=Text.clearName[C.line] or ('['..C.line..']'),
+                text=Text.clearName[lines] or ('['..lines..']'),
                 a=.626,
-                fontSize=math.min(40+10*C.line,70),
-                style=C.line>=4 and 'stretch' or 'appear',
-                duration=C.line/2,
+                fontSize=math.min(40+10*lines,70),
+                style=lines>=4 and 'stretch' or 'appear',
+                duration=lines/2,
             }
-            return {power=C.line,}
+            return {power=lines,}
         end
     end,
 }

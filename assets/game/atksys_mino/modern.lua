@@ -6,14 +6,14 @@ return {
     end,
     drop=function(self)
         local M=self.lastMovement
-        local C=M.clear
         local spin=self.hand.name=='T' and M.action=='rotate' and (M.corners or M.immobile)
         if M.clear then
+            local lines,combo=#self.lastMovement.clear,self.lastMovement.combo
             do-- Text & Sound
                 local t=""
 
                 -- Add B2B text & sound
-                if (C.line>=4 or spin) and self.atkSysData.b2b>0 then
+                if (lines>=4 or spin) and self.atkSysData.b2b>0 then
                     t=t..Text.b2b.." "
                     self:playSound('b2b',self.atkSysData.b2b)
                 end
@@ -21,7 +21,7 @@ return {
                 -- Add spin text & sound
                 if spin then
                     t=t..Text.spin:repD(M.mino.name).." "
-                    self:playSound('spin',C.line)
+                    self:playSound('spin',lines)
                 end
 
                 -- AC text & sound, or Clearing text if no AC
@@ -36,29 +36,29 @@ return {
                     self:playSound('allClear')
                 else
                     self.texts:add{
-                        text=t..(Text.clearName[C.line] or ('['..C.line..']')),
+                        text=t..(Text.clearName[lines] or ('['..lines..']')),
                         a=.626,
-                        fontSize=math.min(30+C.line*10,60)+(spin and 0 or 10),
-                        style=C.line>=4 and 'stretch' or spin and 'spin' or 'appear',
-                        duration=C.line/3+(spin and .6 or 0),
+                        fontSize=math.min(30+lines*10,60)+(spin and 0 or 10),
+                        style=lines>=4 and 'stretch' or spin and 'spin' or 'appear',
+                        duration=lines/3+(spin and .6 or 0),
                     }
                 end
 
                 -- Combo text
-                if C.combo>1 then
+                if combo>1 then
                     self.texts:add{
                         text=
-                            C.combo<11 and Text.combo_small:repD(C.combo-1) or
-                            C.combo<21 and Text.combo_large:repD(C.combo-1) or
+                            combo<11 and Text.combo_small:repD(combo-1) or
+                            combo<21 and Text.combo_large:repD(combo-1) or
                             Text.mega_combo,
-                        a=.7-.3/(2+C.combo),
+                        a=.7-.3/(2+combo),
                         y=60,
-                        fontSize=15+math.min(C.combo,15)*5,
+                        fontSize=15+math.min(combo,15)*5,
                     }
                 end
 
                 -- Combo sound
-                self:playSound('combo',C.combo)
+                self:playSound('combo',combo)
             end
 
             do-- Calculate attack
@@ -67,17 +67,17 @@ return {
 
                 -- Clearing type
                 if spin then
-                    pwr=2*C.line
+                    pwr=2*lines
                     pwr=pwr+math.ceil(self.atkSysData.b2b/4,2)
                     tm=.3
                     self.atkSysData.b2b=math.min(self.atkSysData.b2b+1,26)
-                elseif C.line>=4 then
-                    pwr=C.line
+                elseif lines>=4 then
+                    pwr=lines
                     tm=.2
                     pwr=pwr+math.min(math.ceil(self.atkSysData.b2b/4),4)
                     self.atkSysData.b2b=math.min(self.atkSysData.b2b+1,26)
                 else
-                    pwr=C.line-1
+                    pwr=lines-1
                     tm=.1
                     if self.atkSysData.b2b>1 then
                         self:playSound('b2b_break')
