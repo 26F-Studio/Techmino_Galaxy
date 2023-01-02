@@ -285,21 +285,30 @@ function GAME.release(action,id)
 end
 
 --[[ data:
-    power (0~∞,  no default)
-    mode  (0~1,   default to 0, 0: trigger by time, 1:trigger by step)
-    time  (0~∞,  default to 0, seconds)
-    fatal (0~100, default to 50, percentage)
-    speed (0~100, default to 50, percentage)
+    power      (0~∞,  no default)
+    cancelRate (0~∞,  default to 1)
+    defendRate (0~∞,  default to 1)
+    mode       (0~1,   default to 0, 0: trigger by time, 1:trigger by step)
+    time       (0~∞,  default to 0, seconds)
+    fatal      (0~100, default to 50, percentage)
+    speed      (0~100, default to 50, percentage)
 ]]
 function GAME.send(source,data)
     -- Format normalization
     assert(type(data)=='table',"data not table")
-    assert(type(data.power)=='number' and data.power>0,"bad power value")
+    assert(type(data.power)=='number' and data.power>0,"wrong power value")
+    if data.cancelRate==nil then data.cancelRate=1 else
+        assert(type(data.cancelRate)=='number' and data.cancelRate>=0,"cancelRate not non-negative number")
+    end
+
+    if data.defendRate==nil then data.defendRate=1 else
+        assert(type(data.defendRate)=='number' and data.defendRate>=0,"defendRate not non-negative number")
+    end
+
     if data.mode==nil then data.mode=0 end
-    assert(data.mode==0 or data.mode==1,"bad mode value")
+    assert(data.mode==0 or data.mode==1,"mode not 0 or 1")
     if data.time==nil then data.time=0 else
-        assert(type(data.time)=='number',"time not number")
-        data.time=math.max(data.time,0)
+        assert(type(data.time)=='number' and data.time>=0,"time not non-negative number")
         if data.mode==1 then data.time=math.floor(data.time) end
     end
     if data.fatal==nil then data.fatal=50 else
