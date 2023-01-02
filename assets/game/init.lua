@@ -293,43 +293,37 @@ end
     fatal      (0~100, default to 50, percentage)
     speed      (0~100, default to 50, percentage)
 ]]
+function GAME.initAtk(atk)-- Normalize the attack object
+    if not atk then return end
+    assert(type(atk)=='table',"data not table")
+    assert(type(atk.power)=='number' and atk.power>0,"wrong power value")
+    if atk.cancelRate==nil then atk.cancelRate=1 else
+        assert(type(atk.cancelRate)=='number' and atk.cancelRate>=0,"cancelRate not non-negative number")
+    end
+
+    if atk.defendRate==nil then atk.defendRate=1 else
+        assert(type(atk.defendRate)=='number' and atk.defendRate>=0,"defendRate not non-negative number")
+    end
+
+    if atk.mode==nil then atk.mode=0 end
+    assert(atk.mode==0 or atk.mode==1,"mode not 0 or 1")
+    if atk.time==nil then atk.time=0 else
+        assert(type(atk.time)=='number' and atk.time>=0,"time not non-negative number")
+        if atk.mode==1 then atk.time=math.floor(atk.time) end
+    end
+    if atk.fatal==nil then atk.fatal=50 else
+        assert(type(atk.fatal)=='number',"fatal not number")
+        atk.fatal=MATH.clamp(atk.fatal,0,100)
+    end
+    if atk.speed==nil then atk.speed=50 else
+        assert(type(atk.speed)=='number',"speed not number")
+        atk.speed=MATH.clamp(atk.speed,0,100)
+    end
+    return atk
+end
 function GAME.send(source,data)
-    -- Format normalization
-    assert(type(data)=='table',"data not table")
-    assert(type(data.power)=='number' and data.power>0,"wrong power value")
-    if data.cancelRate==nil then data.cancelRate=1 else
-        assert(type(data.cancelRate)=='number' and data.cancelRate>=0,"cancelRate not non-negative number")
-    end
-
-    if data.defendRate==nil then data.defendRate=1 else
-        assert(type(data.defendRate)=='number' and data.defendRate>=0,"defendRate not non-negative number")
-    end
-
-    if data.mode==nil then data.mode=0 end
-    assert(data.mode==0 or data.mode==1,"mode not 0 or 1")
-    if data.time==nil then data.time=0 else
-        assert(type(data.time)=='number' and data.time>=0,"time not non-negative number")
-        if data.mode==1 then data.time=math.floor(data.time) end
-    end
-    if data.fatal==nil then data.fatal=50 else
-        assert(type(data.fatal)=='number',"fatal not number")
-        data.fatal=MATH.clamp(data.fatal,0,100)
-    end
-    if data.speed==nil then data.speed=50 else
-        assert(type(data.speed)=='number',"speed not number")
-        data.speed=MATH.clamp(data.speed,0,100)
-    end
-
-    local d={
-        power=data.power,
-        mode=data.mode,
-        time=data.time,
-        fatal=data.fatal,
-        speed=data.speed,
-    }
-
     -- Find target
-    if d.target==nil then
+    if data.target==nil then
         local l=GAME.playerList
         if #l>1 then
             local count=0
@@ -344,7 +338,7 @@ function GAME.send(source,data)
                     if source.group==0 and l[i]~=source or source.group~=l[i].group then
                         count=count-1
                         if count==0 then
-                            d.target=l[i]
+                            data.target=l[i]
                             break
                         end
                     end
@@ -352,13 +346,13 @@ function GAME.send(source,data)
             end
         end
     else
-        assert(type(d.target)=='number',"target not number")
-        d.target=GAME.playerMap[d.target]
+        assert(type(data.target)=='number',"target not number")
+        data.target=GAME.playerMap[data.target]
     end
 
     -- Sending airmail
-    if d.target then
-        d.target:receive(d)
+    if data.target then
+        data.target:receive(data)
     end
 end
 

@@ -913,8 +913,8 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     end
 
     -- Attack
-    local atk=minoAtkSys[self.settings.atkSys].drop(self)
-    if self.settings.allowCancel then
+    local atk=GAME.initAtk(minoAtkSys[self.settings.atkSys].drop(self))
+    if atk and self.settings.allowCancel then
         while atk and self.garbageBuffer[1] do
             local ap=atk.power*(atk.cancelRate or 1)
             local gbg=self.garbageBuffer[1]
