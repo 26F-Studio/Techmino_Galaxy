@@ -914,6 +914,26 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
 
     -- Attack
     local atk=minoAtkSys[self.settings.atkSys].drop(self)
+    if self.settings.allowCancel then
+        while atk and self.garbageBuffer[1] do
+            local ap=atk.power*(atk.cancelRate or 1)
+            local gbg=self.garbageBuffer[1]
+            local gp=gbg.power*(gbg.defendRate or 1)
+            local cancel=math.min(ap,gp)
+            ap=ap-cancel
+            gp=gp-cancel
+            if gp==0 then
+                atk.power=math.floor(ap/(atk.cancelRate or 1)+.5)
+                rem(self.garbageBuffer,1)
+            else
+                gbg.power=math.floor(gp/(gbg.defendRate or 1)+.5)
+            end
+            if ap==0 then
+                atk=nil
+                break
+            end
+        end
+    end
     if atk then
         GAME.send(self,atk)
         self:triggerEvent('afterSend',atk)
@@ -1609,6 +1629,7 @@ local baseEnv={
     spin_immobile=false,
     spin_corners=false,
     atkSys='none',
+    allowCancel=true,
 
     freshCondition='any',
     strictLockout=false,
