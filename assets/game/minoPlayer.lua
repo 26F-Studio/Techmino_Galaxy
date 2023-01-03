@@ -914,6 +914,9 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
 
     -- Attack
     local atk=GAME.initAtk(minoAtkSys[self.settings.atkSys].drop(self))
+    if atk then
+        self:triggerEvent('beforeCancel',atk)
+    end
     if atk and self.settings.allowCancel then
         while atk and self.garbageBuffer[1] do
             local ap=atk.power*(atk.cancelRate or 1)
@@ -937,7 +940,6 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if atk then
         self:triggerEvent('beforeSend',atk)
         GAME.send(self,atk)
-        self:triggerEvent('afterSend')
         if self.finished then return end
     end
 
@@ -1755,8 +1757,8 @@ function MP.new()
         afterDrop={},
         afterLock={},
         afterClear={},
+        beforeCancel={},
         beforeSend={},
-        afterSend={},
 
         -- Update
         always={},
