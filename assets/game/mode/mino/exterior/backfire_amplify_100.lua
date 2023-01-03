@@ -18,7 +18,6 @@ return {
             end,
             beforeSend=function(P,atk)
                 atk.power=atk.power*3
-                atk.defendRate=2
                 P:receive(atk)
             end,
             afterClear=function(P,movement)
