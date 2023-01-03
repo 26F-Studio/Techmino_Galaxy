@@ -249,10 +249,14 @@ local function _selectMode(m)
 end
 local function _enterMode(m)
     if m then
-        enterFX.timer=0
-        enterFX.x,enterFX.y,enterFX.r=m.x,m.y,m.r
-        SFX.play('mode_enter')
-        SCN.go('game_out','fade','mino/exterior/'..m.name)
+        if love.filesystem.getInfo('assets/game/mode/mino/exterior/'..m.name..'.lua') then
+            enterFX.timer=0
+            enterFX.x,enterFX.y,enterFX.r=m.x,m.y,m.r
+            SFX.play('mode_enter')
+            SCN.go('game_out','fade','mino/exterior/'..m.name)
+        else
+            MES.new('warn',"Mode file not exist")
+        end
     end
 end
 
