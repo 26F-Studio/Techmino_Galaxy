@@ -935,8 +935,9 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         end
     end
     if atk then
+        self:triggerEvent('beforeSend',atk)
         GAME.send(self,atk)
-        self:triggerEvent('afterSend',atk)
+        self:triggerEvent('afterSend')
         if self.finished then return end
     end
 
@@ -951,21 +952,23 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if self.finished then return end
 
     -- Update & Release garbage
-    local i=1
-    while true do
-        local g=self.garbageBuffer[i]
-        if not g then break end
-        if g.time==g.time0 then
-            local r=self.rcvRND:random(10)
-            for _=1,g.power do
-                self:riseGarbage(r)
+    if not (self.settings.clearStuck and lineClear) then
+        local i=1
+        while true do
+            local g=self.garbageBuffer[i]
+            if not g then break end
+            if g.time==g.time0 then
+                local r=self.rcvRND:random(10)
+                for _=1,g.power do
+                    self:riseGarbage(r)
+                end
+                rem(self.garbageBuffer,i)
+                i=i-1-- Avoid index error
+            elseif g.mode==1 then
+                g.time=g.time+1
             end
-            rem(self.garbageBuffer,i)
-            i=i-1-- Avoid index error
-        elseif g.mode==1 then
-            g.time=g.time+1
+            i=i+1
         end
-        i=i+1
     end
 
     self.spawnTimer=self.settings.spawnDelay
@@ -1630,6 +1633,7 @@ local baseEnv={
     spin_corners=false,
     atkSys='none',
     allowCancel=true,
+    clearStuck=true,
 
     freshCondition='any',
     strictLockout=false,
@@ -1751,6 +1755,7 @@ function MP.new()
         afterDrop={},
         afterLock={},
         afterClear={},
+        beforeSend={},
         afterSend={},
 
         -- Update
