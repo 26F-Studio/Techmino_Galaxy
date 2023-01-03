@@ -16,8 +16,10 @@ return {
             playerInit=function(P)
                 P.modeData.line=0
             end,
-            beforeSend=function(P,atk)
+            beforeCancel=function(_,atk)
                 atk.power=atk.power*3
+            end,
+            beforeSend=function(P,atk)
                 P:receive(atk)
             end,
             afterClear=function(P,movement)
