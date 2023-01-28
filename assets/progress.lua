@@ -126,17 +126,19 @@ end
 function PROGRESS.applyCoolWaitTemplate()
     local list={}
     for i=1,52 do list[i]=('assets/image/loading/%d.png'):format(i) end
-    local z=love.graphics.newArrayImage(list)
-    WAIT.setDefaultDraw(function(a,t)
-        GC.setBlendMode('add','alphamultiply')
-        GC.setColor(1,1,1,a)
-        GC.applyTransform(SCR.xOy_dr)
-        GC.mDrawL(z,
-            math.min(math.floor(t*60)%62,52)%52+1,-- floor(t*60)%62 → 0~61; min(ans) → 0~52~52; ans%52+1 → 1~52,1~1
-            -160,-150,nil,1.5*(1-(1-a)^2.6)
-        )
-        GC.setBlendMode('alpha')
-    end)
+    local success,z=pcall(gc.newArrayImage,list)
+    if success then
+        WAIT.setDefaultDraw(function(a,t)
+            GC.setBlendMode('add','alphamultiply')
+            GC.setColor(1,1,1,a)
+            GC.applyTransform(SCR.xOy_dr)
+            GC.mDrawL(z,
+                math.min(math.floor(t*60)%62,52)%52+1,-- floor(t*60)%62 → 0~61; min(ans) → 0~52~52; ans%52+1 → 1~52,1~1
+                -160,-150,nil,1.5*(1-(1-a)^2.6)
+            )
+            GC.setBlendMode('alpha')
+        end)
+    end
 end
 function PROGRESS.playInteriorBGM() playBgm('blank',prgs.main==1 and 'simp' or 'full') end
 function PROGRESS.playExteriorBGM() playBgm('vacuum',prgs.main==3 and 'simp' or 'full') end
