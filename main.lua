@@ -348,12 +348,12 @@ SCN.addSwap('fadeHeader',{
     draw=function(t)
         local a=t>.25 and 2-t*4 or t*4
         local h=120*SCR.k
-        GC.setColor(.1,.1,.1,a)
-        GC.rectangle('fill',0,h,SCR.w,SCR.h-h)
         GC.setColor(.26,.26,.26,a)
         GC.rectangle('fill',0,0,SCR.w,h)
         GC.setColor(1,1,1,a)
         GC.rectangle('fill',0,h,SCR.w,1)
+        GC.setColor(.1,.1,.1,a)
+        GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
     end,
 })
 SCN.addSwap('fastFadeHeader',{
@@ -361,12 +361,12 @@ SCN.addSwap('fastFadeHeader',{
     draw=function(t)
         local a=t>.1 and 2-t*10 or t*10
         local h=120*SCR.k
-        GC.setColor(.1,.1,.1,a)
-        GC.rectangle('fill',0,h,SCR.w,SCR.h-h)
         GC.setColor(.26,.26,.26,a)
         GC.rectangle('fill',0,0,SCR.w,h)
         GC.setColor(1,1,1,a)
         GC.rectangle('fill',0,h,SCR.w,1)
+        GC.setColor(.1,.1,.1,a)
+        GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
     end,
 })
 DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins")
