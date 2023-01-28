@@ -42,15 +42,17 @@ return {
                         local x=P.handX+centerPos[1]-.5
                         if not list[x] then list[x]={charge=0,charge1=0} end
                         if list[x].charge>=maxCharge then
-                            list[x].charge=-1
+                            list[x].dead=true
                             P:finish('PE')
                         else
-                            list[x].charge=list[x].charge+tsdCharge+1
-                            for _,v in next,list do
-                                v.charge=math.max(v.charge-1,0)
+                            for k,v in next,list do
+                                if k~=x then
+                                    v.charge=math.max(v.charge-1,0)
+                                end
                             end
                             P.modeData.tsd=P.modeData.tsd+1
                         end
+                        list[x].charge=list[x].charge+tsdCharge
                     end
                 else
                     P:finish('PE')
@@ -59,28 +61,29 @@ return {
             drawBelowMarks=function(P)
                 local t=love.timer.getTime()
                 for k,v in next,P.modeData.tsdInfo do
-                    if v.charge<0 then
-                        local x=40*k-20
-                        if t%.2<.1 then
-                            GC.setColor(.6,.4,.8,.626)
-                        else
-                            GC.setColor(.6,.6,.6,.42)
-                        end
-                        GC.rectangle('fill',x-15,0,30,-P.settings.fieldW*100)
-                    elseif v.charge1>0 then
+                    if v.charge1>0 or v.dead then
                         local x=40*k-20
                         local chargeRate=v.charge1/maxCharge
                         local barHeight=chargeRate*P.settings.fieldW*80
-                        if chargeRate<1 then
-                            GC.setColor(.8,0,0,.3+.06*math.sin(t*2+k))
-                        elseif t%.2<.1 then
-                            GC.setColor(.8,.4,.4,.626)
+                        if v.dead then
+                            if t%.2<.1 then
+                                GC.setColor(.6,.4,.8,.626)
+                            else
+                                GC.setColor(.6,.6,.6,.42)
+                            end
+                            GC.rectangle('fill',x-15,0,30,-barHeight)
                         else
-                            GC.setColor(.6,.6,.6,.42)
+                            if chargeRate<1 then
+                                GC.setColor(.8,0,0,.3+.06*math.sin(t*2+k))
+                            elseif t%.2<.1 then
+                                GC.setColor(.8,.4,.4,.626)
+                            else
+                                GC.setColor(.6,.6,.6,.42)
+                            end
+                            GC.rectangle('fill',x-15,0,30,-barHeight)
+                            GC.setColor(1,1,1,.42)
+                            GC.rectangle('fill',x-15,-barHeight,30,2)
                         end
-                        GC.rectangle('fill',x-15,0,30,-barHeight)
-                        GC.setColor(1,1,1,.42)
-                        GC.rectangle('fill',x-15,-barHeight,30,2)
                     end
                 end
             end,
