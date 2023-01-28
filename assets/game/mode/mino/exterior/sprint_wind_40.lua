@@ -9,10 +9,11 @@ return {
         playBgm('race','base')
     end,
     settings={mino={
-        dropDelay=260,
+        dropDelay=20,
+        lockDelay=2600,
         das=126,
         arr=26,
-        frechCount=30,
+        freshCount=1e99,
         event={
             playerInit=function(P)
                 P.modeData.line=0
@@ -37,9 +38,6 @@ return {
                     end
                     md.windCounter=md.windCounter-MATH.sign(md.windCounter)*62000
                 end
-            end,
-            afterLock=function(P)
-                P.settings.dropDelay=math.max(P.settings.dropDelay-2,100)
             end,
             afterClear=function(P,movement)
                 local md=P.modeData
