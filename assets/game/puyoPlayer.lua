@@ -1202,6 +1202,7 @@ local baseEnv={
     skin='puyo_jelly',
 
     shakeness=.26,
+    inputDelay=0,
 }
 local seqGenerators={
     none=function() while true do coroutine.yield() end end,
@@ -1268,11 +1269,12 @@ function PP.new()
         drawInField={},
         drawOnPlayer={},
     }
+    self.soundEvent=setmetatable({},soundEventMeta)
 
     return self
 end
 function PP:initialize()
-    self.soundEvent=setmetatable({},soundEventMeta)
+    self.buffedKey={}
     self.modeData={}
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 

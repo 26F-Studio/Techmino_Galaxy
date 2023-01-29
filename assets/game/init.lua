@@ -270,17 +270,17 @@ end
 
 function GAME.press(action,id)
     if id then
-        GAME.playerMap[id]:press(action)
+        GAME.playerMap[id]:pressKey(action)
     elseif GAME.mainPlayer then
-        GAME.mainPlayer:press(action)
+        GAME.mainPlayer:pressKey(action)
     end
 end
 
 function GAME.release(action,id)
     if id then
-        GAME.playerMap[id]:release(action)
+        GAME.playerMap[id]:releaseKey(action)
     elseif GAME.mainPlayer then
-        GAME.mainPlayer:release(action)
+        GAME.mainPlayer:releaseKey(action)
     end
 end
 

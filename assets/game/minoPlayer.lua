@@ -1653,6 +1653,7 @@ local baseEnv={
     skin='mino_plastic',
 
     shakeness=.26,
+    inputDelay=0,
 }
 local seqGenerators={
     none=function() while true do coroutine.yield() end end,
@@ -1775,6 +1776,7 @@ function MP.new()
     return self
 end
 function MP:initialize()
+    self.buffedKey={}
     self.modeData={}
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 

@@ -1,4 +1,4 @@
-local max,min=math.max,math.min
+local min=math.min
 local floor,ceil=math.floor,math.ceil
 local abs=math.abs
 local ins=table.insert
@@ -138,22 +138,38 @@ function P:finish(reason)
 end
 --------------------------------------------------------------
 -- Press & Release & Update & Render
+function P:pressKey(act)
+    if self.settings.inputDelay<=0 then
+        self:press(act)
+    else
+        table.insert(self.buffedKey,{event='press',act=act,time=self.settings.inputDelay})
+    end
+end
+function P:releaseKey(act)
+    if self.settings.inputDelay<=0 then
+        self:release(act)
+    else
+        table.insert(self.buffedKey,{event='release',act=act,time=self.settings.inputDelay})
+    end
+end
 function P:press(act)
     self:triggerEvent('beforePress',act)
 
-    if not self.actions[act] or self.keyState[act] then return end
-    self.keyState[act]=true
-    ins(self.actionHistory,{0,self.time,act})
-    self.actions[act].press(self)
+    if self.actions[act] and not self.keyState[act] then
+        self.keyState[act]=true
+        ins(self.actionHistory,{0,self.time,act})
+        self.actions[act].press(self)
+    end
 
     self:triggerEvent('afterPress',act)
 end
 function P:release(act)
     self:triggerEvent('beforeRelease',act)
-    if not self.actions[act] or not self.keyState[act] then return end
-    self.keyState[act]=false
-    ins(self.actionHistory,{1,self.time,act})
-    self.actions[act].release(self)
+    if self.actions[act] and self.keyState[act] then
+        self.keyState[act]=false
+        ins(self.actionHistory,{1,self.time,act})
+        self.actions[act].release(self)
+    end
     self:triggerEvent('afterRelease',act)
 end
 local _jmpOP={
@@ -224,6 +240,21 @@ function P:update(dt)
     self.realTime=self.realTime+dt
 
     for _=1,df do
+        -- Simulate input-delay
+        for k,obj in next,self.buffedKey do
+            obj.time=obj.time-1
+            if obj.time<=0 then
+                if obj.event=='press' then
+                    self:press(obj.act)
+                elseif obj.event=='release' then
+                    self:release(obj.act)
+                else
+                    error("?")
+                end
+                self.buffedKey[k]=nil
+            end
+        end
+
         -- Script
         if self.script then
             local loopCount=0

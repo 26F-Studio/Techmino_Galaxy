@@ -1017,6 +1017,7 @@ local baseEnv={
     skin='gem_template',
 
     shakeness=.26,
+    inputDelay=0,
 }
 local soundTimeMeta={
     __index=function(self,k) rawset(self,k,0) return -1e99 end,
@@ -1056,11 +1057,12 @@ function GP.new()
         drawInField={},
         drawOnPlayer={},
     }
+    self.soundEvent=setmetatable({},soundEventMeta)
 
     return self
 end
 function GP:initialize()
-    self.soundEvent=setmetatable({},soundEventMeta)
+    self.buffedKey={}
     self.modeData={}
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 
