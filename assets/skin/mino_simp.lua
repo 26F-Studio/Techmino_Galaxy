@@ -19,7 +19,7 @@ function S.drawFieldBorder()
     gc_line(-201,-401,-201, 401,201, 401,201,-401)
 end
 
-function S.drawHeightLines(fieldW,spawnH,lockoutH,deathH,voidH)
+function S.drawHeightLines(fieldW,maxSpawnH,spawnH,lockoutH,deathH,voidH)
 end
 
 function S.drawDelayIndicator(color,value)

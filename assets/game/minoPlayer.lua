@@ -1469,11 +1469,12 @@ function MP:render()
 
         -- Height lines
         skin.drawHeightLines(-- All unit are pixel
-            settings.fieldW*40,  -- Field Width
-            settings.spawnH*40,  -- Spawning height
-            settings.lockoutH*40,-- Lock-out height
-            settings.deathH*40,  -- Death height
-            settings.voidH*40    -- Void height
+            settings.fieldW*40,   -- Field Width
+            settings.maxSpawnH*40,-- Max Spawning height
+            settings.spawnH*40,   -- Spawning height
+            settings.lockoutH*40, -- Lock-out height
+            settings.deathH*40,   -- Death height
+            settings.voidH*40     -- Void height
         )
 
 

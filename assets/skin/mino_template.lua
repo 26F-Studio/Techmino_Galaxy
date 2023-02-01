@@ -81,11 +81,12 @@ function S.drawFloatHold(n,B,handX,handY,unavailable)
     GC.mStr(n,(handX-1+#B[1]/2)*40,-(handY+#B/2)*40+5)
 end
 
-function S.drawHeightLines(fieldW,spawnH,lockoutH,deathH,voidH)
-    gc_setColor(.0,.4,1.,.8) gc_rectangle('fill',0,-spawnH  -1 ,fieldW,2 )
-    gc_setColor(1.,.5,.0,.6) gc_rectangle('fill',0,-lockoutH-1 ,fieldW,2 )
-    gc_setColor(1.,.0,.0,.6) gc_rectangle('fill',0,-deathH  -1 ,fieldW,2 )
-    gc_setColor(.0,.0,.0,.6) gc_rectangle('fill',0,-voidH   -40,fieldW,40)
+function S.drawHeightLines(fieldW,maxSpawnH,spawnH,lockoutH,deathH,voidH)
+    gc_setColor(.0,.4,1.,S.getTime()%600<300 and .3 or .5) gc_rectangle('fill',0,-maxSpawnH-1 ,fieldW,2)
+    gc_setColor(.0,.4,1.,.8) gc_rectangle('fill',0,-spawnH   -1 ,fieldW,2)
+    gc_setColor(1.,.5,.0,.6) gc_rectangle('fill',0,-lockoutH -1 ,fieldW,2)
+    gc_setColor(1.,.0,.0,.6) gc_rectangle('fill',0,-deathH   -1 ,fieldW,2)
+    gc_setColor(.0,.0,.0,.6) gc_rectangle('fill',0,-voidH    -40,fieldW,40)
 end
 
 function S.drawDelayIndicator(color,value)
