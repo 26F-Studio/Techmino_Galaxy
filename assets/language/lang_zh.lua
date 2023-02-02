@@ -175,7 +175,7 @@ return {
     -- Mode name
     exteriorModeInfo={
         marathon=              {"马拉松","在逐渐加速下消除200行"},
-        techrash_practice=     {"消四练习","做出更多的消四"},
+        techrash_hard=     {"消四练习","做出更多的消四"},
         classic_lo=            {"经典-慢","慢速经典玩法"},
         classic_hi=            {"经典-快","快速经典玩法"},
         lightspeed_lo=         {"光速-易","极限速度，较低难度用于练习"},

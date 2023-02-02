@@ -1,6 +1,10 @@
 local gc=love.graphics
-local tsdCharge=3
-local maxCharge=5
+local initPower=3
+local initSidePower=0
+local maxPower=6
+local maxSidePower=4
+local sidePowerRate=0.5
+local maxCharge=6
 
 local infoMeta={__index=function(self,k)
     self[k]={charge=0,charge1=0}
@@ -14,15 +18,15 @@ return {
         playBgm('way','simp')
     end,
     settings={mino={
-        spin_immobile=true,
-        spin_corners=3,
         event={
             playerInit=function(P)
-                P.modeData.tsd=0
-                P.modeData.tsdInfo=setmetatable({},infoMeta)
+                P.modeData.techrash=0
+                P.modeData.chargePower=initPower
+                P.modeData.sidePower=initSidePower
+                P.modeData.techrashInfo=setmetatable({},infoMeta)
             end,
             always=function(P)
-                for _,v in next,P.modeData.tsdInfo do
+                for _,v in next,P.modeData.techrashInfo do
                     if v.charge1~=v.charge then
                         if v.charge1<v.charge then
                             v.charge1=MATH.expApproach(v.charge1,v.charge,.00626)
@@ -36,27 +40,32 @@ return {
                 end
             end,
             afterClear=function(P,movement)
-                if P.hand.name=='T' and #movement.clear==2 and movement.action=='rotate' and (movement.corners or movement.immobile) then
-                    local list=P.modeData.tsdInfo
-                    local settings=P.settings
-                    local RS=minoRotSys[settings.rotSys]
-                    local minoData=RS[P.hand.shape]
-                    local state=minoData[P.hand.direction]
-                    local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(P)
-                    if centerPos then
-                        local x=P.handX+centerPos[1]-.5
-                        if list[x].charge>=maxCharge then
-                            list[x].dead=true
-                            P:finish('PE')
-                        else
-                            for k,v in next,list do
-                                if k~=x then
-                                    v.charge=math.max(v.charge-1,0)
-                                end
+                if P.hand.name=='I' and #movement.clear==4 then
+                    local list=P.modeData.techrashInfo
+                    local x=P.handX
+                    if list[x].charge>=maxCharge then
+                        list[x].dead=true
+                        P:finish('PE')
+                    else
+                        for k,v in next,list do
+                            if k~=x then
+                                v.charge=math.max(v.charge-1,0)
                             end
-                            P.modeData.tsd=P.modeData.tsd+1
                         end
-                        list[x].charge=list[x].charge+tsdCharge
+                        P.modeData.techrash=P.modeData.techrash+1
+                    end
+                    list[x].charge=list[x].charge+P.modeData.chargePower
+                    list[x-1].charge=list[x-1].charge+math.floor(P.modeData.sidePower/2)
+                    list[x+1].charge=list[x+1].charge+math.floor(P.modeData.sidePower/2)
+
+                    local r1,r2=P.modeData.chargePower,P.modeData.sidePower/sidePowerRate
+                    if P.modeData.chargePower>=maxPower then r1=0 end
+                    if P.modeData.sidePower>=maxSidePower then r2=0 end
+                    if r1*r2>0 then r1,r2=r1>=r2 and 1 or 0,r2>=r1 and 1 or 0 end
+                    if r1>0 then
+                        P.modeData.sidePower=P.modeData.sidePower+1
+                    elseif r2>0 then
+                        P.modeData.chargePower=P.modeData.chargePower+1
                     end
                 else
                     P:finish('PE')
@@ -64,7 +73,7 @@ return {
             end,
             drawBelowMarks=function(P)
                 local t=love.timer.getTime()
-                for k,v in next,P.modeData.tsdInfo do
+                for k,v in next,P.modeData.techrashInfo do
                     if v.charge1>0 or v.dead then
                         local x=40*k-20
                         local chargeRate=v.charge1/maxCharge
@@ -94,9 +103,9 @@ return {
             drawOnPlayer=function(P)
                 gc.setColor(COLOR.L)
                 FONT.set(80)
-                GC.mStr(P.modeData.tsd,-300,-55)
+                GC.mStr(P.modeData.techrash,-300,-55)
                 FONT.set(30)
-                GC.mStr("TSD",-300,30)
+                GC.mStr("Techrash",-300,30)
             end,
         },
     }},
