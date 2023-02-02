@@ -223,7 +223,7 @@ local function _getActionObj(a)
             self.press(P)
         end})
     elseif type(a)=='table' then
-        assert(type(a.press)=='function' and type(a.release)=='function',"wtf why action do not contain func press() & func release()")
+        assert(type(a.press)=='function' and type(a.release)=='function',"WTF why action do not contain func press() & func release()")
         return setmetatable({
             press=a.press,
             release=a.release,
@@ -312,7 +312,7 @@ function GP:erasePosition(x,y,src)
                         end
                     end end
                 else
-                    error('Wrong destroy event mode')
+                    error("Wrong destroy event mode")
                 end
             end
             if g.generate then

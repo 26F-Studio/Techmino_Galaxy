@@ -57,7 +57,7 @@ function F:export_fumen()
     local str=''
 
     -- Anyone interested? I don't
-    error('Not implemented yet')
+    error("Not implemented yet")
 
     return str
 end

@@ -106,7 +106,7 @@ function minoRotSys._reflect(m)-- Only available for 4/2/1 state minoes
     elseif m2[0] then
         m2[0].R.test,m2[0].L.test,m2[0].F.test=minoRotSys._flipList(m2[0].L.test),minoRotSys._flipList(m2[0].R.test),minoRotSys._flipList(m2[0].F.test)
     else
-        error("wtf no minoData[0] to reflect")
+        error("WTF no minoData[0] to reflect")
     end
     return m2
 end

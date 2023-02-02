@@ -372,10 +372,10 @@ function MP:moveHand(action,a,b,c,d)
     elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
     else
-        error('WTF why action is '..tostring(action))
+        error("WTF why action is "..tostring(action))
     end
 
-    if self.handX%1~=0 or self.handY%1~=0 then error('EUREKA! Decimal position.') end
+    if self.handX%1~=0 or self.handY%1~=0 then error("EUREKA! Decimal position") end
 
     local movement={
         action=action,
@@ -776,7 +776,7 @@ function MP:rotate(dir,ifInit)
                 baseX=preState.center[1]-afterState.center[1]
                 baseY=preState.center[2]-afterState.center[2]
             else
-                error('Cannot get baseX/Y')
+                error("Cannot get baseX/Y")
             end
 
             for n=1,#kick.test do

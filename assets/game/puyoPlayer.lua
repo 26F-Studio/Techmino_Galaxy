@@ -222,7 +222,7 @@ local function _getActionObj(a)
             self.press(P)
         end})
     elseif type(a)=='table' then
-        assert(type(a.press)=='function' and type(a.release)=='function',"wtf why action do not contain func press() & func release()")
+        assert(type(a.press)=='function' and type(a.release)=='function',"WTF why action do not contain func press() & func release()")
         return setmetatable({
             press=a.press,
             release=a.release,
@@ -276,10 +276,10 @@ function PP:moveHand(action,a,b,c)
     elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
     else
-        error('wtf why action is '..tostring(action))
+        error("WTF why action is "..tostring(action))
     end
 
-    if self.handX%1~=0 or self.handY%1~=0 then error('EUREKA! Decimal position.') end
+    if self.handX%1~=0 or self.handY%1~=0 then error("EUREKA! Decimal position") end
 
     if action=='rotate' then
         self:playSound(c and 'initrotate' or 'rotate')
@@ -434,7 +434,7 @@ function PP:freshDelay(reason)-- reason can be 'move' or 'drop' or 'spawn'
             self.freshTimeRemain=self.settings.maxFreshTime
         end
     else
-        error("wtf why settings.freshCondition is "..tostring(self.settings.freshCondition))
+        error("WTF why settings.freshCondition is "..tostring(self.settings.freshCondition))
     end
 end
 function PP:freshNextQueue()
@@ -565,7 +565,7 @@ local PRS={
 }
 function PP:rotate(dir,ifInit)
     if not self.hand then return end
-    if dir~='R' and dir~='L' and dir~='F' then error("wtf why dir isn't R/L/F ("..tostring(dir)..")") end
+    if dir~='R' and dir~='L' and dir~='F' then error("WTF why dir isn't R/L/F ("..tostring(dir)..")") end
 
     -- Rotate matrix
     local cb=self.hand.matrix
