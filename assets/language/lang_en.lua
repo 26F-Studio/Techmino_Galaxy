@@ -175,7 +175,7 @@ return {
     -- Mode name
     exteriorModeInfo={
         marathon=              {"Marathon","Clear 200 lines with acceleration"},
-        techrash_hard=     {"Techrash Practice","Clear more Techrash as you can"},
+        techrash_hard=         {"Techrash Hard","Clear more Techrash as you can, but not too close"},
         classic_lo=            {"Classic LO","Classic game in low speed"},
         classic_hi=            {"Classic HI","Classic game in high speed"},
         lightspeed_lo=         {"Lightspeed LO","Light speed with low difficulty to practice"},
