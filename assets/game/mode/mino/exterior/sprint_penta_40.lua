@@ -6,7 +6,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('race','base')
+        playBgm('beat5th','base')
     end,
     settings={mino={
         seqType=function(P)
@@ -26,7 +26,7 @@ return {
                     P:finish('AC')
                 end
                 if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
-                    BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
+                    BGM.set(bgmList['beat5th'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
                 end
             end,
             drawInField=function(P)
