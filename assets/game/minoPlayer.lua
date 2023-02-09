@@ -509,20 +509,24 @@ function MP:resetPosCheck()
 end
 function MP:freshGhost()
     if self.hand then
-        self.ghostY=min(self.field:getHeight()+1,self.handY)
-
-        -- Move ghost to bottom
-        while not self:ifoverlap(self.hand.matrix,self.handX,self.ghostY-1) do
-            self.ghostY=self.ghostY-1
-        end
-
-        -- 20G check
-        if (self.settings.dropDelay<=0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then
-            self:moveHand('drop',self.ghostY-self.handY)
-            self:freshDelay('drop')
-            self:shakeBoard('-drop')
+        if self.deathTimer then
+            self.ghostY=self.handY
         else
-            self:freshDelay('move')
+            self.ghostY=min(self.field:getHeight()+1,self.handY)
+
+            -- Move ghost to bottom
+            while not self:ifoverlap(self.hand.matrix,self.handX,self.ghostY-1) do
+                self.ghostY=self.ghostY-1
+            end
+
+            -- 20G check
+            if (self.settings.dropDelay<=0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then
+                self:moveHand('drop',self.ghostY-self.handY)
+                self:freshDelay('drop')
+                self:shakeBoard('-drop')
+            else
+                self:freshDelay('move')
+            end
         end
     end
 end
