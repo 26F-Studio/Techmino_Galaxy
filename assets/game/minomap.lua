@@ -51,7 +51,7 @@ local modes={
     {pos={0,30,30},name='sprint_hide_40'},
     {pos={0,40,40},name='sprint_invis_40'},
     {pos={0,50,50},name='sprint_blind_40'},
-    {pos={0,10,30},name='sprint_big_100'},
+    {pos={0,10,30},name='sprint_big_80'},
     {pos={0,20,40},name='sprint_small_20'},
     {pos={0,10,40},name='sprint_low_40'},
     {pos={0,10,50},name='sprint_flip_40'},

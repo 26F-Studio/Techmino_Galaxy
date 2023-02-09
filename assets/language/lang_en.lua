@@ -223,7 +223,7 @@ return {
         sprint_hide_40=        {"Sprint 40 Hide","Clear 40 lines with disappearing field"},
         sprint_invis_40=       {"Sprint 40 Invis","Clear 40 lines with invisible field"},
         sprint_blind_40=       {"Sprint 40 Blind","Clear 40 lines with blindfold"},
-        sprint_big_100=        {"Sprint 100 Big","Clear 100 lines with big pieces"},
+        sprint_big_80=         {"Sprint 80 Big","Clear 80 lines with big pieces"},
         sprint_small_20=       {"Sprint 20 Small","Clear 20 lines with small pieces"},
         sprint_low_40=         {"Sprint 40 Low","Clear 40 lines with low field"},
         sprint_flip_40=        {"Sprint 40 Flip","Clear 40 lines with flipping field\nYou spin me right round, baby right round like a record, baby right round right round"},

@@ -1,6 +1,6 @@
 local gc=love.graphics
-local lineTarget=100
-local bgmTransBegin,bgmTransFinish=50,75
+local lineTarget=80
+local bgmTransBegin,bgmTransFinish=40,60
 
 return {
     initialize=function()
@@ -9,9 +9,9 @@ return {
         playBgm('race','base')
     end,
     settings={mino={
-        fieldW=5,
-        spawnH=10,
-        maxSpawnH=11,
+        fieldW=6,
+        spawnH=12,
+        maxSpawnH=13,
         event={
             playerInit=function(P)
                 P.modeData.line=0
