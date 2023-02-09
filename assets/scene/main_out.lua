@@ -26,8 +26,8 @@ function scene.draw()
     PROGRESS.drawExteriorHeader()
 
     -- Title with animation
-    GC.replaceTransform(SCR.xOy)
-    GC.translate(100,210)
+    GC.replaceTransform(SCR.xOy_m)
+    GC.translate(-700,-290)
     -- Techmino
     GC.setColor(1,1,1)
     GC.draw(IMG.title.techmino,-textOffset,0,nil,.55)
@@ -51,11 +51,11 @@ scene.widgetList={
     WIDGET.new{type='button_invis',pos={1,0},x=-700,y=60,w=80,cornerR=20,fontSize=65,text=CHAR.icon.music,     sound='move',code=WIDGET.c_goScn('musicroom','fadeHeader')},
     WIDGET.new{type='button_invis',pos={1,0},x=-850,y=60,w=80,cornerR=20,fontSize=65,text=CHAR.icon.language,  sound='move',code=WIDGET.c_goScn('lang_out','fadeHeader')},
 
-    WIDGET.new{type='button',   x=325,  y=580,w=530,h=100,text=function() return CHAR.icon.person    ..' '..Text.main_out_single    end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('positioning','fadeHeader')},
-    WIDGET.new{type='button',   x=895,  y=580,w=530,h=100,text=function() return CHAR.icon.people    ..' '..Text.main_out_multi     end, fontSize=40,cornerR=26,color='lD',sound=false},
+    WIDGET.new{type='button', pos={.5,.5},x=-475,y=80, w=530,h=100,text=function() return CHAR.icon.person    ..' '..Text.main_out_single    end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('positioning','fadeHeader')},
+    WIDGET.new{type='button', pos={.5,.5},x=95,  y=80, w=530,h=100,text=function() return CHAR.icon.people    ..' '..Text.main_out_multi     end, fontSize=40,cornerR=26,color='lD',sound=false},
 
-    WIDGET.new{type='button',   x=230,  y=720,w=340,h=100,text=function() return CHAR.icon.settings  ..' '..Text.main_out_settings  end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('setting_out','fadeHeader')},
-    WIDGET.new{type='button',   x=610,  y=720,w=340,h=100,text=function() return CHAR.icon.statistics..' '..Text.main_out_stat      end, fontSize=40,cornerR=26,color='lD',sound=false},
-    WIDGET.new{type='button',   x=990,  y=720,w=340,h=100,text=function() return CHAR.icon.zictionary..' '..Text.main_out_dict      end, fontSize=40,cornerR=26,color='lD',sound=false},
+    WIDGET.new{type='button', pos={.5,.5},x=-570,y=220,w=340,h=100,text=function() return CHAR.icon.settings  ..' '..Text.main_out_settings  end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('setting_out','fadeHeader')},
+    WIDGET.new{type='button', pos={.5,.5},x=-190,y=220,w=340,h=100,text=function() return CHAR.icon.statistics..' '..Text.main_out_stat      end, fontSize=40,cornerR=26,color='lD',sound=false},
+    WIDGET.new{type='button', pos={.5,.5},x=190, y=220,w=340,h=100,text=function() return CHAR.icon.zictionary..' '..Text.main_out_dict      end, fontSize=40,cornerR=26,color='lD',sound=false},
 }
 return scene
