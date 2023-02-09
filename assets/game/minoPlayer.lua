@@ -729,14 +729,14 @@ end
 function MP:moveLeft()
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
         self:moveHand('moveX',-1)
-        self:freshGhost(self.deathTimer)
+        self:freshGhost()
         return true
     end
 end
 function MP:moveRight()
     if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
         self:moveHand('moveX',1)
-        self:freshGhost(self.deathTimer)
+        self:freshGhost()
         return true
     end
 end
@@ -785,7 +785,7 @@ function MP:rotate(dir,ifInit)
                     self.hand.matrix=icb
                     self.hand.direction=kick.target
                     self:moveHand('rotate',ix,iy,dir,ifInit)
-                    self:freshGhost(self.deathTimer)
+                    self:freshGhost()
                     return
                 end
             end
@@ -1042,8 +1042,8 @@ function MP:riseGarbage(holePos)
     -- Update hand position (if exist)
     if self.hand then
         self.handY=self.handY+1
-        self.ghostY=self.ghostY+1
         self.minY=self.minY+1
+        self:freshGhost()
     end
 end
 --[[ arg table={
