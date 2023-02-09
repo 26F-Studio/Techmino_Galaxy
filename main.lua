@@ -232,7 +232,11 @@ DEBUG.checkLoadTime("Load Zenitha resources")
 --------------------------------------------------------------
 -- Load saving data
 TABLE.coverR(FILE.load('conf/settings','-json -canskip') or {},SETTINGS)
-for k,v in next,SETTINGS._system do SETTINGS._system[k]=nil SETTINGS.system[k]=v end
+for k,v in next,SETTINGS._system do SETTINGS._system[k]=nil SETTINGS.system[k]=v end-- Gurantee triggering all setting-triggers
+if SETTINGS.system.portrait then-- Brute fullscreen config
+    SCR.setSize(1600,2560)
+    SCR.resize(love.graphics.getWidth(),love.graphics.getHeight())
+end
 PROGRESS.load()
 MINOMAP:loadUnlocked(PROGRESS.getMinoModeUnlocked())
 VCTRL.importSettings(FILE.load('conf/touch','-json -canskip'))
