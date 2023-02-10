@@ -28,8 +28,8 @@ return {
                 table.sort(P.modeData.invertTimes)
             end,
             always=function(P)
-                local md=P.modeData
                 if not P.timing then return end
+                local md=P.modeData
                 md.windStrength=md.windStrength+MATH.sign(md.windTargetStrength-md.windStrength)
                 md.windCounter=md.windCounter+md.windStrength
                 if math.abs(md.windCounter)>=62000 then

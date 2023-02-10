@@ -92,8 +92,8 @@ local bridgeLinks={
     'sprint_mph_40 - sprint_wind_40 - sprint_fix_20',
     'sprint_mph_40 - sprint_delay_20',
     'sprint_40 - sprint_hide_40 - sprint_invis_40 - sprint_blind_40',
-    'sprint_40 - sprint_big_100 - sprint_small_20',
-    'sprint_big_100 - sprint_low_40 - sprint_flip_40 - sprint_dizzy_40',
+    'sprint_40 - sprint_big_80 - sprint_small_20',
+    'sprint_big_80 - sprint_low_40 - sprint_flip_40 - sprint_dizzy_40',
     'sprint_low_40 - sprint_float_40 - sprint_randctrl_40',
 }
 local bridges={}
