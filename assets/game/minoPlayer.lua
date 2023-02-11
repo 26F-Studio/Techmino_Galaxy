@@ -921,28 +921,26 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     local atk=GAME.initAtk(minoAtkSys[self.settings.atkSys].drop(self))
     if atk then
         self:triggerEvent('beforeCancel',atk)
-    end
-    if atk and self.settings.allowCancel then
-        while atk and self.garbageBuffer[1] do
-            local ap=atk.power*(atk.cancelRate or 1)
-            local gbg=self.garbageBuffer[1]
-            local gp=gbg.power*(gbg.defendRate or 1)
-            local cancel=math.min(ap,gp)
-            ap=ap-cancel
-            gp=gp-cancel
-            if gp==0 then
-                atk.power=math.floor(ap/(atk.cancelRate or 1)+.5)
-                rem(self.garbageBuffer,1)
-            else
-                gbg.power=math.floor(gp/(gbg.defendRate or 1)+.5)
-            end
-            if ap==0 then
-                atk=nil
-                break
+        if self.settings.allowCancel then
+            while atk and self.garbageBuffer[1] do
+                local ap=atk.power*(atk.cancelRate or 1)
+                local gbg=self.garbageBuffer[1]
+                local gp=gbg.power*(gbg.defendRate or 1)
+                local cancel=math.min(ap,gp)
+                ap=ap-cancel
+                gp=gp-cancel
+                if gp==0 then
+                    atk.power=math.floor(ap/(atk.cancelRate or 1)+.5)
+                    rem(self.garbageBuffer,1)
+                else
+                    gbg.power=math.floor(gp/(gbg.defendRate or 1)+.5)
+                end
+                if ap==0 then
+                    atk=nil
+                    break
+                end
             end
         end
-    end
-    if atk then
         self:triggerEvent('beforeSend',atk)
         GAME.send(self,atk)
         if self.finished then return end
@@ -965,10 +963,12 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
             local g=self.garbageBuffer[i]
             if not g then break end
             if g.time==g.time0 then
-                local r=self.rcvRND:random(10)
+                -- TODO: apply more garbage args
+                local r=self.seqRND:random(10)
                 for _=1,g.power do
                     self:riseGarbage(r)
                 end
+
                 rem(self.garbageBuffer,i)
                 i=i-1-- Avoid index error
             elseif g.mode==1 then

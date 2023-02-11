@@ -155,7 +155,7 @@ local GAME={
     seed=false,
     mode=false,
 
-    mainPID=false,
+    mainID=false,
     mainPlayer=false,
 }
 
@@ -224,11 +224,11 @@ end
 function GAME.setMain(id)
     if GAME.mainPlayer then
         GAME.playerMap[GAME.mainPlayer].isMain=false
-        GAME.mainPID=false
+        GAME.mainID=false
         GAME.mainPlayer=false
     end
     if GAME.playerMap[id] then
-        GAME.mainPID=id
+        GAME.mainID=id
         GAME.mainPlayer=GAME.playerMap[id]
         GAME.mainPlayer.isMain=true
         GAME.mainPlayer.sound=true
@@ -325,17 +325,18 @@ function GAME.send(source,data)
     -- Find target
     if data.target==nil then
         local l=GAME.playerList
+        local sourceGroup=source and source.group or 0
         if #l>1 then
             local count=0
             for i=1,#l do
-                if source.group==0 and l[i]~=source or source.group~=l[i].group then
+                if sourceGroup==0 and l[i]~=source or sourceGroup~=l[i].group then
                     count=count+1
                 end
             end
             if count>0 then
                 count=math.random(count)
                 for i=1,#l do
-                    if source.group==0 and l[i]~=source or source.group~=l[i].group then
+                    if sourceGroup==0 and l[i]~=source or sourceGroup~=l[i].group then
                         count=count-1
                         if count==0 then
                             data.target=l[i]
