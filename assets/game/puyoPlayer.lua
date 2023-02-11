@@ -761,7 +761,7 @@ function PP:dropGarbage(count)
     local F=self.field
     local w=F:getWidth()
     for _=1,count do
-        local x=self.rcvRND:random(w)
+        local x=self.seqRND:random(w)
         local y=self.settings.spawnH+1
         while F:getCell(x,y) do y=y+1 end
         F:setCell({
@@ -1278,8 +1278,7 @@ function PP:initialize()
     self.modeData={}
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 
-    self.rcvRND=love.math.newRandomGenerator(GAME.seed+434)
-    self.seqRND=love.math.newRandomGenerator(GAME.seed+231)
+    self.seqRND=love.math.newRandomGenerator(GAME.seed+626)
 
     self.pos={
         x=0,y=0,k=1,a=0,

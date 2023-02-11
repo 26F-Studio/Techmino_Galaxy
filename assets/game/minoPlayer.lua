@@ -1786,8 +1786,7 @@ function MP:initialize()
     self.modeData={}
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 
-    self.rcvRND=love.math.newRandomGenerator(GAME.seed+434)
-    self.seqRND=love.math.newRandomGenerator(GAME.seed+231)
+    self.seqRND=love.math.newRandomGenerator(GAME.seed+626)
 
     self.pos={
         x=0,y=0,k=1,a=0,
