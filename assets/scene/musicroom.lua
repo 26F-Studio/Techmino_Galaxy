@@ -51,6 +51,12 @@ local musicListBox do
     end
     musicListBox=WIDGET.new(musicListBox)
 end
+local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1400,
+    disp=function() return BGM.tell()/BGM.getDuration()%1 end,
+    code=function(v) BGM.set('all','seek',v*BGM.getDuration()) end,
+    visibleFunc=function() return BGM.isPlaying() end,
+}
+
 
 local scene={}
 
@@ -98,10 +104,11 @@ function scene.keyDown(key,isRep)
     elseif not isRep then
         if key=='space' then
             if BGM.isPlaying() then
-                BGM.stop()
+                BGM.stop(.26)
             else
                 playBgm(selected,fullband and 'full' or 'base','',noProgress)
             end
+            progressBar:reset()
         elseif key=='tab' then
             local w=scene.widgetList.fullband
             if w._visible then
@@ -168,17 +175,11 @@ scene.widgetList={
     WIDGET.new{type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'title_musicroom'},
 
     musicListBox,
-
-    -- Time bar
-    WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1400,
-        disp=function() return BGM.tell()/BGM.getDuration()%1 end,
-        code=function(v) BGM.set('all','seek',v*BGM.getDuration()) end,
-        visibleFunc=function() return BGM.isPlaying() end,
-    },
+    progressBar,
 
     -- Play/Stop
-    WIDGET.new{type='button_invis',pos={.5,.5},y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=function() playBgm(selected,fullband and 'full' or 'base','',noProgress) end,visibleFunc=function() return not BGM.isPlaying() end},
-    WIDGET.new{type='button_invis',pos={.5,.5},y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=function() BGM.stop() end,visibleFunc=function() return BGM.isPlaying() end},
+    WIDGET.new{type='button_invis',pos={.5,.5},y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=WIDGET.c_pressKey'space',visibleFunc=function() return not BGM.isPlaying() end},
+    WIDGET.new{type='button_invis',pos={.5,.5},y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleFunc=function() return BGM.isPlaying() end},
 
     -- Fullband Switch
     WIDGET.new{type='switch',pos={0,.5},x=150,y=360,h=50,labelPos='right',disp=function() return fullband end,
