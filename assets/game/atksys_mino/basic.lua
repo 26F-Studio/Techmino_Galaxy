@@ -1,7 +1,7 @@
 return {
     drop=function(self)
         if self.lastMovement.clear then
-            local lines=#self.lastMovement.clear.line
+            local lines=#self.lastMovement.clear
             self.texts:add{
                 text=Text.clearName[lines] or ('['..lines..']'),
                 a=.626,
