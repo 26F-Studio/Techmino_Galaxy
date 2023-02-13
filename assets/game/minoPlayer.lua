@@ -966,7 +966,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                 -- Apply attacking args
                 local holePos={}
                 local F=self.field
-                local weights=TABLE.new(.06,self.settings.fieldW)
+                local weights=TABLE.new(.03,self.settings.fieldW)
 
                 -- Calculate hole count and splitting probabality
                 local count=1+max((g.fatal-50)/20,0)
@@ -1001,13 +1001,19 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                         -- Height-Score rate: 2 → 1x, 3 → 1.5x, 4(max) → 2x
                         weights[x]=weights[x]+copyRate*y/2
                     end
-                    weights[x]=MATH.clamp(weights[x],.06,1)
+                    weights[x]=MATH.clamp(weights[x],.03,1)
                 end
 
                 -- Pick hole position
                 for _=1,count do
                     local sum=0
                     for i=1,#weights do sum=sum+weights[i] end
+
+                    -- local str=""
+                    -- for i=1,#weights do
+                    --     str=str..string.format("%03d",weights[i]*100).." "
+                    -- end
+                    -- print(str)
 
                     local r=sum*self.seqRND:random()
                     if sum>0 then
@@ -1018,9 +1024,9 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                                 break
                             end
                         end
-                        weights[r]=.06
-                        if r>1        and weights[r-1]>.06 then weights[r-1]=max(weights[r-1]-splitRate,.06) end
-                        if r<#weights and weights[r+1]>.06 then weights[r+1]=max(weights[r+1]-splitRate,.06) end
+                        weights[r]=.03
+                        if r>1        and weights[r-1]>.03 then weights[r-1]=max(weights[r-1]-splitRate,.03) end
+                        if r<#weights and weights[r+1]>.03 then weights[r+1]=max(weights[r+1]-splitRate,.03) end
                     else
                         error("WTF why sum of weights is 0")
                     end
