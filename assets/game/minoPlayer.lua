@@ -931,8 +931,11 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                 if gp==0 then
                     atk.power=floor(ap/(atk.cancelRate or 1)+.5)
                     rem(self.garbageBuffer,1)
+                    self.garbageSum=self.garbageSum-gbg.power
                 else
-                    gbg.power=floor(gp/(gbg.defendRate or 1)+.5)
+                    local newPow=floor(gp/(gbg.defendRate or 1)+.5)
+                    self.garbageSum=self.garbageSum+newPow-gbg.power
+                    gbg.power=newPow
                 end
                 if ap==0 then
                     atk=nil
@@ -1041,6 +1044,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                 end
 
                 rem(self.garbageBuffer,iBuffer)
+                self.garbageSum=self.garbageSum-g.power
                 iBuffer=iBuffer-1-- Avoid index error
             elseif g.mode==1 then
                 g.time=g.time+1
@@ -1269,6 +1273,7 @@ function MP:receive(data)
         speed=data.speed,
     }
     ins(self.garbageBuffer,B)
+    self.garbageSum=self.garbageSum+data.power
 end
 function MP:getScriptValue(arg)
     return
@@ -1881,6 +1886,7 @@ function MP:initialize()
 
     self:changeAtkSys(self.settings.atkSys)
     self.garbageBuffer={}
+    self.garbageSum=0
 
     self.nextQueue={}
     self.seqGen=coroutine.wrap(
@@ -1924,8 +1930,21 @@ function MP:initialize()
         hold=false,
         hardDrop=false,
     }
-    self.dropHistory={}
-    self.clearHistory={}
+    self.dropHistory={
+        --[[
+            int id,
+            int x,y,direction,
+            int time,
+        ]]
+    }
+    self.clearHistory={
+        --[[
+            int combo,
+            int line,
+            int[] lines,
+            int time,
+        ]]
+    }
     self.texts=TEXT.new()
 
     -- Generate available actions
