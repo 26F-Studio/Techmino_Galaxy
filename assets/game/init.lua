@@ -290,8 +290,8 @@ end
     defendRate (0~∞,  default to 1)
     mode       (0~1,   default to 0, 0: trigger by time, 1:trigger by step)
     time       (0~∞,  default to 0, seconds)
-    fatal      (0~100, default to 50, percentage)
-    speed      (0~100, default to 50, percentage)
+    fatal      (0~100, default to 30, percentage)
+    speed      (0~100, default to 30, percentage)
 ]]
 function GAME.initAtk(atk)-- Normalize the attack object
     if not atk then return end
@@ -311,11 +311,11 @@ function GAME.initAtk(atk)-- Normalize the attack object
         assert(type(atk.time)=='number' and atk.time>=0,"time not non-negative number")
         if atk.mode==1 then atk.time=math.floor(atk.time) end
     end
-    if atk.fatal==nil then atk.fatal=50 else
+    if atk.fatal==nil then atk.fatal=30 else
         assert(type(atk.fatal)=='number',"fatal not number")
         atk.fatal=MATH.clamp(atk.fatal,0,100)
     end
-    if atk.speed==nil then atk.speed=50 else
+    if atk.speed==nil then atk.speed=30 else
         assert(type(atk.speed)=='number',"speed not number")
         atk.speed=MATH.clamp(atk.speed,0,100)
     end

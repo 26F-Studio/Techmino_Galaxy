@@ -1,8 +1,7 @@
 local gc=love.graphics
 
-local max,min=math.max,math.min
+local max,min,rnd=math.max,math.min,math.random
 local floor,ceil=math.floor,math.ceil
-local rnd=math.random
 local ins,rem=table.insert,table.remove
 
 local inst=SFX.playSample
@@ -926,14 +925,14 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                 local ap=atk.power*(atk.cancelRate or 1)
                 local gbg=self.garbageBuffer[1]
                 local gp=gbg.power*(gbg.defendRate or 1)
-                local cancel=math.min(ap,gp)
+                local cancel=min(ap,gp)
                 ap=ap-cancel
                 gp=gp-cancel
                 if gp==0 then
-                    atk.power=math.floor(ap/(atk.cancelRate or 1)+.5)
+                    atk.power=floor(ap/(atk.cancelRate or 1)+.5)
                     rem(self.garbageBuffer,1)
                 else
-                    gbg.power=math.floor(gp/(gbg.defendRate or 1)+.5)
+                    gbg.power=floor(gp/(gbg.defendRate or 1)+.5)
                 end
                 if ap==0 then
                     atk=nil
@@ -958,23 +957,87 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
 
     -- Update & Release garbage
     if not (self.settings.clearStuck and lineClear) then
-        local i=1
+        local iBuffer=1
         while true do
-            local g=self.garbageBuffer[i]
+            local g=self.garbageBuffer[iBuffer]
             if not g then break end
             if g.time==g.time0 then
-                -- TODO: apply more garbage args
-                local r=self.seqRND:random(10)
-                for _=1,g.power do
-                    self:riseGarbage(r)
+                -- TODO: 'speed' not applied
+                -- Apply attacking args
+                local holePos={}
+                local F=self.field
+                local weights=TABLE.new(.06,self.settings.fieldW)
+
+                -- Calculate hole count and splitting probabality
+                local count=1+max((g.fatal-50)/20,0)
+                local splitRate=0
+                if count~=floor(count) then
+                    if self.seqRND:random()>count%1 then
+                        splitRate=count%1/2
+                        count=floor(count)
+                    else
+                        splitRate=-(count%1/2)
+                        count=ceil(count)
+                    end
                 end
 
-                rem(self.garbageBuffer,i)
-                i=i-1-- Avoid index error
+                local copyRate=1-g.fatal/40
+                local sandwichRate=(g.fatal-20)/120
+
+                -- Check bottom state of every column and calculate weight
+                for x=1,#weights do
+                    if F:getCell(x,1) then
+                        if not F:getCell(x,2) then
+                            weights[x]=weights[x]+sandwichRate
+                        elseif not F:getCell(x,3) then
+                            weights[x]=weights[x]+sandwichRate/2
+                        end
+                    else
+                        -- Find solid height
+                        local y=2
+                        while y<4 and not F:getCell(x,y) do
+                            y=y+1
+                        end
+                        -- Height-Score rate: 2 → 1x, 3 → 1.5x, 4(max) → 2x
+                        weights[x]=weights[x]+copyRate*y/2
+                    end
+                    weights[x]=MATH.clamp(weights[x],.06,1)
+                end
+
+                -- Pick hole position
+                for _=1,count do
+                    local sum=0
+                    for i=1,#weights do sum=sum+weights[i] end
+
+                    local r=sum*self.seqRND:random()
+                    if sum>0 then
+                        for i=1,#weights do
+                            r=r-weights[i]
+                            if r<=0 then
+                                r=i
+                                break
+                            end
+                        end
+                        weights[r]=.06
+                        if r>1        and weights[r-1]>.06 then weights[r-1]=max(weights[r-1]-splitRate,.06) end
+                        if r<#weights and weights[r+1]>.06 then weights[r+1]=max(weights[r+1]-splitRate,.06) end
+                    else
+                        error("WTF why sum of weights is 0")
+                    end
+                    ins(holePos,r)
+                end
+
+                -- Final pushing up
+                for _=1,g.power do
+                    self:riseGarbage(holePos)
+                end
+
+                rem(self.garbageBuffer,iBuffer)
+                iBuffer=iBuffer-1-- Avoid index error
             elseif g.mode==1 then
                 g.time=g.time+1
             end
-            i=i+1
+            iBuffer=iBuffer+1
         end
     end
 
@@ -1192,7 +1255,7 @@ function MP:receive(data)
     local B={
         power=data.power,
         mode=data.mode,
-        time0=math.floor(data.time*1000+.5),
+        time0=floor(data.time*1000+.5),
         time=0,
         fatal=data.fatal,
         speed=data.speed,
@@ -1361,7 +1424,7 @@ function MP:updateFrame()
         if C and  C.visibleTimer then
             C.visibleTimer=C.visibleTimer-1
             if C.visibleTimer>0 then
-                C.alpha=math.min(C.visibleTimer/C.disappearTime,1)
+                C.alpha=min(C.visibleTimer/C.disappearTime,1)
             else-- Set to invisible, remove timers
                 C.alpha=0
                 C.visibleTimer=nil
@@ -1437,7 +1500,7 @@ function MP:render()
                     -- Smooth
                     local movingX,droppingY=0,0
                     if self.moveDir and self.moveCharge<self.settings.das then
-                        movingX=15*self.moveDir*(math.max(self.moveCharge,0)/self.settings.das-.5)
+                        movingX=15*self.moveDir*(max(self.moveCharge,0)/self.settings.das-.5)
                     end
                     if self.handY>self.ghostY then
                         droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
