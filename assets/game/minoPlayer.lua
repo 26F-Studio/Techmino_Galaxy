@@ -940,8 +940,10 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                 end
             end
         end
-        self:triggerEvent('beforeSend',atk)
-        GAME.send(self,atk)
+        if atk then
+            self:triggerEvent('beforeSend',atk)
+            GAME.send(self,atk)
+        end
         if self.finished then return end
     end
 
