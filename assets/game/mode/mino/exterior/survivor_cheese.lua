@@ -22,6 +22,7 @@ return {
         event={
             playerInit=function(P)
                 local md=P.modeData
+                md.waveTimer0=3000
                 md.waveTimer=0
                 md.wave=0
             end,
@@ -35,14 +36,16 @@ return {
                     md.wave=md.wave+1
 
                     local wave=md.wave
-                    md.waveTimer=
-                        wave<=100 and MATH.interpolate(wave,0,3000,100,1000) or
-                        wave<=200 and MATH.interpolate(wave,100,1000,200,2000) or
-                        2000-(wave-200)*10
+                    md.waveTimer0=math.floor(
+                        wave<=80 and MATH.interpolate(wave,0,3000,80,2000) or
+                        wave<=150 and MATH.interpolate(wave,80,2000,150,2500) or
+                        math.max(2000-(wave-150)*10,1000)
+                    )
+                    md.waveTimer=md.waveTimer0
                     GAME.send(nil,GAME.initAtk{
                         target=GAME.mainID,
                         power=P.seqRND:random(0,10)+P.seqRND:random(-5,5)>=P.field:getHeight() and 2 or 1,
-                        defendRate=3,
+                        defendRate=wave<60 and 2 or 3,
                         mode=0,
                         time=wave<50 and 100000/(50+wave)-1000 or 0,
                         fatal=MATH.clamp(
@@ -67,6 +70,15 @@ return {
                 GC.mStr(P.modeData.wave,-300,-55)
                 FONT.set(30)
                 GC.mStr("Waves",-300,30)
+
+                local cd=P.modeData.waveTimer/P.modeData.waveTimer0
+                GC.setLineWidth(10)
+                GC.setColor(COLOR.DL)
+                GC.arc('line','open',-300,130,40,-MATH.pi*.5,cd*MATH.tau-MATH.pi*.5)
+                GC.setLineWidth(3)
+                GC.setColor(COLOR.lD)
+                GC.circle('line',-300,130,32)
+                GC.circle('line',-300,130,48)
             end,
         },
     }},
