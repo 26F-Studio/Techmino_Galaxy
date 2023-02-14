@@ -834,8 +834,10 @@ end
 function PP:receive(data)
     local B={
         power=data.power,
+        cancelRate=data.cancelRate,
+        defendRate=data.defendRate,
         mode=data.mode,
-        time0=math.floor(data.time*1000+.5),
+        time0=floor(data.time+.5),
         time=0,
         fatal=data.fatal,
         speed=data.speed,
