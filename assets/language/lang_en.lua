@@ -111,8 +111,8 @@ return {
     -- Widget texts
     button_back="Back",
 
-    title_positioning="Positioning",
-    title_mode_mino="Graph",-- Traslating note: from "Knowledge Graph" from AI domain
+    title_simulation="Simulations",
+    title_graph_mino="M-Graph",-- Traslation warning: from "Knowledge Graph" (AI domain)
     title_settings="Settings",
 
     setting_das="DAS",
@@ -177,8 +177,6 @@ return {
         marathon=              {"Marathon","Clear 200 lines with acceleration"},
         techrash_easy=         {"Techrash Easy","Clear more Techrash as you can"},
         techrash_hard=         {"Techrash Hard","Clear more Techrash as you can, but not too close"},
-        classic_lo=            {"Classic LO","Classic game in low speed"},
-        classic_hi=            {"Classic HI","Classic game in high speed"},
         lightspeed_lo=         {"Lightspeed LO","Light speed with low difficulty to practice"},
         lightspeed_hi=         {"Lightspeed HI","Light speed challenging high difficulty"},
         lightspeed_ti=         {"Lightspeed TI","Light speed\nTerror Instinct"},

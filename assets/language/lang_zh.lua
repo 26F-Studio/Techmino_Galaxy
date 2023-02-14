@@ -111,8 +111,8 @@ return {
     -- Widget texts
     button_back="返回",
 
-    title_positioning="定位",
-    title_mode_mino="图谱",-- 翻译注意：取自人工智能领域的“知识图谱”
+    title_simulation="模拟",
+    title_graph_mino="M-图谱",-- 翻译注意：取自“知识图谱”(人工智能领域)
     title_settings="设置",
 
     setting_das="DAS",
@@ -177,8 +177,6 @@ return {
         marathon=              {"马拉松","在逐渐加速下消除200行"},
         techrash_easy=         {"消四-简单","做出更多的消四"},
         techrash_hard=         {"消四-困难","做出更多的消四，但不能靠太近"},
-        classic_lo=            {"经典-慢","慢速经典玩法"},
-        classic_hi=            {"经典-快","快速经典玩法"},
         lightspeed_lo=         {"光速-易","极限速度，较低难度用于练习"},
         lightspeed_hi=         {"光速-难","极限速度，有挑战性的较高难度"},
         lightspeed_ti=         {"光速-钛","极限速度\n恐怖本能"},
