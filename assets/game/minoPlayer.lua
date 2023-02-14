@@ -928,14 +928,14 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                 local cancel=min(ap,gp)
                 ap=ap-cancel
                 gp=gp-cancel
-                if gp==0 then
-                    atk.power=floor(ap/(atk.cancelRate or 1)+.5)
-                    rem(self.garbageBuffer,1)
+                local newGP=floor(gp/(gbg.defendRate or 1)+.5)
+                if newGP==0 then
+                    atk.power=ap/(atk.cancelRate or 1)
                     self.garbageSum=self.garbageSum-gbg.power
+                    rem(self.garbageBuffer,1)
                 else
-                    local newPow=floor(gp/(gbg.defendRate or 1)+.5)
-                    self.garbageSum=self.garbageSum+newPow-gbg.power
-                    gbg.power=newPow
+                    self.garbageSum=self.garbageSum+newGP-gbg.power
+                    gbg.power=newGP
                 end
                 if ap==0 then
                     atk=nil
@@ -944,6 +944,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
             end
         end
         if atk then
+            atk.power=floor(atk.power+.5)
             self:triggerEvent('beforeSend',atk)
             GAME.send(self,atk)
         end
