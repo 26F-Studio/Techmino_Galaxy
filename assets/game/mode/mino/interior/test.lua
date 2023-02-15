@@ -5,7 +5,7 @@ return {
     end,
     settings={mino={
         skin='mino_interior',
-        shakeness=0.1,
+        shakeness=0,
         dropDelay=1e99,
         lockDelay=1e99,
         readyDelay=1000,
