@@ -39,7 +39,7 @@ return {
                 P.gameTime<=30e3  and 160 or
                 P.gameTime<=60e3  and MATH.interpolate(P.gameTime,60e3,120,30e3,160) or
                 P.gameTime<=120e3 and MATH.interpolate(P.gameTime,120e3,90,60e3,120) or
-                MATH.interpolate(P.gameTime,200e3,40,120e3,90)
+                math.max(MATH.interpolate(P.gameTime,200e3,40,120e3,90),0)
             )
         end
     end,
