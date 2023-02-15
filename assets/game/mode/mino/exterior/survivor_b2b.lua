@@ -1,6 +1,6 @@
 local gc=love.graphics
 local max,min=math.max,math.min
-local bgmTransBegin,bgmTransFinish=30,80
+local bgmTransBegin,bgmTransFinish=20,50
 
 return {
     initialize=function()
@@ -9,18 +9,17 @@ return {
         playBgm('here','base')
     end,
     settings={mino={
-        atkSys='basic',
+        atkSys='modern',
         allowCancel=true,
-        clearStuck=false,
-        initialRisingSpeed=0,
-        risingAcceleration=.003,
+        initialRisingSpeed=1,
+        risingAcceleration=.001,
         risingDeceleration=.001,
         maxRisingSpeed=1,
         minRisingSpeed=1,
         event={
             playerInit=function(P)
                 local md=P.modeData
-                md.waveTimer0=3000
+                md.waveTimer0=4000
                 md.waveTimer=0
                 md.wave=0
             end,
@@ -30,30 +29,22 @@ return {
                 if md.waveTimer>0 then
                     md.waveTimer=min(md.waveTimer,(P.field:getHeight()+3*P.garbageSum)*260)-1
                 end
-                if md.waveTimer==0 and P.garbageSum<=max(15-P.field:getHeight()/2,8) then
+                if md.waveTimer==0 and P.garbageSum<=max(20-P.field:getHeight(),12) then
                     md.wave=md.wave+1
 
                     local wave=md.wave
                     md.waveTimer0=math.floor(
-                        wave<=80 and MATH.interpolate(wave,0,3000,80,2000) or
-                        wave<=150 and MATH.interpolate(wave,80,2000,150,2500) or
-                        math.max(2000-(wave-150)*10,1000)
+                        wave<=40 and MATH.interpolate(wave,0,6000,40,4000) or
+                        wave<=80 and MATH.interpolate(wave,40,4000,80,1500) or
+                        max(1500-(wave-80)*10,500)
                     )
                     md.waveTimer=md.waveTimer0
                     GAME.send(nil,GAME.initAtk{
                         target=GAME.mainID,
-                        power=P.seqRND:random(0,10)+P.seqRND:random(-5,5)>=P.field:getHeight() and 2 or 1,
-                        defendRate=wave<60 and 2 or 3,
+                        power=4+P.seqRND:random(0,MATH.clamp(math.floor(wave/30-P.field:getHeight()/10),0,3)),
                         mode=0,
-                        time=wave<50 and 100000/(50+wave)-1000 or 0,
-                        fatal=MATH.clamp(
-                            (
-                                wave<100 and MATH.interpolate(wave,0,20,100,60) or
-                                wave<200 and MATH.interpolate(wave,100,60,200,100) or
-                                100
-                            )+math.floor((P.seqRND:random()*2-1)*min(wave,100)/5),
-                            0,100
-                        ),
+                        time=(wave<50 and 100000/(100+2*wave)+500 or 1000)+250*max(P.field:getHeight()+P.garbageSum-10,0),
+                        fatal=math.floor(min(30+wave/2,50)),
                         -- speed=?,
                     })
 
