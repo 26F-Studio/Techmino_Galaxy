@@ -3,8 +3,10 @@ function scene.enter()
     PROGRESS.setEnv('interior')
     local visibleButtonName=PROGRESS.getMain()==1 and '1' or '2'
     for _,v in next,scene.widgetList do
-        if v.name then
+        if v.name=='1' or v.name=='2' then
             v:setVisible(v.name==visibleButtonName)
+        elseif v.name=='GameSet' then
+            v.color=PROGRESS.getMain()<=2 and COLOR.L or COLOR.lD
         end
     end
     if PROGRESS.getMain()<=2 and (PROGRESS.getInteriorScore('sprint')>=200 or PROGRESS.getTotalInteriorScore()>=350) then
@@ -69,7 +71,15 @@ scene.widgetList={
     WIDGET.new{name='2',type='button_fill',pos={.5,.5},x=-270,y=140,w=500,h=140, color='B',text=LANG'main_in_tutorial',fontSize=40,cornerR=0,code=WIDGET.c_goScn('tutorial_in','none')},
     WIDGET.new{name='2',type='button_fill',pos={.5,.5},x=270, y=140,w=500,h=140, color='Y',text=LANG'main_in_sandbox', fontSize=40,cornerR=0,code=playInterior'mino/interior/train'},
 
-    WIDGET.new{type='button', pos={.5,.5},x=-270,y=320,w=400,h=100,text=CHAR.icon.language,     fontSize=70,lineWidth=4,cornerR=0,code=WIDGET.c_goScn('lang_in','none')},
-    WIDGET.new{type='button', pos={.5,.5},x=270, y=320,w=400,h=100,text=LANG'main_in_settings', fontSize=40,lineWidth=4,cornerR=0,code=WIDGET.c_goScn('setting_in','none')},
+    WIDGET.new{name='LangSel',type='button', pos={.5,.5},x=-270,y=320,w=400,h=100,text=CHAR.icon.language,     fontSize=70,lineWidth=4,cornerR=0,code=WIDGET.c_goScn('lang_in','none')},
+    WIDGET.new{name='GameSet',type='button', pos={.5,.5},x=270, y=320,w=400,h=100,text=LANG'main_in_settings', fontSize=40,lineWidth=4,cornerR=0,sound=false,code=function()
+        if PROGRESS.getMain()<=2 then
+            SFX.play('button')
+            SCN.go('setting_in','none')
+        else
+            SFX.play('move_failed')
+            SFX.play('suffocate')
+        end
+    end},
 }
 return scene
