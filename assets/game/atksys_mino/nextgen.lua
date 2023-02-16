@@ -106,7 +106,7 @@ return {
             if pwr>0 then
                 return {
                     power=pwr,
-                    time=.2+pwr*.05,
+                    time=200+pwr*50,
                 }
             end
         else

@@ -9,7 +9,7 @@ return {
                 style=lines>=4 and 'stretch' or 'appear',
                 duration=lines/2,
             }
-            return {power=lines,}
+            return {power=lines,time=lines}
         end
     end,
 }

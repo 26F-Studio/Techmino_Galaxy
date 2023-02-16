@@ -69,16 +69,16 @@ return {
                 if spin then
                     pwr=2*lines
                     pwr=pwr+math.ceil(self.atkSysData.b2b/4,2)
-                    tm=.3
+                    tm=300
                     self.atkSysData.b2b=math.min(self.atkSysData.b2b+1,26)
                 elseif lines>=4 then
                     pwr=lines
-                    tm=.2
+                    tm=200
                     pwr=pwr+math.min(math.ceil(self.atkSysData.b2b/4),4)
                     self.atkSysData.b2b=math.min(self.atkSysData.b2b+1,26)
                 else
                     pwr=lines-1
-                    tm=.1
+                    tm=100
                     if self.atkSysData.b2b>1 then
                         self:playSound('b2b_break')
                     end
@@ -91,14 +91,14 @@ return {
                 end
 
                 -- Combo bonus
-                tm=tm+self.combo*.1
+                tm=tm+self.combo*100
                 pwr=pwr+math.min(math.floor(self.combo/3),3)
 
                 -- Send
                 if pwr>0 then
                     return {
                         power=pwr,
-                        time=tm+pwr*.05,
+                        time=tm+pwr*50,
                     }
                 end
             end
