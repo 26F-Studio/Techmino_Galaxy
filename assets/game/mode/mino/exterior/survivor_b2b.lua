@@ -19,7 +19,7 @@ return {
         event={
             playerInit=function(P)
                 local md=P.modeData
-                md.waveTimer0=4000
+                md.waveTimer0=6000
                 md.waveTimer=0
                 md.wave=0
             end,
@@ -36,14 +36,14 @@ return {
                     md.waveTimer0=math.floor(
                         wave<=40 and MATH.interpolate(wave,0,6000,40,4000) or
                         wave<=80 and MATH.interpolate(wave,40,4000,80,1500) or
-                        max(1500-(wave-80)*10,500)
+                        max(MATH.interpolate(wave,80,1500,150,800),800)
                     )
                     md.waveTimer=md.waveTimer0
                     GAME.send(nil,GAME.initAtk{
                         target=GAME.mainID,
                         power=4+P.seqRND:random(0,MATH.clamp(math.floor(wave/30-P.field:getHeight()/10),0,3)),
                         mode=0,
-                        time=(wave<50 and 100000/(100+2*wave)+500 or 1000)+250*max(P.field:getHeight()+P.garbageSum-10,0),
+                        time=(wave<50 and 100000/(100+2*wave)+500 or 1000)+MATH.clamp(400-wave,150,350)*max(P.field:getHeight()+P.garbageSum-8,0),
                         fatal=math.floor(min(30+wave/2,50)),
                         -- speed=?,
                     })
