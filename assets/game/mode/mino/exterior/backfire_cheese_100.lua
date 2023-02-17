@@ -15,8 +15,14 @@ return {
         event={
             playerInit=function(P)
                 P.modeData.line=0
+                P.modeData._currentPower=false
+            end,
+            beforeCancel=function(P,atk)
+                P.modeData._currentPower=atk.power
             end,
             beforeSend=function(P,atk)
+                atk.power=P.modeData._currentPower
+                P.modeData._currentPower=false
                 local s=0
                 for i=1,atk.power do
                     s=s+1
