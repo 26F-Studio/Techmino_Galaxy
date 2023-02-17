@@ -39,13 +39,14 @@ return {
         playBgm('propel','base')
     end,
     settings={mino={
-        das=120,
-        arr=16,
-        sdarr=16,
         spawnDelay=130,
         clearDelay=300,
         event={
             playerInit=function(P)
+                P.settings.das=math.max(P.settings.das,100)
+                P.settings.arr=math.max(P.settings.arr,20)
+                P.settings.sdarr=math.max(P.settings.sdarr,20)
+
                 P.settings.dropDelay=levels[1].drop
                 P.settings.lockDelay=levels[1].lock
                 P.settings.spawnDelay=levels[1].spawn
