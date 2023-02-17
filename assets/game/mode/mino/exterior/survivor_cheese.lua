@@ -28,7 +28,7 @@ return {
                 if not P.timing then return end
                 local md=P.modeData
                 if md.waveTimer>0 then
-                    md.waveTimer=min(md.waveTimer,(P.field:getHeight()+3*P.garbageSum)*260)-1
+                    md.waveTimer=min(md.waveTimer-1,(P.field:getHeight()+3*P.garbageSum)*260)
                 end
                 if md.waveTimer==0 and P.garbageSum<=max(15-P.field:getHeight()/2,8) then
                     md.wave=md.wave+1
@@ -57,7 +57,7 @@ return {
                         -- speed=?,
                     })
 
-                    if wave>bgmTransBegin and wave<bgmTransFinish and P.isMain then
+                    if wave>bgmTransBegin and wave<=bgmTransFinish and P.isMain then
                         BGM.set(bgmList['here'].add,'volume',min((wave-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
                     end
                 end

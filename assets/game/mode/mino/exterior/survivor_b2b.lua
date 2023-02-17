@@ -27,7 +27,7 @@ return {
                 if not P.timing then return end
                 local md=P.modeData
                 if md.waveTimer>0 then
-                    md.waveTimer=min(md.waveTimer,(P.field:getHeight()+3*P.garbageSum)*260)-1
+                    md.waveTimer=min(md.waveTimer-1,(P.field:getHeight()+3*P.garbageSum)*260)
                 end
                 if md.waveTimer==0 and P.garbageSum<=max(20-P.field:getHeight(),12) then
                     md.wave=md.wave+1
@@ -43,12 +43,14 @@ return {
                         target=GAME.mainID,
                         power=4+P.seqRND:random(0,MATH.clamp(math.floor(wave/30-P.field:getHeight()/10),0,3)),
                         mode=0,
-                        time=(wave<50 and 100000/(100+2*wave)+500 or 1000)+MATH.clamp(400-wave,150,350)*max(P.field:getHeight()+P.garbageSum-8,0),
+                        time=
+                            (wave<50 and 100000/(100+2*wave)+500 or 1000)+
+                            MATH.clamp(400-wave,150,350)*max(P.field:getHeight()+P.garbageSum-8,0),
                         fatal=math.floor(min(30+wave/2,50)),
                         -- speed=?,
                     })
 
-                    if wave>bgmTransBegin and wave<bgmTransFinish and P.isMain then
+                    if wave>bgmTransBegin and wave<=bgmTransFinish and P.isMain then
                         BGM.set(bgmList['here'].add,'volume',min((wave-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
                     end
                 end
