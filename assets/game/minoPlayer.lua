@@ -943,7 +943,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                 end
             end
         end
-        if atk then
+        if atk and atk.power>=.5 then
             atk.power=floor(atk.power+.5)
             self:triggerEvent('beforeSend',atk)
             GAME.send(self,atk)
