@@ -234,7 +234,11 @@ function PROGRESS.transendTo(n)
                     SCN.swapTo('main_out','none')
                     PROGRESS.applyCoolWaitTemplate()
                     WAIT.interrupt()
-                    MES.new('error',Text.interior_crash,10)
+                    TASK.new(function()
+                        MES.new('warn',Text.interior_crash,10)
+                        DEBUG.yieldT(3)
+                        MES.new('info',Text.booting_changed,7)
+                    end)
                 end
             end,
             draw=function(_,t)

@@ -8,7 +8,8 @@ return {
     },
     setting_needRestart="该设置需要重启后生效",
     noMode="无法加载模式 '$1': $2",
-    interior_crash="沙箱崩溃: 性能评分溢出",
+    interior_crash="沙箱意外退出:性能评分越界",
+    booting_changed="引导程序已更改",
     musicroom_lowVolume="请调高音乐音量（开关在右下角）",
 
     -- Game

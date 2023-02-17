@@ -8,7 +8,8 @@ return {
     },
     setting_needRestart="This setting takes effect after restart",
     noMode="Cannot load mode '$1': $2",
-    interior_crash="Sandbox crashed: performance rate overflow",
+    interior_crash="Sandbox exited due to performance rate overflow",
+    booting_changed="Booting application changed",
     musicroom_lowVolume="Please turn up BGM volume (At bottom right)",
 
     -- Game
