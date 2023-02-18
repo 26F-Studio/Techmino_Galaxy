@@ -1,14 +1,10 @@
 # Techmino
 
-## 警告：本游戏目前完成度极低，毫无游戏性，故意不开放任何下载渠道的
-## 如果你有条件知道怎么运行可以自己私下试，否则就不要试图下载了
-## 开发进度到合适的时候自然会让所有人都能玩
-## 未经过MrZ许可时请勿将任何提前获取的内容发送到公开领域，防止意外剧透。如果不能做到这一点请忽略此仓库的存在，感谢配合！
+## 注意：本游戏目前处于开发阶段，故不提供给玩家直接下载的渠道。
+## 不建议在公开区域讨论本项目中随时可能变化的内容，感谢配合。
 
-## WARNING: This game is currently under some heavy developments and is considered barely playable, at least for now. Therefore, we do not provide any public release currently.
-## Though you can test this pre-alpha if you do know how to run it, we recommend you not even try to download and play this game if you know nothing about it.
-## Public releases will be made available for everyone when the game is adequately developed.
-## Do not send any content from this repository to the public domain without the permission of MrZ to prevent accidental spoilers. If you can't avoid spoiling others, please ignore this repository. Thank you for your cooperation!
+## ATTENTION: This game is currently under some heavy developments. Therefore, we do not provide any public release currently.
+## Not recommened to talk about features which can be changed at any time. Thank you for your cooperation.
 
 **Techmino: Galaxy GitHub 官方仓库**
 
