@@ -7,20 +7,19 @@ return {
         playBgm('way','simp')
     end,
     settings={mino={
-        seqType=function(P)-- bag12 without I piece
-            local loop=0
+        seqType=function(P)
             local l={}
             local l2={}
             while true do
-                -- Fill list1 (bag7+N)
+                -- Fill list1 (bag7 + 0~4)
                 if not l[1] then
-                    loop=loop+1
+                    P.modeData.bagLoop=P.modeData.bagLoop+1
                     for i=1,7 do table.insert(l,i) end
                     for _=1,
-                        loop<=4  and 0 or
-                        loop<=10 and 1 or
-                        loop<=20 and 2 or
-                        loop<=40 and 3 or
+                        P.modeData.bagLoop<=4  and 0 or
+                        P.modeData.bagLoop<=10 and 1 or
+                        P.modeData.bagLoop<=20 and 2 or
+                        P.modeData.bagLoop<=40 and 3 or
                         4
                     do
                         -- Fill list2 (bag6)
@@ -34,10 +33,15 @@ return {
         event={
             playerInit=function(P)
                 P.modeData.techrash=0
+                P.modeData.bagLoop=0
             end,
             afterClear=function(P,movement)
                 if P.hand.name=='I' and #movement.clear==4 then
                     P.modeData.techrash=P.modeData.techrash+1
+                    print(P.field:getHeight())
+                    if P.field:getHeight()==0 then
+                        P.modeData.bagLoop=math.max(math.floor(P.modeData.bagLoop*.5),10)
+                    end
                 else
                     P:finish('PE')
                 end
