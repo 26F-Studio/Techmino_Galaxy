@@ -453,7 +453,7 @@ end
 function MP:resetPos()-- Move hand piece to the normal spawn position
     self:moveHand('reset',floor(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1+ceil(self.fieldDived/40))
     self.deathTimer=false
-    while self:ifoverlap(self.hand.matrix,self.handX,self.handY) and self.handY<(self.settings.maxSpawnH or self.settings.spawnH)+1 do self.handY=self.handY+1 end
+    while self:ifoverlap(self.hand.matrix,self.handX,self.handY) and self.handY<self.settings.spawnH+self.settings.extraSpawnH+1 do self.handY=self.handY+1 end
     self.minY=self.handY
     self.ghostY=self.handY
     self:resetPosCheck()
@@ -855,7 +855,7 @@ function MP:hold_float()
         h.handY,self.handY=self.handY,h.handY
         h.lastMovement,self.lastMovement=self.lastMovement,h.lastMovement
         h.minY,self.minY=self.minY,h.minY
-        while self:ifoverlap(self.hand.matrix,self.handX,self.handY) and self.handY<(self.settings.maxSpawnH or self.settings.spawnH)+1 do self.handY=self.handY+1 end
+        while self:ifoverlap(self.hand.matrix,self.handX,self.handY) and self.handY<self.settings.spawnH+self.settings.extraSpawnH+1 do self.handY=self.handY+1 end
         self:resetPosCheck()
     else
         self.floatHolds[swapN]={
@@ -1554,7 +1554,7 @@ function MP:render()
         -- Height lines
         skin.drawHeightLines(-- All unit are pixel
             settings.fieldW*40,   -- Field Width
-            settings.maxSpawnH*40,-- Max Spawning height
+            (settings.spawnH+settings.extraSpawnH)*40,-- Max Spawning height
             settings.spawnH*40,   -- Spawning height
             settings.lockoutH*40, -- Lock-out height
             settings.deathH*40,   -- Death height
@@ -1684,7 +1684,7 @@ end
 local baseEnv={
     fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
     spawnH=20,
-    maxSpawnH=21,
+    extraSpawnH=1,
     lockoutH=1e99,
     deathH=1e99,
     voidH=1260,

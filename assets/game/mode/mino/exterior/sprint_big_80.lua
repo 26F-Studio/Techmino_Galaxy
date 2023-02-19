@@ -11,7 +11,6 @@ return {
     settings={mino={
         fieldW=6,
         spawnH=12,
-        maxSpawnH=13,
         event={
             playerInit=function(P)
                 P.modeData.line=0

@@ -10,7 +10,7 @@ return {
     end,
     settings={mino={
         spawnH=4,
-        maxSpawnH=5,
+        extraSpawnH=0,
         event={
             playerInit=function(P)
                 P.modeData.line=0
