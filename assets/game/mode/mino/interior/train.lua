@@ -32,7 +32,7 @@ return {
                         shape[y][x]=m[y][x] and true or false
                     end
                 end
-                local x,y,dir=AI.retard.findPosition(field,shape)
+                local x,y,dir=AI.paperArtist.findPosition(field,shape)
                 P.modeData.x,P.modeData.y,P.modeData.shape=x,y,TABLE.rotate(shape,dir)
                 P.modeData.waitTime=0
                 -- if dir~='0' then P:rotate(dir) end

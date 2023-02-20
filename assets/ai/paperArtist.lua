@@ -1,4 +1,4 @@
-local retard={}
+local paperArtist={}
 
 local function simulateDrop(field,cb,cx)
     local w=#cb[1]
@@ -19,7 +19,7 @@ local function simulateDrop(field,cb,cx)
     return math.max(unpack(delta))+1,delta
 end
 
-function retard.calculateFieldScore(field,cb,cy)
+function paperArtist.calculateFieldScore(field,cb,cy)
     local clear=0
 
     -- Clear filled lines
@@ -67,7 +67,7 @@ function retard.calculateFieldScore(field,cb,cy)
 end
 
 local directions={'0','R','F','L'}
-function retard.findPosition(field,shape)
+function paperArtist.findPosition(field,shape)
     local best={
         score=-1e99,
         x=4,y=4,dir='0',
@@ -80,7 +80,7 @@ function retard.findPosition(field,shape)
             local cy,colH=simulateDrop(F,shape,cx)
             local score=0
 
-            local clear,rowB,colB=retard.calculateFieldScore(field,shape,cy)
+            local clear,rowB,colB=paperArtist.calculateFieldScore(field,shape,cy)
             score=score+clear*2-rowB*3-colB*2
             score=score-cy
             local minH=math.min(unpack(colH))
@@ -98,4 +98,4 @@ function retard.findPosition(field,shape)
     return best.x,best.y,best.dir
 end
 
-return retard
+return paperArtist

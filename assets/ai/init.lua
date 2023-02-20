@@ -1,5 +1,5 @@
 local AI={}
 
-AI.retard=require'assets.ai.retard'
+AI.paperArtist=require'assets.ai.paperArtist'
 
 return AI
