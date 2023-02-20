@@ -92,7 +92,7 @@ function scene.draw()
         gc.setLineWidth(4)
         for _,id in next,tc.getTouches() do
             local x,y=tc.getPosition(id)
-            x,y=SCR.xOy:transformPoint(x,y)
+            x,y=SCR.xOy:inverseTransformPoint(x,y)
             gc.circle('line',x,y,80)
         end
     end
