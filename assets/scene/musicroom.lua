@@ -189,6 +189,9 @@ scene.widgetList={
             fullband=not fullband
             if BGM.isPlaying() then
                 BGM.set(bgmList[selected].add,'volume',fullband and 1 or 0,.26)
+            elseif SETTINGS.system.bgmVol==0 and MATH.roll(0.1) then
+                noProgress=true
+                scene.enter()
             end
         end,
         visibleFunc=function()
