@@ -1,17 +1,6 @@
 -- Game mode selecting for exterior menu
 
 local subject={
-    {-- Puyo
-        trigger=function()
-            SCN.go('mode_puyo','fadeHeader')
-        end,
-        draw=function()
-            GC.setColor(COLOR.R)
-            GC.setLineWidth(8)
-            GC.circle('line',-35,-60,70)
-            GC.circle('line',35,60,70)
-        end,
-    },
     {-- Mino
         trigger=function()
             SCN.go('mode_mino','fadeHeader')
@@ -30,6 +19,17 @@ local subject={
                 100,100,
                 0,100
             )
+        end,
+    },
+    {-- Puyo
+        trigger=function()
+            SCN.go('mode_puyo','fadeHeader')
+        end,
+        draw=function()
+            GC.setColor(COLOR.R)
+            GC.setLineWidth(8)
+            GC.circle('line',-35,-60,70)
+            GC.circle('line',35,60,70)
         end,
     },
     {-- Gem
@@ -65,8 +65,8 @@ function scene.enter()
         s.trigTimer=false
     end
     subjectFocused=false
-    subject[1].valid=PROGRESS.getPuyoUnlocked()
-    subject[2].valid=PROGRESS.getMinoUnlocked()
+    subject[1].valid=PROGRESS.getMinoUnlocked()
+    subject[2].valid=PROGRESS.getPuyoUnlocked()
     subject[3].valid=PROGRESS.getGemUnlocked()
     scene.update(0)
     PROGRESS.playExteriorBGM()

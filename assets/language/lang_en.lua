@@ -97,6 +97,11 @@ return {
     keyset_sys_select=  "Select",
     keyset_sys_back=    "Back",
 
+    keyset_page_sys= "General",
+    keyset_page_mino="Mino",
+    keyset_page_puyo="Puyo",
+    keyset_page_gem= "Gem",
+
     keyset_pressKey="Press a key",
     keyset_deleted= "*Deleted*",
     keyset_info=    "[Esc]: cancel\n[Backspace]: delete",

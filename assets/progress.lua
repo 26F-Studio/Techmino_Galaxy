@@ -13,8 +13,8 @@ local prgs={
         sprint=0,
         marathon=0,
     },
-    puyoUnlocked=false,
     minoUnlocked=true,
+    puyoUnlocked=false,
     gemUnlocked=false,
     bgmUnlocked={},
     minoModeUnlocked={

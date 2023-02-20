@@ -6,18 +6,16 @@ local keyMode
 local keyMap
 local keyButtons={}
 
-function scene.enter()
+function scene.enter(mode)
     BG.set('none')
 
-    keyMode=SCN.args[1] or keyMode
+    keyMode=mode or 'sys'
     keyMap=KEYMAP[keyMode]
 
     TABLE.cut(keyButtons)
     for i=1,#scene.widgetList do
         local n=scene.widgetList[i].name
-        if n=='test' then
-            scene.widgetList[i]:setVisible(keyMode~='sys')
-        elseif n then
+        if n then
             local visible=scene.widgetList[i].name==keyMode
             scene.widgetList[i]:setVisible(visible)
             if visible then
@@ -111,7 +109,11 @@ scene.widgetList={
     WIDGET.new{type='button', name='sys', x=140, y=490,  w=200,h=60,text=LANG"keyset_sys_select",      fontSize=20, color='lB',code=selAct('sys', 'select' )},
     WIDGET.new{type='button', name='sys', x=140, y=560,  w=200,h=60,text=LANG"keyset_sys_back",        fontSize=20, color='lB',code=selAct('sys', 'back'   )},
 
-    WIDGET.new{type='button', name='test',pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG"setting_test",   fontSize=40,code=playExterior'mino/exterior/test'},
-    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button', pos={0,1},x=120, y=-80,w=160,h=80,text=LANG"keyset_page_sys", color='lC',code=function() scene.enter('sys')  end},
+    WIDGET.new{type='button', pos={0,1},x=300, y=-80,w=160,h=80,text=LANG"keyset_page_mino",color='lP',code=function() scene.enter('mino') end,visibleFunc=PROGRESS.getMinoUnlocked},
+    WIDGET.new{type='button', pos={0,1},x=480, y=-80,w=160,h=80,text=LANG"keyset_page_puyo",color='lR',code=function() scene.enter('puyo') end,visibleFunc=PROGRESS.getPuyoUnlocked},
+    WIDGET.new{type='button', pos={0,1},x=660, y=-80,w=160,h=80,text=LANG"keyset_page_gem", color='lB',code=function() scene.enter('gem')  end,visibleFunc=PROGRESS.getGemUnlocked},
+    WIDGET.new{type='button', pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG"setting_test",fontSize=40,code=playExterior'mino/exterior/test'},
+    WIDGET.new{type='button', pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 return scene

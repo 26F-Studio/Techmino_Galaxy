@@ -97,6 +97,11 @@ return {
     keyset_sys_select= "菜单确定",
     keyset_sys_back=    "菜单返回",
 
+    keyset_page_sys= "通用",
+    keyset_page_mino="方块",
+    keyset_page_puyo="气泡",
+    keyset_page_gem= "宝石",
+
     keyset_pressKey="按下要设置的键",
     keyset_deleted= "*已删除*",
     keyset_info=    "[Esc]: 取消\n[Backspace]: 删除",
