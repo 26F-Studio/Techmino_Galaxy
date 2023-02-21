@@ -19,9 +19,20 @@ local function simulateDrop(field,cb,cx)
     return math.max(unpack(delta))+1,delta
 end
 
-function paperArtist.calculateFieldScore(field,cb,cy)
+function paperArtist.calculateFieldScore(field,cb,cx,cy)
     local clear=0
-
+    
+    -- Place the piece into the field
+    for y=1,#cb do
+        -- If this line doesn't exist, create an all-false line
+        if not field[y+cy-1] then
+            field[y+cy-1]=TABLE.new(false,10)
+        end
+        for x=1,#cb[1] do
+            field[y+cy-1][x+cx-1]=field[y+cy-1][x+cx-1] or cb[y][x]
+        end
+    end
+    
     -- Clear filled lines
     for y=cy+#cb-1,cy,-1 do
         if field[y] then
@@ -35,10 +46,10 @@ function paperArtist.calculateFieldScore(field,cb,cy)
             ::CONTINUE_notFull::
         end
     end
-
+    
     -- Which boy can refuse PC?
     if #field==0 then
-        return 1e99
+        return 1e99,0,0
     end
 
     local rowB=0
@@ -79,8 +90,7 @@ function paperArtist.findPosition(field,shape)
             local F=TABLE.shift(field,1)
             local cy,colH=simulateDrop(F,shape,cx)
             local score=0
-
-            local clear,rowB,colB=paperArtist.calculateFieldScore(field,shape,cy)
+            local clear,rowB,colB=paperArtist.calculateFieldScore(F,shape,cx,cy)
             score=score+clear*2-rowB*3-colB*2
             score=score-cy
             local minH=math.min(unpack(colH))
