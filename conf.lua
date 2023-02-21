@@ -40,19 +40,10 @@ function love.conf(t)
     W.display=1-- Monitor ID
     W.highdpi=true-- High-dpi mode for the window on a Retina display
     W.x,W.y=nil
-
+    W.borderless=mobile
+    W.resizable=not mobile
     if fs.getInfo('assets/image/icon.png') then
         W.icon='assets/image/icon.png'
-    end
-
-    if mobile then
-        W.borderless=true
-        W.resizable=false
-        W.fullscreen=true
-    else
-        W.borderless=false
-        W.resizable=true
-        W.fullscreen=false
     end
 
     local M=t.modules
