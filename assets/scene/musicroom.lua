@@ -1,6 +1,7 @@
 local selected,fullband
 local collectCount=0
 local noProgress=false
+local autoPlay=false
 
 local bigTitle=setmetatable({},{
     __index=function(self,name)
@@ -129,6 +130,28 @@ function scene.keyDown(key,isRep)
     end
 end
 
+function scene.update(dt)
+    if autoPlay and BGM.isPlaying() then
+        if autoPlay>0 then
+            autoPlay=math.max(autoPlay-dt,0)
+        else
+            if BGM.tell()<.0626 then
+                autoPlay=math.random(42,120)
+                fullband=MATH.roll(.42)
+
+                local list,r=musicListBox:getList()
+                repeat
+                    r=math.random(#list)
+                until list[r]~=musicListBox:getItem()
+                musicListBox:select(r)
+                musicListBox.code()
+            else
+                autoPlay=.0626
+            end
+        end
+    end
+end
+
 local objText,titleTextObj='',GC.newText(FONT.get(90,'bold'))
 function scene.draw()
     PROGRESS.drawExteriorHeader()
@@ -154,6 +177,7 @@ function scene.draw()
         GC.printf(bgmList[selected].message,0,0,700,'right')
     end
 
+    -- Time
     if BGM.tell() then
         GC.replaceTransform(SCR.xOy_m)
         FONT.set(30)
@@ -162,12 +186,23 @@ function scene.draw()
         GC.printf(STRING.time_simp(BGM.getDuration()),700-626,260,626,'right')
     end
 
+    -- Collecting progress
     GC.replaceTransform(SCR.xOy_r)
     GC.setColor(COLOR.L)
     GC.setLineWidth(2)
     GC.line(-99,-320,-99,-365,-235,-365,-255,-320)
     FONT.set(30)
     GC.printf(collectCount.."/"..bgmCount,-105-626,-362,626,'right')
+
+    -- Autoplay timer
+    if autoPlay then
+        GC.replaceTransform(SCR.xOy_l)
+        GC.setColor(COLOR.L)
+        GC.setLineWidth(2)
+        GC.circle('line',400,445,45)
+        GC.setColor(1,1,1,.26)
+        GC.arc('fill','pie',400,445,45,-MATH.pi/2,-MATH.pi/2+autoPlay/120*MATH.tau)
+    end
 end
 
 scene.widgetList={
@@ -197,6 +232,21 @@ scene.widgetList={
         visibleFunc=function()
             return fullband~=nil and bgmList[selected].base
         end,
+    },
+    -- Auto Switch
+    WIDGET.new{type='switch',pos={0,.5},x=400,y=360,h=50,labelPos='right',disp=function() return autoPlay end,
+        name='autoPlay',text=LANG'musicroom_autoPlay',
+        sound_on=false,sound_off=false,
+        code=function()
+            if autoPlay then
+                autoPlay=false
+            else
+                autoPlay=math.random(42,120)
+            end
+        end,
+        -- visibleFunc=function()
+        --     return autoSwitch
+        -- end,
     },
 
     -- Volume slider
