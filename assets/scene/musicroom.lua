@@ -1,3 +1,11 @@
+local gc=love.graphics
+local gc_replaceTransform,gc_setColor=gc.replaceTransform,gc.setColor
+local gc_print,gc_printf=gc.print,gc.printf
+local setFont=FONT.set
+
+local max,min=math.max,math.min
+local sin=math.sin
+
 local selected,fullband
 local collectCount=0
 local noProgress=false
@@ -25,17 +33,17 @@ local musicListBox do
     musicListBox={type='listBox',pos={1,.5},x=-800,y=-320,w=700,h=500,lineHeight=80}
     function musicListBox.drawFunc(name,_,sel)
         if sel then
-            GC.setColor(1,1,1,.26)
-            GC.rectangle('fill',0,0,700,80)
+            gc_setColor(1,1,1,.26)
+            gc.rectangle('fill',0,0,700,80)
         end
-        FONT.set(60)
-        GC.setColor(name==selected and COLOR.L or COLOR.LD)
-        GC.print(bigTitle[name],20,4)
-        FONT.set(20)
-        GC.printf(bgmList[name].author,0,45,685,'right')
+        setFont(60)
+        gc_setColor(name==selected and COLOR.L or COLOR.LD)
+        gc_print(bigTitle[name],20,4)
+        setFont(20)
+        gc_printf(bgmList[name].author,0,45,685,'right')
         if sel and name~=selected then
-            FONT.set(100)
-            GC.setColor(COLOR.L)
+            setFont(100)
+            gc_setColor(COLOR.L)
             GC.mStr(CHAR.icon.play,350,-20)
         end
     end
@@ -90,7 +98,7 @@ function scene.keyDown(key,isRep)
         musicListBox:arrowKey(key)
     elseif key=='left' or key=='right' then
         if BGM.isPlaying() then
-            BGM.set('all','seek',key=='left' and math.max(BGM.tell()-5,0) or (BGM.tell()+5)%BGM.getDuration())
+            BGM.set('all','seek',key=='left' and max(BGM.tell()-5,0) or (BGM.tell()+5)%BGM.getDuration())
         end
     elseif #key==1 and key:find'[0-9a-z]' then
         local list=musicListBox:getList()
@@ -133,7 +141,7 @@ end
 function scene.update(dt)
     if autoPlay and BGM.isPlaying() then
         if autoPlay>0 then
-            autoPlay=math.max(autoPlay-dt,0)
+            autoPlay=max(autoPlay-dt,0)
         else
             if BGM.tell()<.0626 then
                 autoPlay=math.random(42,120)
@@ -152,11 +160,11 @@ function scene.update(dt)
     end
 end
 
-local objText,titleTextObj='',GC.newText(FONT.get(90,'bold'))
+local objText,titleTextObj='',gc.newText(FONT.get(90,'bold'))
 function scene.draw()
     PROGRESS.drawExteriorHeader()
 
-    GC.replaceTransform(SCR.xOy_l)
+    gc_replaceTransform(SCR.xOy_l)
 
     -- Song title
     if objText~=bigTitle[selected] then
@@ -164,44 +172,44 @@ function scene.draw()
         titleTextObj:set(bigTitle[selected])
     end
     local t=love.timer.getTime()
-    GC.setColor(math.sin(t*.5)*.2+.8,math.sin(t*.7)*.2+.8,math.sin(t)*.2+.8)
-    GC.draw(titleTextObj,700,-100,0,math.min(1,650/titleTextObj:getWidth()),nil,titleTextObj:getWidth(),titleTextObj:getHeight())
+    gc_setColor(sin(t*.5)*.2+.8,sin(t*.7)*.2+.8,sin(t)*.2+.8)
+    gc.draw(titleTextObj,700,-100,0,min(1,650/titleTextObj:getWidth()),nil,titleTextObj:getWidth(),titleTextObj:getHeight())
 
     -- Author and message
-    FONT.set(50)
-    GC.setColor(COLOR.L)
-    GC.printf(bgmList[selected].author,0,-90,700,'right')
+    setFont(50)
+    gc_setColor(COLOR.L)
+    gc_printf(bgmList[selected].author,0,-90,700,'right')
     if bgmList[selected].message then
-        FONT.set(30,'thin')
-        GC.setColor(COLOR.LD)
-        GC.printf(bgmList[selected].message,0,0,700,'right')
+        setFont(30,'thin')
+        gc_setColor(COLOR.LD)
+        gc_printf(bgmList[selected].message,0,0,700,'right')
     end
 
     -- Time
     if BGM.tell() then
-        GC.replaceTransform(SCR.xOy_m)
-        FONT.set(30)
-        GC.setColor(COLOR.L)
-        GC.printf(STRING.time_simp(BGM.tell()%BGM.getDuration()),-700,260,626,'left')
-        GC.printf(STRING.time_simp(BGM.getDuration()),700-626,260,626,'right')
+        gc_replaceTransform(SCR.xOy_m)
+        setFont(30)
+        gc_setColor(COLOR.L)
+        gc_printf(STRING.time_simp(BGM.tell()%BGM.getDuration()),-700,260,626,'left')
+        gc_printf(STRING.time_simp(BGM.getDuration()),700-626,260,626,'right')
     end
 
     -- Collecting progress
-    GC.replaceTransform(SCR.xOy_r)
-    GC.setColor(COLOR.L)
-    GC.setLineWidth(2)
-    GC.line(-99,-320,-99,-365,-235,-365,-255,-320)
-    FONT.set(30)
-    GC.printf(collectCount.."/"..bgmCount,-105-626,-362,626,'right')
+    gc_replaceTransform(SCR.xOy_r)
+    gc_setColor(COLOR.L)
+    gc.setLineWidth(2)
+    gc.line(-99,-320,-99,-365,-235,-365,-255,-320)
+    setFont(30)
+    gc_printf(collectCount.."/"..bgmCount,-105-626,-362,626,'right')
 
     -- Autoplay timer
     if autoPlay then
-        GC.replaceTransform(SCR.xOy_l)
-        GC.setColor(COLOR.L)
-        GC.setLineWidth(2)
-        GC.circle('line',400,445,45)
-        GC.setColor(1,1,1,.26)
-        GC.arc('fill','pie',400,445,45,-MATH.pi/2,-MATH.pi/2+autoPlay/120*MATH.tau)
+        gc_replaceTransform(SCR.xOy_l)
+        gc_setColor(COLOR.L)
+        gc.setLineWidth(2)
+        gc.circle('line',400,445,45)
+        gc_setColor(1,1,1,.26)
+        gc.arc('fill','pie',400,445,45,-MATH.pi/2,-MATH.pi/2+autoPlay/120*MATH.tau)
     end
 end
 
@@ -244,9 +252,6 @@ scene.widgetList={
                 autoPlay=math.random(42,120)
             end
         end,
-        -- visibleFunc=function()
-        --     return autoSwitch
-        -- end,
     },
 
     -- Volume slider
