@@ -70,8 +70,8 @@ function scene.enter()
     subject[3].valid=PROGRESS.getGemUnlocked()
     scene.update(0)
     PROGRESS.playExteriorBGM()
-    if SCN.prev=='main_out' and subject[2].valid and not (subject[1].valid or subject[3].valid) then
-        subjectFocused=2
+    if SCN.prev=='main_out' and subject[1].valid and not (subject[2].valid or subject[3].valid) then
+        subjectFocused=1
         scene.keyDown('return')
     end
 end
