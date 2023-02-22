@@ -15,6 +15,7 @@ return {
     {score=65,name="世界沃德"},
     {score=65,name="Petris"},
     {score=65,name="Zakeru"},
+    {score=65,name="亮君舞"},
     {score=65,name="Dysprosium"},
     {score=65,name="HitachiMako"},
     {score=65,name="我慌死了"},
@@ -23,7 +24,6 @@ return {
     {score=65,name="奏之章"},
     {score=65,name="猫宫"},
     {score=65,name="Notypey"},
-    {score=65,name="亮君"},
     {score=65,name="gggf127"},
     {score=65,name="柴影"},
     {score=65,name="怀沙"},
@@ -33,6 +33,7 @@ return {
     {score=65,name="[**浩]"},
     {score=65,name="sakurw"},
     {score=65,name="[**霖]"},
+    {score=65,name="KK"},
 
     {score=25,name="八零哥"},
     {score=25,name="蕴空之灵"},
@@ -143,4 +144,6 @@ return {
     {score=25,name="*玉"},
     {score=25,name="zzqs1234"},
     {score=25,name="懒*a"},
+    {score=25,name="Sthantom"},
+    {score=25,name="T9348"},
 }
