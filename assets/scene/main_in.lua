@@ -1,5 +1,8 @@
+local consoleClickCount=0
+
 local scene={}
 function scene.enter()
+    consoleClickCount=0
     PROGRESS.setEnv('interior')
     local visibleButtonName=PROGRESS.getMain()==1 and '1' or '2'
     for _,v in next,scene.widgetList do
@@ -77,8 +80,13 @@ scene.widgetList={
             SFX.play('button')
             SCN.go('setting_in','none')
         else
+            consoleClickCount=consoleClickCount+1
             SFX.play('move_failed')
-            SFX.play('suffocate')
+            SFX.play('suffocate',nil,nil,consoleClickCount-5.626)
+            if consoleClickCount==6 then
+                consoleClickCount=0
+                SCN.go('_console')
+            end
         end
     end},
 }
