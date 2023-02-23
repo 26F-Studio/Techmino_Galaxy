@@ -105,9 +105,13 @@ jobs:
           body: ${{ github.event.head_commit.message }}
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
       - name: Get transfer
-        shell: bash
-        run: |
-          curl -sL --retry 5 https://raw.githubusercontent.com/Mikubill/transfer/master/install.sh | sh
+        uses: nick-fields/retry@v2
+        with:
+          max_attempts: 10
+          retry_wait_seconds: 60
+          timeout_minutes: 5
+          command: |
+            curl -sL https://raw.githubusercontent.com/Mikubill/transfer/master/install.sh | sh
       - name: Upload to WeTransfer
         id: transfer
         uses: nick-fields/retry@v2
@@ -195,9 +199,13 @@ jobs:
           body: ${{ github.event.head_commit.message }}
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
       - name: Get transfer
-        shell: bash
-        run: |
-          curl -sL --retry 5 https://raw.githubusercontent.com/Mikubill/transfer/master/install.sh | sh
+        uses: nick-fields/retry@v2
+        with:
+          max_attempts: 10
+          retry_wait_seconds: 60
+          timeout_minutes: 5
+          command: |
+            curl -sL https://raw.githubusercontent.com/Mikubill/transfer/master/install.sh | sh
       - name: Upload to WeTransfer
         id: transfer
         uses: nick-fields/retry@v2
@@ -284,9 +292,13 @@ jobs:
           body: ${{ github.event.head_commit.message }}
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
       - name: Get transfer
-        shell: bash
-        run: |
-          wget -qO- https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_darwin_amd64.tar.gz | tar xvz
+        uses: nick-fields/retry@v2
+        with:
+          max_attempts: 10
+          retry_wait_seconds: 60
+          timeout_minutes: 5
+          command: |
+            wget -qO- https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_darwin_amd64.tar.gz | tar xvz
       - name: Upload to WeTransfer
         id: transfer
         uses: nick-fields/retry@v2
@@ -370,9 +382,13 @@ jobs:
           body: ${{ github.event.head_commit.message }}
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
       - name: Get transfer
-        shell: bash
-        run: |
-          curl -sL --retry 5 https://raw.githubusercontent.com/Mikubill/transfer/master/install.sh | sh
+        uses: nick-fields/retry@v2
+        with:
+          max_attempts: 10
+          retry_wait_seconds: 60
+          timeout_minutes: 5
+          command: |
+            curl -sL https://raw.githubusercontent.com/Mikubill/transfer/master/install.sh | sh
       - name: Upload to WeTransfer
         id: transfer
         uses: nick-fields/retry@v2
@@ -459,9 +475,13 @@ jobs:
           body: ${{ github.event.head_commit.message }}
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
       - name: Get transfer
-        shell: bash
-        run: |
-          wget -qO- https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_darwin_amd64.tar.gz | tar xvz
+        uses: nick-fields/retry@v2
+        with:
+          max_attempts: 10
+          retry_wait_seconds: 60
+          timeout_minutes: 5
+          command: |
+            wget -qO- https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_darwin_amd64.tar.gz | tar xvz
       - name: Upload to WeTransfer
         id: transfer
         uses: nick-fields/retry@v2
@@ -560,9 +580,13 @@ jobs:
           body: ${{ github.event.head_commit.message }}
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
       - name: Get transfer
-        shell: bash
-        run: |
-          wget -qO- https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_darwin_amd64.tar.gz | tar xvz
+        uses: nick-fields/retry@v2
+        with:
+          max_attempts: 10
+          retry_wait_seconds: 60
+          timeout_minutes: 5
+          command: |
+            wget -qO- https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_darwin_amd64.tar.gz | tar xvz
       - name: Upload to WeTransfer
         id: transfer
         uses: nick-fields/retry@v2
@@ -635,13 +659,15 @@ jobs:
           body: ${{ github.event.head_commit.message }}
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
       - name: Get transfer
-        env:
-          TEMP_PATH: ./temp.zip
-        shell: bash
-        run: |
-          curl -sL --retry 5 https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_windows_amd64.zip -o ${{ env.TEMP_PATH }}
-          7z x ${{ env.TEMP_PATH }} -o./
-          rm ${{ env.TEMP_PATH }}
+        uses: nick-fields/retry@v2
+        with:
+          max_attempts: 10
+          retry_wait_seconds: 60
+          timeout_minutes: 5
+          command: |
+            curl -sL https://github.com/Mikubill/transfer/releases/download/v0.4.17/transfer_0.4.17_windows_amd64.zip -o ${{ env.TEMP_PATH }}
+            7z x ${{ env.TEMP_PATH }} -o./
+            rm ${{ env.TEMP_PATH }}
       - name: Upload to WeTransfer
         id: transfer
         uses: nick-fields/retry@v2
