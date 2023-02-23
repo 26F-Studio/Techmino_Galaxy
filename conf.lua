@@ -24,28 +24,6 @@ function love.conf(t)
         t.audio.mixwithsystem=true
     end
 
-    local W=t.window
-    W.title=require"version".appName.."  "..require"version".appVer
-    if portrait then
-        W.width,W.height=900,1440
-        W.minwidth,W.minheight=180,288
-    else
-        W.width,W.height=1440,900
-        W.minwidth,W.minheight=288,180
-    end
-    W.vsync=0-- Unlimited FPS
-    W.msaa=msaa-- Multi-sampled antialiasing
-    W.depth=0-- Bits/samp of depth buffer
-    W.stencil=true-- Bits/samp of stencil buffer
-    W.display=1-- Monitor ID
-    W.highdpi=true-- High-dpi mode for the window on a Retina display
-    W.x,W.y=nil
-    W.borderless=mobile
-    W.resizable=not mobile
-    if fs.getInfo('assets/image/icon.png') then
-        W.icon='assets/image/icon.png'
-    end
-
     local M=t.modules
     M.window,M.system,M.event,M.thread=true,true,true,true
     M.timer,M.math,M.data=true,true,true
@@ -53,4 +31,28 @@ function love.conf(t)
     M.graphics,M.font,M.image=true,true,true
     M.mouse,M.touch,M.keyboard,M.joystick=true,true,true,true
     M.physics=false
+
+    local W=t.window
+    W.vsync=0-- Unlimited FPS
+    W.msaa=msaa-- Multi-sampled antialiasing
+    W.depth=0-- Bits/samp of depth buffer
+    W.stencil=1-- Bits/samp of stencil buffer
+    W.display=1-- Monitor ID
+    W.highdpi=true-- High-dpi mode for the window on a Retina display
+    W.x,W.y=nil,nil
+    W.borderless=mobile
+    W.resizable=not mobile
+    W.fullscreentype=mobile and "exclusive" or "desktop" -- Fullscreen type
+    if portrait then
+        W.width,W.height=900,1440
+        W.minwidth,W.minheight=180,288
+    else
+        W.width,W.height=1440,900
+        W.minwidth,W.minheight=288,180
+    end
+    W.title=require"version".appName.."  "..require"version".appVer
+
+    if fs.getInfo('assets/image/icon.png') then
+        W.icon='assets/image/icon.png'
+    end
 end

@@ -30,11 +30,6 @@ VERSION=require"version"
 math.randomseed(os.time()*626)
 love.setDeprecationOutput(false)
 love.keyboard.setTextInput(false)
-if MOBILE then
-    local w,h,f=love.window.getMode()
-    f.resizable=false
-    love.window.setMode(w,h,f)
-end
 --------------------------------------------------------------
 -- Create directories
 for _,v in next,{'conf','progress','replay','cache','lib'} do
