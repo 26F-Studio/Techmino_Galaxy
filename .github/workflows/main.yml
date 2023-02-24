@@ -710,7 +710,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Cleanup
-        uses: geekyeggo/delete-artifact@v1
+        uses: geekyeggo/delete-artifact@v2
         with:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Display summary
