@@ -2,14 +2,14 @@ local gc=love.graphics
 
 local scene={}
 
-local keyMode
+local keyMode='sys'
 local keyMap
 local keyButtons={}
 
 function scene.enter(mode)
     BG.set('none')
 
-    keyMode=mode or 'sys'
+    keyMode=mode or keyMode
     keyMap=KEYMAP[keyMode]
 
     TABLE.cut(keyButtons)
