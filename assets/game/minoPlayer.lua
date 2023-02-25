@@ -667,7 +667,7 @@ function MP:getMino(shapeID)
                 id=self.pieceCount,
                 color=defaultMinoColor[shapeID],
                 alpha=1,
-                nearby={},
+                conn={},
             }
             if self.settings.pieceVisibleTimer then
                 if self.settings.pieceVisibleTimer==0 then
@@ -681,10 +681,10 @@ function MP:getMino(shapeID)
         end
     end end
 
-    -- Connect nearby cells
+    -- Connect cells
     for y=1,#shape do for x=1,#shape[1] do
         if shape[y][x] then
-            local L=shape[y][x].nearby
+            local L=shape[y][x].conn
             local b
             b=shape[y]   if b and b[x-1] then L[b[x-1]]=true end
             b=shape[y]   if b and b[x+1] then L[b[x+1]]=true end
@@ -1091,7 +1091,7 @@ function MP:riseGarbage(holePos)
     for x=1,w do
         L[x]={
             color=0,
-            nearby={},
+            conn={},
         }
     end
 
@@ -1106,11 +1106,11 @@ function MP:riseGarbage(holePos)
         L[rnd(w)]=false
     end
 
-    -- Add nearby
+    -- Add connection
     for x=1,w do
         if L[x] then
-            if L[x-1] then L[x].nearby[L[x-1]]=true end
-            if L[x+1] then L[x].nearby[L[x+1]]=true end
+            if L[x-1] then L[x].conn[L[x-1]]=true end
+            if L[x+1] then L[x].conn[L[x+1]]=true end
         end
     end
     ins(self.field._matrix,1,L)
@@ -1182,7 +1182,7 @@ function MP:setField(arg)
                     end
                 end
                 if c and c%1==0 and c>=0 and c<=64 then
-                    f[y][x]={color=c,nearby={}}
+                    f[y][x]={color=c,conn={}}
                 else
                     f[y][x]=false
                 end
@@ -1194,10 +1194,10 @@ function MP:setField(arg)
     for y=1,#arg do
         for x=1,w do
             if f[y][x] then
-                if f[y]   and f[y][x-1] then f[y][x].nearby[f[y][x-1]]=true end
-                if f[y]   and f[y][x+1] then f[y][x].nearby[f[y][x+1]]=true end
-                if f[y-1] and f[y-1][x] then f[y][x].nearby[f[y-1][x]]=true end
-                if f[y+1] and f[y+1][x] then f[y][x].nearby[f[y+1][x]]=true end
+                if f[y]   and f[y][x-1] then f[y][x].conn[f[y][x-1]]=true end
+                if f[y]   and f[y][x+1] then f[y][x].conn[f[y][x+1]]=true end
+                if f[y-1] and f[y-1][x] then f[y][x].conn[f[y-1][x]]=true end
+                if f[y+1] and f[y+1][x] then f[y][x].conn[f[y+1][x]]=true end
             end
         end
     end

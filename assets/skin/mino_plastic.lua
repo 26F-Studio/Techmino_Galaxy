@@ -43,7 +43,7 @@ function S.drawFieldCells(F)
 
             gc_setColor(r*.5,g*.5,b*.5,C.alpha)
             -- Reuse local var g
-            g=C.nearby
+            g=C.conn
             if g then
                 local U,D,L,R
                 if not (g[F[y  ] and F[y  ][x+1]]) then gc_rectangle('fill',bx+40-X,by   ,X ,40) R=true end

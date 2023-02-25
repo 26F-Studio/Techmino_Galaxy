@@ -24,7 +24,7 @@ return {
                     repeat
                         r1=P.seqRND:random(1,w)
                     until math.abs(r1-r0)>=2;
-                    F._matrix[y][r1]={color=0,nearby={}}
+                    F._matrix[y][r1]={color=0,conn={}}
                     r0=r1
                 end
                 for _=1,randomCount do
@@ -32,7 +32,7 @@ return {
                     repeat
                         x,y=P.seqRND:random(1,w),math.floor(P.seqRND:random()^2.6*(maxHeight-1))+1
                     until not F._matrix[y][x]
-                    F._matrix[y][x]={color=0,nearby={}}
+                    F._matrix[y][x]={color=0,conn={}}
                 end
                 for y=1,maxHeight do
                     if TABLE.count(F._matrix[y],false)==w then
