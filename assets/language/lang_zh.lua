@@ -171,6 +171,7 @@ return {
 
     title_musicroom="音乐室",
     musicroom_fullband='全频带',
+    musicroom_autoPlay="自动切换",
 
     about_title="关于",
     about_love="Z-UI使用LÖVE引擎",

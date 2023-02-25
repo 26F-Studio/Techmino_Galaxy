@@ -41,12 +41,12 @@ return {
     combo_large="$1 Combo!",
     mega_combo="MEGACMB",
 
-    b2b='B2B',
-    spin='$1-spin',
-    tuck='Tuck',
+    b2b="B2B",
+    spin="$1-spin",
+    tuck="Tuck",
 
-    allClear='ALL CLEAR',
-    halfClear='Half Clear',
+    allClear="ALL CLEAR",
+    halfClear="Half Clear",
 
     -- Key setting
     keyset_mino_moveLeft=   "Move Left",
@@ -170,7 +170,8 @@ return {
     main_out_multi="Multiple",
 
     title_musicroom="Musicroom",
-    musicroom_fullband='Full Band',
+    musicroom_fullband="Full Band",
+    musicroom_autoPlay="Auto Change",
 
     about_title="About",
     about_love="Z-UI powered by LÖVE",
