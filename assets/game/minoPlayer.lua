@@ -1915,7 +1915,7 @@ function MP:initialize()
     self.hand=false-- Controlling mino object
     self.handX=false
     self.handY=false
-    self.lastMovement=false-- Controlling mino path, for spin/tuck/... checking
+    self.lastMovement=false-- Table contain last movement info of mino, for spin/tuck/... checking
     self.ghostY=false
     self.minY=false
 

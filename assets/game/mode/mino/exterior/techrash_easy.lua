@@ -8,6 +8,7 @@ return {
     end,
     settings={mino={
         seqType=function(P)
+            P.modeData.bagLoop=0
             local l={}
             local l2={}
             while true do
@@ -33,12 +34,10 @@ return {
         event={
             playerInit=function(P)
                 P.modeData.techrash=0
-                P.modeData.bagLoop=0
             end,
             afterClear=function(P,movement)
                 if P.hand.name=='I' and #movement.clear==4 then
                     P.modeData.techrash=P.modeData.techrash+1
-                    print(P.field:getHeight())
                     if P.field:getHeight()==0 then
                         P.modeData.bagLoop=math.max(math.floor(P.modeData.bagLoop*.5),10)
                     end
