@@ -49,7 +49,7 @@ return {
                 P.modeData.minH=minH
             end,
             afterClear=function(P,movement)
-                P:triggerEvent('afterLock')-- Another Fresh
+                P:triggerEvent('afterLock')-- Force refresh
                 if P.hand.name=='I' and #movement.clear==4 then
                     P.modeData.techrash=P.modeData.techrash+1
                     local semiPC=P.field:getHeight()==0
@@ -64,7 +64,7 @@ return {
                     end
                     if semiPC then
                         P:playSound('frenzy')
-                        P.modeData.bagLoop=P.modeData.bagLoop-1
+                        P.modeData.bagLoop=math.max(P.modeData.bagLoop-2,0)
                     end
                 else
                     P:finish('PE')
