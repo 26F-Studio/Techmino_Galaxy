@@ -9,26 +9,26 @@ return {
     settings={mino={
         seqType=function(P)
             P.modeData.bagLoop=0
-            local l={}
+            local l1={}
             local l2={}
             while true do
                 -- Fill list1 (bag7 + 0~4)
-                if not l[1] then
+                if not l1[1] then
                     P.modeData.bagLoop=P.modeData.bagLoop+1
-                    for i=1,7 do table.insert(l,i) end
+                    for i=1,7 do table.insert(l1,i) end
                     for _=1,
-                        P.modeData.bagLoop<=4  and 0 or
-                        P.modeData.bagLoop<=10 and 1 or
-                        P.modeData.bagLoop<=20 and 2 or
+                        P.modeData.bagLoop<=10 and 0 or
+                        P.modeData.bagLoop<=20 and 1 or
+                        P.modeData.bagLoop<=30 and 2 or
                         P.modeData.bagLoop<=40 and 3 or
                         4
                     do
                         -- Fill list2 (bag6)
                         if not l2[1] then for i=1,6 do table.insert(l2,i) end end
-                        table.insert(l,table.remove(l2,P.seqRND:random(#l2)))
+                        table.insert(l1,table.remove(l2,P.seqRND:random(#l2)))
                     end
                 end
-                coroutine.yield(table.remove(l,P.seqRND:random(#l)))
+                coroutine.yield(table.remove(l1,P.seqRND:random(#l1)))
             end
         end,
         event={
@@ -64,7 +64,7 @@ return {
                     end
                     if semiPC then
                         P:playSound('frenzy')
-                        P.modeData.bagLoop=math.max(P.modeData.bagLoop-2,0)
+                        P.modeData.bagLoop=math.max(P.modeData.bagLoop-3,0)
                     end
                 else
                     P:finish('PE')
