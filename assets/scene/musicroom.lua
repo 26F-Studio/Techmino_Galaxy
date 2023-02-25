@@ -207,9 +207,9 @@ function scene.draw()
         gc_replaceTransform(SCR.xOy_l)
         gc_setColor(COLOR.L)
         gc.setLineWidth(2)
-        gc.circle('line',400,445,45)
+        gc.circle('line',400,305,20)
         gc_setColor(1,1,1,.26)
-        gc.arc('fill','pie',400,445,45,-MATH.pi/2,-MATH.pi/2+autoPlay/120*MATH.tau)
+        gc.arc('fill','pie',400,305,20,-MATH.pi/2,-MATH.pi/2+autoPlay/120*MATH.tau)
     end
 end
 
