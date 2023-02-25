@@ -751,6 +751,78 @@ end
 function MP:isSolidCell(x,y)
     return not self.deathTimer and self.field:getCell(x,y) and true or false
 end
+function MP:calculateHolePos(g)
+    -- TODO: 'speed' not applied
+    local holePos={}
+    local F=self.field
+    local weights=TABLE.new(.03,self.settings.fieldW)
+
+    -- Calculate hole count and splitting probabality
+    local count=1+max((g.fatal-50)/20,0)
+    local splitRate=0
+    if count~=floor(count) then
+        if self.seqRND:random()>count%1 then
+            splitRate=count%1/2
+            count=floor(count)
+        else
+            splitRate=-(count%1/2)
+            count=ceil(count)
+        end
+    end
+
+    local copyRate=1-g.fatal/40
+    local sandwichRate=(g.fatal-20)/120
+
+    -- Check bottom state of every column and calculate weight
+    for x=1,#weights do
+        if F:getCell(x,1) then
+            if not F:getCell(x,2) then
+                weights[x]=weights[x]+sandwichRate
+            elseif not F:getCell(x,3) then
+                weights[x]=weights[x]+sandwichRate/2
+            end
+        else
+            -- Find solid height
+            local y=2
+            while y<4 and not F:getCell(x,y) do
+                y=y+1
+            end
+            -- Height-Score rate: 2 → 1x, 3 → 1.5x, 4(max) → 2x
+            weights[x]=weights[x]+copyRate*y/2
+        end
+        weights[x]=MATH.clamp(weights[x],.03,1)
+    end
+
+    -- Pick hole position
+    for _=1,count do
+        local sum=0
+        for i=1,#weights do sum=sum+weights[i] end
+
+        -- local str=""
+        -- for i=1,#weights do
+        --     str=str..string.format("%03d",weights[i]*100).." "
+        -- end
+        -- print(str)
+
+        local r=sum*self.seqRND:random()
+        if sum>0 then
+            for i=1,#weights do
+                r=r-weights[i]
+                if r<=0 then
+                    r=i
+                    break
+                end
+            end
+            weights[r]=.03
+            if r>1        and weights[r-1]>.03 then weights[r-1]=max(weights[r-1]-splitRate,.03) end
+            if r<#weights and weights[r+1]>.03 then weights[r+1]=max(weights[r+1]-splitRate,.03) end
+        else
+            error("WTF why sum of weights is 0")
+        end
+        ins(holePos,r)
+    end
+    return holePos
+end
 function MP:moveLeft()
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
         self:moveHand('moveX',-1)
@@ -990,78 +1062,9 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
             local g=self.garbageBuffer[iBuffer]
             if not g then break end
             if g.time==g.time0 then
-                -- TODO: 'speed' not applied
-                -- Apply attacking args
-                local holePos={}
-                local F=self.field
-                local weights=TABLE.new(.03,self.settings.fieldW)
+                local holePos=self:calculateHolePos(g)
 
-                -- Calculate hole count and splitting probabality
-                local count=1+max((g.fatal-50)/20,0)
-                local splitRate=0
-                if count~=floor(count) then
-                    if self.seqRND:random()>count%1 then
-                        splitRate=count%1/2
-                        count=floor(count)
-                    else
-                        splitRate=-(count%1/2)
-                        count=ceil(count)
-                    end
-                end
-
-                local copyRate=1-g.fatal/40
-                local sandwichRate=(g.fatal-20)/120
-
-                -- Check bottom state of every column and calculate weight
-                for x=1,#weights do
-                    if F:getCell(x,1) then
-                        if not F:getCell(x,2) then
-                            weights[x]=weights[x]+sandwichRate
-                        elseif not F:getCell(x,3) then
-                            weights[x]=weights[x]+sandwichRate/2
-                        end
-                    else
-                        -- Find solid height
-                        local y=2
-                        while y<4 and not F:getCell(x,y) do
-                            y=y+1
-                        end
-                        -- Height-Score rate: 2 → 1x, 3 → 1.5x, 4(max) → 2x
-                        weights[x]=weights[x]+copyRate*y/2
-                    end
-                    weights[x]=MATH.clamp(weights[x],.03,1)
-                end
-
-                -- Pick hole position
-                for _=1,count do
-                    local sum=0
-                    for i=1,#weights do sum=sum+weights[i] end
-
-                    -- local str=""
-                    -- for i=1,#weights do
-                    --     str=str..string.format("%03d",weights[i]*100).." "
-                    -- end
-                    -- print(str)
-
-                    local r=sum*self.seqRND:random()
-                    if sum>0 then
-                        for i=1,#weights do
-                            r=r-weights[i]
-                            if r<=0 then
-                                r=i
-                                break
-                            end
-                        end
-                        weights[r]=.03
-                        if r>1        and weights[r-1]>.03 then weights[r-1]=max(weights[r-1]-splitRate,.03) end
-                        if r<#weights and weights[r+1]>.03 then weights[r+1]=max(weights[r+1]-splitRate,.03) end
-                    else
-                        error("WTF why sum of weights is 0")
-                    end
-                    ins(holePos,r)
-                end
-
-                -- Final pushing up
+                -- Pushing up
                 for _=1,g.power do
                     self:riseGarbage(holePos)
                 end
