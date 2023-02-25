@@ -451,7 +451,7 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
     return mino
 end
 function MP:resetPos()-- Move hand piece to the normal spawn position
-    self:moveHand('reset',floor(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1+ceil(self.fieldDived/40))
+    self:moveHand('reset',floor(self.settings.fieldW/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1+ceil(self.fieldDived/40))
     self.deathTimer=false
     while self:ifoverlap(self.hand.matrix,self.handX,self.handY) and self.handY<self.settings.spawnH+self.settings.extraSpawnH+1 do self.handY=self.handY+1 end
     self.minY=self.handY
@@ -711,7 +711,7 @@ function MP:ifoverlap(CB,cx,cy)
     local F=self.field
 
     -- Must in wall
-    if cx<=0 or cx+#CB[1]-1>F:getWidth() or cy<=0 then return true end
+    if cx<=0 or cx+#CB[1]-1>self.settings.fieldW or cy<=0 then return true end
 
     -- Must in air
     if cy>F:getHeight() then return false end
@@ -1084,8 +1084,7 @@ function MP:diveDown(cells)
     self.fieldDived=self.fieldDived+cells*40
 end
 function MP:riseGarbage(holePos)
-    local F=self.field
-    local w=F:getWidth()
+    local w=self.settings.fieldW
     local L={}
 
     -- Generate line
@@ -1114,7 +1113,7 @@ function MP:riseGarbage(holePos)
             if L[x+1] then L[x].nearby[L[x+1]]=true end
         end
     end
-    ins(F._matrix,1,L)
+    ins(self.field._matrix,1,L)
 
     -- Update buried depth and rising speed
     self:diveDown(1)
@@ -1152,7 +1151,7 @@ function MP:switchAction(act,state)
 end
 function MP:setField(arg)
     local F=self.field
-    local w=F:getWidth()
+    local w=self.settings.fieldW
     local f={}
 
     local color=arg.color
@@ -1222,7 +1221,7 @@ function MP:setField(arg)
 end
 function MP:checkLineFull(y)
     local F=self.field
-    for x=1,F:getWidth() do
+    for x=1,self.settings.fieldW do
         if not F:getCell(x,y) then
             return false
         end
@@ -1280,7 +1279,7 @@ function MP:receive(data)
 end
 function MP:getScriptValue(arg)
     return
-        arg.d=='field_width' and self.field:getWidth() or
+        arg.d=='field_width' and self.settings.fieldW or
         arg.d=='field_height' and self.field:getHeight() or
         arg.d=='cell' and (self.field:getCell(arg.x,arg.y) and 1 or 0)
 end

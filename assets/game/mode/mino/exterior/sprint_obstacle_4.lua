@@ -14,7 +14,7 @@ return {
             playerInit=function(P)
                 P.modeData.line=0
                 local F=P.field
-                local w=F:getWidth()
+                local w=P.settings.fieldW
                 local r0,r1=0
                 for y=1,maxHeight do
                     F._matrix[y]={}

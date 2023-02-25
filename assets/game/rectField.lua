@@ -88,9 +88,6 @@ function F:drawThumbnail_color(step,size)
         end
     end
 end
-function F:getWidth()
-    return self._width
-end
 function F:getHeight()
     return #self._matrix
 end

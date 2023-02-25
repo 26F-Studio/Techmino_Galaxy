@@ -307,7 +307,7 @@ function PP:restorePuyoState(puyo)-- Restore a puyo object's state (only inside,
     return puyo
 end
 function PP:resetPos()-- Move hand piece to the normal spawn position
-    self:moveHand('reset',floor(self.field:getWidth()/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
+    self:moveHand('reset',floor(self.settings.fieldW/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
     self.minY=self.handY
     self.ghostY=self.handY
     self:resetPosCheck()
@@ -488,13 +488,11 @@ function PP:getPuyo(mat)
     ins(self.nextQueue,puyo)
 end
 function PP:ifoverlap(CB,cx,cy)
-    local F=self.field
-
     -- Must in wall
-    if cx<=0 or cx+#CB[1]-1>F:getWidth() or cy<=0 then return true end
+    if cx<=0 or cx+#CB[1]-1>self.settings.fieldW or cy<=0 then return true end
 
     -- Must in air
-    if cy>F:getHeight() then return false end
+    if cy>self.field:getHeight() then return false end
 
     -- Check field
     for y=1,#CB do for x=1,#CB[1] do
@@ -727,8 +725,7 @@ function PP:checkPosition(x,y)
     end
 end
 function PP:canFall()
-    local F=self.field
-    for y=1,F:getHeight() do for x=1,F:getWidth() do
+    for y=1,self.field:getHeight() do for x=1,self.settings.fieldW do
         if self:isSolidCell(x,y) and not self:isSolidCell(x,y-1) then
             return true
         end
@@ -737,7 +734,7 @@ end
 function PP:fieldFall()
     local F=self.field
     local fallen=false
-    for x=1,F:getWidth() do
+    for x=1,self.settings.fieldW do
         local airHeight
         for y=1,F:getHeight() do
             if not F:getCell(x,y) then
@@ -759,7 +756,7 @@ function PP:fieldFall()
 end
 function PP:dropGarbage(count)
     local F=self.field
-    local w=F:getWidth()
+    local w=self.settings.fieldW
     for _=1,count do
         local x=self.seqRND:random(w)
         local y=self.settings.spawnH+1
@@ -772,7 +769,7 @@ function PP:dropGarbage(count)
 end
 function PP:checkClear()
     local F=self.field
-    for y=1,F:getHeight() do for x=1,F:getWidth() do
+    for y=1,F:getHeight() do for x=1,self.settings.fieldW do
         local c=F:getCell(x,y)
         if c and c.connClear then
             self:checkPosition(x,y)
@@ -846,7 +843,7 @@ function PP:receive(data)
 end
 function PP:getScriptValue(arg)
     return
-        arg.d=='field_width' and self.field:getWidth() or
+        arg.d=='field_width' and self.settings.fieldW or
         arg.d=='field_height' and self.field:getHeight() or
         arg.d=='cell' and (self.field:getCell(arg.x,arg.y) and 1 or 0)
 end
