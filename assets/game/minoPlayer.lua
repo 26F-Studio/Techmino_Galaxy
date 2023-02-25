@@ -707,6 +707,28 @@ function MP:getMino(shapeID)
     mino._origin=TABLE.copy(mino,0)
     return mino
 end
+function MP:getConnectedCells(x0,y0)
+    local F=self.field
+    local cell=F:getCell(x0,y0)
+    if cell then
+        local list={{x0,y0,cell},[cell]=true}
+        local ptr=1
+        while list[ptr] do
+            local x,y,c0=list[ptr][1],list[ptr][2],list[ptr][3]
+            if c0.conn then
+                local c1
+                c1=F:getCell(x+1,y) if c1 and not list[c1] and c0.conn[c1] then ins(list,{x+1,y,c1}) list[c1]=true end
+                c1=F:getCell(x-1,y) if c1 and not list[c1] and c0.conn[c1] then ins(list,{x-1,y,c1}) list[c1]=true end
+                c1=F:getCell(x,y+1) if c1 and not list[c1] and c0.conn[c1] then ins(list,{x,y+1,c1}) list[c1]=true end
+                c1=F:getCell(x,y-1) if c1 and not list[c1] and c0.conn[c1] then ins(list,{x,y-1,c1}) list[c1]=true end
+            end
+            ptr=ptr+1
+        end
+        return list
+    else
+        return {}
+    end
+end
 function MP:ifoverlap(CB,cx,cy)
     local F=self.field
 

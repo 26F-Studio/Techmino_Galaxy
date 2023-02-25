@@ -34,15 +34,46 @@ return {
         event={
             playerInit=function(P)
                 P.modeData.techrash=0
+                P.modeData.minH=0
+            end,
+            afterLock=function(P)
+                local minH=P.field:getHeight()
+                for x=1,P.settings.fieldW do
+                    for y=P.field:getHeight(),0,-1 do
+                        if P.field:getCell(x,y) then
+                            if y<minH then minH=y end
+                            break
+                        end
+                    end
+                end
+                P.modeData.minH=minH
             end,
             afterClear=function(P,movement)
+                P:triggerEvent('afterLock')-- Another Fresh
                 if P.hand.name=='I' and #movement.clear==4 then
                     P.modeData.techrash=P.modeData.techrash+1
-                    if P.field:getHeight()==0 then
-                        P.modeData.bagLoop=math.max(math.floor(P.modeData.bagLoop*.5),10)
+                    local semiPC=P.field:getHeight()==0
+                    if not semiPC then
+                        semiPC=true
+                        for x=1,P.settings.fieldW do
+                            if #P:getConnectedCells(x,1)%4~=0 then
+                                semiPC=false
+                                break
+                            end
+                        end
+                    end
+                    if semiPC then
+                        P:playSound('frenzy')
+                        P.modeData.bagLoop=P.modeData.bagLoop-1
                     end
                 else
                     P:finish('PE')
+                end
+            end,
+            drawInField=function(P)
+                gc.setColor(1,1,1,.26)
+                for y=P.modeData.minH+4,19,4 do
+                    gc.rectangle('fill',0,-y*40-2,P.settings.fieldW*40,4)
                 end
             end,
             drawOnPlayer=function(P)
