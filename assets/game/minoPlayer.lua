@@ -502,8 +502,8 @@ function MP:resetPosCheck()
         self.keyBuffer.rotate=false
     end
 
-    if self.settings.dasHalt>0 then--DAS cut
-        self.moveCharge=self.moveCharge-self.settings.dasHalt
+    if self.settings.dasHalt>0 then--DAS halt
+        self.moveCharge=min(self.moveCharge,self.settings.das-self.settings.dasHalt)
     end
 end
 function MP:freshGhost()
@@ -1606,6 +1606,9 @@ function MP:render()
 
     -- Field border
     skin.drawFieldBorder()
+
+    -- Das indicator
+    skin.drawDasIndicator(self.moveDir,self.moveCharge,self.settings.das,self.settings.arr,self.settings.dasHalt)
 
     -- Delay indicator
     if not self.hand then-- Spawn
