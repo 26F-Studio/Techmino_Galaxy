@@ -143,7 +143,7 @@ function scene.update(dt)
         if autoPlay>0 then
             autoPlay=max(autoPlay-dt,0)
         else
-            if BGM.tell()<.0626 then
+            if BGM.getDuration()-BGM.tell()<.26 then
                 autoPlay=math.random(42,120)
                 fullband=MATH.roll(.42)
 
