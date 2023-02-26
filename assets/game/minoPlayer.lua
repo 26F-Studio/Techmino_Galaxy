@@ -751,11 +751,8 @@ end
 function MP:isSolidCell(x,y)
     return not self.deathTimer and self.field:getCell(x,y) and true or false
 end
-function MP:calculateHolePos(g)
+function MP:getAtkRate(g)
     -- TODO: 'speed' not applied
-    local holePos={}
-    local F=self.field
-    local weights=TABLE.new(.03,self.settings.fieldW)
 
     -- Calculate hole count and splitting probabality
     local count=1+max((g.fatal-50)/20,0)
@@ -772,6 +769,13 @@ function MP:calculateHolePos(g)
 
     local copyRate=1-g.fatal/40
     local sandwichRate=(g.fatal-20)/120
+
+    return count,splitRate,copyRate,sandwichRate
+end
+function MP:calculateHolePos(count,splitRate,copyRate,sandwichRate)
+    local holePos={}
+    local F=self.field
+    local weights=TABLE.new(.03,self.settings.fieldW)
 
     -- Check bottom state of every column and calculate weight
     for x=1,#weights do
@@ -1062,7 +1066,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
             local g=self.garbageBuffer[iBuffer]
             if not g then break end
             if g.time==g.time0 then
-                local holePos=self:calculateHolePos(g)
+                local holePos=self:calculateHolePos(self:getAtkRate(g))
 
                 -- Pushing up
                 for _=1,g.power do
