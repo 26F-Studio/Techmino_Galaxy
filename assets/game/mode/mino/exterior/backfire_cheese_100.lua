@@ -21,21 +21,20 @@ return {
                 P.modeData._currentPower=atk.power
             end,
             beforeSend=function(P,atk)
-                atk.power=P.modeData._currentPower
-                P.modeData._currentPower=false
-                local s=0
-                for i=1,atk.power do
-                    s=s+1
-                    if P.seqRND:random(0,1)==0 or i==atk.power then
-                        atk.power=s
-                        P:receive(atk)
-                        s=0
+                local powerList={}
+                local section=0
+                for i=1,P.modeData._currentPower do
+                    section=section+1
+                    if P.seqRND:random()<.5 or i==P.modeData._currentPower then
+                        table.insert(powerList,section)
+                        section=0
                     end
                 end
-                if s>0 then
-                    atk.power=s
+                for i=1,#powerList do
+                    atk.power=powerList[i]
                     P:receive(atk)
                 end
+                P.modeData._currentPower=false
             end,
             afterClear=function(P,movement)
                 P.modeData.line=math.min(P.modeData.line+#movement.clear,lineTarget)
