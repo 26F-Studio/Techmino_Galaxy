@@ -16,10 +16,13 @@ S.base='mino_template'
 function S.drawFieldBorder()
     gc_setLineWidth(2)
     gc_setColor(1,1,1)
-    gc_line(-201,-401,-201, 401,201, 401,201,-401)
+    gc_line(-201,-401,-201,401,201,401,201,-401)
 end
 
 function S.drawHeightLines(fieldW,maxSpawnH,spawnH,lockoutH,deathH,voidH)
+end
+
+function S.drawDasIndicator(dir,charge,dasMax,arrMax)
 end
 
 function S.drawDelayIndicator(color,value)

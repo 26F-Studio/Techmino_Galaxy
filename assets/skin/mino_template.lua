@@ -41,10 +41,10 @@ end
 function S.drawFieldBorder()
     gc_setLineWidth(2)
     gc_setColor(1,1,1)
-    gc_line(-201,-401,-201, 401,201, 401,201,-401)
+    gc_line(-201,-401,-201,401,201,401,201,-401)
     gc_setColor(1,1,1,.626)
     gc_line(-201,-401,-181,-401)
-    gc_line(181,-401,201,-401)
+    gc_line(201,-401,181,-401)
 end
 
 function S.drawFieldCells(F)
@@ -87,6 +87,22 @@ function S.drawHeightLines(fieldW,maxSpawnH,spawnH,lockoutH,deathH,voidH)
     gc_setColor(1.,.5,.0,.6) gc_rectangle('fill',0,-lockoutH -1 ,fieldW,2)
     gc_setColor(1.,.0,.0,.6) gc_rectangle('fill',0,-deathH   -1 ,fieldW,2)
     gc_setColor(.0,.0,.0,.6) gc_rectangle('fill',0,-voidH    -40,fieldW,40)
+end
+
+function S.drawDasIndicator(dir,charge,dasMax,arrMax,dasHalt)
+    if not dir then return end
+
+    if charge>0 then
+        gc_setColor(1,1,1,min(charge/dasMax,1)*.4)
+        gc_rectangle('fill',202*dir,401,5*dir*min(charge/dasMax,1),-800)
+        if charge>dasMax then
+            gc_setColor(0,.62,1,.4)
+            gc_rectangle('fill',202*dir,401,5*dir,-800*min((charge-dasMax)/arrMax%1,1))
+        end
+    else
+        gc_setColor(1,0,.62,.5)
+        gc_rectangle('fill',202*dir,401,5*dir,-800*charge/(dasMax-dasHalt))
+    end
 end
 
 function S.drawDelayIndicator(color,value)
