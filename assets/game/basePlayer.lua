@@ -473,13 +473,13 @@ function P:loadScript(script)-- Parse time stamps and labels, check syntax of lu
                     assert(type(arg)=='table',errMsg.."arg must be table")
                     assert(arg.text~=nil,errMsg.."Need arg 't'")
                     for k,v in next,arg do
-                        if     k=='text'    then if type(arg.text)~='string' and type(arg.text)~='table' then error(errMsg.."Wrong arg 'text', need string or str-list") end
-                        elseif k=='duration'then if not (type(v)=='string' or type(v)=='number' and v>0) then error(errMsg.."Wrong arg 'duration', need >0") end
-                        elseif k=='size'    then if not (type(v)=='number' and v>0 and v%5==0 and v<=120) then error(errMsg.."Wrong arg 'size', need 5, 10, 15,... 120") end
+                        if     k=='text'     then if type(arg.text)~='string' and type(arg.text)~='table' then error(errMsg.."Wrong arg 'text', need string or str-list") end
+                        elseif k=='duration' then if not (type(v)=='string' or type(v)=='number' and v>0) then error(errMsg.."Wrong arg 'duration', need >0") end
+                        elseif k=='size'     then if not (type(v)=='number' and v>0 and v%5==0 and v<=120) then error(errMsg.."Wrong arg 'size', need 5, 10, 15,... 120") end
                         elseif k=='type' or k=='style' then if type(v)~='string' then error(errMsg.."Wrong arg 'type', need string") end
-                        elseif k=='style'   then if type(v)~='string' then error(errMsg.."Wrong arg 'style', need string") end
+                        elseif k=='style'    then if type(v)~='string' then error(errMsg.."Wrong arg 'style', need string") end
                         elseif k=='i' or k=='o' or k=='x' or k=='y' then if type(v)~='number' then error(errMsg.."Wrong arg '"..k.."', need number") end
-                        elseif k=='c'       then if type(v)~='table'  then error(errMsg.."Wrong arg 'c', need table") end
+                        elseif k=='c'        then if type(v)~='table'  then error(errMsg.."Wrong arg 'c', need table") end
                         else error(errMsg.."Wrong arg name '"..k.."'")
                         end
                     end
