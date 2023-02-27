@@ -751,7 +751,7 @@ end
 function MP:isSolidCell(x,y)
     return not self.deathTimer and self.field:getCell(x,y) and true or false
 end
-function MP:getAtkRate(g)
+function MP:parseAtkInfo(g)
     -- TODO: 'speed' not applied
 
     -- Calculate hole count and splitting probabality
@@ -786,7 +786,7 @@ function MP:calculateHolePos(count,splitRate,copyRate,sandwichRate)
                 weights[x]=weights[x]+sandwichRate/2
             end
         else
-            -- Find solid height
+            -- Get hole height
             local y=2
             while y<4 and not F:getCell(x,y) do
                 y=y+1
@@ -818,8 +818,8 @@ function MP:calculateHolePos(count,splitRate,copyRate,sandwichRate)
                 end
             end
             weights[r]=.03
-            if r>1        and weights[r-1]>.03 then weights[r-1]=max(weights[r-1]-splitRate,.03) end
-            if r<#weights and weights[r+1]>.03 then weights[r+1]=max(weights[r+1]-splitRate,.03) end
+            if r>1        then weights[r-1]=MATH.clamp(weights[r-1]-splitRate,.03,1) end
+            if r<#weights then weights[r+1]=MATH.clamp(weights[r+1]-splitRate,.03,1) end
         else
             error("WTF why sum of weights is 0")
         end
@@ -1066,7 +1066,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
             local g=self.garbageBuffer[iBuffer]
             if not g then break end
             if g.time==g.time0 then
-                local holePos=self:calculateHolePos(self:getAtkRate(g))
+                local holePos=self:calculateHolePos(self:parseAtkInfo(g))
 
                 -- Pushing up
                 for _=1,g.power do
