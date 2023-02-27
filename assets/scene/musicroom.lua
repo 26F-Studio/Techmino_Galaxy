@@ -1,5 +1,5 @@
 local gc=love.graphics
-local gc_replaceTransform,gc_setColor=gc.replaceTransform,gc.setColor
+local gc_setColor=gc.setColor
 local gc_print,gc_printf=gc.print,gc.printf
 local setFont=FONT.set
 
@@ -60,7 +60,7 @@ local musicListBox do
     end
     musicListBox=WIDGET.new(musicListBox)
 end
-local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1400,
+local progressBar=WIDGET.new{type='slider_progress',pos={1,.5},x=-1500,y=230,w=1400,
     disp=function() return BGM.tell()/BGM.getDuration()%1 end,
     code=function(v) BGM.set('all','seek',v*BGM.getDuration()) end,
     visibleFunc=function() return BGM.isPlaying() end,
@@ -164,7 +164,7 @@ local objText,titleTextObj='',gc.newText(FONT.get(90,'bold'))
 function scene.draw()
     PROGRESS.drawExteriorHeader()
 
-    gc_replaceTransform(SCR.xOy_l)
+    gc.replaceTransform(SCR.xOy_r)
 
     -- Song title
     if objText~=bigTitle[selected] then
@@ -173,29 +173,27 @@ function scene.draw()
     end
     local t=love.timer.getTime()
     gc_setColor(sin(t*.5)*.2+.8,sin(t*.7)*.2+.8,sin(t)*.2+.8)
-    gc.draw(titleTextObj,700,-100,0,min(1,650/titleTextObj:getWidth()),nil,titleTextObj:getWidth(),titleTextObj:getHeight())
+    gc.draw(titleTextObj,-900,-100,0,min(1,650/titleTextObj:getWidth()),nil,titleTextObj:getWidth(),titleTextObj:getHeight())
 
     -- Author and message
     setFont(50)
     gc_setColor(COLOR.L)
-    gc_printf(bgmList[selected].author,0,-90,700,'right')
+    gc_printf(bgmList[selected].author,-1600,-90,700,'right')
     if bgmList[selected].message then
         setFont(30,'thin')
         gc_setColor(COLOR.LD)
-        gc_printf(bgmList[selected].message,0,0,700,'right')
+        gc_printf(bgmList[selected].message,-1600,0,700,'right')
     end
 
     -- Time
     if BGM.tell() then
-        gc_replaceTransform(SCR.xOy_m)
         setFont(30)
         gc_setColor(COLOR.L)
-        gc_printf(STRING.time_simp(BGM.tell()%BGM.getDuration()),-700,260,626,'left')
-        gc_printf(STRING.time_simp(BGM.getDuration()),700-626,260,626,'right')
+        gc_printf(STRING.time_simp(BGM.tell()%BGM.getDuration()),-1500,260,626,'left')
+        gc_printf(STRING.time_simp(BGM.getDuration()),-100-626,260,626,'right')
     end
 
     -- Collecting progress
-    gc_replaceTransform(SCR.xOy_r)
     gc_setColor(COLOR.L)
     gc.setLineWidth(2)
     gc.line(-99,-320,-99,-365,-235,-365,-255,-320)
@@ -204,12 +202,11 @@ function scene.draw()
 
     -- Autoplay timer
     if autoPlay then
-        gc_replaceTransform(SCR.xOy_l)
         gc_setColor(COLOR.L)
         gc.setLineWidth(2)
-        gc.circle('line',400,305,20)
+        gc.circle('line',-1200,305,20)
         gc_setColor(1,1,1,.26)
-        gc.arc('fill','pie',400,305,20,-MATH.pi/2,-MATH.pi/2+autoPlay/120*MATH.tau)
+        gc.arc('fill','pie',-1200,305,20,-MATH.pi/2,-MATH.pi/2+autoPlay/120*MATH.tau)
     end
 end
 
@@ -221,11 +218,11 @@ scene.widgetList={
     progressBar,
 
     -- Play/Stop
-    WIDGET.new{type='button_invis',pos={.5,.5},y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=WIDGET.c_pressKey'space',visibleFunc=function() return not BGM.isPlaying() end},
-    WIDGET.new{type='button_invis',pos={.5,.5},y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleFunc=function() return BGM.isPlaying() end},
+    WIDGET.new{type='button_invis',pos={1,.5},x=-800,y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=WIDGET.c_pressKey'space',visibleFunc=function() return not BGM.isPlaying() end},
+    WIDGET.new{type='button_invis',pos={1,.5},x=-800,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleFunc=function() return BGM.isPlaying() end},
 
     -- Fullband Switch
-    WIDGET.new{type='switch',pos={0,.5},x=150,y=360,h=50,labelPos='right',disp=function() return fullband end,
+    WIDGET.new{type='switch',pos={1,.5},x=-1450,y=360,h=50,labelPos='right',disp=function() return fullband end,
         name='fullband',text=LANG'musicroom_fullband',
         sound_on=false,sound_off=false,
         code=function()
@@ -242,7 +239,7 @@ scene.widgetList={
         end,
     },
     -- Auto Switch
-    WIDGET.new{type='switch',pos={0,.5},x=400,y=360,h=50,labelPos='right',disp=function() return autoPlay end,
+    WIDGET.new{type='switch',pos={1,.5},x=-1200,y=360,h=50,labelPos='right',disp=function() return autoPlay end,
         name='autoPlay',text=LANG'musicroom_autoPlay',
         sound_on=false,sound_off=false,
         code=function()
