@@ -1,6 +1,6 @@
 local gc=love.graphics
-local lineTarget,lineStay=20,6
-local bgmTransBegin,bgmTransFinish=0,10
+local lineTarget,lineStay=40,8
+local bgmTransBegin,bgmTransFinish=10,30
 
 return {
     initialize=function()
