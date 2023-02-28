@@ -171,7 +171,7 @@ return {
 
     title_musicroom="Musicroom",
     musicroom_fullband="Full Band",
-    musicroom_autoPlay="Auto Change",
+    musicroom_autoplay="Auto Change",
 
     about_title="About",
     about_love="Z-UI powered by LÖVE",

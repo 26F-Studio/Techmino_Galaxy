@@ -9,7 +9,7 @@ local sin=math.sin
 local selected,fullband
 local collectCount=0
 local noProgress=false
-local autoPlay=false
+local autoplay=false
 
 local bigTitle=setmetatable({},{
     __index=function(self,name)
@@ -119,7 +119,7 @@ function scene.keyDown(key,isRep)
             end
             progressBar:reset()
         elseif key=='tab' then
-            local w=scene.widgetList.fullband
+            local w=scene.widgetList[love.keyboard.isDown('lctrl','rctrl') and 'fullband' or 'autoplay']
             if w._visible then
                 w.code()
             end
@@ -139,12 +139,12 @@ function scene.keyDown(key,isRep)
 end
 
 function scene.update(dt)
-    if autoPlay and BGM.isPlaying() then
-        if autoPlay>0 then
-            autoPlay=max(autoPlay-dt,0)
+    if autoplay and BGM.isPlaying() then
+        if autoplay>0 then
+            autoplay=max(autoplay-dt,0)
         else
             if BGM.getDuration()-BGM.tell()<.26 then
-                autoPlay=math.random(42,120)
+                autoplay=math.random(42,120)
                 fullband=MATH.roll(.42)
 
                 local list,r=musicListBox:getList()
@@ -154,7 +154,7 @@ function scene.update(dt)
                 musicListBox:select(r)
                 musicListBox.code()
             else
-                autoPlay=.0626
+                autoplay=.0626
             end
         end
     end
@@ -201,12 +201,12 @@ function scene.draw()
     gc_printf(collectCount.."/"..bgmCount,-105-626,-362,626,'right')
 
     -- Autoplay timer
-    if autoPlay then
+    if autoplay then
         gc_setColor(COLOR.L)
         gc.setLineWidth(2)
         gc.circle('line',-1200,305,20)
         gc_setColor(1,1,1,.26)
-        gc.arc('fill','pie',-1200,305,20,-MATH.pi/2,-MATH.pi/2+autoPlay/120*MATH.tau)
+        gc.arc('fill','pie',-1200,305,20,-MATH.pi/2,-MATH.pi/2+autoplay/120*MATH.tau)
     end
 end
 
@@ -239,14 +239,14 @@ scene.widgetList={
         end,
     },
     -- Auto Switch
-    WIDGET.new{type='switch',pos={1,.5},x=-1200,y=360,h=50,labelPos='right',disp=function() return autoPlay end,
-        name='autoPlay',text=LANG'musicroom_autoPlay',
+    WIDGET.new{type='switch',pos={1,.5},x=-1200,y=360,h=50,labelPos='right',disp=function() return autoplay end,
+        name='autoplay',text=LANG'musicroom_autoplay',
         sound_on=false,sound_off=false,
         code=function()
-            if autoPlay then
-                autoPlay=false
+            if autoplay then
+                autoplay=false
             else
-                autoPlay=math.random(42,120)
+                autoplay=math.random(42,120)
             end
         end,
     },
