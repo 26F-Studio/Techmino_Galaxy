@@ -119,7 +119,7 @@ function scene.keyDown(key,isRep)
             end
             progressBar:reset()
         elseif key=='tab' then
-            local w=scene.widgetList[love.keyboard.isDown('lctrl','rctrl') and 'fullband' or 'autoplay']
+            local w=scene.widgetList[love.keyboard.isDown('lctrl','rctrl') and 'autoplay' or 'fullband']
             if w._visible then
                 w.code()
             end
