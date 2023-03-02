@@ -107,11 +107,11 @@ local defaultSoundFunc={
         end
     end,__metatable=true}),
     frenzy=      function() SFX.play('frenzy')      end,
-    allClear=    function() SFX.play('all_clear')   end,
-    halfClear=   function() SFX.play('half_clear')  end,
+    allClear=    function() SFX.play('clear_all')   end,
+    halfClear=   function() SFX.play('clear_half')  end,
     suffocate=   function() SFX.play('suffocate')   end,
     desuffocate= function() SFX.play('desuffocate') end,
-    reach=       function() SFX.play('beep_rise')      end,
+    reach=       function() SFX.play('beep_rise')   end,
     win=         function() SFX.play('win')         end,
     fail=        function() SFX.play('fail')        end,
 }

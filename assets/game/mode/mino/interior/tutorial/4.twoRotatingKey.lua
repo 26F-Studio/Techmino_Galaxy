@@ -103,7 +103,7 @@ return {
                         table.insert(P.nextQueue,1,P:getMino(Minoes[P.hand.name].id))
                         P.hand=false
                         P.spawnTimer=1000
-                        P:playSound('b2b_break')
+                        P:playSound('fail')
                         P:say{
                             duration='1s',
                             text='@tutorial_twoRotatingKey_unnecessaryRotation',
