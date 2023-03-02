@@ -114,6 +114,6 @@ scene.widgetList={
     WIDGET.new{type='button', pos={0,1},x=480, y=-80,w=160,h=80,text=LANG"keyset_page_puyo",color='lR',code=function() scene.enter('puyo') end,visibleFunc=PROGRESS.getPuyoUnlocked},
     WIDGET.new{type='button', pos={0,1},x=660, y=-80,w=160,h=80,text=LANG"keyset_page_gem", color='lB',code=function() scene.enter('gem')  end,visibleFunc=PROGRESS.getGemUnlocked},
     WIDGET.new{type='button', pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG"setting_test",fontSize=40,code=playExterior'mino/exterior/test'},
-    WIDGET.new{type='button', pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button', pos={1,1},x=-120,y=-80,w=160,h=80,sound='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 return scene

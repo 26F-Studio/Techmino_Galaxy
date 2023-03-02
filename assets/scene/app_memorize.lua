@@ -117,7 +117,7 @@ scene.widgetList={
     WIDGET.new{type='button',pos={0.5,0.95},x=-100,y=-400,w=90,fontSize=60,text="7",code=WIDGET.c_pressKey'7'},
     WIDGET.new{type='button',pos={0.5,0.95},x=0,   y=-400,w=90,fontSize=60,text="8",code=WIDGET.c_pressKey'8'},
     WIDGET.new{type='button',pos={0.5,0.95},x=100, y=-400,w=90,fontSize=60,text="9",code=WIDGET.c_pressKey'9'},
-    WIDGET.new{type='button',pos={1,1},     x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={1,1},     x=-120,y=-80,w=160,h=80,sound='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 
 return scene

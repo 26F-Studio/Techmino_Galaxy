@@ -61,7 +61,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=60,y=60,w=80,color='R',cornerR=0,sound='back',fontSize=70,text=CHAR.icon.back_chevron,code=WIDGET.c_pressKey'escape'},
+    WIDGET.new{type='button_fill',pos={0,0},x=60,y=60,w=80,color='R',cornerR=0,sound='button_back',fontSize=70,text=CHAR.icon.back_chevron,code=WIDGET.c_pressKey'escape'},
 
     WIDGET.new{name='1',type='button_fill',pos={.5,.5},x=-270,y=-40,w=500,h=140, color='F',text=LANG'main_in_sprint',  fontSize=40,cornerR=0,code=playInterior'mino/interior/sprint'},
     WIDGET.new{name='1',type='button_fill',pos={.5,.5},x=270, y=-40,w=500,h=140, color='F',text=LANG'main_in_marathon',fontSize=40,cornerR=0,code=playInterior'mino/interior/marathon'},
