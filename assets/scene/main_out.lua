@@ -50,7 +50,7 @@ scene.widgetList={
     WIDGET.new{type='button_invis',pos={1,0},x=-550,y=60,w=80,cornerR=20,fontSize=65,text=CHAR.icon.music,     sound='move',code=WIDGET.c_goScn('musicroom','fadeHeader')},
     WIDGET.new{type='button_invis',pos={1,0},x=-700,y=60,w=80,cornerR=20,fontSize=65,text=CHAR.icon.language,  sound='move',code=WIDGET.c_goScn('lang_out','fadeHeader')},
 
-    WIDGET.new{type='button', pos={.5,.5},x=-475,y=80, w=530,h=100,text=function() return CHAR.icon.person    ..' '..Text.main_out_single    end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('positioning','fadeHeader')},
+    WIDGET.new{type='button', pos={.5,.5},x=-475,y=80, w=530,h=100,text=function() return CHAR.icon.person    ..' '..Text.main_out_single    end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('simulation','fadeHeader')},
     WIDGET.new{type='button', pos={.5,.5},x=95,  y=80, w=530,h=100,text=function() return CHAR.icon.people    ..' '..Text.main_out_multi     end, fontSize=40,cornerR=26,color='lD',sound=false},
 
     WIDGET.new{type='button', pos={.5,.5},x=-570,y=220,w=340,h=100,text=function() return CHAR.icon.settings  ..' '..Text.main_out_settings  end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('setting_out','fadeHeader')},
