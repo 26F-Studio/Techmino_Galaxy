@@ -160,8 +160,8 @@ local bgmList={
     ['sine']={
         author="MrZ",
         message="~~~~~~",
-        base={'melody1','bass','drum'},
-        full={'melody1','melody2','accompany','bass','drum'},
+        base={'melody1','accompany1','bass','drum'},
+        full={'melody1','melody2','accompany1','accompany2','bass','drum'},
     },
     ['space']={
         author="MrZ",
