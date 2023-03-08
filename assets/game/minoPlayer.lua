@@ -479,6 +479,11 @@ function MP:resetPosCheck()
             -- Suffocate IMS, trigger when key pressed, not buffered
             if self.keyState.moveLeft then self:moveLeft() end
             if self.keyState.moveRight then self:moveRight() end
+            -- Suffocate IRS
+            if self.keyBuffer.rotate then
+                self:rotate(self.keyBuffer.rotate,true)
+                self.keyBuffer.rotate=false
+            end
         else
             self:lock()
             self:finish('WA')
@@ -494,13 +499,14 @@ function MP:resetPosCheck()
             self.keyBuffer.move=false
         end
 
+        -- IRS
+        if self.keyBuffer.rotate then
+            self:rotate(self.keyBuffer.rotate,true)
+            self.keyBuffer.rotate=false
+        end
+
         self:freshGhost()
         self:freshDelay('spawn')
-    end
-
-    if self.keyBuffer.rotate then-- IRS
-        self:rotate(self.keyBuffer.rotate,true)
-        self.keyBuffer.rotate=false
     end
 
     if self.settings.dasHalt>0 then--DAS halt
