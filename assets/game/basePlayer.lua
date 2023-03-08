@@ -12,7 +12,7 @@ local P={}
 function P:shakeBoard(args,v)
     local shake=self.settings.shakeness
     if args:sArg('-drop') then
-        self.pos.vy=self.pos.vy+.2*shake
+        self.pos.vy=self.pos.vy+.2*shake*(v^.5 or 1)
     elseif args:sArg('-down') then
         self.pos.dy=self.pos.dy+.1*shake
     elseif args:sArg('-right') then
@@ -28,7 +28,7 @@ function P:shakeBoard(args,v)
         self.pos.va=self.pos.va+((self.handX+#self.hand.matrix[1]/2-1)/self.settings.fieldW-.5)*.0026*shake
     elseif args:sArg('-clear') then
         self.pos.dk=self.pos.dk*(1+shake)
-        self.pos.vk=self.pos.vk+.0002*shake*min(v^1.6,26)
+        self.pos.vk=self.pos.vk+.0002*shake*min((v or 2)^1.6,26)
     end
 end
 function P:playSound(event,...)

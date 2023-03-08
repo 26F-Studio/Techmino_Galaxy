@@ -529,9 +529,10 @@ function MP:freshGhost()
 
             -- 20G check
             if (self.settings.dropDelay<=0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then
-                self:moveHand('drop',self.ghostY-self.handY)
+                local dY=self.ghostY-self.handY
+                self:moveHand('drop',dY)
                 self:freshDelay('drop')
-                self:shakeBoard('-drop')
+                self:shakeBoard('-drop',-dY/self.settings.spawnH)
             else
                 self:freshDelay('move')
             end
@@ -982,7 +983,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     -- Move down
     if self.handY>self.ghostY then
         self:moveHand('drop',self.ghostY-self.handY)
-        self:shakeBoard('-drop')
+        self:shakeBoard('-drop',1)
         self:playSound('drop')
     end
     self:triggerEvent('afterDrop')

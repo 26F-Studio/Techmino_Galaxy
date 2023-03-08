@@ -361,7 +361,7 @@ function PP:resetPosCheck()
             self.keyBuffer.rotate=false
         end
 
-        self:freshGhost(true)
+        self:freshGhost()
         self:freshDelay('spawn')
     end
 
@@ -369,7 +369,7 @@ function PP:resetPosCheck()
         self.moveCharge=min(self.moveCharge,self.settings.das-self.settings.dasHalt)
     end
 end
-function PP:freshGhost(justFreshGhost)
+function PP:freshGhost()
     if self.hand then
         self.ghostY=min(self.field:getHeight()+1,self.handY)
 
@@ -378,14 +378,14 @@ function PP:freshGhost(justFreshGhost)
             self.ghostY=self.ghostY-1
         end
 
-        if not justFreshGhost then
-            if (self.settings.dropDelay<=0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then-- if (temp) 20G on
-                self:moveHand('drop',self.ghostY-self.handY)
-                self:freshDelay('drop')
-                self:shakeBoard('-drop')
-            else
-                self:freshDelay('move')
-            end
+        -- 20G check
+        if (self.settings.dropDelay<=0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then-- if (temp) 20G on
+            local dY=self.ghostY-self.handY
+            self:moveHand('drop',dY)
+            self:freshDelay('drop')
+            self:shakeBoard('-drop',-dY/self.settings.spawnH)
+        else
+            self:freshDelay('move')
         end
     end
 end
@@ -598,7 +598,7 @@ function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
     -- Move down
     if self.handY>self.ghostY then
         self:moveHand('drop',self.ghostY-self.handY)
-        self:shakeBoard('-drop')
+        self:shakeBoard('-drop',1)
         self:playSound('drop')
     end
     self:createLockParticle(self.handX,self.handY)
