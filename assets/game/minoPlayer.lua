@@ -479,6 +479,7 @@ function MP:resetPosCheck()
             -- Suffocate IMS, trigger when key pressed, not buffered
             if self.keyState.moveLeft then self:moveLeft() end
             if self.keyState.moveRight then self:moveRight() end
+
             -- Suffocate IRS
             if self.keyBuffer.rotate then
                 self:rotate(self.keyBuffer.rotate,true)
@@ -490,7 +491,8 @@ function MP:resetPosCheck()
             return
         end
     else
-        if self.keyBuffer.move then-- IMS
+        -- IMS
+        if self.keyBuffer.move then
             if self.keyBuffer.move=='L' then
                 self:moveLeft()
             elseif self.keyBuffer.move=='R' then
