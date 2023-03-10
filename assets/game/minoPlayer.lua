@@ -1558,14 +1558,15 @@ function MP:render()
                 local ptr,lines,fallingRate
                 if self.clearTimer>0 then
                     lines=self.lastMovement.clear
-                    fallingRate=skin.fallingCurve(self.clearTimer/self.settings.clearDelay)
+                    fallingRate=self.clearTimer/self.settings.clearDelay
                     ptr=#lines
                 end
 
                 for y=1,#self.field._matrix do
                     while ptr and y==lines[ptr]-(#lines-ptr) do
+                        skin.drawClearingEffect(settings.fieldW,y,fallingRate)
                         ptr=ptr>1 and ptr-1
-                        gc.translate(0,-40*fallingRate)
+                        gc.translate(0,-40*skin.fallingCurve(fallingRate))
                     end
                     skin.drawFieldCells(self.field._matrix,y)
                 end

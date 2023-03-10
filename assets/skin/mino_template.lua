@@ -59,6 +59,11 @@ function S.drawFieldCells(F,y)
     end
 end
 
+function S.drawClearingEffect(w,y,rate)-- rate is raw `clearTimer/clearDelay`, not `Curve(T/D)`
+    gc_setColor(1,1,1,rate)
+    gc_rectangle('fill',0,(1-y)*40,w*40,-40*rate)
+end
+
 function S.drawFloatHold(n,B,handX,handY,unavailable)
     if unavailable then
         gc_setColor(.6,.6,.6,.25)
