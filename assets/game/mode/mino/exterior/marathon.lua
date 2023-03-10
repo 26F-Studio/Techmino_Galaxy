@@ -1,3 +1,4 @@
+local gc=love.graphics
 local levels={
     {drop=1000,lock=1000,spawn=150, par=999},
     {drop=730, lock=1000,spawn=150, par=909},
@@ -30,7 +31,6 @@ local levels={
     {drop=0,   lock=510 ,spawn=70,  par=142},
     {drop=0,   lock=500 ,spawn=70,  par=133},
 }
-local gc=love.graphics
 
 return {
     initialize=function()

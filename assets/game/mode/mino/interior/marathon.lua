@@ -1,5 +1,5 @@
-local dropSpeed={1000,833,666,500,400,300,200,150,100,70,50,30,22,16,12,8,7,6,5,4}
 local gc=love.graphics
+local dropSpeed={1000,833,666,500,400,300,200,150,100,70,50,30,22,16,12,8,7,6,5,4}
 
 return {
     initialize=function()

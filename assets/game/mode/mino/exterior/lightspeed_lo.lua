@@ -1,3 +1,4 @@
+local gc=love.graphics
 local bgmTransBegin,bgmTransFinish=100,300
 local levels={
     {lock=1e3,spawn=320,das=200,arr=36},
@@ -6,7 +7,6 @@ local levels={
     {lock=550,spawn=230,das=120,arr=24},
     {lock=400,spawn=200,das=100,arr=20},
 }
-local gc=love.graphics
 
 return {
     initialize=function()
@@ -15,10 +15,12 @@ return {
         playBgm('secret8th','base')
     end,
     settings={mino={
-        spawnDelay=150,
         clearDelay=300,
         event={
             playerInit=function(P)
+                P.modeData.point=0
+                P.modeData.level=1
+                P.modeData.target=100
                 P.modeData.storedDas=P.settings.das
                 P.modeData.storedArr=P.settings.arr
 
@@ -27,10 +29,6 @@ return {
                 P.settings.arr=math.max(P.modeData.storedArr,levels[1].arr)
                 P.settings.lockDelay=levels[1].lock
                 P.settings.spawnDelay=levels[1].spawn
-
-                P.modeData.point=0
-                P.modeData.level=1
-                P.modeData.target=100
             end,
             afterSpawn=function(P)
                 local md=P.modeData
