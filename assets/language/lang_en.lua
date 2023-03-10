@@ -210,7 +210,7 @@ return {
         backfire_cheese_100=   {"Backfire Cheese 100","Clear 100 lines, but with cheese backfire"},
         sprint_40=             {"Sprint 40","Clear 40 lines"},
         sprint_10=             {"Sprint 10","Clear 10 lines"},
-        sprint_obstacle_4=     {"Sprint 4 Obstacle","Clear 4 lines with random starting field"},
+        sprint_obstacle_20=    {"Sprint 20 Obstacle","Clear 20 lines with random starting field"},
         sprint_200=            {"Sprint 200","Clear 200 lines"},
         sprint_1000=           {"Sprint 1000","Clear 1000 lines"},
         sprint_drought_40=     {"Sprint 40 Drought","Clear 40 lines without I piece"},
