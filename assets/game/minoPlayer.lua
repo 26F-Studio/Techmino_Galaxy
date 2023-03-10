@@ -458,6 +458,8 @@ function MP:resetPos()-- Move hand piece to the normal spawn position
     self.minY=self.handY
     self.ghostY=self.handY
     self:resetPosCheck()
+
+
     self:triggerEvent('afterResetPos')
 end
 function MP:resetPosCheck()
@@ -986,8 +988,12 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         self:shakeBoard('-drop',1)
         self:playSound('drop')
     end
+
+
     self:triggerEvent('afterDrop')
     if not self.hand or self.finished then return end
+
+
     self:createLockParticle(self.handX,self.handY)
 
     -- Lock to field
@@ -997,6 +1003,8 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         return
     end
     self:playSound('lock')
+
+
     self:triggerEvent('afterLock')
     if self.finished then return end
 
@@ -1018,6 +1026,8 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         self:shakeBoard('-clear',#lineClear)
         self:playSound('clear',#lineClear)
         self:createFrenzyParticle(#lineClear*26)
+
+
         self:triggerEvent('afterClear',self.lastMovement)
         if self.finished then return end
     else
@@ -1027,7 +1037,11 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     -- Attack
     local atk=GAME.initAtk(minoAtkSys[self.settings.atkSys].drop(self))
     if atk then
+
+
         self:triggerEvent('beforeCancel',atk)
+
+
         if self.settings.allowCancel then
             while atk and self.garbageBuffer[1] do
                 local ap=atk.power*(atk.cancelRate or 1)
@@ -1053,7 +1067,11 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         end
         if atk and atk.power>=.5 then
             atk.power=floor(atk.power+.5)
+
+
             self:triggerEvent('beforeSend',atk)
+
+
             GAME.send(self,atk)
         end
         if self.finished then return end
@@ -1535,7 +1553,23 @@ function MP:render()
         skin.drawFieldBackground(settings.fieldW)
 
         gc.translate(0,self.fieldDived)
-            skin.drawFieldCells(self.field)
+
+            gc.push('transform')
+                local ptr,lines,fallingRate
+                if self.clearTimer>0 then
+                    lines=self.lastMovement.clear
+                    fallingRate=skin.fallingCurve(self.clearTimer/self.settings.clearDelay)
+                    ptr=#lines
+                end
+
+                for y=1,#self.field._matrix do
+                    while ptr and y==lines[ptr]-(#lines-ptr) do
+                        ptr=ptr>1 and ptr-1
+                        gc.translate(0,-40*fallingRate)
+                    end
+                    skin.drawFieldCells(self.field._matrix,y)
+                end
+            gc.pop()
 
 
             self:triggerEvent('drawBelowBlock')

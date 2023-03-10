@@ -47,16 +47,16 @@ function S.drawFieldBorder()
     gc_line(201,-401,181,-401)
 end
 
-function S.drawFieldCells(F)
-    F=F._matrix
-    for y=1,#F do for x=1,#F[1] do
+function S.fallingCurve(t) return t end
+function S.drawFieldCells(F,y)
+    for x=1,#F[1] do
         local C=F[y][x]
         if C then
             local r,g,b=unpack(ColorTable[C.color])
             gc_setColor(r,g,b,C.alpha)
             gc_rectangle('fill',(x-1)*40,-y*40,40,40)
         end
-    end end
+    end
 end
 
 function S.drawFloatHold(n,B,handX,handY,unavailable)

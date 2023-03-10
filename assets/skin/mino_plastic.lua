@@ -31,9 +31,8 @@ local function drawSide(B,x,y,bx,by)
 end
 
 
-function S.drawFieldCells(F)
-    F=F._matrix
-    for y=1,#F do for x=1,#F[1] do
+function S.drawFieldCells(F,y)
+    for x=1,#F[1] do
         local C=F[y][x]
         if C then
             local bx,by=(x-1)*40,-y*40
@@ -57,7 +56,7 @@ function S.drawFieldCells(F)
                 if not (U or R or g[F[y+1] and F[y+1][x+1]]) then gc_rectangle('fill',bx+40-X,by   ,X , X) end
             end
         end
-    end end
+    end
 end
 
 function S.drawFloatHold(n,B,handX,handY,unavailable)
