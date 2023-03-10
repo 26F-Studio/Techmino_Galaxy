@@ -9,8 +9,8 @@ return {
         playBgm('race','base')
     end,
     settings={mino={
-        pieceVisibleTimer=120,
-        pieceDisappearTime=120,
+        pieceVisTime=120,
+        pieceFadeTime=120,
         event={
             playerInit=function(P)
                 P.modeData.line=0

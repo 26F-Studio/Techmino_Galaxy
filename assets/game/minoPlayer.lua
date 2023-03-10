@@ -684,12 +684,12 @@ function MP:getMino(shapeID)
                 alpha=1,
                 conn={},
             }
-            if self.settings.pieceVisibleTimer then
-                if self.settings.pieceVisibleTimer==0 then
+            if self.settings.pieceVisTime then
+                if self.settings.pieceVisTime==0 then
                     c.alpha=0
                 else
-                    c.visibleTimer=self.settings.pieceVisibleTimer
-                    c.disappearTime=self.settings.pieceDisappearTime
+                    c.visibleTimer=self.settings.pieceVisTime
+                    c.fadeTime=self.settings.pieceFadeTime
                 end
             end
             shape[y][x]=c
@@ -1499,11 +1499,11 @@ function MP:updateFrame()
         if C and  C.visibleTimer then
             C.visibleTimer=C.visibleTimer-1
             if C.visibleTimer>0 then
-                C.alpha=min(C.visibleTimer/C.disappearTime,1)
+                C.alpha=min(C.visibleTimer/C.fadeTime,1)
             else-- Set to invisible, remove timers
                 C.alpha=0
                 C.visibleTimer=nil
-                C.disappearTime=nil
+                C.fadeTime=nil
             end
         end
     end end
@@ -1788,8 +1788,8 @@ local baseEnv={
     maxRisingSpeed=1,
     minRisingSpeed=1,
 
-    pieceVisibleTimer=false,
-    pieceDisappearTime=1000,
+    pieceVisTime=false,
+    pieceFadeTime=1000,
 
     actionPack='Normal',
     seqType='bag7',
