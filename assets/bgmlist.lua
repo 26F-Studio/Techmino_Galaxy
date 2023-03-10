@@ -125,8 +125,8 @@ local bgmList={
     },
     ['reason']={
         author="MrZ",
-        base={'melody2','bass'},
-        full={'melody1','melody2','bass','drum'},
+        base={'accompany1','accompany2','bass'},
+        full={'melody','accompany1','accompany2','bass','drum'},
     },
     ['rectification']={
         author="MrZ",
