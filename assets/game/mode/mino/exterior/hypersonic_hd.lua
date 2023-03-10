@@ -13,7 +13,7 @@ local levels={
     {lock=260,fresh=4200,spawn=80, clear=120,das=80, arr=20,visTime=600, fadeTime=600 },
 }
 local showInvisPeriod=26000*10
-local showInvisInterval=30
+local showInvisStep=30
 local showVisTime=1000
 local showFadeTime=1000
 
@@ -21,6 +21,10 @@ local flashRate=.1626
 local flashInterval=1846
 local flashVisTime1,flashVisTime2=120,460
 local flashFadeTime=620
+
+local endAllInterval=462
+local endVisTime1,endVisTime2=620,723
+local endFadeTime=1260
 
 return {
     initialize=function()
@@ -39,8 +43,9 @@ return {
                 P.modeData.storedDas=P.settings.das
                 P.modeData.storedArr=P.settings.arr
                 P.modeData.flashTimer=flashInterval
-                P.modeData.swipeTimer=showInvisInterval*26
+                P.modeData.swipeTimer=showInvisStep*26
                 P.modeData.swipeStep=10
+                P.modeData.showAllTimer=0
 
                 P.settings.dropDelay=0
                 P.settings.das=math.max(P.modeData.storedDas,levels[1].das)
@@ -53,12 +58,30 @@ return {
                 -- P.settings.pieceFadeTime=levels[1].fadeTime
             end,
             always=function(P)
+                -- Show all after finished
+                if P.finished then
+                    P.modeData.showAllTimer=(P.modeData.showAllTimer+1)%endAllInterval
+                    if P.modeData.showAllTimer==0 then
+                        for y=1,P.field:getHeight() do
+                            for x=1,P.settings.fieldW do
+                                local c=P.field:getCell(x,y)
+                                if c then
+                                    c.visTimer=P.seqRND:random(endVisTime1,endVisTime2)
+                                    c.fadeTime=endFadeTime
+                                end
+                            end
+                        end
+                    end
+                    return
+                end
+
+                -- Swipe show invis periodly
                 local t=P.modeData.swipeTimer
-                local swiping=t/showInvisInterval<=P.field:getHeight()
+                local swiping=t/showInvisStep<=P.field:getHeight()
                 t=t%showInvisPeriod+(swiping and 1 or P.modeData.swipeStep)
-                if swiping and t%showInvisInterval==0 then
+                if swiping and t%showInvisStep==0 then
                     for x=1,P.settings.fieldW do
-                        local c=P.field:getCell(x,t/showInvisInterval)
+                        local c=P.field:getCell(x,t/showInvisStep)
                         if c then
                             c.visTimer=math.max(c.visTimer or 0,showVisTime)
                             c.fadeTime=math.max(c.fadeTime or 0,showFadeTime)
@@ -67,6 +90,7 @@ return {
                 end
                 P.modeData.swipeTimer=t
 
+                -- Random flashing on beat (may on wrong phase)
                 P.modeData.flashTimer=(P.modeData.flashTimer+1)%flashInterval
                 if P.modeData.flashTimer==0 then
                     for y=1,math.min(P.field:getHeight(),2*P.settings.fieldW) do
