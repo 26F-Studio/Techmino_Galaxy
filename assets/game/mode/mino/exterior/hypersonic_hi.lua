@@ -1,16 +1,16 @@
 local gc=love.graphics
 local bgmTransBegin,bgmTransFinish=100,500
 local levels={
-    {lock=520,fresh=4400,spawn=150,clear=380,das=130,arr=26},
-    {lock=440,fresh=4200,spawn=140,clear=340,das=120,arr=25},
-    {lock=370,fresh=4000,spawn=130,clear=300,das=110,arr=24},
-    {lock=310,fresh=3800,spawn=120,clear=260,das=105,arr=23},
-    {lock=260,fresh=3600,spawn=110,clear=220,das=100,arr=22},
-    {lock=220,fresh=3400,spawn=100,clear=180,das=96, arr=21},
-    {lock=190,fresh=3200,spawn=95, clear=160,das=92, arr=20},
-    {lock=170,fresh=3000,spawn=90, clear=140,das=88, arr=19},
-    {lock=160,fresh=2800,spawn=85, clear=120,das=84, arr=18},
-    {lock=150,fresh=2600,spawn=80, clear=100,das=80, arr=17},
+    {lock=520,fresh=4400,spawn=150,clear=380,das=130,arr=29},
+    {lock=450,fresh=4200,spawn=140,clear=340,das=120,arr=28},
+    {lock=380,fresh=4000,spawn=130,clear=300,das=110,arr=27},
+    {lock=320,fresh=3800,spawn=120,clear=260,das=105,arr=26},
+    {lock=270,fresh=3600,spawn=110,clear=220,das=100,arr=25},
+    {lock=230,fresh=3400,spawn=100,clear=180,das=96, arr=24},
+    {lock=200,fresh=3200,spawn=95, clear=160,das=92, arr=23},
+    {lock=180,fresh=3000,spawn=90, clear=140,das=88, arr=22},
+    {lock=170,fresh=2800,spawn=85, clear=120,das=84, arr=21},
+    {lock=160,fresh=2600,spawn=80, clear=100,das=80, arr=20},
 }
 
 return {
