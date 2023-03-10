@@ -188,7 +188,6 @@ return {
         lightspeed_hi=         {"Lightspeed HI","Light speed challenging high difficulty"},
         lightspeed_ti=         {"Lightspeed TI","Light speed\nTerror Instinct"},
         lightspeed_hd=         {"Lightspeed HD","Light speed with hidden blocks"},
-        lightspeed_ex=         {"Lightspeed EX","Light speed\nExtra challenge"},
         combo_practice=        {"Combo Practice","Clear more combo questions"},
         tsd_practice=          {"TSD Practice","Clear more TSD questions"},
         tsd_easy=              {"TSD Easy","Clear more TSDs in a row"},

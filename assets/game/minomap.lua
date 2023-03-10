@@ -3,13 +3,12 @@
 --  Z
 local modes={
     {pos={10,10,0},name='marathon'},
-    {pos={10,30,0},name='techrash_easy'},
-    {pos={10,40,0},name='techrash_hard'},
+    {pos={10,25,0},name='techrash_easy'},
+    {pos={10,35,0},name='techrash_hard'},
     {pos={25,25,0},name='lightspeed_lo'},
     {pos={35,35,0},name='lightspeed_hi'},
     {pos={55,55,0},name='lightspeed_ti'},
     {pos={35,45,0},name='lightspeed_hd'},
-    {pos={45,55,0},name='lightspeed_ex'},
     {pos={25,10,0},name='combo_practice'},
     {pos={40,10,0},name='tsd_practice'},
     {pos={50,10,0},name='tsd_easy'},
@@ -74,7 +73,7 @@ local modes_str={} for i=1,#modes do modes_str[modes[i].name]=modes[i] end
 local bridgeLinks={
     'marathon - dig_practice - sprint_40 - marathon',
     'marathon - techrash_easy - techrash_hard',
-    'marathon - lightspeed_lo - lightspeed_hi - lightspeed_hd - lightspeed_ex',
+    'marathon - lightspeed_lo - lightspeed_hi - lightspeed_hd',
     'lightspeed_hi - lightspeed_ti',
     'marathon - combo_practice - pc_practice - pc_easy - pc_hard',
     'combo_practice - tsd_practice - tsd_easy - tsd_hard',

@@ -188,7 +188,6 @@ return {
         lightspeed_hi=         {"光速-难","极限速度，有挑战性的较高难度"},
         lightspeed_ti=         {"光速-钛","极限速度\n恐怖本能"},
         lightspeed_hd=         {"光速-隐","极限速度\n但是隐形"},
-        lightspeed_ex=         {"光速-EX","极限速度\n额外挑战"},
         combo_practice=        {"连击练习","完成更多的连击练习题目"},
         tsd_practice=          {"TSD练习","完成更多的TSD练习题目"},
         tsd_easy=              {"TSD-易","连续消除更多的TSD"},
