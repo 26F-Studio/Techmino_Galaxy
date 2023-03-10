@@ -363,6 +363,9 @@ function PP:resetPosCheck()
 
         self:freshGhost()
         self:freshDelay('spawn')
+        if self.handY==self.ghostY then
+            self:playSound('touch')
+        end
     end
 
     if self.settings.dasHalt>0 then--DAS halt
