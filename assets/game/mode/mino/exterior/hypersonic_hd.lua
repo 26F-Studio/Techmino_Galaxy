@@ -1,16 +1,16 @@
 local gc=love.graphics
 local bgmTransBegin,bgmTransFinish=100,500
 local levels={
-    {lock=520,fresh=4400,spawn=150,clear=380,das=130,arr=26},
-    {lock=440,fresh=4200,spawn=140,clear=340,das=120,arr=25},
-    {lock=370,fresh=4000,spawn=130,clear=300,das=110,arr=24},
-    {lock=310,fresh=3800,spawn=120,clear=260,das=105,arr=23},
-    {lock=260,fresh=3600,spawn=110,clear=220,das=100,arr=22},
-    {lock=220,fresh=3400,spawn=100,clear=180,das=96, arr=21},
-    {lock=190,fresh=3200,spawn=95, clear=160,das=92, arr=20},
-    {lock=170,fresh=3000,spawn=90, clear=140,das=88, arr=19},
-    {lock=160,fresh=2800,spawn=85, clear=120,das=84, arr=18},
-    {lock=150,fresh=2600,spawn=80, clear=100,das=80, arr=17},
+    {lock=450,fresh=6000,spawn=150,clear=400,das=130,arr=26,visTime=5000,fadeTime=2600},
+    {lock=400,fresh=5800,spawn=140,clear=360,das=120,arr=25,visTime=4000,fadeTime=2600},
+    {lock=360,fresh=5600,spawn=130,clear=320,das=110,arr=24,visTime=3500,fadeTime=2600},
+    {lock=320,fresh=5400,spawn=120,clear=280,das=105,arr=23,visTime=3000,fadeTime=2600},
+    {lock=290,fresh=5200,spawn=110,clear=240,das=100,arr=22,visTime=2500,fadeTime=2100},
+    {lock=260,fresh=5000,spawn=100,clear=200,das=96, arr=21,visTime=2000,fadeTime=1500},
+    {lock=240,fresh=4800,spawn=95, clear=180,das=92, arr=20,visTime=1600,fadeTime=1100},
+    {lock=220,fresh=4600,spawn=90, clear=160,das=88, arr=19,visTime=1200,fadeTime=900 },
+    {lock=210,fresh=4400,spawn=85, clear=140,das=84, arr=18,visTime=900, fadeTime=800 },
+    {lock=200,fresh=4200,spawn=80, clear=120,das=80, arr=17,visTime=600, fadeTime=600 },
 }
 
 return {
@@ -20,6 +20,8 @@ return {
         playBgm('secret7th','base')
     end,
     settings={mino={
+        pieceVisTime=levels[1].visTime,
+        pieceFadeTime=levels[1].fadeTime,
         event={
             playerInit=function(P)
                 P.modeData.point=0
@@ -35,6 +37,8 @@ return {
                 P.settings.spawnDelay=levels[1].spawn
                 P.settings.clearDelay=levels[1].clear
                 P.settings.maxFreshTime=levels[1].fresh
+                -- P.settings.pieceVisTime=levels[1].visTime
+                -- P.settings.pieceFadeTime=levels[1].fadeTime
             end,
             afterSpawn=function(P)
                 local md=P.modeData
@@ -66,6 +70,8 @@ return {
                         P.settings.spawnDelay=levels[md.level].spawn
                         P.settings.clearDelay=levels[md.level].clear
                         P.settings.maxFreshTime=levels[md.level].fresh
+                        P.settings.pieceVisTime=levels[md.level].visTime
+                        P.settings.pieceFadeTime=levels[md.level].fadeTime
                     else
                         P:finish('AC')
                     end
