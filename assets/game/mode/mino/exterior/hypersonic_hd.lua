@@ -12,6 +12,15 @@ local levels={
     {lock=270,fresh=4400,spawn=85, clear=140,das=84, arr=21,visTime=900, fadeTime=800 },
     {lock=260,fresh=4200,spawn=80, clear=120,das=80, arr=20,visTime=600, fadeTime=600 },
 }
+local showInvisPeriod=26000*10
+local showInvisInterval=30
+local showVisTime=1000
+local showFadeTime=1000
+
+local flashRate=.1626
+local flashInterval=1846
+local flashVisTime1,flashVisTime2=120,460
+local flashFadeTime=620
 
 return {
     initialize=function()
@@ -29,6 +38,9 @@ return {
                 P.modeData.target=100
                 P.modeData.storedDas=P.settings.das
                 P.modeData.storedArr=P.settings.arr
+                P.modeData.flashTimer=flashInterval
+                P.modeData.swipeTimer=showInvisInterval*26
+                P.modeData.swipeStep=10
 
                 P.settings.dropDelay=0
                 P.settings.das=math.max(P.modeData.storedDas,levels[1].das)
@@ -39,6 +51,36 @@ return {
                 P.settings.maxFreshTime=levels[1].fresh
                 -- P.settings.pieceVisTime=levels[1].visTime
                 -- P.settings.pieceFadeTime=levels[1].fadeTime
+            end,
+            always=function(P)
+                local t=P.modeData.swipeTimer
+                local swiping=t/showInvisInterval<=P.field:getHeight()
+                t=t%showInvisPeriod+(swiping and 1 or P.modeData.swipeStep)
+                if swiping and t%showInvisInterval==0 then
+                    for x=1,P.settings.fieldW do
+                        local c=P.field:getCell(x,t/showInvisInterval)
+                        if c then
+                            c.visTimer=math.max(c.visTimer or 0,showVisTime)
+                            c.fadeTime=math.max(c.fadeTime or 0,showFadeTime)
+                        end
+                    end
+                end
+                P.modeData.swipeTimer=t
+
+                P.modeData.flashTimer=(P.modeData.flashTimer+1)%flashInterval
+                if P.modeData.flashTimer==0 then
+                    for y=1,math.min(P.field:getHeight(),2*P.settings.fieldW) do
+                        for x=1,P.settings.fieldW do
+                            if P.seqRND:random()<flashRate then
+                                local c=P.field:getCell(x,y)
+                                if c then
+                                    c.visTimer=math.max(c.visTimer or 0,P.seqRND:random(flashVisTime1,flashVisTime2))
+                                    c.fadeTime=math.max(c.fadeTime or 0,flashFadeTime)
+                                end
+                            end
+                        end
+                    end
+                end
             end,
             afterSpawn=function(P)
                 local md=P.modeData
@@ -55,6 +97,16 @@ return {
             end,
             afterClear=function(P)
                 local md=P.modeData
+
+                -- Update showInvis speed
+                md.swipeStep=10
+                for i=#P.clearHistory,#P.clearHistory-4,-1 do
+                    local c=P.clearHistory[i]
+                    if not c then break end
+                    md.swipeStep=math.max(md.swipeStep-(c.line-4),1)
+                end
+
+                -- Calculate clearing score
                 local dScore=math.floor((P.clearHistory[#P.clearHistory].line+1)^2/4)
                 md.point=md.point+dScore
                 if md.point==md.target-1 then
