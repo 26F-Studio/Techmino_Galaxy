@@ -195,7 +195,6 @@ return {
         pc_practice=           {"PC练习","完成更多的PC练习题目"},
         pc_easy=               {"PC-易","连续完成更多的PC"},
         pc_hard=               {"PC-难","在更多限制条件下连续完成更多的PC"},
-        exam_marathon=         {"Exam Marathon","Exam_01"},
         dig_practice=          {"挖掘练习","消除垃圾行"},
         dig_40=                {"挖掘40","消除40行随机的垃圾行"},
         dig_100=               {"挖掘100","消除100行随机的垃圾行"},
@@ -209,7 +208,6 @@ return {
         backfire_100=          {"回火100","消除100行，但是小心回火"},
         backfire_amplify_100=  {"回火100-放大","消除100行，但是小心被放大的回火"},
         backfire_cheese_100=   {"回火100-奶酪","消除100行，但是小心很难挖掘的回火"},
-        exam_dig=              {"Exam Dig","Exam_02"},
         sprint_40=             {"速跑40","消除40行"},
         sprint_10=             {"速跑10","消除10行"},
         sprint_obstacle_4=     {"速跑4-障碍","在随机初始场地下消除4行"},
@@ -234,7 +232,6 @@ return {
         sprint_dizzy_40=       {"速跑40-眩晕","消除40行，但是控制会反向\n这里的方向出了些状况"},
         sprint_float_40=       {"速跑40-悬浮","消除40行，但是不会下落"},
         sprint_randctrl_40=    {"速跑40-坏键盘","消除40行，但输入设备似乎有一些问题"},
-        exam_rule=             {"Exam Rule","Exam_03"},
     },
 
     -- Level

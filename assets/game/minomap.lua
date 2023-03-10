@@ -16,7 +16,6 @@ local modes={
     {pos={40,25,0},name='pc_practice'},
     {pos={50,25,0},name='pc_easy'},
     {pos={60,25,0},name='pc_hard'},
-    {pos={70,70,0},name='exam_marathon'},
     {pos={10,0,10},name='dig_practice'},
     {pos={30,0,30},name='dig_40'},
     {pos={40,0,40},name='dig_100'},
@@ -30,7 +29,6 @@ local modes={
     {pos={20,0,40},name='backfire_100'},
     {pos={20,0,50},name='backfire_amplify_100'},
     {pos={30,0,50},name='backfire_cheese_100'},
-    {pos={70,0,70},name='exam_dig'},
     {pos={0,10,10},name='sprint_40'},
     {pos={0,30,10},name='sprint_10'},
     {pos={0,40,20},name='sprint_obstacle_4'},
@@ -55,7 +53,6 @@ local modes={
     {pos={0,20,60},name='sprint_dizzy_40'},
     {pos={0,20,50},name='sprint_float_40'},
     {pos={0,30,60},name='sprint_randctrl_40'},
-    {pos={0,70,70},name='exam_rule'},
 }
 -- Initialize modes' graphic values
 for _,m in next,modes do

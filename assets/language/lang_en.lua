@@ -195,7 +195,6 @@ return {
         pc_practice=           {"PC Practice","Clear more PC questions"},
         pc_easy=               {"PC Easy","Make more PC in a row"},
         pc_hard=               {"PC Hard","Make more PC in a row with harder limits"},
-        exam_marathon=         {"Exam Marathon","Exam_01"},
         dig_practice=          {"Dig Practice","Clear the garbage lines"},
         dig_40=                {"Dig 40","Clear 40 random garbage lines"},
         dig_100=               {"Dig 100","Clear 100 random garbage lines"},
@@ -209,7 +208,6 @@ return {
         backfire_100=          {"Backfire 100","Clear 100 lines, but with backfire"},
         backfire_amplify_100=  {"Backfire Amplify 100","Clear 100 lines, but with amplified backfire"},
         backfire_cheese_100=   {"Backfire Cheese 100","Clear 100 lines, but with cheese backfire"},
-        exam_dig=              {"Exam Dig","Exam_02"},
         sprint_40=             {"Sprint 40","Clear 40 lines"},
         sprint_10=             {"Sprint 10","Clear 10 lines"},
         sprint_obstacle_4=     {"Sprint 4 Obstacle","Clear 4 lines with random starting field"},
@@ -234,7 +232,6 @@ return {
         sprint_dizzy_40=       {"Sprint 40 Dizzy","Clear 40 lines with strange direction\nSomething's fishy with thedirections here."},
         sprint_float_40=       {"Sprint 40 Float","Clear 40 lines without gravity"},
         sprint_randctrl_40=    {"Sprint 40 Random","Clear 40 lines with broken input device"},
-        exam_rule=             {"Exam Rule","Exam_03"},
     },
 
     -- Level
