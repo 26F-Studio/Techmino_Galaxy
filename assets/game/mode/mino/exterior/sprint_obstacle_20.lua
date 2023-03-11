@@ -1,8 +1,9 @@
 local gc=love.graphics
 local lineTarget=20
-local bgmTransBegin,bgmTransFinish=5,20
-local maxHeight=4
-local randomCount=4
+local bgmTransBegin,bgmTransFinish=5,10
+local minDist=3
+local maxHeight=3
+local extraCount=3
 
 local function generateField(P)
     local F=P.field
@@ -13,11 +14,11 @@ local function generateField(P)
         F._matrix[y]=TABLE.new(false,w)
         repeat
             r1=P.seqRND:random(1,w)
-        until math.abs(r1-r0)>=2;
+        until math.abs(r1-r0)>=minDist;
         F._matrix[y][r1]={color=0,conn={}}
         r0=r1
     end
-    for _=1,randomCount do
+    for _=1,extraCount do
         local x,y
         repeat
             x=P.seqRND:random(1,w)
@@ -45,7 +46,16 @@ return {
                 generateField(P)
             end,
             afterClear=function(P,movement)
-                P.modeData.line=math.min(P.modeData.line+#movement.clear,lineTarget)
+                local score=math.ceil((#movement.clear+1)/2)
+                P.modeData.line=math.min(P.modeData.line+score,lineTarget)
+                P.texts:add{
+                    text="+"..score,
+                    fontSize=80,
+                    a=.626,
+                    duration=.626,
+                    inPoint=0,
+                    outPoint=1,
+                }
                 generateField(P)
                 if P.modeData.line>=lineTarget then
                     P:finish('AC')
