@@ -132,6 +132,7 @@ return {
 
                 -- Calculate clearing score
                 local dScore=(P.clearHistory[#P.clearHistory].line-1)*2
+                if dScore==0 then return end
                 md.point=md.point+dScore
                 if md.point==md.target-1 then
                     P:playSound('notice')
