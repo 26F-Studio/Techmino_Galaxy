@@ -1001,6 +1001,13 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
 
     -- Lock to field
     self:lock()
+    ins(self.dropHistory,{
+        id=self.hand.id,
+        direction=self.hand.direction,
+        x=self.handX,
+        y=self.handY,
+        time=self.time,
+    })
     if self.handY+#self.hand.matrix-1>self.settings.deathH then
         self:finish('MLE')
         return
@@ -1086,6 +1093,10 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         return
     end
 
+
+    self:triggerEvent('beforeDiscard')
+
+
     -- Discard hand
     self.hand=false
     if self.finished then return end
@@ -1129,13 +1140,6 @@ function MP:lock()-- Put mino into field
             F:setCell(CB[y][x],self.handX+x-1,self.handY+y-1)
         end
     end end
-    ins(self.dropHistory,{
-        id=self.hand.id,
-        direction=self.hand.direction,
-        x=self.handX,
-        y=self.handY,
-        time=self.time,
-    })
 end
 function MP:diveDown(cells)
     if self.fieldDived==0 then
@@ -1924,6 +1928,7 @@ function MP.new()
         afterClear={},
         beforeCancel={},
         beforeSend={},
+        beforeDiscard={},
 
         -- Update
         always={},
