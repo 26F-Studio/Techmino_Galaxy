@@ -127,11 +127,11 @@ return {
                 for i=#P.clearHistory,#P.clearHistory-4,-1 do
                     local c=P.clearHistory[i]
                     if not c then break end
-                    md.swipeStep=math.max(md.swipeStep-(c.line-4),1)
+                    md.swipeStep=math.max(md.swipeStep+(3-c.line),1)
                 end
 
                 -- Calculate clearing score
-                local dScore=math.floor((P.clearHistory[#P.clearHistory].line+1)^2/4)
+                local dScore=(P.clearHistory[#P.clearHistory].line-1)*2
                 md.point=md.point+dScore
                 if md.point==md.target-1 then
                     P:playSound('notice')
