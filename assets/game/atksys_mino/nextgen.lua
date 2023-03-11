@@ -1,20 +1,20 @@
 return {
-    init=function(self)
-        self.settings.tuck=true
-        self.settings.spin_immobile=true
+    init=function(P)
+        P.settings.tuck=true
+        P.settings.spin_immobile=true
     end,
-    drop=function(self)
+    drop=function(P)
         local text=''
-        local M=self.lastMovement
+        local M=P.lastMovement
         local spin=M.action=='rotate' and (M.corners or M.immobile)
         if M.clear then
-            local lines,combo=#self.lastMovement.clear,self.lastMovement.combo
+            local lines,combo=#P.lastMovement.clear,P.lastMovement.combo
             local textDuration=lines/3
 
             -- Multi-clear text
             local multi
             if lines>=4 and combo>1 then
-                local lastClear=self.clearHistory[#self.clearHistory-1]
+                local lastClear=P.clearHistory[#P.clearHistory-1]
                 if lastClear and lines==lastClear.line then
                     multi=true
                 end
@@ -23,19 +23,19 @@ return {
             if multi then
                 text=text.."M-"
                 textDuration=textDuration+.6
-                self:playSound('frenzy')
+                P:playSound('frenzy')
             end
 
             -- Spin text
             if spin then
                 text=Text.spin:repD(M.mino.name).." "
                 textDuration=textDuration+.6
-                self:playSound('spin',lines)
+                P:playSound('spin',lines)
             end
 
             -- Clear text
             text=text..(Text.clearName[lines] or ('['..lines..']'))
-            self.texts:add{
+            P.texts:add{
                 text=text,
                 a=.626,
                 fontSize=math.min(lines-3,0)*10+(spin and 60 or 70),
@@ -45,7 +45,7 @@ return {
 
             -- Combo text
             if combo>1 then
-                self.texts:add{
+                P.texts:add{
                     text=
                         combo<11 and Text.combo_small:repD(combo-1) or
                         combo<21 and Text.combo_large:repD(combo-1) or
@@ -57,8 +57,8 @@ return {
             end
 
             -- All (Half) clear text
-            if self.field:getHeight()==0 then
-                self.texts:add{
+            if P.field:getHeight()==0 then
+                P.texts:add{
                     text=Text.allClear,
                     y=-80,
                     a=.626,
@@ -66,9 +66,9 @@ return {
                     style='flicker',
                     duration=2.5,
                 }
-                self:playSound('allClear')
-            elseif M.y>self.field:getHeight() then
-                self.texts:add{
+                P:playSound('allClear')
+            elseif M.y>P.field:getHeight() then
+                P.texts:add{
                     text=Text.halfClear,
                     y=-80,
                     a=.8,
@@ -76,10 +76,10 @@ return {
                     style='fly',
                     duration=1.6,
                 }
-                self:playSound('halfClear')
+                P:playSound('halfClear')
             end
 
-            self:playSound('combo',combo)
+            P:playSound('combo',combo)
 
             -- Calculate attack
             local pwr
@@ -95,14 +95,14 @@ return {
             end
 
             -- All clear bonus
-            if self.field:getHeight()==0 then
+            if P.field:getHeight()==0 then
                 pwr=pwr+8
-            elseif M.y>self.field:getHeight() then
+            elseif M.y>P.field:getHeight() then
                 pwr=pwr+4
             end
 
             -- Combo bonus
-            pwr=pwr+math.min(math.floor(self.combo/3),3)
+            pwr=pwr+math.min(math.floor(P.combo/3),3)
             if pwr>0 then
                 return {
                     power=pwr,
@@ -112,10 +112,10 @@ return {
         else
             if spin then
                 text=Text.spin:repD(M.mino.name)
-                self:playSound('spin',0)
+                P:playSound('spin',0)
             end
             if #text>0 then
-                self.texts:add{
+                P.texts:add{
                     text=text,
                     a=.4,
                     duration=.8,

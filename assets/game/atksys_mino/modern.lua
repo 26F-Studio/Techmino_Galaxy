@@ -1,41 +1,41 @@
 return {
-    init=function(self)
-        self.atkSysData.b2b=0
-        self.settings.spin_immobile=true
-        self.settings.spin_corners=3
+    init=function(P)
+        P.atkSysData.b2b=0
+        P.settings.spin_immobile=true
+        P.settings.spin_corners=3
     end,
-    drop=function(self)
-        local M=self.lastMovement
-        local spin=self.hand.name=='T' and M.action=='rotate' and (M.corners or M.immobile)
+    drop=function(P)
+        local M=P.lastMovement
+        local spin=P.hand.name=='T' and M.action=='rotate' and (M.corners or M.immobile)
         if M.clear then
-            local lines,combo=#self.lastMovement.clear,self.lastMovement.combo
+            local lines,combo=#P.lastMovement.clear,P.lastMovement.combo
             do-- Text & Sound
                 local t=""
 
                 -- Add B2B text & sound
-                if (lines>=4 or spin) and self.atkSysData.b2b>0 then
+                if (lines>=4 or spin) and P.atkSysData.b2b>0 then
                     t=t..Text.b2b.." "
-                    self:playSound('b2b',self.atkSysData.b2b)
+                    P:playSound('b2b',P.atkSysData.b2b)
                 end
 
                 -- Add spin text & sound
                 if spin then
                     t=t..Text.spin:repD(M.mino.name).." "
-                    self:playSound('spin',lines)
+                    P:playSound('spin',lines)
                 end
 
                 -- AC text & sound, or Clearing text if no AC
-                if self.field:getHeight()==0 then
-                    self.texts:add{
+                if P.field:getHeight()==0 then
+                    P.texts:add{
                         text=Text.allClear,
                         a=.626,
                         fontSize=75,
                         style='flicker',
                         duration=2.5,
                     }
-                    self:playSound('allClear')
+                    P:playSound('allClear')
                 else
-                    self.texts:add{
+                    P.texts:add{
                         text=t..(Text.clearName[lines] or ('['..lines..']')),
                         a=.626,
                         fontSize=math.min(30+lines*10,60)+(spin and 0 or 10),
@@ -46,7 +46,7 @@ return {
 
                 -- Combo text
                 if combo>1 then
-                    self.texts:add{
+                    P.texts:add{
                         text=
                             combo<11 and Text.combo_small:repD(combo-1) or
                             combo<21 and Text.combo_large:repD(combo-1) or
@@ -58,7 +58,7 @@ return {
                 end
 
                 -- Combo sound
-                self:playSound('combo',combo)
+                P:playSound('combo',combo)
             end
 
             do-- Calculate attack
@@ -68,31 +68,31 @@ return {
                 -- Clearing type
                 if spin then
                     pwr=2*lines
-                    pwr=pwr+math.ceil(self.atkSysData.b2b/4,2)
+                    pwr=pwr+math.ceil(P.atkSysData.b2b/4,2)
                     tm=300
-                    self.atkSysData.b2b=math.min(self.atkSysData.b2b+1,26)
+                    P.atkSysData.b2b=math.min(P.atkSysData.b2b+1,26)
                 elseif lines>=4 then
                     pwr=lines
                     tm=200
-                    pwr=pwr+math.min(math.ceil(self.atkSysData.b2b/4),4)
-                    self.atkSysData.b2b=math.min(self.atkSysData.b2b+1,26)
+                    pwr=pwr+math.min(math.ceil(P.atkSysData.b2b/4),4)
+                    P.atkSysData.b2b=math.min(P.atkSysData.b2b+1,26)
                 else
                     pwr=lines-1
                     tm=100
-                    if self.atkSysData.b2b>1 then
-                        self:playSound('b2b_break')
+                    if P.atkSysData.b2b>1 then
+                        P:playSound('b2b_break')
                     end
-                    self.atkSysData.b2b=0
+                    P.atkSysData.b2b=0
                 end
 
                 -- All clear bonus
-                if self.field:getHeight()==0 then
+                if P.field:getHeight()==0 then
                     pwr=math.max(pwr,10)
                 end
 
                 -- Combo bonus
-                tm=tm+self.combo*100
-                pwr=pwr+math.min(math.floor(self.combo/3),3)
+                tm=tm+P.combo*100
+                pwr=pwr+math.min(math.floor(P.combo/3),3)
 
                 -- Send
                 if pwr>0 then
@@ -103,12 +103,12 @@ return {
                 end
             end
         elseif spin then
-            self.texts:add{
+            P.texts:add{
                 text=Text.spin:repD(M.mino.name),
                 a=.4,
                 duration=.8,
             }
-            self:playSound('spin',0)
+            P:playSound('spin',0)
         end
     end,
 }

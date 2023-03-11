@@ -1,8 +1,8 @@
 return {
-    drop=function(self)
-        if self.lastMovement.clear then
-            local lines=#self.lastMovement.clear
-            self.texts:add{
+    drop=function(P)
+        if P.lastMovement.clear then
+            local lines=#P.lastMovement.clear
+            P.texts:add{
                 text=Text.clearName[lines] or ('['..lines..']'),
                 a=.626,
                 fontSize=math.min(40+10*lines,70),
