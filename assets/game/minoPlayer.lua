@@ -688,7 +688,7 @@ function MP:getMino(shapeID)
                 if self.settings.pieceVisTime==0 then
                     c.alpha=0
                 else
-                    c.visibleTimer=self.settings.pieceVisTime
+                    c.visTimer=self.settings.pieceVisTime
                     c.fadeTime=self.settings.pieceFadeTime
                 end
             end
@@ -1496,13 +1496,13 @@ function MP:updateFrame()
     local F=self.field._matrix
     for y=1,#F do for x=1,#F[1] do
         local C=F[y][x]
-        if C and  C.visibleTimer then
-            C.visibleTimer=C.visibleTimer-1
-            if C.visibleTimer>0 then
-                C.alpha=min(C.visibleTimer/C.fadeTime,1)
+        if C and  C.visTimer then
+            C.visTimer=C.visTimer-1
+            if C.visTimer>0 then
+                C.alpha=min(C.visTimer/C.fadeTime,1)
             else-- Set to invisible, remove timers
                 C.alpha=0
-                C.visibleTimer=nil
+                C.visTimer=nil
                 C.fadeTime=nil
             end
         end
