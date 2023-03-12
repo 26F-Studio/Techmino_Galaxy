@@ -222,7 +222,7 @@ scene.widgetList={
     WIDGET.new{type='button_invis',pos={1,.5},x=-800,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleFunc=function() return BGM.isPlaying() end},
 
     -- Fullband Switch
-    WIDGET.new{type='switch',pos={1,.5},x=-1450,y=360,h=50,labelPos='right',disp=function() return fullband end,
+    WIDGET.new{type='switch',pos={1,.5},x=-1450,y=360,h=50,widthLimit=120,labelPos='right',disp=function() return fullband end,
         name='fullband',text=LANG'musicroom_fullband',
         sound_on=false,sound_off=false,
         code=function()
@@ -239,7 +239,7 @@ scene.widgetList={
         end,
     },
     -- Auto Switch
-    WIDGET.new{type='switch',pos={1,.5},x=-1200,y=360,h=50,labelPos='right',disp=function() return autoplay end,
+    WIDGET.new{type='switch',pos={1,.5},x=-1180,y=360,h=50,widthLimit=180,labelPos='right',disp=function() return autoplay end,
         name='autoplay',text=LANG'musicroom_autoplay',
         sound_on=false,sound_off=false,
         code=function()
