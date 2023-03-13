@@ -599,7 +599,7 @@ function GP:freshGems()
     repeat
         for i=1,#newGems do
             local g=newGems[i]
-            g.color=self.seqRND:random(self.settings.colors)
+            g.color=self:random(self.settings.colors)
         end
         freshTimes=freshTimes+1
     until freshTimes>=self.settings.refreshCount or self:hasMove()
@@ -1068,7 +1068,7 @@ function GP:initialize()
     self.modeData={}
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 
-    self.seqRND=love.math.newRandomGenerator(GAME.seed+626)
+    self.RND=love.math.newRandomGenerator(GAME.seed+626)
 
     self.pos={
         x=0,y=0,k=1,a=0,

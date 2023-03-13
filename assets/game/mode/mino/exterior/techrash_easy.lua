@@ -25,10 +25,10 @@ return {
                     do
                         -- Fill list2 (bag6)
                         if not l2[1] then for i=1,6 do table.insert(l2,i) end end
-                        table.insert(l1,table.remove(l2,P.seqRND:random(#l2)))
+                        table.insert(l1,table.remove(l2,P:random(#l2)))
                     end
                 end
-                coroutine.yield(table.remove(l1,P.seqRND:random(#l1)))
+                coroutine.yield(table.remove(l1,P:random(#l1)))
             end
         end,
         event={

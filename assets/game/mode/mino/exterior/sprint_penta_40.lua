@@ -13,7 +13,7 @@ return {
             local l={}
             while true do
                 if not l[1] then for i=8,18 do table.insert(l,i) end end
-                coroutine.yield(table.remove(l,P.seqRND:random(#l)))
+                coroutine.yield(table.remove(l,P:random(#l)))
             end
         end,
         event={

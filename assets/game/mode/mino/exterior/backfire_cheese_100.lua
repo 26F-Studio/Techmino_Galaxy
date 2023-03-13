@@ -25,7 +25,7 @@ return {
                 local section=0
                 for i=1,P.modeData._currentPower do
                     section=section+1
-                    if P.seqRND:random()<.5 or i==P.modeData._currentPower then
+                    if P:random()<.5 or i==P.modeData._currentPower then
                         table.insert(powerList,section)
                         section=0
                     end

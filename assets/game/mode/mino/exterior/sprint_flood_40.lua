@@ -17,7 +17,7 @@ return {
                     l[8],l[9],l[10]=1,1,1
                     l[11],l[12],l[13]=2,2,2
                 end
-                coroutine.yield(table.remove(l,P.seqRND:random(#l)))
+                coroutine.yield(table.remove(l,P:random(#l)))
             end
         end,
         event={

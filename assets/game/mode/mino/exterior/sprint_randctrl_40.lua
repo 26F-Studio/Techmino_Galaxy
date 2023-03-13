@@ -23,7 +23,7 @@ return {
                 if not P.timing then return end
                 P.modeData.randomPressTimer=P.modeData.randomPressTimer-1
                 if P.modeData.randomPressTimer==0 then
-                    local r=P.seqRND:random(P.holdTime==0 and 5 or 4)
+                    local r=P:random(P.holdTime==0 and 5 or 4)
                     if r==1 then
                         P:moveLeft()
                     elseif r==2 then
@@ -35,7 +35,7 @@ return {
                     elseif r==5 then
                         P:hold()
                     end
-                    P.modeData.randomPressTimer=P.seqRND:random(1620,2600)
+                    P.modeData.randomPressTimer=P:random(1620,2600)
                 end
             end,
             afterClear=function(P,movement)

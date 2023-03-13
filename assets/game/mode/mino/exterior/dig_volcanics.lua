@@ -13,7 +13,7 @@ return {
             playerInit=function(P)
                 for _=1,lineStay do
                     P:riseGarbage(P:calculateHolePos(
-                        P.seqRND:random(3,4),-- count
+                        P:random(3,4),-- count
                         .2,-- splitRate
                         -.1, -- copyRate
                         .1 -- sandwichRate
@@ -34,7 +34,7 @@ return {
                         local add=stay-md.lineExist
                         for _=1,add do
                             P:riseGarbage(P:calculateHolePos(
-                                P.seqRND:random(3,4),-- count
+                                P:random(3,4),-- count
                                 .2,-- splitRate
                                 -.1, -- copyRate
                                 .1 -- sandwichRate

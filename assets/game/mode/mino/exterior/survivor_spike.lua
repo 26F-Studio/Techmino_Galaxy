@@ -45,7 +45,7 @@ return {
                             target=GAME.mainID,
                             power=
                                 2+2*i+ -- Basic Attack (4+6+8)
-                                P.seqRND:random(
+                                P:random(
                                     MATH.clamp(ceil(wave/20-P.field:getHeight()/15),0,2), -- Random lower bound (from 0 to 2 on wave 40, -1 if field reach 15)
                                     min(floor(wave/10),4) -- Random Upper bound (from 0 to 4 on wave 40)
                                 ),

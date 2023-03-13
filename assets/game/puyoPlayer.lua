@@ -770,7 +770,7 @@ function PP:dropGarbage(count)
     local F=self.field
     local w=self.settings.fieldW
     for _=1,count do
-        local x=self.seqRND:random(w)
+        local x=self:random(w)
         local y=self.settings.spawnH+1
         while F:getCell(x,y) do y=y+1 end
         F:setCell({
@@ -1224,21 +1224,21 @@ local seqGenerators={
         local l={}
         while true do
             if not l[1] then for i=1,3 do for j=1,3 do ins(l,{{i},{j}}) end end end
-            coroutine.yield(rem(l,P.seqRND:random(#l)))
+            coroutine.yield(rem(l,P:random(#l)))
         end
     end,
     double4color=function(P)
         local l={}
         while true do
             if not l[1] then for i=1,4 do for j=1,4 do ins(l,{{i},{j}}) end end end
-            coroutine.yield(rem(l,P.seqRND:random(#l)))
+            coroutine.yield(rem(l,P:random(#l)))
         end
     end,
     double5color=function(P)
         local l={}
         while true do
             if not l[1] then for i=1,5 do for j=1,5 do ins(l,{{i},{j}}) end end end
-            coroutine.yield(rem(l,P.seqRND:random(#l)))
+            coroutine.yield(rem(l,P:random(#l)))
         end
     end,
 }
@@ -1292,7 +1292,7 @@ function PP:initialize()
     self.modeData={}
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 
-    self.seqRND=love.math.newRandomGenerator(GAME.seed+626)
+    self.RND=love.math.newRandomGenerator(GAME.seed+626)
 
     self.pos={
         x=0,y=0,k=1,a=0,

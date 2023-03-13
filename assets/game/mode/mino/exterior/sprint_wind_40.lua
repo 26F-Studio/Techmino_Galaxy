@@ -17,13 +17,13 @@ return {
         event={
             playerInit=function(P)
                 P.modeData.line=0
-                P.modeData.windTargetStrength=(P.seqRND:random()<.5 and -1 or 1)*P.seqRND:random(1260,1600)
+                P.modeData.windTargetStrength=(P:random()<.5 and -1 or 1)*P:random(1260,1600)
                 P.modeData.windStrength=0
                 P.modeData.windCounter=0
 
                 P.modeData.invertTimes={}
-                for i=1,P.seqRND:random(4,6) do
-                    P.modeData.invertTimes[i]=P.seqRND:random(2,38)
+                for i=1,P:random(4,6) do
+                    P.modeData.invertTimes[i]=P:random(2,38)
                 end
                 table.sort(P.modeData.invertTimes)
             end,
@@ -46,7 +46,7 @@ return {
                     while #md.invertTimes>0 and md.line>md.invertTimes[1] do
                         table.remove(md.invertTimes,1)
                     end
-                    md.windTargetStrength=-MATH.sign(md.windTargetStrength)*P.seqRND:random(1260,1600)
+                    md.windTargetStrength=-MATH.sign(md.windTargetStrength)*P:random(1260,1600)
                 end
                 if md.line>=lineTarget then
                     P:finish('AC')

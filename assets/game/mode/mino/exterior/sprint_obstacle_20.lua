@@ -13,7 +13,7 @@ local function generateField(P)
     for y=1,maxHeight do
         F._matrix[y]=TABLE.new(false,w)
         repeat
-            r1=P.seqRND:random(1,w)
+            r1=P:random(1,w)
         until math.abs(r1-r0)>=minDist;
         F._matrix[y][r1]={color=0,conn={}}
         r0=r1
@@ -21,14 +21,14 @@ local function generateField(P)
     for _=1,extraCount do
         local x,y
         repeat
-            x=P.seqRND:random(1,w)
-            y=math.floor(P.seqRND:random()^2.6*(maxHeight-1))+1
+            x=P:random(1,w)
+            y=math.floor(P:random()^2.6*(maxHeight-1))+1
         until not F._matrix[y][x]
         F._matrix[y][x]={color=0,conn={}}
     end
     for y=1,maxHeight do
         if TABLE.count(F._matrix[y],false)==w then
-            F._matrix[y][P.seqRND:random(1,w)]=false
+            F._matrix[y][P:random(1,w)]=false
         end
     end
 end

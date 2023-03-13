@@ -105,6 +105,9 @@ function P:say(arg)
 end
 --------------------------------------------------------------
 -- Game methods
+function P:random(a,b)
+    return self:random(a,b)
+end
 function P:triggerEvent(name,...)
     -- if name~='always' and name:sub(1,4)~='draw' then print(name) end
     local L=self.event[name]

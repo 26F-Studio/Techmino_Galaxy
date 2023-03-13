@@ -16,7 +16,7 @@ return {
                     table.insert(l,i)
                     table.insert(l,i)
                 end end
-                coroutine.yield(table.remove(l,P.seqRND:random(#l)))
+                coroutine.yield(table.remove(l,P:random(#l)))
             end
         end,
         event={

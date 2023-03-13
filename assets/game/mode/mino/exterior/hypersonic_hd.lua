@@ -66,7 +66,7 @@ return {
                             for x=1,P.settings.fieldW do
                                 local c=P.field:getCell(x,y)
                                 if c then
-                                    c.visTimer=P.seqRND:random(endVisTime1,endVisTime2)
+                                    c.visTimer=P:random(endVisTime1,endVisTime2)
                                     c.fadeTime=endFadeTime
                                 end
                             end
@@ -95,10 +95,10 @@ return {
                 if P.modeData.flashTimer==0 then
                     for y=1,math.min(P.field:getHeight(),2*P.settings.fieldW) do
                         for x=1,P.settings.fieldW do
-                            if P.seqRND:random()<flashRate then
+                            if P:random()<flashRate then
                                 local c=P.field:getCell(x,y)
                                 if c then
-                                    c.visTimer=math.max(c.visTimer or 0,P.seqRND:random(flashVisTime1,flashVisTime2))
+                                    c.visTimer=math.max(c.visTimer or 0,P:random(flashVisTime1,flashVisTime2))
                                     c.fadeTime=math.max(c.fadeTime or 0,flashFadeTime)
                                 end
                             end

@@ -41,7 +41,7 @@ return {
                     md.waveTimer=md.waveTimer0
                     GAME.send(nil,GAME.initAtk{
                         target=GAME.mainID,
-                        power=4+P.seqRND:random(0,MATH.clamp(math.floor(wave/30-P.field:getHeight()/10),0,3)),
+                        power=4+P:random(0,MATH.clamp(math.floor(wave/30-P.field:getHeight()/10),0,3)),
                         mode=0,
                         time=
                             (wave<50 and 100000/(100+2*wave)+500 or 1000)+

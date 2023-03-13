@@ -773,7 +773,7 @@ function MP:parseAtkInfo(g)
     local count=1+max((g.fatal-50)/20,0)
     local splitRate=0
     if count~=floor(count) then
-        if self.seqRND:random()>count%1 then
+        if self:random()>count%1 then
             splitRate=count%1/2
             count=floor(count)
         else
@@ -823,7 +823,7 @@ function MP:calculateHolePos(count,splitRate,copyRate,sandwichRate)
         -- end
         -- print(str)
 
-        local r=sum*self.seqRND:random()
+        local r=sum*self:random()
         if sum>0 then
             for i=1,#weights do
                 r=r-weights[i]
@@ -1829,7 +1829,7 @@ local seqGenerators={
         local l={}
         while true do
             if not l[1] then for i=1,7 do l[i]=i end end
-            coroutine.yield(rem(l,P.seqRND:random(#l)))
+            coroutine.yield(rem(l,P:random(#l)))
         end
     end,
     bag7b1=function(P)
@@ -1839,9 +1839,9 @@ local seqGenerators={
             if not l[1] then
                 for i=1,7 do l[i]=i end
                 if not l0[1] then for i=1,7 do l0[i]=i end end
-                l[8]=rem(l0,P.seqRND:random(#l0))
+                l[8]=rem(l0,P:random(#l0))
             end
-            coroutine.yield(rem(l,P.seqRND:random(#l)))
+            coroutine.yield(rem(l,P:random(#l)))
         end
     end,
     h4r2=function(P)
@@ -1849,7 +1849,7 @@ local seqGenerators={
         while true do
             local r
             for _=1,#history do-- Reroll up to [hisLen] times
-                r=P.seqRND:random(7)
+                r=P:random(7)
                 local repeated
                 for i=1,#history do
                     if r==history[i] then
@@ -1871,7 +1871,7 @@ local seqGenerators={
         while true do
             local maxK=1
             for i=1,7 do
-                weight[i]=weight[i]*.5+P.seqRND:random()
+                weight[i]=weight[i]*.5+P:random()
                 if weight[i]>weight[maxK] then
                     maxK=i
                 end
@@ -1884,7 +1884,7 @@ local seqGenerators={
         local r,prev
         while true do
             repeat
-                r=P.seqRND:random(7)
+                r=P:random(7)
             until r~=prev
             prev=r
             coroutine.yield(r)
@@ -1892,7 +1892,7 @@ local seqGenerators={
     end,
     mess=function(P)
         while true do
-            coroutine.yield(P.seqRND:random(7))
+            coroutine.yield(P:random(7))
         end
     end,
 }
@@ -1949,7 +1949,7 @@ function MP:initialize()
     self.modeData={}
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 
-    self.seqRND=love.math.newRandomGenerator(GAME.seed+626)
+    self.RND=love.math.newRandomGenerator(GAME.seed+626)
 
     self.pos={
         x=0,y=0,k=1,a=0,

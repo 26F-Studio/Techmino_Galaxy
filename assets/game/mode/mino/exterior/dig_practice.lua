@@ -7,8 +7,8 @@ return {
     settings={mino={
         event={
             playerInit=function(P)
-                local dir=P.seqRND:random(0,1)*2-1
-                local phase=P.seqRND:random(3,6)
+                local dir=P:random(0,1)*2-1
+                local phase=P:random(3,6)
                 for i=0,11 do P:riseGarbage((phase+i)*dir%10+1) end
                 P.fieldDived=0
                 P.modeData.garbageRemain=12

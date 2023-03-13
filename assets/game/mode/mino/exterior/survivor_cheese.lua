@@ -42,7 +42,7 @@ return {
                     md.waveTimer=md.waveTimer0
                     GAME.send(nil,GAME.initAtk{
                         target=GAME.mainID,
-                        power=P.seqRND:random(0,10)+P.seqRND:random(-5,5)>=P.field:getHeight() and 2 or 1,
+                        power=P:random(0,10)+P:random(-5,5)>=P.field:getHeight() and 2 or 1,
                         defendRate=wave<60 and 2 or 3,
                         mode=0,
                         time=wave<50 and 100000/(50+wave)-1000 or 0,
@@ -51,7 +51,7 @@ return {
                                 wave<100 and MATH.interpolate(wave,0,20,100,60) or
                                 wave<200 and MATH.interpolate(wave,100,60,200,100) or
                                 100
-                            )+math.floor((P.seqRND:random()*2-1)*min(wave,100)/5),
+                            )+math.floor((P:random()*2-1)*min(wave,100)/5),
                             0,100
                         ),
                         -- speed=?,
