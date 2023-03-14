@@ -106,7 +106,7 @@ end
 --------------------------------------------------------------
 -- Game methods
 function P:random(a,b)
-    return self:random(a,b)
+    return self.RND:random(a,b)
 end
 function P:triggerEvent(name,...)
     -- if name~='always' and name:sub(1,4)~='draw' then print(name) end
