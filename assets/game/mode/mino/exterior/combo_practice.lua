@@ -50,15 +50,10 @@ local function generateField(P)
             F._matrix[2][P:random(wellL,wellR)]=false
         else-- 3-res
             if P:random()<.626 then-- Hook pattern
-                if P:random()<.5 then
-                    F._matrix[1][wellL]={color=0,conn={}}
-                    F._matrix[2][wellL]={color=0,conn={}}
-                    F._matrix[2][wellL+1]={color=0,conn={}}
-                else
-                    F._matrix[1][wellR]={color=0,conn={}}
-                    F._matrix[2][wellR]={color=0,conn={}}
-                    F._matrix[2][wellR-1]={color=0,conn={}}
-                end
+                local L=P:random()<.5
+                F._matrix[1][L and wellL   or wellR  ]={color=0,conn={}}
+                F._matrix[2][L and wellL   or wellR  ]={color=0,conn={}}
+                F._matrix[2][L and wellL+1 or wellR-1]={color=0,conn={}}
             else-- Flat
                 for x=wellL,wellR do
                     F._matrix[1][x]={color=0,conn={}}
@@ -112,8 +107,11 @@ return {
             end,
             beforeDiscard=function(P)
                 if #P.clearHistory>P.modeData._curHisLen then
-                    P.modeData.levelStarted=true
-                    P.modeData.totalCombo=P.modeData.totalCombo+1
+                    if not P.modeData.levelStarted then
+                        P.modeData.levelStarted=true
+                    else
+                        P.modeData.totalCombo=P.modeData.totalCombo+1
+                    end
                     if P.modeData.totalCombo>bgmTransBegin and P.modeData.totalCombo<bgmTransFinish+4 and P.isMain then
                         BGM.set(bgmList['oxygen'].add,'volume',math.min((P.modeData.totalCombo-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
                     end
