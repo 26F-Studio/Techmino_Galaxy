@@ -1,3 +1,9 @@
+-- 1~3 attack 0~2, 4+ attack 4+
+-- Continous 4+ get frenzy bonus (+1 attack)
+-- Combo attack 0,0,1,1,1,2,2,2,3+
+-- All and only `immobile` placement are spin, attack=line*2
+-- No B2B
+
 return {
     init=function(P)
         P.settings.tuck=true
@@ -103,6 +109,8 @@ return {
 
             -- Combo bonus
             pwr=pwr+math.min(math.floor(P.combo/3),3)
+
+            -- Send
             if pwr>0 then
                 return {
                     power=pwr,

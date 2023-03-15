@@ -1,3 +1,8 @@
+-- 1~3 attack 0~2, 4+ attack 4+
+-- T-Spin only, but both 3-corner or immobile count, attack=line*2
+-- Combo attack 0,0,1,1,1,2,2,2,3+
+-- B2B give n/4 attack, up to 4 for T-Spin, 2 for Techrash. B2B chain length up to 26.
+
 return {
     init=function(P)
         P.atkSysData.b2b=0
