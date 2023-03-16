@@ -110,19 +110,14 @@ end
 FONT.setDefaultFallback('symbols')
 FONT.setDefaultFont('norm')
 FONT.load{
-    -- galaxy_black="assets/fonts/26FGalaxySans-Black.otf",
-    -- galaxy_extrabold="assets/fonts/26FGalaxySans-ExtraBold.otf",
-    -- galaxy_bold="assets/fonts/26FGalaxySans-Bold.otf",
-    -- galaxy_medium="assets/fonts/26FGalaxySans-Medium.otf",
-    -- galaxy_regular="assets/fonts/26FGalaxySans-Regular.otf",
-    -- galaxy_light="assets/fonts/26FGalaxySans-Light.otf",
-    -- galaxy_ultralight="assets/fonts/26FGalaxySans-UltraLight.otf",
-    -- galaxy_thin="assets/fonts/26FGalaxySans-Thin.otf",
-    -- galaxy_hairline="assets/fonts/26FGalaxySans-Hairline.otf",
     norm='assets/fonts/Inter-SemiBold.otf',
     thin='assets/fonts/Inter-Regular.otf',
     bold='assets/fonts/Inter-ExtraBold.otf',
     symbols='assets/fonts/symbols.otf',
+
+    galaxy_bold="assets/fonts/26FGalaxySans-Bold.otf",
+    galaxy_norm="assets/fonts/26FGalaxySans-Regular.otf",
+    galaxy_thin="assets/fonts/26FGalaxySans-Thin.otf",
 }
 SCR.setSize(1600,1000)
 BGM.setMaxSources(16)
@@ -179,10 +174,7 @@ IMG.init{
     },
 
     cover='assets/image/db cover.png',
-    title={
-        techmino='assets/image/title_techmino.png',
-        galaxy='assets/image/title_galaxy.png',
-    }
+    title_techmino='assets/image/title_techmino.png',
 }
 SFX.init((function()
     local L={}
