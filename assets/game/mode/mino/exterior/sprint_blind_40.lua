@@ -14,6 +14,18 @@ return {
         event={
             playerInit=function(P)
                 P.modeData.line=0
+                P.modeData.coverAlpha=0
+            end,
+            always=function(P)
+                if P.finished then
+                    if P.modeData.coverAlpha>2000 then
+                        P.modeData.coverAlpha=P.modeData.coverAlpha-1
+                    end
+                else
+                    if P.modeData.coverAlpha<2600 then
+                        P.modeData.coverAlpha=P.modeData.coverAlpha+1
+                    end
+                end
             end,
             afterClear=function(P,movement)
                 P.modeData.line=math.min(P.modeData.line+#movement.clear,lineTarget)
@@ -24,8 +36,13 @@ return {
                     BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
                 end
             end,
+            gameOver=function(P)
+                P:showInvis()
+            end,
             drawInField=function(P)
+                gc.setColor(.26,.26,.26,P.modeData.coverAlpha/2600)
                 gc.setColor(.26,.26,.26)
+                gc.setColor(.26,.26,.26,P.modeData.coverAlpha/2600)
                 gc.rectangle('fill',0,0,P.settings.fieldW*40,-P.settings.spawnH*40)
                 gc.setColor(1,1,1,.26)
                 gc.rectangle('fill',0,(P.modeData.line-lineTarget)*40-2,P.settings.fieldW*40,4)

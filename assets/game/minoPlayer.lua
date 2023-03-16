@@ -4,6 +4,7 @@ local max,min,rnd=math.max,math.min,math.random
 local floor,ceil=math.floor,math.ceil
 local ins,rem=table.insert,table.remove
 
+local clamp=MATH.clamp
 local inst=SFX.playSample
 
 local MP=setmetatable({},{__index=require'assets.game.basePlayer'})
@@ -809,7 +810,7 @@ function MP:calculateHolePos(count,splitRate,copyRate,sandwichRate)
             -- Height-Score rate: 2 → 1x, 3 → 1.5x, 4(max) → 2x
             weights[x]=weights[x]+copyRate*y/2
         end
-        weights[x]=MATH.clamp(weights[x],.03,1)
+        weights[x]=clamp(weights[x],.03,1)
     end
 
     -- Pick hole position
@@ -833,8 +834,8 @@ function MP:calculateHolePos(count,splitRate,copyRate,sandwichRate)
                 end
             end
             weights[r]=.03
-            if r>1        then weights[r-1]=MATH.clamp(weights[r-1]-splitRate,.03,1) end
-            if r<#weights then weights[r+1]=MATH.clamp(weights[r+1]-splitRate,.03,1) end
+            if r>1        then weights[r-1]=clamp(weights[r-1]-splitRate,.03,1) end
+            if r<#weights then weights[r+1]=clamp(weights[r+1]-splitRate,.03,1) end
         else
             error("WTF why sum of weights is 0")
         end
@@ -1323,6 +1324,18 @@ function MP:changeFieldWidth(w,origPos)
         self.field:fresh()
     end
 end
+function MP:showInvis(visStep,visMax)
+    for y=1,self.field:getHeight() do
+        for x=1,self.settings.fieldW do
+            local c=self.field:getCell(x,y)
+            if c then
+                c.visTimer=c.visTimer or 0
+                c.visStep=visStep or 1
+                c.visMax=visMax
+            end
+        end
+    end
+end
 function MP:changeAtkSys(sys)
     self.atkSysData={}
     if minoAtkSys[sys].init then minoAtkSys[sys].init(self) end
@@ -1500,14 +1513,12 @@ function MP:updateFrame()
     local F=self.field._matrix
     for y=1,#F do for x=1,#F[1] do
         local C=F[y][x]
-        if C and  C.visTimer then
-            C.visTimer=C.visTimer-1
-            if C.visTimer>0 then
-                C.alpha=min(C.visTimer/C.fadeTime,1)
-            else-- Set to invisible, remove timers
-                C.alpha=0
+        if C and C.visTimer then
+            local step=C.visStep or -1
+            C.visTimer=C.visTimer+step
+            C.alpha=clamp(C.visTimer/C.fadeTime,0,1)
+            if step<0 and C.visTimer<=0 or step>0 and C.visTimer>=(C.visMax or C.fadeTime) then
                 C.visTimer=nil
-                C.fadeTime=nil
             end
         end
     end end

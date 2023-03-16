@@ -45,7 +45,7 @@ return {
                 P.modeData.flashTimer=flashInterval
                 P.modeData.swipeTimer=showInvisStep*26
                 P.modeData.swipeStep=10
-                P.modeData.showAllTimer=0
+                P.modeData.showAllTimer=endAllInterval
 
                 P.settings.dropDelay=0
                 P.settings.das=math.max(P.modeData.storedDas,levels[1].das)
@@ -60,7 +60,7 @@ return {
             always=function(P)
                 -- Show all after finished
                 if P.finished then
-                    P.modeData.showAllTimer=(P.modeData.showAllTimer+1)%endAllInterval
+                    P.modeData.showAllTimer=(P.modeData.showAllTimer-1)%endAllInterval
                     if P.modeData.showAllTimer==0 then
                         for y=1,P.field:getHeight() do
                             for x=1,P.settings.fieldW do
@@ -91,7 +91,7 @@ return {
                 P.modeData.swipeTimer=t
 
                 -- Random flashing on beat (may on wrong phase)
-                P.modeData.flashTimer=(P.modeData.flashTimer+1)%flashInterval
+                P.modeData.flashTimer=(P.modeData.flashTimer-1)%flashInterval
                 if P.modeData.flashTimer==0 then
                     for y=1,math.min(P.field:getHeight(),2*P.settings.fieldW) do
                         for x=1,P.settings.fieldW do

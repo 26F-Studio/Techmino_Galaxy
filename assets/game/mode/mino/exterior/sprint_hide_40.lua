@@ -24,6 +24,9 @@ return {
                     BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
                 end
             end,
+            gameOver=function(P)
+                P:showInvis(4,626)
+            end,
             drawInField=function(P)
                 gc.setColor(1,1,1,.26)
                 gc.rectangle('fill',0,(P.modeData.line-lineTarget)*40-2,P.settings.fieldW*40,4)
