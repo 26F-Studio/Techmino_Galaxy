@@ -180,7 +180,7 @@ function scene.draw()
     gc_setColor(COLOR.L)
     gc_printf(bgmList[selected].author,-1600,-90,700,'right')
     if bgmList[selected].message then
-        setFont(30,'thin')
+        setFont(30)
         gc_setColor(COLOR.LD)
         gc_printf(bgmList[selected].message,-1600,0,700,'right')
     end

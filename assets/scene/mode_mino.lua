@@ -55,7 +55,7 @@ local panel={
 
         GC.setColor(.99,.99,.99,a)
         GC.draw(self.modeNameText,-170,-320,nil,math.min(1,310/self.modeNameText:getWidth()),1,self.modeNameText:getWidth()/2,0)
-        FONT.set(25,'thin')
+        FONT.set(25)
         GC.printf(self.modeInfoText,-340,-260,320,'center')
     end
 }

@@ -81,7 +81,7 @@ function scene.draw()
 
     -- Error infos
     GC.setColor(COLOR.L)
-    FONT.set(20,'thin')
+    FONT.set(20)
     GC.printf(err.mes[1],SCR.safeX+20,20,626)
     for i=3,#err.mes do
         GC.print(err.mes[i],SCR.safeX+20,30+20*i)
