@@ -389,7 +389,7 @@ function map:draw()
             -- Name
             FONT.set(30)
             GC.setColor(COLOR.L)
-            GC.mStr(Text.exteriorModeInfo[m.name][1],0,-21)
+            GC.shadedPrint(Text.exteriorModeInfo[m.name][1],0,-21,'center',2,4)
 
             -- Selecting frame
             if m==selected or m.active>.001 then
