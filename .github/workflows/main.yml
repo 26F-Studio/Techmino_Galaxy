@@ -133,7 +133,7 @@ jobs:
       - name: Love actions for testing
         uses: 26F-Studio/love-actions-test@v1
         with:
-          font-path: ./assets/fonts/Inter-SemiBold.otf
+          font-path: ./assets/fonts/RHDisplayGalaxy-Medium.otf
           language-folder: ./assets/language
 
   build-android:
