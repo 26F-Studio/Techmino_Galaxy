@@ -7,6 +7,7 @@ return {
     end,
     settings={mino={
         skin='mino_interior',
+        particles=false,
         shakeness=0,
         soundEvent={
             countDown=function(num)

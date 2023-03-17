@@ -138,6 +138,7 @@ actions.moveLeft={
                     P:playSound('touch')
                 end
             else
+                P:freshDelay('move')
                 P:playSound('move_failed')
             end
         else
@@ -160,6 +161,7 @@ actions.moveRight={
                     P:playSound('touch')
                 end
             else
+                P:freshDelay('move')
                 P:playSound('move_failed')
             end
         else
@@ -365,10 +367,14 @@ end
 -- Game methods
 function MP:moveHand(action,a,b,c,d)
     if action=='moveX' then
-        self:createMoveParticle(self.handX,self.handY,self.handX+a,self.handY)
+        if self.settings.particles then
+            self:createMoveParticle(self.handX,self.handY,self.handX+a,self.handY)
+        end
         self.handX=self.handX+a
     elseif action=='drop' or action=='moveY' then
-        self:createMoveParticle(self.handX,self.handY,self.handX,self.handY+a)
+        if self.settings.particles then
+            self:createMoveParticle(self.handX,self.handY,self.handX,self.handY+a)
+        end
         self.handY=self.handY+a
     elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
@@ -998,7 +1004,9 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if not self.hand or self.finished then return end
 
 
-    self:createLockParticle(self.handX,self.handY)
+    if self.settings.particles then
+        self:createLockParticle(self.handX,self.handY)
+    end
 
     -- Lock to field
     self:lock()
@@ -1036,8 +1044,9 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         ins(self.clearHistory,h)
         self:shakeBoard('-clear',#lineClear)
         self:playSound('clear',#lineClear)
-        self:createFrenzyParticle(#lineClear*26)
-
+        if self.settings.particles then
+            self:createFrenzyParticle(#lineClear*26)
+        end
 
         self:triggerEvent('afterClear',self.lastMovement)
         if self.finished then return end
@@ -1830,6 +1839,7 @@ local baseEnv={
     hdLockA=1000,
     hdLockM=100,
     skin='mino_plastic',
+    particles=true,
 
     shakeness=.26,
     inputDelay=0,

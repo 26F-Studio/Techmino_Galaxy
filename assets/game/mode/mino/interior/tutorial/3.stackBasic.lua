@@ -30,6 +30,7 @@ return {
     end,
     settings={mino={
         skin='mino_interior',
+        particles=false,
         shakeness=0,
         readyDelay=1,
         spawnDelay=62,

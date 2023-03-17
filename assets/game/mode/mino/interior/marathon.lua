@@ -9,6 +9,7 @@ return {
     end,
     settings={mino={
         skin='mino_interior',
+        particles=false,
         spawnDelay=130,
         clearDelay=300,
         soundEvent={
