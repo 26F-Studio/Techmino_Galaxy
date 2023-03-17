@@ -56,8 +56,8 @@ function scene.draw()
     GC.mStr(VERSION.appVer,0,-180)
     FONT.set(100)
     GC.scale(2)
-    GC.print("T",-235,-200)
-    GC.print("echmino",-180,-200)
+    GC.print("T",-215,-200)
+    GC.print("echmino",-165,-200)
 end
 
 scene.widgetList={

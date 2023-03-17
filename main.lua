@@ -110,9 +110,12 @@ end
 FONT.setDefaultFallback('symbols')
 FONT.setDefaultFont('norm')
 FONT.load{
-    norm='assets/fonts/Inter-SemiBold.otf',
-    thin='assets/fonts/Inter-Regular.otf',
-    bold='assets/fonts/Inter-ExtraBold.otf',
+    norm='assets/fonts/RHDisplayGalaxy-Medium.otf',
+    bold='assets/fonts/RHDisplayGalaxy-ExtraBold.otf',
+
+    number='assets/fonts/RHTextInktrap-Regular.otf',
+    _basic='assets/fonts/RHMonoGalaxy-Medium.otf',
+
     symbols='assets/fonts/symbols.otf',
 
     galaxy_bold="assets/fonts/26FGalaxySans-Bold.otf",

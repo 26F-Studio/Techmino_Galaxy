@@ -36,8 +36,8 @@ local function sysInfoFunc()
 
     -- Time
     gc.setColor(1,1,1)
-    FONT.set(25,'thin')
-    gc.printf(os.date("%I:%M %p"),0,0,125,'right')
+    FONT.set(25,'number')
+    gc.printf(os.date("%I:%M %p"),0,-3,125,'right')
 
     gc.translate(90,28)
 
@@ -47,15 +47,15 @@ local function sysInfoFunc()
     gc.rectangle('line',-1,-1,34,20)
     local state,pow=love.system.getPowerInfo()
     if state=='unknown' then
-        FONT.set(20,'thin')
+        FONT.set(20,'number')
         gc.print("?",16,9,love.timer.getTime()*2.6,nil,nil,5,11)
     elseif state=='nobattery' then
-        FONT.set(15,'thin')
+        FONT.set(15,'number')
         gc.print("x x",6,-3)
         gc.print("_",13,-1)
     elseif pow then
-        FONT.set(20,'thin')
-        gc.printf(pow.."%",-64,-2,60,'right')
+        FONT.set(20,'number')
+        gc.printf(pow.."%",-64,-4,60,'right')
 
         gc.setColor(
             pow>60 and COLOR.L or

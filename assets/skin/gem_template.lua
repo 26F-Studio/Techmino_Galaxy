@@ -208,7 +208,7 @@ end
 
 function S.drawTime(time)
     gc_setColor(COLOR.dL)
-    FONT.set(30)
+    FONT.set(30,'number')
     gc_printf(("%.3f"):format(time/1000),-370-260,330,260,'right')
 end
 

@@ -14,23 +14,18 @@ local scene={}
 
 function scene.enter()
     time=0
-    err=Zenitha.getErr('#')
-    if not err then
-        GC.setDefaultFilter('nearest','nearest')
-        err={
-            scene="NULL",
-            mes={"??????????????????????????","","TRACEFORWARD","??????","?????","????","???","??","?"},
-            shot=GC.load{200,120,
-                {'setLW',2},
-                {'setCL',1,1,1,.2},
-                {'fRect',0,0,200,120},
-                {'setCL',COLOR.L},
-                {'setFT',60},
-                {'print','?',118,95,MATH.pi},
-            },
-        }
-        GC.setDefaultFilter('linear','linear')
-    end
+    err=Zenitha.getErr('#') or {
+        scene="NULL",
+        mes={"??????????????????????????","","TRACEFORWARD","??????","?????","????","???","??","?"},
+        shot=GC.load{200,120,
+            {'setLW',2},
+            {'setCL',1,1,1,.2},
+            {'fRect',0,0,200,120},
+            {'setCL',COLOR.L},
+            {'setFT',60},
+            {'print','?',118,95,MATH.pi},
+        },
+    }
     table.insert(err.mes,"")
     table.insert(err.mes,SYSTEM.."-"..VERSION.appVer)
     table.insert(err.mes,"Scene: "..err.scene)
