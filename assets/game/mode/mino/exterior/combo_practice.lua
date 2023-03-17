@@ -2,7 +2,7 @@ local gc=love.graphics
 local lineTarget=200
 local bgmTransBegin,bgmTransFinish=20,50
 
-local function generateField(P)
+local function newMap(P)
     local F=P.field
     local w=P.settings.fieldW
     local difficulty=MATH.clamp(P.modeData.cleared+1+P:random(-1,1),1,10)
@@ -88,13 +88,14 @@ return {
                 P.modeData.levelRemain=0
                 P.modeData.cleared=0
                 P.modeData._curHisLen=false
-                generateField(P)
+                newMap(P)
             end,
             afterDrop=function(P)
                 if P.handY>P.modeData.levelRemain then
                     if P.modeData.levelStarted then
-                        generateField(P)
+                        newMap(P)
                         P:playSound('b2b_break')
+                        P.combo=0
                     end
                     P.hand=false
                 end
@@ -119,11 +120,11 @@ return {
                         P:finish('AC')
                     elseif P.modeData.levelRemain<=0 then
                         P.modeData.cleared=P.modeData.cleared+1
-                        generateField(P)
+                        newMap(P)
                         P:playSound('reach')
                     end
                 elseif P.modeData.levelStarted then
-                    generateField(P)
+                    newMap(P)
                     P:playSound('b2b_break')
                 end
             end,
