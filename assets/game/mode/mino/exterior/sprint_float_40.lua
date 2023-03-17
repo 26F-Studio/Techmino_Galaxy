@@ -30,11 +30,6 @@ return {
                 gc.setColor(1,1,1,.26)
                 gc.rectangle('fill',0,(P.modeData.line-lineTarget)*40-2,P.settings.fieldW*40,4)
             end,
-            drawOnPlayer=function(P)
-                gc.setColor(COLOR.L)
-                FONT.set(80)
-                GC.mStr(lineTarget-P.modeData.line,-300,-55)
-            end,
         },
     }},
 }
