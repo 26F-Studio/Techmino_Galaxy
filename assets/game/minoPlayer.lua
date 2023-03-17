@@ -1559,8 +1559,8 @@ function MP:render()
     gc.translate(-200,400)
 
     -- startFieldStencil
-    GC.stc_setComp()
-    GC.stc_rect(0,0,400,-920)
+    -- GC.stc_setComp()
+    -- GC.stc_rect(0,0,400,-920)
     gc.scale(10/settings.fieldW)
 
 
@@ -1657,7 +1657,7 @@ function MP:render()
 
 
     -- stopFieldStencil
-    GC.stc_stop()
+    -- GC.stc_stop()
 
     -- Particles
     gc.setColor(1,1,1)
@@ -1723,15 +1723,15 @@ function MP:render()
         skin.drawStartingCounter(settings.readyDelay)
     end
 
-    -- Upside fade out
-    gc.setBlendMode('multiply','premultiplied')
-    gc.setColorMask(false,false,false,true)
-    for i=0,99,2 do
-        gc.setColor(0,0,0,(1-i/100)^2)
-        gc.rectangle('fill',-200,-422-i,400,-2)
-    end
-    gc.setBlendMode('alpha')
-    gc.setColorMask()
+    -- Fade out at top
+    -- gc.setBlendMode('multiply','premultiplied')
+    -- gc.setColorMask(false,false,false,true)
+    -- for i=0,99,2 do
+    --     gc.setColor(0,0,0,(1-i/100)^2)
+    --     gc.rectangle('fill',-200,-422-i,400,-2)
+    -- end
+    -- gc.setBlendMode('alpha')
+    -- gc.setColorMask()
 
     gc.pop()
 end
