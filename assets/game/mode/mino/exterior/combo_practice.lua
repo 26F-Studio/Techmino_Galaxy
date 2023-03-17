@@ -7,7 +7,7 @@ local function generateField(P)
     local w=P.settings.fieldW
     local difficulty=MATH.clamp(P.modeData.cleared+1+P:random(-1,1),1,10)
     local height=10+math.floor((difficulty+1)/2)+P:random(-2,2)
-    local wellWidth=4 or MATH.clamp(2+math.floor(difficulty/4),2,4)
+    local wellWidth=MATH.clamp(2+math.floor(difficulty/4),2,4)
     local widthExpandCounter=math.floor(15-difficulty)+P:random(-2,2)
     local wellL,wellR
 
