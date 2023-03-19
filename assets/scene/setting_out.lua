@@ -14,7 +14,7 @@ function scene.enter()
     for _,v in next,scene.widgetList do
         if v.name then
             if v.name:sub(1,1)=='S' then
-                v.color=v.name:sub(2,2)==page and 'L' or 'LD'
+                v.color=v.name:sub(2,2)==page and 'lS' or 'L'
             else
                 v:setVisible(type(v.name)=='string' and v.name:sub(1,1)==page)
             end
