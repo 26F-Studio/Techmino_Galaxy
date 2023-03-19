@@ -332,13 +332,20 @@ function PP:resetPosCheck()
             self.deathTimer=self.settings.deathDelay
             self:playSound('suffocate')
 
-            -- Suffocate IMS, trigger when key pressed, not buffered
-            if self.keyState.moveLeft then self:moveLeft() end
-            if self.keyState.moveRight then self:moveRight() end
+            -- Suffocate IMS, always trigger when held
             if self.keyState.softDrop then self:moveDown() end
+            if self.keyState.moveRight~=self.keyState.moveLeft then
+                if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
+            end
 
             -- Suffocate IRS
-            if self.keyBuffer.rotate then
+            if self.settings.easyInitCtrl then
+                if self.keyState.rotate180 then
+                    self:rotate('F',true)
+                elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
+                    self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
+                end
+            elseif self.keyBuffer.rotate then
                 self:rotate(self.keyBuffer.rotate,true)
                 self.keyBuffer.rotate=false
             end
@@ -348,20 +355,32 @@ function PP:resetPosCheck()
             return
         end
     else
-        -- IMS
-        if self.keyBuffer.move then
-            if self.keyBuffer.move=='L' then
-                self:moveLeft()
-            elseif self.keyBuffer.move=='R' then
-                self:moveRight()
+        -- IMS & IRS
+        if self.settings.easyInitCtrl then
+            if self.keyState.softDrop then self:moveDown() end
+            if self.keyState.moveRight~=self.keyState.moveLeft then
+                if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
             end
-            self.keyBuffer.move=false
-        end
 
-        -- IRS
-        if self.keyBuffer.rotate then
-            self:rotate(self.keyBuffer.rotate,true)
-            self.keyBuffer.rotate=false
+            if self.keyState.rotate180 then
+                self:rotate('F',true)
+            elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
+                self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
+            end
+        else
+            if self.keyBuffer.move then
+                if self.keyBuffer.move=='L' then
+                    self:moveLeft()
+                elseif self.keyBuffer.move=='R' then
+                    self:moveRight()
+                end
+                self.keyBuffer.move=false
+            end
+
+            if self.keyBuffer.rotate then
+                self:rotate(self.keyBuffer.rotate,true)
+                self.keyBuffer.rotate=false
+            end
         end
 
         self:freshGhost()
@@ -1222,6 +1241,7 @@ local baseEnv={
     dasHalt=0,
     hdLockA=1000,
     hdLockM=100,
+    easyInitCtrl=false,
     skin='puyo_jelly',
 
     shakeness=.26,
