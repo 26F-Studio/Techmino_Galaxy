@@ -212,12 +212,8 @@ actions.rotate180={
 actions.softDrop={
     press=function(P)
         P.downCharge=0
-        if P.hand then
-            if P.handY>P.ghostY or P.deathTimer then
-                if P:moveDown() then
-                    P:playSound('move')
-                end
-            end
+        if P.hand and (P.handY>P.ghostY or P.deathTimer) and P:moveDown() then
+            P:playSound('move')
         end
     end,
     release=function(P)
@@ -1624,7 +1620,7 @@ function MP:render()
                     skin.drawGhost(CB,self.handX,self.ghostY)
                 end
 
-                -- Mino
+                -- Hand
                 if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
                     -- Smooth
                     local movingX,droppingY=0,0
