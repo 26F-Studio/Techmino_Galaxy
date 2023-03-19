@@ -1624,7 +1624,7 @@ function MP:render()
                 if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
                     -- Smooth
                     local movingX,droppingY=0,0
-                    if self.moveDir and self.moveCharge<self.settings.das then
+                    if not self.deathTimer and self.moveDir and self.moveCharge<self.settings.das then
                         movingX=15*self.moveDir*(max(self.moveCharge,0)/self.settings.das-.5)
                     end
                     if self.handY>self.ghostY then
