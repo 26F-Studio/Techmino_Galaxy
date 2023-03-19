@@ -224,9 +224,13 @@ actions.hardDrop={
     press=function(P)
         if P.hdLockMTimer~=0 or P.hdLockATimer~=0 then
             P:playSound('rotate_failed')
-        elseif P.hand and not P.deathTimer then
-            P.hdLockMTimer=P.settings.hdLockM
-            P:minoDropped()
+        elseif P.hand then
+            if not P.deathTimer then
+                P.hdLockMTimer=P.settings.hdLockM
+                P:minoDropped()
+            else
+                P.deathTimer=ceil(P.deathTimer/2.6)
+            end
         else
             P.keyBuffer.hardDrop=true
         end
