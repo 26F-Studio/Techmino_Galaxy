@@ -122,7 +122,7 @@ TRS[6]={
         local baseX,baseY=self.handX,self.handY
         self:freshDelay('rotate')
         local transformed
-        if (baseY==self.ghostY and ((F:getCell(baseX-1,baseY) or F:getCell(baseX-1,baseY+1))) and (F:getCell(baseX+2,baseY) or F:getCell(baseX+2,baseY+1))) or self.deathTimer then
+        if not self.deathTimer and (baseY==self.ghostY and ((F:getCell(baseX-1,baseY) or F:getCell(baseX-1,baseY+1))) and (F:getCell(baseX+2,baseY) or F:getCell(baseX+2,baseY+1))) or self.deathTimer then
             if not self.settings.noOspin then
                 -- [Warning] field 'spinSeq' is a dirty data, TRS put this var into the block.
                 C.spinSeq=((C.spinSeq or '')..dir):sub(-3)
