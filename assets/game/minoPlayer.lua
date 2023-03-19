@@ -209,15 +209,21 @@ actions.rotate180={
         if P.keyBuffer.rotate=='F' then P.keyBuffer.rotate=false end
     end
 }
-function actions.softDrop(P)
-    P.downCharge=0
-    if not P.hand or P.deathTimer then return end
-    if P.handY>P.ghostY then
-        if P:moveDown() then
-            P:playSound('move')
+actions.softDrop={
+    press=function(P)
+        P.downCharge=0
+        if P.hand then
+            if P.handY>P.ghostY or P.deathTimer then
+                if P:moveDown() then
+                    P:playSound('move')
+                end
+            end
         end
+    end,
+    release=function(P)
+        if P.deathTimer then P:moveUp() end
     end
-end
+}
 actions.hardDrop={
     press=function(P)
         if P.hdLockMTimer~=0 or P.hdLockATimer~=0 then
@@ -488,6 +494,7 @@ function MP:resetPosCheck()
             -- Suffocate IMS, trigger when key pressed, not buffered
             if self.keyState.moveLeft then self:moveLeft() end
             if self.keyState.moveRight then self:moveRight() end
+            if self.keyState.softDrop then self:moveDown() end
 
             -- Suffocate IRS
             if self.keyBuffer.rotate then
@@ -870,6 +877,12 @@ function MP:moveDown()
         if self.handY==self.ghostY then
             self:playSound('touch')
         end
+        return true
+    end
+end
+function MP:moveUp()
+    if not self:ifoverlap(self.hand.matrix,self.handX,self.handY+1) then
+        self:moveHand('moveY',1)
         return true
     end
 end
