@@ -184,7 +184,7 @@ function PROGRESS.setEnv(env)
         error("?")
     end
 end
-function PROGRESS.transendTo(n)
+function PROGRESS.transcendTo(n)
     MES.clear()
     if n==2 then
         WAIT{
