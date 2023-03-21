@@ -114,8 +114,6 @@ FONT.load{
     bold='assets/fonts/RHDisplayGalaxy-ExtraBold.otf',
 
     number='assets/fonts/RHTextInktrap-Regular.otf',
-    _basic='assets/fonts/RHMonoGalaxy-Medium.otf',
-
     symbols='assets/fonts/symbols.otf',
 
     galaxy_bold="assets/fonts/26FGalaxySans-Bold.otf",
