@@ -162,13 +162,13 @@ local GAME={
 }
 
 function GAME.getMode(name)
-    if modeLib[name] then
+    if modeLib[name] and not love.keyboard.isDown('f5') then
         return modeLib[name]
     else
         local path='assets/game/mode/'..name..'.lua'
         assert(love.filesystem.getInfo(path) and FILE.isSafe(path),"No mode named "..tostring(name))
         local M=FILE.load(path,'-lua -canskip')
-        assert(type(M)=='table')
+        assert(type(M)=='table','WTF')
         setmetatable(M,modeMeta)
         assert(type(M.initialize)         =='function',"[mode].initialize must be function")
         assert(type(M.settings)           =='table',   "[mode].settings must be table")

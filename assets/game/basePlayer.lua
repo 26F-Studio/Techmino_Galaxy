@@ -329,7 +329,6 @@ function P:update(dt)
     for _,v in next,self.particles do v:update(dt) end
     self.texts:update(dt)
 end
-function P:render() end
 --------------------------------------------------------------
 -- Builder
 function P:loadSettings(settings)-- Load data & events from mode settings
@@ -339,9 +338,11 @@ function P:loadSettings(settings)-- Load data & events from mode settings
                 assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
                 if type(E)=='table' then
                     for i=1,#E do
+                        assert(type(E[i])=='function','Event must be function or table of functions')
                         ins(self.event[name],E[i])
                     end
-                elseif type(E)=='function' then
+                else
+                    assert(type(E)=='function','Event must be function or table of functions')
                     ins(self.event[name],E)
                 end
             end

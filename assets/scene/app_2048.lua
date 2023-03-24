@@ -230,7 +230,7 @@ end
 
 function scene.enter()
     for i=1,#tileName do
-        tileText[i]=gc.newText(FONT.get(80,'_basic'),tileName[i])
+        tileText[i]=gc.newText(FONT.get(80,'_norm'),tileName[i])
     end
     BG.set('cubes')
 
