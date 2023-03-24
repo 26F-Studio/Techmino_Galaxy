@@ -7,12 +7,14 @@ local langList={
     pt="Português",
     id="Bahasa Indonesia",
     ja="日本語",
+    vi="Tiếng Việt",
 }
 local languages={
     "Language  Langue  Lingua",
     "语言  言語  언어",
     "Idioma  Línguas  Sprache",
     "Язык  Γλώσσα  Bahasa",
+    "Ngôn ngữ",
 }
 local curLang=1
 
@@ -65,7 +67,7 @@ scene.widgetList={
     WIDGET.new{type='button_fill',    x=350,y=610,w=390,h=100,cornerR=26,fontSize=35, text='',          color='LO'},
     WIDGET.new{type='button_fill',    x=350,y=760,w=390,h=100,cornerR=26,fontSize=35, text='',          color='LY'},
 
-    WIDGET.new{type='button_fill',    x=800,y=310,w=390,h=100,cornerR=26,fontSize=40, text='',          color='LA'},
+    WIDGET.new{type='button_fill',    x=800,y=310,w=390,h=100,cornerR=26,fontSize=40, text=langList.vi, color='LA', sound='check_on',code=function() _setLang('vi') end},
     WIDGET.new{type='button_fill',    x=800,y=460,w=390,h=100,cornerR=26,fontSize=40, text='',          color='LK'},
     WIDGET.new{type='button_fill',    x=800,y=610,w=390,h=100,cornerR=26,fontSize=40, text='',          color='LG'},
     WIDGET.new{type='button_fill',    x=800,y=760,w=390,h=100,cornerR=26,fontSize=40, text='',          color='LJ'},
