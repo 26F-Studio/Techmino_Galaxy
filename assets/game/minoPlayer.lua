@@ -688,12 +688,16 @@ function MP:popNext()
         self:finish('ILE')
         return
     end
+    self:resetPos()
 
-    if self.keyBuffer.hold then-- IHS
+    -- IHS
+    if self.settings.easyInitCtrl then
+        if self.keyState.holdPiece then
+            self:hold(true)
+        end
+    elseif self.keyBuffer.hold then
         self.keyBuffer.hold=false
         self:hold(true)
-    else
-        self:resetPos()
     end
 
     self:triggerEvent('afterSpawn')
@@ -953,18 +957,18 @@ function MP:rotate(dir,ifInit)
 end
 function MP:hold(ifInit)
     if self.holdTime>=self.settings.holdSlot and not self.settings.infHold then return end
-    local mode=self.settings.holdMode
 
     -- These data may changed during hold, so we store them and recover them later
     local freshChance,freshTimeRemain=self.freshChance,self.freshTimeRemain
     local holdTime=self.holdTime
 
-    self[
-        mode=='hold' and 'hold_hold' or
-        mode=='swap' and 'hold_swap' or
+    local mode=self.settings.holdMode
+    if not self[
+        mode=='hold'  and 'hold_hold' or
+        mode=='swap'  and 'hold_swap' or
         mode=='float' and 'hold_float' or
         error("WTF why hold mode is "..tostring(mode))
-    ](self)
+    ](self) then return end
 
     -- Recover data
     self.freshChance,self.freshTimeRemain=freshChance,freshTimeRemain
@@ -987,6 +991,7 @@ function MP:hold_hold()
     else
         self:popNext()
     end
+    return true
 end
 function MP:hold_swap()
     local swapN=self.holdTime%self.settings.holdSlot+1
@@ -997,8 +1002,11 @@ function MP:hold_swap()
         self.hand,self.nextQueue[swapN]=self.nextQueue[swapN],self.hand
         self:resetPos()
     end
+    return true
 end
 function MP:hold_float()
+    if self._floatHolding then return end
+    self._floatHolding=true
     local swapN=self.holdTime%self.settings.holdSlot+1
     if self.floatHolds[swapN] then
         local h=self.floatHolds[swapN]
@@ -1018,8 +1026,11 @@ function MP:hold_float()
             minY=self.minY,
         }
         self.hand=false
+        self.handX,self.handY=false,false
         self:popNext()
     end
+    self._floatHolding=nil
+    return true
 end
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if not self.hand or self.deathTimer then return end
@@ -1141,6 +1152,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
 
     -- Discard hand
     self.hand=false
+    self.handX,self.handY=false,false
     if self.finished then return end
 
     -- Update & Release garbage
