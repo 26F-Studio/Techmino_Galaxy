@@ -1,15 +1,15 @@
 return {
     -- Info
     sureText={
-        back="Nhấn lần nữa để Quay về",
+        back="Nhấn lần nữa để Trở về",
         quit="Nhấn lần nữa để Thoát",
         reset="Nhấn lần nữa để Đặt lại",
-        enter="Nhấn lần nữa để Enter (Vào)",
+        enter="Nhấn lần nữa để Vào",
     },
     setting_needRestart="Những cài đặt này cần khởi động lại để có hiệu lực",
     noMode="Không thể tải chế độ '$1': $2",
     interior_crash="Bạn chơi quá tốt, hộp cát không thể xử lý được nên nó đã tự bay màu :)))",
-    booting_changed="Đã thay đổi chương trình boot",
+    booting_changed="Hệ thống đã phát hiện thiết lập của chương trình boot chính bị hỏng\nĐã sử dụng thiết lập của chương trình boot dự phòng",
     musicroom_lowVolume="Vặn âm lượng BGM lên đi bạn ơi! (Nó nằm ở dưới góc phải màn hình đấy!)",
 
     -- Game
@@ -152,7 +152,7 @@ return {
     setting_clean="VRAM Boost",
     setting_fullscreen="Toàn màn hình",
     setting_portrait="Màn hình hướng dọc",
-    setting_autoMute="Tắt tiếng khi mất tập trung",
+    setting_autoMute="Tắt tiếng khi đang nhìn ở cửa số khác",
     setting_showTouch="Hiện các vị trí vừa chạm",
 
     setting_maxFPS="FPS tối đa",
@@ -176,35 +176,35 @@ return {
     main_out_multi="Chơi qua mạng",
 
     title_musicroom="Phòng nhạc",
-    musicroom_fullband="Tất cả\nnhạc cụ",
+    musicroom_fullband="Mở t.cả\nnhạc cụ",
     musicroom_autoplay="Tự động\nđổi bài",
 
     about_title="Giới thiệu",
     about_love="Z-UI được chạy bằng LÖVE",
     about_module="Modules:",
     about_toolchain="Toolchain:",
-    about_peopleLost="Bạn vừa mất $1 !",
+    about_peopleLost="Bạn vừa mất $1 !", -- ?¿
 
     -- Mode name
     exteriorModeInfo={
         marathon=              {"Marathon","Xoá 200 hàng nhưng tốc độ sẽ tăng dần!"},
         techrash_easy=         {"Techrash Easy","Hãy làm thật nhiều Techrash mà bạn có thể làm"},
-        techrash_hard=         {"Techrash Hard","Hãy làm thật nhiều Techrash mà bạn có thể làm, nhưng đừng có làm cùng chung một vị trí"},
+        techrash_hard=         {"Techrash Hard","Hãy làm thật nhiều Techrash mà bạn có thể làm, nhưng đừng có làm cùng chung một vị trí quá nhiều lần!"},
         hypersonic_lo=         {"Hypersonic LO","Hypersonic\nHello World"},
-        hypersonic_hi=         {"Hypersonic HI","Hypersonic\nThử thách cực khó"},
+        hypersonic_hi=         {"Hypersonic HI","Hypersonic\nThử thách khó nuốt\""},
         hypersonic_ti=         {"Hypersonic TI","Hypersonic\nVelocital Trepidation"},
         hypersonic_hd=         {"Hypersonic HD","Hypersonic"},
-        combo_practice=        {"Combo Practice","Clear more combo questions"},
-        tsd_practice=          {"TSD Practice","Clear more TSD questions"},
+        combo_practice=        {"Tập làm combo","Clear more combo questions"},
+        tsd_practice=          {"Tập làm TSD","Clear more TSD questions"},
         tsd_easy=              {"TSD Easy","Clear more TSDs in a row"},
         tsd_hard=              {"TSD Hard","Clear more TSDs in a row, but not at same column"},
         pc_easy=               {"PC Easy","Make PCs with templates"},
         pc_hard=               {"PC Hard","Make PCs with more complicated templates"},
-        pc_challenge=          {"PC Challenge","Make more PCs as you can"},
-        dig_practice=          {"Dig Practice","Clear the garbage lines"},
-        dig_40=                {"Dig 40","Clear 40 random garbage lines"},
-        dig_100=               {"Dig 100","Clear 100 random garbage lines"},
-        dig_400=               {"Dig 400","Clear 400 random garbage lines"},
+        pc_challenge=          {"Tập làm PC","Make more PCs as you can"},
+        dig_practice=          {"Tập đào râc","Dọn một ít hàng rác"},
+        dig_40=                {"Dig 40","Dọn 40 hàng rác ngẫu nhiên"},
+        dig_100=               {"Dig 100","Dọn 100 hàng rác ngẫu nhiên"},
+        dig_400=               {"Dig 400","Dọn 400 hàng rác ngẫu nhiên"},
         dig_shale=             {"Dig Shale","Clear some layered garbage lines"},
         dig_volcanics=         {"Dig Volcanics","Clear some compilicate garbage lines"},
         dig_checker=           {"Dig Checker","Clear ten checker board garbage lines"},
@@ -243,9 +243,9 @@ return {
     -- Level
     tutorial_basic="Những thứ cơ bản",
     tutorial_sequence="Next & Hold",
-    tutorial_stackBasic="Xếp (chồng) gạch - Cơ bản",
+    tutorial_stackBasic="Xếp gạch - Cơ bản",
     tutorial_twoRotatingKey="Xoay cả 2 hướng",
-    tutorial_stackAdvanced="Xếp (chồng) gạch - Nâng cao",
+    tutorial_stackAdvanced="Xếp gạch - Nâng cao",
     tutorial_finesse="Finesse",
 
     tutorial_pass="HOÀN THÀNH",
@@ -257,22 +257,22 @@ return {
     tutorial_basic_5="Bạn cũng có thể xoay gạch bằng cách nhấn các nút xoay.",
 
     tutorial_sequence_1="2. Next & Hold",
-    tutorial_sequence_2="Trời ạ, cái gạch này không khớp với cái hố rồi…",
+    tutorial_sequence_2="Trời ạ, cái gạch này không lọt vùa với cái hố rồi…",
     tutorial_sequence_3="…nhưng ngay bây giờ, bạn có thể nhìn thấy những gạch nào sẽ chuẩn bị rơi. ",
     tutorial_sequence_4="Dùng phím Hold (Giữ) để điều chỉnh thứ tự của các gạch.",
 
     tutorial_stackBasic_1="3. Xếp (chồng) gạch - Cơ bản",
     tutorial_stackBasic_m1="Hãy làm theo hướng dẫn sau\n",
     tutorial_stackBasic_m2="Lúc đầu, hãy giữ cho bề mặt ở phía trên phẳng (đừng để quá gồ ghề)",
-    tutorial_stackBasic_m3="Các miếng gạch sẽ được đặt ở tư thế nằm, chứ không phải là tư thế đứng",
+    tutorial_stackBasic_m3="Các cục gạch sẽ được đặt ở tư thế nằm, chứ không phải là tư thế đứng",
     tutorial_stackBasic_m4="Bề mặt ở trên nếu phẳng thì dễ dàng để đặt gạch hơn, và cố gắng đừng tạo ra bất kì cái hố nào",
     tutorial_stackBasic_m5="Bạn thường được thưởng nhiều hơn khi xóa bốn hàng cùng một lúc, hãy thử làm một cái như vậy xem",
-    tutorial_stackBasic_m6="Thử làm Techrash bằng cách dùng những miếng gạch cuối cùng này mà không cần hướng dẫn xem",
+    tutorial_stackBasic_m6="Thử làm Techrash bằng cách dùng những cục gạch cuối cùng này mà không cần hướng dẫn xem",
 
     tutorial_twoRotatingKey_1="4. Xoay cả 2 hướng",
     tutorial_twoRotatingKey_m1="Hãy làm theo hướng dẫn, nhưng hãy cố gắng sử dụng phím xoay ít nhất có thể",
     tutorial_twoRotatingKey_m2="Nếu bạn có thể xoay trái, thì đừng có xoay phải 3 lần!",
     tutorial_twoRotatingKey_m3="Không những tốn công sức, mà còn ngốn cả thời gian nữa",
-    tutorial_twoRotatingKey_m4="Bạn có thể tự quyết định vị trí đặt gạch rồi, không cần phải dựa vào vị trí của bóng nữa",
-    tutorial_twoRotatingKey_unnecessaryRotation="Bạn dùng nhiều phím Xoay quá!",
+    tutorial_twoRotatingKey_m4="Bây giờ bạn có thể tự quyết định vị trí đặt gạch rồi, không cần phải dựa vào vị trí của bóng nữa",
+    tutorial_twoRotatingKey_unnecessaryRotation="Bạn xoay gạch quá tay rồi!",
 }
