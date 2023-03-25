@@ -8,9 +8,9 @@ return {
     },
     setting_needRestart="Những cài đặt này cần khởi động lại để có hiệu lực",
     noMode="Không thể tải chế độ '$1': $2",
-    interior_crash="Bạn chơi quá tốt, hộp cát không thể xử lý được nên nó đã tự bay màu :)))",
-    booting_changed="Hệ thống đã phát hiện thiết lập của chương trình boot chính bị hỏng\nĐã sử dụng thiết lập của chương trình boot dự phòng",
-    musicroom_lowVolume="Vặn âm lượng BGM lên đi bạn ơi! (Nó nằm ở dưới góc phải màn hình đấy!)",
+    interior_crash="Bạn chơi quá tốt, hộp cát không thể xử lý được nên nó đã tự bay màu",
+    booting_changed="Đã thay đổi chương trình boot",
+    musicroom_lowVolume="Vặn âm lượng nhạc nền lên đi bạn ơi! (Nó nằm ở dưới góc phải màn hình đấy!)",
 
     -- Game
     clearName={
