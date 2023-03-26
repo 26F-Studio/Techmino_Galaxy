@@ -118,7 +118,8 @@ return {
     button_back="Trở về",
 
     title_simulation="Trình giả lập",
-    title_graph_mino="M-Graph (Bản đồ Mino)", -- from "Knowledge Graph" (AI domain)
+    title_graph_mino="M-Graph (Đồ thị Mino)",   -- from "Knowledge Graph" (AI domain)
+                                                -- it used to be translated to "M-Graph (Bản đồ Mino)"
     
     title_settings="Cài đặt",
 
@@ -196,7 +197,7 @@ return {
         pc_easy=               {"Tập làm PC - Dễ","Tập làm Perfect Clear với mẫu đã dựng sẵn"},
         pc_hard=               {"Tập làm PC - Khó","Tập làm Perfect Clear với mẫu đã dựng sẵn, nhưng phức tạp hơn"},
         pc_challenge=          {"Chỉ làm PC","Cố làm nhiều PC nhất có thể"},
-        dig_practice=          {"Tập đào rác","Tập dọn một ít hàng rác"},
+        dig_practice=          {"Tập đào rác","Tập dọn một ít (12) hàng rác"},
         dig_40=                {"Dig 40","Dọn 40 hàng rác ngẫu nhiên"},
         dig_100=               {"Dig 100","Dọn 100 hàng rác ngẫu nhiên"},
         dig_400=               {"Dig 400","Dọn 400 hàng rác ngẫu nhiên"},
