@@ -6,9 +6,9 @@ return {
         reset="Nhấn lần nữa để Đặt lại",
         enter="Nhấn lần nữa để Vào",
     },
-    setting_needRestart="Những cài đặt này cần khởi động lại để có hiệu lực",
+    setting_needRestart="Hãy khởi động lại để cài đặt bạn vừa chỉnh có hiệu lực",
     noMode="Không thể tải chế độ '$1': $2",
-    interior_crash="Bạn chơi quá tốt, hộp cát không thể xử lý được nên nó đã tự bay màu",
+    interior_crash="Bạn chơi quá tốt, hộp cát không thể xử lý được nên nó đã bị crash",
     booting_changed="Đã thay đổi chương trình boot",
     musicroom_lowVolume="Vặn âm lượng nhạc nền lên đi bạn ơi! (Nó nằm ở dưới góc phải màn hình đấy!)",
 
@@ -118,12 +118,7 @@ return {
     button_back="Trở về",
 
     title_simulation="Trình giả lập",
-
-    -- Sea/Squishy's warning:
-        -- EN: DO NOT TRY TO TRANSLATE "M-GRAPH"!
-        -- VI: ĐỪNG CỐ DỊCH TỪ "M-GRAPH"!
-    -- Someone's traslation warning: from "Knowledge Graph" (AI domain)
-        title_graph_mino="M-Graph",
+    title_graph_mino="M-Graph (Bản đồ Mino)", -- from "Knowledge Graph" (AI domain)
     
     title_settings="Cài đặt",
 
@@ -146,7 +141,7 @@ return {
     setting_touching="Bố cục phím cảm ứng...",
     setting_test="Test",
 
-    setting_sysCursor="Thay hình con trỏ chuột",
+    setting_sysCursor="Trỏ chuột hệ thống",
     setting_clickFX="Hiệu ứng nhấp chuột",
     setting_power="Terminal State",
     setting_clean="VRAM Boost",
@@ -183,25 +178,25 @@ return {
     about_love="Z-UI được chạy bằng LÖVE",
     about_module="Modules:",
     about_toolchain="Toolchain:",
-    about_peopleLost="Bạn vừa mất $1 !", -- ?¿
+    about_peopleLost="Bạn vừa đánh rơi $1 !",
 
     -- Mode name
     exteriorModeInfo={
         marathon=              {"Marathon","Xoá 200 hàng nhưng tốc độ sẽ tăng dần!"},
-        techrash_easy=         {"Techrash Easy","Hãy làm thật nhiều Techrash mà bạn có thể làm"},
-        techrash_hard=         {"Techrash Hard","Hãy làm thật nhiều Techrash mà bạn có thể làm, nhưng đừng có làm cùng chung một vị trí quá nhiều lần!"},
-        hypersonic_lo=         {"Hypersonic LO","Hypersonic\nHello World"},
-        hypersonic_hi=         {"Hypersonic HI","Hypersonic\nThử thách khó nuốt\""},
-        hypersonic_ti=         {"Hypersonic TI","Hypersonic\nVelocital Trepidation"},
-        hypersonic_hd=         {"Hypersonic HD","Hypersonic"},
-        combo_practice=        {"Tập làm combo","Clear more combo questions"},
-        tsd_practice=          {"Tập làm TSD","Clear more TSD questions"},
-        tsd_easy=              {"TSD Easy","Clear more TSDs in a row"},
-        tsd_hard=              {"TSD Hard","Clear more TSDs in a row, but not at same column"},
-        pc_easy=               {"PC Easy","Make PCs with templates"},
-        pc_hard=               {"PC Hard","Make PCs with more complicated templates"},
-        pc_challenge=          {"Tập làm PC","Make more PCs as you can"},
-        dig_practice=          {"Tập đào râc","Dọn một ít hàng rác"},
+        techrash_easy=         {"Chỉ làm Techrash - Dễ","Cố làm nhiều Techrash nhất có thể"},
+        techrash_hard=         {"Chỉ làm Techrash - Khó","Cố làm nhiều Techrash nhất có thể, nhưng đừng có làm cùng chung một vị trí quá nhiều lần!"},
+        hypersonic_lo=         {"Hypersonic LO","Hypersonic\n\"Xin chào mọi người!\nEm đang tập chơi 20G.\nNếu em có thắc mắc chỗ nào đó xin mọi người hãy giúp em ạ!\nEm xin cảm tạ!\""},
+        hypersonic_hi=         {"Hypersonic HI","Hypersonic\nThử thách \"khó nuốt\""},
+        hypersonic_ti=         {"Hypersonic TI","Hypersonic\nVelocital Trepidation\n(Nó nhanh tới mức đáng sợ!)"},
+        hypersonic_hd=         {"Hypersonic HD","Hypersonic (nhưng mà gạch sẽ biến mất sau một khoảng thời gian!)"},
+        combo_practice=        {"Tập làm combo","Hãy tập xoá thêm mấy cái combo đi!"},
+        tsd_practice=          {"Tập làm TSD","Hãy tập xoá thêm mấy cái TSD đi"},
+        tsd_easy=              {"Chỉ làm TSD - Dễ","Hãy cố làm nhiều combo TSD nhất có thể (không được dùng kiểu clear khác!)"},
+        tsd_hard=              {"Chỉ làm TSD - Khó","Hãy cố làm nhiều combo TSD nhất có thể, nhưng đừng có làm cùng chung một vị trí quá nhiều lần!"},
+        pc_easy=               {"Tập làm PC - Dễ","Tập làm Perfect Clear với mẫu đã dựng sẵn"},
+        pc_hard=               {"Tập làm PC - Khó","Tập làm Perfect Clear với mẫu đã dựng sẵn, nhưng phức tạp hơn"},
+        pc_challenge=          {"Chỉ làm PC","Cố làm nhiều PC nhất có thể"},
+        dig_practice=          {"Tập đào rác","Tập dọn một ít hàng rác"},
         dig_40=                {"Dig 40","Dọn 40 hàng rác ngẫu nhiên"},
         dig_100=               {"Dig 100","Dọn 100 hàng rác ngẫu nhiên"},
         dig_400=               {"Dig 400","Dọn 400 hàng rác ngẫu nhiên"},
