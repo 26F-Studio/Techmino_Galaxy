@@ -269,5 +269,5 @@ return {
     tutorial_twoRotatingKey_m2="Nếu bạn có thể xoay trái, thì đừng có xoay phải 3 lần!",
     tutorial_twoRotatingKey_m3="Không những tốn công sức, mà còn ngốn cả thời gian nữa",
     tutorial_twoRotatingKey_m4="Bây giờ bạn có thể tự quyết định vị trí đặt gạch rồi, không cần phải dựa vào vị trí của bóng nữa",
-    tutorial_twoRotatingKey_unnecessaryRotation="Bạn xoay gạch quá tay rồi!",
+    tutorial_twoRotatingKey_unnecessaryRotation="BẠN XOAY GẠCH QUÁ TAY RỒI!",
 }
