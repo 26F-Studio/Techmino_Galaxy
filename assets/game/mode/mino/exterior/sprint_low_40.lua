@@ -30,8 +30,7 @@ return {
             end,
             drawOnPlayer=function(P)
                 gc.setColor(COLOR.L)
-                FONT.set(80)
-                GC.mStr(lineTarget-P.modeData.line,-300,-55)
+                FONT.set(80) GC.mStr(lineTarget-P.modeData.line,-300,-55)
             end,
         },
     }},

@@ -101,11 +101,9 @@ return {
                 end
             end,
             drawOnPlayer=function(P)
-                gc.setColor(COLOR.L)
-                FONT.set(80)
-                GC.mStr(P.modeData.techrash,-300,-55)
-                FONT.set(30)
-                GC.mStr("Techrash",-300,30)
+                P:drawInfoPanel(-380,-60,160,120)
+                FONT.set(80) GC.mStr(P.modeData.techrash,-300,-70)
+                FONT.set(30) GC.mStr("Techrash",-300,15)
             end,
         },
     }},

@@ -8,6 +8,11 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 local P={}
 
 --------------------------------------------------------------
+-- Tools
+function P:drawInfoPanel(x,y,w,h)
+    return SKIN.get(self.settings.skin).drawInfoPanel(x,y,w,h)
+end
+--------------------------------------------------------------
 -- Effects
 function P:shakeBoard(args,v)
     local shake=self.settings.shakeness
@@ -348,11 +353,8 @@ function P:loadSettings(settings)-- Load data & events from mode settings
             end
         elseif k=='soundEvent' then
             for name,E in next,v do
-                if type(E)=='function' then
-                    self.soundEvent[name]=E
-                else
-                    error("soundEvent must be function")
-                end
+                assert(type(E)=='function',"soundEvent must be function")
+                self.soundEvent[name]=E
             end
         else
             if type(v)=='table' then

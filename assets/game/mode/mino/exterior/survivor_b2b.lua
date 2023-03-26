@@ -56,11 +56,9 @@ return {
                 end
             end,
             drawOnPlayer=function(P)
-                gc.setColor(COLOR.L)
-                FONT.set(80)
-                GC.mStr(P.modeData.wave,-300,-55)
-                FONT.set(30)
-                GC.mStr("Waves",-300,30)
+                P:drawInfoPanel(-380,-60,160,120)
+                FONT.set(80) GC.mStr(P.modeData.wave,-300,-70)
+                FONT.set(30) GC.mStr("Waves",-300,15)
 
                 local cd=P.modeData.waveTimer/P.modeData.waveTimer0
                 GC.setLineWidth(10)

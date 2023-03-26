@@ -242,6 +242,13 @@ function S.drawTime(time)
     gc_printf(("%.3f"):format(time/1000),-210-260,380,260,'right')
 end
 
+function S.drawInfoPanel(x,y,w,h)
+    gc_setColor(0,0,0,.26)
+    gc_rectangle('fill',x,y,w,h)
+    gc_setColor(COLOR.L)
+    gc_rectangle('line',x,y,w,h)
+end
+
 function S.drawStartingCounter(readyDelay)
     gc_push('transform')
     local num=math.floor((readyDelay-S.getTime())/1000)+1
@@ -253,7 +260,7 @@ function S.drawStartingCounter(readyDelay)
     elseif num==3 then r,g,b=0.70,0.80,0.98 if d>.75 then gc_rotate((d-.75)^3*40) end
     elseif num==4 then r,g,b=0.95,0.93,0.50
     elseif num==5 then r,g,b=0.70,0.95,0.70
-    else  r,g,b=max(1.26-num/10,0),max(1.26-num/10,0),max(1.26-num/10,0)
+    else   r,g,b=max(1.26-num/10,0),max(1.26-num/10,0),max(1.26-num/10,0)
     end
 
     FONT.set(100)
