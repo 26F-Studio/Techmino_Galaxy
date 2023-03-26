@@ -99,14 +99,15 @@ return {
                 end
             end,
             drawOnPlayer=function(P)
-                gc.setColor(COLOR.L)
-                FONT.set(80)
-                GC.mStr(P.modeData.line,-300,-100)
-                gc.rectangle('fill',-380,-2,160,4)
-                GC.mStr(P.modeData.target,-300,10)
+                P:drawInfoPanel(-380,-85,160,200)
+
+                FONT.set(70)
+                GC.mStr(P.modeData.line,-300,-90)
+                gc.rectangle('fill',-375,-2,150,4)
+                GC.mStr(P.modeData.target,-300,-5)
                 FONT.set(30,'bold')
                 gc.setColor(P.modeData.level<=10 and COLOR.G or P.modeData.level<=20 and COLOR.Y or COLOR.R)
-                GC.mStr(P.modeData.level,-300,100)
+                GC.mStr(P.modeData.level,-300,70)
             end,
         },
     }},

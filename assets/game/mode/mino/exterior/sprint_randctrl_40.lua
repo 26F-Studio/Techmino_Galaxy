@@ -52,9 +52,8 @@ return {
                 gc.rectangle('fill',0,(P.modeData.line-lineTarget)*40-2,P.settings.fieldW*40,4)
             end,
             drawOnPlayer=function(P)
-                gc.setColor(COLOR.L)
-                FONT.set(80)
-                GC.mStr(lineTarget-P.modeData.line,-300,-55)
+                P:drawInfoPanel(-380,-60,160,120)
+                FONT.set(80) GC.mStr(lineTarget-P.modeData.line,-300,-55)
             end,
         },
     }},

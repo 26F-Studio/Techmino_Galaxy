@@ -65,9 +65,8 @@ return {
                 end
             end,
             drawOnPlayer=function(P)
-                gc.setColor(COLOR.L)
-                FONT.set(80)
-                GC.mStr(lineTarget-P.modeData.line,-300,-55)
+                P:drawInfoPanel(-380,-60,160,120)
+                FONT.set(80) GC.mStr(lineTarget-P.modeData.line,-300,-55)
             end,
         },
     }},
