@@ -53,7 +53,7 @@ return {
     keyset_mino_moveRight=  "Sang Phải",
     keyset_mino_rotateCW=   "Twist (Xoay) Phải",
     keyset_mino_rotateCCW=  "Twist (Xoay) Trái",
-    keyset_mino_rotate180=  "Twist 180",
+    keyset_mino_rotate180=  "Twist (Xoay) 180",
     keyset_mino_softDrop=   "Thả Nhẹ",
     keyset_mino_hardDrop=   "Thả Mạnh",
     keyset_mino_holdPiece=  "Giữ gạch",
@@ -98,12 +98,12 @@ return {
     keyset_sys_back=    "Trở về",
 
     keyset_page_sys= "Cài đặt chung",
-    keyset_page_mino="Mino\n(Xếp gạch)",
-    keyset_page_puyo="Puyo\n(Xếp slime)",
-    keyset_page_gem= "Gem\n(Xếp kim cương)",
+    keyset_page_mino="Mino",
+    keyset_page_puyo="Puyo",
+    keyset_page_gem= "Gem",
 
     keyset_pressKey="Hãy nhấn một phím",
-    keyset_deleted= "*Đã xoá*",
+    keyset_deleted= "*Đã xóa*",
     keyset_info=    "[Esc]: Huỷ\n[Backspace]: Xoá",
 
     stick2_switch="Cần điều khiển\n2 hướng",
@@ -207,12 +207,12 @@ return {
         survivor_cheese=       {"Kẻ sống sót - Phô mai","Cố sống sót dưới những cuộc tấn công của phô mai"},    -- Based on a joke in Vietnam Tetris Community
         survivor_b2b=          {"Kẻ sống sót - B2B","Cố sống sót dưới những cuộc tấn công ác liệt của Back-to-back"},
         survivor_spike=        {"Kẻ sống sót - Spike","Sống sót dưới các cuộc tấn công kinh hoàng"},
-        backfire_100=          {"Ăn phản đòn - 100 hàng","Xoá 100 hàng nhưng bạn sẽ bị bón hành bởi rác do chính bạn tạo ra!"},
-        backfire_amplify_100=  {"Ăn phản đòn - 100 hàng + khuếch đại","Xoá 100 hàng, cũng bị ăn rác do chính mình tạo ra, lượng rác trả lại hơi bị nhiều đấy nhé!"},
-        backfire_cheese_100=   {"Ăn phản đòn - 100 hàng kiểu phô mai","Xoá 100 hàng, cũng bị ăn rác do chính mình tạo ra, nhưng lần này bị bón hành kiểu phô mai"},
-        sprint_40=             {"40 hàng","Xoá 40 hàng"},
-        sprint_10=             {"10 hàng","Xoá 10 hàng"},
-        sprint_obstacle_20=    {"VCNV - 20 hàng","Dọn 20 hàng rác, nhưng \"chướng ngại vật\" đã được chuẩn bị sẵn trên bảng"},  --if you know "Digital LG Quiz Vietnam" (Road to Olympia mountain) or "Đường lên đỉnh Olympia"
+        backfire_100=          {"Xóa 100 hàng nhận 100 rác","Xoá 100 hàng nhưng bạn sẽ bị bón hành bởi rác do chính bạn tạo ra!"},
+        backfire_amplify_100=  {"Xóa 100 hàng nhận gấp đôi","Xoá 100 hàng, cũng bị ăn rác do chính mình tạo ra, lượng rác trả lại hơi bị nhiều đấy nhé!"},
+        backfire_cheese_100=   {"Xóa 100 hàng nhận phô mai","Xoá 100 hàng, cũng bị ăn rác do chính mình tạo ra, nhưng lần này bị bón hành kiểu phô mai"},
+        sprint_40=             {"40 hàng","Chỉ cần xoá 40 hàng"},
+        sprint_10=             {"10 hàng","Chỉ cần xoá 10 hàng"},
+        sprint_obstacle_20=    {"20 hàng - VCNV","Bây giờ là vòng thi \"Vượt chướng ngại vật\". Các thí sinh của chúng ta ngày hôm nay sẽ xóa một vài hàng với \"chướng ngại vật\" đã được chuẩn bị sẵn"},  --if you know "Digital LG Quiz Vietnam" (Road to Olympia mountain) or "Đường lên đỉnh Olympia"
         sprint_200=            {"200 hàng","Xoá 200 hàng"},
         sprint_1000=           {"1000 hàng","Xoá 1000 hàng"},
         sprint_drought_40=     {"40 hàng - Drought","Xoá 40 hàng, nhưng không có chữ I"},
