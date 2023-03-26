@@ -265,7 +265,7 @@ return {
 
     tutorial_twoRotatingKey_1="4. Two-way Rotations",
     tutorial_twoRotatingKey_m1="Follow the following guides, but try to use the least number of rotations as possible.",
-    tutorial_twoRotatingKey_m2="If you can rotate using one CCW, don't use CCW three times.",
+    tutorial_twoRotatingKey_m2="If you can rotate it using one CCW, try not to use three CWs.",
     tutorial_twoRotatingKey_m3="This not only wastes your effort, but also slows you down.",
     tutorial_twoRotatingKey_m4="You should decide in your mind where to put each piece and not rely on the shadow pieces alone.",
     tutorial_twoRotatingKey_unnecessaryRotation="Redundant Rotation",
