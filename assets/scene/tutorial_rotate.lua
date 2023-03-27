@@ -13,13 +13,13 @@ local parTime={35,45,40,45}
 
 local shapes={
     -- Tetromino
-    {matrix={{1,1,0},{0,1,1},{0,0,0}}},-- Z
-    {matrix={{0,1,1},{1,1,0},{0,0,0}}},-- S
+    {matrix={{1,1,0},{0,1,1},{0,0,0}},no180=true},-- Z
+    {matrix={{0,1,1},{1,1,0},{0,0,0}},no180=true},-- S
     {matrix={{1,0,0},{1,1,1},{0,0,0}}},-- J
     {matrix={{0,0,1},{1,1,1},{0,0,0}}},-- L
     {matrix={{0,1,0},{1,1,1},{0,0,0}}},-- T
     {unuse=true,matrix={{1,1},{1,1}}},-- O
-    {matrix={{0,0,0,0},{1,1,1,1},{0,0,0,0},{0,0,0,0}}},-- I
+    {matrix={{0,0,0,0},{1,1,1,1},{0,0,0,0},{0,0,0,0}},no180=true},-- I
 
     -- Pentomino
     {unuse=true,matrix={{1,1,0},{0,1,0},{0,1,1}}},-- Z5
@@ -58,7 +58,7 @@ local function newQuestion()
     handMat=TABLE.shift(shapes[handID].matrix)
     if level==2 or level==4 then handMat=TABLE.rotate(handMat,({'R','L','F'})[math.random(3)]) end
 
-    local answer=({'R','L','F'})[math.random(score>=20 and 3 or 2)]
+    local answer=({'R','L','F'})[math.random((shapes[handID].no180 and score>=20) and 3 or 2)]
     targetMat=TABLE.rotate(TABLE.shift(handMat),answer)
 end
 
