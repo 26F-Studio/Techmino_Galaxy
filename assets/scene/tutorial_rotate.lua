@@ -11,35 +11,36 @@ local texts=TEXT.new()
 local passTime=60
 local parTime={35,45,40,45}
 
+local X,_=true,false
 local shapes={
     -- Tetromino
-    {matrix={{1,1,0},{0,1,1},{0,0,0}},no180=true},-- Z
-    {matrix={{0,1,1},{1,1,0},{0,0,0}},no180=true},-- S
-    {matrix={{1,0,0},{1,1,1},{0,0,0}}},-- J
-    {matrix={{0,0,1},{1,1,1},{0,0,0}}},-- L
-    {matrix={{0,1,0},{1,1,1},{0,0,0}}},-- T
-    {unuse=true,matrix={{1,1},{1,1}}},-- O
-    {matrix={{0,0,0,0},{1,1,1,1},{0,0,0,0},{0,0,0,0}},no180=true},-- I
+    {matrix={{X,X,_},{_,X,X},{_,_,_}},no180=true},-- Z
+    {matrix={{_,X,X},{X,X,_},{_,_,_}},no180=true},-- S
+    {matrix={{X,_,_},{X,X,X},{_,_,_}}},-- J
+    {matrix={{_,_,X},{X,X,X},{_,_,_}}},-- L
+    {matrix={{_,X,_},{X,X,X},{_,_,_}}},-- T
+    {unuse=true,matrix={{X,X},{X,X}}},-- O
+    {matrix={{_,_,_,_},{X,X,X,X},{_,_,_,_},{_,_,_,_}},no180=true},-- I
 
     -- Pentomino
-    {unuse=true,matrix={{1,1,0},{0,1,0},{0,1,1}}},-- Z5
-    {unuse=true,matrix={{0,1,1},{0,1,0},{1,1,0}}},-- S5
-    {matrix={{1,1,0},{1,1,1},{0,0,0}}},-- P
-    {matrix={{0,1,1},{1,1,1},{0,0,0}}},-- Q
-    {matrix={{1,0,0},{1,1,1},{0,1,0}}},-- F
-    {matrix={{0,0,1},{1,1,1},{0,1,0}}},-- E
-    {matrix={{0,1,0},{0,1,0},{1,1,1}}},-- T5
-    {matrix={{1,0,1},{1,1,1},{0,0,0}}},-- U
-    {matrix={{0,0,1},{0,0,1},{1,1,1}}},-- V
-    {matrix={{1,0,0},{1,1,0},{0,1,1}}},-- W
-    {unuse=true,matrix={{0,1,0},{1,1,1},{0,1,0}}},-- X
-    {matrix={{0,0,0,0},{1,0,0,0},{1,1,1,1},{0,0,0,0}}},-- J5
-    {matrix={{0,0,0,0},{0,0,0,1},{1,1,1,1},{0,0,0,0}}},-- L5
-    {matrix={{0,0,0,0},{0,1,0,0},{1,1,1,1},{0,0,0,0}}},-- R
-    {matrix={{0,0,0,0},{0,0,1,0},{1,1,1,1},{0,0,0,0}}},-- Y
-    {matrix={{0,0,0,0},{1,1,0,0},{0,1,1,1},{0,0,0,0}}},-- N
-    {matrix={{0,0,0,0},{0,0,1,1},{1,1,1,0},{0,0,0,0}}},-- H
-    {unuse=true,matrix={{0,0,0,0,0},{0,0,0,0,0},{1,1,1,1,1},{0,0,0,0,0},{0,0,0,0,0}}},-- I5
+    {unuse=true,matrix={{X,X,_},{_,X,_},{_,X,X}}},-- Z5
+    {unuse=true,matrix={{_,X,X},{_,X,_},{X,X,_}}},-- S5
+    {matrix={{X,X,_},{X,X,X},{_,_,_}}},-- P
+    {matrix={{_,X,X},{X,X,X},{_,_,_}}},-- Q
+    {matrix={{X,_,_},{X,X,X},{_,X,_}}},-- F
+    {matrix={{_,_,X},{X,X,X},{_,X,_}}},-- E
+    {matrix={{_,X,_},{_,X,_},{X,X,X}}},-- T5
+    {matrix={{X,_,X},{X,X,X},{_,_,_}}},-- U
+    {matrix={{_,_,X},{_,_,X},{X,X,X}}},-- V
+    {matrix={{X,_,_},{X,X,_},{_,X,X}}},-- W
+    {unuse=true,matrix={{_,X,_},{X,X,X},{_,X,_}}},-- X
+    {matrix={{_,_,_,_},{X,_,_,_},{X,X,X,X},{_,_,_,_}}},-- J5
+    {matrix={{_,_,_,_},{_,_,_,X},{X,X,X,X},{_,_,_,_}}},-- L5
+    {matrix={{_,_,_,_},{_,X,_,_},{X,X,X,X},{_,_,_,_}}},-- R
+    {matrix={{_,_,_,_},{_,_,X,_},{X,X,X,X},{_,_,_,_}}},-- Y
+    {matrix={{_,_,_,_},{X,X,_,_},{_,X,X,X},{_,_,_,_}}},-- N
+    {matrix={{_,_,_,_},{_,_,X,X},{X,X,X,_},{_,_,_,_}}},-- H
+    {unuse=true,matrix={{_,_,_,_,_},{_,_,_,_,_},{X,X,X,X,X},{_,_,_,_,_},{_,_,_,_,_}}},-- I5
 }
 
 local scene={}
@@ -228,7 +229,7 @@ function scene.draw()
     -- Draw hand shape
     GC.translate(-#handMat*size/2,-#handMat*size/2-250)
     for y=1,#handMat do for x=1,#handMat[1] do
-        if handMat[y][x]==1 then
+        if handMat[y][x] then
             GC.rectangle('fill',(x-1)*size,(y-1)*size,size,size)
         end
     end end
@@ -236,7 +237,7 @@ function scene.draw()
     -- Draw target shape
     GC.translate(0,500)
     for y=1,#targetMat do for x=1,#targetMat[1] do
-        if targetMat[y][x]==1 then
+        if targetMat[y][x] then
             GC.rectangle('fill',(x-1)*size,(y-1)*size,size,size)
         end
     end end
@@ -248,22 +249,23 @@ function scene.draw()
     GC.circle('fill',0,-250,12)
     GC.circle('fill',0,250,12)
 
+    -- Score
+    GC.setColor(1,1,1,.42)
+    FONT.set(80,'bold')
+    GC.mStr(score.."/"..(40*level),0,-50)
+
     -- Time
     if level>1 then
         local barLen=time/parTime[level]*313
         GC.setColor(1,1,1,.1)
         GC.rectangle('fill',-barLen,-6,2*barLen,12)
     else
+        GC.replaceTransform(SCR.xOy_l)
         GC.setLineWidth(2)
         GC.setColor(COLOR.L)
-        GC.rectangle('line',-700-3,150+3,20+6,-300-6)
-        GC.rectangle('fill',-700,150,20,-300*math.max(passTime-totalTime,0)/passTime)
+        GC.rectangle('line',100-3,150+3,20+6,-300-6)
+        GC.rectangle('fill',100,150,20,-300*math.max(passTime-totalTime,0)/passTime)
     end
-
-    -- Score
-    GC.setColor(1,1,1,.42)
-    FONT.set(80,'bold')
-    GC.mStr(score.."/"..(40*level),0,-50)
 
     -- Draw Floating Texts
     GC.replaceTransform(SCR.xOy_m)

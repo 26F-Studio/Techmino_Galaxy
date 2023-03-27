@@ -60,10 +60,10 @@ scene.widgetList={
 
     B{name='T1',x=nil, y=-200,text=LANG'tutorial_basic',          code=playInterior'mino/interior/tutorial/1.basic'},
     B{name='T2',x=nil, y= 0,  text=LANG'tutorial_sequence',       code=playInterior'mino/interior/tutorial/2.sequence'},
-    B{name='T3',x=nil, y= 200,text=LANG'tutorial_piece',          code=WIDGET.c_goScn'tutorial_shape'},
+    B{name='T3',x=nil, y= 200,text=LANG'tutorial_piece',          code=WIDGET.c_goScn('tutorial_shape','none')},
 
     B{name='T4',x=nil, y=-200,text=LANG'tutorial_stackBasic',     code=playInterior'mino/interior/tutorial/4.stackBasic'},
     B{name='T5',x=nil, y= 0,  text=LANG'tutorial_twoRotatingKey', code=playInterior'mino/interior/tutorial/5.twoRotatingKey'},
-    B{name='T6',x=nil, y= 200,text=LANG'tutorial_rotating',       code=WIDGET.c_goScn'tutorial_rotate'},
+    B{name='T6',x=nil, y= 200,text=LANG'tutorial_rotating',       code=WIDGET.c_goScn('tutorial_rotate','none')},
 }
 return scene
