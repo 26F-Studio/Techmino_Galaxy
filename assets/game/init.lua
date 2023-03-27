@@ -2,7 +2,11 @@ local floor=math.floor
 
 Minoes=require'assets.game.minoes'
 ColorTable=require'assets.game.colorTable'
-defaultMinoColor=setmetatable({2,22,42,6,52,12,32},{__index=function() return math.random(64) end})
+defaultMinoColor=setmetatable({
+    2,22,42,6,52,12,32,
+    2,22,62,26,38,4,52,16,32,56,12,42,6,38,4,60,28,12,
+    36,52,4,24,
+},{__index=function() return math.random(64) end})
 defaultPuyoColor=setmetatable({2,12,42,22,52},{__index=function() return math.random(64) end})
 particleSystemTemplate=require'assets.game.particleSystemTemplate'
 require'assets.game.rotsys_mino'

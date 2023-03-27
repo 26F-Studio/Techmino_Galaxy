@@ -12,7 +12,7 @@ return {
         seqType=function(P)
             local l={}
             while true do
-                if not l[1] then for i=8,18 do table.insert(l,i) end end
+                if not l[1] then for i=8,25 do table.insert(l,i) end end
                 coroutine.yield(table.remove(l,P:random(#l)))
             end
         end,
