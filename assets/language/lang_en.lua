@@ -73,9 +73,9 @@ return {
     keyset_gem_swapRight=   "Swap Right",
     keyset_gem_swapUp=      "Swap Up",
     keyset_gem_swapDown=    "Swap Down",
-    keyset_gem_twistCW=    "Rotate CW",
-    keyset_gem_twistCCW=   "Rotate CCW",
-    keyset_gem_twist180=   "Rotate180",
+    keyset_gem_twistCW=     "Rotate CW",
+    keyset_gem_twistCCW=    "Rotate CCW",
+    keyset_gem_twist180=    "Rotate180",
     keyset_gem_moveLeft=    "Cursor Left",
     keyset_gem_moveRight=   "Cursor Right",
     keyset_gem_moveUp=      "Cursor Up",
@@ -237,10 +237,10 @@ return {
     -- Level
     tutorial_basic="The Basics",
     tutorial_sequence="Next & Hold",
+    tutorial_piece="Piece shapes",
     tutorial_stackBasic="Basic Stacking",
     tutorial_twoRotatingKey="Two-way Rotation",
-    tutorial_stackAdvanced="Advanced Stacking",
-    tutorial_finesse="Finesse",
+    tutorial_rotating="Rotating Practice",
 
     tutorial_pass="PASS",
 
@@ -255,7 +255,11 @@ return {
     tutorial_sequence_3="…but now you can see what pieces are coming next.",
     tutorial_sequence_4="Use the Hold key to adjust the order of the pieces.",
 
-    tutorial_stackBasic_1="3. Basic Stacking",
+    tutorial_piece_1="3. Piece shapes",
+    tutorial_piece_2="Usually there are 7 types of tetromino pieces.",
+    tutorial_piece_3="They are named with 7 letters: Z, S, J, L, T, O, I.",
+
+    tutorial_stackBasic_1="4. Basic Stacking",
     tutorial_stackBasic_m1="Please follow the follwing instructions:",
     tutorial_stackBasic_m2="It's recommended to keep the top levels as flat as you can.",
     tutorial_stackBasic_m3="Pieces are often placed \"lying down\", not \"standing up\".",
@@ -263,10 +267,13 @@ return {
     tutorial_stackBasic_m5="You will usually be rewarded more for clearing four lines at once. Try to make another one.",
     tutorial_stackBasic_m6="Try finishing the Techrash with the last piece without a guide!",
 
-    tutorial_twoRotatingKey_1="4. Two-way Rotations",
+    tutorial_twoRotatingKey_1="5. Two-way Rotations",
     tutorial_twoRotatingKey_m1="Follow the following guides, but try to use the least number of rotations as possible.",
     tutorial_twoRotatingKey_m2="If you can rotate it using one CCW, try not to use three CWs.",
     tutorial_twoRotatingKey_m3="This not only wastes your effort, but also slows you down.",
     tutorial_twoRotatingKey_m4="You should decide in your mind where to put each piece and not rely on the shadow pieces alone.",
     tutorial_twoRotatingKey_unnecessaryRotation="Redundant Rotation",
+
+    tutorial_rotating_1="6. Rotating Practice",
+    tutorial_rotating_2="Please rotating the top piece to align the bottom one",
 }
