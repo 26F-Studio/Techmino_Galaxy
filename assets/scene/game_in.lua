@@ -81,8 +81,10 @@ end
 function scene.draw()
     GAME.render()
 
-    gc.replaceTransform(SCR.xOy)
-    if SETTINGS.system.touchControl then VCTRL.draw() end
+    if SETTINGS.system.touchControl then
+        gc.replaceTransform(SCR.xOy)
+        VCTRL.draw()
+    end
 end
 
 scene.widgetList={
