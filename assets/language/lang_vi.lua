@@ -231,7 +231,7 @@ return {
         sprint_small_20=       {"20 hàng - Small","Xoá 20 hàng, nhưng kích thước gạch sẽ nhỏ hơn bình thường"},
         sprint_low_40=         {"40 hàng - Low","Xoá 40 hàng, nhưng độ cao bảng bỗng dưng giảm xuống"},
         sprint_flip_40=        {"40 hàng - Flip","Xoá 40 hàng, nhưng bạn sẽ lật ngược sau mỗi lần bạn đặt gạch\nYou spin me right round, baby right round like a record, baby right round right round"},
-        sprint_dizzy_40=       {"40 hàng - Dizzy","Clear 40 lines with strange direction\nSomething's fishy with the directions here."},
+        sprint_dizzy_40=       {"40 hàng - Dizzy","Xoá 40 hàng nhưng có gì đó không đúng với bộ điều hướng ở đây."},
         sprint_float_40=       {"40 hàng - Float","Clear 40 lines without gravity"},
         sprint_randctrl_40=    {"40 hàng - Random","Clear 40 lines with broken input device"},
     },
