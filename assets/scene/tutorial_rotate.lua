@@ -180,7 +180,7 @@ function scene.keyDown(key)
     if action=='restart' then
         reset()
     elseif action=='back' then
-        SCN.back('none')
+        if sureCheck('back') then SCN.back('none') end
     end
 end
 
