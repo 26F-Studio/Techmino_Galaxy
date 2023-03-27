@@ -248,8 +248,8 @@ return {
 
     tutorial_basic_1="Chào mừng bạn tới Techmino!",
     tutorial_basic_2="1. Những thứ cơ bản",
-    tutorial_basic_3="Hãy dùng phím trái phải để điều khiển gạch đang rơi.",
-    tutorial_basic_4="Hãy dùng phím thả mạnh để đặt gạch lên trên mặt bảng.",
+    tutorial_basic_3="Hãy dùng hai phím trái và phải để điều khiển gạch đang rơi.",
+    tutorial_basic_4="sau đó dùng phím thả mạnh để đặt gạch lên trên mặt bảng.",
     tutorial_basic_5="Bạn cũng có thể xoay gạch bằng cách nhấn các nút xoay.",
 
     tutorial_sequence_1="2. Next & Hold",
@@ -258,7 +258,7 @@ return {
     tutorial_sequence_4="Dùng phím Hold (Giữ) để điều chỉnh thứ tự của các gạch.",
 
     tutorial_stackBasic_1="3. Xếp (chồng) gạch - Cơ bản",
-    tutorial_stackBasic_m1="Ây bạn, hãy tập trung vào màn hình và làm theo hướng dẫn nè!",
+    tutorial_stackBasic_m1="Hãy tập trung vào màn hình và làm theo hướng dẫn nè!",
     tutorial_stackBasic_m2="Lúc đầu, hãy giữ cho bề mặt ở phía trên phẳng (đừng để quá gồ ghề)",
     tutorial_stackBasic_m3="Các cục gạch sẽ được đặt ở tư thế nằm, chứ không phải là tư thế đứng",
     tutorial_stackBasic_m4="Bề mặt ở trên nếu phẳng thì dễ dàng để đặt gạch hơn, và cố gắng đừng tạo ra bất kì cái hố nào",
@@ -269,6 +269,6 @@ return {
     tutorial_twoRotatingKey_m1="Hãy tập trung và làm theo hướng dẫn, nhưng hãy cố gắng sử dụng phím xoay ít nhất có thể",
     tutorial_twoRotatingKey_m2="Nếu bạn có thể xoay trái, thì đừng có xoay phải 3 lần!",
     tutorial_twoRotatingKey_m3="Không những tốn công sức và t.gian, bạn còn dễ bị game over sớm",
-    tutorial_twoRotatingKey_m4="Bây giờ bạn có thể tự quyết định vị trí đặt gạch rồi, không cần phải dựa vào vị trí của bóng nữa",
+    tutorial_twoRotatingKey_m4="Bây giờ bạn có thể tự quyết định vị trí đặt gạch rồi, không cần phải dựa vào gợi ý nữa",
     tutorial_twoRotatingKey_unnecessaryRotation="BẠN XOAY GẠCH QUÁ TAY RỒI!",
 }
