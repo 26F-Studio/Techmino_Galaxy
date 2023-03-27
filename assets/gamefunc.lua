@@ -74,13 +74,13 @@ function playExterior(name)
     return setmetatable({name=name},exteriorModeMeta)
 end
 
-function task_interiorAutoQuit()
+function task_interiorAutoQuit(waitTime)
     TASK.new(function()
         local time=love.timer.getTime()
         repeat
             if SCN.swapping then return end
             coroutine.yield()
-        until love.timer.getTime()-time>1.26
+        until love.timer.getTime()-time>(waitTime or 1.26)
         SCN.back('none')
     end)
 end

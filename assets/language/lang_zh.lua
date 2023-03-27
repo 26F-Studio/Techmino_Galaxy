@@ -73,9 +73,9 @@ return {
     keyset_gem_swapRight=   "向右换",
     keyset_gem_swapUp=      "向上换",
     keyset_gem_swapDown=    "向下换",
-    keyset_gem_twistCW=    "顺时针旋转",
-    keyset_gem_twistCCW=   "逆时针旋转",
-    keyset_gem_twist180=   "180°旋转",
+    keyset_gem_twistCW=     "顺时针旋转",
+    keyset_gem_twistCCW=    "逆时针旋转",
+    keyset_gem_twist180=    "180°旋转",
     keyset_gem_moveLeft=    "光标左移",
     keyset_gem_moveRight=   "光标右移",
     keyset_gem_moveUp=      "光标上移",
@@ -237,10 +237,10 @@ return {
     -- Level
     tutorial_basic="基本规则",
     tutorial_sequence="预览&暂存",
+    tutorial_piece="方块形状",
     tutorial_stackBasic="堆叠(基础)",
     tutorial_twoRotatingKey="双旋",
-    tutorial_stackAdvanced="堆叠(进阶)",
-    tutorial_finesse="极简操作",
+    tutorial_rotating="旋转练习",
 
     tutorial_pass="PASS",
 
@@ -255,7 +255,11 @@ return {
     tutorial_sequence_3="现在你可以看到之后会来什么块了",
     tutorial_sequence_4="使用暂存键来调整方块的顺序",
 
-    tutorial_stackBasic_1="3.堆叠(基础)",
+    tutorial_piece_1="3. 方块形状",
+    tutorial_piece_2="通常游戏只使用七种形状的四连方块",
+    tutorial_piece_3="用七个形状类似的字母给他们命名: Z, S, J, L, T, O, I",
+
+    tutorial_stackBasic_1="4.堆叠(基础)",
     tutorial_stackBasic_m1="请按照提示摆块",
     tutorial_stackBasic_m2="刚开始学习时，一般都推荐尽量“让地形平坦”",
     tutorial_stackBasic_m3="方块通常会尽量摆成平躺的方向，很少竖着",
@@ -263,10 +267,13 @@ return {
     tutorial_stackBasic_m5="通常的规则里用棍子一次消四行往往会有较大的收益，再做一个消四试试看",
     tutorial_stackBasic_m6="尝试不借助提示把消四最后几块补完整吧",
 
-    tutorial_twoRotatingKey_1="4. 双旋",
+    tutorial_twoRotatingKey_1="5. 双旋",
     tutorial_twoRotatingKey_m1="如果可以逆时针旋转一次到位，那么就不需要顺时针转三次",
     tutorial_twoRotatingKey_m2="不仅浪费力气，还会减慢操作速度",
     tutorial_twoRotatingKey_m3="你需要先想好放在哪然后开始操作，而不是依赖影子去对地形",
     tutorial_twoRotatingKey_m4="请按照提示摆块，但旋转的次数必须尽可能少",
     tutorial_twoRotatingKey_unnecessaryRotation="多余旋转",
+
+    tutorial_rotating_1="6. 旋转练习",
+    tutorial_rotating_2="请将上面的方块旋转成下面的朝向",
 }
