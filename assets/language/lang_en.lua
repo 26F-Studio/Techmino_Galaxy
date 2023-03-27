@@ -242,6 +242,7 @@ return {
     tutorial_twoRotatingKey="Two-way Rotation",
     tutorial_rotating="Rotating Practice",
 
+    tutorial_notpass="Failed",
     tutorial_pass="PASS",
 
     tutorial_basic_1="Welcome to Techmino!",

@@ -1,19 +1,16 @@
+local level,score,time,totalTime,passCD
+local handID,handMat,targetMat
+local texts=TEXT.new()
+
 --[[ Levels
-    1~40:    R/L
-    41~80:   R/L/F
+    1~40:    R/L(+F after 20)
     81~120:  Random spawning direction
     121~160: Pentominoes
     161~200: Random spawning direction
 ]]
-local parTime={50,40,35,40,30}
+local passTime=60
+local parTime={35,45,40,45}
 
-local level,score,time,passCD
-local handID,handMat,targetMat
-local texts=TEXT.new()
---[[
-    COLOR.R,COLOR.F,COLOR.O,COLOR.Y,COLOR.L,COLOR.J,COLOR.G,COLOR.A,
-    COLOR.C,COLOR.N,COLOR.S,COLOR.B,COLOR.V,COLOR.P,COLOR.M,COLOR.W,
-]]
 local shapes={
     -- Tetromino
     {matrix={{1,1,0},{0,1,1},{0,0,0}}},-- Z
@@ -51,7 +48,7 @@ local function newQuestion()
     passCD=false
 
     repeat
-        if level>=4 then
+        if level>=3 then
             handID=math.random(8,#shapes)
         else
             handID=math.random(7)
@@ -59,9 +56,9 @@ local function newQuestion()
     until not shapes[handID].unuse
 
     handMat=TABLE.shift(shapes[handID].matrix)
-    if level==3 or level==5 then handMat=TABLE.rotate(handMat,({'R','L','F'})[math.random(3)]) end
+    if level==2 or level==4 then handMat=TABLE.rotate(handMat,({'R','L','F'})[math.random(3)]) end
 
-    local answer=({'R','L','F'})[math.random(level>=2 and 3 or 2)]
+    local answer=({'R','L','F'})[math.random(score>=20 and 3 or 2)]
     targetMat=TABLE.rotate(TABLE.shift(handMat),answer)
 end
 
@@ -69,6 +66,7 @@ local function reset()
     level=1
     score=0
     time=parTime[1]
+    totalTime=0
     passCD=false
     newQuestion()
 
@@ -89,9 +87,29 @@ local function reset()
     }
 end
 
+local function endGame(passLevel)
+    passCD=1e99
+    texts:add{
+        text=passLevel==0 and Text.tutorial_notpass or Text.tutorial_pass,
+        color=({[0]=COLOR.lR,COLOR.lG,COLOR.lB,COLOR.lY})[passLevel],
+        fontSize=80,
+        fontType='bold',
+        style='beat',
+        duration=2.6,
+        inPoint=.1,
+        outPoint=0,
+        exSize=1,
+    }
+    task_interiorAutoQuit(2.6)
+end
+
 function scene.enter()
     reset()
     playBgm('space','simp')
+end
+
+function scene.leave()
+    texts:clear()
 end
 
 function scene.keyDown(key)
@@ -122,24 +140,19 @@ function scene.keyDown(key)
                 score=score+1
                 if score%40==0 then
                     -- End game check
-                    if time==0 or level==5 then
-                        -- Too slow / Level Cleared
-                        passCD=1e99
+                    if time==0 then
                         SFX.play('win')
-                        texts:add{
-                            text=Text.tutorial_pass,
-                            color=time==0 and (level==1 and COLOR.lG or COLOR.lB) or COLOR.lY,
-                            fontSize=80,
-                            fontType='bold',
-                            style='beat',
-                            duration=2.6,
-                            inPoint=.1,
-                            outPoint=0,
-                            exSize=1,
-                        }
-                        task_interiorAutoQuit(2.6)
+                        -- Just pass
+                        endGame(1)
+                        PROGRESS.setTutorialPassed(6)
+                    elseif level==4 then
+                        -- Cleared
+                        endGame(3)
                     else
                         -- Level Up
+                        if level==1 then
+                            PROGRESS.setTutorialPassed(6)
+                        end
                         level=level+1
                         time=parTime[level]
                         SFX.play('beep_notice')
@@ -151,6 +164,7 @@ function scene.keyDown(key)
             else
                 -- Punishment
                 time=math.max(time-1,0)
+                totalTime=totalTime+1
             end
             return
         end
@@ -179,14 +193,26 @@ function scene.mouseMove(x,y,dx,dy) scene.touchMove(x,y,dx,dy,1) end
 scene.mouseUp=scene.touchUp
 
 function scene.update(dt)
-    texts:update(dt)
+    totalTime=totalTime+dt
     time=math.max(time-dt,0)
+    if passCD~=1e99 then
+        if level>1 then
+            if time==0 then
+                endGame(level>=3 and 2 or 1)
+                PROGRESS.setTutorialPassed(6)
+            end
+        elseif totalTime>passTime then
+            SFX.play('fail')
+            endGame(0)
+        end
+    end
     if passCD then
         passCD=passCD-dt
         if passCD<=0 then
             newQuestion()
         end
     end
+    texts:update(dt)
 end
 
 local size=60
@@ -218,9 +244,16 @@ function scene.draw()
     GC.circle('fill',0,250,12)
 
     -- Time
-    local barLen=time/parTime[level]*313
-    GC.setColor(1,1,1,.1)
-    GC.rectangle('fill',-barLen,-6,2*barLen,12)
+    if level>1 then
+        local barLen=time/parTime[level]*313
+        GC.setColor(1,1,1,.1)
+        GC.rectangle('fill',-barLen,-6,2*barLen,12)
+    else
+        GC.setLineWidth(2)
+        GC.setColor(COLOR.L)
+        GC.rectangle('line',-700-3,150+3,20+6,-300-6)
+        GC.rectangle('fill',-700,150,20,-300*math.max(passTime-totalTime,0)/passTime)
+    end
 
     -- Score
     GC.setColor(1,1,1,.42)
