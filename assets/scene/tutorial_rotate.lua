@@ -1,4 +1,4 @@
-local level,score,time,totalTime,passCD
+local level,score,time,totalTime,passCD,protect
 local handID,handMat,targetMat
 local texts=TEXT.new()
 
@@ -59,6 +59,7 @@ local function newQuestion()
     if level==2 or level==4 then handMat=TABLE.rotate(handMat,({'R','L','F'})[math.random(3)]) end
 
     local answer=({'R','L','F'})[math.random((shapes[handID].no180 and score>=20) and 3 or 2)]
+    protect=answer=='F'
     targetMat=TABLE.rotate(TABLE.shift(handMat),answer)
 end
 
@@ -163,8 +164,12 @@ function scene.keyDown(key)
                 end
             else
                 -- Punishment
-                time=math.max(time-1,0)
-                totalTime=totalTime+1
+                if protect then
+                    protect=false
+                else
+                    time=math.max(time-1,0)
+                    totalTime=totalTime+1
+                end
             end
             return
         end
