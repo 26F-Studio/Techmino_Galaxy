@@ -164,6 +164,20 @@ function scene.keyDown(key)
     end
 end
 
+function scene.touchDown(x,y,id)
+    if SETTINGS.system.touchControl then VCTRL.press(x,y,id) end
+end
+function scene.touchMove(x,y,_,_,id)
+    if SETTINGS.system.touchControl then VCTRL.move(x,y,id) end
+end
+function scene.touchUp(_,_,id)
+    if SETTINGS.system.touchControl then VCTRL.release(id) end
+end
+
+scene.mouseDown=scene.touchDown
+function scene.mouseMove(x,y,dx,dy) scene.touchMove(x,y,dx,dy,1) end
+scene.mouseUp=scene.touchUp
+
 function scene.update(dt)
     texts:update(dt)
     time=math.max(time-dt,0)
@@ -217,6 +231,12 @@ function scene.draw()
     GC.replaceTransform(SCR.xOy_m)
     GC.scale(2)
     texts:draw()
+
+    -- Touch control
+    if SETTINGS.system.touchControl then
+        GC.replaceTransform(SCR.xOy)
+        VCTRL.draw()
+    end
 end
 
 scene.widgetList={
