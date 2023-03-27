@@ -242,6 +242,7 @@ return {
     tutorial_twoRotatingKey="双旋",
     tutorial_rotating="旋转练习",
 
+    tutorial_notpass="Failed",
     tutorial_pass="PASS",
 
     tutorial_basic_1="欢迎来到Techmino",
