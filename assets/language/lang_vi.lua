@@ -203,7 +203,7 @@ return {
         dig_400=               {"Đào 400 hàng","Dọn 400 hàng rác (hoàn toàn) ngẫu nhiên"},
         dig_shale=             {"Đào \"đá phiến\"","(Dig Shale)\nDọn một số lượng hàng rác ngẫu nhiên nhưng được xếp thành từng lớp"},
         dig_volcanics=         {"Đào núi lửa","(Dig Volcanics)\nDọn một số lượng hàng rác nhưng chúng khá là phức tạp"},
-        dig_checker=           {"Đào bàn cờ ","(Đào bàn cờ)\nDọn 10 hàng rác nhưng chúng được xếp như bàn cờ!"},
+        dig_checker=           {"Đào bàn cờ ","(Dig Checkers)\nDọn 10 hàng rác nhưng chúng được xếp như bàn cờ!"},
         survivor_cheese=       {"Kẻ sống sót - Phô mai","Cố sống sót dưới những cuộc tấn công của phô mai"},    -- Based on a joke in Vietnam Tetris Community
         survivor_b2b=          {"Kẻ sống sót - B2B","Cố sống sót dưới những cuộc tấn công ác liệt của Back-to-back"},
         survivor_spike=        {"Kẻ sống sót - Spike","Sống sót dưới các cuộc tấn công kinh hoàng"},
