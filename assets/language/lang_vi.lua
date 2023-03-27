@@ -257,7 +257,7 @@ return {
     tutorial_sequence_3="…nhưng ngay bây giờ, bạn có thể nhìn thấy những gạch nào sẽ chuẩn bị rơi. ",
     tutorial_sequence_4="Dùng phím Hold (Giữ) để điều chỉnh thứ tự của các gạch.",
 
-    tutorial_stackBasic_1="3. Xếp (chồng) gạch - Cơ bản",
+    tutorial_stackBasic_1="4. Xếp (chồng) gạch - Cơ bản",
     tutorial_stackBasic_m1="Hãy tập trung vào màn hình và làm theo hướng dẫn nè!",
     tutorial_stackBasic_m2="Lúc đầu, hãy giữ cho bề mặt ở phía trên phẳng (đừng để quá gồ ghề)",
     tutorial_stackBasic_m3="Các cục gạch sẽ được đặt ở tư thế nằm, chứ không phải là tư thế đứng",
@@ -265,7 +265,7 @@ return {
     tutorial_stackBasic_m5="Bạn thường được thưởng nhiều hơn khi xóa bốn hàng cùng một lúc, hãy thử làm một cái như vậy xem",
     tutorial_stackBasic_m6="Thử làm Techrash bằng cách dùng những cục gạch cuối cùng này mà không cần hướng dẫn xem",
 
-    tutorial_twoRotatingKey_1="4. Xoay cả 2 hướng",
+    tutorial_twoRotatingKey_1="5. Xoay cả 2 hướng",
     tutorial_twoRotatingKey_m1="Hãy tập trung và làm theo hướng dẫn, nhưng hãy cố gắng sử dụng phím xoay ít nhất có thể",
     tutorial_twoRotatingKey_m2="Nếu bạn có thể xoay trái, thì đừng có xoay phải 3 lần!",
     tutorial_twoRotatingKey_m3="Không những tốn công sức và t.gian, bạn còn dễ bị game over sớm",
