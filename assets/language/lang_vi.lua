@@ -203,7 +203,7 @@ return {
         dig_400=               {"Đào 400 hàng","Dọn 400 hàng rác (hoàn toàn) ngẫu nhiên"},
         dig_shale=             {"Đào \"đá phiến\"","(Dig Shale)\nDọn một số lượng hàng rác ngẫu nhiên nhưng được xếp thành từng lớp"},
         dig_volcanics=         {"Đào núi lửa","(Dig Volcanics)\nDọn một số lượng hàng rác nhưng chúng khá là phức tạp"},
-        dig_checker=           {"Đào bàn cờ cờ","(Dig Checker)\nDọn 10 hàng rác nhưng chúng được xếp như bàn cờ!"},
+        dig_checker=           {"Đào bàn cờ ","(Đào bàn cờ)\nDọn 10 hàng rác nhưng chúng được xếp như bàn cờ!"},
         survivor_cheese=       {"Kẻ sống sót - Phô mai","Cố sống sót dưới những cuộc tấn công của phô mai"},    -- Based on a joke in Vietnam Tetris Community
         survivor_b2b=          {"Kẻ sống sót - B2B","Cố sống sót dưới những cuộc tấn công ác liệt của Back-to-back"},
         survivor_spike=        {"Kẻ sống sót - Spike","Sống sót dưới các cuộc tấn công kinh hoàng"},
@@ -230,10 +230,10 @@ return {
         sprint_big_80=         {"80 hàng - Big","Xoá 80 hàng nhưng kích thước gạch sẽ to hơn bình thường"},
         sprint_small_20=       {"20 hàng - Small","Xoá 20 hàng, nhưng kích thước gạch sẽ nhỏ hơn bình thường"},
         sprint_low_40=         {"40 hàng - Low","Xoá 40 hàng, nhưng độ cao bảng bỗng dưng giảm xuống"},
-        sprint_flip_40=        {"40 hàng - Flip","Xoá 40 hàng, nhưng bạn sẽ lật ngược sau mỗi lần bạn đặt gạch\nYou spin me right round, baby right round like a record, baby right round right round"},
+        sprint_flip_40=        {"40 hàng - Flip","Xoá 40 hàng, nhưng bạn sẽ lật ngược sau mỗi lần bạn đặt gạch\n\nYou spin me right round, baby right round like a record, baby right round right round"},
         sprint_dizzy_40=       {"40 hàng - Dizzy","Xoá 40 hàng nhưng có gì đó không đúng với bộ điều hướng ở đây."},
-        sprint_float_40=       {"40 hàng - Float","Clear 40 lines without gravity"},
-        sprint_randctrl_40=    {"40 hàng - Random","Clear 40 lines with broken input device"},
+        sprint_float_40=       {"40 hàng - Float","Xoá 40 hàng nhưng không có trọng lực (trôi nổi bồng bềnh như đám mây vậy ấy)"},
+        sprint_randctrl_40=    {"40 hàng - Random","Xoá 40 hàng nhưng bộ điều khiển của bạn bị chập ở đâu đó rồi"},
     },
 
     -- Level
