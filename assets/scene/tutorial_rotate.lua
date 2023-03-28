@@ -59,7 +59,7 @@ local function newQuestion()
     handMat=TABLE.shift(shapes[handID].matrix)
     if level==2 or level==4 then handMat=TABLE.rotate(handMat,({'R','L','F'})[math.random(3)]) end
 
-    local answer=({'R','L','F'})[math.random((shapes[handID].no180 and score>=20) and 3 or 2)]
+    local answer=({'R','L','F'})[math.random((not shapes[handID].no180 and score>=20) and 3 or 2)]
     protect=answer=='F'
     targetMat=TABLE.rotate(TABLE.shift(handMat),answer)
 end
@@ -246,8 +246,8 @@ function scene.draw()
 
     -- Rotating center
     GC.setColor(COLOR.L)
-    GC.circle('fill',0,-250,12)
-    GC.circle('fill',0,250,12)
+    GC.circle('fill',0,-250,10)
+    GC.circle('fill',0,250,10)
 
     -- Score
     GC.setColor(1,1,1,.42)
@@ -257,8 +257,8 @@ function scene.draw()
     -- Time
     if level>1 then
         local barLen=time/parTime[level]*313
-        GC.setColor(1,1,1,.1)
-        GC.rectangle('fill',-barLen,-6,2*barLen,12)
+        GC.setColor(1,1,1,.26)
+        GC.rectangle('fill',-barLen,55,2*barLen,10)
     else
         GC.replaceTransform(SCR.xOy_l)
         GC.setLineWidth(2)
