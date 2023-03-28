@@ -4,44 +4,46 @@ local texts=TEXT.new()
 
 --[[ Levels
     1~40:    R/L(+F after 20)
-    81~120:  Random spawning direction
-    121~160: Pentominoes
-    161~200: Random spawning direction
+    41~80:  Random spawning direction
+    81~120: Pentominoes
+    121~160: Random spawning direction
 ]]
 local passTime=60
 local parTime={35,45,40,45}
 
-local X,_=true,false
-local shapes={
-    -- Tetromino
-    {matrix={{X,X,_},{_,X,X},{_,_,_}},no180=true},-- Z
-    {matrix={{_,X,X},{X,X,_},{_,_,_}},no180=true},-- S
-    {matrix={{X,_,_},{X,X,X},{_,_,_}}},-- J
-    {matrix={{_,_,X},{X,X,X},{_,_,_}}},-- L
-    {matrix={{_,X,_},{X,X,X},{_,_,_}}},-- T
-    {unuse=true,matrix={{X,X},{X,X}}},-- O
-    {matrix={{_,_,_,_},{X,X,X,X},{_,_,_,_},{_,_,_,_}},no180=true},-- I
+local shapes do
+    local X,_=true,false
+    shapes={
+        -- Tetromino
+        {matrix={{X,X,_},{_,X,X},{_,_,_}},no180=true},-- Z
+        {matrix={{_,X,X},{X,X,_},{_,_,_}},no180=true},-- S
+        {matrix={{X,_,_},{X,X,X},{_,_,_}}},-- J
+        {matrix={{_,_,X},{X,X,X},{_,_,_}}},-- L
+        {matrix={{_,X,_},{X,X,X},{_,_,_}}},-- T
+        {unuse=true,matrix={{X,X},{X,X}}},-- O
+        {matrix={{_,_,_,_},{X,X,X,X},{_,_,_,_},{_,_,_,_}},no180=true},-- I
 
-    -- Pentomino
-    {unuse=true,matrix={{X,X,_},{_,X,_},{_,X,X}}},-- Z5
-    {unuse=true,matrix={{_,X,X},{_,X,_},{X,X,_}}},-- S5
-    {matrix={{X,X,_},{X,X,X},{_,_,_}}},-- P
-    {matrix={{_,X,X},{X,X,X},{_,_,_}}},-- Q
-    {matrix={{X,_,_},{X,X,X},{_,X,_}}},-- F
-    {matrix={{_,_,X},{X,X,X},{_,X,_}}},-- E
-    {matrix={{_,X,_},{_,X,_},{X,X,X}}},-- T5
-    {matrix={{X,_,X},{X,X,X},{_,_,_}}},-- U
-    {matrix={{_,_,X},{_,_,X},{X,X,X}}},-- V
-    {matrix={{X,_,_},{X,X,_},{_,X,X}}},-- W
-    {unuse=true,matrix={{_,X,_},{X,X,X},{_,X,_}}},-- X
-    {matrix={{_,_,_,_},{X,_,_,_},{X,X,X,X},{_,_,_,_}}},-- J5
-    {matrix={{_,_,_,_},{_,_,_,X},{X,X,X,X},{_,_,_,_}}},-- L5
-    {matrix={{_,_,_,_},{_,X,_,_},{X,X,X,X},{_,_,_,_}}},-- R
-    {matrix={{_,_,_,_},{_,_,X,_},{X,X,X,X},{_,_,_,_}}},-- Y
-    {matrix={{_,_,_,_},{X,X,_,_},{_,X,X,X},{_,_,_,_}}},-- N
-    {matrix={{_,_,_,_},{_,_,X,X},{X,X,X,_},{_,_,_,_}}},-- H
-    {unuse=true,matrix={{_,_,_,_,_},{_,_,_,_,_},{X,X,X,X,X},{_,_,_,_,_},{_,_,_,_,_}}},-- I5
-}
+        -- Pentomino
+        {unuse=true,matrix={{X,X,_},{_,X,_},{_,X,X}}},-- Z5
+        {unuse=true,matrix={{_,X,X},{_,X,_},{X,X,_}}},-- S5
+        {matrix={{X,X,_},{X,X,X},{_,_,_}}},-- P
+        {matrix={{_,X,X},{X,X,X},{_,_,_}}},-- Q
+        {matrix={{X,_,_},{X,X,X},{_,X,_}}},-- F
+        {matrix={{_,_,X},{X,X,X},{_,X,_}}},-- E
+        {matrix={{_,X,_},{_,X,_},{X,X,X}}},-- T5
+        {matrix={{X,_,X},{X,X,X},{_,_,_}}},-- U
+        {matrix={{_,_,X},{_,_,X},{X,X,X}}},-- V
+        {matrix={{X,_,_},{X,X,_},{_,X,X}}},-- W
+        {unuse=true,matrix={{_,X,_},{X,X,X},{_,X,_}}},-- X
+        {matrix={{_,_,_,_},{X,_,_,_},{X,X,X,X},{_,_,_,_}}},-- J5
+        {matrix={{_,_,_,_},{_,_,_,X},{X,X,X,X},{_,_,_,_}}},-- L5
+        {matrix={{_,_,_,_},{_,X,_,_},{X,X,X,X},{_,_,_,_}}},-- R
+        {matrix={{_,_,_,_},{_,_,X,_},{X,X,X,X},{_,_,_,_}}},-- Y
+        {matrix={{_,_,_,_},{X,X,_,_},{_,X,X,X},{_,_,_,_}}},-- N
+        {matrix={{_,_,_,_},{_,_,X,X},{X,X,X,_},{_,_,_,_}}},-- H
+        {unuse=true,matrix={{_,_,_,_,_},{_,_,_,_,_},{X,X,X,X,X},{_,_,_,_,_},{_,_,_,_,_}}},-- I5
+    }
+end
 
 local scene={}
 
@@ -59,7 +61,7 @@ local function newQuestion()
     handMat=TABLE.shift(shapes[handID].matrix)
     if level==2 or level==4 then handMat=TABLE.rotate(handMat,({'R','L','F'})[math.random(3)]) end
 
-    local answer=({'R','L','F'})[math.random((shapes[handID].no180 and score>=20) and 3 or 2)]
+    local answer=({'R','L','F'})[math.random((not shapes[handID].no180 and score>=20) and 3 or 2)]
     protect=answer=='F'
     targetMat=TABLE.rotate(TABLE.shift(handMat),answer)
 end
@@ -199,6 +201,7 @@ function scene.mouseMove(x,y,dx,dy) scene.touchMove(x,y,dx,dy,1) end
 scene.mouseUp=scene.touchUp
 
 function scene.update(dt)
+    -- Timer & check
     totalTime=totalTime+dt
     time=math.max(time-dt,0)
     if passCD~=1e99 then
@@ -212,6 +215,8 @@ function scene.update(dt)
             endGame(0)
         end
     end
+
+    -- Auto next level
     if passCD then
         passCD=passCD-dt
         if passCD<=0 then
@@ -246,8 +251,8 @@ function scene.draw()
 
     -- Rotating center
     GC.setColor(COLOR.L)
-    GC.circle('fill',0,-250,12)
-    GC.circle('fill',0,250,12)
+    GC.circle('fill',0,-250,10)
+    GC.circle('fill',0,250,10)
 
     -- Score
     GC.setColor(1,1,1,.42)
@@ -257,8 +262,8 @@ function scene.draw()
     -- Time
     if level>1 then
         local barLen=time/parTime[level]*313
-        GC.setColor(1,1,1,.1)
-        GC.rectangle('fill',-barLen,-6,2*barLen,12)
+        GC.setColor(1,1,1,.26)
+        GC.rectangle('fill',-barLen,55,2*barLen,10)
     else
         GC.replaceTransform(SCR.xOy_l)
         GC.setLineWidth(2)
