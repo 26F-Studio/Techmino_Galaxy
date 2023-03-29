@@ -8,7 +8,7 @@ return {
     },
     setting_needRestart="Hãy khởi động lại để cài đặt bạn vừa chỉnh có hiệu lực",
     noMode="Không thể tải chế độ '$1': $2",
-    interior_crash="Bạn chơi quá tốt, hộp cát không thể xử lý được nên nó đã bị crash",
+    interior_crash="Bạn chơi quá hay, hộp cát không thể xử lý được nên nó đã bị crash",
     booting_changed="Đã thay đổi chương trình boot",
     musicroom_lowVolume="Vặn âm lượng nhạc nền lên đi bạn ơi! (Nó nằm ở dưới góc phải màn hình đấy!)",
 
@@ -136,10 +136,10 @@ return {
     setting_bgm="Nhạc nền (BGM)",
     setting_sfx="Hiệu ứng (SFX)",
     setting_vib="Rung (VIB)",
-    setting_handling="Handling...",
-    setting_keymapping="Cài đặt phím...",
+    setting_handling="Handling…",
+    setting_keymapping="Cài đặt phím…",
     setting_enableTouching="Kích hoạt điều khiển bằng cảm ứng",
-    setting_touching="Bố cục phím cảm ứng...",
+    setting_touching="Bố cục phím cảm ứng…",
     setting_test="Test",
 
     setting_sysCursor="Trỏ chuột hệ thống",
@@ -206,17 +206,17 @@ return {
         dig_checker=           {"Đào bàn cờ","(Dig Checker)\n\nDọn 10 hàng rác nhưng chúng được xếp như bàn cờ vua!"},
         survivor_cheese=       {"Sống sót - Phô mai","Cố sống sót dưới những cuộc tấn công của phô mai"},    -- Based on a joke in Vietnam Tetris Community
         survivor_b2b=          {"Sống sót - B2B","Cố sống sót dưới những cuộc tấn công ác liệt của Back-to-back"},
-        survivor_spike=        {"Sống sót - Spike","Sống sót dưới các cuộc tấn công kinh hoàng"},
+        survivor_spike=        {"Sống sót - Spike","Cố sống sót dưới các cuộc tấn công kinh hoàng"},
         backfire_100=          {"Xóa 100 nhận 100","Xóa 100 hàng nhưng bạn sẽ bị bón hành bởi rác do chính bạn tạo ra!"},
         backfire_amplify_100=  {"Xóa 100 nhận 2X","Xóa 100 hàng, cũng bị ăn rác do chính mình tạo ra, lượng rác trả lại hơi bị nhiều đấy nhé!"},
         backfire_cheese_100=   {"Xóa 100 nhận phô mai","Xóa 100 hàng, cũng bị ăn rác do chính mình tạo ra, nhưng lần này bị bón hành kiểu phô mai"},
-        sprint_40=             {"40 hàng","Chỉ cần xóa 40 hàng"},
+        sprint_40=             {"40 hàng","Một chế độ mà bạn luôn thấy\nXóa 40 hàng là bạn đã hoàn thành"},
         sprint_10=             {"10 hàng","Chỉ cần 10 hàng mà thôi!"},
         sprint_obstacle_20=    {"20 hàng - VCNV","Bây giờ là vòng thi \"Vượt chướng ngại vật\"! \nCác thí sinh của chúng ta ngày hôm nay sẽ xóa một vài hàng với \"chướng ngại vật\" đã được chuẩn bị sẵn"},  --if you know "Digital LG Quiz Vietnam" (Road to Olympia mountain) or "Đường lên đỉnh Olympia"
         sprint_200=            {"200 hàng","Xóa 200 hàng thôi, không có gì hơn"},
         sprint_1000=           {"1000 hàng","Xóa 1000 hàng, không có gì hơn"},
-        sprint_drought_40=     {"40 hàng - Drought","Xóa 40 hàng, nhưng không có gạch I"},
-        sprint_flood_40=       {"40 hàng - Flood","Xóa 40 hàng, nhưng khoan...\nSao nhiều gạch S với Z dữ vậy!?"},
+        sprint_drought_40=     {"40 hàng - Drought","Xóa 40 hàng…\nỦa mà khoan, gạch I đâu ròi?!"},
+        sprint_flood_40=       {"40 hàng - Flood","Xóa 40 hàng, nhưng khoan…\nSao nhiều gạch S với Z dữ vậy!?"},
         sprint_penta_40=       {"40 hàng - Penta","Xóa 40 hàng, nhưng lần này với gạch 5 ô (pentominoes)\n\nCó thể bạn không biết: có 18 gạch 5 ô, trong khi chỉ có 7 gạch 4 ô (tetrominoes) thôi!"},
         sprint_sym_40=         {"40 hàng - Sym","Xóa 40 hàng, nhưng bạn phải chơi theo kiểu đối xứng!"},
         sprint_mph_40=         {"40 hàng - MPH","Xóa 40 hàng, nhưng không có NEXT và HOLD!"},
@@ -244,7 +244,7 @@ return {
     tutorial_piece="Hình dáng của gạch",
     tutorial_rotating="Tập xoay gạch", 
 
-    tutorial_pass="HOÀN THÀNH",
+    tutorial_pass="HOÀN THÀNH!", -- Completed/Pass
     tutorial_notpass="Tạch rồi…",
 
     tutorial_basic_1="Chào mừng bạn tới Techmino!",
@@ -255,23 +255,23 @@ return {
 
     tutorial_sequence_1="2. Next & Hold",
     tutorial_sequence_2="Trời ạ, cái gạch này không lọt vùa với cái hố rồi…",
-    tutorial_sequence_3="Bây giờ bạn có thể nhìn thấy những gạch nào sẽ chuẩn bị rơi. ",
+    tutorial_sequence_3="Bây giờ bạn có thể nhìn thấy những gạch nào chuẩn bị rơi theo lần lượt. ",
     tutorial_sequence_4="Dùng phím Hold (Giữ) để điều chỉnh thứ tự của các gạch.",
 
     tutorial_stackBasic_1="4. Xếp gạch sao cho đúng?",
     tutorial_stackBasic_m1="Hãy tập trung vào màn hình và làm theo hướng dẫn nè!",
-    tutorial_stackBasic_m2="Lúc đầu, hãy giữ cho bề mặt ở phía trên phẳng (đừng để quá gồ ghề)",
+    tutorial_stackBasic_m2="Lúc đầu, hãy giữ cho bề mặt ở phía trên phẳng nhất có thể",
     tutorial_stackBasic_m3="Các cục gạch sẽ được đặt ở tư thế nằm, chứ không phải là tư thế đứng",
     tutorial_stackBasic_m4="Bề mặt ở trên nếu phẳng thì dễ dàng để đặt gạch hơn, và cố gắng đừng tạo ra bất kì cái hố nào",
-    tutorial_stackBasic_m5="Bạn thường được thưởng nhiều hơn khi xóa bốn hàng cùng một lúc, hãy thử làm một cái như vậy xem",
-    tutorial_stackBasic_m6="Thử làm Techrash bằng cách dùng những cục gạch cuối cùng này mà không cần hướng dẫn xem",
+    tutorial_stackBasic_m5="Bạn thường được thưởng nhiều hơn khi xóa bốn hàng cùng một lúc, hãy thử làm một cái đi",
+    tutorial_stackBasic_m6="Thử làm Techrash bằng cách dùng những cục gạch cuối cùng này mà không cần hướng dẫn đi",
 
     tutorial_twoRotatingKey_1="5. Xoay cả 2 hướng",
     tutorial_twoRotatingKey_m1="Hãy tập trung và làm theo hướng dẫn, nhưng hãy cố gắng sử dụng phím xoay ít nhất có thể",
     tutorial_twoRotatingKey_m2="Nếu bạn có thể xoay trái, thì đừng có xoay phải 3 lần!",
     tutorial_twoRotatingKey_m3="Không những tốn công sức và t.gian, bạn còn dễ bị game over sớm",
-    tutorial_twoRotatingKey_m4="Bây giờ bạn có thể tự quyết định vị trí đặt gạch rồi, không cần phải dựa vào gợi ý nữa",
-    tutorial_twoRotatingKey_unnecessaryRotation="BẠN XOAY NHIỀU QUÁ!!",
+    tutorial_twoRotatingKey_m4="Bây giờ bạn có thể tự quyết định vị trí đặt thả gạch rồi, không cần phải dựa vào gợi ý nữa",
+    tutorial_twoRotatingKey_unnecessaryRotation="XOAY QUÁ NHIỀU!",
 
     tutorial_rotating_1="6. Tập xoay gạch",
     tutorial_rotating_2="Hãy xoay gạch ở trên sao cho giống với gạch ở dưới.",
