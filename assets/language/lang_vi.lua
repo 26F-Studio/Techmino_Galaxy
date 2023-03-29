@@ -1,10 +1,10 @@
 return {
     -- Info
     sureText={
-        back="Nhấn lần nữa để Trở về",
-        quit="Nhấn lần nữa để Thoát",
-        reset="Nhấn lần nữa để Đặt lại",
-        enter="Nhấn lần nữa để Vào",
+        back="Nhấn lần nữa để trở về",
+        quit="Nhấn lần nữa để thoát",
+        reset="Nhấn lần nữa để đặt lại",
+        enter="Nhấn lần nữa để vào",
     },
     setting_needRestart="Hãy khởi động lại để cài đặt bạn vừa chỉnh có hiệu lực",
     noMode="Không thể tải chế độ '$1': $2",
