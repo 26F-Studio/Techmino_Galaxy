@@ -1,3 +1,6 @@
+-- This translation originally made by Sea (C6H12O6+NaCl+H2O)
+-- Special thanks to Shard Nguyễn, Nguyễn "Cuốc" Hiếu, User670 for advices
+
 return {
     -- Info
     sureText={
@@ -8,9 +11,9 @@ return {
     },
     setting_needRestart="Hãy khởi động lại để cài đặt bạn vừa chỉnh có hiệu lực",
     noMode="Không thể tải chế độ '$1': $2",
-    interior_crash="Bạn chơi quá hay, hộp cát không thể xử lý được nên nó đã bị crash",
+    interior_crash="Bạn chơi quá hay, hộp cát không thể xử lý được nên nó đã bị crash", -- Thanks User670 for suggesting me this alternative
     booting_changed="Đã thay đổi chương trình boot",
-    musicroom_lowVolume="Vặn âm lượng nhạc nền lên đi bạn ơi! (Nó nằm ở dưới góc phải màn hình đấy!)",
+    musicroom_lowVolume="Vặn âm lượng nhạc nền lên đi bạn ơi! (Ở dưới góc phải màn hình đấy!)",
 
     -- Game
     clearName={
@@ -49,6 +52,7 @@ return {
     halfClear="Half Clear",
 
     -- Key setting
+    -- GHI CHÚ: Viết hoa các từ "Trái", "Phải", "Lên", "Xuống"
     keyset_mino_moveLeft=   "Sang Trái",
     keyset_mino_moveRight=  "Sang Phải",
     keyset_mino_rotateCW=   "Twist (Xoay) Phải",
@@ -57,9 +61,9 @@ return {
     keyset_mino_softDrop=   "Thả Nhẹ",
     keyset_mino_hardDrop=   "Thả Mạnh",
     keyset_mino_holdPiece=  "Giữ gạch",
-    keyset_mino_sonicDrop=  "Thả nhanh\n(Sonic Drop)",
-    keyset_mino_sonicLeft=  "Sang Trái nhanh\n(Sonic Left)",
-    keyset_mino_sonicRight= "Sang Phải nhanh\n(Sonic Right)",
+    keyset_mino_sonicDrop=  "Xuống tức thì",
+    keyset_mino_sonicLeft=  "Sang Trái tức thì",
+    keyset_mino_sonicRight= "Sang Phải tức thì",
 
     keyset_puyo_moveLeft=   "Sang Trái",
     keyset_puyo_moveRight=  "Sang Phải",
@@ -67,7 +71,7 @@ return {
     keyset_puyo_rotateCCW=  "Xoay Trái",
     keyset_puyo_rotate180=  "Xoay 180",
     keyset_puyo_softDrop=   "Thả Nhẹ",
-    keyset_puyo_hardDrop=   "Thả Mạnh",
+    keyset_puyo_hardDrop=   "Đặt Mạnh",
 
     keyset_gem_swapLeft=    "Vuốt sang Trái",
     keyset_gem_swapRight=   "Vuốt sang Phải",
@@ -140,7 +144,7 @@ return {
     setting_keymapping="Cài đặt phím…",
     setting_enableTouching="Kích hoạt điều khiển bằng cảm ứng",
     setting_touching="Bố cục phím cảm ứng…",
-    setting_test="Test",
+    setting_test="Thử phím",
 
     setting_sysCursor="Trỏ chuột hệ thống",
     setting_clickFX="Hiệu ứng nhấp chuột",
@@ -244,19 +248,19 @@ return {
     tutorial_piece="Hình dáng của gạch",
     tutorial_rotating="Tập xoay gạch", 
 
-    tutorial_pass="HOÀN THÀNH!", -- Completed/Pass
+    tutorial_pass="HOÀN THÀNH!", -- Completed (Pass)
     tutorial_notpass="Tạch rồi…",
 
     tutorial_basic_1="Chào mừng bạn tới Techmino!",
     tutorial_basic_2="1. Những thứ cơ bản",
-    tutorial_basic_3="Hãy dùng hai phím trái và phải để điều khiển gạch đang rơi.",
-    tutorial_basic_4="sau đó dùng phím thả mạnh để đặt gạch lên trên mặt bảng.",
+    tutorial_basic_3="Hãy dùng hai phím \"Sang Trái\" và \"Sang Phải\" để điều khiển gạch đang rơi.",
+    tutorial_basic_4="sau đó dùng phím \"Thả Mạnh\" để đặt gạch lên trên mặt bảng.",
     tutorial_basic_5="Bạn cũng có thể xoay gạch bằng cách nhấn các nút xoay.",
 
     tutorial_sequence_1="2. Next & Hold",
     tutorial_sequence_2="Trời ạ, cái gạch này không lọt vùa với cái hố rồi…",
     tutorial_sequence_3="Bây giờ bạn có thể nhìn thấy những gạch nào chuẩn bị rơi theo lần lượt. ",
-    tutorial_sequence_4="Dùng phím Hold (Giữ) để điều chỉnh thứ tự của các gạch.",
+    tutorial_sequence_4="Hãy dùng phím \"Giữ gạch\" để điều chỉnh thứ tự của các gạch.",
 
     tutorial_stackBasic_1="4. Xếp gạch sao cho đúng?",
     tutorial_stackBasic_m1="Hãy tập trung vào màn hình và làm theo hướng dẫn nè!",
@@ -269,7 +273,7 @@ return {
     tutorial_twoRotatingKey_1="5. Xoay cả 2 hướng",
     tutorial_twoRotatingKey_m1="Hãy tập trung và làm theo hướng dẫn, nhưng hãy cố gắng sử dụng phím xoay ít nhất có thể",
     tutorial_twoRotatingKey_m2="Nếu bạn có thể xoay trái, thì đừng có xoay phải 3 lần!",
-    tutorial_twoRotatingKey_m3="Không những tốn công sức và t.gian, bạn còn dễ bị game over sớm",
+    tutorial_twoRotatingKey_m3="Không những tốn công sức và t.gian, bạn còn dễ bị \"ngụm củ tỏi\"",
     tutorial_twoRotatingKey_m4="Bây giờ bạn có thể tự quyết định vị trí đặt thả gạch rồi, không cần phải dựa vào gợi ý nữa",
     tutorial_twoRotatingKey_unnecessaryRotation="XOAY QUÁ NHIỀU!",
 
