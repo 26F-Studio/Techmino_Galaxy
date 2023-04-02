@@ -16,7 +16,6 @@ return {
             'softDrop',
             'hardDrop',
             'holdPiece',
-            'sonicDrop',
         },
         event={
             playerInit=function(P)

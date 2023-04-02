@@ -251,43 +251,6 @@ actions.holdPiece={
         P.keyBuffer.hold=false
     end
 }
-function actions.sonicDrop(P)
-    if not P.hand or P.deathTimer then return end
-    if P.handY>P.ghostY then
-        P:moveHand('moveY',P.ghostY-P.handY)
-        P:freshDelay('drop')
-        P:playSound('move')
-        P:playSound('touch')
-    end
-end
-function actions.sonicLeft(P)
-    local moved
-    while P.hand and not P:ifoverlap(P.hand.matrix,P.handX-1,P.handY) do
-        moved=true
-        P:moveHand('moveX',-1)
-        P:freshGhost()
-    end
-    if not moved then
-        P:playSound('move_failed')
-    elseif P.handY==P.ghostY then
-        P:playSound('touch')
-    end
-    return moved
-end
-function actions.sonicRight(P)
-    local moved
-    while P.hand and not P:ifoverlap(P.hand.matrix,P.handX+1,P.handY) do
-        moved=true
-        P:moveHand('moveX',1)
-        P:freshGhost()
-    end
-    if not moved then
-        P:playSound('move_failed')
-    elseif P.handY==P.ghostY then
-        P:playSound('touch')
-    end
-    return moved
-end
 
 actions.func1=NULL
 actions.func2=NULL
@@ -337,7 +300,6 @@ local actionPacks={
         'softDrop',
         'hardDrop',
         'holdPiece',
-        'sonicDrop',
     },
 }
 --------------------------------------------------------------
