@@ -339,7 +339,11 @@ function GP:swap(mode,x,y,dx,dy)
                 args={x,y,dx,dy},
                 positions={x,y,x+dx,y+dy},
             })
+
+
             self:triggerEvent('legalMove','swap')
+
+
             self:playSound('swap')
         elseif mode=='auto' then
             self:playSound('move_back')
@@ -384,7 +388,11 @@ function GP:twist(mode,x,y,dir)
                 positions={x,y,x+1,y,x+1,y+1,x,y+1},
             })
             self:playSound('twist')
+
+
             self:triggerEvent('legalMove','twist')
+
+
         elseif mode=='auto' then
             self:playSound('move_back')
         end
@@ -844,9 +852,17 @@ function GP:updateFrame()
         if fin then
             if group.force and not leagl then
                 self[group.mode](self,'auto',unpack(group.args))
+
+
                 self:triggerEvent('illegalMove',group.mode)
+
+
             elseif leagl then
+
+
                 self:triggerEvent('legalMove',group.mode)
+
+
             end
             rem(self.movingGroups,i)
         end
@@ -994,30 +1010,34 @@ end
 --------------------------------------------------------------
 -- Builder
 local baseEnv={
+    -- Size
     fieldSize=8,
 
-    readyDelay=3000,
-    moveDelay=300,
-    clearDelay=500,
-    fallDelay=200,
-
-    atkSys='none',
-
+    -- "Sequence"
     colors=7,
     linkLen=3,
     diagonalLinkLen=false,
     refreshCount=0,
 
+    -- Delay
+    readyDelay=3000,
+    moveDelay=300,
+    clearDelay=500,
+    fallDelay=200,
+
+    -- Attack
+    atkSys='none',
     multiMove=true,
     swap=true,
     swapForce=true,
     twistR=false,twistL=false,twistF=false,
     twistForce=false,
+
+    -- Other
     script=false,
 
     -- Will be overrode with user setting
     skin='gem_template',
-
     shakeness=.26,
     inputDelay=0,
 }
