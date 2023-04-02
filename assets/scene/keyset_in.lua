@@ -22,7 +22,7 @@ function scene.draw()
     FONT.set(25)
     gc.setColor(COLOR.L)
     for i=1,#keyButtons do
-        local l=KEYMAP.mino[i].keys
+        local l=i<#keyButtons and KEYMAP.mino[i].keys or KEYMAP.sys[1].keys-- Special case: restart
         for j=1,#l do
             GC.mStr(l[j],
                 keyButtons[i].x+79+80*j,
@@ -48,6 +48,7 @@ scene.widgetList={
     WIDGET.new{type='button', x=600,y=480,w=200,h=70,cornerR=0,text=LANG"keyset_mino_softDrop",  fontSize=20,color='lG',code=selAct('mino','softDrop' )},
     WIDGET.new{type='button', x=600,y=560,w=200,h=70,cornerR=0,text=LANG"keyset_mino_hardDrop",  fontSize=20,color='lG',code=selAct('mino','hardDrop' )},
     WIDGET.new{type='button', x=600,y=640,w=200,h=70,cornerR=0,text=LANG"keyset_mino_holdPiece", fontSize=20,color='lG',code=selAct('mino','holdPiece')},
+    WIDGET.new{type='button', x=600,y=720,w=200,h=70,cornerR=0,text=LANG"keyset_sys_restart",    fontSize=20,color='lG',code=selAct('sys', 'restart'  )},
 
     WIDGET.new{type='button', name='test',pos={1,1},x=-300,y=-80,w=160,h=80,cornerR=0,text=LANG"setting_test",fontSize=40,code=playInterior'mino/interior/test'},
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='button_back',cornerR=0,fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
