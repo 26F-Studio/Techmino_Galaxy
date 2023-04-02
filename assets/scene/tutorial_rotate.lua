@@ -116,9 +116,10 @@ function scene.leave()
     texts:clear()
 end
 
-function scene.keyDown(key)
-    local action
+function scene.keyDown(key,isRep)
+    if isRep then return end
 
+    local action
     if not passCD then
         action=KEYMAP.mino:getAction(key)
         if action and action:find('rotate')==1 then
