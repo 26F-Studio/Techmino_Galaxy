@@ -1383,11 +1383,7 @@ function PP:initialize()
 
     -- Generate available actions
     do
-        self.actions={}
-        for k in next,actions do
-            self.actions[k]=_getActionObj(k)
-        end
-
+        self.actions=TABLE.copy(actions,0)
         self.keyState={}
         for k in next,self.actions do
             self.keyState[k]=false

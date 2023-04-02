@@ -270,7 +270,7 @@ local function _getActionObj(a)
             self.press(P)
         end})
     elseif type(a)=='table' then
-        if not (type(a.press)=='function' and type(a.release)=='function') then error("WTF why action do not contain func press() & func release()") end
+        assert(type(a.press)=='function' and type(a.release)=='function',"WTF why action do not contain func press() & func release()")
         return setmetatable({
             press=a.press,
             release=a.release,
@@ -283,25 +283,6 @@ local function _getActionObj(a)
     end
 end
 for k,v in next,actions do actions[k]=_getActionObj(v) end
-local actionPacks={
-    Classic={
-        'moveLeft',
-        'moveRight',
-        'rotateCW',
-        'rotateCCW',
-        'softDrop',
-    },
-    Normal={
-        'moveLeft',
-        'moveRight',
-        'rotateCW',
-        'rotateCCW',
-        'rotate180',
-        'softDrop',
-        'hardDrop',
-        'holdPiece',
-    },
-}
 --------------------------------------------------------------
 -- Effects
 function MP:createMoveParticle(x1,y1,x2,y2)
@@ -1821,7 +1802,6 @@ local baseEnv={
     pieceVisTime=false,
     pieceFadeTime=1000,
 
-    actionPack='Normal',
     seqType='bag7',
     rotSys='TRS',
     tuck=false,
@@ -2064,29 +2044,7 @@ function MP:initialize()
 
     -- Generate available actions
     do
-        self.actions={}
-        local pack=self.settings.actionPack
-        if type(pack)=='string' then
-            local p=actionPacks[pack]
-            assert(p,STRING.repD("Invalid actionPack '$1'",pack))
-            for i=1,#p do
-                self.actions[p[i]]=_getActionObj(p[i])
-            end
-        elseif type(pack)=='table' then
-            for k,v in next,pack do
-                if type(k)=='number' then
-                    self.actions[v]=_getActionObj(v)
-                elseif type(k)=='string' then
-                    assert(actions[k],STRING.repD("No action named '$1'",k))
-                    self.actions[k]=_getActionObj(v)
-                else
-                    error(STRING.repD("Wrong actionPack table format (type $1)",type(k)))
-                end
-            end
-        else
-            error("actionPack must be string or table")
-        end
-
+        self.actions=TABLE.copy(actions,0)
         self.keyState={}
         for k in next,self.actions do
             self.keyState[k]=false

@@ -10,17 +10,11 @@ return {
     end,
     settings={mino={
         freshCount=30,
-        actionPack={
-            'rotateCW',
-            'rotateCCW',
-            'rotate180',
-            'softDrop',
-            'hardDrop',
-            'holdPiece',
-        },
         event={
             playerInit=function(P)
                 P.modeData.line=0
+                P:switchAction('moveLeft',false)
+                P:switchAction('moveRight',false)
             end,
             afterClear=function(P,movement)
                 P.modeData.line=math.min(P.modeData.line+#movement.clear,lineTarget)
