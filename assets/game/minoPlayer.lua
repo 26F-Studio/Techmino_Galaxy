@@ -619,7 +619,7 @@ function MP:pushNext(arg)
         error("arg must be string or table")
     end
 end
-function MP:popNext()
+function MP:popNext(ifHold)
     if self.nextQueue[1] then-- Most cases there is pieces in next queue
         self.hand=rem(self.nextQueue,1)
         self:freshNextQueue()
@@ -634,13 +634,15 @@ function MP:popNext()
     self:resetPos()
 
     -- IHS
-    if self.settings.easyInitCtrl then
-        if self.keyState.holdPiece then
+    if not ifHold then
+        if self.settings.easyInitCtrl then
+            if self.keyState.holdPiece then
+                self:hold(true)
+            end
+        elseif self.keyBuffer.hold then
+            self.keyBuffer.hold=false
             self:hold(true)
         end
-    elseif self.keyBuffer.hold then
-        self.keyBuffer.hold=false
-        self:hold(true)
     end
 
     self:triggerEvent('afterSpawn')
@@ -932,7 +934,7 @@ function MP:hold_hold()
     if self.hand then
         self:resetPos()
     else
-        self:popNext()
+        self:popNext(true)
     end
     return true
 end
@@ -948,8 +950,6 @@ function MP:hold_swap()
     return true
 end
 function MP:hold_float()
-    if self._floatHolding then return end
-    self._floatHolding=true
     local swapN=self.holdTime%self.settings.holdSlot+1
     if self.floatHolds[swapN] then
         local h=self.floatHolds[swapN]
@@ -970,9 +970,8 @@ function MP:hold_float()
         }
         self.hand=false
         self.handX,self.handY=false,false
-        self:popNext()
+        self:popNext(true)
     end
-    self._floatHolding=nil
     return true
 end
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
