@@ -319,9 +319,7 @@ function PP:resetPos()-- Move hand piece to the normal spawn position
     self.ghostY=self.handY
     self:resetPosCheck()
 
-
     self:triggerEvent('afterResetPos')
-
 
 end
 function PP:resetPosCheck()
@@ -496,9 +494,7 @@ function PP:popNext()
 
     self:resetPos()
 
-
     self:triggerEvent('afterSpawn')
-
 
     if self.keyBuffer.hardDrop then-- IHdS
         self.keyBuffer.hardDrop=false
@@ -646,18 +642,14 @@ function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
         self:createLockParticle(self.handX,self.handY)
     end
 
-
     self:triggerEvent('afterDrop')
-
 
     -- Lock to field
     self.chain=0
     self:lock()
     self:playSound('lock')
 
-
     self:triggerEvent('afterLock')
-
 
     -- Lockout check
     if self.handY>self.settings.lockoutH then
@@ -1018,9 +1010,7 @@ function PP:updateFrame()
                 if self.clearTimer==0 then
                     self:clearField()
 
-
                     self:triggerEvent('afterClear')
-
 
                 end
                 break
@@ -1099,17 +1089,13 @@ function PP:render()
     GC.stc_rect(0,0,400,-920)
     gc.scale(10/settings.fieldW)
 
-
         self:triggerEvent('drawBelowField')
-
 
         -- Grid & Cells
         skin.drawFieldBackground(settings.fieldW)
         skin.drawFieldCells(self.field)
 
-
         self:triggerEvent('drawBelowBlock')
-
 
         if self.hand then
             local CB=self.hand.matrix
@@ -1135,9 +1121,7 @@ function PP:render()
             end
         end
 
-
         self:triggerEvent('drawBelowMarks')
-
 
         -- Height lines
         skin.drawHeightLines(-- All unit are pixel
@@ -1148,9 +1132,7 @@ function PP:render()
             settings.voidH*40    -- Void height
         )
 
-
         self:triggerEvent('drawInField')
-
 
     -- stopFieldStencil
     GC.stc_stop()
@@ -1199,9 +1181,7 @@ function PP:render()
     -- Texts
     self.texts:draw()
 
-
     self:triggerEvent('drawOnPlayer')
-
 
     -- Starting counter
     if self.time<settings.readyDelay then

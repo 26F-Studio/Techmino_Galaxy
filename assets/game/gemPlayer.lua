@@ -340,9 +340,7 @@ function GP:swap(mode,x,y,dx,dy)
                 positions={x,y,x+dx,y+dy},
             })
 
-
             self:triggerEvent('legalMove','swap')
-
 
             self:playSound('swap')
         elseif mode=='auto' then
@@ -389,9 +387,7 @@ function GP:twist(mode,x,y,dir)
             })
             self:playSound('twist')
 
-
             self:triggerEvent('legalMove','twist')
-
 
         elseif mode=='auto' then
             self:playSound('move_back')
@@ -853,15 +849,11 @@ function GP:updateFrame()
             if group.force and not leagl then
                 self[group.mode](self,'auto',unpack(group.args))
 
-
                 self:triggerEvent('illegalMove',group.mode)
-
 
             elseif leagl then
 
-
                 self:triggerEvent('legalMove',group.mode)
-
 
             end
             rem(self.movingGroups,i)
@@ -944,17 +936,13 @@ function GP:render()
     GC.stc_rect(0,0,720,-720)
     gc.scale(16/settings.fieldSize)
 
-
         self:triggerEvent('drawBelowField')
-
 
         -- Grid & Cells
         skin.drawFieldBackground(settings.fieldSize)
         skin.drawFieldCells(self.field)
 
-
         self:triggerEvent('drawInField')
-
 
     -- stopFieldStencil
     GC.stc_stop()
@@ -987,9 +975,7 @@ function GP:render()
     -- Texts
     self.texts:draw()
 
-
     self:triggerEvent('drawOnPlayer')
-
 
     -- Starting counter
     if self.time<settings.readyDelay then

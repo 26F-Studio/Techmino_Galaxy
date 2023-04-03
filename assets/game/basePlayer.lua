@@ -138,6 +138,7 @@ function P:finish(reason)
     self:triggerEvent('gameOver',reason)
     GAME.checkFinish()
 
+
     -- TODO: Just for temporary use
     if self.isMain then
         MES.new(reason=='AC' and 'check' or 'error',reason,6.26)
@@ -173,11 +174,13 @@ function P:press(act)
 end
 function P:release(act)
     self:triggerEvent('beforeRelease',act)
+
     if self.actions[act] and self.keyState[act] then
         self.keyState[act]=false
         ins(self.actionHistory,{1,self.time,act})
         self.actions[act].release(self)
     end
+
     self:triggerEvent('afterRelease',act)
 end
 local _jmpOP={
@@ -322,8 +325,9 @@ function P:update(dt)
             end
             if d==0 then
                 self:playSound('countDown',0)
-                self:triggerEvent('gameStart')
                 self.timing=true
+
+                self:triggerEvent('gameStart')
             end
         else
             self.time=self.time+1
