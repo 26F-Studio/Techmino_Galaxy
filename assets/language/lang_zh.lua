@@ -57,9 +57,6 @@ return {
     keyset_mino_softDrop=   "软降",
     keyset_mino_hardDrop=   "硬降",
     keyset_mino_holdPiece=  "暂存",
-    keyset_mino_sonicDrop=  "软降到底",
-    keyset_mino_sonicLeft=  "左瞬移",
-    keyset_mino_sonicRight= "右瞬移",
 
     keyset_puyo_moveLeft=   "左移",
     keyset_puyo_moveRight=  "右移",

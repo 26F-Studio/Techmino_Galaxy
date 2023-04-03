@@ -57,9 +57,6 @@ return {
     keyset_mino_softDrop=   "Soft Drop",
     keyset_mino_hardDrop=   "Hard Drop",
     keyset_mino_holdPiece=  "Hold Piece",
-    keyset_mino_sonicDrop=  "Sonic Drop",
-    keyset_mino_sonicLeft=  "Sonic Left",
-    keyset_mino_sonicRight= "Sonic Right",
 
     keyset_puyo_moveLeft=   "Move Left",
     keyset_puyo_moveRight=  "Move Right",

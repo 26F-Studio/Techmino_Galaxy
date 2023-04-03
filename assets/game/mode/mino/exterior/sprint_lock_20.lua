@@ -10,17 +10,12 @@ return {
     end,
     settings={mino={
         dropDelay=1200,
-        actionPack={
-            'moveLeft',
-            'moveRight',
-            'softDrop',
-            'hardDrop',
-            'holdPiece',
-            'sonicDrop',
-        },
         event={
             playerInit=function(P)
                 P.modeData.line=0
+                P:switchAction('rotateCW',false)
+                P:switchAction('rotateCCW',false)
+                P:switchAction('rotate180',false)
             end,
             afterClear=function(P,movement)
                 P.modeData.line=math.min(P.modeData.line+#movement.clear,lineTarget)

@@ -251,43 +251,6 @@ actions.holdPiece={
         P.keyBuffer.hold=false
     end
 }
-function actions.sonicDrop(P)
-    if not P.hand or P.deathTimer then return end
-    if P.handY>P.ghostY then
-        P:moveHand('moveY',P.ghostY-P.handY)
-        P:freshDelay('drop')
-        P:playSound('move')
-        P:playSound('touch')
-    end
-end
-function actions.sonicLeft(P)
-    local moved
-    while P.hand and not P:ifoverlap(P.hand.matrix,P.handX-1,P.handY) do
-        moved=true
-        P:moveHand('moveX',-1)
-        P:freshGhost()
-    end
-    if not moved then
-        P:playSound('move_failed')
-    elseif P.handY==P.ghostY then
-        P:playSound('touch')
-    end
-    return moved
-end
-function actions.sonicRight(P)
-    local moved
-    while P.hand and not P:ifoverlap(P.hand.matrix,P.handX+1,P.handY) do
-        moved=true
-        P:moveHand('moveX',1)
-        P:freshGhost()
-    end
-    if not moved then
-        P:playSound('move_failed')
-    elseif P.handY==P.ghostY then
-        P:playSound('touch')
-    end
-    return moved
-end
 
 actions.func1=NULL
 actions.func2=NULL
@@ -307,7 +270,7 @@ local function _getActionObj(a)
             self.press(P)
         end})
     elseif type(a)=='table' then
-        if not (type(a.press)=='function' and type(a.release)=='function') then error("WTF why action do not contain func press() & func release()") end
+        assert(type(a.press)=='function' and type(a.release)=='function',"WTF why action do not contain func press() & func release()")
         return setmetatable({
             press=a.press,
             release=a.release,
@@ -320,26 +283,6 @@ local function _getActionObj(a)
     end
 end
 for k,v in next,actions do actions[k]=_getActionObj(v) end
-local actionPacks={
-    Classic={
-        'moveLeft',
-        'moveRight',
-        'rotateCW',
-        'rotateCCW',
-        'softDrop',
-    },
-    Normal={
-        'moveLeft',
-        'moveRight',
-        'rotateCW',
-        'rotateCCW',
-        'rotate180',
-        'softDrop',
-        'hardDrop',
-        'holdPiece',
-        'sonicDrop',
-    },
-}
 --------------------------------------------------------------
 -- Effects
 function MP:createMoveParticle(x1,y1,x2,y2)
@@ -1071,30 +1014,31 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if self.finished then return end
 
     -- Clear
-    local lineClear=self:checkField()
+    if self.settings.clearFullLine then
+        local lineClear=self:checkClear()
+        if lineClear then
+            self.combo=self.combo+1
+            self.lastMovement.clear=lineClear
+            self.lastMovement.combo=self.combo
+            self.clearTimer=self.settings.clearDelay
+            local h={
+                combo=self.combo,
+                line=#lineClear,
+                lines=lineClear,
+                time=self.time,
+            }
+            ins(self.clearHistory,h)
+            self:shakeBoard('-clear',#lineClear)
+            self:playSound('clear',#lineClear)
+            if self.settings.particles then
+                self:createFrenzyParticle(#lineClear*26)
+            end
 
-    if lineClear then
-        self.combo=self.combo+1
-        self.lastMovement.clear=lineClear
-        self.lastMovement.combo=self.combo
-        self.clearTimer=self.settings.clearDelay
-        local h={
-            combo=self.combo,
-            line=#lineClear,
-            lines=lineClear,
-            time=self.time,
-        }
-        ins(self.clearHistory,h)
-        self:shakeBoard('-clear',#lineClear)
-        self:playSound('clear',#lineClear)
-        if self.settings.particles then
-            self:createFrenzyParticle(#lineClear*26)
+            self:triggerEvent('afterClear',self.lastMovement)
+            if self.finished then return end
+        else
+            self.combo=0
         end
-
-        self:triggerEvent('afterClear',self.lastMovement)
-        if self.finished then return end
-    else
-        self.combo=0
     end
 
     -- Attack
@@ -1346,7 +1290,7 @@ function MP:checkLineFull(y)
     end
     return true
 end
-function MP:checkField()
+function MP:checkClear()
     local lineClear={}
     local F=self.field
     for y=F:getHeight(),1,-1 do
@@ -1829,6 +1773,7 @@ end
 --------------------------------------------------------------
 -- Builder
 local baseEnv={
+    -- Size
     fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
     spawnH=20,
     extraSpawnH=1,
@@ -1836,13 +1781,15 @@ local baseEnv={
     deathH=1e99,
     voidH=1260,
 
+    -- Sequence
+    seqType='bag7',
     nextSlot=6,
-
     holdSlot=1,
     infHold=false,
     holdMode='hold',
     holdKeepState=false,
 
+    -- Delay
     readyDelay=3000,
     dropDelay=1000,
     lockDelay=1000,
@@ -1850,17 +1797,18 @@ local baseEnv={
     clearDelay=0,
     deathDelay=260,
 
+    -- Hidden
+    pieceVisTime=false,
+    pieceFadeTime=1000,
+
+    -- Garbage
     initialRisingSpeed=1,
     risingAcceleration=.001,
     risingDeceleration=.003,
     maxRisingSpeed=1,
     minRisingSpeed=1,
 
-    pieceVisTime=false,
-    pieceFadeTime=1000,
-
-    actionPack='Normal',
-    seqType='bag7',
+    -- Attack
     rotSys='TRS',
     tuck=false,
     spin_immobile=false,
@@ -1869,13 +1817,17 @@ local baseEnv={
     allowCancel=true,
     clearStuck=true,
 
+    -- Fresh
     freshCondition='any',
-    strictLockout=false,
     freshCount=15,
     maxFreshTime=6200,
+
+    -- Other
+    strictLockout=false,
+    clearFullLine=true,
     script=false,
 
-    -- Will be overrode with user setting
+    -- May be overrode with user setting
     das=162,
     arr=26,
     sdarr=12,
@@ -1885,7 +1837,6 @@ local baseEnv={
     easyInitCtrl=false,
     skin='mino_plastic',
     particles=true,
-
     shakeness=.26,
     inputDelay=0,
 }
@@ -2102,29 +2053,7 @@ function MP:initialize()
 
     -- Generate available actions
     do
-        self.actions={}
-        local pack=self.settings.actionPack
-        if type(pack)=='string' then
-            local p=actionPacks[pack]
-            assert(p,STRING.repD("Invalid actionPack '$1'",pack))
-            for i=1,#p do
-                self.actions[p[i]]=_getActionObj(p[i])
-            end
-        elseif type(pack)=='table' then
-            for k,v in next,pack do
-                if type(k)=='number' then
-                    self.actions[v]=_getActionObj(v)
-                elseif type(k)=='string' then
-                    assert(actions[k],STRING.repD("No action named '$1'",k))
-                    self.actions[k]=_getActionObj(v)
-                else
-                    error(STRING.repD("Wrong actionPack table format (type $1)",type(k)))
-                end
-            end
-        else
-            error("actionPack must be string or table")
-        end
-
+        self.actions=TABLE.copy(actions,0)
         self.keyState={}
         for k in next,self.actions do
             self.keyState[k]=false

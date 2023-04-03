@@ -271,10 +271,14 @@ end
 -- Game methods
 function PP:moveHand(action,a,b,c)
     if action=='moveX' then
-        self:createMoveParticle(self.handX,self.handY,self.handX+a,self.handY)
+        if self.settings.particles then
+            self:createMoveParticle(self.handX,self.handY,self.handX+a,self.handY)
+        end
         self.handX=self.handX+a
     elseif action=='drop' or action=='moveY' then
-        self:createMoveParticle(self.handX,self.handY,self.handX,self.handY+a)
+        if self.settings.particles then
+            self:createMoveParticle(self.handX,self.handY,self.handX,self.handY+a)
+        end
         self.handY=self.handY+a
     elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
@@ -314,7 +318,11 @@ function PP:resetPos()-- Move hand piece to the normal spawn position
     self.minY=self.handY
     self.ghostY=self.handY
     self:resetPosCheck()
+
+
     self:triggerEvent('afterResetPos')
+
+
 end
 function PP:resetPosCheck()
     local suffocated-- Cancel deathTimer temporarily, or we cannot apply IMS when hold in suffcating
@@ -488,7 +496,9 @@ function PP:popNext()
 
     self:resetPos()
 
+
     self:triggerEvent('afterSpawn')
+
 
     if self.keyBuffer.hardDrop then-- IHdS
         self.keyBuffer.hardDrop=false
@@ -632,14 +642,22 @@ function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
         self:shakeBoard('-drop',1)
         self:playSound('drop')
     end
-    self:createLockParticle(self.handX,self.handY)
+    if self.settings.particles then
+        self:createLockParticle(self.handX,self.handY)
+    end
+
+
     self:triggerEvent('afterDrop')
+
 
     -- Lock to field
     self.chain=0
     self:lock()
     self:playSound('lock')
+
+
     self:triggerEvent('afterLock')
+
 
     -- Lockout check
     if self.handY>self.settings.lockoutH then
@@ -834,7 +852,9 @@ function PP:clearField()
                 k=false
             end
             F:setCell(k,pos[1],pos[2])
-            self:createClearParticle(pos[1],pos[2])
+            if self.settings.particles then
+                self:createClearParticle(pos[1],pos[2])
+            end
         end
     end
     self.clearingGroups={}
@@ -997,7 +1017,11 @@ function PP:updateFrame()
                 self.clearTimer=self.clearTimer-1
                 if self.clearTimer==0 then
                     self:clearField()
+
+
                     self:triggerEvent('afterClear')
+
+
                 end
                 break
             end
@@ -1208,6 +1232,7 @@ end
 --------------------------------------------------------------
 -- Builder
 local baseEnv={
+    -- Size
     fieldW=6,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
     spawnH=11,
     lockoutH=1e99,
@@ -1215,8 +1240,11 @@ local baseEnv={
     voidH=620,
     connH=12,-- Default to 12
 
+    -- Sequence
+    seqType='double4color',
     nextSlot=6,
 
+    -- Delay
     readyDelay=3000,
     dropDelay=1000,
     lockDelay=1000,
@@ -1225,13 +1253,16 @@ local baseEnv={
     clearDelay=200,
     deathDelay=260,
 
-    seqType='double4color',
+    -- Attack
     atkSys='none',
 
-    clearGroupSize=4,
+    -- Fresh
     freshCondition='fall',
     freshCount=15,
     maxFreshTime=6200,
+
+    -- Other
+    clearGroupSize=4,
     script=false,
 
     -- Will be overrode with user setting
@@ -1243,7 +1274,7 @@ local baseEnv={
     hdLockM=100,
     easyInitCtrl=false,
     skin='puyo_jelly',
-
+    particles=true,
     shakeness=.26,
     inputDelay=0,
 }
@@ -1383,11 +1414,7 @@ function PP:initialize()
 
     -- Generate available actions
     do
-        self.actions={}
-        for k in next,actions do
-            self.actions[k]=_getActionObj(k)
-        end
-
+        self.actions=TABLE.copy(actions,0)
         self.keyState={}
         for k in next,self.actions do
             self.keyState[k]=false

@@ -16,14 +16,19 @@ return {
         holdSlot=0,
         deathDelay=0,
         seqType='none',
-        actionPack={
-            'moveLeft',
-            'moveRight',
-        },
         soundEvent={
             countDown=NULL,
         },
         event={
+            playerInit=function(P)
+                P.modeData.line=0
+                P:switchAction('rotateCW',false)
+                P:switchAction('rotateCCW',false)
+                P:switchAction('rotate180',false)
+                P:switchAction('softDrop',false)
+                P:switchAction('hardDrop',false)
+                P:switchAction('holdPiece',false)
+            end,
             gameStart=function(P)
                 P.spawnTimer=6500
             end,

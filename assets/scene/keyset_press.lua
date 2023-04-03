@@ -55,7 +55,7 @@ end
 
 function scene.draw()
     FONT.set(100)
-    GC.shadedPrint(Text['key_'..act],800,300,'center',4,8)
+    GC.shadedPrint(Text['keyset_'..map..'_'..act],800,300,'center',4,8)
     FONT.set(60)
     GC.shadedPrint(result or Text.keyset_pressKey,800,460,'center',2,8)
     FONT.set(35)
