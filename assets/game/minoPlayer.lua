@@ -415,7 +415,6 @@ function MP:resetPos()-- Move hand piece to the normal spawn position
     self.ghostY=self.handY
     self:resetPosCheck()
 
-
     self:triggerEvent('afterResetPos')
 end
 function MP:resetPosCheck()
@@ -619,11 +618,13 @@ function MP:pushNext(arg)
         error("arg must be string or table")
     end
 end
-function MP:popNext()
+function MP:popNext(ifHold)
     if self.nextQueue[1] then-- Most cases there is pieces in next queue
         self.hand=rem(self.nextQueue,1)
         self:freshNextQueue()
-        self.holdTime=0
+        if not ifHold then
+            self.holdTime=0
+        end
     elseif self.holdQueue[1] then-- If no nexts, force using hold
         ins(self.nextQueue,rem(self.holdQueue,1))
         self:popNext()
@@ -634,13 +635,15 @@ function MP:popNext()
     self:resetPos()
 
     -- IHS
-    if self.settings.easyInitCtrl then
-        if self.keyState.holdPiece then
+    if not ifHold then
+        if self.settings.easyInitCtrl then
+            if self.keyState.holdPiece then
+                self:hold(true)
+            end
+        elseif self.keyBuffer.hold then
+            self.keyBuffer.hold=false
             self:hold(true)
         end
-    elseif self.keyBuffer.hold then
-        self.keyBuffer.hold=false
-        self:hold(true)
     end
 
     self:triggerEvent('afterSpawn')
@@ -901,10 +904,6 @@ end
 function MP:hold(ifInit)
     if self.holdTime>=self.settings.holdSlot and not self.settings.infHold then return end
 
-    -- These data may changed during hold, so we store them and recover them later
-    local freshChance,freshTimeRemain=self.freshChance,self.freshTimeRemain
-    local holdTime=self.holdTime
-
     local mode=self.settings.holdMode
     if not self[
         mode=='hold'  and 'hold_hold' or
@@ -913,10 +912,7 @@ function MP:hold(ifInit)
         error("WTF why hold mode is "..tostring(mode))
     ](self) then return end
 
-    -- Recover data
-    self.freshChance,self.freshTimeRemain=freshChance,freshTimeRemain
-    self.holdTime=holdTime+1
-
+    self.holdTime=self.holdTime+1
     self:playSound(ifInit and 'inithold' or 'hold')
 end
 function MP:hold_hold()
@@ -932,7 +928,7 @@ function MP:hold_hold()
     if self.hand then
         self:resetPos()
     else
-        self:popNext()
+        self:popNext(true)
     end
     return true
 end
@@ -948,8 +944,6 @@ function MP:hold_swap()
     return true
 end
 function MP:hold_float()
-    if self._floatHolding then return end
-    self._floatHolding=true
     local swapN=self.holdTime%self.settings.holdSlot+1
     if self.floatHolds[swapN] then
         local h=self.floatHolds[swapN]
@@ -970,9 +964,8 @@ function MP:hold_float()
         }
         self.hand=false
         self.handX,self.handY=false,false
-        self:popNext()
+        self:popNext(true)
     end
-    self._floatHolding=nil
     return true
 end
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
@@ -985,10 +978,8 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         self:playSound('drop')
     end
 
-
     self:triggerEvent('afterDrop')
     if not self.hand or self.finished then return end
-
 
     if self.settings.particles then
         self:createLockParticle(self.handX,self.handY)
@@ -1008,7 +999,6 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         return
     end
     self:playSound('lock')
-
 
     self:triggerEvent('afterLock')
     if self.finished then return end
@@ -1045,9 +1035,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     local atk=GAME.initAtk(minoAtkSys[self.settings.atkSys].drop(self))
     if atk then
 
-
         self:triggerEvent('beforeCancel',atk)
-
 
         if self.settings.allowCancel then
             while atk and self.garbageBuffer[1] do
@@ -1075,9 +1063,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         if atk and atk.power>=.5 then
             atk.power=floor(atk.power+.5)
 
-
             self:triggerEvent('beforeSend',atk)
-
 
             GAME.send(self,atk)
         end
@@ -1090,9 +1076,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         return
     end
 
-
     self:triggerEvent('beforeDiscard')
-
 
     -- Discard hand
     self.hand=false
@@ -1560,9 +1544,7 @@ function MP:render()
     GC.stc_rect(0,0,400,40)
     gc.scale(10/settings.fieldW)
 
-
         self:triggerEvent('drawBelowField')
-
 
         -- Grid & Cells
         skin.drawFieldBackground(settings.fieldW)
@@ -1587,9 +1569,7 @@ function MP:render()
                 end
             gc.pop()
 
-
             self:triggerEvent('drawBelowBlock')
-
 
             if self.hand then
                 local CB=self.hand.matrix
@@ -1633,9 +1613,7 @@ function MP:render()
                 end
             end
 
-
             self:triggerEvent('drawBelowMarks')
-
 
         gc.translate(0,-self.fieldDived)
 
@@ -1649,9 +1627,7 @@ function MP:render()
             settings.voidH*40     -- Void height
         )
 
-
         self:triggerEvent('drawInField')
-
 
     -- stopFieldStencil
     GC.stc_stop()
@@ -1711,9 +1687,7 @@ function MP:render()
     -- Texts
     self.texts:draw()
 
-
     self:triggerEvent('drawOnPlayer')
-
 
     -- Starting counter
     if self.time<settings.readyDelay then
