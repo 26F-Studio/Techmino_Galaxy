@@ -498,9 +498,7 @@ function PP:popNext()
 
     if self.keyBuffer.hardDrop then-- IHdS
         self.keyBuffer.hardDrop=false
-        if not self.deathTimer then
-            self:puyoDropped()
-        end
+        self:puyoDropped()
     end
 end
 function PP:getPuyo(mat)
@@ -1233,19 +1231,19 @@ local baseEnv={
     clearDelay=200,
     deathDelay=260,
 
-    -- Attack
-    atkSys='none',
-
     -- Fresh
     freshCondition='fall',
     freshCount=15,
     maxFreshTime=6200,
 
+    -- Attack
+    atkSys='none',
+
     -- Other
     clearGroupSize=4,
     script=false,
 
-    -- Will be overrode with user setting
+    -- May be overrode with user setting
     das=162,
     arr=26,
     sdarr=12,
