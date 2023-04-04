@@ -1022,7 +1022,7 @@ local baseEnv={
     -- Other
     script=false,
 
-    -- Will be overrode with user setting
+    -- May be overrode with user setting
     skin='gem_template',
     shakeness=.26,
     inputDelay=0,

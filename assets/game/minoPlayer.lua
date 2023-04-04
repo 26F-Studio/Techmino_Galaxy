@@ -905,12 +905,11 @@ function MP:hold(ifInit)
     if self.holdTime>=self.settings.holdSlot and not self.settings.infHold then return end
 
     local mode=self.settings.holdMode
-    if not self[
-        mode=='hold'  and 'hold_hold' or
-        mode=='swap'  and 'hold_swap' or
-        mode=='float' and 'hold_float' or
-        error("WTF why hold mode is "..tostring(mode))
-    ](self) then return end
+    if     mode=='hold'  then self:hold_hold()
+    elseif mode=='swap'  then self:hold_swap()
+    elseif mode=='float' then self:hold_float()
+    else   error("WTF why hold mode is "..tostring(mode))
+    end
 
     self.holdTime=self.holdTime+1
     self:playSound(ifInit and 'inithold' or 'hold')
@@ -930,7 +929,6 @@ function MP:hold_hold()
     else
         self:popNext(true)
     end
-    return true
 end
 function MP:hold_swap()
     local swapN=self.holdTime%self.settings.holdSlot+1
@@ -941,7 +939,6 @@ function MP:hold_swap()
         self.hand,self.nextQueue[swapN]=self.nextQueue[swapN],self.hand
         self:resetPos()
     end
-    return true
 end
 function MP:hold_float()
     local swapN=self.holdTime%self.settings.holdSlot+1
@@ -966,7 +963,6 @@ function MP:hold_float()
         self.handX,self.handY=false,false
         self:popNext(true)
     end
-    return true
 end
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if not self.hand or self.deathTimer then return end
@@ -1771,6 +1767,11 @@ local baseEnv={
     clearDelay=0,
     deathDelay=260,
 
+    -- Fresh
+    freshCondition='any',
+    freshCount=15,
+    maxFreshTime=6200,
+
     -- Hidden
     pieceVisTime=false,
     pieceFadeTime=1000,
@@ -1790,11 +1791,6 @@ local baseEnv={
     atkSys='none',
     allowCancel=true,
     clearStuck=true,
-
-    -- Fresh
-    freshCondition='any',
-    freshCount=15,
-    maxFreshTime=6200,
 
     -- Other
     strictLockout=false,
