@@ -113,6 +113,42 @@ end
 function P:random(a,b)
     return self.RND:random(a,b)
 end
+function P:_getActionObj(a)
+    if type(a)=='string' then
+        return self._actions[a]
+    elseif type(a)=='function' then
+        return setmetatable({
+            press=a,
+            release=NULL,
+        },{__call=function(self,P)
+            self.press(P)
+        end})
+    elseif type(a)=='table' then
+        assert(type(a.press)=='function' and type(a.release)=='function',"WTF why action do not contain func press() & func release()")
+        return setmetatable({
+            press=a.press,
+            release=a.release,
+        },{__call=function(self,P)
+            self.press(P)
+            self.release(P)
+        end})
+    else
+        error("Invalid action: should be function or table contain 'press' and 'release' fields")
+    end
+end
+function P:switchAction(act,state)
+    assert(self.actions[act],"Invalid action name '"..act.."'")
+    if state==nil or state==not self.actions[act] then
+        if self.actions[act] then
+            self:release(act)
+            self.keyState[act]=nil
+            self.actions[act]=nil
+        else
+            self.actions[act]=self:_getActionObj(act)
+            self.keyState[act]=false
+        end
+    end
+end
 function P:triggerEvent(name,...)
     -- if name~='always' and name:sub(1,4)~='draw' then print(name) end
     local L=self.event[name]

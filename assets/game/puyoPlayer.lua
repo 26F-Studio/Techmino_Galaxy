@@ -99,8 +99,8 @@ PP.scriptCmd={
 }
 --------------------------------------------------------------
 -- Actions
-local actions={}
-actions.moveLeft={
+PP._actions={}
+PP._actions.moveLeft={
     press=function(P)
         P.moveDir=-1
         P.moveCharge=0
@@ -122,7 +122,7 @@ actions.moveLeft={
         if P.deathTimer then P:moveRight() end
     end
 }
-actions.moveRight={
+PP._actions.moveRight={
     press=function(P)
         P.moveDir=1
         P.moveCharge=0
@@ -144,7 +144,7 @@ actions.moveRight={
         if P.deathTimer then P:moveLeft() end
     end
 }
-actions.rotateCW={
+PP._actions.rotateCW={
     press=function(P)
         if P.hand then
             P:rotate('R')
@@ -156,7 +156,7 @@ actions.rotateCW={
         if P.keyBuffer.rotate=='R' then P.keyBuffer.rotate=false end
     end
 }
-actions.rotateCCW={
+PP._actions.rotateCCW={
     press=function(P)
         if P.hand then
             P:rotate('L')
@@ -168,7 +168,7 @@ actions.rotateCCW={
         if P.keyBuffer.rotate=='L' then P.keyBuffer.rotate=false end
     end
 }
-actions.rotate180={
+PP._actions.rotate180={
     press=function(P)
         if P.hand then
             P:rotate('F')
@@ -180,7 +180,7 @@ actions.rotate180={
         if P.keyBuffer.rotate=='F' then P.keyBuffer.rotate=false end
     end
 }
-actions.softDrop={
+PP._actions.softDrop={
     press=function(P)
         P.downCharge=0
         if P.hand and (P.handY>P.ghostY or P.deathTimer) and P:moveDown() then
@@ -191,7 +191,7 @@ actions.softDrop={
         if P.deathTimer then P:moveUp() end
     end
 }
-actions.hardDrop={
+PP._actions.hardDrop={
     press=function(P)
         if P.hdLockMTimer~=0 or P.hdLockATimer~=0 then
             P:playSound('rotate_failed')
@@ -207,37 +207,14 @@ actions.hardDrop={
     end
 }
 
-actions.func1=NULL
-actions.func2=NULL
-actions.func3=NULL
-actions.func4=NULL
-actions.func5=NULL
-actions.func6=NULL
+PP._actions.func1=NULL
+PP._actions.func2=NULL
+PP._actions.func3=NULL
+PP._actions.func4=NULL
+PP._actions.func5=NULL
+PP._actions.func6=NULL
 
-local function _getActionObj(a)
-    if type(a)=='string' then
-        return actions[a]
-    elseif type(a)=='function' then
-        return setmetatable({
-            press=a,
-            release=NULL,
-        },{__call=function(self,P)
-            self.press(P)
-        end})
-    elseif type(a)=='table' then
-        assert(type(a.press)=='function' and type(a.release)=='function',"WTF why action do not contain func press() & func release()")
-        return setmetatable({
-            press=a.press,
-            release=a.release,
-        },{__call=function(self,P)
-            self.press(P)
-            self.release(P)
-        end})
-    else
-        error("Invalid action: should be function or table contain 'press' and 'release' fields")
-    end
-end
-for k,v in next,actions do actions[k]=_getActionObj(v) end
+for k,v in next,PP._actions do PP._actions[k]=PP:_getActionObj(v) end
 --------------------------------------------------------------
 -- Effects
 function PP:createMoveParticle(x1,y1,x2,y2)
@@ -1392,7 +1369,7 @@ function PP:initialize()
 
     -- Generate available actions
     do
-        self.actions=TABLE.copy(actions,0)
+        self.actions=TABLE.copy(PP._actions,0)
         self.keyState={}
         for k in next,self.actions do
             self.keyState[k]=false
