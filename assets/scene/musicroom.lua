@@ -200,13 +200,13 @@ function scene.draw()
     setFont(30)
     gc_printf(collectCount.."/"..bgmCount,-105-626,-362,626,'right')
 
-    -- Autoplay timer
+    -- Autoswitch timer
     if autoplay then
         gc_setColor(COLOR.L)
         gc.setLineWidth(2)
-        gc.circle('line',-1200,305,20)
+        gc.circle('line',-1470,95,20)
         gc_setColor(1,1,1,.26)
-        gc.arc('fill','pie',-1200,305,20,-MATH.pi/2,-MATH.pi/2+autoplay/120*MATH.tau)
+        gc.arc('fill','pie',-1470,95,20,-MATH.pi/2,-MATH.pi/2+autoplay/120*MATH.tau)
     end
 end
 
@@ -222,7 +222,7 @@ scene.widgetList={
     WIDGET.new{type='button_invis',pos={1,.5},x=-800,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleFunc=function() return BGM.isPlaying() end},
 
     -- Fullband Switch
-    WIDGET.new{type='switch',pos={1,.5},x=-1450,y=360,h=50,widthLimit=120,labelPos='right',disp=function() return fullband end,
+    WIDGET.new{type='switch',pos={1,.5},x=-1450,y=360,h=50,widthLimit=260,labelPos='right',disp=function() return fullband end,
         name='fullband',text=LANG'musicroom_fullband',
         sound_on=false,sound_off=false,
         code=function()
@@ -238,8 +238,8 @@ scene.widgetList={
             return fullband~=nil and bgmList[selected].base
         end,
     },
-    -- Auto Switch
-    WIDGET.new{type='switch',pos={1,.5},x=-1180,y=360,h=50,widthLimit=180,labelPos='right',disp=function() return autoplay end,
+    -- Auto Switching Switch
+    WIDGET.new{type='switch',pos={1,.5},x=-1450,y=150,h=50,widthLimit=260,labelPos='right',disp=function() return autoplay end,
         name='autoplay',text=LANG'musicroom_autoplay',
         sound_on=false,sound_off=false,
         code=function()
