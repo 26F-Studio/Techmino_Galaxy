@@ -735,7 +735,7 @@ function MP:ifoverlap(CB,cx,cy)
     return false
 end
 function MP:isSuffocate()
-    return self:ifoverlap(self.hand.matrix,self.handX,self.handY)
+    return self.hand and self:ifoverlap(self.hand.matrix,self.handX,self.handY)
 end
 function MP:parseAtkInfo(g)
     -- TODO: 'speed' not applied

@@ -180,7 +180,6 @@ function P:finish(reason)
     self:triggerEvent('gameOver',reason)
     GAME.checkFinish()
 
-
     -- TODO: Just for temporary use
     if self.isMain then
         MES.new(reason=='AC' and 'check' or 'error',reason,6.26)
@@ -370,6 +369,7 @@ function P:update(dt)
                 self.timing=true
 
                 self:triggerEvent('gameStart')
+
             end
         else
             self.time=self.time+1
