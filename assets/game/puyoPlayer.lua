@@ -275,7 +275,7 @@ function PP:moveHand(action,a,b,c)
     if self.deathTimer then
         local t=self.deathTimer
         self.deathTimer=false
-        if self:ifoverlap(self.hand.matrix,self.handX,self.handY) then
+        if self:isSuffocate() then
             self.deathTimer=t
         else
             self:playSound('desuffocate')
@@ -304,10 +304,10 @@ function PP:resetPosCheck()
     if self.deathTimer then
         local bufferedDeathTimer=self.deathTimer
         self.deathTimer=false
-        suffocated=self:ifoverlap(self.hand.matrix,self.handX,self.handY)
+        suffocated=self:isSuffocate()
         self.deathTimer=bufferedDeathTimer
     else
-        suffocated=self:ifoverlap(self.hand.matrix,self.handX,self.handY)
+        suffocated=self:isSuffocate()
     end
 
     if suffocated then
@@ -333,8 +333,14 @@ function PP:resetPosCheck()
                 self.keyBuffer.rotate=false
             end
         else
-            self:lock()
-            self:finish('WA')
+
+            self:triggerEvent('whenSuffocate')
+            self:freshGhost()
+
+            if self:isSuffocate() then
+                self:lock()
+                self:finish('WA')
+            end
             return
         end
     else
@@ -510,17 +516,19 @@ function PP:ifoverlap(CB,cx,cy)
     if cy>self.field:getHeight() then return false end
 
     -- Check field
-    for y=1,#CB do for x=1,#CB[1] do
-        if CB[y][x] and self:isSolidCell(cx+x-1,cy+y-1) then
-            return true
-        end
-    end end
+    if not self.deathTimer then
+        for y=1,#CB do for x=1,#CB[1] do
+            if CB[y][x] and self.field:getCell(cx+x-1,cy+y-1) then
+                return true
+            end
+        end end
+    end
 
     -- No collision
     return false
 end
-function PP:isSolidCell(x,y)
-    return not self.deathTimer and self.field:getCell(x,y) and true or false
+function PP:isSuffocate()
+    return self:ifoverlap(self.hand.matrix,self.handX,self.handY)
 end
 function PP:moveLeft()
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
@@ -750,11 +758,14 @@ function PP:checkPosition(x,y)
     end
 end
 function PP:canFall()
-    for y=1,self.field:getHeight() do for x=1,self.settings.fieldW do
-        if self:isSolidCell(x,y) and not self:isSolidCell(x,y-1) then
-            return true
-        end
-    end end
+    if not self.deathTimer then
+        local F=self.field
+        for y=1,F:getHeight() do for x=1,self.settings.fieldW do
+            if F:getCell(x,y) and not F:getCell(x,y-1) then
+                return true
+            end
+        end end
+    end
 end
 function PP:fieldFall()
     local F=self.field
@@ -1029,8 +1040,15 @@ function PP:updateFrame()
         self.deathTimer=self.deathTimer-1
         if self.deathTimer<=0 then
             self.deathTimer=false
-            self:lock()
-            self:finish('WA')
+
+            self:triggerEvent('whenSuffocate')
+            self:freshGhost()
+
+            if self:isSuffocate() then
+                self:lock()
+                self:finish('WA')
+            end
+            return
         end
     end
 
@@ -1279,6 +1297,7 @@ function PP.new()
         -- Start & End
         playerInit={},
         gameStart={},
+        whenSuffocate={},
         gameOver={},
 
         -- Drop
