@@ -87,25 +87,28 @@ return {
                 md.point=md.point+dScore
                 if md.point==md.target-1 then
                     P:playSound('notice')
-                elseif md.point>=md.target then
-                    if md.level<10 then
-                        P:playSound('reach')
-                        md.level=md.level+1
-                        md.target=100*md.level
+                else
+                    while md.point>=md.target do
+                        if md.level<10 then
+                            P:playSound('reach')
+                            md.level=md.level+1
+                            md.target=100*md.level
 
-                        P.settings.das=math.max(P.modeData.storedDas,levels[md.level].das)
-                        P.settings.arr=math.max(P.modeData.storedArr,levels[md.level].arr)
-                        P.settings.lockDelay=levels[md.level].lock
-                        P.settings.spawnDelay=levels[md.level].spawn
-                        P.settings.clearDelay=levels[md.level].clear
-                        P.settings.maxFreshTime=levels[md.level].fresh
+                            P.settings.das=math.max(P.modeData.storedDas,levels[md.level].das)
+                            P.settings.arr=math.max(P.modeData.storedArr,levels[md.level].arr)
+                            P.settings.lockDelay=levels[md.level].lock
+                            P.settings.spawnDelay=levels[md.level].spawn
+                            P.settings.clearDelay=levels[md.level].clear
+                            P.settings.maxFreshTime=levels[md.level].fresh
 
-                        md.bumpTimer0=levels[md.level].bumpInterval
-                        if md.bumpTimer0 then
-                            md.bumpTimer=md.bumpTimer0
+                            md.bumpTimer0=levels[md.level].bumpInterval
+                            if md.bumpTimer0 then
+                                md.bumpTimer=md.bumpTimer0
+                            end
+                        else
+                            P:finish('AC')
+                            return
                         end
-                    else
-                        P:finish('AC')
                     end
                 end
             end,
