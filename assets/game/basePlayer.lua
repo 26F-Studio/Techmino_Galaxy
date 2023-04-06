@@ -149,6 +149,12 @@ function P:switchAction(act,state)
         end
     end
 end
+function P:setAction(act,data)
+    assert(type(act)=='string',"Action name must be string")
+    assert(self._actions[act],"Invalid action name '"..act.."'")
+    self:release(act)
+    self.actions[act]=self:_getActionObj(data)
+end
 function P:triggerEvent(name,...)
     -- if name~='always' and name:sub(1,4)~='draw' then print(name) end
     local L=self.event[name]
