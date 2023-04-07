@@ -208,9 +208,15 @@ return {
         survivor_cheese=       {"Sống sót - Phô mai","Cố sống sót dưới những cuộc tấn công của phô mai"},    -- Based on a joke in Vietnam Tetris Community
         survivor_b2b=          {"Sống sót - B2B","Cố sống sót dưới những cuộc tấn công ác liệt của Back-to-back"},
         survivor_spike=        {"Sống sót - Spike","Cố sống sót dưới các cuộc tấn công kinh hoàng"},
-        backfire_100=          {"Xóa 100 nhận 100","Xóa 100 hàng nhưng bạn sẽ bị bón hành bởi rác do chính bạn tạo ra!"},
-        backfire_amplify_100=  {"Xóa 100 nhận 2X","Xóa 100 hàng, cũng bị ăn rác do chính mình tạo ra, lượng rác trả lại hơi bị nhiều đấy nhé!"},
-        backfire_cheese_100=   {"Xóa 100 nhận phô mai","Xóa 100 hàng, cũng bị ăn rác do chính mình tạo ra, nhưng lần này bị bón hành kiểu phô mai"},
+
+        -- Will revert back to "Xóa 100 nhận 100" (alt: "Xóa 100 nhận rác")
+        -- when all modes have icons
+        backfire_100=          {"Ăn đòn phản","Xóa 100 hàng nhưng bạn sẽ bị bón hành bởi rác do chính bạn tạo ra!"},
+        -- This one is "Xóa 100 nhận 2X"
+        backfire_amplify_100=  {"Ăn đòn phản đôi","Xóa 100 hàng, cũng bị ăn rác do chính mình tạo ra, lượng rác trả lại hơi bị nhiều đấy nhé!"},
+        -- This one is "Xóa 100 nhận Phô mai"
+        backfire_cheese_100=   {"Ăn đòn phản - Phô mai","Xóa 100 hàng, cũng bị ăn rác do chính mình tạo ra, nhưng lần này bị bón hành kiểu phô mai"},
+        
         sprint_40=             {"40 hàng","Một chế độ mà bạn luôn thấy\nXóa 40 hàng là bạn đã hoàn thành"},
         sprint_10=             {"10 hàng","Chỉ cần 10 hàng mà thôi!"},
         sprint_obstacle_20=    {"20 hàng - VCNV","Bây giờ là vòng thi \"Vượt chướng ngại vật\"! \nCác thí sinh của chúng ta ngày hôm nay sẽ xóa một vài hàng với \"chướng ngại vật\" đã được chuẩn bị sẵn"},  --if you know "Digital LG Quiz Vietnam" (Road to Olympia mountain) or "Đường lên đỉnh Olympia"
