@@ -13,38 +13,43 @@ local _bgmPlaying,_bgmMode
 ---| 'base'
 ---| ''
 ---| nil
----@param arg string
+---@param args string
 ---| nil
----@param noProgress boolean
----| nil
-function playBgm(name,mode,arg,noProgress)
+function playBgm(name,mode,args)
+    if not args then args='' end
+
     if bgmList[name][1] then
-        if not noProgress then
+        if not STRING.sArg(args,'-noProgress') then
             PROGRESS.setBgmUnlocked(name,1)
         end
-        BGM.play(bgmList[name],arg)
+        BGM.play(bgmList[name],args)
     else
         if mode=='simp' and PROGRESS.getBgmUnlocked(name)==2 then
             mode='base'
         else
-            if not noProgress then
+            if not STRING.sArg(args,'-noProgress') then
                 PROGRESS.setBgmUnlocked(name,mode=='simp' and 1 or 2)
             end
         end
         if mode=='simp' then
-            BGM.play(bgmList[name].base,arg)
+            BGM.play(bgmList[name].base,args)
         elseif mode=='base' then
             if not TABLE.compare(BGM.getPlaying(),bgmList[name].full) then
-                BGM.play(bgmList[name].full,arg)
+                BGM.play(bgmList[name].full,args)
                 BGM.set(bgmList[name].add,'volume',0,0)
             else
                 BGM.set(bgmList[name].add,'volume',0,1)
             end
         else--if mode=='full' then
-            BGM.play(bgmList[name].full,arg)
+            BGM.play(bgmList[name].full,args)
         end
     end
     _bgmPlaying,_bgmMode=name,mode
+    if not STRING.sArg(args,'-keepEffects') then
+        BGM.set('all','highgain',1,.1)
+        BGM.set('all','lowgain',1,.1)
+        BGM.set('all','pitch',1,.1)
+    end
 end
 function getBgm()
     return _bgmPlaying,_bgmMode

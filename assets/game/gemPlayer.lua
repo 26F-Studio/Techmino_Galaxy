@@ -94,44 +94,43 @@ GP.scriptCmd={
 }
 --------------------------------------------------------------
 -- Actions
-local actions={}
-
-function actions.swapLeft(P)
+GP._actions={}
+function GP._actions.swapLeft(P)
     if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
         P:swap('action',P.swapX,P.swapY,-1,0)
     end
 end
-function actions.swapRight(P)
+function GP._actions.swapRight(P)
     if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
         P:swap('action',P.swapX,P.swapY,1,0)
     end
 end
-function actions.swapUp(P)
+function GP._actions.swapUp(P)
     if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
         P:swap('action',P.swapX,P.swapY,0,1)
     end
 end
-function actions.swapDown(P)
+function GP._actions.swapDown(P)
     if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
         P:swap('action',P.swapX,P.swapY,0,-1)
     end
 end
-function actions.twistCW(P)
+function GP._actions.twistCW(P)
     if (P.settings.multiMove or #P.movingGroups==0) and P.settings.twistR then
         P:twist('action',P.twistX,P.twistY,'R')
     end
 end
-function actions.twistCCW(P)
+function GP._actions.twistCCW(P)
     if (P.settings.multiMove or #P.movingGroups==0) and P.settings.twistL then
         P:twist('action',P.twistX,P.twistY,'L')
     end
 end
-function actions.twist180(P)
+function GP._actions.twist180(P)
     if (P.settings.multiMove or #P.movingGroups==0) and P.settings.twistF then
         P:twist('action',P.twistX,P.twistY,'F')
     end
 end
-function actions.moveLeft(P)
+function GP._actions.moveLeft(P)
     P.mouseX,P.mouseY=false,false
     P.moveDirH=-1
     P.moveChargeH=0
@@ -149,7 +148,7 @@ function actions.moveLeft(P)
         P:playSound('move_failed')
     end
 end
-function actions.moveRight(P)
+function GP._actions.moveRight(P)
     P.mouseX,P.mouseY=false,false
     P.moveDirH=1
     P.moveChargeH=0
@@ -167,7 +166,7 @@ function actions.moveRight(P)
         P:playSound('move_failed')
     end
 end
-function actions.moveUp(P)
+function GP._actions.moveUp(P)
     P.mouseX,P.mouseY=false,false
     P.moveDirV=1
     P.moveChargeV=0
@@ -185,7 +184,7 @@ function actions.moveUp(P)
         P:playSound('move_failed')
     end
 end
-function actions.moveDown(P)
+function GP._actions.moveDown(P)
     P.mouseX,P.mouseY=false,false
     P.moveDirV=-1
     P.moveChargeV=0
@@ -204,38 +203,14 @@ function actions.moveDown(P)
     end
 end
 
-actions.func1=NULL
-actions.func2=NULL
-actions.func3=NULL
-actions.func4=NULL
-actions.func5=NULL
-actions.func6=NULL
+GP._actions.func1=NULL
+GP._actions.func2=NULL
+GP._actions.func3=NULL
+GP._actions.func4=NULL
+GP._actions.func5=NULL
+GP._actions.func6=NULL
 
-
-local function _getActionObj(a)
-    if type(a)=='string' then
-        return actions[a]
-    elseif type(a)=='function' then
-        return setmetatable({
-            press=a,
-            release=NULL,
-        },{__call=function(self,P)
-            self.press(P)
-        end})
-    elseif type(a)=='table' then
-        assert(type(a.press)=='function' and type(a.release)=='function',"WTF why action do not contain func press() & func release()")
-        return setmetatable({
-            press=a.press,
-            release=a.release,
-        },{__call=function(self,P)
-            self.press(P)
-            self.release(P)
-        end})
-    else
-        error("Invalid action: should be function or table contain 'press' and 'release' fields")
-    end
-end
-for k,v in next,actions do actions[k]=_getActionObj(v) end
+for k,v in next,GP._actions do GP._actions[k]=GP:_getActionObj(v) end
 --------------------------------------------------------------
 -- Effects
 --------------------------------------------------------------
@@ -1116,7 +1091,7 @@ function GP:initialize()
 
     -- Generate available actions
     do
-        self.actions=TABLE.copy(actions,0)
+        self.actions=TABLE.copy(GP._actions,0)
         self.keyState={}
         for k in next,self.actions do
             self.keyState[k]=false

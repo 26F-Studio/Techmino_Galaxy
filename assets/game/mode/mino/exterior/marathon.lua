@@ -66,7 +66,7 @@ return {
             afterClear=function(P)
                 local md=P.modeData
                 md.line=math.min(md.line+P.clearHistory[#P.clearHistory].line,200)
-                if md.line>=md.target then
+                while md.line>=md.target do
                     if md.target<200 then
                         local autoLevel=md.level
                         local averageDropTime=(P.gameTime-md.levelStartTime-P.settings.clearDelay*3)/md.levelPieces-P.settings.spawnDelay
@@ -95,6 +95,7 @@ return {
                         P:playSound('reach')
                     else
                         P:finish('AC')
+                        return
                     end
                 end
             end,

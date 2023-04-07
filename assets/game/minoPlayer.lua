@@ -126,8 +126,8 @@ MP.scriptCmd={
 }
 --------------------------------------------------------------
 -- Actions
-local actions={}
-actions.moveLeft={
+MP._actions={}
+MP._actions.moveLeft={
     press=function(P)
         P.moveDir=-1
         P.moveCharge=0
@@ -150,7 +150,7 @@ actions.moveLeft={
         if P.deathTimer then P:moveRight() end
     end
 }
-actions.moveRight={
+MP._actions.moveRight={
     press=function(P)
         P.moveDir=1
         P.moveCharge=0
@@ -173,7 +173,7 @@ actions.moveRight={
         if P.deathTimer then P:moveLeft() end
     end
 }
-actions.rotateCW={
+MP._actions.rotateCW={
     press=function(P)
         if P.hand then
             P:rotate('R')
@@ -185,7 +185,7 @@ actions.rotateCW={
         if P.keyBuffer.rotate=='R' then P.keyBuffer.rotate=false end
     end
 }
-actions.rotateCCW={
+MP._actions.rotateCCW={
     press=function(P)
         if P.hand then
             P:rotate('L')
@@ -197,7 +197,7 @@ actions.rotateCCW={
         if P.keyBuffer.rotate=='L' then P.keyBuffer.rotate=false end
     end
 }
-actions.rotate180={
+MP._actions.rotate180={
     press=function(P)
         if P.hand then
             P:rotate('F')
@@ -209,7 +209,7 @@ actions.rotate180={
         if P.keyBuffer.rotate=='F' then P.keyBuffer.rotate=false end
     end
 }
-actions.softDrop={
+MP._actions.softDrop={
     press=function(P)
         P.downCharge=0
         if P.hand and (P.handY>P.ghostY or P.deathTimer) and P:moveDown() then
@@ -220,7 +220,7 @@ actions.softDrop={
         if P.deathTimer then P:moveUp() end
     end
 }
-actions.hardDrop={
+MP._actions.hardDrop={
     press=function(P)
         if P.hdLockMTimer~=0 or P.hdLockATimer~=0 then
             P:playSound('rotate_failed')
@@ -239,7 +239,7 @@ actions.hardDrop={
         P.keyBuffer.hardDrop=false
     end
 }
-actions.holdPiece={
+MP._actions.holdPiece={
     press=function(P)
         if P.hand then
             P:hold()
@@ -252,37 +252,14 @@ actions.holdPiece={
     end
 }
 
-actions.func1=NULL
-actions.func2=NULL
-actions.func3=NULL
-actions.func4=NULL
-actions.func5=NULL
-actions.func6=NULL
+MP._actions.func1=NULL
+MP._actions.func2=NULL
+MP._actions.func3=NULL
+MP._actions.func4=NULL
+MP._actions.func5=NULL
+MP._actions.func6=NULL
 
-local function _getActionObj(a)
-    if type(a)=='string' then
-        return actions[a]
-    elseif type(a)=='function' then
-        return setmetatable({
-            press=a,
-            release=NULL,
-        },{__call=function(self,P)
-            self.press(P)
-        end})
-    elseif type(a)=='table' then
-        assert(type(a.press)=='function' and type(a.release)=='function',"WTF why action do not contain func press() & func release()")
-        return setmetatable({
-            press=a.press,
-            release=a.release,
-        },{__call=function(self,P)
-            self.press(P)
-            self.release(P)
-        end})
-    else
-        error("Invalid action: should be function or table contain 'press' and 'release' fields")
-    end
-end
-for k,v in next,actions do actions[k]=_getActionObj(v) end
+for k,v in next,MP._actions do MP._actions[k]=MP:_getActionObj(v) end
 --------------------------------------------------------------
 -- Effects
 function MP:createMoveParticle(x1,y1,x2,y2)
@@ -341,6 +318,7 @@ function MP:moveHand(action,a,b,c,d)
 
     if action=='moveX' then
         if
+            not self.deathTimer and
             self.settings.tuck and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY+1)
@@ -349,50 +327,52 @@ function MP:moveHand(action,a,b,c,d)
             self:playSound('tuck')
         end
     elseif action=='rotate' then
-        if
-            self.settings.spin_immobile and
-            self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
-            self:ifoverlap(self.hand.matrix,self.handX,self.handY+1) and
-            self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) and
-            self:ifoverlap(self.hand.matrix,self.handX+1,self.handY)
-        then
-            movement.immobile=true
-            self:shakeBoard(c=='L' and '-ccw' or c=='R' and '-cw' or '-180')
-            self:playSound('rotate_locked')
-        end
-        if self.settings.spin_corners then
-            local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
-            local state=minoData[self.hand.direction]
-            local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
-            if centerPos then
-                local cx=self.handX+centerPos[1]-.5
-                if floor(cx)==cx then
-                    local cy=self.handY+centerPos[2]-.5
-                    if floor(cy)==cy then
-                        local corners=0
-                        if self:isSolidCell(cx-1,cy-1) then corners=corners+1 end
-                        if self:isSolidCell(cx+1,cy-1) then corners=corners+1 end
-                        if self:isSolidCell(cx-1,cy+1) then corners=corners+1 end
-                        if self:isSolidCell(cx+1,cy+1) then corners=corners+1 end
-                        if corners>=self.settings.spin_corners then
-                            movement.corners=true
-                            self:playSound('rotate_corners')
+        if not self.deathTimer then
+            if
+                self.settings.spin_immobile and
+                self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
+                self:ifoverlap(self.hand.matrix,self.handX,self.handY+1) and
+                self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) and
+                self:ifoverlap(self.hand.matrix,self.handX+1,self.handY)
+            then
+                movement.immobile=true
+                self:shakeBoard(c=='L' and '-ccw' or c=='R' and '-cw' or '-180')
+                self:playSound('rotate_locked')
+            end
+            if self.settings.spin_corners then
+                local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
+                local state=minoData[self.hand.direction]
+                local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
+                if centerPos then
+                    local cx=self.handX+centerPos[1]-.5
+                    if floor(cx)==cx then
+                        local cy=self.handY+centerPos[2]-.5
+                        if floor(cy)==cy then
+                            local corners=0
+                            if self.field:getCell(cx-1,cy-1) then corners=corners+1 end
+                            if self.field:getCell(cx+1,cy-1) then corners=corners+1 end
+                            if self.field:getCell(cx-1,cy+1) then corners=corners+1 end
+                            if self.field:getCell(cx+1,cy+1) then corners=corners+1 end
+                            if corners>=self.settings.spin_corners then
+                                movement.corners=true
+                                self:playSound('rotate_corners')
+                            end
                         end
                     end
                 end
             end
+            if self.handY==self.ghostY then
+                self:playSound('touch')
+            end
         end
         self:playSound(d and 'initrotate' or 'rotate')
-        if self.handY==self.ghostY then
-            self:playSound('touch')
-        end
     end
     self.lastMovement=movement
 
     if self.deathTimer then
         local t=self.deathTimer
         self.deathTimer=false-- Cancel deathTimer temporarily, prevent ifoverlap method treat anything as air
-        if self:ifoverlap(self.hand.matrix,self.handX,self.handY) then
+        if self:isSuffocate() then
             self.deathTimer=t
         else
             self:playSound('desuffocate')
@@ -410,7 +390,7 @@ end
 function MP:resetPos()-- Move hand piece to the normal spawn position
     self:moveHand('reset',floor(self.settings.fieldW/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1+ceil(self.fieldDived/40))
     self.deathTimer=false
-    while self:ifoverlap(self.hand.matrix,self.handX,self.handY) and self.handY<self.settings.spawnH+self.settings.extraSpawnH+1 do self.handY=self.handY+1 end
+    while self:isSuffocate() and self.handY<self.settings.spawnH+self.settings.extraSpawnH+1 do self.handY=self.handY+1 end
     self.minY=self.handY
     self.ghostY=self.handY
     self:resetPosCheck()
@@ -422,10 +402,10 @@ function MP:resetPosCheck()
     if self.deathTimer then
         local bufferedDeathTimer=self.deathTimer
         self.deathTimer=false-- Cancel deathTimer temporarily, or we cannot apply IMS when hold in suffcating
-        suffocated=self:ifoverlap(self.hand.matrix,self.handX,self.handY)
+        suffocated=self:isSuffocate()
         self.deathTimer=bufferedDeathTimer
     else
-        suffocated=self:ifoverlap(self.hand.matrix,self.handX,self.handY)
+        suffocated=self:isSuffocate()
     end
 
     if suffocated then
@@ -451,8 +431,14 @@ function MP:resetPosCheck()
                 self.keyBuffer.rotate=false
             end
         else
-            self:lock()
-            self:finish('WA')
+
+            self:triggerEvent('whenSuffocate')
+            self:freshGhost()
+
+            if self:isSuffocate() then
+                self:lock()
+                self:finish('WA')
+            end
             return
         end
     else
@@ -736,18 +722,20 @@ function MP:ifoverlap(CB,cx,cy)
     -- Must in air
     if cy>F:getHeight() then return false end
 
-    -- Check field
-    for y=1,#CB do for x=1,#CB[1] do
-        if CB[y][x] and self:isSolidCell(cx+x-1,cy+y-1) then
-            return true
-        end
-    end end
+    if not self.deathTimer then
+        -- Check field
+        for y=1,#CB do for x=1,#CB[1] do
+            if CB[y][x] and self.field:getCell(cx+x-1,cy+y-1) then
+                return true
+            end
+        end end
+    end
 
     -- No collision
     return false
 end
-function MP:isSolidCell(x,y)
-    return not self.deathTimer and self.field:getCell(x,y) and true or false
+function MP:isSuffocate()
+    return self.hand and self:ifoverlap(self.hand.matrix,self.handX,self.handY)
 end
 function MP:parseAtkInfo(g)
     -- TODO: 'speed' not applied
@@ -949,7 +937,7 @@ function MP:hold_float()
         h.handY,self.handY=self.handY,h.handY
         h.lastMovement,self.lastMovement=self.lastMovement,h.lastMovement
         h.minY,self.minY=self.minY,h.minY
-        while self:ifoverlap(self.hand.matrix,self.handX,self.handY) and self.handY<self.settings.spawnH+self.settings.extraSpawnH+1 do self.handY=self.handY+1 end
+        while self:isSuffocate() and self.handY<self.settings.spawnH+self.settings.extraSpawnH+1 do self.handY=self.handY+1 end
         self:resetPosCheck()
     else
         self.floatHolds[swapN]={
@@ -963,6 +951,26 @@ function MP:hold_float()
         self.handX,self.handY=false,false
         self:popNext(true)
     end
+end
+function MP:clearLines(lines)
+    for i=1,#lines do
+        self.field:removeLine(lines[i])
+    end
+    ins(self.clearHistory,{
+        combo=self.combo,
+        line=#lines,
+        lines=lines,
+        time=self.time,
+    })
+    self.clearTimer=self.settings.clearDelay
+    self:shakeBoard('-clear',#lines)
+    self:playSound('clear',#lines)
+    if self.settings.particles then
+        self:createFrenzyParticle(#lines*26)
+    end
+
+    self:triggerEvent('afterClear',self.lastMovement)
+    if self.finished then return end
 end
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if not self.hand or self.deathTimer then return end
@@ -1000,28 +1008,14 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if self.finished then return end
 
     -- Clear
+    local fullLines
     if self.settings.clearFullLine then
-        local lineClear=self:checkClear()
-        if lineClear then
+        fullLines=self:getFullLines()
+        if fullLines then
             self.combo=self.combo+1
-            self.lastMovement.clear=lineClear
+            self.lastMovement.clear=fullLines
             self.lastMovement.combo=self.combo
-            self.clearTimer=self.settings.clearDelay
-            local h={
-                combo=self.combo,
-                line=#lineClear,
-                lines=lineClear,
-                time=self.time,
-            }
-            ins(self.clearHistory,h)
-            self:shakeBoard('-clear',#lineClear)
-            self:playSound('clear',#lineClear)
-            if self.settings.particles then
-                self:createFrenzyParticle(#lineClear*26)
-            end
-
-            self:triggerEvent('afterClear',self.lastMovement)
-            if self.finished then return end
+            self:clearLines(fullLines)
         else
             self.combo=0
         end
@@ -1067,7 +1061,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     end
 
     -- Lockout check
-    if self.handY>self.settings.lockoutH and (self.settings.strictLockout or not lineClear)  then
+    if self.handY>self.settings.lockoutH and (self.settings.strictLockout or not fullLines)  then
         self:finish('CE')
         return
     end
@@ -1080,7 +1074,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if self.finished then return end
 
     -- Update & Release garbage
-    if not (self.settings.clearStuck and lineClear) then
+    if not (self.settings.clearStuck and fullLines) then
         local iBuffer=1
         while true do
             local g=self.garbageBuffer[iBuffer]
@@ -1178,19 +1172,6 @@ end
     {4,6,6,3,0,0,2,2,5,5},
     {4,4,3,3,0,0,0,2,2,5},
 }]]
-function MP:switchAction(act,state)
-    assert(actions[act],"Invalid action name '"..act.."'")
-    if state==nil or state==not self.actions[act] then
-        if self.actions[act] then
-            self:release(act)
-            self.keyState[act]=nil
-            self.actions[act]=nil
-        else
-            self.actions[act]=_getActionObj(act)
-            self.keyState[act]=false
-        end
-    end
-end
 function MP:setField(arg)
     local F=self.field
     local w=self.settings.fieldW
@@ -1256,12 +1237,12 @@ function MP:setField(arg)
     if not sudden then self:diveDown(#arg) end
 
     -- Reset current block
-    if self.hand and (resetHand==true or self:ifoverlap(self.hand.matrix,self.handX,self.handY)) then
+    if self.hand and (resetHand==true or self:isSuffocate()) then
         self:resetPos()
     end
     self:freshGhost()
 end
-function MP:checkLineFull(y)
+function MP:isFullLine(y)
     local F=self.field
     for x=1,self.settings.fieldW do
         if not F:getCell(x,y) then
@@ -1270,17 +1251,15 @@ function MP:checkLineFull(y)
     end
     return true
 end
-function MP:checkClear()
-    local lineClear={}
-    local F=self.field
-    for y=F:getHeight(),1,-1 do
-        if self:checkLineFull(y) then
-            F:removeLine(y)
-            ins(lineClear,y)
+function MP:getFullLines()
+    local fullH={}
+    for y=self.field:getHeight(),1,-1 do
+        if self:isFullLine(y) then
+            ins(fullH,y)
         end
     end
-    if #lineClear>0 then
-        return lineClear
+    if #fullH>0 then
+        return fullH
     end
 end
 function MP:changeFieldWidth(w,origPos)
@@ -1473,8 +1452,15 @@ function MP:updateFrame()
         self.deathTimer=self.deathTimer-1
         if self.deathTimer<=0 then
             self.deathTimer=false
-            self:lock()
-            self:finish('WA')
+
+            self:triggerEvent('whenSuffocate')
+            self:freshGhost()
+
+            if self:isSuffocate() then
+                self:lock()
+                self:finish('WA')
+            end
+            return
         end
     end
 
@@ -1550,7 +1536,7 @@ function MP:render()
             gc.push('transform')
                 local ptr,lines,fallingRate
                 if self.clearTimer>0 then
-                    lines=self.lastMovement.clear
+                    lines=self.clearHistory[#self.clearHistory].lines
                     fallingRate=self.clearTimer/self.settings.clearDelay
                     ptr=#lines
                 end
@@ -1725,7 +1711,7 @@ function MP:checkScriptSyntax(cmd,arg,errMsg)
     if cmd=='setField' then
         -- TODO
     elseif cmd=='switchAction' then
-        assert(actions[arg],"Invalid action name '"..arg.."'")
+        assert(self._actions[arg],"Invalid action name '"..arg.."'")
     elseif cmd=='clearHold' then
         assert(arg==nil,errMsg.."No arg needed")
     elseif cmd=='clearNext' then
@@ -1905,6 +1891,7 @@ function MP.new()
         -- Start & End
         playerInit={},
         gameStart={},
+        whenSuffocate={},
         gameOver={},
 
         -- Drop
@@ -2023,7 +2010,7 @@ function MP:initialize()
 
     -- Generate available actions
     do
-        self.actions=TABLE.copy(actions,0)
+        self.actions=TABLE.copy(self._actions,0)
         self.keyState={}
         for k in next,self.actions do
             self.keyState[k]=false

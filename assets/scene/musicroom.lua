@@ -55,7 +55,7 @@ local musicListBox do
             else
                 fullband=nil
             end
-            playBgm(selected,fullband==nil and 'simp' or fullband and 'full' or 'base','',noProgress)
+            playBgm(selected,fullband==nil and 'simp' or fullband and 'full' or 'base',noProgress and '-noProgress' or '')
         end
     end
     musicListBox=WIDGET.new(musicListBox)
@@ -115,7 +115,7 @@ function scene.keyDown(key,isRep)
             if BGM.isPlaying() then
                 BGM.stop(.26)
             else
-                playBgm(selected,fullband and 'full' or 'base','',noProgress)
+                playBgm(selected,fullband and 'full' or 'base',noProgress and '-noProgress' or '')
             end
             progressBar:reset()
         elseif key=='tab' then

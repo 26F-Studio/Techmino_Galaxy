@@ -38,7 +38,7 @@ function P:shakeBoard(args,v)
 end
 function P:playSound(event,...)
     if not self.sound then return end
-    if self.time-self.soundTimeHistory[event]>=15 then
+    if self.time-self.soundTimeHistory[event]>=26 then
         self.soundTimeHistory[event]=self.time
         if self.soundEvent[event] then
             self.soundEvent[event](...)
@@ -113,6 +113,48 @@ end
 function P:random(a,b)
     return self.RND:random(a,b)
 end
+function P:_getActionObj(a)
+    if type(a)=='string' then
+        return self._actions[a]
+    elseif type(a)=='function' then
+        return setmetatable({
+            press=a,
+            release=NULL,
+        },{__call=function(self,P)
+            self.press(P)
+        end})
+    elseif type(a)=='table' then
+        assert(type(a.press)=='function' and type(a.release)=='function',"WTF why action do not contain func press() & func release()")
+        return setmetatable({
+            press=a.press,
+            release=a.release,
+        },{__call=function(self,P)
+            self.press(P)
+            self.release(P)
+        end})
+    else
+        error("Invalid action: should be function or table contain 'press' and 'release' fields")
+    end
+end
+function P:switchAction(act,state)
+    assert(self.actions[act],"Invalid action name '"..act.."'")
+    if state==nil or state==not self.actions[act] then
+        if self.actions[act] then
+            self:release(act)
+            self.keyState[act]=nil
+            self.actions[act]=nil
+        else
+            self.actions[act]=self:_getActionObj(act)
+            self.keyState[act]=false
+        end
+    end
+end
+function P:setAction(act,data)
+    assert(type(act)=='string',"Action name must be string")
+    assert(self._actions[act],"Invalid action name '"..act.."'")
+    self:release(act)
+    self.actions[act]=self:_getActionObj(data)
+end
 function P:triggerEvent(name,...)
     -- if name~='always' and name:sub(1,4)~='draw' then print(name) end
     local L=self.event[name]
@@ -137,7 +179,6 @@ function P:finish(reason)
 
     self:triggerEvent('gameOver',reason)
     GAME.checkFinish()
-
 
     -- TODO: Just for temporary use
     if self.isMain then
@@ -328,6 +369,7 @@ function P:update(dt)
                 self.timing=true
 
                 self:triggerEvent('gameStart')
+
             end
         else
             self.time=self.time+1
