@@ -54,11 +54,11 @@ local defaultSoundFunc={
     b2b_break=      function() SFX.play('b2b_break') end,
     clear=function(lines)
         SFX.play(
-            lines==1 and 'clear_1' or
-            lines==2 and 'clear_2' or
-            lines==3 and 'clear_3' or
-            lines==4 and 'clear_4' or
-            'clear_5'
+            lines<=6 and 'clear_'..lines or
+            lines<=18 and 'clear_'..(lines-lines%2) or
+            lines<=22 and 'clear_'..lines or
+            lines<=26 and 'clear_'..(lines-lines%2) or
+            'clear_26'
         )
         if lines>=3 then
             BGM.set('all','highgain',.26+1/lines,0)
