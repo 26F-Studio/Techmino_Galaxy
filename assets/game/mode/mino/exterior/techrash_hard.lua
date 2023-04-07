@@ -39,8 +39,8 @@ return {
                     end
                 end
             end,
-            afterClear=function(P,movement)
-                if P.hand.name=='I' and #movement.clear==4 then
+            afterClear=function(P,clear)
+                if P.hand.name=='I' and clear.line==4 then
                     local list=P.modeData.techrashInfo
                     local x=P.handX
                     if list[x].charge>=maxCharge then

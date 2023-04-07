@@ -103,8 +103,8 @@ return {
             afterLock=function(P)
                 P.modeData._curHisLen=#P.clearHistory
             end,
-            afterClear=function(P,movement)
-                P.modeData.levelRemain=P.modeData.levelRemain-#movement.clear
+            afterClear=function(P,clear)
+                P.modeData.levelRemain=P.modeData.levelRemain-clear.line
             end,
             beforeDiscard=function(P)
                 if #P.clearHistory>P.modeData._curHisLen then

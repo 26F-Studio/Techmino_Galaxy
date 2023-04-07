@@ -953,23 +953,25 @@ function MP:hold_float()
     end
 end
 function MP:clearLines(lines)
-    for i=1,#lines do
+    local n=#lines
+    for i=1,n do
         self.field:removeLine(lines[i])
     end
-    ins(self.clearHistory,{
+    local his={
         combo=self.combo,
-        line=#lines,
+        line=n,
         lines=lines,
         time=self.time,
-    })
+    }
+    ins(self.clearHistory,his)
     self.clearTimer=self.settings.clearDelay
-    self:shakeBoard('-clear',#lines)
-    self:playSound('clear',#lines)
+    self:shakeBoard('-clear',n)
+    self:playSound('clear',n)
     if self.settings.particles then
-        self:createFrenzyParticle(#lines*26)
+        self:createFrenzyParticle(n*26)
     end
 
-    self:triggerEvent('afterClear',self.lastMovement)
+    self:triggerEvent('afterClear',his)
     if self.finished then return end
 end
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things

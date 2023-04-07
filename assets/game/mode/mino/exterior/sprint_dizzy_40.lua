@@ -30,8 +30,8 @@ return {
             afterPress=    flipFunc,
             beforeRelease= flipFunc,
             afterRelease=  flipFunc,
-            afterClear=function(P,movement)
-                P.modeData.line=math.min(P.modeData.line+#movement.clear,lineTarget)
+            afterClear=function(P,clear)
+                P.modeData.line=math.min(P.modeData.line+clear.line,lineTarget)
                 if P.modeData.line>=lineTarget then
                     P:finish('AC')
                 end

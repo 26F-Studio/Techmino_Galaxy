@@ -39,9 +39,9 @@ return {
                     md.windCounter=md.windCounter-MATH.sign(md.windCounter)*62000
                 end
             end,
-            afterClear=function(P,movement)
+            afterClear=function(P,clear)
                 local md=P.modeData
-                md.line=math.min(md.line+#movement.clear,lineTarget)
+                md.line=math.min(md.line+clear.line,lineTarget)
                 if #md.invertTimes>0 and md.line>md.invertTimes[1] then
                     while #md.invertTimes>0 and md.line>md.invertTimes[1] do
                         table.remove(md.invertTimes,1)

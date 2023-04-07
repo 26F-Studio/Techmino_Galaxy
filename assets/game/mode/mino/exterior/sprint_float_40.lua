@@ -13,12 +13,12 @@ return {
             playerInit=function(P)
                 P.modeData.line=0
             end,
-            afterClear=function(P,movement)
-                for i=#movement.clear,1,-1 do
-                    table.insert(P.field._matrix,movement.clear[i],TABLE.new(false,P.settings.fieldW))
+            afterClear=function(P,clear)
+                for i=clear.line,1,-1 do
+                    table.insert(P.field._matrix,clear.lines[i],TABLE.new(false,P.settings.fieldW))
                 end
                 P.field:fresh()
-                P.modeData.line=math.min(P.modeData.line+#movement.clear,lineTarget)
+                P.modeData.line=math.min(P.modeData.line+clear.line,lineTarget)
                 if P.modeData.line>=lineTarget then
                     P:finish('AC')
                 end

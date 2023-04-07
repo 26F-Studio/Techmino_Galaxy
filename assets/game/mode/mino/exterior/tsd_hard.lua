@@ -1,4 +1,3 @@
-local gc=love.graphics
 local tsdCharge=3
 local maxCharge=5
 
@@ -35,8 +34,9 @@ return {
                     end
                 end
             end,
-            afterClear=function(P,movement)
-                if P.hand.name=='T' and #movement.clear==2 and movement.action=='rotate' and (movement.corners or movement.immobile) then
+            afterClear=function(P,clear)
+                local movement=P.lastMovement
+                if P.hand.name=='T' and clear.line==2 and movement.action=='rotate' and (movement.corners or movement.immobile) then
                     local list=P.modeData.tsdInfo
                     local settings=P.settings
                     local RS=minoRotSys[settings.rotSys]

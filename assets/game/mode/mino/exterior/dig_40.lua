@@ -16,9 +16,9 @@ return {
                 P.modeData.lineCleared=0
                 P.modeData.lineExist=lineStay
             end,
-            afterClear=function(P,movement)
+            afterClear=function(P,clear)
                 local md=P.modeData
-                local cleared=md.lineExist+1-movement.clear[#movement.clear]
+                local cleared=md.lineExist+1-clear.lines[clear.line]
                 if cleared>0 then
                     md.lineCleared=md.lineCleared+cleared
                     md.lineExist=md.lineExist-cleared
