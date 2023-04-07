@@ -245,8 +245,9 @@ end
 function S.drawInfoPanel(x,y,w,h)
     gc_setColor(0,0,0,.26)
     gc_rectangle('fill',x,y,w,h)
-    gc_setColor(COLOR.L)
+    gc_setColor(COLOR.lD)
     gc_rectangle('line',x,y,w,h)
+    gc_setColor(COLOR.L)
 end
 
 function S.drawStartingCounter(readyDelay)
