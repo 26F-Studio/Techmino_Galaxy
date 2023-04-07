@@ -58,8 +58,8 @@ return {
     keyset_mino_rotateCW=   "Twist (Xoay) Phải",
     keyset_mino_rotateCCW=  "Twist (Xoay) Trái",
     keyset_mino_rotate180=  "Twist (Xoay) 180",
-    keyset_mino_softDrop=   "Thả Nhẹ/Xuống từ từ",
-    keyset_mino_hardDrop=   "Thả Mạnh/Đặt gạch luôn",
+    keyset_mino_softDrop=   "Thả Nhẹ/Xuống từ từ",      -- I don't know which one should I use
+    keyset_mino_hardDrop=   "Thả Mạnh/Đặt gạch ngay",   -- so does to it
     keyset_mino_holdPiece=  "Giữ gạch",
 
     keyset_puyo_moveLeft=   "Sang Trái",
@@ -173,7 +173,7 @@ return {
     main_out_multi="Chơi qua mạng",
 
     title_musicroom="Phòng nhạc",
-    musicroom_fullband="Chơi tất cả nhạc cụ",
+    musicroom_fullband="Chơi tất cả nhạc cụ", -- Alt: "Mở full beat", "Nghe full beat"
     musicroom_autoplay="Tự động đổi bài",
 
     about_title="Giới thiệu",
@@ -238,31 +238,32 @@ return {
     },
 
     -- Level
-    tutorial_basic="[Chưa hoàn thành]", -- [Unfinished] | Waiting for actual game
+    tutorial_basic="Những thứ cơ bản", 
     tutorial_sequence="Next & Hold",
     tutorial_stackBasic="Xếp gạch sao cho đúng?",
     tutorial_twoRotatingKey="Xoay cả 2 hướng",
-    tutorial_piece="Hình dáng của gạch",
+    -- tutorial_piece="Hình dạng của\ncác viên gạch",
+    tutorial_piece = "[Chưa hoàn thành]", -- [Unfinished] | Waiting for actual game
     tutorial_rotating="Tập xoay gạch", 
 
     tutorial_pass="HOÀN THÀNH!", -- Completed (Pass)
-    tutorial_notpass="Tạch rồi…",
+    tutorial_notpass="Tạch rồi…", -- Fun fact: "Tạch" is the keyboard sound, don't make any keyboard sounds to who are preapring the test (or WYSI)
 
     tutorial_basic_1="Chào mừng bạn tới Techmino!",
     tutorial_basic_2="1. Những thứ cơ bản",
     tutorial_basic_3="Hãy dùng hai phím \"Sang Trái\" và \"Sang Phải\" để điều khiển gạch đang rơi.",
-    tutorial_basic_4="sau đó dùng phím \"Thả Mạnh\" để đặt gạch lên trên mặt bảng.",
+    tutorial_basic_4="sau đó dùng phím \"Thả Mạnh/Đặt gạch ngay\" để đặt gạch lên trên mặt bảng.",
     tutorial_basic_5="Bạn cũng có thể xoay gạch bằng cách nhấn các nút xoay.",
 
     tutorial_sequence_1="2. Next & Hold",
-    tutorial_sequence_2="Trời ạ, cái gạch này không lọt vùa với cái hố rồi…",
+    tutorial_sequence_2="Trời ạ, cái gạch này không lọt khít với cái hố rồi…",
     tutorial_sequence_3="Bây giờ bạn có thể nhìn thấy những gạch nào chuẩn bị rơi theo lần lượt. ",
     tutorial_sequence_4="Hãy dùng phím \"Giữ gạch\" để điều chỉnh thứ tự của các gạch.",
 
     -- Waiting for the actual game
-    tutorial_piece_1="3. Piece shapes",
-    tutorial_piece_2="Usually there are 7 types of tetromino pieces.",
-    tutorial_piece_3="They are named with 7 letters: Z, S, J, L, T, O, I.",
+    tutorial_piece_1="3. Hình dạng của các viên gạch",
+    tutorial_piece_2="Có 7 gạch tetromino (gạch 4 ô)",
+    tutorial_piece_3="Chúng được đặt tên theo các chữ cái sau: Z, S, J, L, T, O, I.",
 
     tutorial_stackBasic_1="4. Xếp gạch sao cho đúng?",
     tutorial_stackBasic_m1="Hãy tập trung vào màn hình và làm theo hướng dẫn nè!",
@@ -273,7 +274,7 @@ return {
     tutorial_stackBasic_m6="Thử làm Techrash bằng cách dùng những cục gạch cuối cùng này mà không cần hướng dẫn đi",
 
     tutorial_twoRotatingKey_1="5. Xoay cả 2 hướng",
-    tutorial_twoRotatingKey_m1="Hãy tập trung và làm theo hướng dẫn, nhưng hãy cố gắng sử dụng phím xoay ít nhất có thể",
+    tutorial_twoRotatingKey_m1="Hãy tập trung và làm theo hướng dẫn, nhưng hãy cố gắng xoay gạch ít lần nhất có thể",
     tutorial_twoRotatingKey_m2="Nếu bạn có thể xoay trái, thì đừng có xoay phải 3 lần!",
     tutorial_twoRotatingKey_m3="Không những tốn công sức và t.gian, bạn còn dễ bị \"ngụm củ tỏi\"",
     tutorial_twoRotatingKey_m4="Bây giờ bạn có thể tự quyết định vị trí đặt thả gạch rồi, không cần phải dựa vào gợi ý nữa",
