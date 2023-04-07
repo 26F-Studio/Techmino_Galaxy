@@ -58,12 +58,9 @@ return {
     keyset_mino_rotateCW=   "Twist (Xoay) Phải",
     keyset_mino_rotateCCW=  "Twist (Xoay) Trái",
     keyset_mino_rotate180=  "Twist (Xoay) 180",
-    keyset_mino_softDrop=   "Thả Nhẹ",
-    keyset_mino_hardDrop=   "Thả Mạnh",
+    keyset_mino_softDrop=   "Thả Nhẹ/Xuống từ từ",
+    keyset_mino_hardDrop=   "Thả Mạnh/Đặt gạch luôn",
     keyset_mino_holdPiece=  "Giữ gạch",
-    keyset_mino_sonicDrop=  "Xuống tức thì",
-    keyset_mino_sonicLeft=  "Sang Trái tức thì",
-    keyset_mino_sonicRight= "Sang Phải tức thì",
 
     keyset_puyo_moveLeft=   "Sang Trái",
     keyset_puyo_moveRight=  "Sang Phải",
@@ -85,15 +82,15 @@ return {
     keyset_gem_moveUp=      "Cursor Up",
     keyset_gem_moveDown=    "Cursor Down",
 
-    keyset_func1= "Chức năng 1",
-    keyset_func2= "Chức năng 2",
-    keyset_func3= "Chức năng 3",
-    keyset_func4= "Chức năng 4",
-    keyset_func5= "Chức năng 5",
-    keyset_func6= "Chức năng 6",
+    keyset_func1= "Chức năng 1 (F1)",
+    keyset_func2= "Chức năng 2 (F2)",
+    keyset_func3= "Chức năng 3 (F3)",
+    keyset_func4= "Chức năng 4 (F4)",
+    keyset_func5= "Chức năng 5 (F5)",
+    keyset_func6= "Chức năng 6 (F6)",
 
     keyset_sys_restart= "Chơi lại",
-    keyset_sys_chat=    "Chat",
+    keyset_sys_chat=    "Trò chuyện",
     keyset_sys_up=      "Lên",
     keyset_sys_down=    "Xuống",
     keyset_sys_left=    "Trái",
@@ -101,13 +98,13 @@ return {
     keyset_sys_select=  "Lựa chọn",
     keyset_sys_back=    "Trở về",
 
-    keyset_page_sys= "Cài đặt chung",
+    keyset_page_sys= "Chung",
     keyset_page_mino="Mino",
     keyset_page_puyo="Puyo",
     keyset_page_gem= "Gem",
 
     keyset_pressKey="Hãy nhấn một phím",
-    keyset_deleted= "*Đã xóa*",
+    keyset_deleted= "*Xóa rồi nhé*",
     keyset_info=    "[Esc]: Huỷ\n[Backspace]: Xóa",
 
     stick2_switch="Cần điều khiển\n2 hướng",
@@ -133,7 +130,7 @@ return {
     setting_dasHalt="DAS halt",
     setting_hdLockA="Auto hard-drop lock",
     setting_hdLockM="Manual hard-drop lock",
-    setting_shakeness="Shakeness",
+    setting_shakeness="Shakiness",
     setting_hitWavePower="Hitwave Power",
 
     setting_mainVol="Âm lượng tổng",
@@ -142,8 +139,8 @@ return {
     setting_vib="Rung (VIB)",
     setting_handling="Handling…",
     setting_keymapping="Cài đặt phím…",
-    setting_enableTouching="Kích hoạt điều khiển bằng cảm ứng",
-    setting_touching="Bố cục phím cảm ứng…",
+    setting_enableTouching="Điều khiển bằng cảm ứng",
+    setting_touching="Bố cục các nút…",
     setting_test="Thử phím",
 
     setting_sysCursor="Trỏ chuột hệ thống",
@@ -152,8 +149,8 @@ return {
     setting_clean="VRAM Boost",
     setting_fullscreen="Toàn màn hình",
     setting_portrait="Màn hình hướng dọc",
-    setting_autoMute="Tắt tiếng khi đang nhìn ở cửa số khác",
-    setting_showTouch="Hiện vị trí vừa chạm (cảm ứng)",
+    setting_autoMute="Tắt tiếng khi đang xem cửa số khác",
+    setting_showTouch="Hiện vị trí vừa nhấn",
 
     setting_maxFPS="FPS tối đa",
     setting_updRate="Tần suất cập nhật",
@@ -176,8 +173,8 @@ return {
     main_out_multi="Chơi qua mạng",
 
     title_musicroom="Phòng nhạc",
-    musicroom_fullband="Chơi t.cả\nnhạc cụ",
-    musicroom_autoplay="Tự động\nđổi bài",
+    musicroom_fullband="Chơi tất cả nhạc cụ",
+    musicroom_autoplay="Tự động đổi bài",
 
     about_title="Giới thiệu",
     about_love="Z-UI được chạy bằng LÖVE",
@@ -241,7 +238,7 @@ return {
     },
 
     -- Level
-    tutorial_basic="Những thứ cơ bản",
+    tutorial_basic="[Chưa hoàn thành]", -- [Unfinished] | Waiting for actual game
     tutorial_sequence="Next & Hold",
     tutorial_stackBasic="Xếp gạch sao cho đúng?",
     tutorial_twoRotatingKey="Xoay cả 2 hướng",
@@ -261,6 +258,11 @@ return {
     tutorial_sequence_2="Trời ạ, cái gạch này không lọt vùa với cái hố rồi…",
     tutorial_sequence_3="Bây giờ bạn có thể nhìn thấy những gạch nào chuẩn bị rơi theo lần lượt. ",
     tutorial_sequence_4="Hãy dùng phím \"Giữ gạch\" để điều chỉnh thứ tự của các gạch.",
+
+    -- Waiting for the actual game
+    tutorial_piece_1="3. Piece shapes",
+    tutorial_piece_2="Usually there are 7 types of tetromino pieces.",
+    tutorial_piece_3="They are named with 7 letters: Z, S, J, L, T, O, I.",
 
     tutorial_stackBasic_1="4. Xếp gạch sao cho đúng?",
     tutorial_stackBasic_m1="Hãy tập trung vào màn hình và làm theo hướng dẫn nè!",
