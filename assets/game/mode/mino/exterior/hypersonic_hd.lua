@@ -31,6 +31,8 @@ return {
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
         playBgm('secret7th','base')
+        BGM.set('secret7th/melody1','volume',0,0)
+        BGM.set('all','pitch',2^(-1/12),0)
     end,
     settings={mino={
         pieceVisTime=levels[1].visTime,
@@ -151,6 +153,10 @@ return {
                             P.settings.maxFreshTime=levels[md.level].fresh
                             P.settings.pieceVisTime=levels[md.level].visTime
                             P.settings.pieceFadeTime=levels[md.level].fadeTime
+
+                            if md.level==2 then
+                                BGM.set('secret7th/melody1','volume',1,10)
+                            end
                         else
                             P:finish('AC')
                             return
@@ -164,6 +170,8 @@ return {
                 GC.mStr(P.modeData.point,-300,-90)
                 gc.rectangle('fill',-375,-2,150,4)
                 GC.mStr(P.modeData.target,-300,-5)
+                GC.setAlpha(.626)
+                GC.mStr(P.modeData.point,-300+6*math.sin(P.time),-90)
             end,
         },
     }},

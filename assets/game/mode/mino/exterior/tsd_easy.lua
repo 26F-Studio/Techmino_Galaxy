@@ -13,8 +13,9 @@ return {
             playerInit=function(P)
                 P.modeData.tsd=0
             end,
-            afterClear=function(P,movement)
-                if P.hand.name=='T' and #movement.clear==2 and movement.action=='rotate' and (movement.corners or movement.immobile) then
+            afterClear=function(P,clear)
+                local movement=P.lastMovement
+                if P.hand.name=='T' and clear.line==2 and movement.action=='rotate' and (movement.corners or movement.immobile) then
                     P.modeData.tsd=P.modeData.tsd+1
                 else
                     P:finish('PE')

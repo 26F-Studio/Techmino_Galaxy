@@ -45,8 +45,8 @@ return {
                 P.modeData.line=0
                 generateField(P)
             end,
-            afterClear=function(P,movement)
-                local score=math.ceil((#movement.clear+1)/2)
+            afterClear=function(P,clear)
+                local score=math.ceil((clear.line+1)/2)
                 P.modeData.line=math.min(P.modeData.line+score,lineTarget)
                 P.texts:add{
                     text="+"..score,

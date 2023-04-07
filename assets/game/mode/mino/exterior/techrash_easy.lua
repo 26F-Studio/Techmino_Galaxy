@@ -48,9 +48,9 @@ return {
                 end
                 P.modeData.minH=minH
             end,
-            afterClear=function(P,movement)
+            afterClear=function(P,clear)
                 P:triggerEvent('afterLock')-- Force refresh
-                if P.hand.name=='I' and #movement.clear==4 then
+                if P.hand.name=='I' and clear.line==4 then
                     P.modeData.techrash=P.modeData.techrash+1
                     local semiPC=P.field:getHeight()==0
                     if not semiPC then
