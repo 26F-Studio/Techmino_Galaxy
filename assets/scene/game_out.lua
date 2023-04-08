@@ -7,8 +7,10 @@ local repMode=false
 
 function scene.enter()
     VCTRL.reset()
-    GAME.reset(SCN.args[1])
-    GAME.start()
+    if SCN.args[1] then
+        GAME.reset(SCN.args[1])
+        GAME.start()
+    end
 end
 
 function scene.keyDown(key,isRep)
@@ -28,7 +30,7 @@ function scene.keyDown(key,isRep)
     if action=='restart' then
         scene.enter()
     elseif action=='back' then
-        if sureCheck('back') then SCN.back() end
+        SCN.swapTo('pause_out','none')
     end
 end
 

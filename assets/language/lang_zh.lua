@@ -12,7 +12,7 @@ return {
     booting_changed="引导程序已更改",
     musicroom_lowVolume="请调高音乐音量（开关在右下角）",
 
-    -- Game
+    -- In-Game
     clearName={
         "Single",
         "Double",
@@ -47,6 +47,9 @@ return {
 
     allClear='ALL CLEAR',
     halfClear='Half Clear',
+
+    -- About-Game
+    pause="暂停",
 
     -- Key setting
     keyset_mino_moveLeft=   "左移",
