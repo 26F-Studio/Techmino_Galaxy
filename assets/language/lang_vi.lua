@@ -51,6 +51,9 @@ return {
     allClear="ALL CLEAR",
     halfClear="Half Clear",
 
+    -- About-Game
+    pause="Đã tạm dừng",
+
     -- Key setting
     -- GHI CHÚ: Viết hoa các từ "Trái", "Phải", "Lên", "Xuống"
     keyset_mino_moveLeft=   "Sang Trái",
