@@ -713,6 +713,28 @@ function MP:getConnectedCells(x0,y0)
         return {}
     end
 end
+function MP:cutConnection(y)-- y is cutting line height to ground
+    local F=self.field
+    if y<1 or y>F:getHeight() then return end
+    for x=1,self.settings.fieldW do
+        local cell=F:getCell(x,y)
+        if cell then
+            local listLo=self:getConnectedCells(x,y)
+            local listHi={}
+            for i=#listLo,1,-1 do
+                if listLo[i][2]>y then
+                    ins(listHi,rem(listLo,i))
+                end
+            end
+            for i=1,#listLo do
+                for j=1,#listHi do
+                    listLo[i][3].conn[listHi[j][3]]=nil
+                    listHi[j][3].conn[listLo[i][3]]=nil
+                end
+            end
+        end
+    end
+end
 function MP:ifoverlap(CB,cx,cy)
     local F=self.field
 
