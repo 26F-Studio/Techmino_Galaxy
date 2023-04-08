@@ -15,7 +15,7 @@ return {
     booting_changed="Đã thay đổi chương trình boot",
     musicroom_lowVolume="Vặn âm lượng nhạc nền lên đi bạn ơi! (Ở dưới góc phải màn hình đấy!)",
 
-    -- Game
+    -- In-Game
     clearName={
         "Single",
         "Double",

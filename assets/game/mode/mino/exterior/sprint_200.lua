@@ -12,6 +12,8 @@ return {
         event={
             playerInit=function(P)
                 P.modeData.line=0
+
+                P:setAction("func1",mechLib.mino.stack.switch)
             end,
             afterClear=function(P,clear)
                 P.modeData.line=math.min(P.modeData.line+clear.line,lineTarget)
@@ -22,6 +24,7 @@ return {
                     BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
                 end
             end,
+            afterLock = mechLib.mino.stack.event_afterLock,
             drawInField=function(P)
                 gc.setColor(1,1,1,.26)
                 gc.rectangle('fill',0,(P.modeData.line-lineTarget)*40-2,P.settings.fieldW*40,4)
@@ -30,6 +33,7 @@ return {
                 P:drawInfoPanel(-380,-60,160,120)
                 FONT.set(80) GC.mStr(lineTarget-P.modeData.line,-300,-55)
             end,
+            whenSuffocate=mechLib.mino.stack.event_whenSuffocate,
         },
     }},
 }
