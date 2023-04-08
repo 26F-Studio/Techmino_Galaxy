@@ -89,13 +89,14 @@ return {
     keyset_func6= "功能 6",
 
     keyset_sys_restart= "重新开始",
+    keyset_sys_back=    "菜单返回",
+    keyset_sys_setting= "菜单设置",
     keyset_sys_chat=    "开启聊天框",
     keyset_sys_up=      "菜单上",
     keyset_sys_down=    "菜单下",
     keyset_sys_left=    "菜单左",
     keyset_sys_right=   "菜单右",
-    keyset_sys_select= "菜单确定",
-    keyset_sys_back=    "菜单返回",
+    keyset_sys_select=  "菜单确定",
 
     keyset_page_sys= "通用",
     keyset_page_mino="方块",
