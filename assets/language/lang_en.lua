@@ -89,13 +89,14 @@ return {
     keyset_func6= "Function 6",
 
     keyset_sys_restart= "Restart",
+    keyset_sys_back=    "Back",
+    keyset_sys_setting= "Setting",
     keyset_sys_chat=    "Chat",
     keyset_sys_up=      "Up",
     keyset_sys_down=    "Down",
     keyset_sys_left=    "Left",
     keyset_sys_right=   "Right",
     keyset_sys_select=  "Select",
-    keyset_sys_back=    "Back",
 
     keyset_page_sys= "General",
     keyset_page_mino="Mino",

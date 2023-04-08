@@ -281,13 +281,14 @@ KEYMAP.gem=KEYMAP.new{
 }
 KEYMAP.sys=KEYMAP.new{
     {act='restart',     keys={'r'}},
+    {act='back',        keys={'escape'}},
+    {act='setting',     keys={'`'}},
     {act='chat',        keys={'t'}},
     {act='up',          keys={'up'}},
     {act='down',        keys={'down'}},
     {act='left',        keys={'left'}},
     {act='right',       keys={'right'}},
     {act='select',      keys={'return'}},
-    {act='back',        keys={'escape'}},
 }
 local keys=FILE.load('conf/keymap','-json -canskip')
 if keys then

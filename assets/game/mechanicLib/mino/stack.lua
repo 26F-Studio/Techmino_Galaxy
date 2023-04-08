@@ -63,12 +63,18 @@ function stack.event_afterLock(P)
             md.zone_lines=md.zone_lines+1
         end
         if #list>0 and P.sound then
-            SFX.playSample('bass',34-1+md.zone_lines)
-            SFX.playSample('lead',math.min(#list/4,1),34+12-1+md.zone_lines)
-            if md.zone_lines>=8 then
-                SFX.playSample('bass',math.min((#list-1)/3,1),34-5-1+md.zone_lines)
-                if md.zone_lines>=13 then
-                    SFX.playSample('lead',math.min(#list/2,1),34+19-1+md.zone_lines)
+            local volume=math.min(#list/(26/md.zone_lines),1)
+            local standard=34-1+md.zone_lines
+            SFX.playSample('bass',standard)
+            SFX.playSample('lead',volume,standard+7)
+            if md.zone_lines>=8  then SFX.playSample('bass',volume*.8,standard-5) end
+            if md.zone_lines>=13 then SFX.playSample('lead',volume*.5,standard+12) end
+            if md.zone_lines>=18 then
+                if     md.zone_lines==18 then SFX.playSample('lead',volume,'D4')
+                elseif md.zone_lines==19 then SFX.playSample('lead',volume,'E4')
+                elseif md.zone_lines==20 then SFX.playSample('lead',volume,'F4')
+                elseif md.zone_lines==21 then SFX.playSample('lead',volume,'G4')
+                else                          SFX.playSample('lead',volume,'A4')
                 end
             end
         end
