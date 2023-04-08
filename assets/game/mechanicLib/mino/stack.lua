@@ -63,7 +63,8 @@ function stack.event_afterLock(P)
             md.zone_lines=md.zone_lines+1
         end
         if #list>0 and P.sound then
-            local volume=math.min(#list/(26/md.zone_lines),1)
+            local volume=math.min((md.zone_lines+4*#list)/30,1)
+            print(volume)
             local standard=34-1+md.zone_lines
             SFX.playSample('bass',standard)
             SFX.playSample('lead',volume,standard+7)
