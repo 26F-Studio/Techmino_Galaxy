@@ -12,7 +12,7 @@ return {
     booting_changed="Booting application changed",
     musicroom_lowVolume="Please increase BGM volume (bottom right)",
 
-    -- Game
+    -- In-Game
     clearName={
         "Single",
         "Double",
@@ -47,6 +47,9 @@ return {
 
     allClear="ALL CLEAR",
     halfClear="Half Clear",
+
+    -- About-Game
+    pause="Pause",
 
     -- Key setting
     keyset_mino_moveLeft=   "Move Left",
