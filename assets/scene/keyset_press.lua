@@ -1,12 +1,14 @@
 local scene={}
 
 local map,act
+local keyLangStr
 local result
 local quitTimer
 
 function scene.enter()
     map=SCN.args[1]
     act=SCN.args[2]
+    keyLangStr='keyset_'..map..'_'..act
     result=false
     quitTimer=0
     if SETTINGS.system.touchControl then VCTRL.reset() end
@@ -54,12 +56,9 @@ function scene.update(dt)
 end
 
 function scene.draw()
-    FONT.set(100)
-    GC.shadedPrint(Text['keyset_'..map..'_'..act],800,300,'center',4,8)
-    FONT.set(60)
-    GC.shadedPrint(result or Text.keyset_pressKey,800,460,'center',2,8)
-    FONT.set(35)
-    GC.shadedPrint(Text.keyset_info,800,580,'center',2,8)
+    FONT.set(100) GC.shadedPrint(Text[keyLangStr],800,300,'center',4,8)
+    FONT.set(60)  GC.shadedPrint(result or Text.keyset_pressKey,800,460,'center',2,8)
+    FONT.set(35)  GC.shadedPrint(Text.keyset_info,800,580,'center',2,8)
     if SETTINGS.system.touchControl then VCTRL.draw() end
 end
 
