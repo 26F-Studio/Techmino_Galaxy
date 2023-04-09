@@ -22,7 +22,7 @@ end
 function scene.keyDown(key,isRep)
     if key=='s' then SCN.swapTo('main_out','none') end
     if isRep then return end
-    if key=='escape' then
+    if KEYMAP.sys:getAction(key)=='back' then
         if PROGRESS.getMain()<=2 then
             if sureCheck('quit') then PROGRESS.quit() end
         else

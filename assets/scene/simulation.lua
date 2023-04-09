@@ -128,7 +128,7 @@ function scene.keyDown(key,isRep)
                 SFX.play('simulation_select')
             end
         end
-    elseif key=='escape' then
+    elseif KEYMAP.sys:getAction(key)=='back' then
         SCN.back('fadeHeader')
     end
 end

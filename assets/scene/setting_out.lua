@@ -33,7 +33,7 @@ end
 
 function scene.keyDown(key,isRep)
     if isRep then return end
-    if key=='escape' then
+    if KEYMAP.sys:getAction(key)=='back' then
         SCN.back('fadeHeader')
     end
 end

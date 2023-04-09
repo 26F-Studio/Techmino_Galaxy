@@ -279,6 +279,7 @@ KEYMAP.gem=KEYMAP.new{
     {act='func6',       keys={'e'}},
 }
 KEYMAP.sys=KEYMAP.new{
+    {act='view',        keys={'lshift'}},
     {act='restart',     keys={'r'}},
     {act='back',        keys={'escape'}},
     {act='setting',     keys={'`'}},

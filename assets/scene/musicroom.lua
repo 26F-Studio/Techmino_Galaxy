@@ -94,9 +94,10 @@ function scene.enter()
 end
 
 function scene.keyDown(key,isRep)
-    if key=='up' or key=='down' then
+    local act=KEYMAP.sys:getAction(key)
+    if act=='up' or act=='down' then
         musicListBox:arrowKey(key)
-    elseif key=='left' or key=='right' then
+    elseif act=='left' or act=='right' then
         if BGM.isPlaying() then
             BGM.set('all','seek',key=='left' and max(BGM.tell()-5,0) or (BGM.tell()+5)%BGM.getDuration())
         end
@@ -132,7 +133,7 @@ function scene.keyDown(key,isRep)
         elseif key=='`' and love.keyboard.isDown('lalt','ralt') then
             noProgress=true
             scene.enter()
-        elseif key=='escape' then
+        elseif act=='escape' then
             SCN.back('fadeHeader')
         end
     end

@@ -23,7 +23,7 @@ function scene.leave()
 end
 
 function scene.keyDown(key)
-    if key=='escape' then
+    if key==KEYMAP.getAction 'escape' then
         SCN.back('none')
     else
         return true

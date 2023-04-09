@@ -2,6 +2,7 @@ local gc=love.graphics
 
 local scene={}
 
+local restartKeyInfo={keys={'[???]'}}
 local keyButtons={}
 
 function scene.enter()
@@ -13,6 +14,13 @@ function scene.enter()
     end
     table.remove(keyButtons)
     table.remove(keyButtons)
+
+    for i=1,#KEYMAP.sys do
+        if KEYMAP.sys[i].act=='restart' then
+            restartKeyInfo=KEYMAP.sys[i]
+            break
+        end
+    end
 end
 function scene.leave()
     saveKey()
@@ -22,7 +30,7 @@ function scene.draw()
     FONT.set(25)
     gc.setColor(COLOR.L)
     for i=1,#keyButtons do
-        local l=i<#keyButtons and KEYMAP.mino[i].keys or KEYMAP.sys[1].keys-- Special case: restart
+        local l=i<#keyButtons and KEYMAP.mino[i].keys or restartKeyInfo.keys-- Special case: restart
         for j=1,#l do
             GC.mStr(l[j],
                 keyButtons[i].x+79+80*j,

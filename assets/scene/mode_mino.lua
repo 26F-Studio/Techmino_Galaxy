@@ -105,9 +105,9 @@ function scene.touchClick(x,y)
 end
 function scene.keyDown(key,isRep)
     if isRep then return end
-    if key=='space' or key=='return' then
+    if KEYMAP.sys:getAction(key)=='select' then
         panel:setSel(MINOMAP:keyboardSelect())
-    elseif key=='escape' then
+    elseif KEYMAP.sys:getAction(key)=='back' then
         if PROGRESS.getMinoUnlocked() and not PROGRESS.getPuyoUnlocked() and not PROGRESS.getGemUnlocked() then
             SCN.pop()
             SCN.back('fadeHeader')

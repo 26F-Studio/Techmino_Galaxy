@@ -88,6 +88,7 @@ return {
     keyset_func5= "Function 5",
     keyset_func6= "Function 6",
 
+    keyset_sys_view=    "View",
     keyset_sys_restart= "Restart",
     keyset_sys_back=    "Back",
     keyset_sys_setting= "Setting",
