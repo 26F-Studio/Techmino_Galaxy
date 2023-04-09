@@ -18,65 +18,65 @@ local layoutFuncs={}
 do -- function layoutFuncs.default():
     local defaultPosList={
         alive={
-            [1]={main={800,500}},
-            [3]={main={800,500},
-                {1380,600,.5},
-                {220,600,.5},
+            [1]={main={0,0}},
+            [3]={main={0,0},
+                {580,100,.5},
+                {-580,100,.5},
             },
-            [5]={main={800,500},
-                {220,260,.5},
-                {1380,260,.5},
-                {220,740,.5},
-                {1380,740,.5},
+            [5]={main={0,0},
+                {-580,-240,.5},
+                {580,-240,.5},
+                {-580,240,.5},
+                {580,240,.5},
             },
-            [7]={main={800,500},
-                {220,200,.34},{220,500,.34},{220,800,.34},
-                {1380,200,.34},{1380,500,.34},{1380,800,.34},
+            [7]={main={0,0},
+                {-580,-300,.34},{-580,0,.34},{-580,300,.34},
+                {580,-300,.34},{580,0,.34},{580,300,.34},
             },
-            [17]={main={800,500},
-                {120,140,.26},{120,380,.26},{120,620,.26},{120,860,.26},
-                {320,140,.26},{320,380,.26},{320,620,.26},{320,860,.26},
-                {1280,140,.26},{1280,380,.26},{1280,620,.26},{1280,860,.26},
-                {1480,140,.26},{1480,380,.26},{1480,620,.26},{1480,860,.26},
+            [17]={main={0,0},
+                {-680,-360,.26},{-680,-120,.26},{-680,120,.26},{-680,360,.26},
+                {-480,-360,.26},{-480,-120,.26},{-480,120,.26},{-480,360,.26},
+                {480,-360,.26},{480,-120,.26},{480,120,.26},{480,360,.26},
+                {680,-360,.26},{680,-120,.26},{680,120,.26},{680,360,.26},
             },
             [37]=(function()
-                local l={main={800,500}}
+                local l={main={0,0}}
                 for y=-2.5,2.5 do
                     for x=0,2 do
-                        table.insert(l,{340-130*x ,500+160*y,.17})
-                        table.insert(l,{1260+130*x,500+160*y,.17})
+                        table.insert(l,{-460-130*x,160*y,.17})
+                        table.insert(l,{460+130*x, 160*y,.17})
                     end
                 end
                 return l
             end)(),
             [73]=(function()
-                local l={main={800,500}}
+                local l={main={0,0}}
                 for y=-4,4 do
                     for x=0,3 do
-                        table.insert(l,{360-100*x ,500+110*y,.13})
-                        table.insert(l,{1240+100*x,500+110*y,.13})
+                        table.insert(l,{-440-100*x,110*y,.13})
+                        table.insert(l,{440+100*x, 110*y,.13})
                     end
                 end
                 return l
             end)(),
-            [MATH.inf]={main={800,500}},
+            [MATH.inf]={main={0,0}},
         },
         dead={
-            [1]={{800,500}},
+            [1]={{0,0}},
             [2]={
-                {420,500,.9},{1180,500,.9},
+                {-380,0,.9},{380,0,.9},
             },
             [3]={
-                {280,500,.66},{800,500,.66},{1320,500,.66},
+                {-520,0,.66},{-800,0,.66},{520,0,.66},
             },
             [4]={
-                {210,500,.5},{600,500,.5},{1000,500,.5},{1390,500,.5},
+                {-590,0,.5},{-200,0,.5},{200,0,.5},{590,0,.5},
             },
             [15]=(function()
                 local l={}
                 for y=-1,1 do
                     for x=-2,2 do
-                        table.insert(l,{800+315*x ,500+320*y,.36})
+                        table.insert(l,{315*x,320*y,.36})
                     end
                 end
                 return l
@@ -85,7 +85,7 @@ do -- function layoutFuncs.default():
                 local l={}
                 for y=-1.5,1.5 do
                     for x=-3.5,3.5 do
-                        table.insert(l,{800+200*x ,500+240*y,.25})
+                        table.insert(l,{200*x,240*y,.25})
                     end
                 end
                 return l
@@ -94,7 +94,7 @@ do -- function layoutFuncs.default():
                 local l={}
                 for y=-2.5,2.5 do
                     for x=-5.5,5.5 do
-                        table.insert(l,{800+130*x ,500+160*y,.17})
+                        table.insert(l,{130*x,160*y,.17})
                     end
                 end
                 return l
@@ -156,6 +156,7 @@ local GAME={
     playerList=false,
     playerMap=false,
 
+    camera=GC.newCamera(),
     hitWaves={},
 
     seed=false,
@@ -376,6 +377,7 @@ end
 function GAME.update(dt)
     for _,P in next,GAME.playerList do P:update(dt) end
 
+    GAME.camera:update(dt)
     for i=#GAME.hitWaves,1,-1 do
         local wave=GAME.hitWaves[i]
         wave.time=wave.time+dt
@@ -384,7 +386,9 @@ end
 
 function GAME.render()
     gc.setCanvas({Zenitha.getBigCanvas('player'),stencil=true})
-    gc.clear(0,0,0,0)
+    gc.replaceTransform(SCR.xOy_m)
+    gc.applyTransform(GAME.camera.transform)
+    gc.clear(0,0,0,1)
     for _,P in next,GAME.playerList do P:render() end
     gc.setCanvas()
 

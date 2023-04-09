@@ -145,44 +145,12 @@ local enterFX={
     y=false,
     r=false,
 }
-local cam={
-    x0=0,y0=0,k0=.9,a0=0,
-    x=0,y=0,k=2,a=0,
-    swing=0,
-
-    maxDist=2600,-- Max 4000
-    minK=.4,-- Max .2
-    cursor=false,
-    transform=love.math.newTransform(),
-}
-function cam:move(dx,dy)
-    self.x0=self.x0+dx
-    self.y0=self.y0+dy
-    local dist=MATH.distance(0,0,self.x0,self.y0)/self.k0
-    if dist>self.maxDist then
-        local angle=math.atan2(self.y0,self.x0)
-        self.x0=self.maxDist*math.cos(angle)*self.k0
-        self.y0=self.maxDist*math.sin(angle)*self.k0
-    end
-end
-function cam:rotate(da)
-    self.a0=self.a0+da
-end
-function cam:scale(dk)
-    local k0=self.k0
-    self.k0=MATH.clamp(self.k0*dk,self.minK,1.26)
-    dk=self.k0/k0
-    self.x0,self.y0=self.x0*dk,self.y0*dk
-end
-function cam:update(dt)
-    self.swing=.00626*math.sin(love.timer.getTime()/1.26)
-
-    self.x=MATH.expApproach(self.x,self.x0,dt*26)
-    self.y=MATH.expApproach(self.y,self.y0,dt*26)
-    self.k=MATH.expApproach(self.k,self.k0,dt*26)
-    self.a=MATH.expApproach(self.a,self.a0+self.swing,dt*6.26)
-    self.transform:setTransformation(self.x,100+self.y,self.a,self.k)
-end
+local mapCursor=false
+local cam=GC.newCamera()
+cam.k0,cam.k=.9,2
+cam.swing=.00626
+cam.maxDist=2600--[[4000]]
+cam.minK,cam.maxK=.4--[[.2]],1.26
 
 ---@type table
 ---| false
@@ -219,18 +187,18 @@ function map:reset()
         pSys[i]:reset()
         pSys[i]:start()
     end
-    cam.cursor=false
+    mapCursor=false
     enterFX.timer=false
     focused=false
     selected=false
 end
 
-function map:hideCursor() cam.cursor=false end
-function map:showCursor() cam.cursor=true end
+function map:hideCursor() mapCursor=false end
+function map:showCursor() mapCursor=true end
 
 local function _onMode(x,y)
     x,y=SCR.xOy_m:inverseTransformPoint(x,y)
-    x,y=cam.transform:inverseTransformPoint(x,y)
+    x,y=cam.transform:inverseTransformPoint(x,y-100)
     for _,m in next,modes do
         if m.enable and MATH.distance(x,y,m.x,m.y)<m.r*1.26 then
             return m
@@ -280,7 +248,7 @@ function map:mouseClick(x,y)
     end
 end
 function map:keyboardMove(x,y)
-    if cam.cursor then
+    if mapCursor then
         focused=_onMode(x,y)
     end
 end
@@ -339,7 +307,8 @@ end
 local tau=MATH.tau
 function map:draw()
     GC.replaceTransform(SCR.xOy_m)
-    GC.applyTransform(cam.transform)
+    GC.translate(0,100)
+    cam:apply()
 
     -- Draw bridges
     for _,b in next,bridges do
@@ -419,7 +388,7 @@ function map:draw()
 
     -- Draw keyboard cursor
     GC.replaceTransform(SCR.xOy_m)
-    if cam.cursor then
+    if mapCursor then
         GC.push('transform')
         GC.translate(0,100)
         GC.rotate(-cam.a)
