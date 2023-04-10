@@ -8,7 +8,7 @@ function scene.enter()
     pauseText=GC.newText(FONT.get(80,'bold'),Text.pause)
 end
 
-local function doAction(action)
+local function sysAction(action)
     if action=='restart' then
         SFX.play('fail')
         SCN.swapTo('game_out',nil,GAME.mode.name)
@@ -25,7 +25,7 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return end
 
-    if not doAction(KEYMAP.sys:getAction(key)) then
+    if not sysAction(KEYMAP.sys:getAction(key)) then
         SCN.scenes['game_out'].keyDown(key)
     end
 end
@@ -64,8 +64,8 @@ end
 scene.widgetList={
 
     WIDGET.new{type='button',pos={0,0},  x= 120,y= 80, w=160,h=80,sound='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
-    WIDGET.new{type='button',pos={.5,.5},x= 0,  y=-160,w=180,h=90,fontSize=60,text=CHAR.icon.retry,    code=function() doAction('restart') end},
-    WIDGET.new{type='button',pos={.5,.5},x=-110,y= 170,w=180,h=90,fontSize=60,text=CHAR.icon.play,     code=function() doAction('back') end},
-    WIDGET.new{type='button',pos={.5,.5},x= 110,y= 170,w=180,h=90,fontSize=60,text=CHAR.icon.settings, code=function() doAction('setting') end},
+    WIDGET.new{type='button',pos={.5,.5},x= 0,  y=-160,w=180,h=90,fontSize=60,text=CHAR.icon.retry,    code=function() sysAction('restart') end},
+    WIDGET.new{type='button',pos={.5,.5},x=-110,y= 170,w=180,h=90,fontSize=60,text=CHAR.icon.play,     code=function() sysAction('back') end},
+    WIDGET.new{type='button',pos={.5,.5},x= 110,y= 170,w=180,h=90,fontSize=60,text=CHAR.icon.settings, code=function() sysAction('setting') end},
 }
 return scene

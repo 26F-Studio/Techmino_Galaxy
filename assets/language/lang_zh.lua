@@ -88,6 +88,7 @@ return {
     keyset_func5= "功能 5",
     keyset_func6= "功能 6",
 
+    keyset_sys_view=    "视野调整",
     keyset_sys_restart= "重新开始",
     keyset_sys_back=    "菜单返回",
     keyset_sys_setting= "菜单设置",

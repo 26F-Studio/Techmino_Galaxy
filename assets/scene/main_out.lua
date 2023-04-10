@@ -13,7 +13,7 @@ end
 
 function scene.keyDown(key,isRep)
     if isRep then return end
-    if key=='escape' then
+    if KEYMAP.sys:getAction(key)=='back' then
         if sureCheck('quit') then PROGRESS.quit() end
     end
 end

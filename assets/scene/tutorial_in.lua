@@ -40,7 +40,7 @@ function scene.enter()
 end
 
 function scene.keyDown(key)
-    if key=='escape' then
+    if KEYMAP.sys:getAction(key)=='back' then
         SCN.back('none')
     else
         return true

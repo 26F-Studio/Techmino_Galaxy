@@ -13,9 +13,15 @@ function scene.enter()
     end
 end
 
-local function doAction(action)
+local function sysAction(action)
     if action=='restart' then
         scene.enter()
+    elseif action=='view' then
+        if GAME.camera.k0>.8 then
+            GAME.camera:scale(3/5)
+        else
+            GAME.camera:scale(5/3)
+        end
     elseif action=='back' then
         SFX.play('notice')
         SCN.swapTo('pause_out','none')
@@ -34,7 +40,7 @@ function scene.keyDown(key,isRep)
         end
     end
 
-    doAction(KEYMAP.sys:getAction(key))
+    sysAction(KEYMAP.sys:getAction(key))
 end
 
 function scene.keyUp(key)
@@ -104,6 +110,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,0},x=120,y=80,w=160,h=80,sound='button_back',fontSize=60,text=CHAR.icon.pause,code=function() doAction('back') end},
+    WIDGET.new{type='button',pos={0,0},x=120,y=80,w=160,h=80,sound='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
 }
 return scene

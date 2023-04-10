@@ -3,9 +3,13 @@ Map.__index=Map
 
 function Map:import(data)
     if not data then return end
-    for i=1,#self do
-        if data[i] then
-            self[i].keys=TABLE.shift(data[i],0)
+
+    for k,v in next,data do
+        for i=1,#self do
+            if self[i].act==k then
+                self[i].keys=TABLE.shift(v,0)
+                break
+            end
         end
     end
 end
@@ -13,7 +17,7 @@ end
 function Map:export()
     local data={}
     for i=1,#self do
-        data[i]=TABLE.shift(self[i].keys,0)
+        data[self[i].act]=TABLE.shift(self[i].keys,0)
     end
     return data
 end
@@ -45,7 +49,6 @@ function Map:remKey(key)
         end
     end
 end
-
 function Map:addKey(act,key)
     for i=1,#self do
         if self[i].act==act then
