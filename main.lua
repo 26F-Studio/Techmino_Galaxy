@@ -280,9 +280,9 @@ KEYMAP.gem=KEYMAP.new{
 }
 KEYMAP.sys=KEYMAP.new{
     {act='view',        keys={'lshift'}},
-    {act='restart',     keys={'r'}},
+    {act='restart',     keys={'r','`'}},
     {act='back',        keys={'escape'}},
-    {act='setting',     keys={'`'}},
+    {act='setting',     keys={'s'}},
     {act='chat',        keys={'t'}},
     {act='up',          keys={'up'}},
     {act='down',        keys={'down'}},
