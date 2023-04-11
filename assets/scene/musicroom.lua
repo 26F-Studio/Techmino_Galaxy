@@ -133,7 +133,7 @@ function scene.keyDown(key,isRep)
         elseif key=='`' and love.keyboard.isDown('lalt','ralt') then
             noProgress=true
             scene.enter()
-        elseif act=='escape' then
+        elseif act=='back' then
             SCN.back('fadeHeader')
         end
     end
