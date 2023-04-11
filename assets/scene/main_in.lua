@@ -77,7 +77,7 @@ scene.widgetList={
     WIDGET.new{name='LangSel',type='button', pos={.5,.5},x=-270,y=320,w=400,h=100,text=CHAR.icon.language,     fontSize=70,lineWidth=4,cornerR=0,code=WIDGET.c_goScn('lang_in','none')},
     WIDGET.new{name='GameSet',type='button', pos={.5,.5},x=270, y=320,w=400,h=100,text=LANG'main_in_settings', fontSize=40,lineWidth=4,cornerR=0,sound=false,code=function()
         if PROGRESS.getMain()<=2 or love.keyboard.isDown('lctrl','rctrl') then
-            SFX.play('button')
+            SFX.play('button_norm')
             SCN.go('setting_in','none')
         else
             consoleClickCount=consoleClickCount+1
