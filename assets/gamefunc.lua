@@ -79,6 +79,10 @@ function playExterior(name)
     return setmetatable({name=name},exteriorModeMeta)
 end
 
+function canPause()
+    return not GAME.mode.name:find('/test')
+end
+
 function task_interiorAutoQuit(waitTime)
     TASK.new(function()
         local time=love.timer.getTime()

@@ -4,10 +4,26 @@ local scene={}
 
 function scene.enter()
     VCTRL.reset()
-    GAME.reset(SCN.args[1])
-    GAME.start()
+    if SCN.args[1] then
+        GAME.reset(SCN.args[1])
+        GAME.start()
+    end
+    scene.widgetList[1].text=canPause() and CHAR.icon.pause or CHAR.icon.back
+    WIDGET._reset()
 end
 
+local function sysAction(action)
+    if action=='restart' then
+        scene.enter()
+    elseif action=='back' then
+        if canPause() then
+            SFX.play('notice')
+            SCN.swapTo('pause_in','none')
+        else
+            SCN.back('none')
+        end
+    end
+end
 function scene.keyDown(key,isRep)
     if isRep then return end
     local action
@@ -21,12 +37,7 @@ function scene.keyDown(key,isRep)
         end
     end
 
-    action=KEYMAP.sys:getAction(key)
-    if action=='restart' then
-        scene.enter()
-    elseif action=='back' then
-        if sureCheck('back') then SCN.back('none') end
-    end
+    sysAction(KEYMAP.sys:getAction(key))
 end
 
 function scene.keyUp(key)
@@ -88,6 +99,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
+    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
 }
 return scene
