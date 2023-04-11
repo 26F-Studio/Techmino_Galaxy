@@ -23,8 +23,12 @@ local function sysAction(action)
             GAME.camera:scale(5/3)
         end
     elseif action=='back' then
-        SFX.play('notice')
-        SCN.swapTo('pause_out','none')
+        if canPause() then
+            SFX.play('notice')
+            SCN.swapTo('pause_out','none')
+        else
+            SCN.back()
+        end
     end
 end
 function scene.keyDown(key,isRep)

@@ -34,6 +34,13 @@ function scene.leave()
     saveKey()
 end
 
+function scene.keyDown(key,isRep)
+    if isRep then return end
+    if KEYMAP.sys:getAction(key)=='back' then
+        SCN.back('none')
+    end
+end
+
 function scene.draw()
     FONT.set(25)
     gc.setColor(COLOR.L)

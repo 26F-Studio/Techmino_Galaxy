@@ -14,12 +14,12 @@ local function sysAction(action)
         SCN.back()
     elseif action=='back' then
         SFX.play('solve')
-        SCN.swapTo('game_out','none')
+        SCN.swapTo('game_in','none')
     elseif action=='restart' then
         SFX.play('fail')
-        SCN.swapTo('game_out',nil,GAME.mode.name)
+        SCN.swapTo('game_in',nil,GAME.mode.name)
     elseif action=='setting' then
-        SCN.go('setting_out')
+        SCN.go('setting_in','none')
     end
 end
 function scene.keyDown(key,isRep)
@@ -48,22 +48,13 @@ function scene.draw()
     GC.replaceTransform(SCR.xOy_m)
     GC.scale(2)
     GC.setColor(COLOR.L)
-
-    local t=love.timer.getTime()
-    GC.setColorMask(true,false,false,true)
-    GC.mDraw(pauseText,sin(3*t),sin(5*t))
-    GC.setColorMask(false,true,false,true)
-    GC.mDraw(pauseText,sin(6.5*t),sin(2*t))
-    GC.setColorMask(false,false,true,true)
-    GC.mDraw(pauseText,sin(3.5*t),sin(5.5*t))
-    GC.setColorMask()
+    GC.mDraw(pauseText,0,0)
 end
 
 scene.widgetList={
-
-    WIDGET.new{type='button',pos={0,0},  x= 120,y= 80, w=160,h=80,sound='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
-    WIDGET.new{type='button',pos={.5,.5},x= 0,  y=-160,w=180,h=90,fontSize=60,text=CHAR.icon.retry,    code=function() sysAction('restart') end},
-    WIDGET.new{type='button',pos={.5,.5},x=-110,y= 170,w=180,h=90,fontSize=60,text=CHAR.icon.play,     code=function() sysAction('back') end},
-    WIDGET.new{type='button',pos={.5,.5},x= 110,y= 170,w=180,h=90,fontSize=60,text=CHAR.icon.settings, code=function() sysAction('setting') end},
+    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={.5,.5},x=300*-1,y=-160,w=260,h=100,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.play,     code=function() sysAction('back') end},
+    WIDGET.new{type='button',pos={.5,.5},x=300*0,y=-160,w=260,h=100,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.retry,    code=function() sysAction('restart') end},
+    WIDGET.new{type='button',pos={.5,.5},x=300*1,y=-160,w=260,h=100,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.settings, code=function() sysAction('setting') end},
 }
 return scene
