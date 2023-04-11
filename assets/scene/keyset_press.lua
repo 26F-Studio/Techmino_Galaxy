@@ -4,6 +4,7 @@ local map,act
 local keyLangStr
 local result
 local quitTimer
+local escTimerWTF
 
 function scene.enter()
     map=SCN.args[1]
@@ -11,20 +12,22 @@ function scene.enter()
     keyLangStr='keyset_'..map..'_'..act
     result=false
     quitTimer=0
+    escTimerWTF=false
     if SETTINGS.system.touchControl then VCTRL.reset() end
 end
 
 function scene.keyDown(key,isRep)
     if isRep then return end
     if result then return end
-    if key=='escape' then
-        SCN.back('none',SCN.args[1])
+    if key=='escape' and not escTimerWTF then
+        escTimerWTF=.626
     elseif key=='backspace' then
         local L=KEYMAP[map]:getKeys(act)
         if L then TABLE.cut(L) end
         result=Text.keyset_deleted
         SFX.play('beep_down')
     else
+        escTimerWTF=false
         result=key
         KEYMAP[map]:remKey(key)
         KEYMAP[map]:addKey(act,key)
@@ -47,6 +50,12 @@ function scene.mouseMove(x,y,dx,dy) scene.touchMove(x,y,dx,dy,1) end
 scene.mouseUp=scene.touchUp
 
 function scene.update(dt)
+    if escTimerWTF then
+        escTimerWTF=escTimerWTF-dt
+        if escTimerWTF<=0 then
+            SCN.back('none',SCN.args[1])
+        end
+    end
     if result then
         quitTimer=quitTimer+dt
         if quitTimer>.1 then
@@ -56,9 +65,19 @@ function scene.update(dt)
 end
 
 function scene.draw()
-    FONT.set(100) GC.shadedPrint(Text[keyLangStr],800,300,'center',4,8)
-    FONT.set(60)  GC.shadedPrint(result or Text.keyset_pressKey,800,460,'center',2,8)
-    FONT.set(35)  GC.shadedPrint(Text.keyset_info,800,580,'center',2,8)
+    GC.replaceTransform(SCR.origin)
+    if escTimerWTF then
+        GC.setColor(1,1,1,.1)
+        local r=escTimerWTF/.626*SCR.w/2
+        GC.rectangle('fill',SCR.w/2-r,SCR.h*.45,r*2,SCR.h*.1,5)
+    end
+
+    GC.replaceTransform(SCR.xOy_m)
+    FONT.set(100) GC.shadedPrint(Text[keyLangStr],0,-200,'center',4,8)
+    FONT.set(60)  GC.shadedPrint(result or Text.keyset_pressKey,0,-40,'center',2,8)
+    FONT.set(35)  GC.shadedPrint(Text.keyset_info,0,80,'center',2,8)
+
+    GC.replaceTransform(SCR.xOy)
     if SETTINGS.system.touchControl then VCTRL.draw() end
 end
 

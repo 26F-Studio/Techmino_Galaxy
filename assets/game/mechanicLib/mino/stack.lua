@@ -1,3 +1,12 @@
+local scale={
+    'E3','F3','G3','A3',
+    'B3','D4','E4','F4',
+    'G4','A4','B4','D5',
+    'F5','G5','A5','C6',
+    'E6','G6','B6','C7',
+    'E7','G7','A7','C8',
+}
+
 local stack={}
 
 function stack.switch(P)
@@ -61,24 +70,10 @@ function stack.event_afterLock(P)
                 table.insert(F._matrix,md.zone_lines+1,table.remove(F._matrix,y))
             end
             md.zone_lines=md.zone_lines+1
+            SFX.playSample('bass',(20-md.zone_lines)/10,scale[md.zone_lines])
+            SFX.playSample('lead',math.min(md.zone_lines/10,1),scale[md.zone_lines])
         end
-        if #list>0 and P.sound then
-            local volume=math.min((md.zone_lines+4*#list)/30,1)
-            print(volume)
-            local standard=34-1+md.zone_lines
-            SFX.playSample('bass',standard)
-            SFX.playSample('lead',volume,standard+7)
-            if md.zone_lines>=8  then SFX.playSample('bass',volume*.8,standard-5) end
-            if md.zone_lines>=13 then SFX.playSample('lead',volume*.5,standard+12) end
-            if md.zone_lines>=18 then
-                if     md.zone_lines==18 then SFX.playSample('lead',volume,'D4')
-                elseif md.zone_lines==19 then SFX.playSample('lead',volume,'E4')
-                elseif md.zone_lines==20 then SFX.playSample('lead',volume,'F4')
-                elseif md.zone_lines==21 then SFX.playSample('lead',volume,'G4')
-                else                          SFX.playSample('lead',volume,'A4')
-                end
-            end
-        end
+
     end
 end
 

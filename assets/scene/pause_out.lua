@@ -9,12 +9,15 @@ function scene.enter()
 end
 
 local function sysAction(action)
-    if action=='restart' then
+    if action=='quit' then
         SFX.play('fail')
-        SCN.swapTo('game_out',nil,GAME.mode.name)
+        SCN.back()
     elseif action=='back' then
         SFX.play('solve')
         SCN.swapTo('game_out','none')
+    elseif action=='restart' then
+        SFX.play('fail')
+        SCN.swapTo('game_out',nil,GAME.mode.name)
     elseif action=='setting' then
         SCN.go('setting_out')
     else

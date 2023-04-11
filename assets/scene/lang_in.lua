@@ -25,7 +25,7 @@ function scene.leave()
 end
 
 function scene.keyDown(key)
-    if key==KEYMAP.getAction 'escape' then
+    if KEYMAP.sys:getAction(key)=='back' then
         SCN.back('none')
     else
         return true
