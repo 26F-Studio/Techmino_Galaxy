@@ -51,7 +51,51 @@ return {
     -- About-Game
     pause="暂停",
 
-    -- Key setting
+    keyset_pressKey="按下要设置的键",
+    keyset_deleted= "*已删除*",
+    keyset_info=    "[Esc]: 取消\n[Backspace]: 删除\n[Double Esc]: 设置为Esc",
+
+    -- Widget texts
+    button_back="返回",
+
+    title_simulation="模拟",
+    title_graph_mino="M-图谱",-- 翻译注意：取自“知识图谱”(人工智能领域)
+    title_settings="设置",
+
+    setting_das="DAS",
+    setting_arr="ARR",
+    setting_sdarr="SDARR",
+    setting_dasHalt="DAS停顿",
+    setting_hdLockA="自动硬降锁",
+    setting_hdLockM="手动硬降锁",
+    setting_shakeness="场地晃动",
+    setting_hitWavePower="冲击波强度",
+
+    setting_mainVol="主音量",
+    setting_bgm="音乐",
+    setting_sfx="音效",
+    setting_vib="振动",
+    setting_handling="控制参数...",
+    setting_keymapping="键位绑定...",
+    setting_enableTouching="启用触屏控制",
+    setting_touching="触屏控制...",
+    setting_test="测试",
+
+    setting_sysCursor="使用外部光标",
+    setting_clickFX="点击动画",
+    setting_power="终端状态",
+    setting_clean="显存回收加速",
+    setting_fullscreen="全屏",
+    setting_portrait="竖屏",
+    setting_autoMute="闲时静音",
+    setting_showTouch="显示触摸位置",
+
+    setting_maxFPS="最大帧数",
+    setting_updRate="更新比率",
+    setting_drawRate="绘制比率",
+    setting_msaa="抗锯齿",
+
+    title_keyset="键位绑定",
     keyset_mino_moveLeft=   "左移",
     keyset_mino_moveRight=  "右移",
     keyset_mino_rotateCW=   "顺时针旋转",
@@ -99,15 +143,6 @@ return {
     keyset_sys_right=   "菜单右",
     keyset_sys_select=  "菜单确定",
 
-    keyset_page_sys= "通用",
-    keyset_page_mino="方块",
-    keyset_page_puyo="气泡",
-    keyset_page_gem= "宝石",
-
-    keyset_pressKey="按下要设置的键",
-    keyset_deleted= "*已删除*",
-    keyset_info=    "[Esc]: 取消\n[Backspace]: 删除\n[Double Esc]: 设置为Esc",
-
     stick2_switch="2向摇杆",
     stick4_switch="4向摇杆",
     setting_touch_button="增减虚拟按键",
@@ -115,46 +150,6 @@ return {
     settinh_touch_buttonShape="更改形状",
     setting_touch_stickSize="摇杆尺寸",
     setting_touch_ballSize="摇把尺寸",
-
-    -- Widget texts
-    button_back="返回",
-
-    title_simulation="模拟",
-    title_graph_mino="M-图谱",-- 翻译注意：取自“知识图谱”(人工智能领域)
-    title_settings="设置",
-
-    setting_das="DAS",
-    setting_arr="ARR",
-    setting_sdarr="SDARR",
-    setting_dasHalt="DAS停顿",
-    setting_hdLockA="自动硬降锁",
-    setting_hdLockM="手动硬降锁",
-    setting_shakeness="场地晃动",
-    setting_hitWavePower="冲击波强度",
-
-    setting_mainVol="主音量",
-    setting_bgm="音乐",
-    setting_sfx="音效",
-    setting_vib="振动",
-    setting_handling="控制参数...",
-    setting_keymapping="键位绑定...",
-    setting_enableTouching="启用触屏控制",
-    setting_touching="触屏控制...",
-    setting_test="测试",
-
-    setting_sysCursor="使用外部光标",
-    setting_clickFX="点击动画",
-    setting_power="终端状态",
-    setting_clean="显存回收加速",
-    setting_fullscreen="全屏",
-    setting_portrait="竖屏",
-    setting_autoMute="闲时静音",
-    setting_showTouch="显示触摸位置",
-
-    setting_maxFPS="最大帧数",
-    setting_updRate="更新比率",
-    setting_drawRate="绘制比率",
-    setting_msaa="抗锯齿",
 
     main_in_dig="挖掘练习",
     main_in_sprint="40行",

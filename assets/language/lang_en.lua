@@ -51,7 +51,51 @@ return {
     -- About-Game
     pause="Pause",
 
-    -- Key setting
+    keyset_pressKey="Press a key",
+    keyset_deleted= "*Deleted*",
+    keyset_info=    "[Esc]: cancel\n[Backspace]: delete\n[Double Esc]: set to Esc",
+
+    -- Widget texts
+    button_back="Back",
+
+    title_simulation="Simulations",
+    title_graph_mino="M-Graph",-- Traslation warning: from "Knowledge Graph" (AI domain)
+    title_settings="Settings",
+
+    setting_das="DAS",
+    setting_arr="ARR",
+    setting_sdarr="SDARR",
+    setting_dasHalt="DAS halt",
+    setting_hdLockA="Auto hard-drop lock",
+    setting_hdLockM="Manual hard-drop lock",
+    setting_shakeness="Shakiness",
+    setting_hitWavePower="Hitwave Power",
+
+    setting_mainVol="Main Volume",
+    setting_bgm="BGM",
+    setting_sfx="SFX",
+    setting_vib="VIB",
+    setting_handling="Handling…",
+    setting_keymapping="Key mappings…",
+    setting_enableTouching="Enable touch control",
+    setting_touching="Touch controls…",
+    setting_test="Test",
+
+    setting_sysCursor="External cursor",
+    setting_clickFX="Click FX",
+    setting_power="Terminal State",
+    setting_clean="VRAM Boost",
+    setting_fullscreen="Fullscreen",
+    setting_portrait="Portrait",
+    setting_autoMute="Mute when idle",
+    setting_showTouch="Show touches",
+
+    setting_maxFPS="Max FPS",
+    setting_updRate="Update rate",
+    setting_drawRate="Draw rate",
+    setting_msaa="MSAA",
+
+    title_keyset="Keybinds",
     keyset_mino_moveLeft=   "Move Left",
     keyset_mino_moveRight=  "Move Right",
     keyset_mino_rotateCW=   "Twist CW",
@@ -99,15 +143,6 @@ return {
     keyset_sys_right=   "Right",
     keyset_sys_select=  "Select",
 
-    keyset_page_sys= "General",
-    keyset_page_mino="Mino",
-    keyset_page_puyo="Puyo",
-    keyset_page_gem= "Gem",
-
-    keyset_pressKey="Press a key",
-    keyset_deleted= "*Deleted*",
-    keyset_info=    "[Esc]: cancel\n[Backspace]: delete\n[Double Esc]: set to Esc",
-
     stick2_switch="2-way joystick",
     stick4_switch="4-way joystick",
     setting_touch_button="Add/Remove button",
@@ -115,46 +150,6 @@ return {
     settinh_touch_buttonShape="Change button shape",
     setting_touch_stickSize="Stick length",
     setting_touch_ballSize="Stick size",
-
-    -- Widget texts
-    button_back="Back",
-
-    title_simulation="Simulations",
-    title_graph_mino="M-Graph",-- Traslation warning: from "Knowledge Graph" (AI domain)
-    title_settings="Settings",
-
-    setting_das="DAS",
-    setting_arr="ARR",
-    setting_sdarr="SDARR",
-    setting_dasHalt="DAS halt",
-    setting_hdLockA="Auto hard-drop lock",
-    setting_hdLockM="Manual hard-drop lock",
-    setting_shakeness="Shakiness",
-    setting_hitWavePower="Hitwave Power",
-
-    setting_mainVol="Main Volume",
-    setting_bgm="BGM",
-    setting_sfx="SFX",
-    setting_vib="VIB",
-    setting_handling="Handling…",
-    setting_keymapping="Key mappings…",
-    setting_enableTouching="Enable touch control",
-    setting_touching="Touch controls…",
-    setting_test="Test",
-
-    setting_sysCursor="External cursor",
-    setting_clickFX="Click FX",
-    setting_power="Terminal State",
-    setting_clean="VRAM Boost",
-    setting_fullscreen="Fullscreen",
-    setting_portrait="Portrait",
-    setting_autoMute="Mute when idle",
-    setting_showTouch="Show touches",
-
-    setting_maxFPS="Max FPS",
-    setting_updRate="Update rate",
-    setting_drawRate="Draw rate",
-    setting_msaa="MSAA",
 
     main_in_dig="Dig Practice",
     main_in_sprint="40 Lines",
