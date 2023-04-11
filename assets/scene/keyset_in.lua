@@ -2,7 +2,14 @@ local gc=love.graphics
 
 local scene={}
 
-local restartKeyInfo={keys={'[???]'}}
+local sysKeyInfo={
+    {act='?',keys={'[???]'}},
+    {act='?',keys={'[???]'}},
+    {act='?',keys={'[???]'}},
+}
+sysKeyInfo.restart=sysKeyInfo[1]
+sysKeyInfo.back=sysKeyInfo[2]
+sysKeyInfo.quit=sysKeyInfo[3]
 local keyButtons={}
 
 function scene.enter()
@@ -16,9 +23,10 @@ function scene.enter()
     table.remove(keyButtons)
 
     for i=1,#KEYMAP.sys do
-        if KEYMAP.sys[i].act=='restart' then
-            restartKeyInfo=KEYMAP.sys[i]
-            break
+        local act=KEYMAP.sys[i].act
+        if sysKeyInfo[act] then
+            sysKeyInfo[act].act=KEYMAP.sys[i].act
+            sysKeyInfo[act].keys=KEYMAP.sys[i].keys
         end
     end
 end
@@ -30,7 +38,7 @@ function scene.draw()
     FONT.set(25)
     gc.setColor(COLOR.L)
     for i=1,#keyButtons do
-        local l=i<#keyButtons and KEYMAP.mino[i].keys or restartKeyInfo.keys-- Special case: restart
+        local l=i<#keyButtons-2 and KEYMAP.mino[i].keys or sysKeyInfo[i-#keyButtons+3].keys
         for j=1,#l do
             GC.mStr(l[j],
                 keyButtons[i].x+79+80*j,
@@ -57,6 +65,8 @@ scene.widgetList={
     WIDGET.new{type='button', x=600,y=560,w=200,h=70,cornerR=0,text=LANG"keyset_mino_hardDrop",  fontSize=20,color='lG',code=selAct('mino','hardDrop' )},
     WIDGET.new{type='button', x=600,y=640,w=200,h=70,cornerR=0,text=LANG"keyset_mino_holdPiece", fontSize=20,color='lG',code=selAct('mino','holdPiece')},
     WIDGET.new{type='button', x=600,y=720,w=200,h=70,cornerR=0,text=LANG"keyset_sys_restart",    fontSize=20,color='lG',code=selAct('sys', 'restart'  )},
+    WIDGET.new{type='button', x=600,y=800,w=200,h=70,cornerR=0,text=LANG"keyset_sys_back",       fontSize=20,color='lG',code=selAct('sys', 'back'     )},
+    WIDGET.new{type='button', x=600,y=880,w=200,h=70,cornerR=0,text=LANG"keyset_sys_quit",       fontSize=20,color='lG',code=selAct('sys', 'quit'     )},
 
     WIDGET.new{type='button',pos={1,1},x=-300,y=-80,w=160,h=80,cornerR=0,text=LANG"setting_test",fontSize=40,code=playInterior'mino/interior/test'},
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='button_back',cornerR=0,fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},

@@ -134,8 +134,10 @@ return {
 
     keyset_sys_view=    "View",
     keyset_sys_restart= "Restart",
-    keyset_sys_back=    "Back",
+    keyset_sys_back=    "Menu back",
+    keyset_sys_quit=    "End game",
     keyset_sys_setting= "Setting",
+    keyset_sys_help=    "Quick Help",
     keyset_sys_chat=    "Chat",
     keyset_sys_up=      "Up",
     keyset_sys_down=    "Down",
