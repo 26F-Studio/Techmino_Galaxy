@@ -106,7 +106,7 @@ return {
 
     keyset_pressKey="Press a key",
     keyset_deleted= "*Deleted*",
-    keyset_info=    "[Esc]: cancel\n[Backspace]: delete",
+    keyset_info=    "[Esc]: cancel\n[Backspace]: delete\n[Double Esc]: set to Esc",
 
     stick2_switch="2-way joystick",
     stick4_switch="4-way joystick",

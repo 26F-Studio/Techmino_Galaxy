@@ -106,7 +106,7 @@ return {
 
     keyset_pressKey="按下要设置的键",
     keyset_deleted= "*已删除*",
-    keyset_info=    "[Esc]: 取消\n[Backspace]: 删除",
+    keyset_info=    "[Esc]: 取消\n[Backspace]: 删除\n[Double Esc]: 设置为Esc",
 
     stick2_switch="2向摇杆",
     stick4_switch="4向摇杆",
