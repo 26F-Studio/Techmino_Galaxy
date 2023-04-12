@@ -12,6 +12,7 @@ local stack={}
 function stack.switch(P)
     if not P.modeData.inZone then
         P.modeData.inZone=true
+        P.modeData.zone_lineList={highest=0}-- For no-fall mode
         P.modeData.zone_lines=0
         P.settings.clearFullLine=false
 
@@ -25,6 +26,8 @@ function stack.switch(P)
         BGM.set('all','highgain',.626,.26)
     else
         P.modeData.inZone=false
+        P.modeData.zone_lineList=false
+        P.modeData.zone_lines=false
         P.settings.clearFullLine=true
 
         -- Recover gravity
@@ -70,10 +73,37 @@ function stack.event_afterLock(P)
                 table.insert(F._matrix,md.zone_lines+1,table.remove(F._matrix,y))
             end
             md.zone_lines=md.zone_lines+1
+            md.zone_lineList.highest=md.zone_lineList.highest+1
             SFX.playSample('bass',(20-md.zone_lines)/10,scale[md.zone_lines])
             SFX.playSample('lead',math.min(md.zone_lines/10,1),scale[md.zone_lines])
         end
-
+    end
+end
+function stack.event_afterLock_noFall(P)
+    if P.modeData.inZone then
+        local F=P.field
+        local list={}
+        local md=P.modeData
+        for y=1,F:getHeight() do
+            if not P.modeData.zone_lineList[y] and P:isFullLine(y) then
+                table.insert(list,y)
+                P.modeData.zone_lineList[y]=true
+                if y>md.zone_lineList.highest then
+                    md.zone_lineList.highest=y
+                end
+            end
+        end
+        for _,y in next,list do
+            if y>=md.zone_lines+1 then
+                for x=1,#F._matrix[y] do
+                    local C=F:getCell(x,y)
+                    if C then C.color=0 end
+                end
+            end
+            md.zone_lines=md.zone_lines+1
+            SFX.playSample('bass',(20-md.zone_lines)/10,scale[md.zone_lines])
+            SFX.playSample('lead',math.min(md.zone_lines/10,1),scale[md.zone_lines])
+        end
     end
 end
 
@@ -94,13 +124,14 @@ local lineFont={
     100,--26+
 }
 function stack.event_drawOnPlayer(P)
-    if P.modeData.inZone and P.modeData.zone_lines>0 then
+    local md=P.modeData
+    if md.inZone and md.zone_lines>0 then
         GC.push('transform')
-        GC.translate(0,400-(P.modeData.zone_lines+.5)*(400/P.settings.fieldW)/2)
+        GC.translate(0,400-(md.zone_lineList.highest+.5)*(400/P.settings.fieldW)/2)
         GC.scale(2)
-        local fontSize=lineFont[math.min(P.modeData.zone_lines,26)]
+        local fontSize=lineFont[math.min(md.zone_lines,26)]
         FONT.set(fontSize,'bold')
-        GC.shadedPrint(P.modeData.zone_lines,0,-fontSize*.5,'center',2,8,COLOR.lD,COLOR.L)
+        GC.shadedPrint(md.zone_lines,0,-fontSize*.5,'center',2,8,COLOR.lD,COLOR.L)
         GC.pop()
     end
 end
