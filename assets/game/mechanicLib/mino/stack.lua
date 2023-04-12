@@ -83,4 +83,25 @@ function stack.event_whenSuffocate(P)
     end
 end
 
+local lineFont={
+    30,35,40,45,--1~4
+    50,50,55,55,55,--5~9
+    60,60,60,60,60,--10~14
+    75,75,75,80,80,--15~19
+    85,85,--20,21
+    90,90,--22,23
+    95,95,--24,25
+    100,--26+
+}
+function stack.event_drawOnPlayer(P)
+    if P.modeData.inZone and P.modeData.zone_lines>0 then
+        local fontSize=lineFont[math.min(P.modeData.zone_lines,26)]
+        FONT.set(fontSize)
+        GC.shadedPrint(P.modeData.zone_lines,
+            0,400-fontSize*.4-(P.modeData.zone_lines+.5)*(400/P.settings.fieldW)/2,
+            'center',3,8,COLOR.dX,COLOR.L
+        )
+    end
+end
+
 return stack

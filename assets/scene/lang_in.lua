@@ -41,7 +41,7 @@ end
 
 function scene.draw()
     FONT.set(80)
-    love.graphics.setColor(1,1,1)
+    GC.setColor(1,1,1)
     GC.mStr(languages[curLang-curLang%1],800,60)
 end
 
