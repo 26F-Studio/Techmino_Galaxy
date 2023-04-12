@@ -95,6 +95,8 @@ return {
     setting_drawRate="绘制比率",
     setting_msaa="抗锯齿",
 
+    lang_note="中文为原始语言，其他语言翻译由志愿者贡献，不保证100%准确",
+
     title_keyset="键位绑定",
     keyset_mino_moveLeft=   "左移",
     keyset_mino_moveRight=  "右移",

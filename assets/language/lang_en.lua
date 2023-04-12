@@ -95,6 +95,8 @@ return {
     setting_drawRate="Draw rate",
     setting_msaa="MSAA",
 
+    lang_note="Chinese is the original language, other translations are contributed by volunteers and might not be 100% accurate",
+
     title_keyset="Keybinds",
     keyset_mino_moveLeft=   "Move Left",
     keyset_mino_moveRight=  "Move Right",
