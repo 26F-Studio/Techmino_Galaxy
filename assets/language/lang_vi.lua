@@ -1,6 +1,3 @@
--- This translation originally made by Sea (C6H12O6+NaCl+H2O)
--- Special thanks to Shard Nguyễn, Nguyễn "Cuốc" Hiếu, User670 for advices
-
 return {
     -- Info
     sureText={
@@ -54,14 +51,62 @@ return {
     -- About-Game
     pause="Đã tạm dừng",
 
-    -- Key setting
+    keyset_pressKey="Hãy nhấn một phím",
+    keyset_deleted= "*Xóa rồi nhé*",
+    keyset_info=    "[Esc]: Huỷ\t[Backspace]: Xóa\nNhấn 2 lần [Esc]: gán phím Esc",
+
+    -- Widget texts
+    button_back="Trở về",
+
+    title_simulation="Trình giả lập",
+    title_graph_mino="M-Graph (Đồ thị Mino)",   -- from "Knowledge Graph" (AI domain) -- it used to be translated to "M-Graph (Bản đồ Mino)"
+    title_settings="Cài đặt",
+
+    setting_das="DAS",
+    setting_arr="ARR",
+    setting_sdarr="SDARR",
+    setting_dasHalt="DAS halt",
+    setting_hdLockA="Auto hard-drop lock",
+    setting_hdLockM="Manual hard-drop lock",
+    setting_shakeness="Shakiness",
+    setting_hitWavePower="Hitwave Power",
+
+    setting_mainVol="Âm lượng tổng",
+    setting_bgm="Nhạc nền (BGM)",
+    setting_sfx="Hiệu ứng (SFX)",
+    setting_vib="Rung (VIB)",
+    setting_handling="Handling…",
+    setting_keymapping="Cài đặt phím…",
+    setting_enableTouching="Điều khiển bằng cảm ứng",
+    setting_touching="Bố cục các nút…",
+    setting_test="Thử phím",
+
+    setting_sysCursor="Trỏ chuột hệ thống",
+    setting_clickFX="Hiệu ứng nhấp chuột",
+    setting_power="Trạng thái cuối cùng",   -- Ok I searched StackOverflow and asked Bing AI for this (ChatGPT was busy that time)
+    setting_clean="VRAM Boost",
+    setting_fullscreen="Toàn màn hình",
+    setting_portrait="Màn hình hướng dọc",
+    setting_autoMute="Tắt tiếng khi đang xem cửa số khác",
+    setting_showTouch="Hiện vị trí vừa nhấn",
+
+    setting_maxFPS="FPS tối đa",
+    setting_updRate="Tần suất cập nhật",
+    setting_drawRate="Tuần suất vẽ",
+    setting_msaa="MSAA - Khử răng cưa",
+
+    lang_note="Bản tiếng Trung (简体中文) là bản gốc của game. Bản dịch này được dịch từ bản tiếng Anh (English)\nCác bản dịch được các tình nguyện viên đóng góp và chúng có thể không chính xác 100%\nCó một số thuật ngữ không được dịch trực tiếp trong game. Vui lòng tra từ điển Zictionary để tìm hiểu thêm",
+            -- Chinese version is the original version of the game. This translation (Vietnamese) is translated from English\nAll translations are contributed by volunteers and it may not accurate 100%\nThere are some terms are not translated directly in the game. Please check Zictionary for more information.
+            --                                                                                                                                                                                             |---------------------------------------------------------------------------------------------------------| <-- only appear in Vietnamese
+
     -- GHI CHÚ: Viết hoa các từ "Trái", "Phải", "Lên", "Xuống"
+    title_keyset="Gán phím",
     keyset_mino_moveLeft=   "Sang Trái",
     keyset_mino_moveRight=  "Sang Phải",
     keyset_mino_rotateCW=   "Twist (Xoay) Phải",
     keyset_mino_rotateCCW=  "Twist (Xoay) Trái",
     keyset_mino_rotate180=  "Twist (Xoay) 180",
-    keyset_mino_softDrop=   "Thả Nhẹ/Xuống từ từ",      -- I don't know which one should I use
+    keyset_mino_softDrop=   "Thả Nhẹ/Xuống 1 ô",      -- I don't know which one should I use
     keyset_mino_hardDrop=   "Thả Mạnh/Đặt gạch ngay",   -- so does to it
     keyset_mino_holdPiece=  "Giữ gạch",
 
@@ -92,23 +137,18 @@ return {
     keyset_func5= "Chức năng 5 (F5)",
     keyset_func6= "Chức năng 6 (F6)",
 
+    keyset_sys_view=    "Đổi view (Gần/Xa)",
     keyset_sys_restart= "Chơi lại",
+    keyset_sys_back=    "Trở về",
+    keyset_sys_quit=    "Dừng game",
+    keyset_sys_setting= "Vào Cài đặt",
+    keyset_sys_help=    "Mở Trợ giúp nhanh",
     keyset_sys_chat=    "Trò chuyện",
     keyset_sys_up=      "Lên",
     keyset_sys_down=    "Xuống",
     keyset_sys_left=    "Trái",
     keyset_sys_right=   "Phải",
     keyset_sys_select=  "Lựa chọn",
-    keyset_sys_back=    "Trở về",
-
-    keyset_page_sys= "Chung",
-    keyset_page_mino="Mino",
-    keyset_page_puyo="Puyo",
-    keyset_page_gem= "Gem",
-
-    keyset_pressKey="Hãy nhấn một phím",
-    keyset_deleted= "*Xóa rồi nhé*",
-    keyset_info=    "[Esc]: Huỷ\n[Backspace]: Xóa",
 
     stick2_switch="Cần điều khiển\n2 hướng",
     stick4_switch="Cần điều khiển\n4 hướng",
@@ -117,48 +157,6 @@ return {
     settinh_touch_buttonShape="Đổi hình dạng phím",
     setting_touch_stickSize="Chiều dài",
     setting_touch_ballSize="Kích thước",
-
-    -- Widget texts
-    button_back="Trở về",
-
-    title_simulation="Trình giả lập",
-    title_graph_mino="M-Graph (Đồ thị Mino)",   -- from "Knowledge Graph" (AI domain)
-                                                -- it used to be translated to "M-Graph (Bản đồ Mino)"
-    
-    title_settings="Cài đặt",
-
-    setting_das="DAS",
-    setting_arr="ARR",
-    setting_sdarr="SDARR",
-    setting_dasHalt="DAS halt",
-    setting_hdLockA="Auto hard-drop lock",
-    setting_hdLockM="Manual hard-drop lock",
-    setting_shakeness="Shakiness",
-    setting_hitWavePower="Hitwave Power",
-
-    setting_mainVol="Âm lượng tổng",
-    setting_bgm="Nhạc nền (BGM)",
-    setting_sfx="Hiệu ứng (SFX)",
-    setting_vib="Rung (VIB)",
-    setting_handling="Handling…",
-    setting_keymapping="Cài đặt phím…",
-    setting_enableTouching="Điều khiển bằng cảm ứng",
-    setting_touching="Bố cục các nút…",
-    setting_test="Thử phím",
-
-    setting_sysCursor="Trỏ chuột hệ thống",
-    setting_clickFX="Hiệu ứng nhấp chuột",
-    setting_power="Terminal State",
-    setting_clean="VRAM Boost",
-    setting_fullscreen="Toàn màn hình",
-    setting_portrait="Màn hình hướng dọc",
-    setting_autoMute="Tắt tiếng khi đang xem cửa số khác",
-    setting_showTouch="Hiện vị trí vừa nhấn",
-
-    setting_maxFPS="FPS tối đa",
-    setting_updRate="Tần suất cập nhật",
-    setting_drawRate="Tuần suất vẽ",
-    setting_msaa="MSAA - Khử răng cưa",
 
     main_in_dig="Tập đào rác",
     main_in_sprint="40 hàng",
@@ -219,10 +217,10 @@ return {
         backfire_amplify_100=  {"Ăn đòn phản đôi","Xóa 100 hàng, cũng bị ăn rác do chính mình tạo ra, lượng rác trả lại hơi bị nhiều đấy nhé!"},
         -- This one is "Xóa 100 nhận Phô mai"
         backfire_cheese_100=   {"Ăn đòn phản - Phô mai","Xóa 100 hàng, cũng bị ăn rác do chính mình tạo ra, nhưng lần này bị bón hành kiểu phô mai"},
-        
+
         sprint_40=             {"40 hàng","Một chế độ mà bạn luôn thấy\nXóa 40 hàng là bạn đã hoàn thành"},
         sprint_10=             {"10 hàng","Chỉ cần 10 hàng mà thôi!"},
-        sprint_obstacle_20=    {"20 hàng - VCNV","Bây giờ là vòng thi \"Vượt chướng ngại vật\"! \nCác thí sinh của chúng ta ngày hôm nay sẽ xóa một vài hàng với \"chướng ngại vật\" đã được chuẩn bị sẵn"},  --if you know "Digital LG Quiz Vietnam" (Road to Olympia mountain) or "Đường lên đỉnh Olympia"
+        sprint_obstacle_20=    {"20 điểm - VCNV","Bây giờ là vòng thi \"Vượt chướng ngại vật\"! \nCác thí sinh của chúng ta ngày hôm nay sẽ xóa một vài hàng với \"chướng ngại vật\" đã được chuẩn bị sẵn"},  --if you know "Digital LG Quiz Vietnam" (Road to Olympia mountain) or "Đường lên đỉnh Olympia"
         sprint_200=            {"200 hàng","Xóa 200 hàng thôi, không có gì hơn"},
         sprint_1000=           {"1000 hàng","Xóa 1000 hàng, không có gì hơn"},
         sprint_drought_40=     {"40 hàng - Drought","Xóa 40 hàng…\nỦa mà khoan, gạch I đâu ròi?!"},
@@ -247,13 +245,13 @@ return {
     },
 
     -- Level
-    tutorial_basic="Những thứ cơ bản", 
+    tutorial_basic="Những thứ cơ bản",
     tutorial_sequence="Next & Hold",
     tutorial_stackBasic="Xếp gạch sao cho đúng?",
     tutorial_twoRotatingKey="Xoay cả 2 hướng",
     -- tutorial_piece="Hình dạng của\ncác viên gạch",
     tutorial_piece = "[Chưa hoàn thành]", -- [Unfinished] | Waiting for actual game
-    tutorial_rotating="Tập xoay gạch", 
+    tutorial_rotating="Tập xoay gạch",
 
     tutorial_pass="HOÀN THÀNH!", -- Completed (Pass)
     tutorial_notpass="Tạch rồi…", -- Fun fact: "Tạch" is the keyboard sound, don't make any keyboard sounds to who are preapring the test (or WYSI)
@@ -292,3 +290,7 @@ return {
     tutorial_rotating_1="6. Tập xoay gạch",
     tutorial_rotating_2="Hãy xoay gạch ở trên sao cho giống với gạch ở dưới.",
 }
+
+-- Moved the credit to the last for easier edit
+-- This translation originally made by Sea (C6H12O6+NaCl+H2O)
+-- Special thanks to Shard Nguyễn, Nguyễn "Cuốc" Hiếu, User670 for advices
