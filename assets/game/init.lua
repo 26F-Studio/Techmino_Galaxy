@@ -388,7 +388,7 @@ function GAME.render()
     gc.setCanvas({Zenitha.getBigCanvas('player'),stencil=true})
     gc.replaceTransform(SCR.xOy_m)
     gc.applyTransform(GAME.camera.transform)
-    gc.clear(0,0,0,1)
+    gc.clear(0,0,0,0)
     for _,P in next,GAME.playerList do P:render() end
     gc.setCanvas()
 
