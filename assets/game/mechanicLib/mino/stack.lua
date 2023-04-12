@@ -95,12 +95,13 @@ local lineFont={
 }
 function stack.event_drawOnPlayer(P)
     if P.modeData.inZone and P.modeData.zone_lines>0 then
+        GC.push('transform')
+        GC.translate(0,400-(P.modeData.zone_lines+.5)*(400/P.settings.fieldW)/2)
+        GC.scale(2)
         local fontSize=lineFont[math.min(P.modeData.zone_lines,26)]
-        FONT.set(fontSize)
-        GC.shadedPrint(P.modeData.zone_lines,
-            0,400-fontSize*.4-(P.modeData.zone_lines+.5)*(400/P.settings.fieldW)/2,
-            'center',3,8,COLOR.dX,COLOR.L
-        )
+        FONT.set(fontSize,'bold')
+        GC.shadedPrint(P.modeData.zone_lines,0,-fontSize*.5,'center',2,8,COLOR.lD,COLOR.L)
+        GC.pop()
     end
 end
 
