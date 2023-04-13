@@ -95,7 +95,7 @@ return {
     setting_drawRate="Draw rate",
     setting_msaa="MSAA",
 
-    lang_note="Chinese is the original language, other translations are contributed by volunteers and might not be 100% accurate",
+    lang_note="Chinese is the original game language.\nAll translations are contributed by volunteers and it may not be 100% accurate\nThere are some terms not translated directly, please check Zictionary for more information.",
 
     title_keyset="Keybinds",
     keyset_mino_moveLeft=   "Move Left",
