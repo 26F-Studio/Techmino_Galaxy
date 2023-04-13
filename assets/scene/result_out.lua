@@ -25,6 +25,7 @@ function scene.draw()
 
     GC.setCanvas(Zenitha.getBigCanvas('result'))
     GC.clear(0,0,0,0)
+    GC.replaceTransform(SCR.xOy)
     GAME.mode.resultPage(time)
     GC.setCanvas()
 
