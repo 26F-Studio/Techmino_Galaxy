@@ -22,8 +22,8 @@ return {
                 P.fieldDived=0
                 P.modeData.garbageRemain=12
             end,
-            afterClear=function(P,movement)
-                local remain=movement.clear[#movement.clear]-1
+            afterClear=function(P,clear)
+                local remain=clear.lines[clear.line]-1
                 if remain<P.modeData.garbageRemain then
                     P.modeData.garbageRemain=remain
                     if remain==0 then

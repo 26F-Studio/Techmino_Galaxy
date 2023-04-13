@@ -73,6 +73,7 @@ end
     text ("[TEXT]")
     duration ('2.6s')
     style ('appear')
+    styleArg (nil)
     size (60)
     type ('norm')
     x,y (0,0)
@@ -87,6 +88,8 @@ function P:say(arg)
         elseif str:sub(1,1)=='@' then
             str=Text[str:sub(2)] or str
         end
+    else
+        str=tostring(str)
     end
     local D=arg.duration
     if type(D)=='string' then
@@ -97,8 +100,9 @@ function P:say(arg)
     arg.duration=D
     self.texts:add{
         duration=D,
-        text=str or "[TEXT]",
+        text=str,
         style=arg.style or 'appear',
+        styleArg=arg.styleArg,
         fontSize=arg.size or 60,
         fontType=arg.type or 'norm',
         x=arg.x or 0,
