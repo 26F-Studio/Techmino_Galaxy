@@ -16,24 +16,25 @@ end
 -- Effects
 function P:shakeBoard(args,v)
     local shake=self.settings.shakeness
+    local pos=self.pos
     if args:sArg('-drop') then
-        self.pos.vy=self.pos.vy+.2*shake*(v^.5 or 1)
+        pos.vy=pos.vy+.2*shake*(v^.5 or 1)
     elseif args:sArg('-down') then
-        self.pos.dy=self.pos.dy+.1*shake
+        pos.dy=pos.dy+.1*shake
     elseif args:sArg('-right') then
-        self.pos.dx=self.pos.dx+.1*shake
+        pos.dx=pos.dx+.1*shake
     elseif args:sArg('-left') then
-        self.pos.dx=self.pos.dx-.1*shake
+        pos.dx=pos.dx-.1*shake
     elseif args:sArg('-cw') then
-        self.pos.va=self.pos.va+.002*shake
+        pos.va=pos.va+.002*shake
     elseif args:sArg('-ccw') then
-        self.pos.va=self.pos.va-.002*shake
+        pos.va=pos.va-.002*shake
     elseif args:sArg('-180') then
-        self.pos.vy=self.pos.vy+.1*shake
-        self.pos.va=self.pos.va+((self.handX+#self.hand.matrix[1]/2-1)/self.settings.fieldW-.5)*.0026*shake
+        pos.vy=pos.vy+.1*shake
+        pos.va=pos.va+((self.handX+#self.hand.matrix[1]/2-1)/self.settings.fieldW-.5)*.0026*shake
     elseif args:sArg('-clear') then
-        self.pos.dk=self.pos.dk*(1+shake)
-        self.pos.vk=self.pos.vk+.0002*shake*min((v or 2)^1.6,26)
+        pos.dk=pos.dk*(1+shake)
+        pos.vk=pos.vk+.0002*shake*min((v or 2)^1.6,26)
     end
 end
 function P:playSound(event,...)
@@ -48,16 +49,18 @@ function P:playSound(event,...)
     end
 end
 function P:setPosition(x,y,k,a)
-    self.pos.x=x or self.pos.x
-    self.pos.y=y or self.pos.y
-    self.pos.k=k or self.pos.k
-    self.pos.a=a or self.pos.a
+    local pos=self.pos
+    pos.x=x or pos.x
+    pos.y=y or pos.y
+    pos.k=k or pos.k
+    pos.a=a or pos.a
 end
 function P:movePosition(dx,dy,k,da)
-    self.pos.x=self.pos.x+(dx or 0)
-    self.pos.y=self.pos.y+(dy or 0)
-    self.pos.k=self.pos.k*(k or 1)
-    self.pos.a=self.pos.a+(da or 0)
+    local pos=self.pos
+    pos.x=pos.x+(dx or 0)
+    pos.y=pos.y+(dy or 0)
+    pos.k=pos.k*(k  or 1)
+    pos.a=pos.a+(da or 0)
 end
 local function parseTime(str)
     local num,unit=str:cutUnit()
