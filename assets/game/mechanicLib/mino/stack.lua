@@ -43,7 +43,7 @@ function stack.switch(P)
             text=tostring(P.modeData.zone_lines),
             y=P.modeData.zoneTextHeight or P.modeData.zoneTextHeight0,
             size=math.min(lineFont[P.modeData.zone_lines]*2,100),
-            duration=math.min(P.modeData.zone_lines^.5,5),
+            duration=math.min(P.modeData.zone_lines^.5*.626,3),
             type='bold',
             style='zoomout',
             styleArg=.626,
