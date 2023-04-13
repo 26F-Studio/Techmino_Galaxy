@@ -1,5 +1,3 @@
-local gc=love.graphics
-local lineTarget=40
 local bgmTransBegin,bgmTransFinish=10,30
 
 return {
@@ -10,26 +8,24 @@ return {
     end,
     settings={mino={
         event={
-            playerInit=function(P)
-                P.modeData.line=0
-            end,
-            afterClear=function(P,clear)
-                for i=clear.line,1,-1 do
-                    table.insert(P.field._matrix,clear.lines[i],TABLE.new(false,P.settings.fieldW))
-                end
-                P.field:fresh()
-                P.modeData.line=math.min(P.modeData.line+clear.line,lineTarget)
-                if P.modeData.line>=lineTarget then
-                    P:finish('AC')
-                end
-                if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
-                    BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
-                end
-            end,
-            drawInField=function(P)
-                gc.setColor(1,1,1,.26)
-                gc.rectangle('fill',0,(P.modeData.line-lineTarget)*40-2,P.settings.fieldW*40,4)
-            end,
+            playerInit=mechLib.mino.statistics.event_playerInit,
+            afterClear={
+                function(P,clear)
+                    for i=clear.line,1,-1 do
+                        table.insert(P.field._matrix,clear.lines[i],TABLE.new(false,P.settings.fieldW))
+                    end
+                    P.field:fresh()
+                end,
+                mechLib.mino.statistics.event_afterClear,
+                mechLib.mino.sprint.event_afterClear[40],
+                function(P)
+                    if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
+                        BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
+                    end
+                end,
+            },
+            drawInField=mechLib.mino.sprint.event_drawInField[40],
+            drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],
         },
     }},
 }

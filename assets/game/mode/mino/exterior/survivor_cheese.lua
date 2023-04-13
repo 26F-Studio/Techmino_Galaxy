@@ -1,4 +1,3 @@
-local gc=love.graphics
 local max,min=math.max,math.min
 local bgmTransBegin,bgmTransFinish=30,80
 

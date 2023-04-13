@@ -1,4 +1,3 @@
-local gc=love.graphics
 local floor,ceil=math.floor,math.ceil
 local max,min=math.max,math.min
 local bgmTransBegin,bgmTransFinish=10,30

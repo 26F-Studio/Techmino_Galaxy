@@ -17,23 +17,17 @@ return {
             end,
         },
         event={
-            playerInit=function(P)
-                P.modeData.line=0
-            end,
-            afterClear=function(P)
-                P.modeData.line=math.min(P.modeData.line+P.clearHistory[#P.clearHistory].line,40)
-                if PROGRESS.getMain()>=2 and P.modeData.line>10 and P.isMain then
-                    BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-10)/20,1),2.6)
-                end
-                if P.modeData.line>=40 then
-                    P:finish('AC')
-                end
-            end,
-            drawOnPlayer=function(P)
-                gc.setColor(COLOR.L)
-                FONT.set(80)
-                GC.mStr(40-P.modeData.line,-300,-55)
-            end,
+            playerInit=mechLib.mino.statistics.event_playerInit,
+            afterClear={
+                mechLib.mino.statistics.event_afterClear,
+                mechLib.mino.sprint.event_afterClear[40],
+                function(P)
+                    if PROGRESS.getMain()>=2 and P.modeData.line>10 and P.isMain then
+                        BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-10)/20,1),2.6)
+                    end
+                end,
+            },
+            drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],
         },
     }},
     result=function()
