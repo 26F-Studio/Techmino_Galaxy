@@ -95,7 +95,7 @@ return {
     setting_drawRate="Tuần suất vẽ",
     setting_msaa="MSAA - Khử răng cưa",
 
-    lang_note="Bản tiếng Trung (Giản thể) (简体中文) là bản gốc của game. Bản dịch này được dịch từ bản tiếng Anh (English)\nCác bản dịch được các tình nguyện viên đóng góp và chúng có thể không chính xác 100%\nCó một số thuật ngữ không được dịch trực tiếp trong game. Vui lòng tra từ điển Zictionary để tìm hiểu thêm",
+    lang_note="Bản tiếng Trung (Giản thể) (简体中文) là bản gốc của game. Bản dịch này được dịch từ bản tiếng Anh (English)\nCác bản dịch được các tình nguyện viên đóng góp và chúng có thể không chính xác 100%\nCó một số thuật ngữ không được dịch trực tiếp trong game. Vui lòng tra Zictionary để tìm hiểu thêm",
             -- Chinese (Simplified Han) version is the original version of the game. This translation (Vietnamese) is translated from English\nAll translations are contributed by volunteers and it may not accurate 100%\nThere are some terms are not translated directly in the game. Please check Zictionary for more information.
             --                                                                                                                                                                                             |---------------------------------------------------------------------------------------------------------| <-- only appear in Vietnamese
 
