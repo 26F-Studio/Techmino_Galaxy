@@ -53,7 +53,7 @@ return {
 
     keyset_pressKey="Hãy nhấn một phím",
     keyset_deleted= "*Xóa rồi nhé*",
-    keyset_info=    "[Esc]: Huỷ\t[Backspace]: Xóa\nNhấn 2 lần [Esc]: gán phím Esc",
+    keyset_info=    "[Esc]: Huỷ\t[Backspace]: Xóa\nNhấn đúp [Esc]: gán phím Esc",
 
     -- Widget texts
     button_back="Trở về",
@@ -91,12 +91,12 @@ return {
     setting_showTouch="Hiện vị trí vừa nhấn",
 
     setting_maxFPS="FPS tối đa",
-    setting_updRate="Tần suất cập nhật",
+    setting_updRate="Tần suất cập nhậ vt",
     setting_drawRate="Tuần suất vẽ",
     setting_msaa="MSAA - Khử răng cưa",
 
-    lang_note="Bản tiếng Trung (简体中文) là bản gốc của game. Bản dịch này được dịch từ bản tiếng Anh (English)\nCác bản dịch được các tình nguyện viên đóng góp và chúng có thể không chính xác 100%\nCó một số thuật ngữ không được dịch trực tiếp trong game. Vui lòng tra từ điển Zictionary để tìm hiểu thêm",
-            -- Chinese version is the original version of the game. This translation (Vietnamese) is translated from English\nAll translations are contributed by volunteers and it may not accurate 100%\nThere are some terms are not translated directly in the game. Please check Zictionary for more information.
+    lang_note="Bản tiếng Trung (Giản thể) (简体中文) là bản gốc của game. Bản dịch này được dịch từ bản tiếng Anh (English)\nCác bản dịch được các tình nguyện viên đóng góp và chúng có thể không chính xác 100%\nCó một số thuật ngữ không được dịch trực tiếp trong game. Vui lòng tra từ điển Zictionary để tìm hiểu thêm",
+            -- Chinese (Simplified Han) version is the original version of the game. This translation (Vietnamese) is translated from English\nAll translations are contributed by volunteers and it may not accurate 100%\nThere are some terms are not translated directly in the game. Please check Zictionary for more information.
             --                                                                                                                                                                                             |---------------------------------------------------------------------------------------------------------| <-- only appear in Vietnamese
 
     -- GHI CHÚ: Viết hoa các từ "Trái", "Phải", "Lên", "Xuống"
@@ -140,7 +140,7 @@ return {
     keyset_sys_view=    "Đổi view (Gần/Xa)",
     keyset_sys_restart= "Chơi lại",
     keyset_sys_back=    "Trở về",
-    keyset_sys_quit=    "Dừng game",
+    keyset_sys_quit=    "DỪNG game",
     keyset_sys_setting= "Vào Cài đặt",
     keyset_sys_help=    "Mở Trợ giúp nhanh",
     keyset_sys_chat=    "Trò chuyện",
