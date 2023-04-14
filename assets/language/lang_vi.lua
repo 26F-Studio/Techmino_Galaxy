@@ -87,7 +87,7 @@ return {
     setting_clean="VRAM Boost",
     setting_fullscreen="Toàn màn hình",
     setting_portrait="Màn hình hướng dọc",
-    setting_autoMute="Tắt tiếng khi đang xem cửa số khác",
+    setting_autoMute="Tắt tiếng khi mở cửa số khác",
     setting_showTouch="Hiện vị trí vừa nhấn",
 
     setting_maxFPS="FPS tối đa",
