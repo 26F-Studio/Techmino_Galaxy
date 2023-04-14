@@ -1273,7 +1273,7 @@ function MP:isFullLine(y)
     end
     return true
 end
-function MP:getFullLines()
+function MP:getFullLines()-- Top to bottom, like {4,3,2,1}
     local fullH={}
     for y=self.field:getHeight(),1,-1 do
         if self:isFullLine(y) then

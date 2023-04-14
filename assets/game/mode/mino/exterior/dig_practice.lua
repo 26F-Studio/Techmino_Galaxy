@@ -6,22 +6,8 @@ return {
     end,
     settings={mino={
         event={
-            playerInit=function(P)
-                local dir=P:random(0,1)*2-1
-                local phase=P:random(3,6)
-                for i=0,11 do P:riseGarbage((phase+i)*dir%10+1) end
-                P.fieldDived=0
-                P.modeData.garbageRemain=12
-            end,
-            afterClear=function(P,clear)
-                local remain=clear.lines[clear.line]-1
-                if remain<P.modeData.garbageRemain then
-                    P.modeData.garbageRemain=remain
-                    if remain==0 then
-                        P:finish('AC')
-                    end
-                end
-            end,
+            playerInit=mechLib.mino.dig.practice_event_playerInit[12],
+            afterClear=mechLib.mino.dig.practice_event_afterClear,
         },
     }},
 }

@@ -7,6 +7,7 @@ return {
 
         -- Mode
         sprint=require'assets.game.mechanicLib.mino.sprint',
+        dig=require'assets.game.mechanicLib.mino.dig',
         survivor=require'assets.game.mechanicLib.mino.survivor',
         backfire=require'assets.game.mechanicLib.mino.backfire',
         hypersonic=require'assets.game.mechanicLib.mino.hypersonic',
