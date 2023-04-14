@@ -218,14 +218,14 @@ return {
         -- This one is "Xóa 100 nhận Phô mai"
         backfire_cheese_100=   {"Ăn đòn phản - Phô mai","Xóa 100 hàng, cũng bị ăn rác do chính mình tạo ra, nhưng lần này bị bón hành kiểu phô mai"},
 
-        sprint_40=             {"40 hàng","Một chế độ mà bạn luôn thấy\nXóa 40 hàng là bạn đã hoàn thành"},
+        sprint_40=             {"40 hàng","Xóa 40 hàng càng nhanh càng tốt\nĐơn giản vậy thôi"},
         sprint_10=             {"10 hàng","Chỉ cần 10 hàng mà thôi!"},
-        sprint_obstacle_20=    {"20 điểm - VCNV","Bây giờ là vòng thi \"Vượt chướng ngại vật\"! \nCác thí sinh của chúng ta ngày hôm nay sẽ xóa một vài hàng với \"chướng ngại vật\" đã được chuẩn bị sẵn"},  --if you know "Digital LG Quiz Vietnam" (Road to Olympia mountain) or "Đường lên đỉnh Olympia"
-        sprint_200=            {"200 hàng","Xóa 200 hàng thôi, không có gì hơn"},
-        sprint_1000=           {"1000 hàng","Xóa 1000 hàng, không có gì hơn"},
-        sprint_drought_40=     {"40 hàng - Drought","Xóa 40 hàng…\nỦa mà khoan, gạch I đâu ròi?!"},
+        sprint_obstacle_20=    {"20 điểm - VCNV","(Vượt chướng ngại vật)\n\nBây giờ là vòng thi \"Vượt chướng ngại vật\"!\n\nCác thí sinh sẽ cùng nhau đi tìm một \"ẩn số\" gồm có 20 \"chữ cái\""},  --ref from "Đường lên đỉnh Olympia"
+        sprint_200=            {"200 hàng","Xóa 200 hàng\n\n(Nhớ để ý kẻo mỏi tay)"},
+        sprint_1000=           {"1000 hàng","Xóa 1000 hàng\n\n(Chỉ mong tay bạn không bị rã rời)"},
+        sprint_drought_40=     {"40 hàng - Drought","Xóa 40 hàng…\nỦa mà khoan, nãy giờ chơi sao không thấy gạch I rơi???"},
         sprint_flood_40=       {"40 hàng - Flood","Xóa 40 hàng, nhưng khoan…\nSao nhiều gạch S với Z dữ vậy!?"},
-        sprint_penta_40=       {"40 hàng - Penta","Xóa 40 hàng, nhưng lần này với gạch 5 ô (pentominoes)\n\nCó thể bạn không biết: có 18 gạch 5 ô, trong khi chỉ có 7 gạch 4 ô (tetrominoes) thôi!"},
+        sprint_penta_40=       {"40 hàng - Penta","Xóa 40 hàng, nhưng lần này với gạch 5 ô (pentominoes)"},
         sprint_sym_40=         {"40 hàng - Sym","Xóa 40 hàng, nhưng bạn phải chơi theo kiểu đối xứng!"},
         sprint_mph_40=         {"40 hàng - MPH","Xóa 40 hàng, nhưng không có NEXT và HOLD!"},
         sprint_delay_20=       {"20 hàng - Delay","Xóa 20 hàng, nhưng mà nó tự dưng lag kinh khủng khiếp!"},
@@ -235,9 +235,9 @@ return {
         sprint_hide_40=        {"40 hàng - Hide","Xóa 40 hàng, nhưng toàn bộ gạch ở trên bảng sẽ dần trong suốt theo thời gian"},
         sprint_invis_40=       {"40 hàng - Invis","Xóa 40 hàng, nhưng bạn sẽ không thể nhìn thấy toàn bộ gạch mình đã đặt"},
         sprint_blind_40=       {"40 hàng - Blind","Xóa 40 hàng, nhưng đó là khi bạn đang bị bịt mắt"},
-        sprint_big_80=         {"80 hàng - Big","Xóa 80 hàng nhưng kích thước gạch sẽ to hơn bình thường"},
-        sprint_small_20=       {"20 hàng - Small","Xóa 20 hàng, nhưng kích thước gạch sẽ nhỏ hơn bình thường"},
-        sprint_low_40=         {"40 hàng - Low","Xóa 40 hàng, nhưng độ cao bảng sẽ thấp hơn bình thường"},
+        sprint_big_80=         {"80 hàng - Big","Xóa 80 hàng nhưng gạch toàn loại cỡ khủng"},
+        sprint_small_20=       {"20 hàng - Small","Xóa 20 hàng, nhưng gạch toàn loại bé tí teo"},
+        sprint_low_40=         {"40 hàng - Low","Xóa 40 hàng, nhưng cái \"trần\" bảng thấp hơn bình thường"},
         sprint_flip_40=        {"40 hàng - Flip","Xóa 40 hàng, nhưng cái bảng sẽ bị lật ngược sau mỗi lần bạn đặt gạch\n\nYou spin me right round, baby right round like a record, baby right round right round"},
         sprint_dizzy_40=       {"40 hàng - Dizzy","Xóa 40 hàng nhưng có gì đó không đúng với bộ điều khiển ở đây."},
         sprint_float_40=       {"40 hàng - Float","Xóa 40 hàng nhưng không có trọng lực (trôi nổi bồng bềnh như đám mây vậy ấy)"},
