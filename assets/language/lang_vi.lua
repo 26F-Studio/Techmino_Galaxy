@@ -68,7 +68,7 @@ return {
     setting_dasHalt="DAS halt",
     setting_hdLockA="Auto hard-drop lock",
     setting_hdLockM="Manual hard-drop lock",
-    setting_shakeness="Shakiness",
+    setting_shakeness="Độ lắc bảng",
     setting_hitWavePower="Hitwave Power",
 
     setting_mainVol="Âm lượng tổng",
