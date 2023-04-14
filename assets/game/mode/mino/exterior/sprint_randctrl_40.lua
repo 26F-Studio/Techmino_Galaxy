@@ -10,34 +10,10 @@ return {
         event={
             playerInit={
                 mechLib.mino.statistics.event_playerInit,
-                function(P)
-                    P.modeData.randomPressTimer=2600
-                end,
+                mechLib.mino.limit.randomPress_event_playerInit,
             },
-            beforePress=function(P)
-                if P.modeData.randomPressTimer>260 then
-                    P.modeData.randomPressTimer=P.modeData.randomPressTimer-120
-                end
-            end,
-            always=function(P)
-                if not P.timing then return end
-                P.modeData.randomPressTimer=P.modeData.randomPressTimer-1
-                if P.modeData.randomPressTimer==0 then
-                    local r=P:random(P.holdTime==0 and 5 or 4)
-                    if r==1 then
-                        P:moveLeft()
-                    elseif r==2 then
-                        P:moveRight()
-                    elseif r==3 then
-                        P:rotate('R')
-                    elseif r==4 then
-                        P:rotate('L')
-                    elseif r==5 then
-                        P:hold()
-                    end
-                    P.modeData.randomPressTimer=P:random(1620,2600)
-                end
-            end,
+            beforePress=mechLib.mino.limit.randomPress_event_beforePress,
+            always=mechLib.mino.limit.randomPress_event_always,
             afterClear={
                 mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],

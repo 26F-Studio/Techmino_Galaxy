@@ -7,16 +7,7 @@ return {
         playBgm('race','base')
     end,
     settings={mino={
-        seqType=function(P)-- bag12 without I piece
-            local l={}
-            while true do
-                if not l[1] then for i=1,6 do
-                    table.insert(l,i)
-                    table.insert(l,i)
-                end end
-                coroutine.yield(table.remove(l,P:random(#l)))
-            end
-        end,
+        seqType='bag12_drought',
         event={
             playerInit=mechLib.mino.statistics.event_playerInit,
             afterClear={

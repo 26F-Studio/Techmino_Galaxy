@@ -6,6 +6,7 @@ return {
         -- Mode
         sprint=require'assets.game.mechanicLib.mino.sprint',
         survivor=require'assets.game.mechanicLib.mino.survivor',
+        hypersonic=require'assets.game.mechanicLib.mino.hypersonic',
 
         -- Utility
         sequence=require'assets.game.mechanicLib.mino.sequence',

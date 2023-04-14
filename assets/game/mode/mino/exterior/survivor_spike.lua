@@ -18,9 +18,8 @@ return {
             playerInit=mechLib.mino.survivor.event_playerInit,
             always=mechLib.mino.survivor.spike_event_always,
             afterClear=function(P)
-                local md=P.modeData
-                if md.wave>bgmTransBegin and md.wave<=bgmTransFinish and P.isMain then
-                    BGM.set(bgmList['here'].add,'volume',math.min((md.wave-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
+                if P.modeData.wave>bgmTransBegin and P.modeData.wave<=bgmTransFinish and P.isMain then
+                    BGM.set(bgmList['here'].add,'volume',math.min((P.modeData.wave-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
                 end
             end,
             drawOnPlayer=mechLib.mino.survivor.event_drawOnPlayer,

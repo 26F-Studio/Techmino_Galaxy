@@ -1,4 +1,3 @@
-local gc=love.graphics
 local bgmTransBegin,bgmTransFinish=10,30
 
 return {
@@ -16,41 +15,12 @@ return {
         event={
             playerInit={
                 mechLib.mino.statistics.event_playerInit,
-                function(P)
-                    P.modeData.windTargetStrength=(P:random()<.5 and -1 or 1)*P:random(1260,1600)
-                    P.modeData.windStrength=0
-                    P.modeData.windCounter=0
-
-                    P.modeData.invertTimes={}
-                    for i=1,P:random(4,6) do
-                        P.modeData.invertTimes[i]=P:random(2,38)
-                    end
-                    table.sort(P.modeData.invertTimes)
-                end,
+                mechLib.mino.limit.wind_event_playerInit,
             },
-            always=function(P)
-                if not P.timing then return end
-                local md=P.modeData
-                md.windStrength=md.windStrength+MATH.sign(md.windTargetStrength-md.windStrength)
-                md.windCounter=md.windCounter+md.windStrength
-                if math.abs(md.windCounter)>=62000 then
-                    if P.hand then
-                        P[md.windCounter<0 and 'moveLeft' or 'moveRight'](P)
-                    end
-                    md.windCounter=md.windCounter-MATH.sign(md.windCounter)*62000
-                end
-            end,
+            always=mechLib.mino.limit.wind_event_always,
             afterClear={
                 mechLib.mino.statistics.event_afterClear,
-                function(P)
-                    local md=P.modeData
-                    if #md.invertTimes>0 and md.line>md.invertTimes[1] then
-                        while #md.invertTimes>0 and md.line>md.invertTimes[1] do
-                            table.remove(md.invertTimes,1)
-                        end
-                        md.windTargetStrength=-MATH.sign(md.windTargetStrength)*P:random(1260,1600)
-                    end
-                end,
+                mechLib.mino.limit.wind_event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
                 function(P)
                     if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
@@ -60,14 +30,7 @@ return {
             },
             drawInField={
                 mechLib.mino.sprint.event_drawInField[40],
-                function(P)
-                    gc.setLineWidth(4)
-                    gc.setColor(1,.626,.626,.626)
-                    gc.circle('fill',P.settings.fieldW*(20+P.modeData.windStrength/100),-400,P.modeData.windStrength/60,6)
-                    gc.setLineWidth(8)
-                    gc.setColor(1,.942,.942,.42)
-                    gc.line(P.settings.fieldW*20,-400,P.settings.fieldW*(20+P.modeData.windStrength/100),-400)
-                end,
+                mechLib.mino.limit.wind_event_drawInField,
             },
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],
         },

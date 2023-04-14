@@ -27,6 +27,29 @@ function sequence.bag7b1(P)
     end
 end
 
+function sequence.bag12_drought(P)-- bag14 without I piece
+    local l={}
+    while true do
+        if not l[1] then for i=1,6 do
+            ins(l,i)
+            ins(l,i)
+        end end
+        coroutine.yield(rem(l,P:random(#l)))
+    end
+end
+
+function sequence.bag7_flood(P)-- bag7 with extra 3 S pieces and 3 Z pieces
+    local l={}
+    while true do
+        if not l[1] then
+            for i=1,7 do l[i]=i end
+            l[8],l[9],l[10]=1,1,1
+            l[11],l[12],l[13]=2,2,2
+        end
+        coroutine.yield(rem(l,P:random(#l)))
+    end
+end
+
 function sequence.h4r2(P)
     local history=TABLE.new(0,2)
     while true do
@@ -85,8 +108,8 @@ end
 function sequence.penta_bag18(P)
     local l={}
     while true do
-        if not l[1] then for i=8,25 do table.insert(l,i) end end
-        coroutine.yield(table.remove(l,P:random(#l)))
+        if not l[1] then for i=8,25 do ins(l,i) end end
+        coroutine.yield(rem(l,P:random(#l)))
     end
 end
 
