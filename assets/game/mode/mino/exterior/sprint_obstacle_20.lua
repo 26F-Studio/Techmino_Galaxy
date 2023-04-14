@@ -41,33 +41,33 @@ return {
     end,
     settings={mino={
         event={
-            playerInit=function(P)
-                P.modeData.line=0
-                generateField(P)
-            end,
-            afterClear=function(P,clear)
-                local score=math.ceil((clear.line+1)/2)
-                P.modeData.line=math.min(P.modeData.line+score,lineTarget)
-                P.texts:add{
-                    text="+"..score,
-                    fontSize=80,
-                    a=.626,
-                    duration=.626,
-                    inPoint=0,
-                    outPoint=1,
-                }
-                generateField(P)
-                if P.modeData.line>=lineTarget then
-                    P:finish('AC')
-                end
-                if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
-                    BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
-                end
-            end,
-            drawOnPlayer=function(P)
-                P:drawInfoPanel(-380,-60,160,120)
-                FONT.set(80) GC.mStr(lineTarget-P.modeData.line,-300,-55)
-            end,
+            playerInit={
+                mechLib.mino.statistics.event_playerInit,
+                generateField,
+            },
+            afterClear={
+                function(P,clear)
+                    local score=math.ceil((clear.line+1)/2)
+                    P.modeData.line=math.min(P.modeData.line+score,lineTarget)
+                    P.texts:add{
+                        text="+"..score,
+                        fontSize=80,
+                        a=.626,
+                        duration=.626,
+                        inPoint=0,
+                        outPoint=1,
+                    }
+                    generateField(P)
+                end,
+                mechLib.mino.sprint.event_afterClear[20],
+                function(P)
+                    if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
+                        BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
+                    end
+                end,
+            },
+            drawInField=mechLib.mino.sprint.event_drawInField[20],
+            drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[20],
         },
     }},
 }

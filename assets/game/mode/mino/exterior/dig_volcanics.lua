@@ -1,4 +1,3 @@
-local gc=love.graphics
 local lineTarget,lineStay=20,6
 local bgmTransBegin,bgmTransFinish=0,10
 

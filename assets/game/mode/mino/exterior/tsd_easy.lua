@@ -1,5 +1,3 @@
-local gc=love.graphics
-
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')

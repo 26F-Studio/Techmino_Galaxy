@@ -31,14 +31,8 @@ return {
                     BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
                 end
             end,
-            drawInField=function(P)
-                gc.setColor(1,1,1,.26)
-                gc.rectangle('fill',0,(P.modeData.line-lineTarget)*40-2,P.settings.fieldW*40,4)
-            end,
-            drawOnPlayer=function(P)
-                P:drawInfoPanel(-380,-60,160,120)
-                FONT.set(80) GC.mStr(lineTarget-P.modeData.line,-300,-55)
-            end,
+            drawInField=mechLib.mino.sprint.event_drawInField[40],
+            drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],
         },
     }},
     result=function()

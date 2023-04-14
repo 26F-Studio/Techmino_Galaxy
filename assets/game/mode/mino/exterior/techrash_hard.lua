@@ -1,4 +1,3 @@
-local gc=love.graphics
 local initPower=3
 local initSidePower=0
 local maxPower=6
