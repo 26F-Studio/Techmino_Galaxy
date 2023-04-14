@@ -1,6 +1,38 @@
 local gc=love.graphics
 local misc={}
 
+misc.timeLimit_event_always=TABLE.newPool(function(self,time)
+    time=math.floor(time*1000+.5)
+    self[time]=function(P)
+        if P.gameTime>=time then
+            P:finish('AC')
+        end
+    end
+    return self[time]
+end)
+misc.timeLimit_event_drawOnPlayer=TABLE.newPool(function(self,time)
+    time=math.floor(time*1000+.5)
+    self[time]=function(P)
+        gc.push('transform')
+        gc.translate(-300,0)
+        gc.setLineWidth(2)
+        gc.setColor(.98,.98,.98,.8)
+        gc.rectangle('line',-75,-50,150,100,4)
+        gc.setColor(.98,.98,.98,.4)
+        gc.rectangle('fill',-75+2,-50+2,150-4,100-4,2)
+        FONT.set(50)
+        local t=P.gameTime/1000
+        local T=("%.1f"):format(time-t)
+        gc.setColor(COLOR.lD)
+        GC.mStr(T,2,-33)
+        t=t/time
+        gc.setColor(1.7*t,2.3-2*t,.3)
+        GC.mStr(T,0,-35)
+        gc.pop()
+    end
+    return self[time]
+end)
+
 function misc.invincible_event_afterLock(P)
     if P.field:getHeight()>P.settings.spawnH-1 then
         for y=1,P.field:getHeight()-(P.settings.spawnH-1) do for x=1,P.settings.fieldW do
@@ -186,6 +218,61 @@ do-- wind
         gc.setColor(1,.942,.942,.42)
         gc.line(P.settings.fieldW*20,-400,P.settings.fieldW*(20+P.modeData.windStrength/100),-400)
     end
+end
+
+do-- obstacle
+    local minDist=3
+    local maxHeight=3
+    local extraCount=3
+
+    function misc.obstacle_generateField(P)
+        local F=P.field
+        local w=P.settings.fieldW
+        local r0,r1=0
+        TABLE.cut(F._matrix)
+        for y=1,maxHeight do
+            F._matrix[y]=TABLE.new(false,w)
+            repeat
+                r1=P:random(1,w)
+            until math.abs(r1-r0)>=minDist;
+            F._matrix[y][r1]={color=0,conn={}}
+            r0=r1
+        end
+        for _=1,extraCount do
+            local x,y
+            repeat
+                x=P:random(1,w)
+                y=math.floor(P:random()^2.6*(maxHeight-1))+1
+            until not F._matrix[y][x]
+            F._matrix[y][x]={color=0,conn={}}
+        end
+        for y=1,maxHeight do
+            if TABLE.count(F._matrix[y],false)==w then
+                F._matrix[y][P:random(1,w)]=false
+            end
+        end
+    end
+
+    misc.obstacle_event_afterClear=TABLE.newPool(function(self,lineCount)
+        self[lineCount]=function(P,clear)
+            local score=math.ceil((clear.line+1)/2)
+            P.modeData.line=math.min(P.modeData.line+score,lineCount)
+            P.texts:add{
+                text="+"..score,
+                fontSize=80,
+                a=.626,
+                duration=.626,
+                inPoint=0,
+                outPoint=1,
+            }
+            if P.modeData.line>=lineCount then
+                P:finish('AC')
+            else
+                misc.obstacle_generateField(P)
+            end
+        end
+        return self[lineCount]
+    end)
 end
 
 return misc

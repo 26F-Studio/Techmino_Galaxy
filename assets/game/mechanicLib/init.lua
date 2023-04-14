@@ -10,6 +10,9 @@ return {
         survivor=require'assets.game.mechanicLib.mino.survivor',
         backfire=require'assets.game.mechanicLib.mino.backfire',
         hypersonic=require'assets.game.mechanicLib.mino.hypersonic',
+        comboPractice=require'assets.game.mechanicLib.mino.comboPractice',
+        tsdChallenge=require'assets.game.mechanicLib.mino.tsdChallenge',
+        techrashChallenge=require'assets.game.mechanicLib.mino.techrashChallenge',
 
         -- Special
         stack=require'assets.game.mechanicLib.mino.stack',
