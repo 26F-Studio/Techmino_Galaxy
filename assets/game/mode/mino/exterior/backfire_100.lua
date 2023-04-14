@@ -11,20 +11,9 @@ return {
         allowCancel=true,
         clearStuck=true,
         event={
-            playerInit={
-                mechLib.mino.statistics.event_playerInit,
-                function(P)
-                    P.modeData._currentPower=false
-                end,
-            },
-            beforeCancel=function(P,atk)
-                P.modeData._currentPower=atk.power
-            end,
-            beforeSend=function(P,atk)
-                atk.power=P.modeData._currentPower
-                P.modeData._currentPower=false
-                P:receive(atk)
-            end,
+            playerInit=mechLib.mino.statistics.event_playerInit,
+            beforeCancel=mechLib.mino.backfire.storePower_event_beforeCancel,
+            beforeSend=mechLib.mino.backfire.normal_event_beforeSend,
             afterClear={
                 mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[100],

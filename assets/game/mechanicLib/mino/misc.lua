@@ -1,19 +1,30 @@
 local gc=love.graphics
-local limit={}
+local misc={}
 
-function limit.slowHide_event_gameOver(P)
+function misc.invincible_event_afterLock(P)
+    if P.field:getHeight()>P.settings.spawnH-1 then
+        for y=1,P.field:getHeight()-(P.settings.spawnH-1) do for x=1,P.settings.fieldW do
+            if not P.field:getCell(x,y) then
+                P.field:setCell({},x,y)
+            end
+        end end
+        P:playSound('desuffocate')
+    end
+end
+
+function misc.slowHide_event_gameOver(P)
     P:showInvis(4,626)
 end
 
-function limit.fastHide_event_gameOver(P)
+function misc.fastHide_event_gameOver(P)
     P:showInvis(1,100)
 end
 
 do --coverField
-    function limit.coverField_event_playerInit(P)
+    function misc.coverField_event_playerInit(P)
         P.modeData.coverAlpha=0
     end
-    function limit.coverField_event_always(P)
+    function misc.coverField_event_always(P)
         if P.finished then
             if P.modeData.coverAlpha>2000 then
                 P.modeData.coverAlpha=P.modeData.coverAlpha-1
@@ -24,27 +35,27 @@ do --coverField
             end
         end
     end
-    function limit.coverField_event_gameOver(P)
+    function misc.coverField_event_gameOver(P)
         P:showInvis()
     end
-    function limit.coverField_event_drawInField(P)
+    function misc.coverField_event_drawInField(P)
         gc.setColor(.26,.26,.26,P.modeData.coverAlpha/2600)
         gc.rectangle('fill',0,0,P.settings.fieldW*40,-P.settings.spawnH*40)
     end
 end
 
-function limit.noRotate_event_playerInit(P)
+function misc.noRotate_event_playerInit(P)
     P:switchAction('rotateCW',false)
     P:switchAction('rotateCCW',false)
     P:switchAction('rotate180',false)
 end
 
-function limit.noMove_event_playerInit(P)
+function misc.noMove_event_playerInit(P)
     P:switchAction('moveLeft',false)
     P:switchAction('moveRight',false)
 end
 
-function limit.noFallAfterClear_event_afterClear(P,clear)
+function misc.noFallAfterClear_event_afterClear(P,clear)
     for i=clear.line,1,-1 do
         table.insert(P.field._matrix,clear.lines[i],TABLE.new(false,P.settings.fieldW))
     end
@@ -52,23 +63,23 @@ function limit.noFallAfterClear_event_afterClear(P,clear)
 end
 
 do-- swapDirection
-    function limit.swapDirection_event_playerInit(P)
+    function misc.swapDirection_event_playerInit(P)
         P.modeData.flip=false
     end
-    function limit.swapDirection_event_key(P)
+    function misc.swapDirection_event_key(P)
         if P.modeData.flip then
             P.keyState.rotateCW,P.keyState.rotateCCW=P.keyState.rotateCCW,P.keyState.rotateCW
             P.keyState.moveLeft,P.keyState.moveRight=P.keyState.moveRight,P.keyState.moveLeft
         end
     end
-    function limit.swapDirection_event_afterLock(P)
+    function misc.swapDirection_event_afterLock(P)
         P.modeData.flip=not P.modeData.flip
         P.actions.rotateCW,P.actions.rotateCCW=P.actions.rotateCCW,P.actions.rotateCW
         P.actions.moveLeft,P.actions.moveRight=P.actions.moveRight,P.actions.moveLeft
     end
 end
 
-function limit.flipBoard_event_afterLock(P)
+function misc.flipBoard_event_afterLock(P)
     for y=1,P.field:getHeight() do
         TABLE.reverse(P.field._matrix[y])
     end
@@ -77,15 +88,15 @@ end
 do-- randomPress
     local decreaseLimit,decreaseAmount=260,120
     local minInterval,maxInterval=1620,2600
-    function limit.randomPress_event_playerInit(P)
+    function misc.randomPress_event_playerInit(P)
         P.modeData.randomPressTimer=maxInterval
     end
-    function limit.randomPress_event_beforePress(P)
+    function misc.randomPress_event_beforePress(P)
         if P.modeData.randomPressTimer>decreaseLimit then
             P.modeData.randomPressTimer=P.modeData.randomPressTimer-decreaseAmount
         end
     end
-    function limit.randomPress_event_always(P)
+    function misc.randomPress_event_always(P)
         if not P.timing then return end
         P.modeData.randomPressTimer=P.modeData.randomPressTimer-1
         if P.modeData.randomPressTimer==0 then
@@ -107,16 +118,16 @@ do-- randomPress
 end
 
 do-- symmetery
-    function limit.symmetery_event_initPlayer(P)
+    function misc.symmetery_event_initPlayer(P)
         P.modeData._coords={}
     end
-    function limit.symmetery_event_afterDrop(P)
+    function misc.symmetery_event_afterDrop(P)
         local CB=P.hand.matrix
         for y=1,#CB do for x=1,#CB[1] do if CB[y][x] then
             table.insert(P.modeData._coords,{P.handX+x-1,P.handY+y-1})
         end end end
     end
-    function limit.symmetery_event_afterLock(P)
+    function misc.symmetery_event_afterLock(P)
         local id=nil
         for _,coord in next,P.modeData._coords do
             local C=P.field:getCell((P.settings.fieldW+1)-coord[1],coord[2])
@@ -135,7 +146,7 @@ do-- symmetery
 end
 
 do-- wind
-    function limit.wind_event_playerInit(P)
+    function misc.wind_event_playerInit(P)
         P.modeData.windTargetStrength=(P:random()<.5 and -1 or 1)*P:random(1260,1600)
         P.modeData.windStrength=0
         P.modeData.windCounter=0
@@ -146,7 +157,7 @@ do-- wind
         end
         table.sort(P.modeData.invertTimes)
     end
-    function limit.wind_event_always(P)
+    function misc.wind_event_always(P)
         if not P.timing then return end
         local md=P.modeData
         md.windStrength=md.windStrength+MATH.sign(md.windTargetStrength-md.windStrength)
@@ -158,7 +169,7 @@ do-- wind
             md.windCounter=md.windCounter-MATH.sign(md.windCounter)*62000
         end
     end
-    function limit.wind_event_afterClear(P)
+    function misc.wind_event_afterClear(P)
         local md=P.modeData
         if #md.invertTimes>0 and md.line>md.invertTimes[1] then
             while #md.invertTimes>0 and md.line>md.invertTimes[1] do
@@ -167,7 +178,7 @@ do-- wind
             md.windTargetStrength=-MATH.sign(md.windTargetStrength)*P:random(1260,1600)
         end
     end
-    function limit.wind_event_drawInField(P)
+    function misc.wind_event_drawInField(P)
         gc.setLineWidth(4)
         gc.setColor(1,.626,.626,.626)
         gc.circle('fill',P.settings.fieldW*(20+P.modeData.windStrength/100),-400,P.modeData.windStrength/60,6)
@@ -177,4 +188,4 @@ do-- wind
     end
 end
 
-return limit
+return misc

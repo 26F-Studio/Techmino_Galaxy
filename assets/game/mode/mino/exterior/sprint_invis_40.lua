@@ -20,7 +20,7 @@ return {
                     end
                 end,
             },
-            gameOver=mechLib.mino.limit.fastHide_event_gameOver,
+            gameOver=mechLib.mino.misc.fastHide_event_gameOver,
             drawInField=mechLib.mino.sprint.event_drawInField[40],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],
         },

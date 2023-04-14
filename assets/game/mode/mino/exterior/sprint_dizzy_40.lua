@@ -10,13 +10,13 @@ return {
         event={
             playerInit={
                 mechLib.mino.statistics.event_playerInit,
-                mechLib.mino.limit.swapDirection_event_playerInit,
+                mechLib.mino.misc.swapDirection_event_playerInit,
             },
-            afterLock=    mechLib.mino.limit.swapDirection_event_afterLock,
-            beforePress=  mechLib.mino.limit.swapDirection_event_key,
-            afterPress=   mechLib.mino.limit.swapDirection_event_key,
-            beforeRelease=mechLib.mino.limit.swapDirection_event_key,
-            afterRelease= mechLib.mino.limit.swapDirection_event_key,
+            afterLock=    mechLib.mino.misc.swapDirection_event_afterLock,
+            beforePress=  mechLib.mino.misc.swapDirection_event_key,
+            afterPress=   mechLib.mino.misc.swapDirection_event_key,
+            beforeRelease=mechLib.mino.misc.swapDirection_event_key,
+            afterRelease= mechLib.mino.misc.swapDirection_event_key,
             afterClear={
                 mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],

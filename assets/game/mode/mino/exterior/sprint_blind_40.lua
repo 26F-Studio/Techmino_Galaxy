@@ -12,9 +12,9 @@ return {
         event={
             playerInit={
                 mechLib.mino.statistics.event_playerInit,
-                mechLib.mino.limit.coverField_event_playerInit,
+                mechLib.mino.misc.coverField_event_playerInit,
             },
-            always=mechLib.mino.limit.coverField_event_always,
+            always=mechLib.mino.misc.coverField_event_always,
             afterClear={
                 mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
@@ -24,9 +24,9 @@ return {
                     end
                 end,
             },
-            gameOver=mechLib.mino.limit.coverField_event_gameOver,
+            gameOver=mechLib.mino.misc.coverField_event_gameOver,
             drawInField={
-                mechLib.mino.limit.coverField_event_drawInField,
+                mechLib.mino.misc.coverField_event_drawInField,
                 mechLib.mino.sprint.event_drawInField[40],
             },
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],

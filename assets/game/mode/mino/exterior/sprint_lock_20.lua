@@ -11,7 +11,7 @@ return {
         event={
             playerInit={
                 mechLib.mino.statistics.event_playerInit,
-                mechLib.mino.limit.noRotate_event_playerInit,
+                mechLib.mino.misc.noRotate_event_playerInit,
             },
             afterClear={
                 mechLib.mino.statistics.event_afterClear,

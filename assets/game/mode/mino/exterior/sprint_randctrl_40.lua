@@ -10,10 +10,10 @@ return {
         event={
             playerInit={
                 mechLib.mino.statistics.event_playerInit,
-                mechLib.mino.limit.randomPress_event_playerInit,
+                mechLib.mino.misc.randomPress_event_playerInit,
             },
-            beforePress=mechLib.mino.limit.randomPress_event_beforePress,
-            always=mechLib.mino.limit.randomPress_event_always,
+            beforePress=mechLib.mino.misc.randomPress_event_beforePress,
+            always=mechLib.mino.misc.randomPress_event_always,
             afterClear={
                 mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],

@@ -15,12 +15,12 @@ return {
         event={
             playerInit={
                 mechLib.mino.statistics.event_playerInit,
-                mechLib.mino.limit.wind_event_playerInit,
+                mechLib.mino.misc.wind_event_playerInit,
             },
-            always=mechLib.mino.limit.wind_event_always,
+            always=mechLib.mino.misc.wind_event_always,
             afterClear={
                 mechLib.mino.statistics.event_afterClear,
-                mechLib.mino.limit.wind_event_afterClear,
+                mechLib.mino.misc.wind_event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
                 function(P)
                     if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
@@ -30,7 +30,7 @@ return {
             },
             drawInField={
                 mechLib.mino.sprint.event_drawInField[40],
-                mechLib.mino.limit.wind_event_drawInField,
+                mechLib.mino.misc.wind_event_drawInField,
             },
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],
         },

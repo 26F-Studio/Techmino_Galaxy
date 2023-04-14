@@ -40,16 +40,7 @@ return {
                 -- P.handX,P.handY,P.ghostY=P.modeData.x,P.modeData.y,P.modeData.y
                 -- P:minoDropped()
             end,
-            afterLock=function(P)
-                if P.field:getHeight()>=19 then
-                    for y=1,P.field:getHeight()-18 do for x=1,10 do
-                        if not P.field:getCell(x,y) then
-                            P.field:setCell({},x,y)
-                        end
-                    end end
-                    P:playSound('desuffocate')
-                end
-            end,
+            afterLock=mechLib.mino.misc.invincible_event_afterLock,
             drawBelowMarks=function(P)
                 local m=P.modeData.shape
                 if m then
