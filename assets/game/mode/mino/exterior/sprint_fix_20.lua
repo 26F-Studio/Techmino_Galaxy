@@ -11,10 +11,7 @@ return {
         event={
             playerInit={
                 mechLib.mino.statistics.event_playerInit,
-                function(P)
-                    P:switchAction('moveLeft',false)
-                    P:switchAction('moveRight',false)
-                end
+                mechLib.mino.limit.noMove_event_playerInit,
             },
             afterClear={
                 mechLib.mino.statistics.event_afterClear,

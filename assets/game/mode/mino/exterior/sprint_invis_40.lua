@@ -20,9 +20,7 @@ return {
                     end
                 end,
             },
-            gameOver=function(P)
-                P:showInvis(1,100)
-            end,
+            gameOver=mechLib.mino.limit.fastField_event_gameOver,
             drawInField=mechLib.mino.sprint.event_drawInField[40],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],
         },

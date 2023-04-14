@@ -7,9 +7,14 @@ return {
         sprint=require'assets.game.mechanicLib.mino.sprint',
         survivor=require'assets.game.mechanicLib.mino.survivor',
 
-        -- Special
+        -- Utility
+        sequence=require'assets.game.mechanicLib.mino.sequence',
+        limit=require'assets.game.mechanicLib.mino.limit',
         stack=require'assets.game.mechanicLib.mino.stack',
     },
-    puyo={},
+    puyo={
+        -- Utility
+        sequence=require'assets.game.mechanicLib.puyo.sequence',
+    },
     gem={},
 }

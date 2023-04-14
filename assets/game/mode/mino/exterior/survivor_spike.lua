@@ -16,7 +16,7 @@ return {
         minRisingSpeed=1,
         event={
             playerInit=mechLib.mino.survivor.event_playerInit,
-            always=mechLib.mino.survivor.event_always_spike,
+            always=mechLib.mino.survivor.spike_event_always,
             afterClear=function(P)
                 local md=P.modeData
                 if md.wave>bgmTransBegin and md.wave<=bgmTransFinish and P.isMain then

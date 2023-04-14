@@ -10,12 +10,7 @@ return {
         event={
             playerInit=mechLib.mino.statistics.event_playerInit,
             afterClear={
-                function(P,clear)
-                    for i=clear.line,1,-1 do
-                        table.insert(P.field._matrix,clear.lines[i],TABLE.new(false,P.settings.fieldW))
-                    end
-                    P.field:fresh()
-                end,
+                mechLib.mino.limit.noFallAfterClear_event_afterClear,
                 mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
                 function(P)
