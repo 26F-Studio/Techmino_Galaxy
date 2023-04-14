@@ -488,15 +488,13 @@ function PP:getPuyo(mat)
     self.pieceCount=self.pieceCount+1
     mat=TABLE.shift(mat)
 
-    -- Generate matrix
+    -- Generate cell matrix from bool matrix
     for y=1,#mat do for x=1,#mat[1] do
-        if mat[y][x] then
-            mat[y][x]={
-                puyoID=self.pieceCount,
-                color=defaultPuyoColor[mat[y][x]],
-                connClear=true,
-            }
-        end
+        mat[y][x]=mat[y][x] and {
+            puyoID=self.pieceCount,
+            color=defaultPuyoColor[mat[y][x]],
+            connClear=true,
+        }
     end end
 
     local puyo={

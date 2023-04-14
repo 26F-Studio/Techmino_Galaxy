@@ -644,25 +644,14 @@ function MP:getMino(shapeID)
     self.pieceCount=self.pieceCount+1
     local shape=TABLE.shift(Minoes[shapeID].shape)
 
-    -- Generate matrix
+    -- Generate cell matrix from bool matrix
     for y=1,#shape do for x=1,#shape[1] do
-        if shape[y][x] then
-            local c={
-                id=self.pieceCount,
-                color=defaultMinoColor[shapeID],
-                alpha=1,
-                conn={},
-            }
-            if self.settings.pieceVisTime then
-                if self.settings.pieceVisTime==0 then
-                    c.alpha=0
-                else
-                    c.visTimer=self.settings.pieceVisTime
-                    c.fadeTime=self.settings.pieceFadeTime
-                end
-            end
-            shape[y][x]=c
-        end
+        shape[y][x]=shape[y][x] and {
+            id=self.pieceCount,
+            color=defaultMinoColor[shapeID],
+            alpha=1,
+            conn={},
+        }
     end end
 
     -- Connect cells
@@ -1132,8 +1121,17 @@ function MP:lock()-- Put mino into field
     local CB=self.hand.matrix
     local F=self.field
     for y=1,#CB do for x=1,#CB[1] do
-        if CB[y][x] then
-            F:setCell(CB[y][x],self.handX+x-1,self.handY+y-1)
+        local c=CB[y][x]
+        if c then
+            if self.settings.pieceVisTime then
+                if self.settings.pieceVisTime==0 then
+                    c.alpha=0
+                else
+                    c.visTimer=self.settings.pieceVisTime
+                    c.fadeTime=self.settings.pieceFadeTime
+                end
+            end
+            F:setCell(c,self.handX+x-1,self.handY+y-1)
         end
     end end
 end
