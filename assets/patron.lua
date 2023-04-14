@@ -146,4 +146,5 @@ return {
     {score=25,name="懒*a"},
     {score=25,name="Sthantom"},
     {score=25,name="T9348"},
+    {score=25,name="T1206"},
 }
