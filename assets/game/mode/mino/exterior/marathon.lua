@@ -110,6 +110,7 @@ return {
                 gc.setColor(P.modeData.level<=10 and COLOR.G or P.modeData.level<=20 and COLOR.Y or COLOR.R)
                 GC.mStr(P.modeData.level,-300,70)
             end,
+        },
     }},
     result=function()
         local P=GAME.mainPlayer
