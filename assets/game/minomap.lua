@@ -1,3 +1,5 @@
+local gc=love.graphics
+
 -- Y X
 --  *
 --  Z
@@ -306,23 +308,23 @@ end
 
 local tau=MATH.tau
 function map:draw()
-    GC.replaceTransform(SCR.xOy_m)
-    GC.translate(0,100)
+    gc.replaceTransform(SCR.xOy_m)
+    gc.translate(0,100)
     cam:apply()
 
     -- Draw bridges
     for _,b in next,bridges do
         if b.enable then
-            GC.setColor(1,1,1,.8)
-            GC.setLineWidth(30)
-            GC.line(b.x1,b.y1,b.x2,b.y2)
-            GC.setColor(0,0,0,.6)
-            GC.setLineWidth(20)
-            GC.line(b.x1,b.y1,b.x2,b.y2)
+            gc.setColor(1,1,1,.8)
+            gc.setLineWidth(30)
+            gc.line(b.x1,b.y1,b.x2,b.y2)
+            gc.setColor(0,0,0,.6)
+            gc.setLineWidth(20)
+            gc.line(b.x1,b.y1,b.x2,b.y2)
             for i=0,.75,.25 do
                 local t=(b.timer/2.6+i)%1
-                GC.setColor(1,1,1,-t*(t-1)*4)
-                GC.circle('fill',MATH.interpolate(t,0,b.x1,1,b.x2),MATH.interpolate(t,0,b.y1,1,b.y2),6,6)
+                gc.setColor(1,1,1,-t*(t-1)*4)
+                gc.circle('fill',MATH.interpolate(t,0,b.x1,1,b.x2),MATH.interpolate(t,0,b.y1,1,b.y2),6,6)
             end
         end
     end
@@ -330,74 +332,75 @@ function map:draw()
     -- Draw modes
     for _,m in next,modes do
         if m.enable then
-            GC.push('transform')
-            GC.translate(m.x,m.y)
-            GC.scale(1+m.active*.1)
-            GC.rotate(-cam.a)
+            gc.push('transform')
+            gc.translate(m.x,m.y)
+            gc.scale(1+m.active*.1)
+            gc.rotate(-cam.a)
 
             -- Outline, decided by if-passed or rank reached
             if m.state<0 then
-                GC.setLineWidth(10)
-                GC.setColor(1,1,1,.42)
+                gc.setLineWidth(10)
+                gc.setColor(1,1,1,.42)
                 GC.regPolygon('line',0,0,m.r,6,tau/12)
-                GC.setColor(1,1,1)
-                GC.setLineWidth(4)
+                gc.setColor(1,1,1)
+                gc.setLineWidth(4)
                 GC.regPolygon('line',0,0,m.r,6,tau/12)
             else
-                GC.setColor(1,1,1,.626)
-                GC.setLineWidth(2)
+                gc.setColor(1,1,1,.626)
+                gc.setLineWidth(2)
                 GC.regPolygon('line',0,0,m.r-11,6,tau/12)
                 GC.regPolygon('line',0,0,m.r+5,6,tau/12)
                 if m.state>0 then
-                    GC.setLineWidth(10)
-                    GC.setColor(modeStateColor[m.state] or COLOR.lD)
+                    gc.setLineWidth(10)
+                    gc.setColor(modeStateColor[m.state] or COLOR.lD)
                     GC.regPolygon('line',0,0,m.r-3,6,tau/12)
                 end
             end
 
             -- Name
             FONT.set(30)
-            GC.setColor(COLOR.L)
-            GC.shadedPrint(Text.exteriorModeInfo[m.name][1],0,-21,'center',2,4)
+            gc.setColor(COLOR.L)
+            local modeInfo=Text.exteriorModeInfo[m.name]
+            GC.shadedPrint(modeInfo and modeInfo[1] or m.name,0,-21,'center',2,4)
 
             -- Selecting frame
             if m==selected or m.active>.001 then
                 local rb=m==selected and .42 or 1
-                GC.setLineWidth(8)
-                GC.setColor(rb,1,rb,m==selected and 1 or m.active*.26)
+                gc.setLineWidth(8)
+                gc.setColor(rb,1,rb,m==selected and 1 or m.active*.26)
                 GC.regPolygon('line',0,0,m.r+16,6,tau/12)
             end
-            GC.pop()
+            gc.pop()
         end
     end
 
     -- Draw clickFX
     if enterFX.timer then
-        GC.setColor(1,1,1,math.min(enterFX.timer*62,1))
-        GC.setLineWidth(4+enterFX.timer*260)
+        gc.setColor(1,1,1,math.min(enterFX.timer*62,1))
+        gc.setLineWidth(4+enterFX.timer*260)
         GC.regPolygon('line',enterFX.x,enterFX.y,(enterFX.r)*260^enterFX.timer,6,tau/12-cam.a)
     end
 
     -- Draw back and particles
-    GC.rotate(-tau/4)GC.setColor(1,0,0,.01)GC.polygon('fill',mapPoly)GC.scale(.5)GC.setColor(0,0,0,.0626)GC.polygon('fill',mapPoly)GC.scale(2)
-    GC.rotate(tau/3) GC.setColor(0,1,0,.01)GC.polygon('fill',mapPoly)GC.scale(.5)GC.setColor(0,0,0,.0626)GC.polygon('fill',mapPoly)GC.scale(2)
-    GC.rotate(tau/3) GC.setColor(0,0,1,.01)GC.polygon('fill',mapPoly)GC.scale(.5)GC.setColor(0,0,0,.0626)GC.polygon('fill',mapPoly)GC.scale(2)
-    GC.rotate(tau/3) GC.setColor(1,.26,.26)GC.draw(pSys[1])
-    GC.rotate(tau/3) GC.setColor(.26,1,.26)GC.draw(pSys[2])
-    GC.rotate(tau/3) GC.setColor(.26,.26,1)GC.draw(pSys[3])
+    gc.rotate(-tau/4)gc.setColor(1,0,0,.01)gc.polygon('fill',mapPoly)gc.scale(.5)gc.setColor(0,0,0,.0626)gc.polygon('fill',mapPoly)gc.scale(2)
+    gc.rotate(tau/3) gc.setColor(0,1,0,.01)gc.polygon('fill',mapPoly)gc.scale(.5)gc.setColor(0,0,0,.0626)gc.polygon('fill',mapPoly)gc.scale(2)
+    gc.rotate(tau/3) gc.setColor(0,0,1,.01)gc.polygon('fill',mapPoly)gc.scale(.5)gc.setColor(0,0,0,.0626)gc.polygon('fill',mapPoly)gc.scale(2)
+    gc.rotate(tau/3) gc.setColor(1,.26,.26)gc.draw(pSys[1])
+    gc.rotate(tau/3) gc.setColor(.26,1,.26)gc.draw(pSys[2])
+    gc.rotate(tau/3) gc.setColor(.26,.26,1)gc.draw(pSys[3])
 
     -- Draw keyboard cursor
-    GC.replaceTransform(SCR.xOy_m)
+    gc.replaceTransform(SCR.xOy_m)
     if mapCursor then
-        GC.push('transform')
-        GC.translate(0,100)
-        GC.rotate(-cam.a)
-        GC.setColor(COLOR.L)
-        GC.setLineWidth(4)
-        GC.line(0,-10,0,-30)
-        GC.line(8.62,5,26,15)
-        GC.line(-8.62,5,-26,15)
-        GC.pop()
+        gc.push('transform')
+        gc.translate(0,100)
+        gc.rotate(-cam.a)
+        gc.setColor(COLOR.L)
+        gc.setLineWidth(4)
+        gc.line(0,-10,0,-30)
+        gc.line(8.62,5,26,15)
+        gc.line(-8.62,5,-26,15)
+        gc.pop()
     end
 end
 
