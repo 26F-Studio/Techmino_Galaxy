@@ -144,7 +144,7 @@ function P:_getActionObj(a)
     end
 end
 function P:switchAction(act,state)
-    assert(self.actions[act],"Invalid action name '"..act.."'")
+    assert(self._actions[act],"Invalid action name '"..act.."'")
     if state==nil or state==not self.actions[act] then
         if self.actions[act] then
             self:release(act)

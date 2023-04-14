@@ -488,15 +488,13 @@ function PP:getPuyo(mat)
     self.pieceCount=self.pieceCount+1
     mat=TABLE.shift(mat)
 
-    -- Generate matrix
+    -- Generate cell matrix from bool matrix
     for y=1,#mat do for x=1,#mat[1] do
-        if mat[y][x] then
-            mat[y][x]={
-                puyoID=self.pieceCount,
-                color=defaultPuyoColor[mat[y][x]],
-                connClear=true,
-            }
-        end
+        mat[y][x]=mat[y][x] and {
+            puyoID=self.pieceCount,
+            color=defaultPuyoColor[mat[y][x]],
+            connClear=true,
+        }
     end end
 
     local puyo={
@@ -1252,30 +1250,6 @@ local baseEnv={
     shakeness=.26,
     inputDelay=0,
 }
-local seqGenerators={
-    none=function() while true do coroutine.yield() end end,
-    double3color=function(P)
-        local l={}
-        while true do
-            if not l[1] then for i=1,3 do for j=1,3 do ins(l,{{i},{j}}) end end end
-            coroutine.yield(rem(l,P:random(#l)))
-        end
-    end,
-    double4color=function(P)
-        local l={}
-        while true do
-            if not l[1] then for i=1,4 do for j=1,4 do ins(l,{{i},{j}}) end end end
-            coroutine.yield(rem(l,P:random(#l)))
-        end
-    end,
-    double5color=function(P)
-        local l={}
-        while true do
-            if not l[1] then for i=1,5 do for j=1,5 do ins(l,{{i},{j}}) end end end
-            coroutine.yield(rem(l,P:random(#l)))
-        end
-    end,
-}
 local soundTimeMeta={
     __index=function(self,k) rawset(self,k,0) return -1e99 end,
     __metatable=true,
@@ -1351,7 +1325,7 @@ function PP:initialize()
     self.garbageBuffer={}
 
     self.nextQueue={}
-    self.seqGen=coroutine.wrap(seqGenerators[self.settings.seqType])
+    self.seqGen=coroutine.wrap(mechLib.puyo.sequence[self.settings.seqType] or self.settings.seqType)
     self:freshNextQueue()
 
     self.dropTimer=0

@@ -1,12 +1,5 @@
 local bgmTransBegin,bgmTransFinish=10,30
 
-local function flipFunc(P)
-    if P.modeData.flip then
-        P.keyState.rotateCW,P.keyState.rotateCCW=P.keyState.rotateCCW,P.keyState.rotateCW
-        P.keyState.moveLeft,P.keyState.moveRight=P.keyState.moveRight,P.keyState.moveLeft
-    end
-end
-
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -17,19 +10,13 @@ return {
         event={
             playerInit={
                 mechLib.mino.statistics.event_playerInit,
-                function(P)
-                    P.modeData.flip=false
-                end,
+                mechLib.mino.misc.swapDirection_event_playerInit,
             },
-            afterLock=function(P)
-                P.modeData.flip=not P.modeData.flip
-                P.actions.rotateCW,P.actions.rotateCCW=P.actions.rotateCCW,P.actions.rotateCW
-                P.actions.moveLeft,P.actions.moveRight=P.actions.moveRight,P.actions.moveLeft
-            end,
-            beforePress=   flipFunc,
-            afterPress=    flipFunc,
-            beforeRelease= flipFunc,
-            afterRelease=  flipFunc,
+            afterLock=    mechLib.mino.misc.swapDirection_event_afterLock,
+            beforePress=  mechLib.mino.misc.swapDirection_event_key,
+            afterPress=   mechLib.mino.misc.swapDirection_event_key,
+            beforeRelease=mechLib.mino.misc.swapDirection_event_key,
+            afterRelease= mechLib.mino.misc.swapDirection_event_key,
             afterClear={
                 mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],

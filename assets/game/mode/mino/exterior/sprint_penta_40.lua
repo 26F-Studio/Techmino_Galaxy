@@ -7,13 +7,7 @@ return {
         playBgm('beat5th','base')
     end,
     settings={mino={
-        seqType=function(P)
-            local l={}
-            while true do
-                if not l[1] then for i=8,25 do table.insert(l,i) end end
-                coroutine.yield(table.remove(l,P:random(#l)))
-            end
-        end,
+        seqType='penta_bag18',
         event={
             playerInit=mechLib.mino.statistics.event_playerInit,
             afterClear={

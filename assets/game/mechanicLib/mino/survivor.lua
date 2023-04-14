@@ -26,7 +26,7 @@ function survivor.event_drawOnPlayer(P)
     gc.circle('line',-300,130,48)
 end
 
-function survivor.event_always_b2b(P)
+function survivor.b2b_event_always(P)
     if not P.timing then return end
     local md=P.modeData
     if md.waveTimer>0 then
@@ -54,7 +54,7 @@ function survivor.event_always_b2b(P)
         })
     end
 end
-function survivor.event_always_cheese(P)
+function survivor.cheese_event_always(P)
     if not P.timing then return end
     local md=P.modeData
     if md.waveTimer>0 then
@@ -88,7 +88,7 @@ function survivor.event_always_cheese(P)
         })
     end
 end
-function survivor.event_always_spike(P)
+function survivor.spike_event_always(P)
     if not P.timing then return end
     local md=P.modeData
     if md.waveTimer>0 then

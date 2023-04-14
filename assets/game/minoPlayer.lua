@@ -644,25 +644,14 @@ function MP:getMino(shapeID)
     self.pieceCount=self.pieceCount+1
     local shape=TABLE.shift(Minoes[shapeID].shape)
 
-    -- Generate matrix
+    -- Generate cell matrix from bool matrix
     for y=1,#shape do for x=1,#shape[1] do
-        if shape[y][x] then
-            local c={
-                id=self.pieceCount,
-                color=defaultMinoColor[shapeID],
-                alpha=1,
-                conn={},
-            }
-            if self.settings.pieceVisTime then
-                if self.settings.pieceVisTime==0 then
-                    c.alpha=0
-                else
-                    c.visTimer=self.settings.pieceVisTime
-                    c.fadeTime=self.settings.pieceFadeTime
-                end
-            end
-            shape[y][x]=c
-        end
+        shape[y][x]=shape[y][x] and {
+            id=self.pieceCount,
+            color=defaultMinoColor[shapeID],
+            alpha=1,
+            conn={},
+        }
     end end
 
     -- Connect cells
@@ -1132,8 +1121,17 @@ function MP:lock()-- Put mino into field
     local CB=self.hand.matrix
     local F=self.field
     for y=1,#CB do for x=1,#CB[1] do
-        if CB[y][x] then
-            F:setCell(CB[y][x],self.handX+x-1,self.handY+y-1)
+        local c=CB[y][x]
+        if c then
+            if self.settings.pieceVisTime then
+                if self.settings.pieceVisTime==0 then
+                    c.alpha=0
+                else
+                    c.visTimer=self.settings.pieceVisTime
+                    c.fadeTime=self.settings.pieceFadeTime
+                end
+            end
+            F:setCell(c,self.handX+x-1,self.handY+y-1)
         end
     end end
 end
@@ -1821,79 +1819,6 @@ local baseEnv={
     shakeness=.26,
     inputDelay=0,
 }
-local seqGenerators={
-    none=function() while true do coroutine.yield() end end,
-    bag7=function(P)
-        local l={}
-        while true do
-            if not l[1] then for i=1,7 do l[i]=i end end
-            coroutine.yield(rem(l,P:random(#l)))
-        end
-    end,
-    bag7b1=function(P)
-        local l0={}
-        local l={}
-        while true do
-            if not l[1] then
-                for i=1,7 do l[i]=i end
-                if not l0[1] then for i=1,7 do l0[i]=i end end
-                l[8]=rem(l0,P:random(#l0))
-            end
-            coroutine.yield(rem(l,P:random(#l)))
-        end
-    end,
-    h4r2=function(P)
-        local history=TABLE.new(0,2)
-        while true do
-            local r
-            for _=1,#history do-- Reroll up to [hisLen] times
-                r=P:random(7)
-                local repeated
-                for i=1,#history do
-                    if r==history[i] then
-                        repeated=true
-                        break
-                    end
-                end
-                if not repeated then break end-- Not repeated means success, available r value
-            end
-            rem(history,1)
-            ins(history,r)
-            if history[1]~=0 then-- Initializing, just continue generating until history is full
-                coroutine.yield(r)
-            end
-        end
-    end,
-    c2=function(P)
-        local weight=TABLE.new(0,7)
-        while true do
-            local maxK=1
-            for i=1,7 do
-                weight[i]=weight[i]*.5+P:random()
-                if weight[i]>weight[maxK] then
-                    maxK=i
-                end
-            end
-            weight[maxK]=weight[maxK]/3.5
-            coroutine.yield(maxK)
-        end
-    end,
-    random=function(P)
-        local r,prev
-        while true do
-            repeat
-                r=P:random(7)
-            until r~=prev
-            prev=r
-            coroutine.yield(r)
-        end
-    end,
-    mess=function(P)
-        while true do
-            coroutine.yield(P:random(7))
-        end
-    end,
-}
 local soundTimeMeta={
     __index=function(self,k) rawset(self,k,0) return -1e99 end,
     __metatable=true,
@@ -1975,11 +1900,7 @@ function MP:initialize()
     self.garbageSum=0
 
     self.nextQueue={}
-    self.seqGen=coroutine.wrap(
-        type(self.settings.seqType)=='string' and seqGenerators[self.settings.seqType] or
-        type(self.settings.seqType)=='function' and self.settings.seqType or
-        seqGenerators.bag7
-    )
+    self.seqGen=coroutine.wrap(mechLib.mino.sequence[self.settings.seqType] or self.settings.seqType)
     self:freshNextQueue()
 
     self.holdQueue={}

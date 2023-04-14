@@ -9,11 +9,7 @@ return {
     settings={mino={
         event={
             playerInit=mechLib.mino.statistics.event_playerInit,
-            afterLock=function(P)
-                for y=1,P.field:getHeight() do
-                    TABLE.reverse(P.field._matrix[y])
-                end
-            end,
+            afterLock=mechLib.mino.misc.flipBoard_event_afterLock,
             afterClear={
                 mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],

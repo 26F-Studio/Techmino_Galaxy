@@ -11,11 +11,7 @@ return {
         event={
             playerInit={
                 mechLib.mino.statistics.event_playerInit,
-                function(P)
-                    P:switchAction('rotateCW',false)
-                    P:switchAction('rotateCCW',false)
-                    P:switchAction('rotate180',false)
-                    end
+                mechLib.mino.misc.noRotate_event_playerInit,
             },
             afterClear={
                 mechLib.mino.statistics.event_afterClear,

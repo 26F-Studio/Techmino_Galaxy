@@ -10,32 +10,10 @@ return {
         event={
             playerInit={
                 mechLib.mino.statistics.event_playerInit,
-                function(P)
-                    P.modeData._coords={}
-                end,
+                mechLib.mino.misc.symmetery_event_initPlayer,
             },
-            afterDrop=function(P)
-                local CB=P.hand.matrix
-                for y=1,#CB do for x=1,#CB[1] do if CB[y][x] then
-                    table.insert(P.modeData._coords,{P.handX+x-1,P.handY+y-1})
-                end end end
-            end,
-            afterLock=function(P)
-                local id=nil
-                for _,coord in next,P.modeData._coords do
-                    local C=P.field:getCell((P.settings.fieldW+1)-coord[1],coord[2])
-                    C=C and C.id or false
-                    if id==nil then
-                        id=C
-                    elseif id~=C then
-                        for _,coord in next,P.modeData._coords do
-                            P.field:setCell(false,coord[1],coord[2])
-                        end
-                        break
-                    end
-                end
-                TABLE.cut(P.modeData._coords)
-            end,
+            afterDrop=mechLib.mino.misc.symmetery_event_initPlayer,
+            afterLock=mechLib.mino.misc.symmetery_event_afterLock,
             afterClear={
                 mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],

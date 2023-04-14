@@ -12,21 +12,9 @@ return {
         event={
             playerInit={
                 mechLib.mino.statistics.event_playerInit,
-                function(P)
-                    P.modeData.coverAlpha=0
-                end,
+                mechLib.mino.misc.coverField_event_playerInit,
             },
-            always=function(P)
-                if P.finished then
-                    if P.modeData.coverAlpha>2000 then
-                        P.modeData.coverAlpha=P.modeData.coverAlpha-1
-                    end
-                else
-                    if P.modeData.coverAlpha<2600 then
-                        P.modeData.coverAlpha=P.modeData.coverAlpha+1
-                    end
-                end
-            end,
+            always=mechLib.mino.misc.coverField_event_always,
             afterClear={
                 mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
@@ -36,14 +24,9 @@ return {
                     end
                 end,
             },
-            gameOver=function(P)
-                P:showInvis()
-            end,
+            gameOver=mechLib.mino.misc.coverField_event_gameOver,
             drawInField={
-                function(P)
-                    GC.setColor(.26,.26,.26,P.modeData.coverAlpha/2600)
-                    GC.rectangle('fill',0,0,P.settings.fieldW*40,-P.settings.spawnH*40)
-                end,
+                mechLib.mino.misc.coverField_event_drawInField,
                 mechLib.mino.sprint.event_drawInField[40],
             },
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],
