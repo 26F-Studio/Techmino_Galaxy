@@ -59,8 +59,6 @@ return {
                 P.modeData.level=1
                 P.modeData.levelStartTime=0
                 P.modeData.levelPieces=0
-
-                P:setAction("func1",mechLib.mino.stack.switch)
             end,
             afterLock=function(P)
                 P.modeData.levelPieces=P.modeData.levelPieces+1
