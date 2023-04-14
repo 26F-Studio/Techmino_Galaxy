@@ -6,14 +6,28 @@ local scale={
     'E6','G6','B6','C7',
     'E7','G7','A7','C8',
 }
+local lineFont={
+    30,35,40,45,--1~4
+    50,50,55,55,55,--5~9
+    60,60,60,60,60,--10~14
+    75,75,75,80,80,--15~19
+    85,85,--20,21
+    90,90,--22,23
+    95,95,--24,25
+    100,--26+
+}
 
 local stack={}
 
 function stack.switch(P)
     if not P.modeData.inZone then
         P.modeData.inZone=true
-        P.modeData.zone_lineList={highest=0}-- For no-fall mode
         P.modeData.zone_lines=0
+        P.modeData.zone_highestLine=0
+        P.modeData.zone_lineList={}-- For no-fall mode
+        P.modeData.zoneTextHeight0=0
+        P.modeData.zoneTextHeight=false-- For line number animation
+
         P.settings.clearFullLine=false
 
         -- Switch to 0G
@@ -25,9 +39,27 @@ function stack.switch(P)
 
         BGM.set('all','highgain',.626,.26)
     else
+        P:say{
+            text=tostring(P.modeData.zone_lines),
+            y=P.modeData.zoneTextHeight or P.modeData.zoneTextHeight0,
+            size=math.min(lineFont[P.modeData.zone_lines]*2,100),
+            duration=math.min(P.modeData.zone_lines^.5,5),
+            type='bold',
+            style='zoomout',
+            styleArg=.626,
+        }
+        local lines=P:getFullLines()
+        if lines then
+            P:clearLines(lines)
+            P:freshGhost()
+        end
+
         P.modeData.inZone=false
-        P.modeData.zone_lineList=false
         P.modeData.zone_lines=false
+        P.modeData.zone_highestLine=false
+        P.modeData.zone_lineList=false
+        P.modeData.zoneTextHeight,P.modeData.zoneTextHeight0=false,false
+
         P.settings.clearFullLine=true
 
         -- Recover gravity
@@ -37,12 +69,15 @@ function stack.switch(P)
         P.settings.lockDelay=P.modeData.zone_lockDelay
         P.modeData.zone_dropDelay,P.modeData.zone_lockDelay=nil,nil
 
-        local lines=P:getFullLines()
-        if lines then
-            P:clearLines(lines)
-            P:freshGhost()
-        end
         BGM.set('all','highgain',1,.1)
+    end
+end
+
+local expApproach=MATH.expApproach
+function stack.event_always_animated(P)
+    local md=P.modeData
+    if md.inZone and md.zoneTextHeight then
+        md.zoneTextHeight=expApproach(md.zoneTextHeight,md.zoneTextHeight0,.00626)
     end
 end
 
@@ -73,7 +108,9 @@ function stack.event_afterLock(P)
                 table.insert(F._matrix,md.zone_lines+1,table.remove(F._matrix,y))
             end
             md.zone_lines=md.zone_lines+1
-            md.zone_lineList.highest=md.zone_lineList.highest+1
+            md.zone_highestLine=md.zone_highestLine+1
+            md.zoneTextHeight0=400-(md.zone_highestLine+.5)*(400/P.settings.fieldW)/2
+            if not P.modeData.zoneTextHeight then P.modeData.zoneTextHeight=P.modeData.zoneTextHeight0 end
             SFX.playSample('bass',(20-md.zone_lines)/10,scale[md.zone_lines])
             SFX.playSample('lead',math.min(md.zone_lines/10,1),scale[md.zone_lines])
         end
@@ -88,8 +125,10 @@ function stack.event_afterLock_noFall(P)
             if not P.modeData.zone_lineList[y] and P:isFullLine(y) then
                 table.insert(list,y)
                 P.modeData.zone_lineList[y]=true
-                if y>md.zone_lineList.highest then
-                    md.zone_lineList.highest=y
+                if y>md.zone_highestLine then
+                    md.zone_highestLine=y
+                    md.zoneTextHeight0=400-(md.zone_highestLine+.5)*(400/P.settings.fieldW)/2
+                    if not P.modeData.zoneTextHeight then P.modeData.zoneTextHeight=P.modeData.zoneTextHeight0 end
                 end
             end
         end
@@ -113,21 +152,23 @@ function stack.event_whenSuffocate(P)
     end
 end
 
-local lineFont={
-    30,35,40,45,--1~4
-    50,50,55,55,55,--5~9
-    60,60,60,60,60,--10~14
-    75,75,75,80,80,--15~19
-    85,85,--20,21
-    90,90,--22,23
-    95,95,--24,25
-    100,--26+
-}
 function stack.event_drawOnPlayer(P)
     local md=P.modeData
     if md.inZone and md.zone_lines>0 then
         GC.push('transform')
-        GC.translate(0,400-(md.zone_lineList.highest+.5)*(400/P.settings.fieldW)/2)
+        GC.translate(0,md.zoneTextHeight0)
+        GC.scale(2)
+        local fontSize=lineFont[math.min(md.zone_lines,26)]
+        FONT.set(fontSize,'bold')
+        GC.shadedPrint(md.zone_lines,0,-fontSize*.5,'center',2,8,COLOR.lD,COLOR.L)
+        GC.pop()
+    end
+end
+function stack.event_drawOnPlayer_animated(P)
+    local md=P.modeData
+    if md.inZone and md.zone_lines>0 then
+        GC.push('transform')
+        GC.translate(0,md.zoneTextHeight)
         GC.scale(2)
         local fontSize=lineFont[math.min(md.zone_lines,26)]
         FONT.set(fontSize,'bold')

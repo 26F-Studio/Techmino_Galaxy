@@ -99,10 +99,10 @@ local function endGame(passLevel)
         fontSize=80,
         fontType='bold',
         style='beat',
+        styleArg=1,
         duration=2.6,
         inPoint=.1,
         outPoint=0,
-        exSize=1,
     }
     task_interiorAutoQuit(2.6)
 end
@@ -171,8 +171,8 @@ function scene.keyDown(key,isRep)
                 if protect then
                     protect=false
                 else
-                    time=math.max(time-1,0)
-                    totalTime=totalTime+1
+                    time=math.max(time-1.26,0)
+                    totalTime=totalTime+1.26
                 end
             end
             return

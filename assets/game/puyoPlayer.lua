@@ -1068,10 +1068,11 @@ function PP:render()
     gc.push('transform')
 
     -- applyPlayerTransform
-    gc.translate(self.pos.x,self.pos.y)
-    gc.scale(self.pos.k*(1+self.pos.dk))
-    gc.translate(self.pos.dx,self.pos.dy)
-    gc.rotate(self.pos.a+self.pos.da)
+    local pos=self.pos
+    gc.translate(pos.x,pos.y)
+    gc.scale(pos.k*(1+pos.dk))
+    gc.translate(pos.dx,pos.dy)
+    gc.rotate(pos.a+pos.da)
 
     -- applyFieldTransform
     gc.push('transform')
