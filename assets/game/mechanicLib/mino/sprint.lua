@@ -25,7 +25,6 @@ sprint.event_drawOnPlayer=TABLE.newPool(function(self,lineCount)
         FONT.set(80) GC.mStr(lineCount-P.modeData.line,-300,-55)
     end
     return self[lineCount]
-end
-)
+end)
 
 return sprint
