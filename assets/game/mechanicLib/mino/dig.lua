@@ -4,7 +4,7 @@ dig.sprint_event_playerInit=TABLE.newPool(function(self,lineStay)
     self[lineStay]=function(P)
         for _=1,lineStay do P:riseGarbage() end
         P.fieldDived=0
-        P.modeData.line=0
+        P.modeData.lineDig=0
         P.modeData.lineExist=lineStay
     end
     return self[lineStay]
@@ -22,12 +22,12 @@ dig.sprint_event_afterClear=TABLE.newPool(function(self,info)
             end
         end
         if cleared>0 then
-            md.line=md.line+cleared
-            if md.line>=lineCount then
+            md.lineDig=md.lineDig+cleared
+            if md.lineDig>=lineCount then
                 P:finish('AC')
             else
                 md.lineExist=md.lineExist-cleared
-                local add=math.min(lineCount-md.line,lineStay)-md.lineExist
+                local add=math.min(lineCount-md.lineDig,lineStay)-md.lineExist
                 if add>0 then
                     for _=1,add do P:riseGarbage() end
                     md.lineExist=md.lineExist+add
@@ -86,7 +86,7 @@ dig.shale_event_playerInit=TABLE.newPool(function(self,lineStay)
     self[lineStay]=function(P)
         for _=1,lineStay do pushShaleGarbage(P) end
         P.fieldDived=0
-        P.modeData.line=0
+        P.modeData.lineDig=0
         P.modeData.lineExist=lineStay
     end
     return self[lineStay]
@@ -104,12 +104,12 @@ dig.shale_event_afterClear=TABLE.newPool(function(self,info)
             end
         end
         if cleared>0 then
-            md.line=md.line+cleared
-            if md.line>=lineCount then
+            md.lineDig=md.lineDig+cleared
+            if md.lineDig>=lineCount then
                 P:finish('AC')
             else
                 md.lineExist=md.lineExist-cleared
-                local add=math.min(lineCount-md.line,lineStay)-md.lineExist
+                local add=math.min(lineCount-md.lineDig,lineStay)-md.lineExist
                 if add>0 then
                     for _=1,add do pushShaleGarbage(P) end
                     md.lineExist=md.lineExist+add
@@ -122,17 +122,17 @@ end)
 
 local function pushVocanicsGarbage(P)
     P:riseGarbage(P:calculateHolePos(
-        P:random(2,3),-- count
-        -.2,-- splitRate
-        -.1,-- copyRate
-        -1 -- sandwichRate
+        P:random(3,4),-- count
+        .2,-- splitRate
+        -.1, -- copyRate
+        .1 -- sandwichRate
     ))
 end
 dig.vocanics_event_playerInit=TABLE.newPool(function(self,lineStay)
     self[lineStay]=function(P)
         for _=1,lineStay do pushVocanicsGarbage(P) end
         P.fieldDived=0
-        P.modeData.line=0
+        P.modeData.lineDig=0
         P.modeData.lineExist=lineStay
     end
     return self[lineStay]
@@ -150,12 +150,12 @@ dig.vocanics_event_afterClear=TABLE.newPool(function(self,info)
             end
         end
         if cleared>0 then
-            md.line=md.line+cleared
-            if md.line>=lineCount then
+            md.lineDig=md.lineDig+cleared
+            if md.lineDig>=lineCount then
                 P:finish('AC')
             else
                 md.lineExist=md.lineExist-cleared
-                local add=math.min(lineCount-md.line,lineStay)-md.lineExist
+                local add=math.min(lineCount-md.lineDig,lineStay)-md.lineExist
                 if add>0 then
                     for _=1,add do pushVocanicsGarbage(P) end
                     md.lineExist=md.lineExist+add
@@ -164,6 +164,14 @@ dig.vocanics_event_afterClear=TABLE.newPool(function(self,info)
         end
     end
     return self[info]
+end)
+
+dig.event_drawOnPlayer=TABLE.newPool(function(self,lineCount)
+    self[lineCount]=function(P)
+        P:drawInfoPanel(-380,-60,160,120)
+        FONT.set(80) GC.mStr(lineCount-P.modeData.lineDig,-300,-55)
+    end
+    return self[lineCount]
 end)
 
 return dig

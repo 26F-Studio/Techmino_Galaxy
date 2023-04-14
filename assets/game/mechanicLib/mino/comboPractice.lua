@@ -71,7 +71,7 @@ function comboPractice.event_playerInit(P)
     P.settings.arr=math.max(P.settings.arr,12)
     P.settings.sdarr=math.max(P.settings.sdarr,6)
 
-    P.modeData.line=0
+    P.modeData.comboCount=0
     P.modeData.levelRemain=0
     P.modeData.cleared=0
     P.modeData._curHisLen=false
@@ -99,9 +99,9 @@ comboPractice.event_beforeDiscard=TABLE.newPool(function(self,lineCount)
             if not P.modeData.levelStarted then
                 P.modeData.levelStarted=true
             else
-                P.modeData.line=P.modeData.line+1
+                P.modeData.comboCount=P.modeData.comboCount+1
             end
-            if P.modeData.line>=lineCount then
+            if P.modeData.comboCount>=lineCount then
                 P:finish('AC')
             elseif P.modeData.levelRemain<=0 then
                 P.modeData.cleared=P.modeData.cleared+1
@@ -114,6 +114,14 @@ comboPractice.event_beforeDiscard=TABLE.newPool(function(self,lineCount)
         end
     end
     return self[lineCount]
+end)
+
+comboPractice.event_drawOnPlayer=TABLE.newPool(function(self,comboCount)
+    self[comboCount]=function(P)
+        P:drawInfoPanel(-380,-60,160,120)
+        FONT.set(80) GC.mStr(comboCount-P.modeData.comboCount,-300,-55)
+    end
+    return self[comboCount]
 end)
 
 return comboPractice

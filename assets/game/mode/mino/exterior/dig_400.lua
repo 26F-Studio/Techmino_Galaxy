@@ -12,12 +12,12 @@ return {
             afterClear={
                 mechLib.mino.dig.sprint_event_afterClear['400,10'],
                 function(P)
-                    if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
-                        BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
+                    if P.modeData.lineDig>bgmTransBegin and P.modeData.lineDig<bgmTransFinish+4 and P.isMain then
+                        BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.lineDig-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
                     end
                 end,
             },
-            drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[400],
+            drawOnPlayer=mechLib.mino.dig.event_drawOnPlayer[400],
         },
     }},
 }
