@@ -140,11 +140,13 @@ function PROGRESS.applyCoolWaitTemplate()
         end)
     end
 end
+function PROGRESS.setInteriorBG() BG.set('none') end
+function PROGRESS.setExteriorBG() BG.set(prgs.main==3 and 'space' or 'galaxy') end
 function PROGRESS.playInteriorBGM() playBgm('blank',prgs.main==1 and 'simp' or 'full') end
 function PROGRESS.playExteriorBGM() playBgm('vacuum',prgs.main==3 and 'simp' or 'full') end
 function PROGRESS.setEnv(env)
     if env=='interior' then
-        BG.set('none')
+        PROGRESS.setInteriorBG()
         PROGRESS.playInteriorBGM()
         Zenitha.setClickFX(true)
         Zenitha.setDrawCursor(function(_,x,y)
@@ -161,7 +163,7 @@ function PROGRESS.setEnv(env)
             end
         end)
     elseif env=='exterior' then
-        BG.set(prgs.main==3 and 'space' or 'galaxy')
+        PROGRESS.setExteriorBG()
         PROGRESS.playExteriorBGM()
         Zenitha.setClickFX(function(x,y) SYSFX.new('glow',2,x,y,20) end)
         Zenitha.setDrawCursor(function(_,x,y)
