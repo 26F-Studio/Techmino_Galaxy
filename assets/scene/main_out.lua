@@ -16,6 +16,8 @@ function scene.keyDown(key,isRep)
     local act=KEYMAP.sys:getAction(key)
     if act=='help' then
         SCN.go('dictionary','none','aboutDict_hidden')
+    elseif act=='setting' then
+        SCN.go('setting_out','fadeHeader')
     elseif act=='back' then
         if sureCheck('quit') then PROGRESS.quit() end
     end

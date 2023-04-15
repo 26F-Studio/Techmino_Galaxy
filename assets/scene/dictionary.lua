@@ -2,6 +2,14 @@ local ins=table.insert
 local gc=love.graphics
 local scene={}
 
+local categoryColor={
+    intro=     {index=COLOR.F, content=COLOR.lF},
+    tutorial=  {index=COLOR.Y, content=COLOR.lY},
+    concept=   {index=COLOR.lB,content=COLOR.LB},
+    technique= {index=COLOR.G, content=COLOR.lG},
+    other=     {index=COLOR.M, content=COLOR.lM},
+}
+
 local prevScene
 local time,quiting
 local selected
@@ -9,48 +17,55 @@ local baseDict=require('assets/basedictionary')
 local dispDict={}
 local currentDict={locale=false}
 local enDict=FILE.load('assets/language/dict_en.lua','-lua -canskip')
-local index={
-    type='listBox',pos={.5,.5},x=-630,y=-300,w=240,h=600,
-    lineHeight=40,cornerR=5,
-    scrollBarWidth=5,
-    scrollBarDist=12,
-    scrollBarColor=COLOR.lY,
-    activeColor={0,0,0,0},idleColor={0,0,0,0},
-}
-local categoryColor={
-    about=     {[false]=COLOR.LF,[true]=COLOR.F, text=COLOR.lF},
-    tutorial=  {[false]=COLOR.LY,[true]=COLOR.Y, text=COLOR.lY},
-    concept=   {[false]=COLOR.LB,[true]=COLOR.lB,text=COLOR.LB},
-    technique= {[false]=COLOR.LG,[true]=COLOR.G, text=COLOR.lG},
-    other=     {[false]=COLOR.LM,[true]=COLOR.M, text=COLOR.lM},
-}
-function index.drawFunc(obj,_,sel)
-    if sel then
-        gc.setColor(1,1,1,.26)
-        gc.rectangle('fill',0,0,240,40)
-    end
-    FONT.set(30,'norm')
-    GC.stc_reset()
-    GC.stc_rect(0,0,240,40)
-    gc.setColor(categoryColor[obj.cat][selected==obj])
-    gc.print(obj.title,5,0)
-    GC.stc_stop()
-end
-function index.code()
-    if selected~=index:getItem() then
-        selected=index:getItem()
-    end
-end
-index=WIDGET.new(index)
 
-local function freshIndexPanelPos()
-    index._y=200+50*(1-time)
+local function back()
+    quiting=true
 end
+local index do-- Widgets
+    index={
+        type='listBox',pos={.5,.5},x=-630,y=-300,w=240,h=600,
+        lineHeight=40,cornerR=5,
+        scrollBarWidth=5,
+        scrollBarDist=12,
+        scrollBarColor=COLOR.lY,
+        activeColor={0,0,0,0},idleColor={0,0,0,0},
+    }
+    function index.drawFunc(obj,_,sel)
+        if sel then
+            gc.setColor(1,1,1,.26)
+            gc.rectangle('fill',0,0,240,40)
+        end
+        FONT.set(30,'norm')
+        GC.stc_reset()
+        GC.stc_rect(0,0,240,40)
+        gc.setColor(categoryColor[obj.cat].index)
+        gc.print(obj.title,5,0)
+        if obj==selected then
+            gc.setColor(1,1,1,.62+.355*math.sin(love.timer.getTime()*12.6))
+            gc.print(obj.title,5,0)
+        end
+        GC.stc_stop()
+    end
+    function index.code()
+        if selected~=index:getItem() then
+            selected=index:getItem()
+        end
+    end
+    index=WIDGET.new(index)
+end
+
+local function freshWidgetPos()
+    local y0=SCR.h0/2+50*(1-time)
+    for i=1,#scene.widgetList do
+        scene.widgetList[i]._y=scene.widgetList[i].y+y0
+    end
+end
+
 function scene.enter()
     local target=SCN.args[1] or 'aboutDict'
 
     time=0
-    freshIndexPanelPos()
+    freshWidgetPos()
 
     quiting=false
     prevScene=SCN.stack[#SCN.stack-1]
@@ -60,7 +75,7 @@ function scene.enter()
     if currentDict.locale~=SETTINGS.system.locale then
         currentDict=FILE.load('assets/language/dict_'..SETTINGS.system.locale..'.lua','-lua -canskip')
         if not currentDict then
-            currentDict={aboutDict={title="[No Dict Data]",content="No dictionary file detected."}};
+            currentDict={aboutDict={title="[No Dict Data]",content="No dictionary file detected."}}
         end
         currentDict.locale=SETTINGS.system.locale
     end
@@ -92,17 +107,30 @@ function scene.enter()
     index:setList(dispDict)
     if selectedNum then index:select(selectedNum)end
     index._scrollPos1=index._scrollPos
+    collectgarbage()
 end
 
-local function back()
-    quiting=true
-end
-function scene.keyDown(key)
-    local action=KEYMAP.sys:getAction(key)
-    if action=='left' then
-        -- TODO
-    elseif action=='help' or action=='back' then
+function scene.keyDown(key,isRep)
+    local act=KEYMAP.sys:getAction(key)
+    if act=='up' or act=='down' then
+        index:arrowKey(key)
+    elseif act=='help' or act=='back' then
         back()
+    elseif key=='pageup'   then
+        index:scroll(-15)
+    elseif key=='pagedown' then
+        index:scroll(15)
+    elseif #key==1 and key:find'[0-9a-z]' then
+    elseif not isRep then
+        if key=='return' then
+            if selected~=index:getItem() then
+                index.code()
+            end
+        elseif key=='home' then
+            index:scroll(-1e99)
+        elseif key=='end' then
+            index:scroll(1e99)
+        end
     end
 end
 
@@ -112,17 +140,16 @@ function scene.update(dt)
     end
     if quiting then
         time=math.max(time-12.6*dt,0)
-        freshIndexPanelPos()
+        freshWidgetPos()
         if time<=0 then
             SCN.back('none')
         end
     elseif time<1 then
         time=math.min(time+6.26*dt,1)
-        freshIndexPanelPos()
+        freshWidgetPos()
     end
 end
 
-local frame=10
 local w,h=900,700
 local w2,h2=250,600
 
@@ -144,24 +171,24 @@ function scene.draw()
     gc.translate(70-w/2,50*(1-time))
 
     -- Dark shade
-    gc.setLineWidth(frame)
-    gc.setColor(.44,.44,.44,time)
+    gc.setLineWidth(10)
+    gc.setColor(.45,.45,.45,time)
     gc.translate(5,5)
-    gc.rectangle('line',-frame/2,-h/2-frame/2,w+frame,h+frame,10)
-    gc.rectangle('line',-w2-frame/2,-h2/2-frame/2,w2,h2+frame,10)
+    gc.rectangle('line',-5,-h/2-5,w+10,h+10,10)
+    gc.rectangle('line',-w2-5,-h2/2-5,w2,h2+10,10)
     gc.translate(-5,-5)
 
     -- Light frame
     gc.setColor(.62,.62,.62,time)
-    gc.rectangle('line',-frame/2,-h/2-frame/2,w+frame,h+frame,10)
-    gc.rectangle('line',-w2-frame/2,-h2/2-frame/2,w2,h2+frame,10)
+    gc.rectangle('line',-5,-h/2-5,w+10,h+10,10)
+    gc.rectangle('line',-w2-5,-h2/2-5,w2,h2+10,10)
 
     -- Screen
-    gc.setColor(.38,.44,.54,time*.4)
+    gc.setColor(.4,.45,.55,time*.4)
     gc.rectangle('fill',0,-h/2,w,h,5)
-    gc.rectangle('fill',-w2,-h2/2,w2-frame,h2,5)
+    gc.rectangle('fill',-w2,-h2/2,w2-10,h2,5)
 
-    gc.setColor(categoryColor[selected.cat].text)
+    gc.setColor(categoryColor[selected.cat].content)
     -- Title
     gc.draw(selected.titleText,15,-h/2+5,nil,math.min(1,(w-25)/selected.titleText:getWidth()),1)
 
@@ -175,7 +202,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={.5,.5},x=600,y=-310,w=80,h=80,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.cross_big,code=back,visibleFunc=function() return not quiting end},
     index,
+    WIDGET.new{type='button',pos={.5,.5},x=600,y=-310,w=80,h=80,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.cross_big,code=back,visibleFunc=function() return not quiting end},
 }
 return scene
