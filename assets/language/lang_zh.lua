@@ -51,10 +51,6 @@ return {
     -- About-Game
     pause="暂停",
 
-    keyset_pressKey="按下要设置的键",
-    keyset_deleted= "*已删除*",
-    keyset_info=    "[Esc]: 取消\n[Backspace]: 删除\n[Double Esc]: 设置为Esc",
-
     -- Widget texts
     button_back="返回",
 
@@ -146,6 +142,10 @@ return {
     keyset_sys_left=    "菜单左",
     keyset_sys_right=   "菜单右",
     keyset_sys_select=  "菜单确定",
+
+    keyset_pressKey="按下要设置的键",
+    keyset_deleted= "*已删除*",
+    keyset_info=    "[Esc]: 取消\n[Backspace]: 删除\n[Double Esc]: 设置为Esc",
 
     stick2_switch="2向摇杆",
     stick4_switch="4向摇杆",
