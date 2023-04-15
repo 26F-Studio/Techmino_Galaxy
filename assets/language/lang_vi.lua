@@ -146,7 +146,6 @@ return {
     keyset_sys_right=   "Phải",
     keyset_sys_select=  "Lựa chọn",
 
-    
     keyset_pressKey="Hãy nhấn một phím",
     keyset_deleted= "*Xóa rồi nhé*",
     keyset_info=    "[Esc]: Huỷ\t[Backspace]: Xóa\nNhấn đúp [Esc]: gán phím Esc",
