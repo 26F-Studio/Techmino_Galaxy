@@ -54,7 +54,7 @@ local function _setLang(lid)
         duration=1,inPoint=0,outPoint=0,
     }
     collectgarbage()
-    WIDGET.resize()
+    WIDGET._reset()
 end
 
 scene.widgetList={
