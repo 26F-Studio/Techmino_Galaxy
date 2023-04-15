@@ -220,7 +220,8 @@ return {
 
         sprint_40=             {"40 hàng","Xóa 40 hàng càng nhanh càng tốt\nĐơn giản vậy thôi"},
         sprint_10=             {"10 hàng","Chỉ cần 10 hàng mà thôi!"},
-        sprint_obstacle_20=    {"20 điểm - VCNV","(Vượt chướng ngại vật)\n\nBây giờ là vòng thi \"Vượt chướng ngại vật\"!\n\nCác thí sinh sẽ cùng nhau đi tìm một \"ẩn số\" gồm có 20 \"chữ cái\""},  --ref from "Đường lên đỉnh Olympia"
+        sprint_obstacle_20=    {"20 điểm - VCNV","(Vượt chướng ngại vật)\n\nTrò chơi có thứ tự bắt đầu ngẫu nhiên\nHoàn thành nhiệm vụ này được 20 điểm"},  --based on Hiếu's suggestion
+        -- sprint_obstacle_20=    {"20 điểm - VCNV","(Vượt chướng ngại vật)\n\nBây giờ là vòng thi \"Vượt chướng ngại vật\"!\n\nCác thí sinh sẽ cùng nhau đi tìm một \"ẩn số\" gồm có 20 \"chữ cái\""},  --ref from "Đường lên đỉnh Olympia"
         sprint_200=            {"200 hàng","Xóa 200 hàng\n\n(Nhớ để ý kẻo mỏi tay)"},
         sprint_1000=           {"1000 hàng","Xóa 1000 hàng\n\n(Chỉ mong tay bạn không bị rã rời)"},
         sprint_drought_40=     {"40 hàng - Drought","Xóa 40 hàng…\nỦa mà khoan, nãy giờ chơi sao không thấy gạch I rơi???"},
