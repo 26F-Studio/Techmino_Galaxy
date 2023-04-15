@@ -13,7 +13,10 @@ end
 
 function scene.keyDown(key,isRep)
     if isRep then return end
-    if KEYMAP.sys:getAction(key)=='back' then
+    local act=KEYMAP.sys:getAction(key)
+    if act=='help' then
+        SCN.go('dictionary','none','aboutDict_hidden')
+    elseif act=='back' then
         if sureCheck('quit') then PROGRESS.quit() end
     end
 end
@@ -56,6 +59,6 @@ scene.widgetList={
 
     WIDGET.new{type='button', pos={.5,.5},x=-570,y=220,w=340,h=100,text=function() return CHAR.icon.settings  ..' '..Text.main_out_settings  end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('setting_out','fadeHeader')},
     WIDGET.new{type='button', pos={.5,.5},x=-190,y=220,w=340,h=100,text=function() return CHAR.icon.statistics..' '..Text.main_out_stat      end, fontSize=40,cornerR=26,color='lD',sound=false},
-    WIDGET.new{type='button', pos={.5,.5},x=190, y=220,w=340,h=100,text=function() return CHAR.icon.zictionary..' '..Text.main_out_dict      end, fontSize=40,cornerR=26,color='lD',sound=false},
+    WIDGET.new{type='button', pos={.5,.5},x=190, y=220,w=340,h=100,text=function() return CHAR.icon.zictionary..' '..Text.main_out_dict      end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('dictionary','none')},
 }
 return scene

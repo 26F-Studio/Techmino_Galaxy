@@ -7,8 +7,10 @@ return {
 
         -- Mode
         sprint=require'assets.game.mechanicLib.mino.sprint',
+        dig=require'assets.game.mechanicLib.mino.dig',
         survivor=require'assets.game.mechanicLib.mino.survivor',
         backfire=require'assets.game.mechanicLib.mino.backfire',
+        marathon=require'assets.game.mechanicLib.mino.marathon',
         hypersonic=require'assets.game.mechanicLib.mino.hypersonic',
         comboPractice=require'assets.game.mechanicLib.mino.comboPractice',
         tsdChallenge=require'assets.game.mechanicLib.mino.tsdChallenge',

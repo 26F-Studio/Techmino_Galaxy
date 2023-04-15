@@ -51,10 +51,6 @@ return {
     -- About-Game
     pause="Pause",
 
-    keyset_pressKey="Press a key",
-    keyset_deleted= "*Deleted*",
-    keyset_info=    "[Esc]: cancel\n[Backspace]: delete\n[Double Esc]: set to Esc",
-
     -- Widget texts
     button_back="Back",
 
@@ -146,6 +142,10 @@ return {
     keyset_sys_left=    "Left",
     keyset_sys_right=   "Right",
     keyset_sys_select=  "Select",
+
+    keyset_pressKey="Press a key",
+    keyset_deleted= "*Deleted*",
+    keyset_info=    "[Esc]: cancel\n[Backspace]: delete\n[Double Esc]: set to Esc",
 
     stick2_switch="2-way joystick",
     stick4_switch="4-way joystick",
