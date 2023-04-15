@@ -51,10 +51,6 @@ return {
     -- About-Game
     pause="Đã tạm dừng",
 
-    keyset_pressKey="Hãy nhấn một phím",
-    keyset_deleted= "*Xóa rồi nhé*",
-    keyset_info=    "[Esc]: Huỷ\t[Backspace]: Xóa\nNhấn đúp [Esc]: gán phím Esc",
-
     -- Widget texts
     button_back="Trở về",
 
@@ -149,6 +145,11 @@ return {
     keyset_sys_left=    "Trái",
     keyset_sys_right=   "Phải",
     keyset_sys_select=  "Lựa chọn",
+
+    
+    keyset_pressKey="Hãy nhấn một phím",
+    keyset_deleted= "*Xóa rồi nhé*",
+    keyset_info=    "[Esc]: Huỷ\t[Backspace]: Xóa\nNhấn đúp [Esc]: gán phím Esc",
 
     stick2_switch="Cần điều khiển\n2 hướng",
     stick4_switch="Cần điều khiển\n4 hướng",
