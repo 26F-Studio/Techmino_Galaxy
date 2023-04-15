@@ -1,3 +1,5 @@
+local floor,min=math.floor,math.min
+
 local scale={
     'E3','F3','G3','A3',
     'B3','D4','E4','F4',
@@ -39,15 +41,17 @@ function stack.switch(P)
 
         BGM.set('all','highgain',.626,.26)
     else
-        P:say{
-            text=tostring(P.modeData.zone_lines),
-            y=P.modeData.zoneTextHeight or P.modeData.zoneTextHeight0,
-            size=math.min(lineFont[P.modeData.zone_lines]*2,100),
-            duration=math.min(P.modeData.zone_lines^.5*.626,3),
-            type='bold',
-            style='zoomout',
-            styleArg=.626,
-        }
+        if P.modeData.zone_lines>0 then
+            P:say{
+                text=tostring(P.modeData.zone_lines),
+                y=P.modeData.zoneTextHeight or P.modeData.zoneTextHeight0,
+                size=min(lineFont[min(P.modeData.zone_lines,26)]*2,100),
+                duration=min(P.modeData.zone_lines^.5*.626,3),
+                type='bold',
+                style='zoomout',
+                styleArg=.626,
+            }
+        end
         local lines=P:getFullLines()
         if lines then
             P:clearLines(lines)
@@ -63,8 +67,8 @@ function stack.switch(P)
         P.settings.clearFullLine=true
 
         -- Recover gravity
-        P.dropTimer=math.floor(P.dropTimer/P.settings.dropDelay*P.modeData.zone_dropDelay)
-        P.lockTimer=math.floor(P.lockTimer/P.settings.lockDelay*P.modeData.zone_lockDelay)
+        P.dropTimer=floor(P.dropTimer/P.settings.dropDelay*P.modeData.zone_dropDelay)
+        P.lockTimer=floor(P.lockTimer/P.settings.lockDelay*P.modeData.zone_lockDelay)
         P.settings.dropDelay=P.modeData.zone_dropDelay
         P.settings.lockDelay=P.modeData.zone_lockDelay
         P.modeData.zone_dropDelay,P.modeData.zone_lockDelay=nil,nil
@@ -112,7 +116,7 @@ function stack.event_afterLock(P)
             md.zoneTextHeight0=400-(md.zone_highestLine+.5)*(400/P.settings.fieldW)/2
             if not P.modeData.zoneTextHeight then P.modeData.zoneTextHeight=P.modeData.zoneTextHeight0 end
             SFX.playSample('bass',(20-md.zone_lines)/10,scale[md.zone_lines])
-            SFX.playSample('lead',math.min(md.zone_lines/10,1),scale[md.zone_lines])
+            SFX.playSample('lead',min(md.zone_lines/10,1),scale[md.zone_lines])
         end
     end
 end
@@ -141,7 +145,7 @@ function stack.event_afterLock_noFall(P)
             end
             md.zone_lines=md.zone_lines+1
             SFX.playSample('bass',(20-md.zone_lines)/10,scale[md.zone_lines])
-            SFX.playSample('lead',math.min(md.zone_lines/10,1),scale[md.zone_lines])
+            SFX.playSample('lead',min(md.zone_lines/10,1),scale[md.zone_lines])
         end
     end
 end
@@ -158,7 +162,7 @@ function stack.event_drawOnPlayer(P)
         GC.push('transform')
         GC.translate(0,md.zoneTextHeight0)
         GC.scale(2)
-        local fontSize=lineFont[math.min(md.zone_lines,26)]
+        local fontSize=lineFont[min(md.zone_lines,26)]
         FONT.set(fontSize,'bold')
         GC.shadedPrint(md.zone_lines,0,-fontSize*.5,'center',2,8,COLOR.lD,COLOR.L)
         GC.pop()
@@ -170,7 +174,7 @@ function stack.event_drawOnPlayer_animated(P)
         GC.push('transform')
         GC.translate(0,md.zoneTextHeight)
         GC.scale(2)
-        local fontSize=lineFont[math.min(md.zone_lines,26)]
+        local fontSize=lineFont[min(md.zone_lines,26)]
         FONT.set(fontSize,'bold')
         GC.shadedPrint(md.zone_lines,0,-fontSize*.5,'center',2,8,COLOR.lD,COLOR.L)
         GC.pop()
