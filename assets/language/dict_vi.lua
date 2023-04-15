@@ -4,7 +4,7 @@ return {
         content="Zictionary sẽ dạy cho bạn mọi thứ về xếp gạch",
     },
     aboutDict_hidden={
-        title="Cái này à?",
+        title="Cái gì đây?",
         content="Nó sẽ dạy cho bạn mọi thứ về xếp gạch.\n\nMà ngon lành rồi,\nbạn đã biết cách mở từ điển bằng cách nhấn phím tắt rồi đấy!",
     },
 }
