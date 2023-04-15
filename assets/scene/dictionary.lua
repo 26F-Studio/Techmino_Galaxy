@@ -17,22 +17,28 @@ local index={
     scrollBarColor=COLOR.lY,
     activeColor={0,0,0,0},idleColor={0,0,0,0},
 }
+local categoryColor={
+    about=     {[false]=COLOR.LF,[true]=COLOR.F, text=COLOR.lF},
+    tutorial=  {[false]=COLOR.LY,[true]=COLOR.Y, text=COLOR.lY},
+    concept=   {[false]=COLOR.LB,[true]=COLOR.lB,text=COLOR.LB},
+    technique= {[false]=COLOR.LG,[true]=COLOR.G, text=COLOR.lG},
+    other=     {[false]=COLOR.LM,[true]=COLOR.M, text=COLOR.lM},
+}
 function index.drawFunc(obj,_,sel)
     if sel then
         gc.setColor(1,1,1,.26)
         gc.rectangle('fill',0,0,240,40)
     end
     FONT.set(30,'norm')
-    gc.setColor(selected==obj and COLOR.lC or COLOR.LC)
     GC.stc_reset()
     GC.stc_rect(0,0,240,40)
+    gc.setColor(categoryColor[obj.cat][selected==obj])
     gc.print(obj.title,5,0)
     GC.stc_stop()
 end
 function index.code()
     if selected~=index:getItem() then
         selected=index:getItem()
-        print(selected)
     end
 end
 index=WIDGET.new(index)
@@ -52,10 +58,10 @@ function scene.enter()
 
     -- Initialize dictionary for current language (if need)
     if currentDict.locale~=SETTINGS.system.locale then
-        currentDict=
-            FILE.load('assets/language/dict_'..SETTINGS.system.locale..'.lua','-lua -canskip') or
-            {aboutDict={title="[No Dict Data]",content="No dictionary file detected."}};
-
+        currentDict=FILE.load('assets/language/dict_'..SETTINGS.system.locale..'.lua','-lua -canskip')
+        if not currentDict then
+            currentDict={aboutDict={title="[No Dict Data]",content="No dictionary file detected."}};
+        end
         currentDict.locale=SETTINGS.system.locale
     end
 
@@ -116,14 +122,9 @@ function scene.update(dt)
     end
 end
 
-local boarderColor={COLOR.hex"A0A0A0"}
-local shadeColor={COLOR.hex"707070"}
-local screenColor={COLOR.hex"60708A"}
-local textColor=COLOR.LC
 local frame=10
 local w,h=900,700
 local w2,h2=250,600
-local shade=5
 
 function scene.draw()
     -- Draw previous scene's things
@@ -144,21 +145,23 @@ function scene.draw()
 
     -- Dark shade
     gc.setLineWidth(frame)
-    gc.setColor(shadeColor) GC.setAlpha(time)
-    gc.rectangle('line',-frame/2+shade,-h/2-frame/2+shade,w+frame,h+frame,10)
-    gc.rectangle('line',-w2-frame/2+shade,-h2/2-frame/2+shade,w2,h2+frame,10)
+    gc.setColor(.44,.44,.44,time)
+    gc.translate(5,5)
+    gc.rectangle('line',-frame/2,-h/2-frame/2,w+frame,h+frame,10)
+    gc.rectangle('line',-w2-frame/2,-h2/2-frame/2,w2,h2+frame,10)
+    gc.translate(-5,-5)
 
     -- Light frame
-    gc.setColor(boarderColor) GC.setAlpha(time)
+    gc.setColor(.62,.62,.62,time)
     gc.rectangle('line',-frame/2,-h/2-frame/2,w+frame,h+frame,10)
     gc.rectangle('line',-w2-frame/2,-h2/2-frame/2,w2,h2+frame,10)
 
     -- Screen
-    gc.setColor(screenColor) GC.setAlpha(time*.4)
+    gc.setColor(.38,.44,.54,time*.4)
     gc.rectangle('fill',0,-h/2,w,h,5)
     gc.rectangle('fill',-w2,-h2/2,w2-frame,h2,5)
 
-    gc.setColor(textColor)
+    gc.setColor(categoryColor[selected.cat].text)
     -- Title
     gc.draw(selected.titleText,15,-h/2+5,nil,math.min(1,(w-25)/selected.titleText:getWidth()),1)
 
