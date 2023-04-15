@@ -38,6 +38,8 @@ function scene.keyDown(key,isRep)
         SCN.back('fadeHeader')
     elseif act=='setting' then
         SCN.swapTo('setting_out','none',love.keyboard.isDown('lshift','rshift') and (page-2)%4+1 or page%4+1)
+    elseif act=='help' then
+        callDict('setting_out')
     end
 end
 

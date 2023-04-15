@@ -1,13 +1,13 @@
 local ins=table.insert
-local gc=love.graphics
+local gc,GC=love.graphics,GC
 local scene={}
 
 local categoryColor={
-    intro=     {index=COLOR.F, content=COLOR.lF},
-    tutorial=  {index=COLOR.Y, content=COLOR.lY},
-    concept=   {index=COLOR.lB,content=COLOR.LB},
-    technique= {index=COLOR.G, content=COLOR.lG},
-    other=     {index=COLOR.M, content=COLOR.lM},
+    intro= {index=COLOR.F, content=COLOR.lF},-- Instruction for current scene
+    guide= {index=COLOR.Y, content=COLOR.lY},-- Practice methods
+    term=  {index=COLOR.lB,content=COLOR.LB},-- Concept in game
+    tech=  {index=COLOR.G, content=COLOR.lG},-- General technics
+    other= {index=COLOR.M, content=COLOR.lM},-- Other
 }
 
 local prevScene
@@ -68,7 +68,7 @@ function scene.enter()
     freshWidgetPos()
 
     quiting=false
-    prevScene=SCN.stack[#SCN.stack-1]
+    prevScene=SCN.scenes[SCN.stack[#SCN.stack-1]] or NONE
     selected=false
 
     -- Initialize dictionary for current language (if need)
@@ -87,10 +87,31 @@ function scene.enter()
         if not obj.hidden or type(obj.hidden)=='function' and obj.hidden() or target==obj.id then
             local curObj=currentDict[obj.id] or NONE
             local enObj=enDict[obj.id] or NONE
-            obj.title=curObj.title or enObj.title or '['..obj.id..']';
-            obj.titleSize=obj.content==curObj.content and curObj.titleSize or obj.content==enObj.content and enObj.titleSize or 50
-            obj.content=curObj.content or enObj.content or '[No Data]';
-            obj.contentSize=obj.content==curObj.content and curObj.contentSize or obj.content==enObj.content and enObj.contentSize or 30
+
+            obj.title=curObj.title_full or curObj.title
+            if obj.title then
+                obj.titleSize=curObj.titleSize or 50
+            else
+                obj.title=enObj.title_full or enObj.title
+                if obj.title then
+                    obj.titleSize=enObj.titleSize or 50
+                else
+                    obj.title='['..obj.id..']';
+                    obj.titleSize=50
+                end
+            end
+            obj.content=curObj.content
+            if obj.content then
+                obj.contentSize=curObj.contentSize or 30
+            else
+                obj.content=enObj.content
+                if obj.content then
+                    obj.contentSize=enObj.contentSize or 30
+                else
+                    obj.content='[No Data]';
+                    obj.contentSize=30
+                end
+            end
 
             obj.titleText=nil-- Generate when needed (__index at basedictionary.lua)
 
@@ -135,8 +156,8 @@ function scene.keyDown(key,isRep)
 end
 
 function scene.update(dt)
-    if prevScene then
-        SCN.scenes[prevScene].update(dt)
+    if prevScene.update then
+        prevScene.update(dt)
     end
     if quiting then
         time=math.max(time-12.6*dt,0)
@@ -155,11 +176,13 @@ local w2,h2=250,600
 
 function scene.draw()
     -- Draw previous scene's things
-    if prevScene then
-        SCN.scenes[prevScene].draw()
+    if prevScene.draw then
+        prevScene.draw()
     end
-    gc.replaceTransform(SCR.xOy)
-    WIDGET._draw(SCN.scenes[prevScene].widgetList)
+    if prevScene.widgetList then
+        gc.replaceTransform(SCR.xOy)
+        WIDGET._draw(prevScene.widgetList)
+    end
 
     -- Dark background
     gc.replaceTransform(SCR.origin)
@@ -188,17 +211,21 @@ function scene.draw()
     gc.rectangle('fill',0,-h/2,w,h,5)
     gc.rectangle('fill',-w2,-h2/2,w2-10,h2,5)
 
+    -- Title & Content
+    GC.stc_reset()
+    GC.stc_rect(0,-h/2,w,h,5)
     gc.setColor(categoryColor[selected.cat].content)
-    -- Title
-    gc.draw(selected.titleText,15,-h/2+5,nil,math.min(1,(w-25)/selected.titleText:getWidth()),1)
+        -- Title
+        gc.draw(selected.titleText,15,-h/2+5,nil,math.min(1,(w-25)/selected.titleText:getWidth()),1)
 
-    gc.translate(0,selected.titleText:getHeight()+5)
-    -- Line
-    GC.setLineWidth(2)
-    gc.line(15,-h/2,w-10,-h/2)
-    -- Content
-    FONT.set(selected.contentSize)
-    gc.printf(selected.content,15,-h/2+5,w-30,'left')
+        gc.translate(0,selected.titleText:getHeight()+5)
+        -- Line
+        GC.setLineWidth(2)
+        gc.line(15,-h/2,w-10,-h/2)
+        -- Content
+        FONT.set(selected.contentSize)
+        gc.printf(selected.content,15,-h/2+5,w-30,'left')
+    GC.stc_stop()
 end
 
 scene.widgetList={
