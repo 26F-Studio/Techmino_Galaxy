@@ -121,3 +121,8 @@ end
 function callDict(entry)
     SCN.go('dictionary','none',entry)
 end
+
+local isKeyDown=love.keyboard.isDown
+function isCtrlPressed() return isKeyDown('lctrl','rctrl') end
+function isShiftPressed() return isKeyDown('lshift','rshift') end
+function isAltPressed() return isKeyDown('lalt','ralt') end

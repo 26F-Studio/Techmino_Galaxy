@@ -101,11 +101,11 @@ function scene.keyDown(key,isRep)
         if BGM.isPlaying() then
             BGM.set('all','seek',key=='left' and max(BGM.tell()-5,0) or (BGM.tell()+5)%BGM.getDuration())
         end
-    elseif #key==1 and key:find'[0-9a-z]' then
+    elseif #key==1 and key:find'[0-9a-z]' and not love.keyboard then
         local list=musicListBox:getList()
         local sel=musicListBox:getSelect()
         for _=1,#list do
-            sel=(sel-1+(love.keyboard.isDown('lshift','rshift') and -1 or 1))%#list+1
+            sel=(sel-1+(isShiftPressed() and -1 or 1))%#list+1
             if list[sel]:sub(1,1)==key then
                 musicListBox:select(sel)
                 break
@@ -120,7 +120,7 @@ function scene.keyDown(key,isRep)
             end
             progressBar:reset()
         elseif key=='tab' then
-            local w=scene.widgetList[love.keyboard.isDown('lctrl','rctrl') and 'autoplay' or 'fullband']
+            local w=scene.widgetList[isCtrlPressed() and 'autoplay' or 'fullband']
             if w._visible then
                 w.code()
             end
@@ -130,7 +130,7 @@ function scene.keyDown(key,isRep)
             end
         elseif key=='home' then
             BGM.set('all','seek',0)
-        elseif key=='`' and love.keyboard.isDown('lalt','ralt') then
+        elseif key=='`' and isAltPressed() then
             noProgress=true
             scene.enter()
         elseif act=='back' then
