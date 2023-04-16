@@ -13,17 +13,36 @@ local categoryColor={
 local prevScene
 local time,quiting
 local selected
-local baseDict=require('assets/basedictionary')
+
+-- Base dict data, not formatted
+local baseDict do
+    baseDict=require('assets/basedictionary')
+    local dictObjMeta={__index=function(obj,k)
+        if k=='titleText' then
+            obj.titleText=love.graphics.newText(FONT.get(obj.titleSize,'bold'),obj.title)
+            return obj.titleText
+        end
+    end}
+    for _,obj in next,baseDict do
+        local list=STRING.split(obj[1],':')
+        obj[1]=nil
+        obj.cat,obj.id=list[1]:trim(),list[2]:trim()
+        setmetatable(obj,dictObjMeta)
+    end
+end
+
 local dispDict={}
+-- Dict data of current language
 local currentDict={locale=false}
+-- Dict data of English
 local enDict=FILE.load('assets/language/dict_en.lua','-lua -canskip')
 
 local function back()
     quiting=true
     SFX.play('dict_close')
 end
-local index do-- Widgets
-    index={
+local listBox do-- Widgets
+    listBox={
         type='listBox',pos={.5,.5},x=-630,y=-300,w=240,h=600,
         lineHeight=40,cornerR=5,
         scrollBarWidth=5,
@@ -31,7 +50,7 @@ local index do-- Widgets
         scrollBarColor=COLOR.lY,
         activeColor={0,0,0,0},idleColor={0,0,0,0},
     }
-    function index.drawFunc(obj,_,sel)
+    function listBox.drawFunc(obj,_,sel)
         if sel then
             gc.setColor(1,1,1,.26)
             gc.rectangle('fill',0,0,240,40)
@@ -47,12 +66,20 @@ local index do-- Widgets
         end
         GC.stc_stop()
     end
-    function index.code()
-        if selected~=index:getItem() then
-            selected=index:getItem()
+    function listBox.code()
+        if selected~=listBox:getItem() then
+            selected=listBox:getItem()
         end
     end
-    index=WIDGET.new(index)
+    listBox=WIDGET.new(listBox)
+end
+local inputBox do
+    inputBox={
+        type='inputBox',pos={.5,.5},x=-380,y=280,w=900,h=70,
+        cornerR=5,
+        frameColor={0,0,0,0},
+    }
+    inputBox=WIDGET.new(inputBox)
 end
 
 local function freshWidgetPos()
@@ -126,9 +153,9 @@ function scene.enter()
     end
 
     if not selected then selected=dispDict[1] end
-    index:setList(dispDict)
-    if selectedNum then index:select(selectedNum)end
-    index._scrollPos1=index._scrollPos
+    listBox:setList(dispDict)
+    if selectedNum then listBox:select(selectedNum)end
+    listBox._scrollPos1=listBox._scrollPos
     SFX.play('dict_open')
     collectgarbage()
 end
@@ -136,23 +163,30 @@ end
 function scene.keyDown(key,isRep)
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
-        index:arrowKey(key)
+        listBox:arrowKey(key)
     elseif act=='help' or act=='back' then
         back()
     elseif key=='pageup'   then
-        index:scroll(-15)
+        listBox:scroll(-15)
     elseif key=='pagedown' then
-        index:scroll(15)
+        listBox:scroll(15)
     elseif #key==1 and key:find'[0-9a-z]' then
+        if WIDGET.sel~=inputBox then
+            WIDGET.focus(inputBox)
+            WIDGET.textinput(key)
+            return true
+        end
+    elseif key=='delete' or key=='backspace' then
+        inputBox:keypress(key)
     elseif not isRep then
         if key=='return' then
-            if selected~=index:getItem() then
-                index.code()
+            if selected~=listBox:getItem() then
+                listBox.code()
             end
         elseif key=='home' then
-            index:scroll(-1e99)
+            listBox:scroll(-1e99)
         elseif key=='end' then
-            index:scroll(1e99)
+            listBox:scroll(1e99)
         end
     end
 end
@@ -175,6 +209,7 @@ end
 
 local w,h=900,700
 local w2,h2=250,600
+local searchH=80
 
 function scene.draw()
     -- Draw previous scene's things
@@ -201,21 +236,24 @@ function scene.draw()
     gc.translate(5,5)
     gc.rectangle('line',-5,-h/2-5,w+10,h+10,10)
     gc.rectangle('line',-w2-5,-h2/2-5,w2,h2+10,10)
+    gc.line(-5,h/2-searchH,w+5,h/2-searchH)
     gc.translate(-5,-5)
 
     -- Light frame
     gc.setColor(.62,.62,.62,time)
     gc.rectangle('line',-5,-h/2-5,w+10,h+10,10)
     gc.rectangle('line',-w2-5,-h2/2-5,w2,h2+10,10)
+    gc.line(-5,h/2-searchH,w+5,h/2-searchH)
 
     -- Screen
     gc.setColor(.4,.45,.55,time*.4)
-    gc.rectangle('fill',0,-h/2,w,h,5)
+    gc.rectangle('fill',0,-h/2,w,h-searchH-5,5)
+    gc.rectangle('fill',0,h/2-searchH+5,w,searchH-5,5)
     gc.rectangle('fill',-w2,-h2/2,w2-10,h2,5)
 
     -- Title & Content
     GC.stc_reset()
-    GC.stc_rect(0,-h/2,w,h,5)
+    GC.stc_rect(0,-h/2,w,h-searchH-5,5)
     gc.setColor(categoryColor[selected.cat].content)
         -- Title
         gc.draw(selected.titleText,15,-h/2+5,nil,math.min(1,(w-25)/selected.titleText:getWidth()),1)
@@ -231,7 +269,10 @@ function scene.draw()
 end
 
 scene.widgetList={
-    index,
-    WIDGET.new{type='button',pos={.5,.5},x=600,y=-310,w=80,h=80,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.cross_big,code=back,visibleFunc=function() return not quiting end},
+    listBox,
+    inputBox,
+    WIDGET.new{type='button',pos={.5,.5},x=600,y=-310,w=80,h=80,sound=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.cross_big,code=back},
+    WIDGET.new{type='button',pos={.5,.5},x=370,y=210, w=80,h=80,sound=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.earth},
+    WIDGET.new{type='button',pos={.5,.5},x=470,y=210, w=80,h=80,sound=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.copy},
 }
 return scene
