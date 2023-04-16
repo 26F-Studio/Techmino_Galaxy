@@ -130,6 +130,9 @@ WIDGET._prototype.checkBox.sound_off='check_off'
 WIDGET._prototype.selector.sound='selector'
 WIDGET._prototype.listBox.sound_select='listBox_select'
 WIDGET._prototype.listBox.sound_click='listBox_click'
+WIDGET._prototype.inputBox.sound_input='inputBox_input'
+WIDGET._prototype.inputBox.sound_bksp='inputBox_bksp'
+WIDGET._prototype.inputBox.sound_clear='inputBox_clear'
 
 --[Attention] Not loading IMG/SFX/BGM files here, just read file paths
 IMG.init{
