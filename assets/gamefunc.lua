@@ -117,3 +117,7 @@ end
 function backText()
     return CHAR.icon.back_chevron..' '..Text.button_back
 end
+
+function callDict(entry)
+    SCN.go('dictionary','none',entry)
+end

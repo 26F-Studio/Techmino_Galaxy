@@ -33,8 +33,13 @@ end
 
 function scene.keyDown(key,isRep)
     if isRep then return end
-    if KEYMAP.sys:getAction(key)=='back' then
+    local act=KEYMAP.sys:getAction(key)
+    if act=='back' then
         SCN.back('fadeHeader')
+    elseif act=='setting' then
+        SCN.swapTo('setting_out','none',love.keyboard.isDown('lshift','rshift') and (page-2)%4+1 or page%4+1)
+    elseif act=='help' then
+        callDict('setting_out')
     end
 end
 

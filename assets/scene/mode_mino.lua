@@ -65,6 +65,7 @@ local scene={}
 function scene.enter()
     panel:setSel(false)
     MINOMAP:reset()
+    PROGRESS.setExteriorBG()
     PROGRESS.playExteriorBGM()
 end
 

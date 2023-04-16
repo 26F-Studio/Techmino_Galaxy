@@ -1,6 +1,11 @@
 local baseDict={
-    {'about','aboutDict'},
-    {'about','aboutDict_hidden',true},
+    {'intro: aboutDict'},
+    {'intro: aboutDict_hidden',hidden=true},
+    {'intro: setting_out',hidden=true},
+    {'guide: noobGuide'},
+    {'term:  20g'},
+    {'tech:  hypertap'},
+    {'other: 26f_studio'},
     -- TODO
 }
 
@@ -11,9 +16,9 @@ local dictObjMeta={__index=function(obj,k)
     end
 end}
 for _,obj in next,baseDict do
-    obj.type,obj[1]=obj[1]
-    obj.id,obj[2]=obj[2]
-    obj.hidden,obj[3]=obj[3]
+    local list=STRING.split(obj[1],':')
+    obj[1]=nil
+    obj.cat,obj.id=list[1]:trim(),list[2]:trim()
     setmetatable(obj,dictObjMeta)
 end
 
