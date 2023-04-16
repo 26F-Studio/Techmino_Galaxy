@@ -133,16 +133,6 @@ WIDGET._prototype.listBox.sound_click='listBox_click'
 
 --[Attention] Not loading IMG/SFX/BGM files here, just read file paths
 IMG.init{
-    lock='assets/image/mess/lock.png',
-    dialCircle='assets/image/mess/dialCircle.png',
-    dialNeedle='assets/image/mess/dialNeedle.png',
-    lifeIcon='assets/image/mess/life.png',
-    badgeIcon='assets/image/mess/badge.png',
-    ctrlSpeedLimit='assets/image/mess/ctrlSpeedLimit.png',
-    speedLimit='assets/image/mess/speedLimit.png',
-    pay1='assets/image/mess/pay1.png',
-    pay2='assets/image/mess/pay2.png',
-
     miya={
         miyaCH1='assets/image/characters/miya1.png',
         miyaCH2='assets/image/characters/miya2.png',
@@ -155,8 +145,6 @@ IMG.init{
     xiaoyaCH='assets/image/characters/xiaoya.png',
     xiaoyaOmino='assets/image/characters/xiaoya_Omino.png',
     mikuCH='assets/image/characters/miku.png',
-    electric='assets/image/characters/electric.png',
-    hbm='assets/image/characters/hbm.png',
     z={
         character='assets/image/characters/z_character.png',
         screen1='assets/image/characters/z_screen1.png',
@@ -165,15 +153,6 @@ IMG.init{
         particle2='assets/image/characters/z_particle2.png',
         particle3='assets/image/characters/z_particle3.png',
         particle4='assets/image/characters/z_particle4.png',
-    },
-
-    lanterns={
-        'assets/image/lanterns/1.png',
-        'assets/image/lanterns/2.png',
-        'assets/image/lanterns/3.png',
-        'assets/image/lanterns/4.png',
-        'assets/image/lanterns/5.png',
-        'assets/image/lanterns/6.png',
     },
 
     cover='assets/image/db cover.png',
