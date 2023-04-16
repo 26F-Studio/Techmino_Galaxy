@@ -20,6 +20,7 @@ local enDict=FILE.load('assets/language/dict_en.lua','-lua -canskip')
 
 local function back()
     quiting=true
+    SFX.play('dict_close')
 end
 local index do-- Widgets
     index={
@@ -128,6 +129,7 @@ function scene.enter()
     index:setList(dispDict)
     if selectedNum then index:select(selectedNum)end
     index._scrollPos1=index._scrollPos
+    SFX.play('dict_open')
     collectgarbage()
 end
 
