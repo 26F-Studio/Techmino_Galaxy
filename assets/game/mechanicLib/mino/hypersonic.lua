@@ -291,7 +291,7 @@ do-- hidden
                     P.settings.pieceFadeTime=levels[md.level].fadeTime
 
                     if md.level==2 then
-                        BGM.set('secret7th/melody1','volume',1,10)
+                        BGM.set('secret7th/melody1','volume',1,26)
                     end
                 else
                     P:finish('AC')

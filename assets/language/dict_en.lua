@@ -8,7 +8,7 @@ return {
         content="Help you learn everything around here.\nWow, you opened dictionary with shortcut key!",
     },
     setting_out={
-        title="Setting_EX",
+        title="Setting",
         content="The setting page.\nYou can change a bunch of settings here.",
     },
     noobGuide={

@@ -87,7 +87,7 @@ function scene.mouseClick(x,y,k)
 end
 function scene.wheelMoved(dx,dy)
     MINOMAP:hideCursor()
-    if love.keyboard.isDown('lctrl','rctrl') then
+    if isCtrlPressed() then
         MINOMAP:rotateCam(-(dx+dy)*.26)
     else
         MINOMAP:scaleCam(1.1^(dx+dy))

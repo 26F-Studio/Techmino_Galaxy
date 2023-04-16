@@ -128,6 +128,8 @@ WIDGET._prototype.button.sound='button_norm'
 WIDGET._prototype.checkBox.sound_on='check_on'
 WIDGET._prototype.checkBox.sound_off='check_off'
 WIDGET._prototype.selector.sound='selector'
+WIDGET._prototype.listBox.sound_select='listBox_select'
+WIDGET._prototype.listBox.sound_click='listBox_click'
 
 --[Attention] Not loading IMG/SFX/BGM files here, just read file paths
 IMG.init{

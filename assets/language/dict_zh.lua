@@ -8,7 +8,7 @@ return {
         content="帮助你了解这里的一切。\n哇，你用快捷键打开了词典！",
     },
     setting_out={
-        title="设置菜单_外",
+        title="设置",
         content="设置菜单\n你可以在这里修改各种选项。",
     },
     noobGuide={
