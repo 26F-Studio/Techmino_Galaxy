@@ -37,11 +37,24 @@ local currentDict={locale=false}
 -- Dict data of English
 local enDict=FILE.load('assets/language/dict_en.lua','-lua -canskip')
 
+local listBox,inputBox,linkButton,copyButton
 local function back()
     quiting=true
     SFX.play('dict_close')
 end
-local listBox do-- Widgets
+local function selectItem(item)
+    selected=item
+    linkButton._visible=selected and selected.link and true
+end
+local function openLink()
+    if selected.link then
+        love.system.openURL(selected.link)
+    end
+end
+local function copyText()
+    love.system.setClipboardText(("%s:\n%s\n==Techmino Dict==\n"):format(selected.title_full,selected.content))
+end
+do
     listBox={
         type='listBox',pos={.5,.5},x=-630,y=-300,w=240,h=600,
         lineHeight=40,cornerR=5,
@@ -68,18 +81,28 @@ local listBox do-- Widgets
     end
     function listBox.code()
         if selected~=listBox:getItem() then
-            selected=listBox:getItem()
+            selectItem(listBox:getItem())
         end
     end
     listBox=WIDGET.new(listBox)
-end
-local inputBox do
-    inputBox={
+
+    inputBox=WIDGET.new{
         type='inputBox',pos={.5,.5},x=-380,y=280,w=900,h=70,
         cornerR=5,
         frameColor={0,0,0,0},
     }
-    inputBox=WIDGET.new(inputBox)
+    linkButton=WIDGET.new{
+        type='button',pos={.5,.5},x=370,y=210,w=80,h=80,
+        sound=false,lineWidth=4,cornerR=0,
+        fontSize=60,text=CHAR.icon.earth,
+        code=openLink
+    }
+    copyButton=WIDGET.new{
+        type='button',pos={.5,.5},x=470,y=210,w=80,h=80,
+        sound=false,lineWidth=4,cornerR=0,
+        fontSize=60,text=CHAR.icon.copy,
+        code=copyText
+    }
 end
 
 local function freshWidgetPos()
@@ -97,7 +120,7 @@ function scene.enter()
 
     quiting=false
     prevScene=SCN.scenes[SCN.stack[#SCN.stack-1]] or NONE
-    selected=false
+    selectItem(false)
 
     -- Initialize dictionary for current language (if need)
     if currentDict.locale~=SETTINGS.system.locale then
@@ -140,19 +163,19 @@ function scene.enter()
                     obj.contentSize=30
                 end
             end
-
+            obj.link=curObj.link or false
             obj.titleText=nil-- Generate when needed (__index at basedictionary.lua)
 
             ins(dispDict,obj)
             dispDict[obj.id]=obj
             if target==obj.id then
-                selected=obj
+                selectItem(obj)
                 selectedNum=#dispDict
             end
         end
     end
 
-    if not selected then selected=dispDict[1] end
+    if not selected then selectItem(dispDict[1]) end
     listBox:setList(dispDict)
     if selectedNum then listBox:select(selectedNum)end
     listBox._scrollPos1=listBox._scrollPos
@@ -272,7 +295,7 @@ scene.widgetList={
     listBox,
     inputBox,
     WIDGET.new{type='button',pos={.5,.5},x=600,y=-310,w=80,h=80,sound=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.cross_big,code=back},
-    WIDGET.new{type='button',pos={.5,.5},x=370,y=210, w=80,h=80,sound=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.earth},
-    WIDGET.new{type='button',pos={.5,.5},x=470,y=210, w=80,h=80,sound=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.copy},
+    linkButton,
+    copyButton,
 }
 return scene
