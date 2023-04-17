@@ -1,5 +1,6 @@
 local ins=table.insert
 local gc,GC=love.graphics,GC
+local kbIsDown=love.keyboard.isDown
 local scene={}
 
 local categoryColor={
@@ -9,10 +10,20 @@ local categoryColor={
     tech=  {index=COLOR.G, content=COLOR.lG},-- General technics
     other= {index=COLOR.M, content=COLOR.lM},-- Other
 }
+local mainW,mainH=900,700
+local mainX=70-mainW/2
+local listW,listH=250,600
+local searchH=80
 
 local prevScene
 local time,quiting
 local selected
+local contents={
+    _width=0,
+    title=GC.newText(FONT.get(30),""),
+    texts={},
+    lineH=0,
+}
 
 -- Base dict data, not formatted
 local baseDict do
@@ -38,13 +49,30 @@ local currentDict={locale=false}
 local enDict=FILE.load('assets/language/dict_en.lua','-lua -canskip')
 
 local listBox,inputBox,linkButton,copyButton
-local function back()
+local function close()
     quiting=true
     SFX.play('dict_close')
 end
 local function selectItem(item)
     selected=item
-    linkButton._visible=selected and selected.link and true
+    linkButton._visible=item and item.link and true
+    if item then
+        contents.title=selected.titleText
+        contents._width,contents.texts=FONT.get(item.contentSize):getWrap(item.content,mainW-30)
+        contents.lineH=1.26*item.contentSize
+        contents.scroll=0
+        contents.maxScroll=math.max(
+            #contents.texts*contents.lineH
+            +126
+            +(contents.title:getHeight()+5)
+            -(mainH-searchH),
+            0
+        )
+    else
+        contents.texts=NONE
+        contents.maxScroll=0
+    end
+    contents.scroll=0
 end
 local function openLink()
     if selected.link then
@@ -54,9 +82,9 @@ end
 local function copyText()
     love.system.setClipboardText(("%s:\n%s\n==Techmino Dict==\n"):format(selected.title_full,selected.content))
 end
-do
+do-- Widgets
     listBox={
-        type='listBox',pos={.5,.5},x=-630,y=-300,w=240,h=600,
+        type='listBox',pos={.5,.5},x=-630,y=-300,w=listW-10,h=listH,
         lineHeight=40,cornerR=5,
         scrollBarWidth=5,
         scrollBarDist=12,
@@ -87,7 +115,7 @@ do
     listBox=WIDGET.new(listBox)
 
     inputBox=WIDGET.new{
-        type='inputBox',pos={.5,.5},x=-380,y=280,w=900,h=70,
+        type='inputBox',pos={.5,.5},x=-380,y=280,w=mainW,h=searchH-10,
         cornerR=5,
         frameColor={0,0,0,0},
     }
@@ -163,6 +191,8 @@ function scene.enter()
                     obj.contentSize=30
                 end
             end
+            obj.titleSize=5*math.floor(obj.titleSize/5+.5)
+            obj.contentSize=5*math.floor(obj.contentSize/5+.5)
             obj.title_full=curObj.title_full or obj.title or enObj.title_full or enObj.title
             obj.link=curObj.link or false
             obj.titleText=nil-- Generate when needed (__index at basedictionary.lua)
@@ -187,9 +217,11 @@ end
 function scene.keyDown(key,isRep)
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
-        listBox:arrowKey(key)
+        if not (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
+            listBox:arrowKey(key)
+        end
     elseif act=='help' or act=='back' then
-        back()
+        close()
     elseif key=='pageup'   then
         listBox:scroll(-15)
     elseif key=='pagedown' then
@@ -215,6 +247,34 @@ function scene.keyDown(key,isRep)
     end
 end
 
+local function inScreen(x,y)
+    x,y=SCR.xOy:transformPoint(x,y)
+    x,y=SCR.xOy_m:inverseTransformPoint(x,y)
+    return x>=mainX and x<mainX+mainW and y>-mainH/2 and y<mainH/2-searchH
+end
+local function scroll(dy)
+    contents.scroll=MATH.clamp(contents.scroll-dy,0,contents.maxScroll)
+end
+function scene.mouseMove(x,y,_,dy)
+    if WIDGET.sel~=listBox and love.mouse.isDown(1) and x and y and inScreen(x,y) then
+        scroll(dy)
+    end
+end
+function scene.mouseDown(_,_,k)
+    if k==2 then
+        close()
+    end
+end
+function scene.touchMove(x,y,_,dy)
+    if WIDGET.sel~=listBox and inScreen(x,y) then
+        scroll(dy)
+    end
+end
+
+function scene.wheelMoved(_,y)
+    scroll(y*contents.lineH*2)
+end
+
 function scene.update(dt)
     if prevScene.update then
         prevScene.update(dt)
@@ -229,11 +289,10 @@ function scene.update(dt)
         time=math.min(time+6.26*dt,1)
         freshWidgetPos()
     end
+    if kbIsDown('up','down') and (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
+        scroll(12.6*contents.lineH*dt*(kbIsDown('up') and 1 or -1))
+    end
 end
-
-local w,h=900,700
-local w2,h2=250,600
-local searchH=80
 
 function scene.draw()
     -- Draw previous scene's things
@@ -252,50 +311,53 @@ function scene.draw()
 
     -- Dictionary
     gc.replaceTransform(SCR.xOy_m)
-    gc.translate(70-w/2,50*(1-time))
+    gc.translate(mainX,50*(1-time))
 
     -- Dark shade
     gc.setLineWidth(10)
     gc.setColor(.45,.45,.45,time)
     gc.translate(5,5)
-    gc.rectangle('line',-5,-h/2-5,w+10,h+10,10)
-    gc.rectangle('line',-w2-5,-h2/2-5,w2,h2+10,10)
-    gc.line(-5,h/2-searchH,w+5,h/2-searchH)
+    gc.rectangle('line',-5,-mainH/2-5,mainW+10,mainH+10,10)
+    gc.rectangle('line',-listW-5,-listH/2-5,listW,listH+10,10)
+    gc.line(-5,mainH/2-searchH,mainW+5,mainH/2-searchH)
     gc.translate(-5,-5)
 
     -- Light frame
     gc.setColor(.62,.62,.62,time)
-    gc.rectangle('line',-5,-h/2-5,w+10,h+10,10)
-    gc.rectangle('line',-w2-5,-h2/2-5,w2,h2+10,10)
-    gc.line(-5,h/2-searchH,w+5,h/2-searchH)
+    gc.rectangle('line',-5,-mainH/2-5,mainW+10,mainH+10,10)
+    gc.rectangle('line',-listW-5,-listH/2-5,listW,listH+10,10)
+    gc.line(-5,mainH/2-searchH,mainW+5,mainH/2-searchH)
 
     -- Screen
     gc.setColor(.4,.45,.55,time*.4)
-    gc.rectangle('fill',0,-h/2,w,h-searchH-5,5)
-    gc.rectangle('fill',0,h/2-searchH+5,w,searchH-5,5)
-    gc.rectangle('fill',-w2,-h2/2,w2-10,h2,5)
+    gc.rectangle('fill',0,-mainH/2,mainW,mainH-searchH-5,5)
+    gc.rectangle('fill',0,mainH/2-searchH+5,mainW,searchH-5,5)
+    gc.rectangle('fill',-listW,-listH/2,listW-10,listH,5)
 
     -- Title & Content
     GC.stc_reset()
-    GC.stc_rect(0,-h/2,w,h-searchH-5,5)
+    GC.stc_rect(0,-mainH/2,mainW,mainH-searchH-5,5)
     gc.setColor(categoryColor[selected.cat].content)
+        gc.translate(0,-contents.scroll)
         -- Title
-        gc.draw(selected.titleText,15,-h/2+5,nil,math.min(1,(w-25)/selected.titleText:getWidth()),1)
+        gc.draw(contents.title,15,-mainH/2+5,nil,math.min(1,(mainW-25)/contents.title:getWidth()),1)
 
-        gc.translate(0,selected.titleText:getHeight()+5)
+        gc.translate(0,contents.title:getHeight()+5)
         -- Line
         GC.setLineWidth(2)
-        gc.line(15,-h/2,w-10,-h/2)
+        gc.line(15,-mainH/2,mainW-10,-mainH/2)
         -- Content
         FONT.set(selected.contentSize)
-        gc.printf(selected.content,15,-h/2+5,w-30,'left')
+        for i=1,#contents.texts do
+            gc.print(contents.texts[i],15,-mainH/2+5+contents.lineH*(i-1))
+        end
     GC.stc_stop()
 end
 
 scene.widgetList={
     listBox,
     inputBox,
-    WIDGET.new{type='button',pos={.5,.5},x=600,y=-310,w=80,h=80,sound=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.cross_big,code=back},
+    WIDGET.new{type='button',pos={.5,.5},x=600,y=-310,w=80,h=80,sound=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.cross_big,code=close},
     linkButton,
     copyButton,
 }
