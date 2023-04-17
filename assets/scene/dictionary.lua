@@ -19,7 +19,7 @@ local baseDict do
     baseDict=require('assets/basedictionary')
     local dictObjMeta={__index=function(obj,k)
         if k=='titleText' then
-            obj.titleText=love.graphics.newText(FONT.get(obj.titleSize,'bold'),obj.title)
+            obj.titleText=love.graphics.newText(FONT.get(obj.titleSize,'bold'),obj.title_full)
             return obj.titleText
         end
     end}
@@ -139,11 +139,11 @@ function scene.enter()
             local curObj=currentDict[obj.id] or NONE
             local enObj=enDict[obj.id] or NONE
 
-            obj.title=curObj.title_full or curObj.title
+            obj.title=curObj.title
             if obj.title then
                 obj.titleSize=curObj.titleSize or 50
             else
-                obj.title=enObj.title_full or enObj.title
+                obj.title=enObj.title
                 if obj.title then
                     obj.titleSize=enObj.titleSize or 50
                 else
@@ -163,6 +163,7 @@ function scene.enter()
                     obj.contentSize=30
                 end
             end
+            obj.title_full=curObj.title_full or obj.title or enObj.title_full or enObj.title
             obj.link=curObj.link or false
             obj.titleText=nil-- Generate when needed (__index at basedictionary.lua)
 
