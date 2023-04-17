@@ -68,9 +68,9 @@ return {
     setting_hitWavePower="Hitwave Power",
 
     setting_mainVol="Âm lượng tổng",
-    setting_bgm="Nhạc nền (BGM)",
-    setting_sfx="Hiệu ứng (SFX)",
-    setting_vib="Rung (VIB)",
+    setting_bgm="Nhạc nền",
+    setting_sfx="Hiệu ứng",
+    setting_vib="Rung",
     setting_handling="Handling…",
     setting_keymapping="Cài đặt phím…",
     setting_enableTouching="Điều khiển bằng cảm ứng",
@@ -84,10 +84,10 @@ return {
     setting_fullscreen="Toàn màn hình",
     setting_portrait="Màn hình hướng dọc",
     setting_autoMute="Tắt tiếng khi mở cửa số khác",
-    setting_showTouch="Hiện vị trí vừa nhấn",
+    setting_showTouch="Hiện vị trí vừa chạm",
 
     setting_maxFPS="FPS tối đa",
-    setting_updRate="Tần suất cập nhậ vt",
+    setting_updRate="Tần suất cập nhật",
     setting_drawRate="Tuần suất vẽ",
     setting_msaa="MSAA - Khử răng cưa",
 
@@ -102,8 +102,8 @@ return {
     keyset_mino_rotateCW=   "Twist (Xoay) Phải",
     keyset_mino_rotateCCW=  "Twist (Xoay) Trái",
     keyset_mino_rotate180=  "Twist (Xoay) 180",
-    keyset_mino_softDrop=   "Thả Nhẹ/Xuống 1 ô",      -- I don't know which one should I use
-    keyset_mino_hardDrop=   "Thả Mạnh/Đặt gạch ngay",   -- so does to it
+    keyset_mino_softDrop=   "Rơi Nhẹ",
+    keyset_mino_hardDrop=   "Rơi Mạnh",
     keyset_mino_holdPiece=  "Giữ gạch",
 
     keyset_puyo_moveLeft=   "Sang Trái",
@@ -219,11 +219,11 @@ return {
         backfire_cheese_100=   {"Ăn đòn phản - Phô mai","Xóa 100 hàng, cũng bị ăn rác do chính mình tạo ra, nhưng lần này bị bón hành kiểu phô mai"},
 
         sprint_40=             {"40 hàng","Xóa 40 hàng càng nhanh càng tốt\nĐơn giản vậy thôi"},
-        sprint_10=             {"10 hàng","Chỉ cần 10 hàng mà thôi!"},
-        sprint_obstacle_20=    {"20 điểm - VCNV","(Vượt chướng ngại vật)\n\nTrò chơi có thứ tự bắt đầu ngẫu nhiên\nHoàn thành nhiệm vụ này được 20 điểm"},  --based on Hiếu's suggestion
+        sprint_10=             {"10 hàng","Xoá 10 hàng, càng nhanh càng tốt"},
+        sprint_obstacle_20=    {"20 điểm - VCNV","(Vượt chướng ngại vật)\n\nTrò chơi sẽ bắt đầu với các \"chướng ngại vật\" hoàn toàn ngẫu nhiên\nHoàn thành nhiệm vụ này được 20 điểm"},  --based on Hiếu's suggestion
         -- sprint_obstacle_20=    {"20 điểm - VCNV","(Vượt chướng ngại vật)\n\nBây giờ là vòng thi \"Vượt chướng ngại vật\"!\n\nCác thí sinh sẽ cùng nhau đi tìm một \"ẩn số\" gồm có 20 \"chữ cái\""},  --ref from "Đường lên đỉnh Olympia"
         sprint_200=            {"200 hàng","Xóa 200 hàng\n\n(Nhớ để ý kẻo mỏi tay)"},
-        sprint_1000=           {"1000 hàng","Xóa 1000 hàng\n\n(Chỉ mong tay bạn không bị rã rời)"},
+        sprint_1000=           {"1000 hàng","Xóa 1000 hàng\n\n(Tay của bạn còn ổn không?)"},
         sprint_drought_40=     {"40 hàng - Drought","Xóa 40 hàng…\nỦa mà khoan, nãy giờ chơi sao không thấy gạch I rơi???"},
         sprint_flood_40=       {"40 hàng - Flood","Xóa 40 hàng, nhưng khoan…\nSao nhiều gạch S với Z dữ vậy!?"},
         sprint_penta_40=       {"40 hàng - Penta","Xóa 40 hàng, nhưng lần này với gạch 5 ô (pentominoes)"},
@@ -260,7 +260,7 @@ return {
     tutorial_basic_1="Chào mừng bạn tới Techmino!",
     tutorial_basic_2="1. Những thứ cơ bản",
     tutorial_basic_3="Hãy dùng hai phím \"Sang Trái\" và \"Sang Phải\" để điều khiển gạch đang rơi.",
-    tutorial_basic_4="sau đó dùng phím \"Thả Mạnh/Đặt gạch ngay\" để đặt gạch lên trên mặt bảng.",
+    tutorial_basic_4="sau đó dùng phím \"Rơi Mạnh\" để đặt gạch lên trên mặt bảng.",
     tutorial_basic_5="Bạn cũng có thể xoay gạch bằng cách nhấn các nút xoay.",
 
     tutorial_sequence_1="2. Next & Hold",
@@ -275,9 +275,9 @@ return {
 
     tutorial_stackBasic_1="4. Xếp gạch sao cho đúng?",
     tutorial_stackBasic_m1="Hãy tập trung vào màn hình và làm theo hướng dẫn nè!",
-    tutorial_stackBasic_m2="Lúc đầu, hãy giữ cho bề mặt ở phía trên phẳng nhất có thể",
-    tutorial_stackBasic_m3="Các cục gạch sẽ được đặt ở tư thế nằm, chứ không phải là tư thế đứng",
-    tutorial_stackBasic_m4="Bề mặt ở trên nếu phẳng thì dễ dàng để đặt gạch hơn, và cố gắng đừng tạo ra bất kì cái hố nào",
+    tutorial_stackBasic_m2="Lúc đầu, hãy giữ cho \"địa hình\" gạch phẳng nhất có thể",
+    tutorial_stackBasic_m3="Các cục gạch nên được đặt ở tư thế nằm, chứ không phải là tư thế đứng",
+    tutorial_stackBasic_m4="Nếu \"địa hình\" gạch bằng phẳng thì dễ dàng để đặt gạch hơn, và cố gắng đừng tạo ra bất kì cái hố nào",
     tutorial_stackBasic_m5="Bạn thường được thưởng nhiều hơn khi xóa bốn hàng cùng một lúc, hãy thử làm một cái đi",
     tutorial_stackBasic_m6="Thử làm Techrash bằng cách dùng những cục gạch cuối cùng này mà không cần hướng dẫn đi",
 
