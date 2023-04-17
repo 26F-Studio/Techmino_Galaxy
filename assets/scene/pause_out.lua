@@ -7,6 +7,9 @@ local pauseText
 function scene.enter()
     pauseText=GC.newText(FONT.get(80,'bold'),Text.pause)
 end
+function scene.leave()
+    SCN.scenes['game_out'].leave()
+end
 
 local function sysAction(action)
     if action=='quit' then

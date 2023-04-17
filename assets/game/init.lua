@@ -188,7 +188,11 @@ function GAME.getMode(name)
     end
 end
 
-function GAME.reset(mode,seed)
+function GAME.load(mode,seed)
+    if GAME.mode then
+        MES.new('warn',"Game is running")
+        return
+    end
     GAME.playing=true
     GAME.playerList={}
     GAME.playerMap={}
@@ -200,6 +204,45 @@ function GAME.reset(mode,seed)
     GAME.mode=mode and GAME.getMode(mode) or NONE
     if GAME.mode.initialize then GAME.mode.initialize() end
     TASK.removeTask_code(task_switchToResult)
+    TASK.removeTask_code(task_unloadGame)
+
+    if #GAME.playerList==0 then
+        MES.new('warn',"No players created in this mode")
+    else
+        if GAME.mainPlayer then
+            local conf=SETTINGS["game_"..GAME.mainPlayer.gameMode]
+            if conf then GAME.mainPlayer:loadSettings(conf) end
+        end
+        if GAME.mode.settings then
+            for i=1,#GAME.playerList do
+                local conf=GAME.mode.settings[GAME.playerList[i].gameMode]
+                if conf then
+                    GAME.playerList[i]:loadSettings(conf)
+                end
+            end
+        end
+
+        for i=1,#GAME.playerList do
+            GAME.playerList[i]:initialize()
+            GAME.playerList[i]:triggerEvent('playerInit')
+        end
+
+        layoutFuncs[GAME.mode['layout']]()
+    end
+end
+
+function GAME.unload()
+    GAME.playing=false
+    GAME.playerList=false
+    GAME.playerMap=false
+
+    GAME.hitWaves={}
+
+    GAME.seed=false
+    GAME.mode=false
+
+    GAME.mainID=false
+    GAME.mainPlayer=false
 end
 
 function GAME.newPlayer(id,pType)
@@ -246,32 +289,6 @@ function GAME.setGroup(id,gid)
     assert(type(gid)=='number' and gid>=0 and gid%1==gid,"Invalid group id")
     if GAME.playerMap[id] then
         GAME.playerMap[id].group=gid
-    end
-end
-
-function GAME.start()
-    if #GAME.playerList==0 then
-        MES.new('warn',"No players created in this mode")
-    else
-        if GAME.mainPlayer then
-            local conf=SETTINGS["game_"..GAME.mainPlayer.gameMode]
-            if conf then GAME.mainPlayer:loadSettings(conf) end
-        end
-        if GAME.mode.settings then
-            for i=1,#GAME.playerList do
-                local conf=GAME.mode.settings[GAME.playerList[i].gameMode]
-                if conf then
-                    GAME.playerList[i]:loadSettings(conf)
-                end
-            end
-        end
-
-        for i=1,#GAME.playerList do
-            GAME.playerList[i]:initialize()
-            GAME.playerList[i]:triggerEvent('playerInit')
-        end
-
-        layoutFuncs[GAME.mode['layout']]()
     end
 end
 

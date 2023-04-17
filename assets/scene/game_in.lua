@@ -2,19 +2,25 @@ local gc=love.graphics
 
 local scene={}
 
+local function startGame(modeName)
+    GAME.unload()
+    GAME.load(modeName)
+end
 function scene.enter()
-    VCTRL.reset()
     if SCN.args[1] then
-        GAME.reset(SCN.args[1])
-        GAME.start()
+        startGame(SCN.args[1])
     end
+    VCTRL.reset()
     scene.widgetList.pause.text=canPause() and CHAR.icon.pause or CHAR.icon.back
     WIDGET._reset()
+end
+function scene.leave()
+    TASK.new(task_unloadGame)
 end
 
 local function sysAction(action)
     if action=='restart' then
-        scene.enter()
+        startGame(GAME.mode.name)
     elseif action=='back' then
         if canPause() then
             SFX.play('notice')

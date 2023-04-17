@@ -12,7 +12,7 @@ local mobile=SYSTEM=='Android' or SYSTEM=='iOS'
 function scene.enter()
     page=tostring(SCN.args[1] or 1)
     for _,v in next,scene.widgetList do
-        if v.name then
+        if v.name and #v.name<=2 then
             if v.name:sub(1,1)=='S' then
                 v.color=v.name:sub(2,2)==page and 'lS' or 'L'
             else
@@ -24,6 +24,7 @@ function scene.enter()
         scene.widgetList["3f"]:setVisible(not mobile)
         scene.widgetList["3p"]:setVisible(mobile)
     end
+    scene.widgetList.test:setVisible(not GAME.mode)
     WIDGET._reset()
     BG.set('none')
 end
@@ -94,6 +95,6 @@ scene.widgetList={
     -- Gameplay
     -- ?
 
-    WIDGET.new{type='button', pos={1,1},x=-300,y=-80,w=160, h=80,cornerR=10, fontSize=40,text=LANG'setting_test',           code=playExterior'mino/exterior/test'},
+    WIDGET.new{name='test',type='button', pos={1,1},x=-300,y=-80,w=160, h=80,cornerR=10, fontSize=40,text=LANG'setting_test',code=playExterior'mino/exterior/test',visibleFunc=function() return not GAME.mode end},
 }
 return scene

@@ -55,7 +55,7 @@ local function close()
 end
 local function selectItem(item)
     selected=item
-    linkButton._visible=item and item.link and true
+    linkButton:setVisible(item and item.link and true)
     if item then
         contents.title=selected.titleText
         contents._width,contents.texts=FONT.get(item.contentSize):getWrap(item.content,mainW-30)
