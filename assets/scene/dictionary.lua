@@ -119,17 +119,17 @@ do-- Widgets
         cornerR=5,
         frameColor={0,0,0,0},
     }
-    linkButton=WIDGET.new{
-        type='button',pos={.5,.5},x=370,y=210,w=80,h=80,
-        sound=false,lineWidth=4,cornerR=0,
-        fontSize=60,text=CHAR.icon.earth,
-        code=openLink
-    }
     copyButton=WIDGET.new{
-        type='button',pos={.5,.5},x=470,y=210,w=80,h=80,
+        type='button',pos={.5,.5},x=mainX+mainW-50,y=210,w=80,h=80,
         sound=false,lineWidth=4,cornerR=0,
         fontSize=60,text=CHAR.icon.copy,
         code=copyText
+    }
+    linkButton=WIDGET.new{
+        type='button',pos={.5,.5},x=mainX+mainW-150,y=210,w=80,h=80,
+        sound=false,lineWidth=4,cornerR=0,
+        fontSize=60,text=CHAR.icon.earth,
+        code=openLink
     }
 end
 
@@ -357,8 +357,8 @@ end
 scene.widgetList={
     listBox,
     inputBox,
-    WIDGET.new{type='button',pos={.5,.5},x=600,y=-310,w=80,h=80,sound=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.cross_big,code=close},
-    linkButton,
     copyButton,
+    linkButton,
+    WIDGET.new{type='button',pos={.5,.5},x=mainX+mainW+70,y=-310,w=80,h=80,sound=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.cross_big,code=close},
 }
 return scene

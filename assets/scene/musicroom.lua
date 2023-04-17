@@ -51,7 +51,7 @@ local musicListBox do
         if sel and name~=selected then
             setFont(100)
             gc_setColor(COLOR.L)
-            GC.mStr(CHAR.icon.play,350,-20)
+            GC.mStr(CHAR.icon.play,350,-25)
         end
     end
     function musicListBox.code()
