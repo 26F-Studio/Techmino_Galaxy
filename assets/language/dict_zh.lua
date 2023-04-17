@@ -5,7 +5,7 @@ return {
     },
     aboutDict_hidden={
         title="关于本词典?",
-        content="帮助你了解这里的一切。\n哇，你用快捷键打开了词典！\nP.WVWAWVAVWAWV",
+        content="帮助你了解这里的一切。\n哇，你用快捷键打开了词典！",
     },
     setting_out={
         title="设置",

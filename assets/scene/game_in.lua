@@ -8,7 +8,7 @@ function scene.enter()
         GAME.reset(SCN.args[1])
         GAME.start()
     end
-    scene.widgetList[1].text=canPause() and CHAR.icon.pause or CHAR.icon.back
+    scene.widgetList.pause.text=canPause() and CHAR.icon.pause or CHAR.icon.back
     WIDGET._reset()
 end
 
@@ -99,6 +99,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
+    WIDGET.new{name='pause',type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
 }
 return scene
