@@ -122,6 +122,13 @@ function callDict(entry)
     SCN.go('dictionary','none',entry)
 end
 
+function task_unloadGame()
+    coroutine.yield()
+    DEBUG.yieldUntilNextScene()
+    GAME.unload()
+    collectgarbage()
+end
+
 local isKeyDown=love.keyboard.isDown
 function isCtrlPressed() return isKeyDown('lctrl','rctrl') end
 function isShiftPressed() return isKeyDown('lshift','rshift') end
