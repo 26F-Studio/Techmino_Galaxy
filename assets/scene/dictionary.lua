@@ -11,8 +11,8 @@ local categoryColor={
     other= {index=COLOR.M, content=COLOR.lM},-- Other
 }
 local mainW,mainH=900,700
-local mainX=70-mainW/2
-local listW,listH=250,600
+local mainX=100-mainW/2
+local listW,listH=300,600
 local searchH=80
 
 local prevScene
@@ -84,7 +84,7 @@ local function copyText()
 end
 do-- Widgets
     listBox={
-        type='listBox',pos={.5,.5},x=-630,y=-300,w=listW-10,h=listH,
+        type='listBox',pos={.5,.5},x=mainX-listW,y=-listH/2,w=listW-10,h=listH,
         lineHeight=40,cornerR=5,
         scrollBarWidth=5,
         scrollBarDist=12,
@@ -115,7 +115,7 @@ do-- Widgets
     listBox=WIDGET.new(listBox)
 
     inputBox=WIDGET.new{
-        type='inputBox',pos={.5,.5},x=-380,y=280,w=mainW,h=searchH-10,
+        type='inputBox',pos={.5,.5},x=mainX,y=280,w=mainW,h=searchH-10,
         cornerR=5,
         frameColor={0,0,0,0},
     }
