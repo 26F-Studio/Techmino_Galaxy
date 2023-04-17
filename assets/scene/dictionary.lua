@@ -94,11 +94,11 @@ do-- Widgets
     function listBox.drawFunc(obj,_,sel)
         if sel then
             gc.setColor(1,1,1,.26)
-            gc.rectangle('fill',0,0,240,40)
+            gc.rectangle('fill',0,0,listW-10,40)
         end
         FONT.set(30,'norm')
         GC.stc_reset()
-        GC.stc_rect(0,0,240,40)
+        GC.stc_rect(0,0,listW-10,40)
         gc.setColor(categoryColor[obj.cat].index)
         gc.print(obj.title,5,0)
         if obj==selected then
