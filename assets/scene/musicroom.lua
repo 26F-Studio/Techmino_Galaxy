@@ -30,7 +30,14 @@ local bigTitle=setmetatable({},{
 })
 
 local musicListBox do
-    musicListBox={type='listBox',pos={.5,.5},x=0,y=-320,w=700,h=500,lineHeight=80}
+    musicListBox={
+        type='listBox',pos={.5,.5},x=0,y=-320,w=700,h=500,
+        lineHeight=80,
+        scrollBarWidth=5,
+        scrollBarDist=4,
+        scrollBarColor='dL',
+        activeColor='L',idleColor='L',
+    }
     function musicListBox.drawFunc(name,_,sel)
         if sel then
             gc_setColor(1,1,1,.26)
