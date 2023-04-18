@@ -222,7 +222,11 @@ function scene.keyDown(key,isRep)
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
         if not (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
+            local sel=listBox:getItem()
             listBox:arrowKey(key)
+            if listBox:getItem()~=sel then
+                SFX.play(listBox.sound_select)
+            end
         end
     elseif act=='help' or act=='back' then
         close()
@@ -243,9 +247,10 @@ function scene.keyDown(key,isRep)
     elseif key=='delete' or key=='backspace' then
         inputBox:keypress(key)
     elseif not isRep then
-        if key=='return' then
+        if act=='select' then
             if selected~=listBox:getItem() then
                 listBox.code()
+                SFX.play(listBox.sound_click)
             end
         elseif key=='home' then
             listBox:scroll(-1e99)
