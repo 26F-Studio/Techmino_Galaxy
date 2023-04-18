@@ -231,10 +231,14 @@ function scene.keyDown(key,isRep)
     elseif key=='pagedown' then
         listBox:scroll(15)
     elseif #key==1 and key:find'[0-9a-z]' then
-        if WIDGET.sel~=inputBox then
-            WIDGET.focus(inputBox)
-            WIDGET.textinput(key)
-            return true
+        if key=='c' and isCtrlPressed() then
+            copyText()
+        else
+            if WIDGET.sel~=inputBox then
+                WIDGET.focus(inputBox)
+                WIDGET.textinput(key)
+                return true
+            end
         end
     elseif key=='delete' or key=='backspace' then
         inputBox:keypress(key)
