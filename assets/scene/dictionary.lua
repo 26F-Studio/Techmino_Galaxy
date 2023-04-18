@@ -68,6 +68,7 @@ local function selectItem(item)
             -(mainH-searchH),
             0
         )
+        copyButton:setVisible(true)
     else
         contents.texts=NONE
         contents.maxScroll=0
@@ -77,10 +78,13 @@ end
 local function openLink()
     if selected.link then
         love.system.openURL(selected.link)
+        SFX.play('dict_link')
     end
 end
 local function copyText()
     love.system.setClipboardText(("%s:\n%s\n==Techmino Dict==\n"):format(selected.title_full,selected.content))
+    SFX.play('dict_copy')
+    copyButton:setVisible(false)
 end
 do-- Widgets
     listBox={
@@ -123,13 +127,13 @@ do-- Widgets
         type='button',pos={.5,.5},x=mainX+mainW-50,y=210,w=80,h=80,
         sound=false,lineWidth=4,cornerR=0,
         fontSize=60,text=CHAR.icon.copy,
-        code=copyText
+        code=copyText,
     }
     linkButton=WIDGET.new{
         type='button',pos={.5,.5},x=mainX+mainW-150,y=210,w=80,h=80,
         sound=false,lineWidth=4,cornerR=0,
         fontSize=60,text=CHAR.icon.earth,
-        code=openLink
+        code=openLink,
     }
 end
 
@@ -218,7 +222,11 @@ function scene.keyDown(key,isRep)
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
         if not (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
+            local sel=listBox:getItem()
             listBox:arrowKey(key)
+            if listBox:getItem()~=sel then
+                SFX.play(listBox.sound_select)
+            end
         end
     elseif act=='help' or act=='back' then
         close()
@@ -227,17 +235,22 @@ function scene.keyDown(key,isRep)
     elseif key=='pagedown' then
         listBox:scroll(15)
     elseif #key==1 and key:find'[0-9a-z]' then
-        if WIDGET.sel~=inputBox then
-            WIDGET.focus(inputBox)
-            WIDGET.textinput(key)
-            return true
+        if key=='c' and isCtrlPressed() then
+            copyText()
+        else
+            if WIDGET.sel~=inputBox then
+                WIDGET.focus(inputBox)
+                WIDGET.textinput(key)
+                return true
+            end
         end
     elseif key=='delete' or key=='backspace' then
         inputBox:keypress(key)
     elseif not isRep then
-        if key=='return' then
+        if act=='select' then
             if selected~=listBox:getItem() then
                 listBox.code()
+                SFX.play(listBox.sound_click)
             end
         elseif key=='home' then
             listBox:scroll(-1e99)
