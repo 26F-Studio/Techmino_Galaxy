@@ -64,7 +64,7 @@ return {
     setting_dasHalt="DAS halt",
     setting_hdLockA="Auto hard-drop lock",
     setting_hdLockM="Manual hard-drop lock",
-    setting_shakeness="Độ lắc bảng",
+    setting_shakeness="Độ lắc",
     setting_hitWavePower="Hitwave Power",
 
     setting_mainVol="Âm lượng tổng",
@@ -77,18 +77,18 @@ return {
     setting_touching="Bố cục các nút…",
     setting_test="Thử phím",
 
-    setting_sysCursor="Trỏ chuột hệ thống",
+    setting_sysCursor="Sử dụng trỏ chuột hệ thống",
     setting_clickFX="Hiệu ứng nhấp chuột",
     setting_power="Trạng thái cuối cùng",   -- Ok I searched StackOverflow and asked Bing AI for this (ChatGPT was busy that time)
-    setting_clean="VRAM Boost",
+    setting_clean="Tăng tốc độ VRAM",
     setting_fullscreen="Toàn màn hình",
     setting_portrait="Màn hình hướng dọc",
-    setting_autoMute="Tắt tiếng khi mở cửa số khác",
+    setting_autoMute="Tự động tắt tiếng khi mở cửa số khác",
     setting_showTouch="Hiện vị trí vừa chạm",
 
     setting_maxFPS="FPS tối đa",
-    setting_updRate="Tần suất cập nhật",
-    setting_drawRate="Tuần suất vẽ",
+    setting_updRate="Thời gian phản hồi",
+    setting_drawRate="Tần suất khung hình",
     setting_msaa="MSAA - Khử răng cưa",
 
     lang_note="Bản tiếng Trung (Giản thể) (简体中文) là bản gốc của game. Bản dịch này được dịch từ bản tiếng Anh (English)\nCác bản dịch được các tình nguyện viên đóng góp và chúng có thể không chính xác 100%\nCó một số thuật ngữ không được dịch trực tiếp trong game. Vui lòng tra Zictionary để tìm hiểu thêm",
@@ -121,10 +121,10 @@ return {
     keyset_gem_twistCW=     "Xoay Phải",
     keyset_gem_twistCCW=    "Xoay Trái",
     keyset_gem_twist180=    "Xoay 180",
-    keyset_gem_moveLeft=    "Cursor Left",
-    keyset_gem_moveRight=   "Cursor Right",
-    keyset_gem_moveUp=      "Cursor Up",
-    keyset_gem_moveDown=    "Cursor Down",
+    keyset_gem_moveLeft=    "Con trỏ trái",
+    keyset_gem_moveRight=   "Con trỏ phải",
+    keyset_gem_moveUp=      "Con trỏ hướng lên",
+    keyset_gem_moveDown=    "Con trỏ hướng xuống",
 
     keyset_func1= "Chức năng 1 (F1)",
     keyset_func2= "Chức năng 2 (F2)",
