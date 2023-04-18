@@ -68,6 +68,7 @@ local function selectItem(item)
             -(mainH-searchH),
             0
         )
+        copyButton:setVisible(true)
     else
         contents.texts=NONE
         contents.maxScroll=0
@@ -77,10 +78,13 @@ end
 local function openLink()
     if selected.link then
         love.system.openURL(selected.link)
+        SFX.play('dict_link')
     end
 end
 local function copyText()
     love.system.setClipboardText(("%s:\n%s\n==Techmino Dict==\n"):format(selected.title_full,selected.content))
+    SFX.play('dict_copy')
+    copyButton:setVisible(false)
 end
 do-- Widgets
     listBox={
@@ -123,13 +127,13 @@ do-- Widgets
         type='button',pos={.5,.5},x=mainX+mainW-50,y=210,w=80,h=80,
         sound=false,lineWidth=4,cornerR=0,
         fontSize=60,text=CHAR.icon.copy,
-        code=copyText
+        code=copyText,
     }
     linkButton=WIDGET.new{
         type='button',pos={.5,.5},x=mainX+mainW-150,y=210,w=80,h=80,
         sound=false,lineWidth=4,cornerR=0,
         fontSize=60,text=CHAR.icon.earth,
-        code=openLink
+        code=openLink,
     }
 end
 
