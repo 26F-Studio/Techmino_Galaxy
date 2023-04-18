@@ -294,4 +294,5 @@ return {
 
 -- Moved the credit to the last for easier edit
 -- This translation originally made by Sea (C6H12O6+NaCl+H2O)
--- Special thanks to Shard Nguyễn, Nguyễn "Cuốc" Hiếu, User670 for advices
+-- Special thanks to Shard Nguyễn, Nguyễn "Cuốc" Hiếu, User670, Lê Duy Quang for advices, suggestions in both game and Zictionary
+-- Thanks to Escape the Martix (tadcouq) for doing minor changes for translation
