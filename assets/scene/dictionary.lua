@@ -101,15 +101,12 @@ do-- Widgets
             gc.rectangle('fill',0,0,listW-10,40)
         end
         FONT.set(30,'norm')
-        GC.stc_reset()
-        GC.stc_rect(0,0,listW-10,40)
         gc.setColor(categoryColor[obj.cat].index)
         gc.print(obj.title,5,0)
         if obj==selected then
             gc.setColor(1,1,1,.62+.355*math.sin(love.timer.getTime()*12.6))
             gc.print(obj.title,5,0)
         end
-        GC.stc_stop()
     end
     function listBox.code()
         if selected~=listBox:getItem() then
