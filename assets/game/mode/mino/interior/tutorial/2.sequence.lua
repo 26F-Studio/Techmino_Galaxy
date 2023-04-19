@@ -73,7 +73,7 @@ return {
                 elseif P.modeData.quest==4 then
                     if #P.nextQueue+#P.holdQueue==0 then
                         for y=F:getHeight(),1,-1 do
-                            if not P:checkLineFull(y) then
+                            if not P:isFullLine(y) then
                                 P.modeData.signal=false
                                 return
                             end

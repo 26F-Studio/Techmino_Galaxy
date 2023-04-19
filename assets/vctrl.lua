@@ -1,4 +1,8 @@
-local gc=love.graphics
+local gc_setLineWidth,gc_setColor=GC.setLineWidth,GC.setColor
+local gc_line=GC.line
+local gc_rectangle,gc_circle=GC.rectangle,GC.circle
+local sin,cos=math.sin,math.cos
+
 
 local touches={}
 
@@ -13,8 +17,11 @@ function button:new(data)
         y=data.y or SCR.h0/2,
         r=data.r or 80,
         shape=data.shape or 'circle',
-        lastPressTime=-1e99,
         key=data.key or 'X',
+        iconSize=data.iconSize or 80,
+
+        lastPressTime=-1e99,
+        drawable=false,
     },self)
 end
 function button:reset()
@@ -47,23 +54,31 @@ function button:release()
     love.keyreleased(self.key)
 end
 function button:draw(setting)
-    gc.setLineWidth(4)
-    FONT.set(50)
+    gc_setLineWidth(4)
     if self.shape=='circle' then
-        gc.setColor(1,1,1,self.pressed and .5 or .05)
-        gc.circle('fill',self.x,self.y,self.r-4)
+        gc_setColor(1,1,1,self.pressed and .5 or .05)
+        gc_circle('fill',self.x,self.y,self.r-4)
 
-        gc.setColor(1,1,1)
-        gc.circle('line',self.x,self.y,self.r-2)
+        gc_setColor(1,1,1)
+        gc_circle('line',self.x,self.y,self.r-2)
     elseif self.shape=='square' then
-        gc.setColor(1,1,1,self.pressed and .5 or .05)
-        gc.rectangle('fill',self.x-self.r-4,self.y-self.r-4,self.r*2+8,self.r*2+8)
+        gc_setColor(1,1,1,self.pressed and .5 or .05)
+        gc_rectangle('fill',self.x-self.r-4,self.y-self.r-4,self.r*2+8,self.r*2+8)
 
-        gc.setColor(1,1,1)
-        gc.rectangle('line',self.x-self.r-2,self.y-self.r-2,self.r*2+4,self.r*2+4)
+        gc_setColor(1,1,1)
+        gc_rectangle('line',self.x-self.r-2,self.y-self.r-2,self.r*2+4,self.r*2+4)
     end
-    if not setting then gc.setColor(1,1,1,.4) end
-    GC.mStr(self.key,self.x,self.y-35)
+    if self.iconSize>0 and self.drawable then
+        gc_setColor(1,1,1,setting and 1 or .4)
+        GC.mDraw(
+            self.drawable,
+            self.x,self.y,0,
+            self.iconSize/100*math.min(self.r*2/self.drawable:getWidth(),self.r*2/self.drawable:getHeight())
+        )
+    end
+end
+function button:setDrawable(img)
+    self.drawable=img
 end
 function button:export()
     return {
@@ -73,6 +88,7 @@ function button:export()
         r=self.r,
         shape=self.shape,
         key=self.key,
+        iconSize=self.iconSize,
     }
 end
 
@@ -88,9 +104,12 @@ function stick2way:new(data)
         y=data.y or 800,
         len=data.len or 320,-- Not include semicircle
         h=data.h or 160,
+        iconSize=data.iconSize or 80,
+
         touchID=false,
         state='wait',
         stickX=0,
+        drawable={false,false},
     },self)
 end
 function stick2way:getDistance(x,y)
@@ -133,18 +152,31 @@ function stick2way:reset()
     self.state='wait'
     self.stickX=0
 end
+function stick2way:setDrawable(i,img)
+    self.drawable[i]=img
+end
 function stick2way:draw(setting)
-    gc.setLineWidth(4)
-    gc.setColor(1,1,1)
-    gc.rectangle('line',self.x-self.len/2-self.h/2,self.y-self.h/2,self.len+self.h,self.h,self.h/2)
+    gc_setLineWidth(4)
+    gc_setColor(1,1,1)
+    gc_rectangle('line',self.x-self.len/2-self.h/2,self.y-self.h/2,self.len+self.h,self.h,self.h/2)
     if setting then
-        gc.circle('line',self.x,self.y,self.h/2-10)
-        gc.setColor(1,1,1,self.touchID and .5 or .05)
-        gc.rectangle('fill',self.x-self.len/2-self.h/2,self.y-self.h/2,self.len+self.h,self.h,self.h/2)
+        gc_circle('line',self.x,self.y,self.h/2-10)
+        gc_setColor(1,1,1,self.touchID and .5 or .05)
+        gc_rectangle('fill',self.x-self.len/2-self.h/2,self.y-self.h/2,self.len+self.h,self.h,self.h/2)
     else
-        gc.circle('line',self.x+self.stickX*self.len/2,self.y,self.h/2-10)
-        gc.setColor(1,1,1,self.touchID and .5 or .05)
-        gc.circle('fill',self.x+self.stickX*self.len/2,self.y,self.h/2-12)
+        gc_circle('line',self.x+self.stickX*self.len/2,self.y,self.h/2-10)
+        gc_setColor(1,1,1,self.touchID and .5 or .05)
+        gc_circle('fill',self.x+self.stickX*self.len/2,self.y,self.h/2-12)
+    end
+    if self.iconSize>0 then
+        gc_setColor(1,1,1,setting and 1 or .4)
+        local drawable=self.drawable
+        if drawable[1] then
+            GC.mDraw(drawable[1],self.x-self.len/2,self.y,0,self.iconSize/100*math.min(self.h/drawable[1]:getWidth(),self.h/drawable[1]:getHeight()))
+        end
+        if drawable[2] then
+            GC.mDraw(drawable[2],self.x+self.len/2,self.y,0,self.iconSize/100*math.min(self.h/drawable[2]:getWidth(),self.h/drawable[2]:getHeight()))
+        end
     end
 end
 function stick2way:export()
@@ -155,6 +187,7 @@ function stick2way:export()
         y=math.floor(self.y),
         len=self.len,
         h=self.h,
+        iconSize=self.iconSize,
     }
 end
 
@@ -169,11 +202,14 @@ function stick4way:new(data)
         x=data.x or 300,
         y=data.y or 700,
         r=data.r or 160,
-        threshold=data.threshold or .26,
         ball=data.ball or .3,
+        threshold=data.threshold or .26,
+        iconSize=data.iconSize or 80,
+
         stickD=0,stickA=0,
         touchID=false,
         state='wait',
+        drawable={false,false,false,false},
     },self)
 end
 function stick4way:getDistance(x,y)
@@ -227,26 +263,38 @@ function stick4way:reset()
     self.state='wait'
     self.stickX=0
 end
+function stick4way:setDrawable(i,img)
+    self.drawable[i]=img
+end
 function stick4way:draw(setting)
-    gc.setLineWidth(4)
-    gc.setColor(1,1,1,.2)
+    gc_setLineWidth(4)
+    gc_setColor(1,1,1,.2)
     local bigR=self.r*(1+self.ball)+5-- Real radius (with ball and extra +5)
     local ballR=self.r*self.ball
-    gc.line(self.x-bigR/2^.5,self.y-bigR/2^.5,self.x+bigR/2^.5,self.y+bigR/2^.5)
-    gc.line(self.x-bigR/2^.5,self.y+bigR/2^.5,self.x+bigR/2^.5,self.y-bigR/2^.5)
-    gc.setColor(1,1,1)
-    gc.circle('line',self.x,self.y,bigR)
+    gc_line(self.x-bigR/2^.5,self.y-bigR/2^.5,self.x+bigR/2^.5,self.y+bigR/2^.5)
+    gc_line(self.x-bigR/2^.5,self.y+bigR/2^.5,self.x+bigR/2^.5,self.y-bigR/2^.5)
+    gc_setColor(1,1,1)
+    gc_circle('line',self.x,self.y,bigR)
     if setting then
-        gc.circle('line',self.x,self.y,ballR)
-        gc.setColor(1,1,1,self.touchID and .5 or .05)
-        gc.circle('fill',self.x,self.y,bigR)
+        gc_circle('line',self.x,self.y,ballR)
+        gc_setColor(1,1,1,self.touchID and .5 or .05)
+        gc_circle('fill',self.x,self.y,bigR)
     else
-        local x,y=self.x+self.stickD*self.r*math.cos(self.stickA),self.y+self.stickD*self.r*math.sin(self.stickA)
-        gc.circle('line',x,y,ballR)
-        gc.setColor(1,1,1,self.touchID and .5 or .05)
-        gc.circle('fill',x,y,ballR)
-        gc.setColor(1,1,1,.5)
-        gc.line(self.x,self.y,self.x+self.stickD*self.r*math.cos(self.stickA),self.y+self.stickD*self.r*math.sin(self.stickA))
+        local x,y=self.x+self.stickD*self.r*cos(self.stickA),self.y+self.stickD*self.r*sin(self.stickA)
+        gc_circle('line',x,y,ballR)
+        gc_setColor(1,1,1,self.touchID and .5 or .05)
+        gc_circle('fill',x,y,ballR)
+        gc_setColor(1,1,1,.5)
+        gc_line(self.x,self.y,self.x+self.stickD*self.r*cos(self.stickA),self.y+self.stickD*self.r*sin(self.stickA))
+    end
+    if self.iconSize>0 then
+        gc_setColor(1,1,1,setting and 1 or .4)
+        local drawable=self.drawable
+        for i=1,4 do if drawable[i] then
+            local d=(bigR+ballR)*.5
+            local angle=i*math.pi/2
+            GC.mDraw(drawable[i],self.x+d*cos(angle),self.y+d*sin(angle),0,self.iconSize/100*math.min((bigR-ballR)/drawable[i]:getWidth(),(bigR-ballR)/drawable[i]:getHeight()))
+        end end
     end
 end
 function stick4way:export()
@@ -258,6 +306,7 @@ function stick4way:export()
         r=self.r,
         ball=self.ball,
         threshold=self.threshold,
+        iconSize=self.iconSize or 80,
     }
 end
 

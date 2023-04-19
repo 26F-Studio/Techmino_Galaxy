@@ -30,7 +30,7 @@ local baseDict do
     baseDict=require('assets/basedictionary')
     local dictObjMeta={__index=function(obj,k)
         if k=='titleText' then
-            obj.titleText=love.graphics.newText(FONT.get(obj.titleSize,'bold'),obj.title_full)
+            obj.titleText=love.graphics.newText(FONT.get(obj.titleSize,'bold'),obj.titleFull)
             return obj.titleText
         end
     end}
@@ -82,7 +82,7 @@ local function openLink()
     end
 end
 local function copyText()
-    love.system.setClipboardText(("%s:\n%s\n==Techmino Dict==\n"):format(selected.title_full,selected.content))
+    love.system.setClipboardText(("%s:\n%s\n==Techmino Dict==\n"):format(selected.titleFull,selected.content))
     SFX.play('dict_copy')
     copyButton:setVisible(false)
 end
@@ -197,7 +197,7 @@ function scene.enter()
             end
             obj.titleSize=5*math.floor(obj.titleSize/5+.5)
             obj.contentSize=5*math.floor(obj.contentSize/5+.5)
-            obj.title_full=curObj.title_full or obj.title or enObj.title_full or enObj.title
+            obj.titleFull=curObj.titleFull or obj.title or enObj.titleFull or enObj.title
             obj.link=curObj.link or false
             obj.titleText=nil-- Generate when needed (__index at basedictionary.lua)
 

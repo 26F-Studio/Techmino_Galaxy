@@ -151,7 +151,8 @@ return {
     stick4_switch="4向摇杆",
     setting_touch_button="增减虚拟按键",
     setting_touch_buttonSize="按键尺寸",
-    settinh_touch_buttonShape="更改形状",
+    setting_touch_buttonShape="更改形状",
+    setting_touch_iconSize="图标尺寸",
     setting_touch_stickSize="摇杆尺寸",
     setting_touch_ballSize="摇把尺寸",
 
