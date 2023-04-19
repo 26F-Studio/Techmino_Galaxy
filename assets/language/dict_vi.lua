@@ -41,7 +41,7 @@ Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm 
 __________________________
 Chú thích:
     1: Đề mục này do dịch thuật viên đổi tên, bản gốc là Stacking
-    2: Bản gốc ghi là phần A1, tuy nhiên sau khi thảo luận với những người khác, quyết định sửa thành nhóm A
+    2: Bản gốc ghi là phần A1, tuy nhiên sau khi thảo luận với những người khác, quyết định sửa thành nhóm A. (Có thể thay đổi trong tương lai)
         ]===],
     },
     ['20g']={
