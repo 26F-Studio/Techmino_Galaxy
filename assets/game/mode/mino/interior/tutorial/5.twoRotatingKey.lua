@@ -147,10 +147,10 @@ return {
             afterLock=function(P)
                 if #P.nextQueue==0 then
                     P.modeData.signal=
-                        P:checkLineFull(1) and
-                        P:checkLineFull(2) and
-                        P:checkLineFull(3) and
-                        P:checkLineFull(4) or false
+                        P:isFullLine(1) and
+                        P:isFullLine(2) and
+                        P:isFullLine(3) and
+                        P:isFullLine(4) or false
                 end
             end,
             drawBelowMarks=function(P)
