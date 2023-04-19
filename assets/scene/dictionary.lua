@@ -86,6 +86,12 @@ local function copyText()
     SFX.play('dict_copy')
     copyButton:setVisible(false)
 end
+local function freshWidgetPos()
+    local y0=SCR.h0/2+50*(1-time)
+    for i=1,#scene.widgetList do
+        scene.widgetList[i]._y=scene.widgetList[i].y+y0
+    end
+end
 do-- Widgets
     listBox={
         type='listBox',pos={.5,.5},x=mainX-listW,y=-listH/2,w=listW-10,h=listH,
@@ -94,6 +100,7 @@ do-- Widgets
         scrollBarDist=12,
         scrollBarColor=COLOR.lY,
         activeColor={0,0,0,0},idleColor={0,0,0,0},
+        stencilMode='single',
     }
     function listBox.drawFunc(obj,_,sel)
         if sel then
@@ -101,15 +108,12 @@ do-- Widgets
             gc.rectangle('fill',0,0,listW-10,40)
         end
         FONT.set(30,'norm')
-        GC.stc_reset()
-        GC.stc_rect(0,0,listW-10,40)
         gc.setColor(categoryColor[obj.cat].index)
         gc.print(obj.title,5,0)
         if obj==selected then
             gc.setColor(1,1,1,.62+.355*math.sin(love.timer.getTime()*12.6))
             gc.print(obj.title,5,0)
         end
-        GC.stc_stop()
     end
     function listBox.code()
         if selected~=listBox:getItem() then
@@ -137,11 +141,56 @@ do-- Widgets
     }
 end
 
-local function freshWidgetPos()
-    local y0=SCR.h0/2+50*(1-time)
-    for i=1,#scene.widgetList do
-        scene.widgetList[i]._y=scene.widgetList[i].y+y0
+local function assertObj(cond,message,obj)
+    assert(cond,('Dict parse error: %s\nLine %d: %s'):format(message,obj._line,obj._id))
+end
+local function parseDict(data)
+    data=data:split('\n')
+    local result={}
+    local buffer
+    for lineNum,line in next,data do
+        line=line:gsub('%-%-.*',''):trim()
+        local head=line:sub(1,1)
+        if head=='#' then
+            if buffer then
+                assertObj(not result[buffer._id],'Duplicate ID',buffer)
+                result[buffer._id]=buffer
+                buffer.content=buffer.content:trim()
+            end
+            buffer={
+                _id=line:sub(2):trim(),
+                _line=lineNum,
+            }
+            assertObj(#buffer._id>0,'Empty ID',buffer)
+        elseif head=='@' then
+            local key,value=line:match('@%s*(%w+)%s*(.+)')
+            if key=='title' then
+                value=value:gsub('%%n','\n')
+                buffer.title=not buffer.title and value or buffer.title..'\n'..value
+                assertObj(#buffer.title>0,'Empty title',buffer)
+            elseif key=='title_full' then
+                value=value:gsub('%%n','\n')
+                buffer.title_full=not buffer.title_full and value or buffer.title_full..'\n'..value
+            elseif key=='titleSize' then
+                assertObj(not buffer.titleSize,'Duplicate @titleSize',buffer)
+                buffer.titleSize=tonumber(value)
+                assertObj(buffer.titleSize and buffer.titleSize>0,'Invalid titleSize',buffer)
+            elseif key=='contentSize' then
+                assertObj(not buffer.contentSize,'Duplicate @contentSize',buffer)
+                buffer.contentSize=tonumber(value)
+                assertObj(buffer.contentSize and buffer.contentSize>0,'Invalid contentSize',buffer)
+            elseif key=='link' then
+                assertObj(not buffer.link,'Duplicate @link',buffer)
+                buffer.link=value
+            end
+        else
+            buffer.content=not buffer.content and line or buffer.content..'\n'..line
+        end
     end
+    if buffer then
+        result[buffer._id]=buffer
+    end
+    return result
 end
 
 function scene.enter()
@@ -157,6 +206,16 @@ function scene.enter()
     -- Initialize dictionary for current language (if need)
     if currentDict.locale~=SETTINGS.system.locale then
         currentDict=FILE.load('assets/language/dict_'..SETTINGS.system.locale..'.lua','-lua -canskip')
+        if type(currentDict)=='string' then
+            local res,data
+            res,data=pcall(parseDict,currentDict)
+            if res then
+                currentDict=data
+            else
+                currentDict=nil
+                MES.new('error',data,10)
+            end
+        end
         if not currentDict then
             currentDict={aboutDict={title="[No Dict Data]",content="No dictionary file detected."}}
         end
