@@ -275,9 +275,9 @@ return {
 
     tutorial_stackBasic_1="4. Xếp gạch sao cho đúng?",
     tutorial_stackBasic_m1="Hãy tập trung vào màn hình và làm theo hướng dẫn nè!",
-    tutorial_stackBasic_m2="Lúc đầu, hãy giữ cho \"địa hình\" gạch phẳng nhất có thể",
+    tutorial_stackBasic_m2="Lúc đầu, hãy giữ cho địa hình gạch phẳng nhất có thể",
     tutorial_stackBasic_m3="Các cục gạch nên được đặt ở tư thế nằm, chứ không phải là tư thế đứng",
-    tutorial_stackBasic_m4="Nếu \"địa hình\" gạch bằng phẳng thì dễ dàng để đặt gạch hơn, và cố gắng đừng tạo ra bất kì cái hố nào",
+    tutorial_stackBasic_m4="Nếu địa hình gạch bằng phẳng thì dễ dàng để đặt gạch hơn, và cố gắng đừng tạo ra bất kì cái hố nào",
     tutorial_stackBasic_m5="Bạn thường được thưởng nhiều hơn khi xóa bốn hàng cùng một lúc, hãy thử làm một cái đi",
     tutorial_stackBasic_m6="Thử làm Techrash bằng cách dùng những cục gạch cuối cùng này mà không cần hướng dẫn đi",
 
