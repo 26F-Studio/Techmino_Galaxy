@@ -26,7 +26,7 @@ A. Stacking (Xếp gạch)
 B. Efficiency & Speed (Hiệu quả & Tốc độ)
     B1. Trước mỗi lần đặt gạch, hãy suy nghĩ xem bạn sẽ đặt gạch ở đâu? Bấm những phím nào để gạch tới chỗ đó và đứng đúng tư thế? Thay vì dựa dẫm vào gạch ma quá nhiều
     B2. Nên sử dụng 2 (hoặc 3, tùy game) phím xoay thay vì 1 phím xoay. Nhấn 1 phím xoay sẽ làm bạn chậm và làm cho bạn dễ rơi vào trạng thái bị động
-    B3. Đừng lo lắng vụ tốc độ khi bạn mới tập chơi Finesse, ai mới tập chơi đều gặp hiện tượng tốc độ cực chậm (như mạng 2G). Nhừng đừng lo lắng, một khi bạn đã quen tay thì bạn có thể cải thiện tốc độ chơi của mình — việc này không quá khó đâu!
+    B3. Đừng lo lắng về tốc độ khi bạn mới tập chơi Finesse, đây là chuyện bình thường. Nhừng đừng lo, bạn có thể tập chơi nhanh hơn một khi bạn đã quen tay — việc này không khó đâu!
     
 C. Stacking (Xếp gạch)
     C1. Hoàn thành chế độ "40 hàng"
