@@ -1,6 +1,7 @@
 return {
     aboutDict={
-        title="Thông tin về Zictionary",
+        title="T.tin về Zictionary",
+        title_full="Thông tin về Zictionary",
         content="Zictionary sẽ dạy cho bạn mọi thứ về xếp gạch",
     },
     aboutDict_hidden={
@@ -21,7 +22,7 @@ Bạn mới tập chơi xếp gạch à? Nếu vậy thì…
 A. Stacking (Xếp gạch)
     A1. Suy nghĩ kỹ trước khi đặt gạch. Chưa vừa ý? Suy nghĩ thêm lần nữa.
     A2. Hãy xếp gạch càng phẳng càng tốt để bạn có thể ra quyết định đặt gạch dễ dàng hơn.
-    A3. Lập kế hoạch xếp như thế nào dựa trên NEXT để giữ được thể đẹp, và hãy tận dụng HOLD nếu có thể
+    A3. Lập chiến lược dựa trên NEXT, và nếu có thể thì hãy tận dụng HOLD để giữ được thể đẹp. 
 
 B. Efficiency & Speed (Hiệu quả & Tốc độ)
     B1. Trước mỗi lần đặt gạch, hãy suy nghĩ xem bạn sẽ đặt gạch ở đâu? Bấm những phím nào để gạch tới chỗ đó và đứng đúng tư thế? Thay vì dựa dẫm vào gạch ma quá nhiều
@@ -51,7 +52,8 @@ Chú thích:
     hypertap={
         title="Hypertap",
         title_full="Hypertap (Nhấn liên tục)",
-        content=[===[Đề cập tới một kỹ năng là khi bạn "rung" tay liên tục để nhấn liên tục làm tốc độ di chuyển ngang¹ nhanh hơn
+        content=[===[
+Đề cập tới một kỹ năng là khi bạn "rung" tay liên tục để nhấn liên tục làm tốc độ di chuyển ngang¹ nhanh hơn
 
 __________________________
 Chú thích:
