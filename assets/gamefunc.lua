@@ -133,3 +133,51 @@ local isKeyDown=love.keyboard.isDown
 function isCtrlPressed() return isKeyDown('lctrl','rctrl') end
 function isShiftPressed() return isKeyDown('lshift','rshift') end
 function isAltPressed() return isKeyDown('lalt','ralt') end
+
+local function _getImg(mode,act)
+    return IMG.actionIcons[mode][act]
+end
+function resetVCTRL(mode)
+    VCTRL.reset()
+    if not mode then return end
+
+    for i=1,#VCTRL do
+        local obj=VCTRL[i]
+        if obj.type=='button' then
+            local act=KEYMAP[mode]:getAction(obj.key)
+            local res,drawable=pcall(_getImg,mode,act)
+            obj:setDrawable(res and drawable or act and GC.newText(FONT.get(30),act))
+        elseif obj.type=='stick2way' then
+            for j,suffix in next,{'left','right'} do
+                local act=KEYMAP[mode]:getAction('vj2'..suffix)
+                local res,drawable=pcall(_getImg,mode,act)
+                obj:setDrawable(j,res and drawable or act and GC.newText(FONT.get(30),act))
+            end
+        elseif obj.type=='stick4way' then
+            for j,suffix in next,{'down','left','up','right'} do
+                local act=KEYMAP[mode]:getAction('vj4'..suffix)
+                local res,drawable=pcall(_getImg,mode,act)
+                obj:setDrawable(j,res and drawable or act and GC.newText(FONT.get(30),act))
+            end
+        end
+    end
+end
+function updateWidgetVisible(widgetList)
+    if VCTRL.focus then
+        widgetList.iconSize:setVisible(true)
+        widgetList.button1:setVisible(VCTRL.focus.type=='button')
+        widgetList.button2:setVisible(VCTRL.focus.type=='button')
+        widgetList.stick2_1:setVisible(VCTRL.focus.type=='stick2way')
+        widgetList.stick2_2:setVisible(VCTRL.focus.type=='stick2way')
+        widgetList.stick4_1:setVisible(VCTRL.focus.type=='stick4way')
+        widgetList.stick4_2:setVisible(VCTRL.focus.type=='stick4way')
+    else
+        widgetList.iconSize:setVisible(false)
+        widgetList.button1:setVisible(false)
+        widgetList.button2:setVisible(false)
+        widgetList.stick2_1:setVisible(false)
+        widgetList.stick2_2:setVisible(false)
+        widgetList.stick4_1:setVisible(false)
+        widgetList.stick4_2:setVisible(false)
+    end
+end

@@ -13,7 +13,7 @@ function scene.enter()
     result=false
     quitTimer=0
     escTimerWTF=false
-    if SETTINGS.system.touchControl then VCTRL.reset() end
+    if SETTINGS.system.touchControl then resetVCTRL(map) end
 end
 
 function scene.keyDown(key,isRep)

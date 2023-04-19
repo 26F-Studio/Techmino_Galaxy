@@ -136,6 +136,41 @@ WIDGET._prototype.inputBox.sound_clear='inputBox_clear'
 
 --[Attention] Not loading IMG/SFX/BGM files here, just read file paths
 IMG.init{
+    actionIcons={
+        mino={
+            moveLeft='assets/image/actionIcons/mino/moveLeft.png',
+            moveRight='assets/image/actionIcons/mino/moveRight.png',
+            rotateCW='assets/image/actionIcons/mino/rotateCW.png',
+            rotateCCW='assets/image/actionIcons/mino/rotateCCW.png',
+            rotate180='assets/image/actionIcons/mino/rotate180.png',
+            softDrop='assets/image/actionIcons/mino/softDrop.png',
+            hardDrop='assets/image/actionIcons/mino/hardDrop.png',
+            holdPiece='assets/image/actionIcons/mino/holdPiece.png',
+            func1='assets/image/actionIcons/mino/func1.png',
+            func2='assets/image/actionIcons/mino/func2.png',
+            func3='assets/image/actionIcons/mino/func2.png',
+            func4='assets/image/actionIcons/mino/func2.png',
+            func5='assets/image/actionIcons/mino/func2.png',
+            func6='assets/image/actionIcons/mino/func2.png',
+        },
+        puyo={
+            moveLeft='assets/image/actionIcons/puyo/moveLeft.png',
+            moveRight='assets/image/actionIcons/puyo/moveRight.png',
+            rotateCW='assets/image/actionIcons/puyo/rotateCW.png',
+            rotateCCW='assets/image/actionIcons/puyo/rotateCCW.png',
+            rotate180='assets/image/actionIcons/puyo/rotate180.png',
+            softDrop='assets/image/actionIcons/puyo/softDrop.png',
+            hardDrop='assets/image/actionIcons/puyo/hardDrop.png',
+            holdPiece='assets/image/actionIcons/puyo/holdPiece.png',
+            func1='assets/image/actionIcons/puyo/func1.png',
+            func2='assets/image/actionIcons/puyo/func2.png',
+            func3='assets/image/actionIcons/puyo/func2.png',
+            func4='assets/image/actionIcons/puyo/func2.png',
+            func5='assets/image/actionIcons/puyo/func2.png',
+            func6='assets/image/actionIcons/puyo/func2.png',
+        },
+        gem={},
+    },
     miya={
         miyaCH1='assets/image/characters/miya1.png',
         miyaCH2='assets/image/characters/miya2.png',
@@ -157,8 +192,6 @@ IMG.init{
         particle3='assets/image/characters/z_particle3.png',
         particle4='assets/image/characters/z_particle4.png',
     },
-
-    cover='assets/image/db cover.png',
     title_techmino='assets/image/title_techmino.png',
 }
 SFX.init((function()

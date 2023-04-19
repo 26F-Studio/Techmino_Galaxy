@@ -13,7 +13,7 @@ function scene.enter()
     if SCN.args[1] then
         startGame(SCN.args[1])
     end
-    VCTRL.reset()
+    resetVCTRL(GAME.mainPlayer and GAME.mainPlayer.gameMode)
     scene.widgetList.pause.text=canPause() and CHAR.icon.pause or CHAR.icon.back
     WIDGET._reset()
 end
