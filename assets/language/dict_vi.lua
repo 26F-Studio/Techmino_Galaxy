@@ -45,8 +45,8 @@ Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập phần
     },
     hypertap={
         title="Hypertap",
-        title_full="Hypertap (Nhấn liên tục)",
-        content="Đề cập tới một kỹ năng là khi bạn \"rung\" tay liên tục để nhấn liên tục làm tốc độ di chuyển ngang\u{00B9} nhanh hơn"..[===[
+        title_full=[==[Hypertap (Nhấn liên tục)",
+        content="Đề cập tới một kỹ năng là khi bạn "rung" tay liên tục để nhấn liên tục làm tốc độ di chuyển ngang¹ nhanh hơn
 
 __________________________
 Chú thích:
@@ -54,7 +54,7 @@ Chú thích:
     },
     ['26f_studio']={
         title="26F Studio",
-        content="A group",
+        content="Một nhóm",
     },
 }
 
