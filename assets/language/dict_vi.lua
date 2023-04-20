@@ -6,18 +6,19 @@ return {
     },
     aboutDict_hidden={
         title="Cái gì đây?",
-        content="Nó sẽ dạy cho bạn mọi thứ về xếp gạch.\n\nMà ngon lành rồi,\nbạn đã biết cách mở từ điển bằng cách nhấn phím tắt rồi đấy!",
+        content="Nó sẽ dạy cho bạn mọi thứ về xếp gạch.\n\n... Khoan, chờ khoảng chừng là 2 giây!\nBạn vừa nhấn phím tắt à? Ngon lành cành đào rồi đây",
     },
     setting_out={
         title="Cài đặt",
         content="Đây là trang Cài đặt.\nBạn có thể chỉnh một đống thứ ngay tại đây. ",
     },
+    
     noobGuide={
-        title="Chào bạn mới", 
-        contentSize=20,
+        title="Xin chào", 
+        -- contentSize=20,
         content=[===[
-Bạn mới tập chơi xếp gạch à? Nếu vậy thì…
-Đây là một vài thứ mà bạn nên làm mỗi khi chơi, chúng được sắp xếp thành một nhóm. Tuy xếp thành nhóm, chúng tôi khuyên bạn nên làm cả ba nhóm cùng lúc thay vì làm từng cái một.
+Cảm ơn bạn đã tải và chơi Techmino! ... Hả? Đây là lần đầu bạn chơi game xếp gạch á? Nếu vạy thì...
+Đây là một vài thứ mà bạn nên làm mỗi khi chơi, chúng được sắp xếp thành một nhóm. Tuy xếp thành nhóm, bạn vẫn nên làm cả ba nhóm cùng lúc thay vì làm từng cái một.
 
 A. Stacking (Xếp gạch)
     A1. Suy nghĩ kỹ trước khi đặt gạch. Chưa vừa ý? Suy nghĩ thêm lần nữa.
@@ -35,20 +36,25 @@ C. Practice (Luyện tập)¹
     C3. Hoàn thành chế độ "40 hàng" mà chỉ được làm Techrash.
     C4. Hoàn thành chế độ "40 hàng" mà chỉ được làm Techrash và không được dùng HOLD
     
-Nhóm C rất linh động, bạn có thể điều chỉnh độ khó dựa trên tình hình/điều kiện của bạn (giống như cái ký tự ” này có ý nghĩa gì đối với bạn)
+Nhóm C rất linh động, bạn có thể điều chỉnh độ khó dựa trên tình hình/điều kiện của bạn (ví dụ như "không làm bạn chơi quá chậm")
 
-Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm A², đây là một kỹ năng tối quan trọng trong bất kỳ tựa game xếp gạch nào; và bạn sẽ có thể dần dần làm chủ bất kỳ chế độ nào, lúc đó chỉ cần nhìn lướt qua NEXT là đủ rồi.
+Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm A³, đây là một kỹ năng tối quan trọng trong bất kỳ tựa game xếp gạch nào; và bạn sẽ có thể dần dần làm chủ bất kỳ chế độ nào, lúc đó chỉ cần nhìn lướt qua NEXT là đủ rồi.
 
 __________________________
 Chú thích:
-    1: Đề mục này do dịch thuật viên đổi tên, bản gốc là Stacking
-    2: Bản gốc ghi là phần A1, tuy nhiên sau khi thảo luận với những người khác, quyết định sửa thành nhóm A. (Có thể thay đổi trong tương lai)
+    1: Đề mục này do dịch thuật viên đặt, bản gốc vẫn ghi là Stacking (không hiểu tại sao nhóm A và C bị trùng tên)
+    2: Câu gốc là: like what does “without losing too much speed” means to you (nó giống như việc câu "không làm mất tốc độ của bạn" có ý nghĩa như thế nào đối với bạn)
+    3: Bản gốc ghi là phần A1, nhưng có người bảo nên là nhóm A. (Có thể thay đổi trong tương lai)
         ]===],
     },
+
+--------------------------------------------------------------
+
     ['20g']={
         title="20G",
         content="Tốc độ nhanh nhất trong các trò Tetris hiện đại. Trong các chế độ xài tốc độ 20G, các miếng gạch thay vì rơi từ từ, nó sẽ xuất hiện ngay lập tức ở cuối bảng. Việc này đôi khi sẽ làm bạn không thể di chuyển được theo phương ngang như ý bạn muốn; bởi vì gạch đôi khi cũng không thể leo qua chỗ lồi lõm hoặc ra khỏi hố sâu. Bạn có thể tìm hiểu thêm về đơn vị \"G\" trong mục \"Tốc độ rơi\"",
     },
+
     hypertap={
         title="Hypertap",
         title_full="Hypertap (Nhấn liên tục)",
@@ -60,6 +66,9 @@ Chú thích:
     1:  Di chuyển ngang: di chuyển sang trái và phải
         ]===],
     },
+
+--------------------------------------------------------------
+
     ['26f_studio']={
         title="26F Studio",
         content="Một nhóm",
