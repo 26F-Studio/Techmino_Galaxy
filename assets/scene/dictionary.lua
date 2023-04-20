@@ -161,8 +161,10 @@ local function parseDict(data)
     local result={}
     local buffer
     for lineNum,line in next,data do
-        line=line:gsub('%-%-.*',''):trim()
-        if #line==0 then goto CONTINUE end
+        if line:find('%-%-') then
+            line=line:gsub('%-%-.*',''):trim()
+            if #line==0 then goto CONTINUE end
+        end
         local head=line:sub(1,1)
         if head=='#' then
             if buffer then
