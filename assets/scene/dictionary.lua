@@ -68,7 +68,7 @@ local function selectItem(item)
             local line={}
             if str:sub(1,2)=='~~' then
                 str=str:sub(str:find('[^~]') or #str):trim()
-                line.divider=tonumber(str) or 1
+                line.divider=MATH.clamp(math.floor((tonumber(str) or 1)+.5),1,10)
                 line.height=line.divider+10
             else
                 line.text=str
