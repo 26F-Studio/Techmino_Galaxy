@@ -10,9 +10,11 @@ return {
     },
     setting_out={
         title="Cài đặt",
-        content="Đây là trang Cài đặt.\nBạn có thể chỉnh một đống thứ ngay tại đây. ",
+        content="Đây là trang Cài đặt.\nBạn có thể chỉnh một đống thứ ở đây!",
     },
-    
+
+--------------------------------------------------------------
+
     noobGuide={
         title="Xin chào", 
         -- contentSize=20,
@@ -73,6 +75,15 @@ Chú thích:
         title="26F Studio",
         content="Một nhóm",
     },
+
+--------------------------------------------------------------
+
+    ['keybinding']={
+        title="Gán phím",
+        content=[===[
+            
+        ]===]
+    }
 }
 
 -- Always use font size which can be divided by 5 (ex: 5, 10, 15, 20, 25,...)
