@@ -181,9 +181,9 @@ local function parseDict(data)
                 value=value:gsub('%%n','\n')
                 buffer.title=not buffer.title and value or buffer.title..'\n'..value
                 assertObj(#buffer.title>0,'Empty title',buffer)
-            elseif key=='title_full' then
+            elseif key=='titleFull' then
                 value=value:gsub('%%n','\n')
-                buffer.title_full=not buffer.title_full and value or buffer.title_full..'\n'..value
+                buffer.titleFull=not buffer.titleFull and value or buffer.titleFull..'\n'..value
             elseif key=='titleSize' then
                 assertObj(not buffer.titleSize,'Duplicate @titleSize',buffer)
                 buffer.titleSize=tonumber(value)
