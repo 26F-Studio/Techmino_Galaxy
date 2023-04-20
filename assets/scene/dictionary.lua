@@ -77,6 +77,7 @@ local function selectItem(item)
             contents.maxScroll=contents.maxScroll+line.height
             contents.texts[i]=line
         end
+        table.insert(contents.texts,1,{divider=4,height=10})
         copyButton:setVisible(true)
     else
         contents.title="x"
@@ -424,11 +425,8 @@ function scene.draw()
         gc_translate(0,-contents.scroll)
         -- Title
         gc_draw(contents.title,15,-mainH/2+5,nil,math.min(1,(mainW-25)/contents.title:getWidth()),1)
+        gc_translate(0,contents.title:getHeight())
 
-        gc_translate(0,contents.title:getHeight()+5)
-        -- Line
-        gc_setLineWidth(2)
-        gc_line(15,-mainH/2,mainW-10,-mainH/2)
         -- Content
         FONT.set(selected.contentSize)
         local fontH=FONT.get(selected.contentSize):getHeight()
