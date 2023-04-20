@@ -19,7 +19,7 @@ return {
         title="Xin chào", 
         contentSize=20,
         content=[===[
-Cảm ơn bạn đã tải và chơi Techmino! ... Hả? Đây là lần đầu bạn chơi game xếp gạch á? Nếu vạy thì...
+Cảm ơn bạn đã tải và chơi Techmino! ... Hả? Đây là lần đầu bạn chơi game xếp gạch á? Nếu vậy thì...
 Đây là một vài thứ mà bạn nên làm mỗi khi chơi, chúng được sắp xếp thành một nhóm. Tuy xếp thành nhóm, bạn vẫn nên làm cả ba nhóm cùng lúc thay vì làm từng cái một.
 
 A. Stacking (Xếp gạch)
@@ -38,7 +38,7 @@ C. Practice (Luyện tập)¹
     C3. Hoàn thành chế độ "40 hàng" mà chỉ được làm Techrash.
     C4. Hoàn thành chế độ "40 hàng" mà chỉ được làm Techrash và không được dùng HOLD
     
-Nhóm C rất linh động, bạn có thể điều chỉnh độ khó dựa trên tình hình/điều kiện của bạn (ví dụ như "không làm bạn chơi quá chậm")
+Nhóm C rất linh động, bạn có thể điều chỉnh độ khó dựa trên tình hình/điều kiện của bạn (ví dụ như "không làm bạn chơi quá chậm"²)
 
 Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm A³, đây là một kỹ năng tối quan trọng trong bất kỳ tựa game xếp gạch nào; và bạn sẽ có thể dần dần làm chủ bất kỳ chế độ nào, lúc đó chỉ cần nhìn lướt qua NEXT là đủ rồi.
 
@@ -81,6 +81,7 @@ Chú thích:
     ['keybinding']={
         title="Gán phím",
         title_full="Lời khuyên cho việc Thiết lập phím",
+        contentSize=20
         content=[===[
 Dưới đây là vài lời khuyên hữu ích khi bạn thiết lập / gán phím / thiết lập tay cầm của bạn:
 
