@@ -161,9 +161,13 @@ local function parseDict(data)
     local result={}
     local buffer
     for lineNum,line in next,data do
-        if line:find('%-%-') then
-            line=line:gsub('%-%-.*',''):trim()
-            if #line==0 then goto CONTINUE end
+        local commentPos=line:find('%-%-')
+        if commentPos then
+            if line:sub(commentPos-1,commentPos-1)~='\\' then
+                line=line:gsub('%-%-.*',''):trim()
+                if #line==0 then goto CONTINUE end
+            end
+            line=line:gsub('\\(%-%-+)','%1')
         end
         local head=line:sub(1,1)
         if head=='#' then
