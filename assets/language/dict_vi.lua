@@ -17,7 +17,7 @@ return {
 
     noobGuide={
         title="Xin chào", 
-        -- contentSize=20,
+        contentSize=20,
         content=[===[
 Cảm ơn bạn đã tải và chơi Techmino! ... Hả? Đây là lần đầu bạn chơi game xếp gạch á? Nếu vạy thì...
 Đây là một vài thứ mà bạn nên làm mỗi khi chơi, chúng được sắp xếp thành một nhóm. Tuy xếp thành nhóm, bạn vẫn nên làm cả ba nhóm cùng lúc thay vì làm từng cái một.
@@ -80,10 +80,15 @@ Chú thích:
 
     ['keybinding']={
         title="Gán phím",
+        title_full="Lời khuyên cho việc Thiết lập phím",
         content=[===[
-            
-        ]===]
-    }
+Dưới đây là vài lời khuyên hữu ích khi bạn thiết lập / gán phím / thiết lập tay cầm của bạn:
+
+1.  Tránh việc gán một ngón tay cho nhiều phím mà bạn muốn nhấn cùng nhau
+      Ví dụ: Bình thường bạn sẽ không cần nhấn nhiều nút xoay chỉ với một ngón tay đâu!
+      Lúc đó bạn nên thử gán mỗi phím cho mỗi ngón tay đi!
+        ]===],
+    },
 }
 
 -- Always use font size which can be divided by 5 (ex: 5, 10, 15, 20, 25,...)
