@@ -1,7 +1,7 @@
 return [[
 # aboutDict
 @ title T.tin về Zictionary
-@ title_full Thông tin về Zictionary
+@ titleFull Thông tin về Zictionary
 Zictionary sẽ dạy cho bạn mọi thứ về xếp gạch
 
 # aboutDict_hidden
@@ -54,7 +54,7 @@ Tốc độ nhanh nhất trong các trò Tetris hiện đại. Trong các chế 
 
 # hypertap
 @ title Hypertap
-@ title_full Hypertap (Nhấn liên tục)
+@ titleFull Hypertap (Nhấn liên tục)
 Đề cập tới một kỹ năng là khi bạn "rung" tay liên tục để nhấn liên tục làm tốc độ di chuyển ngang¹ nhanh hơn
 
 ~~6
@@ -66,7 +66,7 @@ Một nhóm
 
 # keybinding
 @ title Gán phím
-@ title_full Lời khuyên cho việc Thiết lập phím
+@ titleFull Lời khuyên cho việc Thiết lập phím
 @ contentSize 20
 Dưới đây là vài lời khuyên hữu ích khi bạn thiết lập / gán phím / thiết lập tay cầm của bạn:
 
