@@ -162,6 +162,7 @@ local function parseDict(data)
     local buffer
     for lineNum,line in next,data do
         line=line:gsub('%-%-.*',''):trim()
+        if #line==0 then goto CONTINUE end
         local head=line:sub(1,1)
         if head=='#' then
             if buffer then
@@ -198,6 +199,7 @@ local function parseDict(data)
         else
             buffer.content=not buffer.content and line or buffer.content..'\n'..line
         end
+        ::CONTINUE::
     end
     if buffer then
         result[buffer._id]=buffer
