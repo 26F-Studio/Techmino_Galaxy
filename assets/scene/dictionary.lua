@@ -1,5 +1,9 @@
+local gc_setColor,gc_setLineWidth=GC.setColor,GC.setLineWidth
+local gc_draw,gc_print,gc_rectangle,gc_line=GC.draw,GC.print,GC.rectangle,GC.line
+local gc_stc_reset,gc_stc_rect,gc_stc_stop=GC.stc_reset,GC.stc_rect,GC.stc_stop
+local gc_translate,gc_replaceTransform=GC.translate,GC.replaceTransform
+
 local ins=table.insert
-local gc,GC=love.graphics,GC
 local kbIsDown=love.keyboard.isDown
 local scene={}
 
@@ -22,15 +26,13 @@ local contents={
     _width=0,
     title=GC.newText(FONT.get(30),""),
     texts={},
-    lineH=0,
 }
-
 -- Base dict data, not formatted
 local baseDict do
     baseDict=require('assets/basedictionary')
     local dictObjMeta={__index=function(obj,k)
         if k=='titleText' then
-            obj.titleText=love.graphics.newText(FONT.get(obj.titleSize,'bold'),obj.titleFull)
+            obj.titleText=GC.newText(FONT.get(obj.titleSize,'bold'),obj.titleFull)
             return obj.titleText
         end
     end}
@@ -59,18 +61,28 @@ local function selectItem(item)
     if item then
         contents.title=selected.titleText
         contents._width,contents.texts=FONT.get(item.contentSize):getWrap(item.content,mainW-30)
-        contents.lineH=1.26*item.contentSize
         contents.scroll=0
-        contents.maxScroll=math.max(
-            #contents.texts*contents.lineH
-            +126
-            +(contents.title:getHeight()+5)
-            -(mainH-searchH),
-            0
-        )
+        contents.maxScroll=126+(contents.title:getHeight()+5)-(mainH-searchH)
+        for i=1,#contents.texts do
+            local str=contents.texts[i]
+            local line={}
+            if str:sub(1,2)=='~~' then
+                str=str:sub(str:find('[^~]') or #str):trim()
+                line.divider=tonumber(str) or 1
+                line.height=line.divider+10
+            else
+                line.text=str
+                line.height=item.contentSize+10
+            end
+            contents.maxScroll=contents.maxScroll+line.height
+            contents.texts[i]=line
+        end
+        table.insert(contents.texts,1,{divider=4,height=10})
         copyButton:setVisible(true)
     else
+        contents.title="x"
         contents.texts=NONE
+        contents.scroll=0
         contents.maxScroll=0
     end
     contents.scroll=0
@@ -104,15 +116,15 @@ do-- Widgets
     }
     function listBox.drawFunc(obj,_,sel)
         if sel then
-            gc.setColor(1,1,1,.26)
-            gc.rectangle('fill',0,0,listW-10,40)
+            gc_setColor(1,1,1,.26)
+            gc_rectangle('fill',0,0,listW-10,40)
         end
         FONT.set(30,'norm')
-        gc.setColor(categoryColor[obj.cat].index)
-        gc.print(obj.title,5,0)
+        gc_setColor(categoryColor[obj.cat].index)
+        gc_print(obj.title,5,0)
         if obj==selected then
-            gc.setColor(1,1,1,.62+.355*math.sin(love.timer.getTime()*12.6))
-            gc.print(obj.title,5,0)
+            gc_setColor(1,1,1,.62+.355*math.sin(love.timer.getTime()*12.6))
+            gc_print(obj.title,5,0)
         end
     end
     function listBox.code()
@@ -150,6 +162,7 @@ local function parseDict(data)
     local buffer
     for lineNum,line in next,data do
         line=line:gsub('%-%-.*',''):trim()
+        if #line==0 then goto CONTINUE end
         local head=line:sub(1,1)
         if head=='#' then
             if buffer then
@@ -186,6 +199,7 @@ local function parseDict(data)
         else
             buffer.content=not buffer.content and line or buffer.content..'\n'..line
         end
+        ::CONTINUE::
     end
     if buffer then
         result[buffer._id]=buffer
@@ -344,7 +358,7 @@ function scene.touchMove(x,y,_,dy)
 end
 
 function scene.wheelMoved(_,y)
-    scroll(y*contents.lineH*2)
+    scroll(y*62)
 end
 
 function scene.update(dt)
@@ -362,7 +376,7 @@ function scene.update(dt)
         freshWidgetPos()
     end
     if kbIsDown('up','down') and (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
-        scroll(12.6*contents.lineH*dt*(kbIsDown('up') and 1 or -1))
+        scroll(260*dt*(kbIsDown('up') and 1 or -1))
     end
 end
 
@@ -372,58 +386,67 @@ function scene.draw()
         prevScene.draw()
     end
     if prevScene.widgetList then
-        gc.replaceTransform(SCR.xOy)
+        gc_replaceTransform(SCR.xOy)
         WIDGET._draw(prevScene.widgetList)
     end
 
     -- Dark background
-    gc.replaceTransform(SCR.origin)
-    gc.setColor(.1,.1,.1,time*.8)
-    gc.rectangle('fill',0,0,SCR.w,SCR.h)
+    gc_replaceTransform(SCR.origin)
+    gc_setColor(.1,.1,.1,time*.8)
+    gc_rectangle('fill',0,0,SCR.w,SCR.h)
 
     -- Dictionary
-    gc.replaceTransform(SCR.xOy_m)
-    gc.translate(mainX,50*(1-time))
+    gc_replaceTransform(SCR.xOy_m)
+    gc_translate(mainX,50*(1-time))
 
     -- Dark shade
-    gc.setLineWidth(10)
-    gc.setColor(.45,.45,.45,time)
-    gc.translate(5,5)
-    gc.rectangle('line',-5,-mainH/2-5,mainW+10,mainH+10,10)
-    gc.rectangle('line',-listW-5,-listH/2-5,listW,listH+10,10)
-    gc.line(-5,mainH/2-searchH,mainW+5,mainH/2-searchH)
-    gc.translate(-5,-5)
+    gc_setLineWidth(10)
+    gc_setColor(.45,.45,.45,time)
+    gc_translate(5,5)
+    gc_rectangle('line',-5,-mainH/2-5,mainW+10,mainH+10,10)
+    gc_rectangle('line',-listW-5,-listH/2-5,listW,listH+10,10)
+    gc_line(-5,mainH/2-searchH,mainW+5,mainH/2-searchH)
+    gc_translate(-5,-5)
 
     -- Light frame
-    gc.setColor(.62,.62,.62,time)
-    gc.rectangle('line',-5,-mainH/2-5,mainW+10,mainH+10,10)
-    gc.rectangle('line',-listW-5,-listH/2-5,listW,listH+10,10)
-    gc.line(-5,mainH/2-searchH,mainW+5,mainH/2-searchH)
+    gc_setColor(.62,.62,.62,time)
+    gc_rectangle('line',-5,-mainH/2-5,mainW+10,mainH+10,10)
+    gc_rectangle('line',-listW-5,-listH/2-5,listW,listH+10,10)
+    gc_line(-5,mainH/2-searchH,mainW+5,mainH/2-searchH)
 
     -- Screen
-    gc.setColor(.4,.45,.55,time*.4)
-    gc.rectangle('fill',0,-mainH/2,mainW,mainH-searchH-5,5)
-    gc.rectangle('fill',0,mainH/2-searchH+5,mainW,searchH-5,5)
-    gc.rectangle('fill',-listW,-listH/2,listW-10,listH,5)
+    gc_setColor(.4,.45,.55,time*.4)
+    gc_rectangle('fill',0,-mainH/2,mainW,mainH-searchH-5,5)
+    gc_rectangle('fill',0,mainH/2-searchH+5,mainW,searchH-5,5)
+    gc_rectangle('fill',-listW,-listH/2,listW-10,listH,5)
 
     -- Title & Content
-    GC.stc_reset()
-    GC.stc_rect(0,-mainH/2,mainW,mainH-searchH-5,5)
-    gc.setColor(categoryColor[selected.cat].content)
-        gc.translate(0,-contents.scroll)
+    gc_stc_reset()
+    gc_stc_rect(0,-mainH/2,mainW,mainH-searchH-5,5)
+    gc_setColor(categoryColor[selected.cat].content)
+        gc_translate(0,-contents.scroll)
         -- Title
-        gc.draw(contents.title,15,-mainH/2+5,nil,math.min(1,(mainW-25)/contents.title:getWidth()),1)
+        gc_draw(contents.title,15,-mainH/2+5,nil,math.min(1,(mainW-25)/contents.title:getWidth()),1)
+        gc_translate(0,contents.title:getHeight())
 
-        gc.translate(0,contents.title:getHeight()+5)
-        -- Line
-        GC.setLineWidth(2)
-        gc.line(15,-mainH/2,mainW-10,-mainH/2)
         -- Content
         FONT.set(selected.contentSize)
-        for i=1,#contents.texts do
-            gc.print(contents.texts[i],15,-mainH/2+5+contents.lineH*(i-1))
+        local fontH=FONT.get(selected.contentSize):getHeight()
+        gc_translate(0,-mainH/2+5)
+        for _,line in next,contents.texts do
+            if love.keyboard.isDown('f1') then
+                gc_setLineWidth(1)
+                gc_rectangle('line',15,0,mainW-25,line.height)
+            end
+            if line.divider then
+                gc_setLineWidth(line.divider)
+                gc_line(15,line.height/2,mainW-10,line.height/2)
+            elseif line.text then
+                gc_print(line.text,15,(line.height-fontH)/2)
+            end
+            gc_translate(0,line.height)
         end
-    GC.stc_stop()
+    gc_stc_stop()
 end
 
 scene.widgetList={
