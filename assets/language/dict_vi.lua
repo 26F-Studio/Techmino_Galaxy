@@ -6,16 +6,20 @@ Zictionary sẽ dạy cho bạn mọi thứ về xếp gạch
 
 # aboutDict_hidden
 @ title Cái gì đây?
-Nó sẽ dạy cho bạn mọi thứ về xếp gạch.\n\n... Khoan, chờ khoảng chừng là 2 giây!\nBạn vừa nhấn phím tắt à? Ngon lành cành đào rồi đây
+Nó sẽ dạy cho bạn mọi thứ về xếp gạch.
+... Khoan, chờ khoảng chừng là 2 giây!
+Bạn vừa nhấn phím tắt à? Ngon lành cành đào rồi đây
 
 # setting_out
 @ title Cài đặt
-Đây là trang Cài đặt.\nBạn có thể chỉnh một đống thứ ở đây!
+Đây là trang Cài đặt.
+Bạn có thể chỉnh một đống thứ ở đây!
 
 # noobGuide
 @ title Xin chào
 @ contentSize 20
-Cảm ơn bạn đã tải và chơi Techmino! ... Hả? Đây là lần đầu bạn chơi game xếp gạch á? Nếu vậy thì...
+Cảm ơn bạn đã tải và chơi Techmino!
+... Hả? Đây là lần đầu bạn chơi game xếp gạch á? Nếu vậy thì...
 Đây là một vài thứ mà bạn nên làm mỗi khi chơi, chúng được sắp xếp thành một nhóm. Tuy xếp thành nhóm, bạn vẫn nên làm cả ba nhóm cùng lúc thay vì làm từng cái một.
 ~~
 A. Stacking (Xếp gạch)
