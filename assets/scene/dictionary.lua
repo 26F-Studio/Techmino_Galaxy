@@ -1,3 +1,5 @@
+("a_b"):match()
+
 local gc_setColor,gc_setLineWidth=GC.setColor,GC.setLineWidth
 local gc_draw,gc_print,gc_rectangle,gc_line=GC.draw,GC.print,GC.rectangle,GC.line
 local gc_stc_reset,gc_stc_rect,gc_stc_stop=GC.stc_reset,GC.stc_rect,GC.stc_stop
@@ -181,9 +183,9 @@ local function parseDict(data)
                 value=value:gsub('%%n','\n')
                 buffer.title=not buffer.title and value or buffer.title..'\n'..value
                 assertObj(#buffer.title>0,'Empty title',buffer)
-            elseif key=='title_full' then
+            elseif key=='titleFull' then
                 value=value:gsub('%%n','\n')
-                buffer.title_full=not buffer.title_full and value or buffer.title_full..'\n'..value
+                buffer.titleFull=not buffer.titleFull and value or buffer.titleFull..'\n'..value
             elseif key=='titleSize' then
                 assertObj(not buffer.titleSize,'Duplicate @titleSize',buffer)
                 buffer.titleSize=tonumber(value)
