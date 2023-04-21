@@ -20,7 +20,7 @@
         -- Example: ~~5
 
     Here is some superscript you may want to use
-    ¹   ²   ³   ⁴   ⁵   ⁵   ⁷   ⁸   ⁹   ⁰
+    ¹   ²   ³   ⁴   ⁵   ⁶   ⁷   ⁸   ⁹   ⁰
 ]]
 
 --[[
