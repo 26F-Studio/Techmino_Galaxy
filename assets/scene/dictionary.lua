@@ -20,11 +20,12 @@ local listW,listH=300,600
 local searchH=80
 
 local prevScene
+local searchTimer,lastSearchText
 local time,quiting
 local selected
 local contents={
     _width=0,
-    title=GC.newText(FONT.get(30),""),
+    title=GC.newText(FONT.get(30),''),
     texts={},
 }
 -- Base dict data, not formatted
@@ -44,7 +45,10 @@ local baseDict do
     end
 end
 
+-- Entries from baseDict, with data from languages
 local dispDict={}
+local filteredDict={}
+
 -- Dict data of current language
 local currentDict={locale=false}
 -- Dict data of English
@@ -102,6 +106,32 @@ local function freshWidgetPos()
     local y0=SCR.h0/2+50*(1-time)
     for i=1,#scene.widgetList do
         scene.widgetList[i]._y=scene.widgetList[i].y+y0
+    end
+end
+local function dictSortFunc(a,b)
+    return a._priority>b._priority
+end
+local function search(str)
+    str=str:trim()
+    if str=='' then
+        listBox:setList(dispDict)
+    else
+        TABLE.cut(filteredDict)
+        for i=1,#dispDict do
+            local obj=dispDict[i]
+            obj._priority=
+                (obj.title:lower():find(str) and 26 or 0)+
+                (obj.titleFull and obj.titleFull:lower():find(str) and 16 or 0)+
+                (#str>=3 and obj.content:lower():find(str) and 3*math.min(#str,5) or 0)
+            if obj._priority>0 then
+                ins(filteredDict,obj)
+            end
+        end
+        table.sort(filteredDict,dictSortFunc)
+        listBox:setList(filteredDict)
+        if filteredDict[1] then
+            selectItem(filteredDict[1])
+        end
     end
 end
 do-- Widgets
@@ -217,6 +247,7 @@ function scene.enter()
     local target=SCN.args[1] or 'aboutDict'
 
     time=0
+    searchTimer,lastSearchText=0,''
     freshWidgetPos()
 
     quiting=false
@@ -236,9 +267,7 @@ function scene.enter()
                 MES.new('error',data,10)
             end
         end
-        if not currentDict then
-            currentDict={aboutDict={title="[No Dict Data]",content="No dictionary file detected."}}
-        end
+        if not currentDict then currentDict={} end
         currentDict.locale=SETTINGS.system.locale
     end
 
@@ -291,7 +320,7 @@ function scene.enter()
 
     if not selected then selectItem(dispDict[1]) end
     listBox:setList(dispDict)
-    if selectedNum then listBox:select(selectedNum)end
+    if selectedNum then listBox:select(selectedNum or 1)end
     listBox._scrollPos1=listBox._scrollPos
     SFX.play('dict_open')
     collectgarbage()
@@ -317,10 +346,8 @@ function scene.keyDown(key,isRep)
         if key=='c' and isCtrlPressed() then
             copyText()
         else
-            if WIDGET.sel~=inputBox then
+            if not WIDGET.isFocus(inputBox) then
                 WIDGET.focus(inputBox)
-                WIDGET.textinput(key)
-                return true
             end
         end
     elseif key=='delete' or key=='backspace' then
@@ -348,7 +375,7 @@ local function scroll(dy)
     contents.scroll=MATH.clamp(contents.scroll-dy,0,contents.maxScroll)
 end
 function scene.mouseMove(x,y,_,dy)
-    if WIDGET.sel~=listBox and love.mouse.isDown(1) and x and y and inScreen(x,y) then
+    if WIDGET.isFocus(listBox) and love.mouse.isDown(1) and x and y and inScreen(x,y) then
         scroll(dy)
     end
 end
@@ -358,7 +385,7 @@ function scene.mouseDown(_,_,k)
     end
 end
 function scene.touchMove(x,y,_,dy)
-    if WIDGET.sel~=listBox and inScreen(x,y) then
+    if WIDGET.isFocus(listBox) and inScreen(x,y) then
         scroll(dy)
     end
 end
@@ -380,6 +407,15 @@ function scene.update(dt)
     elseif time<1 then
         time=math.min(time+6.26*dt,1)
         freshWidgetPos()
+    end
+    searchTimer=searchTimer+dt
+    if searchTimer>.26 then
+        local prompt=inputBox:getText():trim()
+        if (prompt=='' or #prompt>=2) and prompt~=lastSearchText then
+            lastSearchText=prompt
+            search(lastSearchText)
+        end
+        searchTimer=0
     end
     if kbIsDown('up','down') and (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
         scroll(260*dt*(kbIsDown('up') and 1 or -1))
