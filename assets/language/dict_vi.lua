@@ -92,23 +92,6 @@ Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm 
 -- 2: The original sentence is: like what does “without losing too much speed” means to you <P/s: after that it is the pure translation>
 -- 3: The original said it was part A1, but someone said it should be group A. (May be changed in the future)
 
-# 20g
-@ title 20G
-Tốc độ nhanh nhất trong các trò Tetris hiện đại. Trong các chế độ xài tốc độ 20G, các miếng gạch thay vì rơi từ từ, nó sẽ xuất hiện ngay lập tức ở cuối bảng. Việc này đôi khi sẽ làm bạn không thể di chuyển được theo phương ngang như ý bạn muốn; bởi vì gạch đôi khi cũng không thể leo qua chỗ lồi lõm hoặc ra khỏi hố sâu. Bạn có thể tìm hiểu thêm về đơn vị \"G\" trong mục \"Tốc độ rơi\"
-
-
-# hypertap
-@ title Hypertap
-@ titleFull Hypertap (Nhấn liên tục)
-Đề cập tới một kỹ năng là khi bạn "rung" tay liên tục để nhấn liên tục làm tốc độ di chuyển ngang¹ nhanh hơn
-
-~~6
---1: Di chuyển ngang: di chuyển sang trái và phải
-
-# 26f_studio
-@ title 26F Studio
-Một nhóm
-
 # keybinding
 @ title Gán phím
 @ titleFull Lời khuyên cho việc Gán phím
@@ -275,14 +258,11 @@ When it gets fast, the commonly used unit is G, referring to how many blocks the
 
 # 20g
 @ title 20G
-@titleFull 20G (Instant Falling Speed)
-Since usually the matrix is 20 blocks tall, a falling speed of 20G means a block would fall to the bottom of the matrix within one frame, effectively instantly. Thus 20G is also refers to a falling speed where the piece instantly falls to the bottom.
-
-At such a falling speed, there is no in-between state for the fall, and it is easy to get a piece stuck in a terrain where there are bumps on the side that the piece cannot climb over.
+Tốc độ nhanh nhất trong các trò xếp gạch hiện đại. Trong các chế độ xài tốc độ 20G, các miếng gạch thay vì rơi từ từ, nó sẽ xuất hiện ngay lập tức ở cuối bảng. Việc này đôi khi sẽ làm bạn không thể di chuyển được theo phương ngang như ý bạn muốn; bởi vì gạch đôi khi cũng không thể leo qua chỗ lồi lõm hoặc ra khỏi hố sâu. Bạn có thể tìm hiểu thêm về đơn vị "G" trong mục "Tốc độ rơi"
 
 #lock_delay
 @title Lockdown Delay
-The time between "piece touches the floor" and "piece locking and cannot be moved".
+The time between "piece touches the The time between "piece touches the floor" and "piece locking and cannot be moved".
 
 This can usually be reset by actions like moving and rotating, giving the player more reaction time even with a fast falling speed.
 
@@ -354,4 +334,13 @@ Using three rotation buttons including a 180-degree rotation button can further 
 A technique where you move a piece to a target position using the least number of button presses, saving time and potential to make mistakes.
 
 Usually Finesse only deals with situations where you can directly drop the piece from high up, and does not consider situations where you need to tuck (soft drop then move) or spin.
+
+# hypertap
+@ title Hypertap
+@ titleFull Hypertap (Nhấn liên tục)
+Đề cập tới một kỹ năng là khi bạn "rung" tay liên tục để nhấn liên tục làm tốc độ di chuyển sang trái và phải nhanh hơn
+
+# 26f_studio
+@ title 26F Studio
+Một nhóm
 ]]
