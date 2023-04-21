@@ -108,6 +108,9 @@ local function freshWidgetPos()
         scene.widgetList[i]._y=scene.widgetList[i].y+y0
     end
 end
+local function dictSortFunc(a,b)
+    return a._priority>b._priority
+end
 local function search(str)
     str=str:trim()
     if str=='' then
@@ -116,10 +119,15 @@ local function search(str)
         TABLE.cut(filteredDict)
         for i=1,#dispDict do
             local obj=dispDict[i]
-            if obj.title:lower():find(str) or #str>=3 and obj.content:lower():find(str) then
+            obj._priority=
+                (obj.title:lower():find(str) and 26 or 0)+
+                (obj.titleFull and obj.titleFull:lower():find(str) and 16 or 0)+
+                (#str>=3 and obj.content:lower():find(str) and 3*math.min(#str,5) or 0)
+            if obj._priority>0 then
                 ins(filteredDict,obj)
             end
         end
+        table.sort(filteredDict,dictSortFunc)
         listBox:setList(filteredDict)
         if filteredDict[1] then
             selectItem(filteredDict[1])
