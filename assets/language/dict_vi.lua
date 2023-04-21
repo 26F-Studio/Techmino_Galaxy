@@ -1,3 +1,43 @@
+--[[
+    Comment from Squishy (SweetSea-ButImNotSweet) (sea)
+    For anyone who are editing the file, please notice:
+        1. If you want to make footnotes, please use superscripts and make a line with the thickness is 6
+           Then you can add footnotes after is
+        2. Always use right format and follow MrZ's guide
+
+    Format guide:
+        #internal_id
+        @property value
+        Content isn't prefixed with anything
+        and can span multiple lines.
+
+        -- You can comment anything here and don't worry, it will not create any meaningless empty line
+
+        Having empty lines in the text is also fine, and the empty lines will be preserved.
+        
+        -- To make border line
+        ~~ thickness
+        -- Example: ~~5
+
+    Here is some superscript you may want to use
+    ¹   ²   ³   ⁴   ⁵   ⁵   ⁷   ⁸   ⁹   ⁰
+]]
+
+--[[
+    Comment from MrZ
+    Translation guideline:
+    1.  You can switch orders of entries, and this doesn't affect what is shown
+        in game. However, it's not recommended to change the order so that it's
+        easier to find the entry you or someone else wants to edit
+    2.  For "about" and "guide" type entries, keep the "you" if original text
+        does so. Make it feel like you are talking directly to the player.
+    3.  For "terms" and "technique" type entries, avoid vocabulary that "feel
+        obvious like joking", "directly refers to a player", eg "the player" or
+        "the game". Try to avoid these by rephrasing your sentence.
+    4.  Keep this comment at the top of the file too, translated, so that other
+        translators can see and translate this too
+]]
+
 return [[
 # aboutDict
 @ title T.tin về Zictionary
@@ -47,6 +87,11 @@ Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm 
 2: Câu gốc là: like what does “without losing too much speed” means to you (nó giống như việc câu "không làm mất tốc độ của bạn" có ý nghĩa như thế nào đối với bạn)
 3: Bản gốc ghi là phần A1, nhưng có người bảo nên là nhóm A. (Có thể thay đổi trong tương lai)
 
+-- Changes:
+-- 1: This title is set by the translator, the original still says Stacking (don't understand why groups A and C have the same name)
+-- 2: The original sentence is: like what does “without losing too much speed” means to you <P/s: after that it is the pure translation>
+-- 3: The original said it was part A1, but someone said it should be group A. (May be changed in the future)
+
 # 20g
 @ title 20G
 Tốc độ nhanh nhất trong các trò Tetris hiện đại. Trong các chế độ xài tốc độ 20G, các miếng gạch thay vì rơi từ từ, nó sẽ xuất hiện ngay lập tức ở cuối bảng. Việc này đôi khi sẽ làm bạn không thể di chuyển được theo phương ngang như ý bạn muốn; bởi vì gạch đôi khi cũng không thể leo qua chỗ lồi lõm hoặc ra khỏi hố sâu. Bạn có thể tìm hiểu thêm về đơn vị \"G\" trong mục \"Tốc độ rơi\"
@@ -66,9 +111,50 @@ Một nhóm
 
 # keybinding
 @ title Gán phím
-@ titleFull Lời khuyên cho việc Thiết lập phím
+@ titleFull Lời khuyên cho việc Gán phím
 @ contentSize 20
-Dưới đây là vài lời khuyên hữu ích khi bạn thiết lập / gán phím / thiết lập tay cầm của bạn:
+Dưới đây là vài lời khuyên hữu ích khi bạn gán phím
 
-1.Tránh việc gán một ngón tay cho nhiều phím mà bạn muốn nhấn cùng nhau Ví dụ: Bình thường bạn sẽ không cần nhấn nhiều nút xoay chỉ với một ngón tay đâu! Lúc đó bạn nên thử gán mỗi phím cho mỗi ngón tay đi!
+1.  Tránh việc để một ngón tay của bạn phải nhấn nhiều phím mà bạn muốn nhấn cùng nhau - Lấy ví dụ nè: bạn có lẽ sẽ không cần phải nhấn nhiều phím xoay cùng nhau đâu! Hãy thử gán mỗi phím mỗi ngón tay đi.
+~~
+2.  Trừ khi bạn tự tin với ngót út của mình, thì hãy tránh gán ngón này với bất cứ phím nào! Thường thì ngón trỏ và ngón giữa là hai ngón nhanh nhẹn nhất, nhưng bạn cũng có thể thoải mái tìm hiểu xem các ngón tay của bạn nhanh chậm thế nào.
+~~
+3.  Không nhất thiết phải sao chép cấu hình phím¹ của người khác. Mỗi người là mỗi cá tính khác biệt, và không ai giống ai; và miễn là bạn còn ghi nhớ điều này thì sử dụng một cấu hình phím khác sẽ có tác động tối thiểu đến kỹ năng của bạn
+
+
+~~6
+1: (Sea: Nói thật ra là khi mình dịch tới đoạn này thì mình khá là bí không biết dùng từ này cho hợp với "key config". Cứ việc thoải mái sửa nếu bạn biết từ nào hay hơn)
+
+-- Notice:
+-- 1: (Sea: To be honest, when I got to this part, I was quite confused as to what word to use for "key config". Feel free to edit it if you know a better word)
+
+# handling
+@ title Handling
+@ titleFull Handling Suggestions
+@ contentSize 25
+Several main factors that may affect handling:
+(1) Input delay, which could be affected by device configuration or condition. Restart the game or change your device can probably fix it.
+(2) Unstable programming or faulty designs. It could be alleviated by lowering the effect settings.
+(3) Designed on purpose. Adaptation might help.
+(4) Improper parameter setting. Change the settings.
+(5) Improper play posture. It’s not convenient to use force. Change your posture.
+(6) Not being used to the operation after changing the key position or changing the device. Getting used to it or changing the settings might help.
+(7) Muscle fatigue, response, and decreases in coordination abilities. Have some rest and come back later or in a few days.
+
+# piece_shape
+@ title Pieces' Shapes
+@ titleFull Tetrominos' Shapes
+In standard Tetris games, all the blocks used are tetrominos, i.e., Blocks that are linked by four minoes side-by-side.
+
+There are seven kinds of tetrominos in total when allowing rotations and disallowing reflections. These tetrominos are named by the letter in the alphabet that they resemble. They are Z, S, J, L, T, O, and I. See the “Shape & Name” entry for more information.
+
+# piece_color
+@ title Pieces' Colors
+@ titleFull Tetrominos' Colors
+Usually, tetrominos with the same shape are given the same color. This helps you to distinguish and remember the tetrominoes easier.
+
+# piece_direction
+@ title Pieces' Directions
+@ titleFull Tetrominos' Directions
+Usually, tetrominos spawn with a consistent rotation state (in other words, it won't spawn in one direction sometimes but in another direction some other times). Some rotation systems also take a tetromino's direction into account when deciding what direction to kick the tetromino.
 ]]
