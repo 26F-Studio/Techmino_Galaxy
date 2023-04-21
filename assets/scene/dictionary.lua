@@ -81,6 +81,7 @@ local function selectItem(item)
             contents.maxScroll=contents.maxScroll+line.height
             contents.texts[i]=line
         end
+        contents.maxScroll=math.max(contents.maxScroll,0)
         table.insert(contents.texts,1,{divider=4,height=10})
         copyButton:setVisible(true)
     else
