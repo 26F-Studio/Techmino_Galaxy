@@ -267,9 +267,7 @@ function scene.enter()
                 MES.new('error',data,10)
             end
         end
-        if not currentDict then
-            currentDict={aboutDict={title="[No Dict Data]",content="No dictionary file detected."}}
-        end
+        if not currentDict then currentDict={} end
         currentDict.locale=SETTINGS.system.locale
     end
 
@@ -322,7 +320,7 @@ function scene.enter()
 
     if not selected then selectItem(dispDict[1]) end
     listBox:setList(dispDict)
-    if selectedNum then listBox:select(selectedNum)end
+    if selectedNum then listBox:select(selectedNum or 1)end
     listBox._scrollPos1=listBox._scrollPos
     SFX.play('dict_open')
     collectgarbage()
