@@ -376,7 +376,7 @@ local function scroll(dy)
     contents.scroll=MATH.clamp(contents.scroll-dy,0,contents.maxScroll)
 end
 function scene.mouseMove(x,y,_,dy)
-    if WIDGET.isFocus(listBox) and love.mouse.isDown(1) and x and y and inScreen(x,y) then
+    if not WIDGET.isFocus(listBox) and love.mouse.isDown(1) and x and y and inScreen(x,y) then
         scroll(dy)
     end
 end
@@ -386,7 +386,7 @@ function scene.mouseDown(_,_,k)
     end
 end
 function scene.touchMove(x,y,_,dy)
-    if WIDGET.isFocus(listBox) and inScreen(x,y) then
+    if not WIDGET.isFocus(listBox) and inScreen(x,y) then
         scroll(dy)
     end
 end

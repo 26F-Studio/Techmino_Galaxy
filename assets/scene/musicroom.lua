@@ -108,7 +108,7 @@ function scene.keyDown(key,isRep)
         if BGM.isPlaying() then
             BGM.set('all','seek',key=='left' and max(BGM.tell()-5,0) or (BGM.tell()+5)%BGM.getDuration())
         end
-    elseif #key==1 and key:find'[0-9a-z]' and not love.keyboard then
+    elseif #key==1 and key:find'[0-9a-z]' then
         local list=musicListBox:getList()
         local sel=musicListBox:getSelect()
         for _=1,#list do
