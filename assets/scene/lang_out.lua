@@ -27,6 +27,14 @@ function scene.leave()
     saveSettings()
 end
 
+function scene.keyDown(key)
+    if KEYMAP.sys:getAction(key)=='back' then
+        SCN.back('none')
+    else
+        return true
+    end
+end
+
 function scene.update(dt)
     curLang=curLang+dt*1.26
     if curLang>=#languages+1 then

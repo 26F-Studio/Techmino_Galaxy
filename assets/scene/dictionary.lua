@@ -81,6 +81,7 @@ local function selectItem(item)
             contents.maxScroll=contents.maxScroll+line.height
             contents.texts[i]=line
         end
+        contents.maxScroll=math.max(contents.maxScroll,0)
         table.insert(contents.texts,1,{divider=4,height=10})
         copyButton:setVisible(true)
     else
@@ -112,7 +113,7 @@ local function dictSortFunc(a,b)
     return a._priority>b._priority
 end
 local function search(str)
-    str=str:trim()
+    str=str:trim():lower()
     if str=='' then
         listBox:setList(dispDict)
     else
@@ -354,7 +355,7 @@ function scene.keyDown(key,isRep)
         inputBox:keypress(key)
     elseif not isRep then
         if act=='select' then
-            if selected~=listBox:getItem() then
+            if selected~=listBox:getItem() and listBox:getItem() then
                 listBox.code()
                 SFX.play(listBox.sound_click)
             end
