@@ -23,7 +23,7 @@ local function sysAction(action)
         startGame(GAME.mode.name)
     elseif action=='back' then
         if canPause() then
-            SFX.play('notice')
+            SFX.play('pause')
             SCN.swapTo('pause_in','none')
         else
             SCN.back('none')

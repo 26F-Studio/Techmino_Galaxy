@@ -1,5 +1,3 @@
-local sin=math.sin
-
 local scene={}
 
 local pauseText
@@ -13,10 +11,10 @@ end
 
 local function sysAction(action)
     if action=='quit' then
-        SFX.play('fail')
+        SFX.play('pause_quit')
         SCN.back()
     elseif action=='back' then
-        SFX.play('solve')
+        SFX.play('unpause')
         SCN.swapTo('game_in','none')
     elseif action=='restart' then
         SFX.play('fail')

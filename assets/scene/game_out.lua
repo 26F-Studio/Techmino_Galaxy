@@ -32,7 +32,7 @@ local function sysAction(action)
         end
     elseif action=='back' then
         if canPause() then
-            SFX.play('notice')
+            SFX.play('pause')
             SCN.swapTo('pause_out','none')
         else
             SCN.back()
