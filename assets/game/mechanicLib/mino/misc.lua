@@ -111,9 +111,21 @@ do-- swapDirection
     end
 end
 
-function misc.flipBoard_event_afterLock(P)
+function misc.flipBoardLR(P)
     for y=1,P.field:getHeight() do
         TABLE.reverse(P.field._matrix[y])
+    end
+end
+function misc.flipBoardUD(P)
+    TABLE.reverse(P.field._matrix)
+end
+function misc.invertBoard(P,fromH,toH)
+    local F=P.field
+    local mat=F._matrix
+    for y=fromH or 1,toH or F:getHeight() do
+        for x=1,P.settings.fieldW do
+            mat[y][x]=not mat[y][x] and {color=0}
+        end
     end
 end
 
