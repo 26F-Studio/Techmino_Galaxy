@@ -183,29 +183,29 @@ do-- wind
         P.modeData.windStrength=0
         P.modeData.windCounter=0
 
-        P.modeData.invertTimes={}
+        P.modeData.invertPoints={}
         for i=1,P:random(4,6) do
-            P.modeData.invertTimes[i]=P:random(2,38)
+            P.modeData.invertPoints[i]=P:random(2,38)
         end
-        table.sort(P.modeData.invertTimes)
+        table.sort(P.modeData.invertPoints)
     end
     function misc.wind_event_always(P)
         if not P.timing then return end
         local md=P.modeData
         md.windStrength=md.windStrength+MATH.sign(md.windTargetStrength-md.windStrength)
-        md.windCounter=md.windCounter+md.windStrength
-        if math.abs(md.windCounter)>=62000 then
+        md.windCounter=md.windCounter+math.abs(md.windStrength)
+        if md.windCounter>=62000 then
             if P.hand then
-                P[md.windCounter<0 and 'moveLeft' or 'moveRight'](P)
+                P[md.windStrength<0 and 'moveLeft' or 'moveRight'](P)
             end
-            md.windCounter=md.windCounter-MATH.sign(md.windCounter)*62000
+            md.windCounter=md.windCounter-62000
         end
     end
     function misc.wind_event_afterClear(P)
         local md=P.modeData
-        if #md.invertTimes>0 and md.line>md.invertTimes[1] then
-            while #md.invertTimes>0 and md.line>md.invertTimes[1] do
-                table.remove(md.invertTimes,1)
+        if #md.invertPoints>0 and md.line>md.invertPoints[1] then
+            while #md.invertPoints>0 and md.line>md.invertPoints[1] do
+                table.remove(md.invertPoints,1)
             end
             md.windTargetStrength=-MATH.sign(md.windTargetStrength)*P:random(1260,1600)
         end
