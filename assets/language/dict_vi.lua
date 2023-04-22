@@ -104,7 +104,6 @@ Dưới đây là vài lời khuyên hữu ích khi bạn gán phím
 ~~
 3.  Không nhất thiết phải sao chép cấu hình phím¹ của người khác. Mỗi người là mỗi cá tính khác biệt, và không ai giống ai; và miễn là bạn còn ghi nhớ điều này thì sử dụng một cấu hình phím khác sẽ có tác động tối thiểu đến kỹ năng của bạn
 
-
 ~~6
 1: (Sea: Nói thật ra là khi mình dịch tới đoạn này thì mình khá là bí không biết dùng từ này cho hợp với "key config". Cứ việc thoải mái sửa nếu bạn biết từ nào hay hơn)
 
@@ -125,9 +124,9 @@ Several main factors that may affect handling:
 (7) Muscle fatigue, response, and decreases in coordination abilities. Have some rest and come back later or in a few days.
 
 # piece_shape
-@ title Pieces' Shapes
-@ titleFull Tetrominos' Shapes
-In standard Tetris games, all the blocks used are tetrominos, i.e., Blocks that are linked by four minoes side-by-side.
+@ title Màu gạch
+@ titleFull Màu của Techmino
+Trong các trò chơi xếp gạch hiện đại, các tetromino, i.e., Những viên gạch có 4 ô.
 
 There are seven kinds of tetrominos in total when allowing rotations and disallowing reflections. These tetrominos are named by the letter in the alphabet that they resemble. They are Z, S, J, L, T, O, and I. See the “Shape & Name” entry for more information.
 
@@ -318,7 +317,7 @@ A rule where floating or otherwise disconnected blocks may fall down after clear
 "Cascade" is often used to refer the rule itself, due to the potetial confusion between "gravity" and "falling speed".
 
 #mph
-@ title MPH
+@ title MPH 
 @ titleFull Memoryless, Previewless, Holdless
 A combination of rules: memoryless (pure random piece sequence), previewless (no Next queue), and holdless (no Hold queue).
 
