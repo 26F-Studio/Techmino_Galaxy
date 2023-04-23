@@ -1,8 +1,7 @@
 -- Black-White grid
-local gc=love.graphics
-local gc_clear,gc_scale=gc.clear,gc.scale
-local gc_setColor=gc.setColor
-local gc_rectangle=gc.rectangle
+local gc_clear,gc_scale=GC.clear,GC.scale
+local gc_setColor=GC.setColor
+local gc_rectangle=GC.rectangle
 
 local sin=math.sin
 local ceil=math.ceil
