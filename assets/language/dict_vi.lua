@@ -88,9 +88,9 @@ Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm 
 @ contentSize 20
 Dưới đây là vài lời khuyên hữu ích khi bạn gán phím
 
-1.  Tránh việc để một ngón tay của bạn phải nhấn nhiều phím mà bạn muốn nhấn cùng nhau - Lấy ví dụ nè: bạn có lẽ sẽ không cần phải nhấn nhiều phím xoay cùng nhau đâu! Hãy thử gán mỗi phím mỗi ngón tay đi.
+1.  Một ngón tay chỉ nên thực hiện một chức năng khác nhau. Ví dụ như: 1 ngón cho sang trái, 1 ngón cho sang phải, 1 ngón cho phím xoay phải, 1 ngón cho rơi mạnh
 ~~
-2.  Trừ khi bạn tự tin với ngót út của mình, thì hãy tránh gán ngón này với bất cứ phím nào! Thường thì ngón trỏ và ngón giữa là hai ngón nhanh nhẹn nhất, nhưng bạn cũng có thể thoải mái tìm hiểu xem các ngón tay của bạn nhanh chậm thế nào.
+2.  Trừ khi bạn tự tin với ngót út của mình, thì không nên để ngóm tay này làm bất kì chức năng nào! Hơn hơn hết, nên xài ngón trỏ và ngón giữa vì hai ngón này là nhanh nhẹn nhất, nhưng bạn cũng có thể thoải mái tìm hiểu xem các ngón tay của mình nhanh chậm thế nào, mạnh yếu ra sao.
 ~~
 3.  Không nhất thiết phải sao chép cấu hình phím của người khác, vì không ai giống ai. Thay vào đó hãy chỉnh theo cách của bạn, miễn là bạn chơi thoải nái là được.
 
@@ -108,16 +108,14 @@ Những yếu tố ảnh hưởng tới việc xếp gạch của bạn:
 (7) Muscle fatigue, response, and decreases in coordination abilities. Have some rest and come back later or in a few days.
 
 # piece_shape
-@ title Gạch là gì?
-@ titleFull Là Tetromino đấy!
-Trong các trò xếp gạch hiện đại, các Tetromino, kiểu như… những viên gạch (có diện tích là) 4 ô.
+@ title Những miếng gạch
+Trong các trò xếp gạch, các viên gạch là những khối có 4 ô liên kết với nhau
 
-Tổng cộng có bảy Tetromino nếu chỉ cho phép quay và không cho phép lật ngược. Những tetrominos này được đặt tên theo chữ cái trong bảng chữ cái giống với hình dáng của chúng. Đó là Z, S, J, L, T, O
+Mỗi trò xếp gạch đều có tổng cộng có bảy viên gạch khác nhau. Chúng được đặt tên theo chữ cái trong bảng chữ cái giống với hình dáng của chúng. Đó là Z, S, J, L, T, O
 
 # piece_color
 @ title Màu của gạch
-@ titleFull Màu của Tetromino
-Thông thường, các tetromino có cùng hình dáng sẽ cùng có màu. Nó sẽ giúp bạn phân biệt dễ dàng phân biệt chúng và nhớ lâu hơn
+Thông thường, các viên gạch có cùng hình dáng sẽ cùng có màu. Nó sẽ giúp bạn phân biệt dễ dàng phân biệt chúng và nhớ lâu hơn
 
 # piece_direction
 @ title Pieces' Directions
@@ -126,11 +124,11 @@ Usually, tetrominos spawn with a consistent rotation state (in other words, it w
 
 # next
 @ title Next
-Hiện thị nhưng viên gạch sẽ lần lượt rơi xuống. Có một kỹ năng quan trọng đó là "Lên kế hoạch đặt gạch tiếp theo như thế nào?"
+Hiển thị nhưng viên gạch sẽ lần lượt rơi xuống. Có thể sử dụng ô này để lên kế hoạch trước cách xếp một cách tốt hơn. 
 
 # hold
 @ title Hold
-Lưu gạch hiện tại để dùng sau và lấy gạch đang giữ ra dùng (hoặc là lấy gạch tiếp theo, nếu chưa giữ gạch nài trước đó). Cho phép bạn đổi thứ tự gạch sẽ xuất hiện. Có thể dùng cho chiến lược của bạn, hay đơn giản hơn là thử gạch khác nếu gạch hiện tại không có chỗ đặt lý tưởng.
+Lưu gạch hiện tại để dùng lại sau và lấy gạch đang giữ ra dùng (hoặc là lấy gạch tiếp theo, nếu chưa giữ gạch nào trước đó). Cho phép bạn đổi thứ tự gạch sẽ xuất hiện. Có thể dùng một cách chiến lược, hay đơn giản hơn là thử gạch khác nếu gạch hiện tại không có chỗ đặt lý tưởng.
 
 # clear
 @ title Xóa mấy hàng?
@@ -321,7 +319,9 @@ Usually Finesse only deals with situations where you can directly drop the piece
 # hypertap
 @ title Hypertap
 @ titleFull Hypertap (Nhấn liên tục)
-Đề cập tới một kỹ năng là khi bạn "rung" tay liên tục để nhấn liên tục làm tốc độ di chuyển sang trái và phải nhanh hơn
+Đề cập tới một kỹ năng là khi bạn rung tay liên tục để nhấn liên tục làm tốc độ di chuyển nhanh hơn
+
+Bây giờ các trò xếp gạch có DAS thấp hơn nhiều so với xếp gạch ngày xưa rồi (DAS ngày xưa cao chót vót lắm) nên bạn không cần phải Hypertap đâu, nhấn giữ là đủ rồi.
 
 # 26f_studio
 @ title 26F Studio
