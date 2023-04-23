@@ -47,7 +47,7 @@ Zictionary sẽ dạy cho bạn mọi thứ về xếp gạch
 # aboutDict_hidden
 @ title Cái gì đây?
 Nó sẽ dạy cho bạn mọi thứ về xếp gạch.
-... Khoan, chờ khoảng chừng là 2 giây!
+... Khoan, chờ khoảng chừng 2 giây!
 Bạn vừa nhấn phím tắt à? Ngon lành cành đào rồi đây
 
 # setting_out
@@ -72,25 +72,15 @@ B. Efficiency & Speed (Hiệu quả & Tốc độ)
     B2. Nên sử dụng 2 (hoặc 3, tùy game) phím xoay thay vì nhấn 1 phím xoay liên tục trong thời gian dài. Bởi vì làm như vậy trong thời gian dài sẽ làm bạn chậm và làm cho bạn dễ rơi vào trạng thái bị động
     B3. Đừng lo lắng về tốc độ khi bạn mới tập chơi Finesse, đây là chuyện bình thường. Hơn nữa bạn có thể tập chơi nhanh hơn một khi bạn đã quen tay — việc này không khó đâu!
 ~~
-C. Practice (Luyện tập)¹
+C. Practice (Luyện tập)
     C1. Hoàn thành chế độ "40 hàng"
     C2. Hoàn thành chế độ "40 hàng" mà không dùng HOLD
     C3. Hoàn thành chế độ "40 hàng" mà chỉ được làm Techrash.
     C4. Hoàn thành chế độ "40 hàng" mà chỉ được làm Techrash và không được dùng HOLD
 
-Nhóm C rất linh động, bạn có thể điều chỉnh độ khó dựa trên tình hình/điều kiện của bạn (ví dụ như "không làm bạn chơi quá chậm"²)
+Nhóm C rất linh động, bạn có thể điều chỉnh độ khó dựa trên tình hình/điều kiện của bạn (ví dụ như "không làm bạn chơi quá chậm")
 ~~
-Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm A³, đây là một kỹ năng tối quan trọng trong bất kỳ tựa game xếp gạch nào; và bạn sẽ có thể dần dần làm chủ bất kỳ chế độ nào, lúc đó chỉ cần nhìn lướt qua NEXT là đủ rồi.
-
-~~6
-1: Đề mục này do dịch thuật viên đặt, bản gốc vẫn ghi là Stacking (không hiểu tại sao nhóm A và C bị trùng tên)
-2: Câu gốc là: like what does “without losing too much speed” means to you (nó giống như việc câu "không làm mất tốc độ của bạn" có ý nghĩa như thế nào đối với bạn)
-3: Bản gốc ghi là phần A1, nhưng có người bảo nên là nhóm A. (Có thể thay đổi trong tương lai)
-
--- Changes:
--- 1: This title is set by the translator, the original still says Stacking (don't understand why groups A and C have the same name)
--- 2: The original sentence is: like what does “without losing too much speed” means to you <P/s: after that it is the pure translation>
--- 3: The original said it was part A1, but someone said it should be group A. (May be changed in the future)
+Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm A, đây là một kỹ năng tối quan trọng trong bất kỳ tựa game xếp gạch nào; và bạn sẽ có thể dần dần làm chủ bất kỳ chế độ nào, lúc đó chỉ cần nhìn lướt qua NEXT là đủ rồi.
 
 # keybinding
 @ title Gán phím
@@ -145,18 +135,12 @@ Lưu gạch hiện tại để dùng sau và lấy gạch đang giữ ra dùng (
 # clear
 @ title Xóa mấy hàng?
 @ titleFull Single, Double, Triple và Techrash
--- @ titleFull (Đơn, Đôi, Tam, Tứ)¹
 Đề cập tới số hàng bạn xóa sau khi bạn đặt gạch
 
 Single = Xóa 1 hàng.
 Double = Xóa 2 hàng.
 Triple = Xóa 3 hàng.
 Techrash = Xóa 4 hàng.
--- Techrash² = Xóa 4 hàng.
---
--- ~~6
--- 1. Có một số game sẽ dịch như thế, nhưng cũng sẽ có game không dịch. Lấy ví dụ trong Tetra Legend (do Sạc Nguyễn dịch) có dịch Single, Double, Triple, Tetra tương ứng thành Đơn, Đôi, Tam, Tứ. Nhưng trong Techmino Galaxy (và Techmino), 4 từ Single, Double, Triple và Techrash được giữ nguyên.
--- 2. Không phải lúc nào xóa 4 hàng cũng là Techrash
 
 # clear_big
 @ title Bigger Line Clears
@@ -172,7 +156,7 @@ Refers to making at least two special line clears (usually this refers to Techra
 @ title All Clear
 @ titleFull All Clear (AC)
 Tên khác Perfect Clear (PC).
-Xóa sajcb toàn bộ gạch ở trong bảng.
+Xóa sạch toàn bộ gạch ở trong bảng.
 
 # half_clear
 @ title Half Clear
@@ -245,7 +229,7 @@ A skilled player would tune DAS to be as short as possible while still being abl
 
 # misaction
 @ title Mis-Action
-Làm một hành động nào đó nhưng bị lỗi/sai sót. Có 2 kiểu: mis-drop (thả gạch nhầm chỗ/thời điểm) và mis-hold (giữ nhầm gạch)
+Làm một hành động nào đó nhưng bị lỗi/sai sót. Có 2 kiểu: mis-drop (thả gạch nhầm chỗ/sai thời điểm) và mis-hold (vô tình giữ/đổi gạch)
 
 # gravity
 @ title Falling Speed
@@ -257,7 +241,7 @@ When it gets fast, the commonly used unit is G, referring to how many blocks the
 
 # 20g
 @ title 20G
-Tốc độ nhanh nhất trong các trò xếp gạch hiện đại. Trong các chế độ xài tốc độ 20G, các miếng gạch thay vì rơi từ từ, nó sẽ xuất hiện ngay lập tức ở cuối bảng. Việc này đôi khi sẽ làm bạn không thể di chuyển được theo phương ngang như ý bạn muốn; bởi vì gạch đôi khi cũng không thể leo qua chỗ lồi lõm hoặc ra khỏi hố sâu. Bạn có thể tìm hiểu thêm về đơn vị "G" trong mục "Tốc độ rơi"
+Tốc độ nhanh nhất trong các trò xếp gạch hiện đại. Trong các chế độ xài tốc độ 20G, các viên gạch thay vì rơi từ từ, nó sẽ xuất hiện ngay lập tức ở đáy bảng. Việc này đôi khi sẽ làm bạn không thể di chuyển được theo phương ngang như ý bạn muốn; bởi vì gạch đôi khi cũng không thể leo qua chỗ lồi lõm hoặc ra khỏi hố sâu. Bạn có thể tìm hiểu thêm về đơn vị "G" trong mục "Tốc độ rơi"
 
 #lock_delay
 @title Lockdown Delay
