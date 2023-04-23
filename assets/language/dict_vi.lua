@@ -321,7 +321,7 @@ Usually Finesse only deals with situations where you can directly drop the piece
 @ titleFull Hypertap (Nhấn liên tục)
 Đề cập tới một kỹ năng là khi bạn rung tay liên tục để nhấn liên tục làm tốc độ di chuyển nhanh hơn
 
-Bây giờ các trò xếp gạch có DAS thấp hơn nhiều so với xếp gạch ngày xưa rồi (DAS ngày xưa cao chót vót lắm) nên bạn không cần phải Hypertap đâu, nhấn giữ là đủ rồi.
+Bây giờ các trò xếp gạch có DAS thấp hơn nhiều so với xếp gạch ngày xưa rồi nên bạn không cần phải Hypertap đâu, nhấn giữ là đủ rồi. Nhưng nếu bạn chơi xếp gạch cổ điển (Classic Tetris) thì cứ dùng đi.
 
 # 26f_studio
 @ title 26F Studio
