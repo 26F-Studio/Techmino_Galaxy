@@ -115,7 +115,7 @@ Mỗi trò xếp gạch đều có tổng cộng có bảy viên gạch khác nh
 
 # piece_color
 @ title Màu của gạch
-Thông thường, các viên gạch có cùng hình dáng sẽ cùng có màu. Nó sẽ giúp bạn phân biệt dễ dàng phân biệt chúng và nhớ lâu hơn
+Thông thường, các viên gạch có cùng hình dáng sẽ cùng có màu. Nó sẽ giúp bạn dễ dàng phân biệt và nhớ chúng lâu hơn
 
 # piece_direction
 @ title Pieces' Directions
@@ -151,9 +151,9 @@ While normally you can only clear 4 lines at a time (Techrash), there are modes 
 Refers to making at least two special line clears (usually this refers to Techrashes and Spin line clears) without making regular line clears in between.
 
 # all_clear
-@ title All Clear
-@ titleFull All Clear (AC)
-Tên khác Perfect Clear (PC).
+@ title Perfect Clear
+@ titleFull Perfect Clear (PC)
+Tên khác: All Clear (AC).
 Xóa sạch toàn bộ gạch ở trong bảng.
 
 # half_clear
