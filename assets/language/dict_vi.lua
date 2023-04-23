@@ -61,11 +61,11 @@ Bạn có thể chỉnh một đống thứ ở đây!
 Cảm ơn bạn đã tải và chơi Techmino!
 ... Hả? Đây là lần đầu bạn chơi game xếp gạch á? Nếu vậy thì...
 Đây là một vài thứ mà bạn nên làm mỗi khi chơi, chúng được sắp xếp thành một nhóm. Tuy xếp thành nhóm, bạn vẫn nên làm cả ba nhóm cùng lúc thay vì làm từng cái một.
-~~
+
 A. Stacking (Xếp gạch)
     A1. Suy nghĩ kỹ trước khi đặt gạch. Chưa vừa ý? Suy nghĩ thêm lần nữa.
     A2. Hãy xếp gạch càng phẳng càng tốt để bạn có thể ra quyết định đặt gạch dễ dàng hơn.
-    A3. Lập chiến lược dựa trên NEXT, và nếu có thể thì hãy tận dụng HOLD để giữ được thể đẹp. 
+    A3. Lên kế hoạc trước cách xếp, hãy tận dụng tối đa NEXT và HOLD để giữ được thể đẹp. 
 ~~
 B. Efficiency & Speed (Hiệu quả & Tốc độ)
     B1. Trước mỗi lần đặt gạch, hãy suy nghĩ xem bạn sẽ đặt gạch ở đâu? Bấm những phím nào để gạch tới chỗ đó và đứng đúng tư thế? Thay vì dựa dẫm vào gạch ma quá nhiều
@@ -77,7 +77,7 @@ C. Practice (Luyện tập)¹
     C2. Hoàn thành chế độ "40 hàng" mà không dùng HOLD
     C3. Hoàn thành chế độ "40 hàng" mà chỉ được làm Techrash.
     C4. Hoàn thành chế độ "40 hàng" mà chỉ được làm Techrash và không được dùng HOLD
-~~
+
 Nhóm C rất linh động, bạn có thể điều chỉnh độ khó dựa trên tình hình/điều kiện của bạn (ví dụ như "không làm bạn chơi quá chậm"²)
 ~~
 Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm A³, đây là một kỹ năng tối quan trọng trong bất kỳ tựa game xếp gạch nào; và bạn sẽ có thể dần dần làm chủ bất kỳ chế độ nào, lúc đó chỉ cần nhìn lướt qua NEXT là đủ rồi.
@@ -102,19 +102,13 @@ Dưới đây là vài lời khuyên hữu ích khi bạn gán phím
 ~~
 2.  Trừ khi bạn tự tin với ngót út của mình, thì hãy tránh gán ngón này với bất cứ phím nào! Thường thì ngón trỏ và ngón giữa là hai ngón nhanh nhẹn nhất, nhưng bạn cũng có thể thoải mái tìm hiểu xem các ngón tay của bạn nhanh chậm thế nào.
 ~~
-3.  Không nhất thiết phải sao chép cấu hình phím¹ của người khác. Mỗi người là mỗi cá tính khác biệt, và không ai giống ai; và miễn là bạn còn ghi nhớ điều này thì sử dụng một cấu hình phím khác sẽ có tác động tối thiểu đến kỹ năng của bạn
-
-~~6
-1: (Sea: Nói thật ra là khi mình dịch tới đoạn này thì mình khá là bí không biết dùng từ này cho hợp với "key config". Cứ việc thoải mái sửa nếu bạn biết từ nào hay hơn)
-
--- Notice:
--- 1: (Sea: To be honest, when I got to this part, I was quite confused as to what word to use for "key config". Feel free to edit it if you know a better word)
+3.  Không nhất thiết phải sao chép cấu hình phím của người khác, vì không ai giống ai. Thay vào đó hãy chỉnh theo cách của bạn, miễn là bạn chơi thoải nái là được.
 
 # handling
 @ title Handling
-@ titleFull Handling Suggestions
+@ titleFull Mẹo khi xử lý gạch
 @ contentSize 25
-Several main factors that may affect handling:
+Những yếu tố ảnh hưởng tới việc xếp gạch của bạn:
 (1) Input delay, which could be affected by device configuration or condition. Restart the game or change your device can probably fix it.
 (2) Unstable programming or faulty designs. It could be alleviated by lowering the effect settings.
 (3) Designed on purpose. Adaptation might help.
@@ -124,16 +118,16 @@ Several main factors that may affect handling:
 (7) Muscle fatigue, response, and decreases in coordination abilities. Have some rest and come back later or in a few days.
 
 # piece_shape
-@ title Màu gạch
-@ titleFull Màu của Techmino
-Trong các trò chơi xếp gạch hiện đại, các tetromino, i.e., Những viên gạch có 4 ô.
+@ title Gạch là gì?
+@ titleFull Là Tetromino đấy!
+Trong các trò xếp gạch hiện đại, các Tetromino, kiểu như… những viên gạch (có diện tích là) 4 ô.
 
-There are seven kinds of tetrominos in total when allowing rotations and disallowing reflections. These tetrominos are named by the letter in the alphabet that they resemble. They are Z, S, J, L, T, O, and I. See the “Shape & Name” entry for more information.
+Tổng cộng có bảy Tetromino nếu chỉ cho phép quay và không cho phép lật ngược. Những tetrominos này được đặt tên theo chữ cái trong bảng chữ cái giống với hình dáng của chúng. Đó là Z, S, J, L, T, O
 
 # piece_color
-@ title Pieces' Colors
-@ titleFull Tetrominos' Colors
-Usually, tetrominos with the same shape are given the same color. This helps you to distinguish and remember the tetrominoes easier.
+@ title Màu của gạch
+@ titleFull Màu của Tetromino
+Thông thường, các tetromino có cùng hình dáng sẽ cùng có màu. Nó sẽ giúp bạn phân biệt dễ dàng phân biệt chúng và nhớ lâu hơn
 
 # piece_direction
 @ title Pieces' Directions
@@ -142,21 +136,27 @@ Usually, tetrominos spawn with a consistent rotation state (in other words, it w
 
 # next
 @ title Next
-Displays the next few pieces to come. It is an essential skill to plan ahead where to place blocks in the Next queue to improve your Tetris skill.
+Hiện thị nhưng viên gạch sẽ lần lượt rơi xuống. Có một kỹ năng quan trọng đó là "Lên kế hoạch đặt gạch tiếp theo như thế nào?"
 
 # hold
 @ title Hold
-Save your current piece for later use, and take out a previously held piece (or next piece in the next queue, if no piece was held) to place instead. Enables placing pieces in a different order. Can be used strategically, or simply to try another piece when the current piece isn't ideal.
+Lưu gạch hiện tại để dùng sau và lấy gạch đang giữ ra dùng (hoặc là lấy gạch tiếp theo, nếu chưa giữ gạch nài trước đó). Cho phép bạn đổi thứ tự gạch sẽ xuất hiện. Có thể dùng cho chiến lược của bạn, hay đơn giản hơn là thử gạch khác nếu gạch hiện tại không có chỗ đặt lý tưởng.
 
 # clear
-@ title Line Clears
-@ titleFull Singles, Doubles, Triples and Techrashes
-Refer to the number of lines you clear at once, after dropping a piece.
+@ title Xóa mấy hàng?
+@ titleFull Single, Double, Triple và Techrash
+-- @ titleFull (Đơn, Đôi, Tam, Tứ)¹
+Đề cập tới số hàng bạn xóa sau khi bạn đặt gạch
 
-Single = clear 1 line.
-Double = clear 2 lines.
-Triple = clear 3 lines.
-Techrash = clear 4 lines.
+Single = Xóa 1 hàng.
+Double = Xóa 2 hàng.
+Triple = Xóa 3 hàng.
+Techrash = Xóa 4 hàng.
+-- Techrash² = Xóa 4 hàng.
+--
+-- ~~6
+-- 1. Có một số game sẽ dịch như thế, nhưng cũng sẽ có game không dịch. Lấy ví dụ trong Tetra Legend (do Sạc Nguyễn dịch) có dịch Single, Double, Triple, Tetra tương ứng thành Đơn, Đôi, Tam, Tứ. Nhưng trong Techmino Galaxy (và Techmino), 4 từ Single, Double, Triple và Techrash được giữ nguyên.
+-- 2. Không phải lúc nào xóa 4 hàng cũng là Techrash
 
 # clear_big
 @ title Bigger Line Clears
@@ -171,8 +171,8 @@ Refers to making at least two special line clears (usually this refers to Techra
 # all_clear
 @ title All Clear
 @ titleFull All Clear (AC)
-Also known as Perfect Clear (PC).
-Clear all minoes on the field.
+Tên khác Perfect Clear (PC).
+Xóa sajcb toàn bộ gạch ở trong bảng.
 
 # half_clear
 @ title Half Clear
@@ -245,7 +245,7 @@ A skilled player would tune DAS to be as short as possible while still being abl
 
 # misaction
 @ title Mis-Action
-Doing an action by mistake. There are two types, mis-drop and mis-hold.
+Làm một hành động nào đó nhưng bị lỗi/sai sót. Có 2 kiểu: mis-drop (thả gạch nhầm chỗ/thời điểm) và mis-hold (giữ nhầm gạch)
 
 # gravity
 @ title Falling Speed
