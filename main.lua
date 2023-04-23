@@ -171,27 +171,6 @@ IMG.init{
         },
         gem={},
     },
-    miya={
-        miyaCH1='assets/image/characters/miya1.png',
-        miyaCH2='assets/image/characters/miya2.png',
-        miyaCH3='assets/image/characters/miya3.png',
-        miyaCH4='assets/image/characters/miya4.png',
-        heart='assets/image/characters/miya_heart.png',
-        glow='assets/image/characters/miya_glow.png',
-    },
-    monoCH='assets/image/characters/mono.png',
-    xiaoyaCH='assets/image/characters/xiaoya.png',
-    xiaoyaOmino='assets/image/characters/xiaoya_Omino.png',
-    mikuCH='assets/image/characters/miku.png',
-    z={
-        character='assets/image/characters/z_character.png',
-        screen1='assets/image/characters/z_screen1.png',
-        screen2='assets/image/characters/z_screen2.png',
-        particle1='assets/image/characters/z_particle1.png',
-        particle2='assets/image/characters/z_particle2.png',
-        particle3='assets/image/characters/z_particle3.png',
-        particle4='assets/image/characters/z_particle4.png',
-    },
     title_techmino='assets/image/title_techmino.png',
 }
 SFX.init((function()
@@ -203,8 +182,8 @@ SFX.init((function()
     end
     return L
 end)())
-SFX.loadSample{name='bass',path='assets/sample/bass',base='A2'}-- A2~A4
-SFX.loadSample{name='lead',path='assets/sample/lead',base='A3'}-- A3~A5
+SFX.loadSample{name='bass',path='assets/sample/bass',base='A2'}-- A2~C5
+SFX.loadSample{name='lead',path='assets/sample/lead',base='A3'}-- A3~C6
 
 SFX.load('assets/sfx/')
 BGM.init((function()

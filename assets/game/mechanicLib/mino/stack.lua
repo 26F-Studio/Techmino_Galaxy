@@ -117,6 +117,7 @@ function stack.event_afterLock(P)
             if not P.modeData.zoneTextHeight then P.modeData.zoneTextHeight=P.modeData.zoneTextHeight0 end
             SFX.playSample('bass',(20-md.zone_lines)/10,scale[md.zone_lines])
             SFX.playSample('lead',min(md.zone_lines/10,1),scale[md.zone_lines])
+            -- or 9.5-tone scale
         end
     end
 end

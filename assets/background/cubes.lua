@@ -1,8 +1,7 @@
 -- Flying cubes
-local gc=love.graphics
-local gc_clear=gc.clear
-local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
-local gc_rectangle=gc.rectangle
+local gc_clear=GC.clear
+local gc_setColor,gc_setLineWidth=GC.setColor,GC.setLineWidth
+local gc_rectangle=GC.rectangle
 
 local rnd=math.random
 local ins,rem=table.insert,table.remove
