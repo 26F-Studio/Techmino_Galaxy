@@ -564,12 +564,16 @@ function MP:freshDelay(reason)-- reason can be 'move' or 'drop' or 'spawn'
 end
 function MP:freshNextQueue()
     while #self.nextQueue<max(self.settings.nextSlot,1) do
-        local shapeID=self:seqGen()
-        if shapeID then
-            if type(shapeID)=='number' then
-                self:pushNext(shapeID)
+        local shape=self:seqGen()
+        if type(shape)=='number' then
+            self:pushNext(shape)
+        elseif type(shape)=='string' then
+            self:pushNext(shape)
+        elseif type(shape)=='table' then
+            if shape[1] then
+                self:pushNext(shape)
             else
-                break
+                ins(self.nextQueue,self:getMino(shape))
             end
         else
             break
@@ -639,33 +643,44 @@ function MP:popNext(ifHold)
         self:minoDropped()
     end
 end
-function MP:getMino(shapeID)
-    assert(type(shapeID)=='number',"shapeID must be number")
+function MP:getMino(shapeData)
+    local shapeID,shapeName,shapeMat,shapeColor
+    if type(shapeData)=='table' then
+        shapeID=shapeData.id
+        shapeName=shapeData.name or "?"
+        shapeMat=TABLE.shift(shapeData.shape)
+        shapeColor=shapeData.color or self:random(64)
+    else
+        shapeID=shapeData
+        assert(type(shapeID)=='number',"shapeID must be number")
+        shapeName=Minoes[shapeID].name
+        shapeMat=TABLE.shift(Minoes[shapeID].shape)
+        shapeColor=defaultMinoColor[shapeID]
+    end
     self.pieceCount=self.pieceCount+1
-    local shape=TABLE.shift(Minoes[shapeID].shape)
 
     -- Generate cell matrix from bool matrix
-    for y=1,#shape do for x=1,#shape[1] do
-        shape[y][x]=shape[y][x] and {
+    for y=1,#shapeMat do for x=1,#shapeMat[1] do
+        shapeMat[y][x]=shapeMat[y][x] and {
             id=self.pieceCount,
-            color=defaultMinoColor[shapeID],
+            color=shapeColor,
             conn={},
         }
     end end
 
     -- Connect cells
-    for y=1,#shape do for x=1,#shape[1] do
-        if shape[y][x] then
-            local L=shape[y][x].conn
+    for y=1,#shapeMat do for x=1,#shapeMat[1] do
+        if shapeMat[y][x] then
+            local L=shapeMat[y][x].conn
             local b
-            b=shape[y]   if b and b[x-1] then L[b[x-1]]=true end
-            b=shape[y]   if b and b[x+1] then L[b[x+1]]=true end
-            b=shape[y-1] if b and b[x]   then L[b[x]  ]=true end
-            b=shape[y+1] if b and b[x]   then L[b[x]  ]=true end
-            b=shape[y-1] if b and b[x-1] then L[b[x-1]]=true end
-            b=shape[y-1] if b and b[x+1] then L[b[x+1]]=true end
-            b=shape[y+1] if b and b[x-1] then L[b[x-1]]=true end
-            b=shape[y+1] if b and b[x+1] then L[b[x+1]]=true end
+            b=shapeMat[y]   if b and b[x-1] then L[b[x-1]]=true end
+            b=shapeMat[y]   if b and b[x+1] then L[b[x+1]]=true end
+            b=shapeMat[y-1] if b and b[x]   then L[b[x]  ]=true end
+            b=shapeMat[y+1] if b and b[x]   then L[b[x]  ]=true end
+            b=shapeMat[y-1] if b and b[x-1] then L[b[x-1]]=true end
+            b=shapeMat[y-1] if b and b[x+1] then L[b[x+1]]=true end
+            b=shapeMat[y+1] if b and b[x-1] then L[b[x-1]]=true end
+            b=shapeMat[y+1] if b and b[x+1] then L[b[x+1]]=true end
         end
     end end
 
@@ -673,8 +688,8 @@ function MP:getMino(shapeID)
         id=self.pieceCount,
         shape=shapeID,
         direction=0,
-        name=Minoes[shapeID].name,
-        matrix=shape,
+        name=shapeName,
+        matrix=shapeMat,
     }
     mino._origin=TABLE.copy(mino,0)
     return mino
@@ -855,8 +870,9 @@ function MP:moveUp()
 end
 function MP:rotate(dir,ifInit)
     if not self.hand then return end
-    local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
     if dir~='R' and dir~='L' and dir~='F' then error("WTF why dir isn't R/L/F ("..tostring(dir)..")") end
+    local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
+    if not minoData then return end
 
     if minoData.rotate then-- Custom rotate function
         minoData.rotate(self,dir,ifInit)
@@ -1599,11 +1615,13 @@ function MP:render()
 
                     local RS=minoRotSys[settings.rotSys]
                     local minoData=RS[self.hand.shape]
-                    local state=minoData[self.hand.direction]
-                    local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
-                    if centerPos then
-                        gc.setColor(1,1,1,.8)
-                        GC.mDraw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40,nil,1.26)
+                    if minoData then
+                        local state=minoData[self.hand.direction]
+                        local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
+                        if centerPos then
+                            gc.setColor(1,1,1,.8)
+                            GC.mDraw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40,nil,1.26)
+                        end
                     end
                     gc.translate(-movingX,-droppingY)
                 end
