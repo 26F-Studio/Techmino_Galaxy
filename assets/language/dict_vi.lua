@@ -115,7 +115,7 @@ Mỗi trò xếp gạch đều có tổng cộng có bảy viên gạch khác nh
 
 # piece_color
 @ title Màu của gạch
-Thông thường, các viên gạch có cùng hình dáng sẽ cùng có màu. Nó sẽ giúp bạn dễ dàng phân biệt và nhớ chúng lâu hơn
+Thông thường, các viên gạch có cùng hình dáng sẽ có cùng màu. Nó sẽ giúp bạn dễ dàng phân biệt và nhớ chúng lâu hơn
 
 # piece_direction
 @ title Pieces' Directions
@@ -141,8 +141,8 @@ Triple = Xóa 3 hàng.
 Techrash = Xóa 4 hàng.
 
 # clear_big
-@ title Bigger Line Clears
-@ titleFull Line Clears Beyond Techrashes
+@ title Xóa >4 hàng?
+@ titleFull Xóa nhiều hơn cả Techrash?
 While normally you can only clear 4 lines at a time (Techrash), there are modes with special rules that enable you to clear more lines at once. For example, clearing 5 lines is called Pentacrash, and clearing 6 lines is called Hexacrash.
 
 # b2b
@@ -159,8 +159,8 @@ Xóa sạch toàn bộ gạch ở trong bảng.
 # half_clear
 @ title Half Clear
 @ titleFull Half Clear (HC)
-An extension to All Clear, refers to All Clears "with remaining blocks below the cleared lines."
-As a special case, if the line clear is a Single, then there cannot be player-placed blocks remaining.
+Một biến thể của All Clear, Half Clear chính là All Clear "nhưng vẫn còn gạch ở dưới hàng vừa xóa"
+Trong trường hợp đặc biệt, nếu xóa một hàng, thì trẻn bảng không được còn gạch do người chơi đặt.
 
 # rotation_system
 @ title Rotation Systems
