@@ -27,6 +27,21 @@ function sequence.bag7b1(P)
     end
 end
 
+function sequence.bag7steal1(P)
+    local l={}
+    local victim={}
+    for i=1,7 do victim[i]=i end
+    rem(victim,P:random(7))
+    while true do
+        if not l[1] then
+            l,victim=victim,l
+            for i=1,7 do victim[i]=i end
+            ins(l,rem(victim,P:random(#victim)))
+        end
+        coroutine.yield(rem(l,P:random(#l)))
+    end
+end
+
 function sequence.bag12_drought(P)-- bag14 without I piece
     local l={}
     while true do
