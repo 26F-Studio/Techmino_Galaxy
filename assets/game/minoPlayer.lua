@@ -649,7 +649,6 @@ function MP:getMino(shapeID)
         shape[y][x]=shape[y][x] and {
             id=self.pieceCount,
             color=defaultMinoColor[shapeID],
-            alpha=1,
             conn={},
         }
     end end

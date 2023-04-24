@@ -37,10 +37,11 @@ function S.drawFieldCells(F,y)
         if C then
             local bx,by=(x-1)*40,-y*40
             local r,g,b=unpack(ColorTable[C.color])
-            gc_setColor(r,g,b,C.alpha)
+            local a=C.alpha or 1
+            gc_setColor(r,g,b,a)
             gc_rectangle('fill',bx,by,40,40)
 
-            gc_setColor(r*.5,g*.5,b*.5,C.alpha)
+            gc_setColor(r*.5,g*.5,b*.5,a)
             -- Reuse local var g
             g=C.conn
             if g then
