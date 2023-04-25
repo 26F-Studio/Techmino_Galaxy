@@ -115,7 +115,7 @@ function stack.event_afterLock(P)
             md.zone_highestLine=md.zone_highestLine+1
             md.zoneTextHeight0=400-(md.zone_highestLine+.5)*(400/P.settings.fieldW)/2
             if not P.modeData.zoneTextHeight then P.modeData.zoneTextHeight=P.modeData.zoneTextHeight0 end
-            SFX.playSample('bass',(20-md.zone_lines)/10,scale[md.zone_lines])
+            SFX.playSample('bass',min((20-md.zone_lines)/10,1),scale[md.zone_lines])
             SFX.playSample('lead',min(md.zone_lines/10,1),scale[md.zone_lines])
             -- or 9.5-tone scale
         end
