@@ -307,8 +307,8 @@ do-- hidden
         GC.mStr(P.modeData.point,-300,-90)
         gc.rectangle('fill',-375,-2,150,4)
         GC.mStr(P.modeData.target,-300,-5)
-        GC.setAlpha(.626)
-        GC.mStr(P.modeData.point,-300+6*math.sin(P.time),-90)
+        GC.setAlpha(.7023)
+        GC.mStr(P.modeData.point,-300+10*math.sin(P.time),-90)
     end
 end
 
