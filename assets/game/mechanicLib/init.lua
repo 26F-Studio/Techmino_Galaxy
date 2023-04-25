@@ -3,6 +3,7 @@ return {
         -- Basic
         statistics=require'assets.game.mechanicLib.mino.statistics',
         sequence=require'assets.game.mechanicLib.mino.sequence',
+        attackSys=require'assets.game.mechanicLib.mino.attackSys',
         misc=require'assets.game.mechanicLib.mino.misc',
 
         -- Mode
@@ -21,7 +22,10 @@ return {
     },
     puyo={
         -- Basic
+        statistics=require'assets.game.mechanicLib.puyo.statistics',
         sequence=require'assets.game.mechanicLib.puyo.sequence',
+        attackSys=require'assets.game.mechanicLib.puyo.attackSys',
+        misc=require'assets.game.mechanicLib.puyo.misc',
     },
     gem={},
 }
