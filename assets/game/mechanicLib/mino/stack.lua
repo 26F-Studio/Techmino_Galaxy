@@ -21,6 +21,8 @@ local lineFont={
 
 local stack={}
 
+---@param fall? boolean
+---@param autoquit? boolean
 function stack.switch_auto(P,fall,autoquit)
     if fall==nil then fall=true end
     if autoquit==nil then autoquit=true end

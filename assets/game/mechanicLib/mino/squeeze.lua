@@ -2,21 +2,28 @@ local floor,clamp=math.floor,MATH.clamp
 
 local squeeze={}
 
-function squeeze.switch_auto(P,...)
-    squeeze.switch(P,...)
+---@param width? number
+---@param wait? number
+---@param speed? number
+function squeeze.switch_auto(P,width,wait,speed)
+    squeeze.switch(P,width,wait,speed)
     local setCode,setEvent=P.modeData.inSqueeze and P.addCodeSeg or P.delCodeSeg,P.modeData.inSqueeze and P.addEvent or P.delEvent
     setCode(P,'extraSolidCheck',squeeze.codeSeg_extraSolidCheck)
     setCode(P,'changeSpawnPos',squeeze.codeSeg_changeSpawnPos)
     setEvent(P,'afterDrop',squeeze.event_afterDrop)
     setEvent(P,'drawInField',squeeze.event_drawInField)
 end
-function squeeze.switch(P,width,wait,move)
+
+---@param width? number
+---@param wait? number
+---@param speed? number
+function squeeze.switch(P,width,wait,speed)
     local md=P.modeData
     if not md.inSqueeze then
         md.inSqueeze=true
         md.squeezeWidth=width or floor(10*.6+.5)
         md.squeezeWait=wait or floor(10/10+1+.5)
-        md.squeezeMove=move or floor(10/10+.5)
+        md.squeezeMove=speed or floor(10/10+.5)
         md.squeezePos=floor(P.settings.fieldW/2-md.squeezeWidth/2+.5)
         md.squeezeWaitTimer=0
     else
