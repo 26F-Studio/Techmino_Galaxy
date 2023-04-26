@@ -174,7 +174,7 @@ function scene.update(dt)
             end
         end
     end
-    if not love.mouse.isDown(1,2,3) then
+    if not love.mouse.isDown(1,2,3) and BGM.isPlaying() then
         fakeProgress=BGM.tell()/BGM.getDuration()%1
     end
 end
