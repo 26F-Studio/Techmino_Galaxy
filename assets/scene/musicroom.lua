@@ -10,6 +10,7 @@ local selected,fullband
 local collectCount=0
 local noProgress=false
 local autoplay=false
+local fakeProgress=0
 
 local bigTitle=setmetatable({},{
     __index=function(self,name)
@@ -68,8 +69,14 @@ local musicListBox do
     musicListBox=WIDGET.new(musicListBox)
 end
 local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1400,
-    disp=function() return BGM.tell()/BGM.getDuration()%1 end,
-    code=function(v) BGM.set('all','seek',v*BGM.getDuration()) end,
+    disp=function() return fakeProgress end,
+    code=function(v,mode)
+        fakeProgress=v
+        print(mode)
+        if mode=='release' then
+            BGM.set('all','seek',v*BGM.getDuration())
+        end
+    end,
     visibleFunc=function() return BGM.isPlaying() end,
 }
 
@@ -78,6 +85,7 @@ local scene={}
 
 function scene.enter()
     selected,fullband=getBgm()
+    fakeProgress=0
     if not selected then selected='blank' end
     if PROGRESS.getBgmUnlocked(selected)==2 then
         fullband=fullband=='full'
@@ -165,6 +173,9 @@ function scene.update(dt)
                 autoplay=.0626
             end
         end
+    end
+    if not love.mouse.isDown(1,2,3) then
+        fakeProgress=BGM.tell()/BGM.getDuration()%1
     end
 end
 
