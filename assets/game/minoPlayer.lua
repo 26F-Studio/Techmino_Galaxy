@@ -1876,6 +1876,9 @@ function MP.new()
         drawInField={},
         drawOnPlayer={},
     }
+    self.codeSeg={
+        extraSolidCheck={},
+    }
     self.soundEvent=setmetatable({},soundEventMeta)
 
     return self

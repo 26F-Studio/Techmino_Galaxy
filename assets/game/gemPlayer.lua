@@ -1041,6 +1041,8 @@ function GP.new()
         drawInField={},
         drawOnPlayer={},
     }
+    self.codeSeg={
+    }
     self.soundEvent=setmetatable({},soundEventMeta)
 
     return self

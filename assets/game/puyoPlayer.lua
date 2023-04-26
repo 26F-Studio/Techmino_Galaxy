@@ -1292,6 +1292,8 @@ function PP.new()
         drawInField={},
         drawOnPlayer={},
     }
+    self.codeSeg={
+    }
     self.soundEvent=setmetatable({},soundEventMeta)
 
     return self
