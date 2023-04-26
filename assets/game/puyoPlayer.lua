@@ -1276,8 +1276,8 @@ function PP.new()
         gameOver={},
 
         -- Drop
-        afterSpawn={},
         afterResetPos={},
+        afterSpawn={},
         afterDrop={},
         afterLock={},
         afterClear={},
