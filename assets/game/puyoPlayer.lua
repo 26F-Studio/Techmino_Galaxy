@@ -1317,11 +1317,13 @@ function PP:initialize()
     self.timing=false   -- Is gameTime running?
 
     self.field=require'assets.game.rectField'.new(self.settings.fieldW)
+    self.clearingGroups={}
 
     self.pieceCount=0
     self.chain=0
 
-    self.clearingGroups={}
+    self.atkSysData={}
+    mechLib.puyo.attackSys[self.settings.atkSys].init(self)
     self.garbageBuffer={}
 
     self.nextQueue={}

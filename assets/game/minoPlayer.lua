@@ -8,7 +8,6 @@ local clamp=MATH.clamp
 local inst=SFX.playSample
 
 local MP=setmetatable({},{__index=require'assets.game.basePlayer'})
-local minoAtkSys=require'assets.game.atksys_mino'
 
 --------------------------------------------------------------
 -- Function tables
@@ -1050,7 +1049,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     end
 
     -- Attack
-    local atk=GAME.initAtk(minoAtkSys[self.settings.atkSys].drop(self))
+    local atk=GAME.initAtk(mechLib.mino.attackSys[self.settings.atkSys].drop(self))
     if atk then
 
         self:triggerEvent('beforeCancel',atk)
@@ -1328,10 +1327,6 @@ function MP:showInvis(visStep,visMax)
             end
         end
     end
-end
-function MP:changeAtkSys(sys)
-    self.atkSysData={}
-    if minoAtkSys[sys].init then minoAtkSys[sys].init(self) end
 end
 function MP:receive(data)
     local B={
@@ -1912,7 +1907,8 @@ function MP:initialize()
     self.pieceCount=0
     self.combo=0
 
-    self:changeAtkSys(self.settings.atkSys)
+    self.atkSysData={}
+    mechLib.mino.attackSys[self.settings.atkSys].init(self)
     self.garbageBuffer={}
     self.garbageSum=0
 

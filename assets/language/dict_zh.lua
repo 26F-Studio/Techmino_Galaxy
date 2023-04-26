@@ -200,8 +200,9 @@ ARR: Auto-repeat-rate, 自动重复速率
 一般规则下该延迟可以被操作刷新，故在高重力规则下即使方块瞬间落地，依然有很多操作的机会。
 
 # spwan_delay
-@ title 出块延迟（PSD）
-Piece Spawn Delay, 指“当前方块锁定”到“下一个方块出现”之间的时间。
+@ title 出块延迟（ED）
+Entry Delay, 进场延迟，指“当前方块锁定”到“下一个方块出现”之间的时间。
+有时也被称为ARE
 
 # clear_delay
 @ title 消行延迟（LCD）
@@ -214,7 +215,7 @@ Suffocating Death Delay, 如果方块出生后和场地有重叠，将进入窒�
 # death_condition
 @ title 死亡判定
 不同规则的死亡判定不同，通常包含其中的一条或若干条：
-1. 窒息（Block Out），新出现的方块和场地方块有重叠
+1. 窒息（Block Out），生成位置被阻挡
 2. 场外锁定（Lock Out），方块锁定时完全在场地之外
 3. 超高（Top Out），场地总高度大于一定值
 
