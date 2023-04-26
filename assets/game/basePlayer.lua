@@ -1,7 +1,7 @@
 local min=math.min
 local floor,ceil=math.floor,math.ceil
 local abs=math.abs
-local ins=table.insert
+local ins,rem=table.insert,table.remove
 
 local sign,expApproach=MATH.sign,MATH.expApproach
 
@@ -389,25 +389,62 @@ function P:update(dt)
 end
 --------------------------------------------------------------
 -- Builder
+function P:addEvent(name,E)
+    assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
+    if type(E)=='table' then
+        for i=1,#E do
+            self:addEvent(name,E[i])
+        end
+    else
+        assert(type(E)=='function','event must be function or table of functions')
+        ins(self.event[name],E)
+    end
+end
+function P:delEvent(name,E)
+    assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
+    assert(type(E)=='function','event must be function')
+    local pos=TABLE.find(self.event[name],E)
+    if pos then rem(self.event[name],pos) end
+end
+function P:addCodeSeg(name,S)
+    assert(self.codeSeg[name],"Wrong codeSeg key: '"..tostring(name).."'")
+    if type(S)=='table' then
+        for i=1,#S do
+            self:addCodeSeg(name,S[i])
+        end
+    else
+        assert(type(S)=='function','codeSeg must be function or table of functions')
+        ins(self.codeSeg[name],S)
+    end
+end
+function P:delCodeSeg(name,S)
+    assert(self.codeSeg[name],"Wrong codeSeg key: '"..tostring(name).."'")
+    assert(type(S)=='function','codeSeg must be function')
+    local pos=TABLE.find(self.codeSeg[name],S)
+    if pos then rem(self.codeSeg[name],pos) end
+end
+function P:addSoundEvent(name,E)
+    assert(self.soundEvent[name],"Wrong soundEvent key: '"..tostring(name).."'")
+    assert(type(E)=='function',"soundEvent must be function")
+    self.soundEvent[name]=E
+end
+function P:delSoundEvent(name)
+    assert(self.soundEvent[name],"Wrong soundEvent key: '"..tostring(name).."'")
+    self.soundEvent[name]=nil
+end
 function P:loadSettings(settings)-- Load data & events from mode settings
     for k,v in next,settings do
         if k=='event' then
             for name,E in next,v do
-                assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
-                if type(E)=='table' then
-                    for i=1,#E do
-                        assert(type(E[i])=='function','Event must be function or table of functions')
-                        ins(self.event[name],E[i])
-                    end
-                else
-                    assert(type(E)=='function','Event must be function or table of functions')
-                    ins(self.event[name],E)
-                end
+                self:addEvent(name,E)
+            end
+        elseif k=='codeSeg' then
+            for name,S in next,v do
+                self:addCodeSeg(name,S)
             end
         elseif k=='soundEvent' then
             for name,E in next,v do
-                assert(type(E)=='function',"soundEvent must be function")
-                self.soundEvent[name]=E
+                self:addSoundEvent(name,E)
             end
         else
             if type(v)=='table' then

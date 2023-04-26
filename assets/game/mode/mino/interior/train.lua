@@ -11,11 +11,7 @@ return {
         lockDelay=1e99,
         infHold=true,
         -- spawnDelay=26,
-        soundEvent={
-            countDown=function(num)
-                SFX.playSample('lead',num>0 and 'E4' or 'E5')
-            end,
-        },
+        soundEvent={countDown=mechLib.mino.misc.interior_soundEvent_countDown},
         event={-- Display ghost at not-bad places to help new players learn stacking
             playerInit=function(P)
                 P.modeData.waitTime=0

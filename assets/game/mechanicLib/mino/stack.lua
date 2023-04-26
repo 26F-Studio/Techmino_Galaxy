@@ -21,9 +21,21 @@ local lineFont={
 
 local stack={}
 
+---@param fall? boolean
+---@param autoquit? boolean
+function stack.switch_auto(P,fall,autoquit)
+    if fall==nil then fall=true end
+    if autoquit==nil then autoquit=true end
+    stack.switch(P)
+    local setEvent=P.modeData.inStack and P.addEvent or P.delEvent
+    setEvent(P,'always',stack.event_always)
+    setEvent(P,'afterLock',fall and stack.event_afterLock or stack.event_afterLock_noFall)
+    if autoquit then setEvent(P,'whenSuffocate',stack.event_whenSuffocate) end
+    setEvent(P,'drawOnPlayer',stack.event_drawOnPlayer)
+end
 function stack.switch(P)
-    if not P.modeData.inZone then
-        P.modeData.inZone=true
+    if not P.modeData.inStack then
+        P.modeData.inStack=true
         P.modeData.zone_lines=0
         P.modeData.zone_highestLine=0
         P.modeData.zone_lineList={}-- For no-fall mode
@@ -58,7 +70,7 @@ function stack.switch(P)
             P:freshGhost()
         end
 
-        P.modeData.inZone=false
+        P.modeData.inStack=false
         P.modeData.zone_lines=false
         P.modeData.zone_highestLine=false
         P.modeData.zone_lineList=false
@@ -78,15 +90,15 @@ function stack.switch(P)
 end
 
 local expApproach=MATH.expApproach
-function stack.event_always_animated(P)
+function stack.event_always(P)
     local md=P.modeData
-    if md.inZone and md.zoneTextHeight then
+    if md.inStack and md.zoneTextHeight then
         md.zoneTextHeight=expApproach(md.zoneTextHeight,md.zoneTextHeight0,.00626)
     end
 end
 
 function stack.event_afterLock(P)
-    if P.modeData.inZone then
+    if P.modeData.inStack then
         local F=P.field
         local list={}
         local md=P.modeData
@@ -122,7 +134,7 @@ function stack.event_afterLock(P)
     end
 end
 function stack.event_afterLock_noFall(P)
-    if P.modeData.inZone then
+    if P.modeData.inStack then
         local F=P.field
         local list={}
         local md=P.modeData
@@ -152,26 +164,14 @@ function stack.event_afterLock_noFall(P)
 end
 
 function stack.event_whenSuffocate(P)
-    if P.modeData.inZone then
+    if P.modeData.inStack then
         stack.switch(P,false)
     end
 end
 
 function stack.event_drawOnPlayer(P)
     local md=P.modeData
-    if md.inZone and md.zone_lines>0 then
-        GC.push('transform')
-        GC.translate(0,md.zoneTextHeight0)
-        GC.scale(2)
-        local fontSize=lineFont[min(md.zone_lines,26)]
-        FONT.set(fontSize,'bold')
-        GC.shadedPrint(md.zone_lines,0,-fontSize*.5,'center',2,8,COLOR.lD,COLOR.L)
-        GC.pop()
-    end
-end
-function stack.event_drawOnPlayer_animated(P)
-    local md=P.modeData
-    if md.inZone and md.zone_lines>0 then
+    if md.inStack and md.zone_lines>0 then
         GC.push('transform')
         GC.translate(0,md.zoneTextHeight)
         GC.scale(2)

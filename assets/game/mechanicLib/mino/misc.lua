@@ -33,6 +33,10 @@ misc.timeLimit_event_drawOnPlayer=TABLE.newPool(function(self,time)
     return self[time]
 end)
 
+function misc.interior_soundEvent_countDown(num)
+    SFX.playSample('lead',num>0 and 'E4' or 'E5')
+end
+
 function misc.invincible_event_afterLock(P)
     if P.field:getHeight()>P.settings.spawnH-1 then
         for y=1,P.field:getHeight()-(P.settings.spawnH-1) do for x=1,P.settings.fieldW do

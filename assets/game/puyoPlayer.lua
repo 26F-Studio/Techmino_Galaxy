@@ -1276,8 +1276,8 @@ function PP.new()
         gameOver={},
 
         -- Drop
-        afterSpawn={},
         afterResetPos={},
+        afterSpawn={},
         afterDrop={},
         afterLock={},
         afterClear={},
@@ -1291,6 +1291,8 @@ function PP.new()
         drawBelowMarks={},
         drawInField={},
         drawOnPlayer={},
+    }
+    self.codeSeg={
     }
     self.soundEvent=setmetatable({},soundEventMeta)
 

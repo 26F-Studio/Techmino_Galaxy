@@ -9,11 +9,7 @@ return {
         skin='mino_interior',
         particles=false,
         shakeness=0,
-        soundEvent={
-            countDown=function(num)
-                SFX.playSample('lead',num>0 and 'E4' or 'E5')
-            end,
-        },
+        soundEvent={countDown=mechLib.mino.misc.interior_soundEvent_countDown},
         event={
             playerInit=mechLib.mino.dig.practice_event_playerInit[12],
             afterClear=mechLib.mino.dig.practice_event_afterClear,
