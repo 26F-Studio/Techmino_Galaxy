@@ -12,11 +12,7 @@ return {
         particles=false,
         spawnDelay=130,
         clearDelay=300,
-        soundEvent={
-            countDown=function(num)
-                SFX.playSample('lead',num>0 and 'E4' or 'E5')
-            end,
-        },
+        soundEvent={countDown=mechLib.mino.misc.interior_soundEvent_countDown},
         event={
             playerInit=function(P)
                 P.settings.das=math.max(P.settings.das,100)
