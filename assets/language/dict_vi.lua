@@ -82,7 +82,7 @@ Nhóm C rất linh động, bạn có thể điều chỉnh độ khó dựa tr�
 ~~
 Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm A, đây là một kỹ năng tối quan trọng trong bất kỳ tựa game xếp gạch nào; và bạn sẽ có thể dần dần làm chủ bất kỳ chế độ nào, lúc đó chỉ cần nhìn lướt qua NEXT là đủ rồi.
 
-# keybinding
+# keybinding 
 @ title Gán phím
 @ titleFull Lời khuyên cho việc Gán phím
 @ contentSize 20
@@ -148,7 +148,7 @@ While normally you can only clear 4 lines at a time (Techrash), there are modes 
 # b2b
 @ title Back to Back
 @ titleFull Back to Back (BtB, B2B)
-Refers to making at least two special line clears (usually this refers to Techrashes and Spin line clears) without making regular line clears in between.
+Đề cập tới việc liên tục xóa theo kiểu đặc biệt (thường là Techrash và Spin có xóa hàng) mà không bị ngắt quãng vì xóa theo kiểu bình thường.
 
 # all_clear
 @ title Perfect Clear
