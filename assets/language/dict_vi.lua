@@ -90,12 +90,12 @@ Dưới đây là vài lời khuyên hữu ích khi bạn gán phím
 
 1.  Một ngón tay chỉ nên thực hiện một chức năng khác nhau. Ví dụ như: 1 ngón cho sang trái, 1 ngón cho sang phải, 1 ngón cho phím xoay phải, 1 ngón cho rơi mạnh
 ~~
-2.  Trừ khi bạn tự tin với ngót út của mình, thì không nên để ngóm tay này làm bất kì chức năng nào! Hơn hơn hết, nên xài ngón trỏ và ngón giữa vì hai ngón này là nhanh nhẹn nhất, nhưng bạn cũng có thể thoải mái tìm hiểu xem các ngón tay của mình nhanh chậm thế nào, mạnh yếu ra sao.
+2.  Trừ khi bạn tự tin với ngót út của mình, thì không nên để ngón tay này làm bất kì việc hết! Hơn hết, nên xài ngón trỏ và ngón giữa vì hai ngón này là nhanh nhẹn nhất, nhưng bạn cũng có thể thoải mái tìm hiểu xem các ngón tay của mình nhanh chậm thế nào, mạnh yếu ra sao.
 ~~
 3.  Không nhất thiết phải sao chép cấu hình phím của người khác, vì không ai giống ai. Thay vào đó hãy chỉnh theo cách của bạn, miễn là bạn chơi thoải nái là được.
 
 # handling
-@ title Handling
+@ title Xử lý gạch
 @ titleFull Mẹo khi xử lý gạch
 @ contentSize 25
 Những yếu tố ảnh hưởng tới việc xếp gạch của bạn:
@@ -108,7 +108,7 @@ Những yếu tố ảnh hưởng tới việc xếp gạch của bạn:
 (7) Muscle fatigue, response, and decreases in coordination abilities. Have some rest and come back later or in a few days.
 
 # piece_shape
-@ title Những miếng gạch
+@ title Những viên gạch
 Trong các trò xếp gạch, các viên gạch là những khối có 4 ô liên kết với nhau
 
 Mỗi trò xếp gạch đều có tổng cộng có bảy viên gạch khác nhau. Chúng được đặt tên theo chữ cái trong bảng chữ cái giống với hình dáng của chúng. Đó là Z, S, J, L, T, O
@@ -124,7 +124,7 @@ Usually, tetrominos spawn with a consistent rotation state (in other words, it w
 
 # next
 @ title Next
-Hiển thị nhưng viên gạch sẽ lần lượt rơi xuống. Có thể sử dụng ô này để lên kế hoạch trước cách xếp một cách tốt hơn. 
+Hiện nhưng viên gạch sẽ lần lượt rơi xuống. Có thể sử dụng ô này để lên kế hoạch trước cách xếp một cách tốt hơn. 
 
 # hold
 @ title Hold
@@ -143,7 +143,7 @@ Techrash = Xóa 4 hàng.
 # clear_big
 @ title Xóa >4 hàng?
 @ titleFull Xóa nhiều hơn cả Techrash?
-While normally you can only clear 4 lines at a time (Techrash), there are modes with special rules that enable you to clear more lines at once. For example, clearing 5 lines is called Pentacrash, and clearing 6 lines is called Hexacrash.
+Mặc dù thông thường, bạn chỉ có thể xóa 4 hàng cùng một lúc (Techrash), nhưng có những chế độ với các quy tắc đặc biệt cho phép bạn xóa nhiều hàng hơn cùng một lúc. Ví dụ: xóa 5 hàng được gọi là Pentacrash và xóa 6 hàng được gọi là Hexacrash.
 
 # b2b
 @ title Back to Back
@@ -279,12 +279,12 @@ A way to randomly generate a piece sequence. It keeps track of the recent few pi
 His generator is an improvement over generating the sequence completely randomly, and greatly reduces the chances that a drought or flood happens.
 
 # half_invis
-@ title Half Invis
-A rule where pieces fade away after a few seconds after landing.
+@ title Half Invis (Tàng hình một phần)
+Gạch sẽ biến mất sau vài giây từ lúc nó được đặt xuống.
 
 # full_invis
-@ title Full Invis
-A rule where pieces instantly goes invisible upon locking down.
+@ title Full Invis (Tàng hình hoàn toàn)
+Gạch sẽ biến mất ngay lập tức sau khi nó được đặt xuống.
 
 # deepdrop
 @ title Deep Drop
@@ -301,14 +301,14 @@ A rule where floating or otherwise disconnected blocks may fall down after clear
 #mph
 @ title MPH 
 @ titleFull Memoryless, Previewless, Holdless
-A combination of rules: memoryless (pure random piece sequence), previewless (no Next queue), and holdless (no Hold queue).
+Sự kết hợp của ba quy tắc: "Không nhớ gì" (chuỗi gạch tạo ra hoàn toàn ngẫu nhiên), "Không biết trước gạch nào sẽ tới" (không hiện NEXT), và "Không giữ được".
 
 # multi_rotation
-@ title Rotation buttons
-@ titleFull Using two or three rotation buttons
-Using both CW and CCW rotation buttons can reduce button presses by replacing three rotations of one direction with one rotation in the other direction. It is also a key technique in Finesse.
+@ title Xoay về hướng nào?
+@ titleFull Hãy dùng hai hoặc ba phím xoay
+Dùng cả 2 nút xoay phải và xoay trái có thể giảm số lần nhấn nút bằng cách nhấn một nút xoay này thay vì ba lần nút xoay kia. Đây cũng là một trong những kỹ thuật quan trọng trong Finesse.
 
-Using three rotation buttons including a 180-degree rotation button can further reduce button presses, but is less effective at improving your playing, and is not always available depending on the game.
+Nếu bạn có thể dùng cả 3 nút xoay: xoay trái, xoay phải và xoay 180 độ; thì có thể giảm số nút cần để xoay. Nhưng hãy lưu ý rằng sử dụng nút xoay 180 độ (có thể) không giúp bạn cải thiện kỹ năng chơi. Mặt khác, nút này không phải ở chế độ nào hay game nào cũng có!
 
 # finesse
 @ title Finesse

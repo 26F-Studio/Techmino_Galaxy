@@ -10,7 +10,7 @@ return {
     noMode="Không thể tải chế độ '$1': $2",
     interior_crash="Bạn chơi quá hay, hộp cát không thể xử lý được nên nó đã bị crash", -- Thanks User670 for suggesting me this alternative
     booting_changed="Đã thay đổi chương trình boot",
-    musicroom_lowVolume="Vặn âm lượng nhạc nền lên đi bạn ơi! (Ở dưới góc phải màn hình đấy!)",
+    musicroom_lowVolume="Vặn âm lượng nhạc nền lên đi! (Ở dưới góc phải màn hình đấy!)",
 
     -- In-Game
     clearName={
@@ -87,7 +87,7 @@ return {
     setting_showTouch="Hiện vị trí vừa chạm",
 
     setting_maxFPS="FPS tối đa",
-    setting_updRate="Thời gian phản hồi",
+    setting_updRate="Tần suất phản hồi",
     setting_drawRate="Tần suất khung hình",
     setting_msaa="MSAA - Khử răng cưa",
 
@@ -111,8 +111,8 @@ return {
     keyset_puyo_rotateCW=   "Xoay Phải",
     keyset_puyo_rotateCCW=  "Xoay Trái",
     keyset_puyo_rotate180=  "Xoay 180",
-    keyset_puyo_softDrop=   "Thả Nhẹ",
-    keyset_puyo_hardDrop=   "Đặt Mạnh",
+    keyset_puyo_softDrop=   "Rơi Nhẹ",
+    keyset_puyo_hardDrop=   "Rơi Mạnh",
 
     keyset_gem_swapLeft=    "Vuốt sang Trái",
     keyset_gem_swapRight=   "Vuốt sang Phải",
