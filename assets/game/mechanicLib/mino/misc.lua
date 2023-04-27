@@ -1,3 +1,4 @@
+local ins,rem=table.insert,table.remove
 local gc=love.graphics
 local misc={}
 
@@ -93,7 +94,7 @@ end
 
 function misc.noFallAfterClear_event_afterClear(P,clear)
     for i=clear.line,1,-1 do
-        table.insert(P.field._matrix,clear.lines[i],TABLE.new(false,P.settings.fieldW))
+        ins(P.field._matrix,clear.lines[i],TABLE.new(false,P.settings.fieldW))
     end
     P.field:fresh()
 end
@@ -119,9 +120,11 @@ function misc.flipBoardLR(P)
     for y=1,P.field:getHeight() do
         TABLE.reverse(P.field._matrix[y])
     end
+    P:freshGhost()
 end
 function misc.flipBoardUD(P)
     TABLE.reverse(P.field._matrix)
+    P:freshGhost()
 end
 function misc.invertBoard(P,fromH,toH)
     local F=P.field
@@ -131,6 +134,20 @@ function misc.invertBoard(P,fromH,toH)
             mat[y][x]=not mat[y][x] and {color=0}
         end
     end
+end
+function misc.spinBoard(P,dx)
+    dx=dx and dx%P.settings.fieldW or P:random(1,P.settings.fieldW-1)
+    if dx==0 then return end
+    if dx>=P.settings.fieldW/2 then dx=dx-P.settings.fieldW end
+    local ip=dx>0 and 1 or P.settings.fieldW
+    local rp=dx>0 and P.settings.fieldW or 1
+    for _=1,math.abs(dx) do
+        for y=1,P.field:getHeight() do
+            local line=P.field._matrix[y]
+            ins(line,ip,rem(line,rp))
+        end
+    end
+    P:freshGhost()
 end
 
 do-- randomPress
@@ -172,7 +189,7 @@ do-- symmetery
     function misc.symmetery_event_afterDrop(P)
         local CB=P.hand.matrix
         for y=1,#CB do for x=1,#CB[1] do if CB[y][x] then
-            table.insert(P.modeData._coords,{P.handX+x-1,P.handY+y-1})
+            ins(P.modeData._coords,{P.handX+x-1,P.handY+y-1})
         end end end
     end
     function misc.symmetery_event_afterLock(P)
@@ -221,7 +238,7 @@ do-- wind
         local md=P.modeData
         if #md.invertPoints>0 and md.line>md.invertPoints[1] then
             while #md.invertPoints>0 and md.line>md.invertPoints[1] do
-                table.remove(md.invertPoints,1)
+                rem(md.invertPoints,1)
             end
             md.windTargetStrength=-MATH.sign(md.windTargetStrength)*P:random(1260,1600)
         end
