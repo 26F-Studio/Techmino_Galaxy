@@ -58,26 +58,34 @@ function misc.fastHide_event_gameOver(P)
 end
 
 do --coverField
-    function misc.coverField_event_playerInit(P)
-        P.modeData.coverAlpha=0
+    function misc.coverField_switch_auto(P)
+        local md=P.modeData
+        if not md._coverAlpha then
+            md._coverAlpha=0
+            md.coverAlpha=2600
+            P:addEvent('always',misc.coverField_event_always)
+            P:addEvent('gameOver',misc.coverField_event_gameOver)
+            P:addEvent('drawInField',misc.coverField_event_drawInField)
+        else
+            md.coverAlpha=md.coverAlpha==0 and 2600 or md.coverAlpha==2600 and 0 or md.coverAlpha
+        end
     end
     function misc.coverField_event_always(P)
-        if P.finished then
-            if P.modeData.coverAlpha>2000 then
-                P.modeData.coverAlpha=P.modeData.coverAlpha-1
-            end
-        else
-            if P.modeData.coverAlpha<2600 then
-                P.modeData.coverAlpha=P.modeData.coverAlpha+1
-            end
+        local md=P.modeData
+        if md._coverAlpha and md._coverAlpha~=md.coverAlpha then
+            md._coverAlpha=md._coverAlpha+MATH.sign(md.coverAlpha-md._coverAlpha)
         end
     end
     function misc.coverField_event_gameOver(P)
         P:showInvis()
+        P.modeData.coverAlpha=2000
     end
     function misc.coverField_event_drawInField(P)
-        gc.setColor(.26,.26,.26,P.modeData.coverAlpha/2600)
-        gc.rectangle('fill',0,0,P.settings.fieldW*40,-P.settings.spawnH*40)
+        local md=P.modeData
+        if md._coverAlpha and md._coverAlpha>0 then
+            gc.setColor(.26,.26,.26,md._coverAlpha/2600)
+            gc.rectangle('fill',0,0,P.settings.fieldW*40,-P.settings.spawnH*40)
+        end
     end
 end
 

@@ -83,7 +83,7 @@ local sidePowerRate=0.5
 local maxCharge=6
 
 local infoMeta={__index=function(self,k)
-    self[k]={charge=0,charge1=0}
+    self[k]={charge=0,_charge=0}
     return self[k]
 end}
 function techrash.hard_event_playerInit(P)
@@ -94,14 +94,14 @@ function techrash.hard_event_playerInit(P)
 end
 function techrash.hard_event_always(P)
     for _,v in next,P.modeData.techrashInfo do
-        if v.charge1~=v.charge then
-            if v.charge1<v.charge then
-                v.charge1=MATH.expApproach(v.charge1,v.charge,.00626)
+        if v._charge~=v.charge then
+            if v._charge<v.charge then
+                v._charge=MATH.expApproach(v._charge,v.charge,.00626)
             else
-                v.charge1=math.max(v.charge1-.00626,v.charge)
+                v._charge=math.max(v._charge-.00626,v.charge)
             end
-            if math.abs(v.charge1-v.charge)<.01 then
-                v.charge1=v.charge
+            if math.abs(v._charge-v.charge)<.01 then
+                v._charge=v.charge
             end
         end
     end
@@ -141,9 +141,9 @@ end
 function techrash.hard_event_drawBelowMarks(P)
     local t=love.timer.getTime()
     for k,v in next,P.modeData.techrashInfo do
-        if v.charge1>0 or v.dead then
+        if v._charge>0 or v.dead then
             local x=40*k-20
-            local chargeRate=v.charge1/maxCharge
+            local chargeRate=v._charge/maxCharge
             local barHeight=chargeRate*P.settings.fieldW*80
             if v.dead then
                 if t%.2<.1 then
