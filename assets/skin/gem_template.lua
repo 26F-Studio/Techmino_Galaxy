@@ -191,11 +191,11 @@ function S.drawGarbageBuffer(garbageBuffer)
         if y+h>800 then
             h=800-y
         end
-        if g.time<g.time0 then
+        if g._time<g.time then
             gc_setColor(COLOR.R)
             gc_rectangle('fill',370,360-y-h+3,10,h-6)
             gc_setColor(COLOR.L)
-            local progress=g.time/g.time0
+            local progress=g._time/g.time
             gc_rectangle('fill',370,360-y-h+3+(h-6)*(1-progress),10,(h-6)*progress)
         else
             gc_setColor(S.getTime()%100<50 and COLOR.R or COLOR.L)

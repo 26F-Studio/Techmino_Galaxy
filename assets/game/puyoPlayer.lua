@@ -642,12 +642,12 @@ function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
     while true do
         l=self.garbageBuffer[i]
         if not l then break end
-        if l.time==l.time0 then
+        if l._time==l.time then
             self:dropGarbage(l.power*2)
             rem(self.garbageBuffer,i)
             i=i-1-- Avoid index error
         elseif l.mode==1 then
-            l.time=l.time+1
+            l._time=l._time+1
         end
         i=i+1
     end
@@ -870,8 +870,8 @@ function PP:receive(data)
         cancelRate=data.cancelRate,
         defendRate=data.defendRate,
         mode=data.mode,
-        time0=floor(data.time+.5),
-        time=0,
+        time=floor(data.time+.5),
+        _time=0,
         fatal=data.fatal,
         speed=data.speed,
     }
@@ -1053,8 +1053,8 @@ function PP:updateFrame()
     -- Update garbage
     for i=1,#self.garbageBuffer do
         local g=self.garbageBuffer[i]
-        if g.mode==0 and g.time<g.time0 then
-            g.time=g.time+1
+        if g.mode==0 and g._time<g.time then
+            g._time=g._time+1
         end
     end
 end

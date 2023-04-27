@@ -1117,7 +1117,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         while true do
             local g=self.garbageBuffer[iBuffer]
             if not g then break end
-            if g.time==g.time0 then
+            if g._time==g.time then
                 local holePos=self:calculateHolePos(self:parseAtkInfo(g))
 
                 -- Pushing up
@@ -1129,7 +1129,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
                 self.garbageSum=self.garbageSum-g.power
                 iBuffer=iBuffer-1-- Avoid index error
             elseif g.mode==1 then
-                g.time=g.time+1
+                g._time=g._time+1
             end
             iBuffer=iBuffer+1
         end
@@ -1345,8 +1345,8 @@ function MP:receive(data)
         cancelRate=data.cancelRate,
         defendRate=data.defendRate,
         mode=data.mode,
-        time0=floor(data.time+.5),
-        time=0,
+        time=floor(data.time+.5),
+        _time=0,
         fatal=data.fatal,
         speed=data.speed,
     }
@@ -1510,8 +1510,8 @@ function MP:updateFrame()
     -- Update garbage
     for i=1,#self.garbageBuffer do
         local g=self.garbageBuffer[i]
-        if g.mode==0 and g.time<g.time0 then
-            g.time=g.time+1
+        if g.mode==0 and g._time<g.time then
+            g._time=g._time+1
         end
     end
 

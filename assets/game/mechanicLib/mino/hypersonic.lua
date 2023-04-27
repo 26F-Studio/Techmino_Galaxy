@@ -87,8 +87,8 @@ do-- high
     }
 
     function hypersonic.high_event_playerInit(P)
-        P.modeData.bumpTimer0=false
         P.modeData.bumpTimer=false
+        P.modeData._bumpTimer=false
 
         P.settings.dropDelay=0
         P.settings.das=math.max(P.modeData.storedDas,levels[1].das)
@@ -100,11 +100,11 @@ do-- high
     end
 
     function hypersonic.high_event_always(P)
-        if P.finished or not P.modeData.bumpTimer or P.field:getHeight()==0 then return end
-        P.modeData.bumpTimer=P.modeData.bumpTimer-1
-        if P.modeData.bumpTimer<=0 then
+        if P.finished or not P.modeData._bumpTimer or P.field:getHeight()==0 then return end
+        P.modeData._bumpTimer=P.modeData._bumpTimer-1
+        if P.modeData._bumpTimer<=0 then
             local F=P.field
-            P.modeData.bumpTimer=P.modeData.bumpTimer0
+            P.modeData._bumpTimer=P.modeData.bumpTimer
 
             local firstLine=F._matrix[1]
             local newLine={}
@@ -150,9 +150,9 @@ do-- high
                     P.settings.clearDelay=levels[md.level].clear
                     P.settings.maxFreshTime=levels[md.level].fresh
 
-                    md.bumpTimer0=levels[md.level].bumpInterval
-                    if md.bumpTimer0 then
-                        md.bumpTimer=md.bumpTimer0
+                    md.bumpTimer=levels[md.level].bumpInterval
+                    if md.bumpTimer then
+                        md._bumpTimer=md.bumpTimer
                     end
                 else
                     P:finish('AC')
