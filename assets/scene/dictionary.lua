@@ -424,7 +424,7 @@ function scene.update(dt)
 end
 
 function scene.draw()
-    -- Draw previous scene's things
+    -- Previous scene's things
     if prevScene.draw then
         prevScene.draw()
     end

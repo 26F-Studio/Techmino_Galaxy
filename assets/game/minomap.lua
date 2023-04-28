@@ -312,7 +312,7 @@ function map:draw()
     gc.translate(0,100)
     cam:apply()
 
-    -- Draw bridges
+    -- Bridges
     for _,b in next,bridges do
         if b.enable then
             gc.setColor(1,1,1,.8)
@@ -329,7 +329,7 @@ function map:draw()
         end
     end
 
-    -- Draw modes
+    -- Modes
     for _,m in next,modes do
         if m.enable then
             gc.push('transform')
@@ -374,14 +374,14 @@ function map:draw()
         end
     end
 
-    -- Draw clickFX
+    -- enterFX
     if enterFX.timer then
         gc.setColor(1,1,1,math.min(enterFX.timer*62,1))
         gc.setLineWidth(4+enterFX.timer*260)
         GC.regPolygon('line',enterFX.x,enterFX.y,(enterFX.r)*260^enterFX.timer,6,tau/12-cam.a)
     end
 
-    -- Draw back and particles
+    -- Back and particles
     gc.rotate(-tau/4)gc.setColor(1,0,0,.01)gc.polygon('fill',mapPoly)gc.scale(.5)gc.setColor(0,0,0,.0626)gc.polygon('fill',mapPoly)gc.scale(2)
     gc.rotate(tau/3) gc.setColor(0,1,0,.01)gc.polygon('fill',mapPoly)gc.scale(.5)gc.setColor(0,0,0,.0626)gc.polygon('fill',mapPoly)gc.scale(2)
     gc.rotate(tau/3) gc.setColor(0,0,1,.01)gc.polygon('fill',mapPoly)gc.scale(.5)gc.setColor(0,0,0,.0626)gc.polygon('fill',mapPoly)gc.scale(2)
@@ -389,7 +389,7 @@ function map:draw()
     gc.rotate(tau/3) gc.setColor(.26,1,.26)gc.draw(pSys[2])
     gc.rotate(tau/3) gc.setColor(.26,.26,1)gc.draw(pSys[3])
 
-    -- Draw keyboard cursor
+    -- Keyboard cursor
     gc.replaceTransform(SCR.xOy_m)
     if mapCursor then
         gc.push('transform')
