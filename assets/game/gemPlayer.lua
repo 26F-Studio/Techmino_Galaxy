@@ -594,8 +594,8 @@ function GP:receive(data)
         cancelRate=data.cancelRate,
         defendRate=data.defendRate,
         mode=data.mode,
-        time0=floor(data.time+.5),
-        time=0,
+        time=floor(data.time+.5),
+        _time=0,
         fatal=data.fatal,
         speed=data.speed,
     }
@@ -884,8 +884,8 @@ function GP:updateFrame()
     -- Update garbage
     for i=1,#self.garbageBuffer do
         local g=self.garbageBuffer[i]
-        if g.mode==0 and g.time<g.time0 then
-            g.time=g.time+1
+        if g.mode==0 and g._time<g.time then
+            g._time=g._time+1
         end
     end
 end

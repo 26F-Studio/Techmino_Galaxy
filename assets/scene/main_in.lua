@@ -43,14 +43,14 @@ end
 function scene.draw()
     GC.replaceTransform(SCR.xOy_m)
 
-    -- Draw progress bar
+    -- Progress bar
     if PROGRESS.getMain()>=2 then
         scoreColor(-520,PROGRESS.getInteriorScore('dig'))
         scoreColor(-160,PROGRESS.getInteriorScore('sprint'))
         scoreColor(200, PROGRESS.getInteriorScore('marathon'))
     end
 
-    -- Draw logo & verNum
+    -- Logo & verNum
     GC.setColor(1,1,1)
     FONT.set(30)
     GC.mStr(VERSION.appVer,0,-180)

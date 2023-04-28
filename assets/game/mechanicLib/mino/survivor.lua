@@ -6,7 +6,7 @@ local survivor={}
 
 function survivor.event_playerInit(P)
     local md=P.modeData
-    md.waveTimer0=1
+    md.curWaveTime=1
     md.waveTimer=0
     md.wave=0
 end
@@ -16,7 +16,7 @@ function survivor.event_drawOnPlayer(P)
     FONT.set(80) GC.mStr(P.modeData.wave,-300,-70)
     FONT.set(30) GC.mStr("Waves",-300,15)
 
-    local cd=P.modeData.waveTimer/P.modeData.waveTimer0
+    local cd=P.modeData.waveTimer/P.modeData.curWaveTime
     gc.setLineWidth(10)
     gc.setColor(COLOR.DL)
     gc.arc('line','open',-300,130,40,-MATH.pi*.5,cd*MATH.tau-MATH.pi*.5)
@@ -36,12 +36,12 @@ function survivor.b2b_event_always(P)
         md.wave=md.wave+1
 
         local wave=md.wave
-        md.waveTimer0=math.floor(
+        md.curWaveTime=math.floor(
             wave<=40 and MATH.interpolate(wave,0,6000,40,4000) or
             wave<=80 and MATH.interpolate(wave,40,4000,80,1500) or
             max(MATH.interpolate(wave,80,1500,150,800),800)
         )
-        md.waveTimer=md.waveTimer0
+        md.waveTimer=md.curWaveTime
         GAME.send(nil,GAME.initAtk{
             target=GAME.mainID,
             power=4+P:random(0,MATH.clamp(math.floor(wave/30-P.field:getHeight()/10),0,3)),
@@ -64,12 +64,12 @@ function survivor.cheese_event_always(P)
         md.wave=md.wave+1
 
         local wave=md.wave
-        md.waveTimer0=math.floor(
+        md.curWaveTime=math.floor(
             wave<=80 and MATH.interpolate(wave,0,3000,80,2000) or
             wave<=150 and MATH.interpolate(wave,80,2000,150,2500) or
             math.max(2000-(wave-150)*10,1000)
         )
-        md.waveTimer=md.waveTimer0
+        md.waveTimer=md.curWaveTime
         GAME.send(nil,GAME.initAtk{
             target=GAME.mainID,
             power=P:random(0,10)+P:random(-5,5)>=P.field:getHeight() and 2 or 1,
@@ -98,12 +98,12 @@ function survivor.spike_event_always(P)
         md.wave=md.wave+1
 
         local wave=md.wave
-        md.waveTimer0=floor(
+        md.curWaveTime=floor(
             wave<=10 and MATH.interpolate(wave,0,20000,10,15000) or
             wave<=30 and MATH.interpolate(wave,10,15000,30,12000) or
             max(MATH.interpolate(wave,30,12000,60,10000),10000)
         )
-        md.waveTimer=md.waveTimer0
+        md.waveTimer=md.curWaveTime
         for i=1,3 do
             GAME.send(nil,GAME.initAtk{
                 target=GAME.mainID,

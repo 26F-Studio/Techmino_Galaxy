@@ -1,6 +1,6 @@
 local level,score,time,totalTime,passCD,protect
 local handID,handMat,targetMat
-local texts=TEXT.new()
+local texts
 
 --[[ Levels
     1~40:    R/L(+F after 20)
@@ -12,36 +12,36 @@ local passTime=60
 local parTime={35,45,40,45}
 
 local shapes do
-    local X,_=true,false
+    local O,_=true,false
     shapes={
         -- Tetromino
-        {matrix={{X,X,_},{_,X,X},{_,_,_}},no180=true},-- Z
-        {matrix={{_,X,X},{X,X,_},{_,_,_}},no180=true},-- S
-        {matrix={{X,_,_},{X,X,X},{_,_,_}}},-- J
-        {matrix={{_,_,X},{X,X,X},{_,_,_}}},-- L
-        {matrix={{_,X,_},{X,X,X},{_,_,_}}},-- T
-        {unuse=true,matrix={{X,X},{X,X}}},-- O
-        {matrix={{_,_,_,_},{X,X,X,X},{_,_,_,_},{_,_,_,_}},no180=true},-- I
+        {matrix={{O,O,_},{_,O,O},{_,_,_}},no180=true},-- Z
+        {matrix={{_,O,O},{O,O,_},{_,_,_}},no180=true},-- S
+        {matrix={{O,_,_},{O,O,O},{_,_,_}}},-- J
+        {matrix={{_,_,O},{O,O,O},{_,_,_}}},-- L
+        {matrix={{_,O,_},{O,O,O},{_,_,_}}},-- T
+        {unuse=true,matrix={{O,O},{O,O}}},-- O
+        {matrix={{_,_,_,_},{O,O,O,O},{_,_,_,_},{_,_,_,_}},no180=true},-- I
 
         -- Pentomino
-        {unuse=true,matrix={{X,X,_},{_,X,_},{_,X,X}}},-- Z5
-        {unuse=true,matrix={{_,X,X},{_,X,_},{X,X,_}}},-- S5
-        {matrix={{X,X,_},{X,X,X},{_,_,_}}},-- P
-        {matrix={{_,X,X},{X,X,X},{_,_,_}}},-- Q
-        {matrix={{X,_,_},{X,X,X},{_,X,_}}},-- F
-        {matrix={{_,_,X},{X,X,X},{_,X,_}}},-- E
-        {matrix={{_,X,_},{_,X,_},{X,X,X}}},-- T5
-        {matrix={{X,_,X},{X,X,X},{_,_,_}}},-- U
-        {matrix={{_,_,X},{_,_,X},{X,X,X}}},-- V
-        {matrix={{X,_,_},{X,X,_},{_,X,X}}},-- W
-        {unuse=true,matrix={{_,X,_},{X,X,X},{_,X,_}}},-- X
-        {matrix={{_,_,_,_},{X,_,_,_},{X,X,X,X},{_,_,_,_}}},-- J5
-        {matrix={{_,_,_,_},{_,_,_,X},{X,X,X,X},{_,_,_,_}}},-- L5
-        {matrix={{_,_,_,_},{_,X,_,_},{X,X,X,X},{_,_,_,_}}},-- R
-        {matrix={{_,_,_,_},{_,_,X,_},{X,X,X,X},{_,_,_,_}}},-- Y
-        {matrix={{_,_,_,_},{X,X,_,_},{_,X,X,X},{_,_,_,_}}},-- N
-        {matrix={{_,_,_,_},{_,_,X,X},{X,X,X,_},{_,_,_,_}}},-- H
-        {unuse=true,matrix={{_,_,_,_,_},{_,_,_,_,_},{X,X,X,X,X},{_,_,_,_,_},{_,_,_,_,_}}},-- I5
+        {unuse=true,matrix={{O,O,_},{_,O,_},{_,O,O}}},-- Z5
+        {unuse=true,matrix={{_,O,O},{_,O,_},{O,O,_}}},-- S5
+        {matrix={{O,O,_},{O,O,O},{_,_,_}}},-- P
+        {matrix={{_,O,O},{O,O,O},{_,_,_}}},-- Q
+        {matrix={{O,_,_},{O,O,O},{_,O,_}}},-- F
+        {matrix={{_,_,O},{O,O,O},{_,O,_}}},-- E
+        {matrix={{_,O,_},{_,O,_},{O,O,O}}},-- T5
+        {matrix={{O,_,O},{O,O,O},{_,_,_}}},-- U
+        {matrix={{_,_,O,_},{_,_,O,O},{O,O,O,_},{_,_,_,_}}},-- V
+        {matrix={{O,_,_},{O,O,_},{_,O,O}}},-- W
+        {unuse=true,matrix={{_,O,_},{O,O,O},{_,O,_}}},-- X
+        {matrix={{_,_,_,_},{O,_,_,_},{O,O,O,O},{_,_,_,_}}},-- J5
+        {matrix={{_,_,_,_},{_,_,_,O},{O,O,O,O},{_,_,_,_}}},-- L5
+        {matrix={{_,_,_,_},{_,O,_,_},{O,O,O,O},{_,_,_,_}}},-- R
+        {matrix={{_,_,_,_},{_,_,O,_},{O,O,O,O},{_,_,_,_}}},-- Y
+        {matrix={{_,_,_,_},{O,O,_,_},{_,O,O,O},{_,_,_,_}}},-- N
+        {matrix={{_,_,_,_},{_,_,O,O},{O,O,O,_},{_,_,_,_}}},-- H
+        {unuse=true,matrix={{_,_,_,_,_},{_,_,_,_,_},{O,O,O,O,O},{_,_,_,_,_},{_,_,_,_,_}}},-- I5
     }
 end
 
@@ -108,12 +108,13 @@ local function endGame(passLevel)
 end
 
 function scene.enter()
+    texts=TEXT.new()
     reset()
     playBgm('space','simp')
 end
 
 function scene.leave()
-    texts:clear()
+    texts=nil
 end
 
 function scene.keyDown(key,isRep)
@@ -224,7 +225,7 @@ function scene.update(dt)
             newQuestion()
         end
     end
-    texts:update(dt)
+    if texts then texts:update(dt) end
 end
 
 local size=60
@@ -232,7 +233,7 @@ function scene.draw()
     GC.replaceTransform(SCR.xOy_m)
     GC.setColor(ColorTable[defaultMinoColor[handID]])
 
-    -- Draw hand shape
+    -- Hand shape
     GC.translate(-#handMat*size/2,-#handMat*size/2-250)
     for y=1,#handMat do for x=1,#handMat[1] do
         if handMat[y][x] then
@@ -240,7 +241,7 @@ function scene.draw()
         end
     end end
 
-    -- Draw target shape
+    -- Target shape
     GC.translate(0,500)
     for y=1,#targetMat do for x=1,#targetMat[1] do
         if targetMat[y][x] then
@@ -273,10 +274,12 @@ function scene.draw()
         GC.rectangle('fill',100,150,20,-300*math.max(passTime-totalTime,0)/passTime)
     end
 
-    -- Draw Floating Texts
-    GC.replaceTransform(SCR.xOy_m)
-    GC.scale(2)
-    texts:draw()
+    -- Floating texts
+    if texts then
+        GC.replaceTransform(SCR.xOy_m)
+        GC.scale(2)
+        texts:draw()
+    end
 
     -- Touch control
     if SETTINGS.system.touchControl then
