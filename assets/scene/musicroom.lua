@@ -104,7 +104,7 @@ function scene.enter()
     musicListBox:select(TABLE.find(musicListBox:getList(),selected))
 
     if SETTINGS.system.bgmVol<.0626 then
-        MES.new('warn',Text.musicroom_lowVolume)
+        MSG.new('warn',Text.musicroom_lowVolume)
     end
 end
 

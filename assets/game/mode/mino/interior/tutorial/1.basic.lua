@@ -169,5 +169,5 @@ return {
             "finish AC",
         },
     }},
-    result=task_interiorAutoQuit,
+    result=autoQuitInterior,
 }

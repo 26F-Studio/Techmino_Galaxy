@@ -265,7 +265,7 @@ function scene.enter()
                 currentDict=data
             else
                 currentDict=nil
-                MES.new('error',data,10)
+                MSG.new('error',data,10)
             end
         end
         if not currentDict then currentDict={} end

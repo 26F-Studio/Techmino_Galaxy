@@ -16,7 +16,7 @@ function scene.enter()
     time=0
     err=Zenitha.getErr('#') or {
         scene="NULL",
-        mes={"??????????????????????????","","TRACEFORWARD","??????","?????","????","???","??","?"},
+        msg={"??????????????????????????","","TRACEFORWARD","??????","?????","????","???","??","?"},
         shot=GC.load{200,120,
             {'setLW',2},
             {'setCL',1,1,1,.2},
@@ -26,9 +26,9 @@ function scene.enter()
             {'print','?',118,95,MATH.pi},
         },
     }
-    table.insert(err.mes,"")
-    table.insert(err.mes,SYSTEM.."-"..VERSION.appVer)
-    table.insert(err.mes,"Scene: "..err.scene)
+    table.insert(err.msg,"")
+    table.insert(err.msg,SYSTEM.."-"..VERSION.appVer)
+    table.insert(err.msg,"Scene: "..err.scene)
     Zenitha.setVersionText("")
 end
 
@@ -77,9 +77,9 @@ function scene.draw()
     -- Error infos
     GC.setColor(COLOR.L)
     FONT.set(20)
-    GC.printf(err.mes[1],SCR.safeX+20,20,626)
-    for i=3,#err.mes do
-        GC.print(err.mes[i],SCR.safeX+20,30+20*i)
+    GC.printf(err.msg[1],SCR.safeX+20,20,626)
+    for i=3,#err.msg do
+        GC.print(err.msg[i],SCR.safeX+20,30+20*i)
     end
 
     -- Screenshot

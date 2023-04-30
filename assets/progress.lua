@@ -106,11 +106,11 @@ function PROGRESS.load()
             if res.hash==PROGRESS.getHash(res) then
                 TABLE.coverR(res,prgs)
             else
-                MES.new('info',"Hash not match")
+                MSG.new('info',"Hash not match")
             end
         end
     else
-        MES.new('info',"Load progress failed: "..res)
+        MSG.new('info',"Load progress failed: "..res)
     end
 end
 
@@ -187,7 +187,7 @@ function PROGRESS.setEnv(env)
     end
 end
 function PROGRESS.transcendTo(n)
-    MES.clear()
+    MSG.clear()
     if n==2 then
         WAIT{
             coverAlpha=0,
@@ -237,9 +237,9 @@ function PROGRESS.transcendTo(n)
                     PROGRESS.applyCoolWaitTemplate()
                     WAIT.interrupt()
                     TASK.new(function()
-                        MES.new('warn',Text.interior_crash,10)
+                        MSG.new('warn',Text.interior_crash,10)
                         DEBUG.yieldT(3)
-                        MES.new('info',Text.booting_changed,7)
+                        MSG.new('info',Text.booting_changed,7)
                     end)
                 end
             end,

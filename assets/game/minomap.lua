@@ -222,7 +222,7 @@ local function _enterMode(m)
             SFX.play('map_enter')
             SCN.go('game_out','fade','mino/exterior/'..m.name)
         else
-            MES.new('warn',"Mode file not exist")
+            MSG.new('warn',"Mode file not exist")
         end
     end
 end

@@ -1,6 +1,6 @@
 function sureCheck(event)
     if TASK.lock('sureCheck_'..event,1) then
-        MES.new('info',Text.sureText[event],1)
+        MSG.new('info',Text.sureText[event],1)
     else
         return true
     end
@@ -60,7 +60,7 @@ local interiorModeMeta={__call=function(self)
     if success then
         SCN.go('game_in','none',self.name)
     else
-        MES.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+        MSG.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
     end
 end}
 function playInterior(name)
@@ -72,7 +72,7 @@ local exteriorModeMeta={__call=function(self)
     if success then
         SCN.go('game_out','fade',self.name)
     else
-        MES.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+        MSG.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
     end
 end}
 function playExterior(name)
@@ -83,15 +83,19 @@ function canPause()
     return not GAME.mode.name:find('/test')
 end
 
-function task_interiorAutoQuit(waitTime)
-    TASK.new(function()
-        local time=love.timer.getTime()
-        repeat
-            if SCN.swapping then return end
-            coroutine.yield()
-        until love.timer.getTime()-time>(waitTime or 1.26)
-        SCN.back('none')
-    end)
+local function task_interiorAutoQuit()
+    local time=love.timer.getTime()
+    repeat
+        if SCN.swapping then return end
+        coroutine.yield()
+    until love.timer.getTime()-time>1.26
+    SCN.back('none')
+end
+function autoQuitInterior(disable)
+    TASK.removeTask_code(task_interiorAutoQuit)
+    if not disable then
+        TASK.new(task_interiorAutoQuit)
+    end
 end
 
 function saveSettings()
@@ -180,4 +184,23 @@ function updateWidgetVisible(widgetList)
         widgetList.stick4_1:setVisible(false)
         widgetList.stick4_2:setVisible(false)
     end
+end
+
+local sandBoxEnv={
+    mechLib=mechLib,
+    math=math,
+    string=string,
+    table=table,
+    coroutine=coroutine,
+    assert=assert,error=error,
+    tonumber=tonumber,tostring=tostring,
+    select=select,next=next,
+    ipairs=ipairs,pairs=pairs,
+    type=type,
+    pcall=pcall,xpcall=xpcall,
+    rawget=rawget,rawset=rawset,rawlen=rawlen,rawequal=rawequal,
+    setfenv=setfenv,setmetatable=setmetatable,
+}
+function setSafeEnv(func)
+    setfenv(func,TABLE.copy(sandBoxEnv))
 end
