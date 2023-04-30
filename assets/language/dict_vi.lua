@@ -193,7 +193,7 @@ In order to more easily perform combos, a common technique is to build a tall st
 
 # spike
 @ title Spike
-Refers to sending a lot of attack in a short period of time.
+Đề cập việc gửi xóa nhiều hàng liên tiếp để tấn công mạnh vào đối thủ
 
 # drop_speed
 @ title Drop Speed
@@ -221,7 +221,7 @@ APM refers to Attack per Minute.
 APL refers to Attack per Line. Sometimes also called "Efficiency".
 
 # das_arr
-@ title DAS and ARR
+@ title DAS và ARR
 DAS stands for Delayed Auto Shift, and ARR stands for Auto Repeat Rate. The come into play when you hold a direction key to move a piece sideways.
 
 Imagine you are in a text editor, and you hold down a letter key. A letter appears first, and after a little pause, more letters begin to appear quickly. The little pause is DAS, and the rate at which the letters appear quickly is ARR.
@@ -233,7 +233,8 @@ A skilled player would tune DAS to be as short as possible while still being abl
 Làm một hành động nào đó nhưng bị lỗi/sai sót. Có 2 kiểu: mis-drop (thả gạch nhầm chỗ/sai thời điểm) và mis-hold (vô tình giữ/đổi gạch)
 
 # gravity
-@ title Falling Speed
+@ title Tốc độ rơi
+@ titleFull Tốc độ rơi (Falling speed)
 The speed at which pieces naturally fall when you don't press any buttons.
 
 When falling is relatively slow, the speed is usually described as "X blocks per second" or "one block every X seconds".
@@ -282,24 +283,30 @@ A way to randomly generate a piece sequence. It keeps track of the recent few pi
 His generator is an improvement over generating the sequence completely randomly, and greatly reduces the chances that a drought or flood happens.
 
 # half_invis
-@ title Half Invis (Tàng hình một phần)
+@ title Half Invis
+@ titleFull Half Invis (Tàng hình một phần)
 Gạch sẽ biến mất sau vài giây từ lúc nó được đặt xuống.
 
 # full_invis
-@ title Full Invis (Tàng hình hoàn toàn)
+@ title Full Invis
+@ titleFull Full Invis (Tàng hình hoàn toàn)
 Gạch sẽ biến mất ngay lập tức sau khi nó được đặt xuống.
 
 # deepdrop
 @ title Deep Drop
-A rule where pieces can drop down through existing blocks into an opening.
+Một quy tắc trong đó gạch có thể chìm xuống dưới, xuyên qua cả gạch đã đặt, để xuống lố sâu hơn
 
-This is more often used when experimenting, as it allows pieces to reach any opening that can hold the piece, without having to worry about rotation system.
+Điều này thường được sử dụng khi thử nghiệm, vì nó cho phép các viên gạch tiếp cận bất kỳ lỗ mở nào có thể giữ mảnh mà không phải lo lắng về hệ thống xoay.
+
+~~3
+
+Thông tin thêm: nếu bạn đã từng chơi Gameloft Tetris thì sẽ có một booster tên là "Gạch ma" (đừng nhầm lẫn với "Bóng gạch") thì bạn sẽ để ý rằng loại gạch này có thể đi xuyên qua để xuống cái lỗ chưa. Deep Drop cũng hoạt động giống như thế, nhưng thay vì chỉ là một mino (gạch 1 ô) thì Deep Drop sẽ hiệu lực lên tất cả Tetromino - tức là, nếu bạn có một lỗ chữ Z nằm khá sâu và gạch đang rơi cũng là gạch Z, thì bạn có thể nhấn nút "Rơi tức thì", sau đó nhấn nút "Rơi nhanh" để thực hiện Deep Drop; lập tức gạch Z đã đi xuống lỗ chữ Z bất chấp nó sâu tới mấy và rồi bạn có thể nhấn nút "Đặt mạnh" để chốt vị trí.
 
 # cascade
 @ title Gravity
-A rule where floating or otherwise disconnected blocks may fall down after clearing a line. This can create chains of line clears known as "Cascade".
+Một quy tắc trong đó các gạch nổi hoặc bị mất liên kết có thể rơi xuống sau khi xóa một hàng. Điều này có thể tạo ra các chuỗi xóa hàng được gọi là "Cascade".
 
-"Cascade" is often used to refer the rule itself, due to the potetial confusion between "gravity" and "falling speed".
+"Cascade" (thác (nước)) là từ hay dùng nhiều để nói về quy tắc này, bởi vì hai từ "gravity" (trọng lực) and "falling speed" (tốc độ rơi) có thể gây nhầm lẫn.
 
 #mph
 @ title MPH 
