@@ -190,7 +190,7 @@ end
 
 function GAME.load(mode,seed)
     if GAME.mode then
-        MES.new('warn',"Game is running")
+        MSG.new('warn',"Game is running")
         return
     end
     GAME.playing=true
@@ -207,7 +207,7 @@ function GAME.load(mode,seed)
     TASK.removeTask_code(task_unloadGame)
 
     if #GAME.playerList==0 then
-        MES.new('warn',"No players created in this mode")
+        MSG.new('warn',"No players created in this mode")
     else
         if GAME.mainPlayer then
             local conf=SETTINGS["game_"..GAME.mainPlayer.gameMode]
@@ -247,7 +247,7 @@ end
 
 function GAME.newPlayer(id,pType)
     if not (type(id)=='number' and floor(id)==id and id>=1 and id<=1000) then
-        MES.new('error',"player id must be 1~1000 integer")
+        MSG.new('error',"player id must be 1~1000 integer")
         return
     end
 
@@ -259,7 +259,7 @@ function GAME.newPlayer(id,pType)
     elseif pType=='gem' then
         P=require'assets.game.gemPlayer'.new(GAME.mode)
     else
-        MES.new('error',"invalid player type :'"..tostring(pType).."'")
+        MSG.new('error',"invalid player type :'"..tostring(pType).."'")
         return
     end
 

@@ -67,8 +67,8 @@ Zenitha.setOnGlobalKey('f11',function()
     saveSettings()
 end)
 Zenitha.setOnFnKeys({
-    function() MES.new('info',("System:%s[%s]\nLuaVer:%s\nJitVer:%s\nJitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,
-    function() MES.new('check',PROFILE.switch() and "Profile start!" or "Profile report copied!") end,
+    function() MSG.new('info',("System:%s[%s]\nLuaVer:%s\nJitVer:%s\nJitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,
+    function() MSG.new('check',PROFILE.switch() and "Profile start!" or "Profile report copied!") end,
     function() if love['_openConsole'] then love['_openConsole']() end end,
     function() for k,v in next,_G do print(k,v) end end,
     function() local w=WIDGET.getSelected() print(w and w:getInfo() or "No widget selected") end,

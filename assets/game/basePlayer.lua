@@ -44,7 +44,7 @@ function P:playSound(event,...)
         if self.soundEvent[event] then
             self.soundEvent[event](...)
         else
-            MES.new('warn',"Unknown sound event: "..event)
+            MSG.new('warn',"Unknown sound event: "..event)
         end
     end
 end
@@ -189,7 +189,7 @@ function P:finish(reason)
 
     -- TODO: Just for temporary use
     if self.isMain then
-        MES.new(reason=='AC' and 'check' or 'error',reason,6.26)
+        MSG.new(reason=='AC' and 'check' or 'error',reason,6.26)
         self:playSound(reason=='AC' and 'win' or 'fail')
     end
 end
