@@ -1,11 +1,14 @@
-local level,score,time,totalTime,passCD,protect
+local controlCD
+local level,score
+local time,totalTime
+local protect-- Prevent punishment 90 when need 180 for one time
 local handID,handMat,targetMat
 local texts
 
 --[[ Levels
     1~40:    R/L(+F after 20)
-    41~80:  Random spawning direction
-    81~120: Pentominoes
+    41~80:   Random spawning direction
+    81~120:  Pentominoes
     121~160: Random spawning direction
 ]]
 local passTime=60
@@ -48,7 +51,7 @@ end
 local scene={}
 
 local function newQuestion()
-    passCD=false
+    controlCD=false
 
     repeat
         if level>=3 then
@@ -67,11 +70,12 @@ local function newQuestion()
 end
 
 local function reset()
+    autoQuitInterior(true)
     level=1
     score=0
     time=parTime[1]
     totalTime=0
-    passCD=false
+    controlCD=false
     newQuestion()
 
     texts:clear()
@@ -92,7 +96,7 @@ local function reset()
 end
 
 local function endGame(passLevel)
-    passCD=1e99
+    controlCD=1e99
     texts:add{
         text=passLevel==0 and Text.tutorial_notpass or Text.tutorial_pass,
         color=({[0]=COLOR.lR,COLOR.lG,COLOR.lB,COLOR.lY})[passLevel],
@@ -104,7 +108,7 @@ local function endGame(passLevel)
         inPoint=.1,
         outPoint=0,
     }
-    task_interiorAutoQuit(2.6)
+    autoQuitInterior()
 end
 
 function scene.enter()
@@ -121,7 +125,7 @@ function scene.keyDown(key,isRep)
     if isRep then return end
 
     local action
-    if not passCD then
+    if not controlCD then
         action=KEYMAP.mino:getAction(key)
         if action and action:find('rotate')==1 then
             SFX.play('rotate')
@@ -142,7 +146,7 @@ function scene.keyDown(key,isRep)
                 end
             end
             if same then
-                passCD=.26
+                controlCD=.26
                 score=score+1
                 if score%40==0 then
                     -- End game check
@@ -206,7 +210,7 @@ function scene.update(dt)
     -- Timer & check
     totalTime=totalTime+dt
     time=math.max(time-dt,0)
-    if passCD~=1e99 then
+    if controlCD~=1e99 then
         if level>1 then
             if time==0 then
                 endGame(level>=3 and 2 or 1)
@@ -219,12 +223,13 @@ function scene.update(dt)
     end
 
     -- Auto next level
-    if passCD then
-        passCD=passCD-dt
-        if passCD<=0 then
+    if controlCD then
+        controlCD=controlCD-dt
+        if controlCD<=0 then
             newQuestion()
         end
     end
+
     if texts then texts:update(dt) end
 end
 
@@ -270,8 +275,8 @@ function scene.draw()
         GC.replaceTransform(SCR.xOy_l)
         GC.setLineWidth(2)
         GC.setColor(COLOR.L)
-        GC.rectangle('line',100-3,150+3,20+6,-300-6)
-        GC.rectangle('fill',100,150,20,-300*math.max(passTime-totalTime,0)/passTime)
+        GC.rectangle('line',200-3,150+3,20+6,-300-6)
+        GC.rectangle('fill',200,150,20,-300*math.max(passTime-totalTime,0)/passTime)
     end
 
     -- Floating texts

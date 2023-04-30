@@ -52,5 +52,5 @@ return {
             end,
         },
     }},
-    result=task_interiorAutoQuit,
+    result=autoQuitInterior,
 }

@@ -258,9 +258,8 @@ return {
     tutorial_sequence_3="…but now you can see what pieces are coming next.",
     tutorial_sequence_4="Use the Hold key to adjust the order of the pieces.",
 
-    tutorial_piece_1="3. Piece shapes",
-    tutorial_piece_2="Usually there are 7 types of tetromino pieces.",
-    tutorial_piece_3="They are named with 7 letters: Z, S, J, L, T, O, I.",
+    tutorial_shape_1="3. Piece shapes",
+    tutorial_shape_2="Select one piece which fit the field better",
 
     tutorial_stackBasic_1="4. Basic Stacking",
     tutorial_stackBasic_m1="Please follow the follwing instructions:",

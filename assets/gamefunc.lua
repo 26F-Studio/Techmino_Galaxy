@@ -83,15 +83,19 @@ function canPause()
     return not GAME.mode.name:find('/test')
 end
 
-function task_interiorAutoQuit(waitTime)
-    TASK.new(function()
-        local time=love.timer.getTime()
-        repeat
-            if SCN.swapping then return end
-            coroutine.yield()
-        until love.timer.getTime()-time>(waitTime or 1.26)
-        SCN.back('none')
-    end)
+local function task_interiorAutoQuit()
+    local time=love.timer.getTime()
+    repeat
+        if SCN.swapping then return end
+        coroutine.yield()
+    until love.timer.getTime()-time>1.26
+    SCN.back('none')
+end
+function autoQuitInterior(disable)
+    TASK.removeTask_code(task_interiorAutoQuit)
+    if not disable then
+        TASK.new(task_interiorAutoQuit)
+    end
 end
 
 function saveSettings()

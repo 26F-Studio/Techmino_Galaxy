@@ -258,9 +258,8 @@ return {
     tutorial_sequence_3="现在你可以看到之后会来什么块了",
     tutorial_sequence_4="使用暂存键来调整方块的顺序",
 
-    tutorial_piece_1="3. 方块形状",
-    tutorial_piece_2="通常游戏只使用七种形状的四连方块",
-    tutorial_piece_3="用七个形状类似的字母给他们命名: Z, S, J, L, T, O, I",
+    tutorial_shape_1="3. 方块形状",
+    tutorial_shape_2="选择更贴合地形的那个方块",
 
     tutorial_stackBasic_1="4.堆叠(基础)",
     tutorial_stackBasic_m1="请按照提示摆块",
