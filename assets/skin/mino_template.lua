@@ -48,21 +48,16 @@ function S.drawFieldBorder()
 end
 
 function S.fallingCurve(t) return t end
-function S.drawFieldCells(F,y)
-    for x=1,#F[1] do
-        local C=F[y][x]
-        if C then
-            local r,g,b=unpack(ColorTable[C.color])
-            local a=C.alpha or 1
-            gc_setColor(r,g,b,a)
-            gc_rectangle('fill',(x-1)*40,-y*40,40,40)
-        end
-    end
+function S.drawFieldCells(C)
+    local r,g,b=unpack(ColorTable[C.color])
+    local a=C.alpha or 1
+    gc_setColor(r,g,b,a)
+    gc_rectangle('fill',0,0,40,-40)
 end
 
-function S.drawClearingEffect(w,y,rate)-- rate is raw `clearTimer/clearDelay`, not `Curve(T/D)`
+function S.drawClearingEffect(w,rate)-- rate is raw `clearTimer/clearDelay`, not `Curve(T/D)`
     gc_setColor(1,1,1,rate)
-    gc_rectangle('fill',0,(1-y)*40,w*40,-40*rate)
+    gc_rectangle('fill',0,0,w*40,-40*rate)
 end
 
 function S.drawFloatHold(n,B,handX,handY,unavailable)

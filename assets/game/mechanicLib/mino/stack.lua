@@ -101,6 +101,7 @@ end
 function stack.event_afterLock(P)
     if P.modeData.stack_enabled then
         local F=P.field
+        local matrix=F._matrix
         local list={}
         local md=P.modeData
         for y=md.stack_lines+1,F:getHeight() do
@@ -118,11 +119,17 @@ function stack.event_afterLock(P)
         end
         for _,y in next,list do
             if y>=md.stack_lines+1 then
-                for x=1,#F._matrix[y] do
+                for x=1,#matrix[y] do
                     local C=F:getCell(x,y)
                     if C then C.color=0 end
                 end
-                table.insert(F._matrix,md.stack_lines+1,table.remove(F._matrix,y))
+                table.insert(matrix,md.stack_lines+1,table.remove(matrix,y))
+                for x=1,P.settings.fieldW do
+                    P:setCellBias(x,md.stack_lines+1,{y=y-(md.stack_lines+1),expBack=.01})
+                    for y1=md.stack_lines+2,y do
+                        P:setCellBias(x,y1,{y=-1,expBack=.01})
+                    end
+                end
             end
             md.stack_lines=md.stack_lines+1
             md.stack_highestLine=md.stack_highestLine+1

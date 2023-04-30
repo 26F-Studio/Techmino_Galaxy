@@ -87,7 +87,7 @@ local function reset()
     autoQuitInterior(true)
     level=1
     score=0
-    time=parTime[1]
+    time=passTime
     totalTime=0
     noControl=false
     newQuestion()

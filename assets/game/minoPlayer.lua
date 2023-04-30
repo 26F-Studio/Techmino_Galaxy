@@ -288,6 +288,30 @@ function MP:createLockParticle(x,y)
     )
     p:emit(1)
 end
+function MP:setCellBias(x,y,bias)
+    local c=self.field:getCell(x,y)
+    if c then
+        bias.x=40*(bias.x or 0)
+        bias.y=-40*(bias.y or 0)
+        if c.bias then
+            bias.x=bias.x+c.bias.x
+            bias.y=bias.y+c.bias.y
+        end
+        c.bias=bias
+    end
+end
+function MP:showInvis(visStep,visMax)
+    for y=1,self.field:getHeight() do
+        for x=1,self.settings.fieldW do
+            local c=self.field:getCell(x,y)
+            if c then
+                c.visTimer=c.visTimer or 0
+                c.visStep=visStep or 1
+                c.visMax=visMax
+            end
+        end
+    end
+end
 --------------------------------------------------------------
 -- Game methods
 function MP:moveHand(action,a,b,c,d)
@@ -1327,18 +1351,6 @@ function MP:changeFieldWidth(w,origPos)
         self.field:fresh()
     end
 end
-function MP:showInvis(visStep,visMax)
-    for y=1,self.field:getHeight() do
-        for x=1,self.settings.fieldW do
-            local c=self.field:getCell(x,y)
-            if c then
-                c.visTimer=c.visTimer or 0
-                c.visStep=visStep or 1
-                c.visMax=visMax
-            end
-        end
-    end
-end
 function MP:receive(data)
     local B={
         power=data.power,
@@ -1519,12 +1531,32 @@ function MP:updateFrame()
     local F=self.field._matrix
     for y=1,#F do for x=1,#F[1] do
         local C=F[y][x]
-        if C and C.visTimer then
-            local step=C.visStep or -1
-            C.visTimer=C.visTimer+step
-            C.alpha=clamp(C.visTimer/C.fadeTime,0,1)
-            if step<0 and C.visTimer<=0 or step>0 and C.visTimer>=(C.visMax or C.fadeTime) then
-                C.visTimer=nil
+        if C then
+            if C.visTimer then
+                local step=C.visStep or -1
+                C.visTimer=C.visTimer+step
+                C.alpha=clamp(C.visTimer/C.fadeTime,0,1)
+                if step<0 and C.visTimer<=0 or step>0 and C.visTimer>=(C.visMax or C.fadeTime) then
+                    C.visTimer=nil
+                end
+            end
+            if C.bias then
+                local b=C.bias
+                if b.expBack then
+                    b.x=MATH.expApproach(b.x,0,b.expBack)
+                    b.y=MATH.expApproach(b.y,0,b.expBack)
+                elseif b.lineBack then
+                    local dist=(b.x^2+b.y^2)^.5
+                    if dist<b.lineBack then
+                        C.bias=nil
+                    else
+                        local k=1-b.lineBack/dist
+                        b.x,b.y=b.x*k,b.y*k
+                    end
+                end
+                if b.x==0 and b.y==0 then
+                    C.bias=nil
+                end
             end
         end
     end end
@@ -1577,23 +1609,40 @@ function MP:render()
 
         gc.translate(0,self.fieldDived)
 
-            gc.push('transform')
+            do -- Field
+                local matrix=self.field._matrix
+                gc.push('transform')
                 local ptr,lines,fallingRate
                 if self.clearTimer>0 then
                     lines=self.clearHistory[#self.clearHistory].lines
-                    fallingRate=self.clearTimer/self.settings.clearDelay
+                    fallingRate=self.clearTimer/settings.clearDelay
                     ptr=#lines
                 end
 
-                for y=floor(1+self.fieldDived/40),#self.field._matrix do
+                local width=settings.fieldW
+                for y=floor(1+self.fieldDived/40),#matrix do
                     while ptr and y==lines[ptr]-(#lines-ptr) do
-                        skin.drawClearingEffect(settings.fieldW,y,fallingRate)
+                        skin.drawClearingEffect(settings.fieldW,fallingRate)
                         ptr=ptr>1 and ptr-1
                         gc.translate(0,-40*skin.fallingCurve(fallingRate))
                     end
-                    skin.drawFieldCells(self.field._matrix,y)
+                    for x=1,width do
+                        local C=matrix[y][x]
+                        if C then
+                            if C.bias then
+                                gc.translate(C.bias.x,C.bias.y)
+                                skin.drawFieldCells(C,matrix,x,y)
+                                gc.translate(-C.bias.x,-C.bias.y)
+                            else
+                                skin.drawFieldCells(C,matrix,x,y)
+                            end
+                        end
+                        gc.translate(40,0)
+                    end
+                    gc.translate(-40*width,-40)-- \r\n (Return + Newline)
                 end
-            gc.pop()
+                gc.pop()
+            end
 
             self:triggerEvent('drawBelowBlock')
 
@@ -1609,8 +1658,8 @@ function MP:render()
                 if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
                     -- Smooth
                     local movingX,droppingY=0,0
-                    if not self.deathTimer and self.moveDir and self.moveCharge<self.settings.das then
-                        movingX=15*self.moveDir*(max(self.moveCharge,0)/self.settings.das-.5)
+                    if not self.deathTimer and self.moveDir and self.moveCharge<settings.das then
+                        movingX=15*self.moveDir*(max(self.moveCharge,0)/settings.das-.5)
                     end
                     if self.handY>self.ghostY then
                         droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
@@ -1672,7 +1721,7 @@ function MP:render()
     skin.drawFieldBorder()
 
     -- Das indicator
-    skin.drawDasIndicator(self.moveDir,self.moveCharge,self.settings.das,self.settings.arr,self.settings.dasHalt)
+    skin.drawDasIndicator(self.moveDir,self.moveCharge,settings.das,settings.arr,settings.dasHalt)
 
     -- Delay indicator
     if not self.hand then-- Spawn

@@ -21,10 +21,10 @@ end
 
 function S.fallingCurve(t) return 1 end
 
-function S.drawClearingEffect(w,y,rate)
+function S.drawClearingEffect(w,rate)
     if rate>.626 then
         gc_setColor(1,1,1,.8626)
-        gc_rectangle('fill',0,-y*40,w*40,40)
+        gc_rectangle('fill',0,0,w*40,-40)
     end
 end
 

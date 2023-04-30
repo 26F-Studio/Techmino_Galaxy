@@ -31,32 +31,27 @@ local function drawSide(B,x,y,bx,by)
 end
 
 
-function S.drawFieldCells(F,y)
-    for x=1,#F[1] do
-        local C=F[y][x]
-        if C then
-            local bx,by=(x-1)*40,-y*40
-            local r,g,b=unpack(ColorTable[C.color])
-            local a=C.alpha or 1
-            gc_setColor(r,g,b,a)
-            gc_rectangle('fill',bx,by,40,40)
+function S.drawFieldCells(C,F,x,y)
+    -- local bx,by=(x-1)*40,-y*40
+    local r,g,b=unpack(ColorTable[C.color])
+    local a=C.alpha or 1
+    gc_setColor(r,g,b,a)
+    gc_rectangle('fill',0,0,40,-40)
 
-            gc_setColor(r*.5,g*.5,b*.5,a)
-            -- Reuse local var g
-            g=C.conn
-            if g then
-                local U,D,L,R
-                if not (g[F[y  ] and F[y  ][x+1]]) then gc_rectangle('fill',bx+40-X,by   ,X ,40) R=true end
-                if not (g[F[y  ] and F[y  ][x-1]]) then gc_rectangle('fill',bx     ,by   ,X ,40) L=true end
-                if not (g[F[y-1] and F[y-1][x  ]]) then gc_rectangle('fill',bx     ,by+40,40,-X) D=true end
-                if not (g[F[y+1] and F[y+1][x  ]]) then gc_rectangle('fill',bx     ,by   ,40, X) U=true end
+    gc_setColor(r*.5,g*.5,b*.5,a)
+    -- Reuse local var g
+    local c=C.conn
+    if c then
+        local U,D,L,R
+        if not (c[F[y  ] and F[y  ][x+1]]) then gc_rectangle('fill',40,0  ,-X,-40) R=true end
+        if not (c[F[y  ] and F[y  ][x-1]]) then gc_rectangle('fill',0 ,0  ,X ,-40) L=true end
+        if not (c[F[y-1] and F[y-1][x  ]]) then gc_rectangle('fill',0 ,0  ,40,-X ) D=true end
+        if not (c[F[y+1] and F[y+1][x  ]]) then gc_rectangle('fill',0 ,-40,40, X ) U=true end
 
-                if not (D or L or g[F[y-1] and F[y-1][x-1]]) then gc_rectangle('fill',bx     ,by+40,X ,-X) end
-                if not (U or L or g[F[y+1] and F[y+1][x-1]]) then gc_rectangle('fill',bx     ,by   ,X , X) end
-                if not (D or R or g[F[y-1] and F[y-1][x+1]]) then gc_rectangle('fill',bx+40-X,by+40,X ,-X) end
-                if not (U or R or g[F[y+1] and F[y+1][x+1]]) then gc_rectangle('fill',bx+40-X,by   ,X , X) end
-            end
-        end
+        if not (D or L or c[F[y-1] and F[y-1][x-1]]) then gc_rectangle('fill',0 ,0  ,X ,-X) end
+        if not (U or L or c[F[y+1] and F[y+1][x-1]]) then gc_rectangle('fill',0 ,-40,X , X) end
+        if not (D or R or c[F[y-1] and F[y-1][x+1]]) then gc_rectangle('fill',40,0  ,-X,-X) end
+        if not (U or R or c[F[y+1] and F[y+1][x+1]]) then gc_rectangle('fill',40,-40,-X, X) end
     end
 end
 
