@@ -267,10 +267,9 @@ return {
     tutorial_sequence_3="Bây giờ bạn có thể nhìn thấy những gạch nào chuẩn bị rơi theo lần lượt. ",
     tutorial_sequence_4="Hãy dùng phím \"Giữ gạch\" để điều chỉnh thứ tự của các gạch.",
 
-    tutorial_piece_1="3. Hình dạng của các viên gạch",
-    tutorial_piece_2="Có 7 gạch tetromino (gạch 4 ô)",
-    tutorial_piece_3="Chúng được đặt tên theo các chữ cái sau: Z, S, J, L, T, O, I.",
-
+    tutorial_shape_1="3. Hình dạng của các viên gạch",
+    tutorial_shape_2="Hãy chọn gạch vừa khít nhất.",
+    
     tutorial_stackBasic_1="4. Xếp gạch sao cho đúng?",
     tutorial_stackBasic_m1="Hãy tập trung vào màn hình và làm theo hướng dẫn nè!",
     tutorial_stackBasic_m2="Lúc đầu, hãy giữ cho địa hình gạch phẳng nhất có thể",
