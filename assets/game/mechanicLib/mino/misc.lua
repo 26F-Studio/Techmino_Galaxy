@@ -125,13 +125,24 @@ do-- swapDirection
 end
 
 function misc.flipBoardLR(P)
+    local matrix=P.field._matrix
+    local width=P.settings.fieldW
     for y=1,P.field:getHeight() do
-        TABLE.reverse(P.field._matrix[y])
+        TABLE.reverse(matrix[y])
+        for x=1,width do
+            P:setCellBias(x,y,{x=width+1-2*x,expBack=.026})
+        end
     end
     P:freshGhost()
 end
 function misc.flipBoardUD(P)
     TABLE.reverse(P.field._matrix)
+    local height=P.field:getHeight()
+    for y=1,height do
+        for x=1,P.settings.fieldW do
+            P:setCellBias(x,y,{y=height+1-2*y,expBack=.026})
+        end
+    end
     P:freshGhost()
 end
 function misc.invertBoard(P,fromH,toH)
@@ -144,8 +155,8 @@ function misc.invertBoard(P,fromH,toH)
     end
 end
 function misc.spinBoard(P,dx)
-    dx=dx and dx%P.settings.fieldW or P:random(1,P.settings.fieldW-1)
     if dx==0 then return end
+    dx=dx and dx%P.settings.fieldW or P:random(1,P.settings.fieldW-1)
     if dx>=P.settings.fieldW/2 then dx=dx-P.settings.fieldW end
     local ip=dx>0 and 1 or P.settings.fieldW
     local rp=dx>0 and P.settings.fieldW or 1
