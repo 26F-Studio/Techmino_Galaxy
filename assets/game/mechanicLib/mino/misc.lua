@@ -219,25 +219,39 @@ do-- symmetery
 end
 
 do-- wind
-    function misc.wind_event_playerInit(P)
-        P.modeData.windTargetStrength=(P:random()<.5 and -1 or 1)*P:random(1260,1600)
-        P.modeData.windStrength=0
-        P.modeData.windCounter=0
+    function misc.wind_switch_auto(P)
+        local md=P.modeData
+        if md.wind_enabled then
+            md.wind_enabled=false
+            md.windStrength=false
+            md._windStrength=false
+            md.windCounter=false
+            md.invertPoints=false
+        else
+            md.wind_enabled=true
+            md.windStrength=(P:random()<.5 and -1 or 1)*P:random(1260,1600)
+            md._windStrength=0
+            md.windCounter=0
 
-        P.modeData.invertPoints={}
-        for i=1,P:random(4,6) do
-            P.modeData.invertPoints[i]=P:random(2,38)
+            md.invertPoints={}
+            for i=1,P:random(4,6) do
+                md.invertPoints[i]=P:random(2,38)
+            end
+            table.sort(md.invertPoints)
         end
-        table.sort(P.modeData.invertPoints)
+        local setEvent=P.modeData.wind_enabled and P.addEvent or P.delEvent
+        setEvent(P,'always',misc.wind_event_always)
+        setEvent(P,'afterClear',misc.wind_event_afterClear)
+        setEvent(P,'drawInField',misc.wind_event_drawInField)
     end
     function misc.wind_event_always(P)
         if not P.timing then return end
         local md=P.modeData
-        md.windStrength=md.windStrength+MATH.sign(md.windTargetStrength-md.windStrength)
-        md.windCounter=md.windCounter+math.abs(md.windStrength)
+        md._windStrength=md._windStrength+MATH.sign(md.windStrength-md._windStrength)
+        md.windCounter=md.windCounter+math.abs(md._windStrength)
         if md.windCounter>=62000 then
             if P.hand then
-                P[md.windStrength<0 and 'moveLeft' or 'moveRight'](P)
+                P[md._windStrength<0 and 'moveLeft' or 'moveRight'](P)
             end
             md.windCounter=md.windCounter-62000
         end
@@ -248,16 +262,16 @@ do-- wind
             while #md.invertPoints>0 and md.line>md.invertPoints[1] do
                 rem(md.invertPoints,1)
             end
-            md.windTargetStrength=-MATH.sign(md.windTargetStrength)*P:random(1260,1600)
+            md.windStrength=-MATH.sign(md.windStrength)*P:random(1260,1600)
         end
     end
     function misc.wind_event_drawInField(P)
         gc.setLineWidth(4)
         gc.setColor(1,.626,.626,.626)
-        gc.circle('fill',P.settings.fieldW*(20+P.modeData.windStrength/100),-400,P.modeData.windStrength/60,6)
+        gc.circle('fill',P.settings.fieldW*(20+P.modeData._windStrength/100),-400,P.modeData._windStrength/60,6)
         gc.setLineWidth(8)
         gc.setColor(1,.942,.942,.42)
-        gc.line(P.settings.fieldW*20,-400,P.settings.fieldW*(20+P.modeData.windStrength/100),-400)
+        gc.line(P.settings.fieldW*20,-400,P.settings.fieldW*(20+P.modeData._windStrength/100),-400)
     end
 end
 
