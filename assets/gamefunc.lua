@@ -185,3 +185,22 @@ function updateWidgetVisible(widgetList)
         widgetList.stick4_2:setVisible(false)
     end
 end
+
+local sandBoxEnv={
+    mechLib=mechLib,
+    math=math,
+    string=string,
+    table=table,
+    coroutine=coroutine,
+    assert=assert,error=error,
+    tonumber=tonumber,tostring=tostring,
+    select=select,next=next,
+    ipairs=ipairs,pairs=pairs,
+    type=type,
+    pcall=pcall,xpcall=xpcall,
+    rawget=rawget,rawset=rawset,rawlen=rawlen,rawequal=rawequal,
+    setfenv=setfenv,setmetatable=setmetatable,
+}
+function setSafeEnv(func)
+    setfenv(func,TABLE.copy(sandBoxEnv))
+end

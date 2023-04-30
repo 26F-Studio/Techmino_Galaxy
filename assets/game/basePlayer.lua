@@ -389,44 +389,62 @@ function P:update(dt)
 end
 --------------------------------------------------------------
 -- Builder
-function P:addEvent(name,E)
+function P:addEvent(name,F)
     assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
-    if type(E)=='table' then
-        for i=1,#E do
-            self:addEvent(name,E[i])
+    if type(F)=='table' then
+        for i=1,#F do
+            self:addEvent(name,F[i])
         end
+    elseif type(F)=='string' then
+        local errMsg
+        F,errMsg=loadstring('local P=...\n'..F)
+        if F then
+            setSafeEnv(F)
+            ins(self.event[name],F)
+        else
+            error('Error in code string: '..errMsg)
+        end
+    elseif type(F)=='function' then
+        ins(self.event[name],F)
     else
-        assert(type(E)=='function','event must be function or table of functions')
-        ins(self.event[name],E)
+        error('event must be function or table of functions')
     end
 end
-function P:delEvent(name,E)
+function P:delEvent(name,F)
     assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
-    assert(type(E)=='function','event must be function')
-    local pos=TABLE.find(self.event[name],E)
+    assert(type(F)=='function','event must be function')
+    local pos=TABLE.find(self.event[name],F)
     if pos then rem(self.event[name],pos) end
 end
-function P:addCodeSeg(name,S)
+function P:addCodeSeg(name,F)
     assert(self.codeSeg[name],"Wrong codeSeg key: '"..tostring(name).."'")
-    if type(S)=='table' then
-        for i=1,#S do
-            self:addCodeSeg(name,S[i])
+    if type(F)=='table' then
+        for i=1,#F do
+            self:addCodeSeg(name,F[i])
         end
-    else
-        assert(type(S)=='function','codeSeg must be function or table of functions')
-        ins(self.codeSeg[name],S)
+    elseif type(F)=='string' then
+        local errMsg
+        F,errMsg=loadstring('local P=...\n'..F)
+        if F then
+            setSafeEnv(F)
+            ins(self.codeSeg[name],F)
+        else
+            error('Error in code string: '..errMsg)
+        end
+    elseif type(F)=='function' then
+        ins(self.codeSeg[name],F)
     end
 end
-function P:delCodeSeg(name,S)
+function P:delCodeSeg(name,F)
     assert(self.codeSeg[name],"Wrong codeSeg key: '"..tostring(name).."'")
-    assert(type(S)=='function','codeSeg must be function')
-    local pos=TABLE.find(self.codeSeg[name],S)
+    assert(type(F)=='function','codeSeg must be function')
+    local pos=TABLE.find(self.codeSeg[name],F)
     if pos then rem(self.codeSeg[name],pos) end
 end
-function P:addSoundEvent(name,E)
+function P:addSoundEvent(name,F)
     assert(self.soundEvent[name],"Wrong soundEvent key: '"..tostring(name).."'")
-    assert(type(E)=='function',"soundEvent must be function")
-    self.soundEvent[name]=E
+    assert(type(F)=='function',"soundEvent must be function")
+    self.soundEvent[name]=F
 end
 function P:delSoundEvent(name)
     assert(self.soundEvent[name],"Wrong soundEvent key: '"..tostring(name).."'")
@@ -435,16 +453,16 @@ end
 function P:loadSettings(settings)-- Load data & events from mode settings
     for k,v in next,settings do
         if k=='event' then
-            for name,E in next,v do
-                self:addEvent(name,E)
+            for name,F in next,v do
+                self:addEvent(name,F)
             end
         elseif k=='codeSeg' then
-            for name,S in next,v do
-                self:addCodeSeg(name,S)
+            for name,F in next,v do
+                self:addCodeSeg(name,F)
             end
         elseif k=='soundEvent' then
-            for name,E in next,v do
-                self:addSoundEvent(name,E)
+            for name,F in next,v do
+                self:addSoundEvent(name,F)
             end
         else
             if type(v)=='table' then
