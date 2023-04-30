@@ -250,12 +250,11 @@ return {
     tutorial_sequence="Next & Hold",
     tutorial_stackBasic="Xếp gạch sao cho đúng?",
     tutorial_twoRotatingKey="Xoay cả 2 hướng",
-    -- tutorial_piece="Hình dạng của\ncác viên gạch",
-    tutorial_piece = "[Chưa hoàn thành]", -- [Unfinished] | Waiting for actual game
+    tutorial_piece="Hình dạng của\ncác viên gạch",
     tutorial_rotating="Tập xoay gạch",
 
     tutorial_pass="HOÀN THÀNH!", -- Completed (Pass)
-    tutorial_notpass="Tạch rồi…", -- Fun fact: "Tạch" is the keyboard sound, don't make any keyboard sounds to who are preapring the test (or WYSI)
+    tutorial_notpass="Trượt rồi…",
 
     tutorial_basic_1="Chào mừng bạn tới Techmino!",
     tutorial_basic_2="1. Những thứ cơ bản",
@@ -268,7 +267,6 @@ return {
     tutorial_sequence_3="Bây giờ bạn có thể nhìn thấy những gạch nào chuẩn bị rơi theo lần lượt. ",
     tutorial_sequence_4="Hãy dùng phím \"Giữ gạch\" để điều chỉnh thứ tự của các gạch.",
 
-    -- Waiting for the actual game
     tutorial_piece_1="3. Hình dạng của các viên gạch",
     tutorial_piece_2="Có 7 gạch tetromino (gạch 4 ô)",
     tutorial_piece_3="Chúng được đặt tên theo các chữ cái sau: Z, S, J, L, T, O, I.",

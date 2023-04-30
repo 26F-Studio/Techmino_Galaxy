@@ -99,10 +99,13 @@ Dưới đây là vài lời khuyên hữu ích khi bạn gán phím
 @ titleFull Mẹo khi xử lý gạch
 @ contentSize 25
 Những yếu tố ảnh hưởng tới việc xếp gạch của bạn:
-(1) Input delay, which could be affected by device configuration or condition. Restart the game or change your device can probably fix it.
-(2) Unstable programming or faulty designs. It could be alleviated by lowering the effect settings.
-(3) Designed on purpose. Adaptation might help.
-(4) Improper parameter setting. Change the settings.
+(1) Độ trễ đầu vào, có thể là do cấu hình, thông số hoặc điều kiện của thiết bị. Khởi động lại trò chơi, bảo dưỡng, sửa chữa hoặc thay đổi thiết bị của bạn có thể khắc phục vấn đề này.
+~~
+(2) Unstable programming or faulty designs. It could be alleviated by lowering the effect settings. Trò chơi không ổn định hoặc thiết kế quá sơ sài và nhiều lỗi. Có thể giảm tình trạng này bằng cách hạ thấp cài đặt hiệu ứng xuống
+~~
+(3) Cái gì cũng có mục đích của nó, ngay cả thiết kế cũng vậy. Việc làm quen với chúng có thể giúp bạn.
+~~
+(4) Cài đặt tham số không phù hợp. Thay đổi cài đặt. (?)
 (5) Improper play posture. It’s not convenient to use force. Change your posture.
 (6) Not being used to the operation after changing the key position or changing the device. Getting used to it or changing the settings might help.
 (7) Muscle fatigue, response, and decreases in coordination abilities. Have some rest and come back later or in a few days.
