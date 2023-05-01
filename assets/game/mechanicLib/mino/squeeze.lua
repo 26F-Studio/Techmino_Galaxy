@@ -6,8 +6,23 @@ local squeeze={}
 ---@param wait? number
 ---@param depth? number
 ---@param speed? number
+function squeeze.turnOn_auto(P,width,wait,depth,speed)
+    if not P.modeData.squeeze_enabled then
+        squeeze.switch_auto(P,width,wait,depth,speed)
+    end
+end
+function squeeze.turnOff_auto(P)
+    if P.modeData.squeeze_enabled then
+        squeeze.switch_auto(P)
+    end
+end
+
+---@param width? number
+---@param wait? number
+---@param depth? number
+---@param speed? number
 function squeeze.switch_auto(P,width,wait,depth,speed)
-    squeeze.switch(P,width,wait,speed)
+    squeeze.switch(P,width,wait,depth,speed)
     local setCode,setEvent=P.modeData.squeeze_enabled and P.addCodeSeg or P.delCodeSeg,P.modeData.squeeze_enabled and P.addEvent or P.delEvent
     setCode(P,'extraSolidCheck',squeeze.codeSeg_extraSolidCheck)
     setCode(P,'changeSpawnPos',squeeze.codeSeg_changeSpawnPos)
