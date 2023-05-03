@@ -10,9 +10,7 @@ return {
         event={
             playerInit={
                 mechLib.mino.statistics.event_playerInit,
-                mechLib.mino.misc.symmetery_event_initPlayer,
             },
-            afterDrop=mechLib.mino.misc.symmetery_event_initPlayer,
             afterLock=mechLib.mino.misc.symmetery_event_afterLock,
             afterClear={
                 mechLib.mino.statistics.event_afterClear,

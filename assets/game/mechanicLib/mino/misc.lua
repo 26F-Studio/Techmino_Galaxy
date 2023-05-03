@@ -202,30 +202,28 @@ do-- randomPress
 end
 
 do-- symmetery
-    function misc.symmetery_event_initPlayer(P)
-        P.modeData._coords={}
-    end
-    function misc.symmetery_event_afterDrop(P)
+    function misc.symmetery_event_afterLock(P)
+        local currentPos={}
+
         local CB=P.hand.matrix
         for y=1,#CB do for x=1,#CB[1] do if CB[y][x] then
-            ins(P.modeData._coords,{P.handX+x-1,P.handY+y-1})
+            ins(currentPos,{P.handX+x-1,P.handY+y-1})
         end end end
-    end
-    function misc.symmetery_event_afterLock(P)
+
         local id=nil
-        for _,coord in next,P.modeData._coords do
-            local C=P.field:getCell((P.settings.fieldW+1)-coord[1],coord[2])
+        for _,checkPos in next,currentPos do
+            local C=P.field:getCell((P.settings.fieldW+1)-checkPos[1],checkPos[2])
             C=C and C.id or false
             if id==nil then
                 id=C
             elseif id~=C then
-                for _,coord in next,P.modeData._coords do
-                    P.field:setCell(false,coord[1],coord[2])
+                for _,clearPos in next,currentPos do
+                    P.field:setCell(false,clearPos[1],clearPos[2])
                 end
+                -- TODO: other punishment
                 break
             end
         end
-        TABLE.cut(P.modeData._coords)
     end
 end
 

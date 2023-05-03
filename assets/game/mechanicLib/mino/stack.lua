@@ -23,6 +23,21 @@ local stack={}
 
 ---@param fall? boolean
 ---@param autoquit? boolean
+function stack.turnOn_auto(P,fall,autoquit)
+    if not P.modeData.stack_enabled then
+        stack.switch_auto(P,fall,autoquit)
+    end
+end
+
+function stack.turnOff_auto(P)
+    if P.modeData.stack_enabled then
+        stack.switch_auto(P)
+    end
+end
+
+
+---@param fall? boolean
+---@param autoquit? boolean
 function stack.switch_auto(P,fall,autoquit)
     if fall==nil then fall=true end
     if autoquit==nil then autoquit=true end
