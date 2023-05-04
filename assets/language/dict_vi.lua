@@ -166,34 +166,45 @@ Một biến thể của All Clear, Half Clear chính là All Clear "nhưng vẫ
 Trong trường hợp đặc biệt, nếu xóa một hàng, thì trẻn bảng không được còn gạch do người chơi đặt.
 
 # rotation_system
-@ title Rotation Systems
-When rotating a piece, if it results in the piece overlapping with existing blocks or the wall/floor, the game may test adjacent positions to see if they are available. This makes it less likely for a rotation to fail and get stuck.
+@ title Rotation System (Hệ thống xoay gạch)
+Khi xoay gạch, nếu gạch đó chồng chéo lên gạch khác hoặc là đụng tường, trò chơi sẽ kiểm tra lần lượt các vị trí liền kề để xem gạch có thể đặt ở vị trí nào xung quanh hay không. Điều này giúp cho gạch ít có khả năng bị kẹt (hoặc là không xoay được)
 
-A system that defines what positions gets checked during a rotation is called a rotation system. The process of checking these positions is often called "wall-kicking", since it looks like a piece kicks off a wall during the rotation; and offsets are often stored in a table called "wall-kick table".
+Một hệ thống xác định những vị trí để kiểm tra gạch có xoay được hay không khi xoay gạch chính là rotation system (hệ thống xoay). Và quá trình kiểm tra các vị trí này được gọi là "wall-kicking" ("đá vào tường"), vì có vẻ như gạch đá-ra-khỏi-tường khi xoay gạch; và các vị trí đá thường sẽ được lưu trữ ở trong một cái bảng gọi là "wall-kick table" (có thể hiểu là: "bảng các vị trí gạch nảy ra khi đá vào tường").
 
+~~6
+
+Ghi chú: Trong tiếng Việt, từ "xoay" đồng nghĩa với từ "quay", bạn có thể gọi Rotation System là "Hệ thống quay gạch" - tùy vào ý thích của bạn
+
+-- Do not translate "Spin" into "Quay" or "Xoay" because it can be confused
 # spin
 @ title Spin
-Sometimes it is possible to use a rotation to move a piece into a position that is unreachable otherwise. This action is called a Spin, and depending on the piece used, it would be called things like "Z-spin", "J-Spin" etc.
+Đôi khi bạn có thể xoay gạch để di chuyển tới một vị trí mà thông thường sẽ không tiếp cận được. Hành động này được gọi là "Spin"
 
-A spin resulting in a line clear is a Spin line clear, such as a Z-Spin Single.
+~~3
 
-Sometimes, certain spin moves that fail to satisfy certain conditions get the "Mini" prefix, like a "Mini Z-Spin". Mini spins get less bonus compared to regular spins.
+CHÚ Ý: Đừng nhầm lẫn với Rotate - Xoay/Quay, mặc dù nhìn lướt qua bạn sẽ thấy cả hai từ có nghĩa tương đương nhau
+
+~~3
+Tùy thuộc vào gạch bạn sử dụng để xoay mà hành động này sẽ được gọi với các tên khác nhau. Ví dụ: "Z-spin", "S-spin", v.v.
+
+Đôi khi việc spin gạch không đáp ứng đủ các điều kiện nhất định thì sẽ
+nhận được tiền tố "Mini" vào trong tên. Ví dụ: "Mini Z-spin". Thường thì Mini-spin sẽ gửi ít hàng rác hơn và nhận được ít điểm hơn so với spin thông thường
 
 # all_spin
 @ title All Spin
-A type of rule in which all pieces can receive bonuses when performing a spin. This is in contract to "T-Spin Only", where only the T piece can receive bonus when performing a spin.
+Một quy tắc trong đó tất cả các viên gạch đều có thể nhận được điểm thưởng và gửi hàng rác khi spin gạch. Điều này đối lập với "Chỉ làm T=spin" (T-spin only) khi mà chỉ có gạch T nhận được điểm thưởng và gửi hàng rác
 
 # combo
 @ title Combo
-Refers to consecutive pieces all resulting in a line clear, without pieces that don't clear lines in between.
+Xóa nhiều hàng liên tiếp, nhưng không có viên gạch nào không xóa hàng chen ngang!
 
 # combo_setup
-@ title Combo Setups
-In order to more easily perform combos, a common technique is to build a tall stack with a 2-column to 4-column wide well, then drop pieces into the well.
+@ title Combo Setup
+Để dễ dàng thực hiện combo, có một kỹ thuật phổ biến đó là xếp chồng gạch tạo thành một bức tường cao với một cái "hố" rộng từ 2 đến 4 cột, sau đó thả gạch vào "hố" để xóa nhiều hàng liên tiếp
 
 # spike
 @ title Spike
-Đề cập việc gửi xóa nhiều hàng liên tiếp để tấn công mạnh vào đối thủ
+Đề cập tới việc gửi xóa nhiều hàng liên tiếp để tấn công mạnh vào đối thủ
 
 # drop_speed
 @ title Drop Speed
