@@ -208,12 +208,17 @@ Xóa nhiều hàng liên tiếp, nhưng không có viên gạch nào không xóa
 
 # drop_speed
 @ title Drop Speed
-@ titleFull Drop Speed: PPS, BPM, LPM
-There are a few ways to measure how fast you drop pieces.
+@ titleFull Drop Speed (Tốc độ thả rơi): PPS, BPM, LPM
+Có một số cách để đô tốc độ bạn thả rơi gạch:
 
-PPS refers to Pieces per Second.
-BPM refers to Blocks per Minute. Also known as PPM, P for Pieces.
-LPM refers to Lines per Minute. There are two ways to calculate this "lines" here, one is to use literal lines cleared, two is to convert from how many pieces you dropped. The latter makes it less sensitive to external factors like garbage lines.
+PPS viết tắt của Pieces per Second (gạch/giây).
+~~
+BPM viết tắt của Blocks per Minute (gạch/phút). Còn được biết đến với một tên khác là PPM, P là viêt tắt của Pieces (gạch).
+~~
+LPM viết tắt của Lines per Minute (hàng/phút).
+Có hai cách để tính số "hàng" ở đây:
+    1. Dùng số hàng đã thực sự được xóa
+    2. Đổi từ số gạch bạn đã thả rơi. Việc này giúp cho việc tính số hàng ít bị ảnh hưởng từ yếu tố bên ngoài: ví dụ như các hàng rác
 
 # key_speed
 @ title Action Speed
