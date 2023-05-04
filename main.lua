@@ -186,7 +186,7 @@ SFX.loadSample{name='bass',path='assets/sample/bass',base='A2'}-- A2~C5
 SFX.loadSample{name='lead',path='assets/sample/lead',base='A3'}-- A3~C6
 
 SFX.load('assets/sfx/')
-BGM.init((function()
+BGM.load((function()
     local path='assets/music/'
     local L={}
     for _,dir in next,love.filesystem.getDirectoryItems(path) do

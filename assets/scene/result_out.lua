@@ -9,7 +9,7 @@ end
 function scene.keyDown(key)
     local action=KEYMAP.sys:getAction(key)
     if action=='restart' then
-        SCN.pop()
+        SCN._pop()
         SCN.go('game_out',nil,GAME.mode.name)
     elseif action=='back' then
         SCN.back()

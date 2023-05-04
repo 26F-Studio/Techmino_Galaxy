@@ -430,7 +430,7 @@ function scene.draw()
     end
     if prevScene.widgetList then
         gc_replaceTransform(SCR.xOy)
-        WIDGET._draw(prevScene.widgetList)
+        WIDGET.draw(prevScene.widgetList)
     end
 
     -- Dark background

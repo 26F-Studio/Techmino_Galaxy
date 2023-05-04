@@ -87,7 +87,7 @@ end
 
 local function _checkWin()
     if #hand==14 then
-        MES.new('info',"Coming soon!")
+        MSG.new('info',"Coming soon!")
     end
 end
 

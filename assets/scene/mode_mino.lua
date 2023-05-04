@@ -110,7 +110,7 @@ function scene.keyDown(key,isRep)
         panel:setSel(MINOMAP:keyboardSelect())
     elseif KEYMAP.sys:getAction(key)=='back' then
         if PROGRESS.getMinoUnlocked() and not PROGRESS.getPuyoUnlocked() and not PROGRESS.getGemUnlocked() then
-            SCN.pop()
+            SCN._pop()
             SCN.back('fadeHeader')
         end
     -- elseif key=='z' then
