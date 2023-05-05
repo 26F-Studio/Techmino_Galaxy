@@ -167,7 +167,7 @@ function P:triggerEvent(name,...)
     local L=self.event[name]
     if L then for i=1,#L do L[i](self,...) end end
 end
----@param reason
+--- @param reason
 ---| 'AC'  Win
 ---| 'WA'  Block out
 ---| 'CE'  Lock out

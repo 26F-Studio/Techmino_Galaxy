@@ -50,7 +50,7 @@ local subject={
     },
 }
 
----@type integer
+--- @type integer
 ---| false
 local subjectFocused=false
 
