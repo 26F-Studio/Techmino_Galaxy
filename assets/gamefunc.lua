@@ -7,14 +7,8 @@ function sureCheck(event)
 end
 
 local _bgmPlaying,_bgmMode
---- @param mode
----| 'full'
----| 'simp'
----| 'base'
----| ''
----| nil
---- @param args string
----| nil
+--- @param mode 'full'|'simp'|'base'|''|nil
+--- @param args string|nil
 function playBgm(name,mode,args)
     if not args then args='' end
 
@@ -40,7 +34,7 @@ function playBgm(name,mode,args)
             else
                 BGM.set(bgmList[name].add,'volume',0,1)
             end
-        else--if mode=='full' then
+        else-- if mode=='full' then
             BGM.play(bgmList[name].full,args)
         end
     end

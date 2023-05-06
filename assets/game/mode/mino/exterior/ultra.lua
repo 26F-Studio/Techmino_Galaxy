@@ -7,8 +7,7 @@ return {
     end,
     settings={mino={
         event={
-            always=mechLib.mino.misc.timeLimit_event_always[120],
-            drawOnPlayer=mechLib.mino.misc.timeLimit_event_drawOnPlayer[120],
+            playerInit="mechLib.mino.misc.timer_new(P,120e3,mechLib.mino.misc.finish_TLE,'info')",
         },
     }},
 }

@@ -379,7 +379,7 @@ function PP:resetPosCheck()
         end
     end
 
-    if self.settings.dasHalt>0 then--DAS halt
+    if self.settings.dasHalt>0 then-- DAS halt
         self.moveCharge=min(self.moveCharge,self.settings.das-self.settings.dasHalt)
     end
 end
@@ -1065,76 +1065,76 @@ function PP:render()
 
     gc.push('transform')
 
-    -- applyPlayerTransform
+    -- Player's transform
     local pos=self.pos
     gc.translate(pos.x,pos.y)
     gc.scale(pos.k*(1+pos.dk))
     gc.translate(pos.dx,pos.dy)
     gc.rotate(pos.a+pos.da)
 
-    -- applyFieldTransform
+    -- Field's transform
     gc.push('transform')
-    gc.translate(-200,400)
 
-    -- startFieldStencil
-    GC.stc_setComp()
-    GC.stc_rect(0,0,400,-920)
-    gc.scale(10/settings.fieldW)
+        gc.translate(-200,400)
 
-        self:triggerEvent('drawBelowField')
+        -- Start field stencil
+        GC.stc_setComp()
+        GC.stc_rect(0,0,400,-920)
+        gc.scale(10/settings.fieldW)
 
-        -- Grid & Cells
-        skin.drawFieldBackground(settings.fieldW)
-        skin.drawFieldCells(self.field)
+            self:triggerEvent('drawBelowField')-- From frame's bottom-left, 40px a cell
 
-        self:triggerEvent('drawBelowBlock')
+            -- Grid & Cells
+            skin.drawFieldBackground(settings.fieldW)
+            skin.drawFieldCells(self.field)
 
-        if self.hand then
-            local CB=self.hand.matrix
+            self:triggerEvent('drawBelowBlock')-- From frame's bottom-left, 40px a cell
 
-            -- Ghost
-            if not self.deathTimer then
-                skin.drawGhost(CB,self.handX,self.ghostY)
+            if self.hand then
+                local CB=self.hand.matrix
+
+                -- Ghost
+                if not self.deathTimer then
+                    skin.drawGhost(CB,self.handX,self.ghostY)
+                end
+
+                -- Hand
+                if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
+                    -- Smooth
+                    local movingX,droppingY=0,0
+                    if not self.deathTimer and self.moveDir and self.moveCharge<self.settings.das then
+                        movingX=15*self.moveDir*(self.moveCharge/self.settings.das-.5)
+                    end
+                    if self.handY>self.ghostY then
+                        droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
+                    end
+                    gc.translate(movingX,droppingY)
+                    skin.drawHand(CB,self.handX,self.handY)
+                    gc.translate(-movingX,-droppingY)
+                end
             end
 
-            -- Hand
-            if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
-                -- Smooth
-                local movingX,droppingY=0,0
-                if not self.deathTimer and self.moveDir and self.moveCharge<self.settings.das then
-                    movingX=15*self.moveDir*(self.moveCharge/self.settings.das-.5)
-                end
-                if self.handY>self.ghostY then
-                    droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
-                end
-                gc.translate(movingX,droppingY)
-                skin.drawHand(CB,self.handX,self.handY)
-                gc.translate(-movingX,-droppingY)
-            end
-        end
+            self:triggerEvent('drawBelowMarks')-- From frame's bottom-left, 40px a cell
 
-        self:triggerEvent('drawBelowMarks')
+            -- Height lines
+            skin.drawHeightLines(-- All unit are pixel
+                settings.fieldW*40,  -- Field Width
+                settings.spawnH*40,  -- Spawning height
+                settings.lockoutH*40,-- Lock-out height
+                settings.deathH*40,  -- Death height
+                settings.voidH*40    -- Void height
+            )
 
-        -- Height lines
-        skin.drawHeightLines(-- All unit are pixel
-            settings.fieldW*40,  -- Field Width
-            settings.spawnH*40,  -- Spawning height
-            settings.lockoutH*40,-- Lock-out height
-            settings.deathH*40,  -- Death height
-            settings.voidH*40    -- Void height
-        )
+            self:triggerEvent('drawInField')-- From frame's bottom-left, 40px a cell
 
-        self:triggerEvent('drawInField')
+        -- Stop field stencil
+        GC.stc_stop()
 
-    -- stopFieldStencil
-    GC.stc_stop()
+        -- Particles
+        gc.setColor(1,1,1)
+        gc.draw(self.particles.star)
+        gc.draw(self.particles.trail)
 
-    -- Particles
-    gc.setColor(1,1,1)
-    gc.draw(self.particles.star)
-    gc.draw(self.particles.trail)
-
-    -- popFieldTransform
     gc.pop()
 
     -- Field border
@@ -1173,7 +1173,7 @@ function PP:render()
     -- Texts
     self.texts:draw()
 
-    self:triggerEvent('drawOnPlayer')
+    self:triggerEvent('drawOnPlayer')-- From player's center
 
     -- Starting counter
     if self.time<settings.readyDelay then

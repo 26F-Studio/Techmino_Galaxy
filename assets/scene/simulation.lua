@@ -50,8 +50,7 @@ local subject={
     },
 }
 
---- @type integer
----| false
+--- @type integer|false
 local subjectFocused=false
 
 local scene={}
