@@ -1586,135 +1586,135 @@ function MP:render()
 
     gc.push('transform')
 
-    -- applyPlayerTransform
+    -- Player's transform
     local pos=self.pos
     gc.translate(pos.x,pos.y)
     gc.scale(pos.k*(1+pos.dk))
     gc.translate(pos.dx,pos.dy)
     gc.rotate(pos.a+pos.da)
 
-    -- applyFieldTransform
+    -- Field's transform
     gc.push('transform')
-    gc.translate(-200,400)
 
-    -- startFieldStencil
-    GC.stc_setComp('equal',0)
-    GC.stc_rect(0,0,400,40)
-    gc.scale(10/settings.fieldW)
+        gc.translate(-200,400)
 
-        self:triggerEvent('drawBelowField')
+        -- Start field stencil
+        GC.stc_setComp('equal',0)
+        GC.stc_rect(0,0,400,40)
+        gc.scale(10/settings.fieldW)
 
-        -- Grid & Cells
-        skin.drawFieldBackground(settings.fieldW)
+            self:triggerEvent('drawBelowField')-- From frame's bottom-left, 40px a cell
 
-        gc.translate(0,self.fieldDived)
+            -- Grid & Cells
+            skin.drawFieldBackground(settings.fieldW)
 
-            do -- Field
-                local matrix=self.field._matrix
-                gc.push('transform')
-                local ptr,lines,fallingRate
-                if self.clearTimer>0 then
-                    lines=self.clearHistory[#self.clearHistory].lines
-                    fallingRate=self.clearTimer/settings.clearDelay
-                    ptr=#lines
+            gc.translate(0,self.fieldDived)
+
+                do -- Field
+                    local matrix=self.field._matrix
+                    gc.push('transform')
+                    local ptr,lines,fallingRate
+                    if self.clearTimer>0 then
+                        lines=self.clearHistory[#self.clearHistory].lines
+                        fallingRate=self.clearTimer/settings.clearDelay
+                        ptr=#lines
+                    end
+
+                    local width=settings.fieldW
+                    for y=floor(1+self.fieldDived/40),#matrix do
+                        while ptr and y==lines[ptr]-(#lines-ptr) do
+                            skin.drawClearingEffect(settings.fieldW,fallingRate)
+                            ptr=ptr>1 and ptr-1
+                            gc.translate(0,-40*skin.fallingCurve(fallingRate))
+                        end
+                        for x=1,width do
+                            local C=matrix[y][x]
+                            if C then
+                                if C.bias then
+                                    gc.translate(C.bias.x,C.bias.y)
+                                    skin.drawFieldCells(C,matrix,x,y)
+                                    gc.translate(-C.bias.x,-C.bias.y)
+                                else
+                                    skin.drawFieldCells(C,matrix,x,y)
+                                end
+                            end
+                            gc.translate(40,0)
+                        end
+                        gc.translate(-40*width,-40)-- \r\n (Return + Newline)
+                    end
+                    gc.pop()
                 end
 
-                local width=settings.fieldW
-                for y=floor(1+self.fieldDived/40),#matrix do
-                    while ptr and y==lines[ptr]-(#lines-ptr) do
-                        skin.drawClearingEffect(settings.fieldW,fallingRate)
-                        ptr=ptr>1 and ptr-1
-                        gc.translate(0,-40*skin.fallingCurve(fallingRate))
+                self:triggerEvent('drawBelowBlock')-- From field's bottom-left, 40px a cell
+
+                if self.hand then
+                    local CB=self.hand.matrix
+
+                    -- Ghost
+                    if not self.deathTimer then
+                        skin.drawGhost(CB,self.handX,self.ghostY)
                     end
-                    for x=1,width do
-                        local C=matrix[y][x]
-                        if C then
-                            if C.bias then
-                                gc.translate(C.bias.x,C.bias.y)
-                                skin.drawFieldCells(C,matrix,x,y)
-                                gc.translate(-C.bias.x,-C.bias.y)
-                            else
-                                skin.drawFieldCells(C,matrix,x,y)
+
+                    -- Hand
+                    if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
+                        -- Smooth
+                        local movingX,droppingY=0,0
+                        if not self.deathTimer and self.moveDir and self.moveCharge<settings.das then
+                            movingX=15*self.moveDir*(max(self.moveCharge,0)/settings.das-.5)
+                        end
+                        if self.handY>self.ghostY then
+                            droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
+                        end
+                        gc.translate(movingX,droppingY)
+
+                        skin.drawHand(CB,self.handX,self.handY)
+
+                        local RS=minoRotSys[settings.rotSys]
+                        local minoData=RS[self.hand.shape]
+                        if minoData then
+                            local state=minoData[self.hand.direction]
+                            local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
+                            if centerPos then
+                                gc.setColor(1,1,1,.8)
+                                GC.mDraw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40,nil,1.26)
                             end
                         end
-                        gc.translate(40,0)
+                        gc.translate(-movingX,-droppingY)
                     end
-                    gc.translate(-40*width,-40)-- \r\n (Return + Newline)
-                end
-                gc.pop()
-            end
-
-            self:triggerEvent('drawBelowBlock')
-
-            if self.hand then
-                local CB=self.hand.matrix
-
-                -- Ghost
-                if not self.deathTimer then
-                    skin.drawGhost(CB,self.handX,self.ghostY)
                 end
 
-                -- Hand
-                if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
-                    -- Smooth
-                    local movingX,droppingY=0,0
-                    if not self.deathTimer and self.moveDir and self.moveCharge<settings.das then
-                        movingX=15*self.moveDir*(max(self.moveCharge,0)/settings.das-.5)
+                -- Float hold
+                if #self.floatHolds>0 then
+                    for n=1,#self.floatHolds do
+                        local H=self.floatHolds[n]
+                        skin.drawFloatHold(n,H.hand.matrix,H.handX,H.handY,settings.holdMode=='float' and not settings.infHold and n<=self.holdTime)
                     end
-                    if self.handY>self.ghostY then
-                        droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
-                    end
-                    gc.translate(movingX,droppingY)
-
-                    skin.drawHand(CB,self.handX,self.handY)
-
-                    local RS=minoRotSys[settings.rotSys]
-                    local minoData=RS[self.hand.shape]
-                    if minoData then
-                        local state=minoData[self.hand.direction]
-                        local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
-                        if centerPos then
-                            gc.setColor(1,1,1,.8)
-                            GC.mDraw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40,nil,1.26)
-                        end
-                    end
-                    gc.translate(-movingX,-droppingY)
                 end
-            end
 
-            -- Float hold
-            if #self.floatHolds>0 then
-                for n=1,#self.floatHolds do
-                    local H=self.floatHolds[n]
-                    skin.drawFloatHold(n,H.hand.matrix,H.handX,H.handY,settings.holdMode=='float' and not settings.infHold and n<=self.holdTime)
-                end
-            end
+                self:triggerEvent('drawBelowMarks')-- From field's bottom-left, 40px a cell
 
-            self:triggerEvent('drawBelowMarks')
+            gc.translate(0,-self.fieldDived)
 
-        gc.translate(0,-self.fieldDived)
+            -- Height lines
+            skin.drawHeightLines(-- All unit are pixel
+                settings.fieldW*40,   -- Field Width
+                (settings.spawnH+settings.extraSpawnH)*40,-- Max Spawning height
+                settings.spawnH*40,   -- Spawning height
+                settings.lockoutH*40, -- Lock-out height
+                settings.deathH*40,   -- Death height
+                settings.voidH*40     -- Void height
+            )
 
-        -- Height lines
-        skin.drawHeightLines(-- All unit are pixel
-            settings.fieldW*40,   -- Field Width
-            (settings.spawnH+settings.extraSpawnH)*40,-- Max Spawning height
-            settings.spawnH*40,   -- Spawning height
-            settings.lockoutH*40, -- Lock-out height
-            settings.deathH*40,   -- Death height
-            settings.voidH*40     -- Void height
-        )
+            self:triggerEvent('drawInField')-- From frame's bottom-left, 40px a cell
 
-        self:triggerEvent('drawInField')
+        -- Stop field stencil
+        GC.stc_stop()
 
-    -- stopFieldStencil
-    GC.stc_stop()
+        -- Particles
+        gc.setColor(1,1,1)
+        gc.draw(self.particles.star)
+        gc.draw(self.particles.trail)
 
-    -- Particles
-    gc.setColor(1,1,1)
-    gc.draw(self.particles.star)
-    gc.draw(self.particles.trail)
-
-    -- popFieldTransform
     gc.pop()
 
     -- Field border
@@ -1764,7 +1764,7 @@ function MP:render()
     -- Texts
     self.texts:draw()
 
-    self:triggerEvent('drawOnPlayer')
+    self:triggerEvent('drawOnPlayer')-- From player's center
 
     -- Starting counter
     if self.time<settings.readyDelay then

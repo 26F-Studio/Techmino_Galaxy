@@ -18,7 +18,7 @@ local prgs={
     gemUnlocked=false,
     bgmUnlocked={},
     minoModeUnlocked={
-        -- -2 = not passed, -1 = passed, 0,1,2,... = rank reached
+        -- 0 = reached, 1~5 = rank reached
         sprint_40=0,
         marathon=0,
         dig_practice=0,

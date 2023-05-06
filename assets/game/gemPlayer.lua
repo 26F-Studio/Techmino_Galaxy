@@ -896,47 +896,47 @@ function GP:render()
 
     gc.push('transform')
 
-    -- applyPlayerTransform
+    -- Player's transform
     local pos=self.pos
     gc.translate(pos.x,pos.y)
     gc.scale(pos.k*(1+pos.dk))
     gc.translate(pos.dx,pos.dy)
     gc.rotate(pos.a+pos.da)
 
-    -- applyFieldTransform
+    -- Field's transform
     gc.push('transform')
-    gc.translate(-360,360)
 
-    -- startFieldStencil
-    GC.stc_setComp()
-    GC.stc_rect(0,0,720,-720)
-    gc.scale(16/settings.fieldSize)
+        gc.translate(-360,360)
 
-        self:triggerEvent('drawBelowField')
+        -- Start field stencil
+        GC.stc_setComp()
+        GC.stc_rect(0,0,720,-720)
+        gc.scale(16/settings.fieldSize)
 
-        -- Grid & Cells
-        skin.drawFieldBackground(settings.fieldSize)
-        skin.drawFieldCells(self.field)
+            self:triggerEvent('drawBelowField')-- From frame's bottom-left, 40px a cell
 
-        self:triggerEvent('drawInField')
+            -- Grid & Cells
+            skin.drawFieldBackground(settings.fieldSize)
+            skin.drawFieldCells(self.field)
 
-    -- stopFieldStencil
-    GC.stc_stop()
+            self:triggerEvent('drawInField')-- From frame's bottom-left, 40px a cell
 
-    -- Particles
-    gc.setColor(1,1,1)
-    gc.draw(self.particles.star)
-    gc.draw(self.particles.trail)
+        -- Stop field stencil
+        GC.stc_stop()
 
-    -- Cursor(s)
-    if self.settings.swap then
-        skin.drawSwapCursor(self.swapX,self.swapY,self.swapLock)
-    end
-    if self.settings.twistR then
-        skin.drawTwistCursor(self.twistX,self.twistY)
-    end
+        -- Particles
+        gc.setColor(1,1,1)
+        gc.draw(self.particles.star)
+        gc.draw(self.particles.trail)
 
-    -- popFieldTransform
+        -- Cursor(s)
+        if self.settings.swap then
+            skin.drawSwapCursor(self.swapX,self.swapY,self.swapLock)
+        end
+        if self.settings.twistR then
+            skin.drawTwistCursor(self.twistX,self.twistY)
+        end
+
     gc.pop()
 
     -- Field border
@@ -951,7 +951,7 @@ function GP:render()
     -- Texts
     self.texts:draw()
 
-    self:triggerEvent('drawOnPlayer')
+    self:triggerEvent('drawOnPlayer')-- From player's center
 
     -- Starting counter
     if self.time<settings.readyDelay then

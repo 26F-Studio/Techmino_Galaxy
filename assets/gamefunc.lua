@@ -7,14 +7,8 @@ function sureCheck(event)
 end
 
 local _bgmPlaying,_bgmMode
---- @param mode
----| 'full'
----| 'simp'
----| 'base'
----| ''
----| nil
---- @param args string
----| nil
+--- @param mode 'full'|'simp'|'base'|''|nil
+--- @param args string|nil
 function playBgm(name,mode,args)
     if not args then args='' end
 

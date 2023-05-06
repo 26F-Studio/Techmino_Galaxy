@@ -59,7 +59,7 @@ local modes={
 -- Initialize modes' graphic values
 for _,m in next,modes do
     m.enable=true
-    m.state=-2
+    m.state=-1
     m.active=0
     m.x=30*(m.pos[1]-m.pos[2])*(3^.5/2)
     m.y=30*(m.pos[3]-(m.pos[1]+m.pos[2])*.5)
@@ -154,12 +154,10 @@ cam.swing=.00626
 cam.maxDist=2600--[[4000]]
 cam.minK,cam.maxK=.4--[[.2]],1.26
 
---- @type table
----| false
+--- @type table|false
 local focused=false
 
---- @type table
----| false
+--- @type table|false
 local selected=false
 
 local map={}
