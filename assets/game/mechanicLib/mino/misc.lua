@@ -2,37 +2,83 @@ local ins,rem=table.insert,table.remove
 local gc=love.graphics
 local misc={}
 
-misc.timeLimit_event_always=TABLE.newPool(function(self,time)
-    time=math.floor(time*1000+.5)
-    self[time]=function(P)
-        if P.gameTime>=time then
-            P:finish('AC')
+function misc.finish_AC(P) P:finish('AC') end
+function misc.finish_TLE(P) P:finish('TLE') end
+function misc.finish_UKE(P) P:finish('UKE') end
+
+do-- timer
+    local timer_drawFunc={
+        info=function(_,time,time0)
+            gc.push('transform')
+            gc.translate(-300,0)
+            gc.setLineWidth(2)
+            gc.setColor(.98,.98,.98,.8)
+            gc.rectangle('line',-75,-50,150,100,4)
+            gc.setColor(.98,.98,.98,.4)
+            gc.rectangle('fill',-75+2,-50+2,150-4,100-4,2)
+            FONT.set(50)
+            local text=("%.1f"):format(time/1000)
+            gc.setColor(COLOR.lD)
+            GC.mStr(text,2,-33)
+            local t=1-time/time0
+            gc.setColor(1.7*t,2.3-2*t,.3)
+            GC.mStr(text,0,-35)
+            gc.pop()
+        end,
+    }
+
+    --- @param time number @milliseconds
+    --- @param func function @function(P)
+    --- @param style string|function @name of style or function(P,time,time0)
+    function misc.timer_new(P,time,func,style)
+        if not P.modeData.timerList then
+            P.modeData.timerList={}
+            P:addEvent('always',misc.timer_event_always)
+            P:addEvent('drawOnPlayer',misc.timer_event_drawOnPlayer)
+        end
+        if type(style)=='string' then
+            style=timer_drawFunc[style]
+        end
+        ins(P.modeData.timerList,{
+            time=time,
+            time0=time,
+            func=func,
+            drawFunc=style,
+        })
+    end
+
+    function misc.timer_event_always(P)
+        if not P.timing then return end
+        local l=P.modeData.timerList
+        if not l then return end
+        local i=1
+        while l[i] do
+            l[i].time=l[i].time-1
+            if l[i].time<=0 then
+                l[i].func(P)
+                rem(l,i)
+                if not l[1] then
+                    P:delEvent('always',misc.timer_event_always)
+                    P:delEvent('drawOnPlayer',misc.timer_event_drawOnPlayer)
+                    break
+                end
+            else
+                i=i+1
+            end
         end
     end
-    return self[time]
-end)
-misc.timeLimit_event_drawOnPlayer=TABLE.newPool(function(self,time)
-    time=math.floor(time*1000+.5)
-    self[time]=function(P)
-        gc.push('transform')
-        gc.translate(-300,0)
-        gc.setLineWidth(2)
-        gc.setColor(.98,.98,.98,.8)
-        gc.rectangle('line',-75,-50,150,100,4)
-        gc.setColor(.98,.98,.98,.4)
-        gc.rectangle('fill',-75+2,-50+2,150-4,100-4,2)
-        FONT.set(50)
-        local t=P.gameTime/1000
-        local T=("%.1f"):format(time-t)
-        gc.setColor(COLOR.lD)
-        GC.mStr(T,2,-33)
-        t=t/time
-        gc.setColor(1.7*t,2.3-2*t,.3)
-        GC.mStr(T,0,-35)
-        gc.pop()
+
+    function misc.timer_event_drawOnPlayer(P)
+        local l=P.modeData.timerList
+        if not l then return end
+        local i=1
+        while l[i] do
+            local t=l[i]
+            if t.drawFunc then t.drawFunc(P,t.time,t.time0) end
+            i=i+1
+        end
     end
-    return self[time]
-end)
+end
 
 function misc.interior_soundEvent_countDown(num)
     SFX.playSample('lead',num>0 and 'E4' or 'E5')
@@ -57,7 +103,7 @@ function misc.fastHide_event_gameOver(P)
     P:showInvis(1,100)
 end
 
-do --coverField
+do-- coverField
     function misc.coverField_switch_auto(P)
         local md=P.modeData
         if not md._coverAlpha then
