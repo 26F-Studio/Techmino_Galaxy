@@ -34,7 +34,7 @@ function playBgm(name,mode,args)
             else
                 BGM.set(bgmList[name].add,'volume',0,1)
             end
-        else--if mode=='full' then
+        else-- if mode=='full' then
             BGM.play(bgmList[name].full,args)
         end
     end

@@ -15,7 +15,7 @@ require'assets.game.rotsys_mino'
 local gc=love.graphics
 
 local layoutFuncs={}
-do -- function layoutFuncs.default():
+do-- function layoutFuncs.default():
     local defaultPosList={
         alive={
             [1]={main={0,0}},

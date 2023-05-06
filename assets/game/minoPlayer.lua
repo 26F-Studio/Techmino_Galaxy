@@ -505,7 +505,7 @@ function MP:resetPosCheck()
         end
     end
 
-    if self.settings.dasHalt>0 then--DAS halt
+    if self.settings.dasHalt>0 then-- DAS halt
         self.moveCharge=min(self.moveCharge,self.settings.das-self.settings.dasHalt)
     end
 end
@@ -1610,7 +1610,7 @@ function MP:render()
 
             gc.translate(0,self.fieldDived)
 
-                do -- Field
+                do-- Field
                     local matrix=self.field._matrix
                     gc.push('transform')
                     local ptr,lines,fallingRate

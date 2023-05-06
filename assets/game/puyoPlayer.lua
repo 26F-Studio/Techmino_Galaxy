@@ -379,7 +379,7 @@ function PP:resetPosCheck()
         end
     end
 
-    if self.settings.dasHalt>0 then--DAS halt
+    if self.settings.dasHalt>0 then-- DAS halt
         self.moveCharge=min(self.moveCharge,self.settings.das-self.settings.dasHalt)
     end
 end
