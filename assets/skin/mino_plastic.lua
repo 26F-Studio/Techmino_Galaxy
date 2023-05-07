@@ -15,23 +15,31 @@ local COLOR=COLOR
 local S={}
 S.base='mino_template'
 
-local X=3-- Border width
+local X=3-- Cell border width
 
-local function drawSide(B,x,y,bx,by)
+local function drawCell(B,x,y,bx,by,r,g,b,a)
+    gc_setColor(r,g,b,a)
+    gc_rectangle('fill',bx,by,40,40)
+
     local U,D,L,R
+    gc_setColor(r*.65,g*.65,b*.65,a)
+    if not (B[y+1] and B[y+1][x  ]) then gc_rectangle('fill',bx    ,by   ,40, X) U=true end
     if not (B[y  ] and B[y  ][x+1]) then gc_rectangle('fill',bx+40 ,by   ,-X,40) R=true end
+    gc_setColor(r*.4,g*.4,b*.4,a)
     if not (B[y  ] and B[y  ][x-1]) then gc_rectangle('fill',bx    ,by   ,X ,40) L=true end
     if not (B[y-1] and B[y-1][x  ]) then gc_rectangle('fill',bx    ,by+40,40,-X) D=true end
-    if not (B[y+1] and B[y+1][x  ]) then gc_rectangle('fill',bx    ,by   ,40, X) U=true end
 
-    if not (D or L or B[y-1] and B[y-1][x-1]) then gc_rectangle('fill',bx     ,by+40,X ,-X) end
+    gc_setColor(r*.8,g*.8,b*.8,a)
+    if not (U or R or B[y+1] and B[y+1][x+1]) then gc_rectangle('fill',bx+40  ,by   ,-X, X) end
+    gc_setColor(r*.5,g*.5,b*.5,a)
     if not (U or L or B[y+1] and B[y+1][x-1]) then gc_rectangle('fill',bx     ,by   ,X , X) end
     if not (D or R or B[y-1] and B[y-1][x+1]) then gc_rectangle('fill',bx+40  ,by+40,-X,-X) end
-    if not (U or R or B[y+1] and B[y+1][x+1]) then gc_rectangle('fill',bx+40  ,by   ,-X, X) end
+    gc_setColor(r*.3,g*.3,b*.3,a)
+    if not (D or L or B[y-1] and B[y-1][x-1]) then gc_rectangle('fill',bx     ,by+40,X ,-X) end
 end
 
 
-function S.drawFieldCells(C,F,x,y)
+function S.drawFieldCell(C,F,x,y)
     -- local bx,by=(x-1)*40,-y*40
     local r,g,b=unpack(ColorTable[C.color])
     local a=C.alpha or 1
@@ -39,19 +47,23 @@ function S.drawFieldCells(C,F,x,y)
     gc_rectangle('fill',0,0,40,-40)
 
     gc_setColor(r*.5,g*.5,b*.5,a)
-    -- Reuse local var g
     local c=C.conn
     if c then
         local U,D,L,R
+        gc_setColor(r*.65,g*.65,b*.65,a)
+        if not (c[F[y+1] and F[y+1][x  ]]) then gc_rectangle('fill',0 ,-40,40, X ) U=true end
         if not (c[F[y  ] and F[y  ][x+1]]) then gc_rectangle('fill',40,0  ,-X,-40) R=true end
+        gc_setColor(r*.4,g*.4,b*.4,a)
         if not (c[F[y  ] and F[y  ][x-1]]) then gc_rectangle('fill',0 ,0  ,X ,-40) L=true end
         if not (c[F[y-1] and F[y-1][x  ]]) then gc_rectangle('fill',0 ,0  ,40,-X ) D=true end
-        if not (c[F[y+1] and F[y+1][x  ]]) then gc_rectangle('fill',0 ,-40,40, X ) U=true end
 
-        if not (D or L or c[F[y-1] and F[y-1][x-1]]) then gc_rectangle('fill',0 ,0  ,X ,-X) end
+        gc_setColor(r*.8,g*.8,b*.8,a)
+        if not (U or R or c[F[y+1] and F[y+1][x+1]]) then gc_rectangle('fill',40,-40,-X, X) end
+        gc_setColor(r*.5,g*.5,b*.5,a)
         if not (U or L or c[F[y+1] and F[y+1][x-1]]) then gc_rectangle('fill',0 ,-40,X , X) end
         if not (D or R or c[F[y-1] and F[y-1][x+1]]) then gc_rectangle('fill',40,0  ,-X,-X) end
-        if not (U or R or c[F[y+1] and F[y+1][x+1]]) then gc_rectangle('fill',40,-40,-X, X) end
+        gc_setColor(r*.3,g*.3,b*.3,a)
+        if not (D or L or c[F[y-1] and F[y-1][x-1]]) then gc_rectangle('fill',0 ,0  ,X ,-X) end
     end
 end
 
@@ -64,15 +76,12 @@ function S.drawFloatHold(n,B,handX,handY,unavailable)
             end
         end end
     else
+        local a=S.getTime()%150/200
         for y=1,#B do for x=1,#B[1] do
             if B[y][x] then
                 local bx,by=(handX+x-2)*40,-(handY+y-1)*40
                 local r,g,b=unpack(ColorTable[B[y][x].color])
-                gc_setColor(r,g,b,S.getTime()%150/200)
-                gc_rectangle('fill',bx,by,40,40)
-
-                gc_setColor(r*.5,g*.5,b*.5,S.getTime()%150/200)
-                drawSide(B,x,y,bx,by)
+                drawCell(B,x,y,bx,by,r,g,b,a)
             end
         end end
     end
@@ -85,9 +94,7 @@ end
 function S.drawGhost(B,handX,ghostY)
     for y=1,#B do for x=1,#B[1] do
         if B[y][x] then
-            gc_setColor(1,1,1,.26)
-            gc_rectangle('fill',(handX+x-2)*40,-(ghostY+y-1)*40,40,40)
-            drawSide(B,x,y,(handX+x-2)*40,-(ghostY+y-1)*40)
+            drawCell(B,x,y,(handX+x-2)*40,-(ghostY+y-1)*40,1,1,1,.26)
         end
     end end
 end
@@ -97,11 +104,7 @@ function S.drawHand(B,handX,handY)
         if B[y][x] then
             local bx,by=(handX+x-2)*40,-(handY+y-1)*40
             local r,g,b=unpack(ColorTable[B[y][x].color])
-            gc_setColor(r,g,b)
-            gc_rectangle('fill',bx,by,40,40)
-
-            gc_setColor(r*.5,g*.5,b*.5)
-            drawSide(B,x,y,bx,by)
+            drawCell(B,x,y,bx,by,r,g,b,1)
         end
     end end
 end
@@ -122,11 +125,7 @@ function S.drawNext(n,B,unavailable)
             if B[y][x] then
                 local bx,by=(x-#B[1]/2-1)*40,(y-#B/2)*-40
                 local r,g,b=unpack(ColorTable[B[y][x].color])
-                gc_setColor(r,g,b)
-                gc_rectangle('fill',bx,by,40,40)
-
-                gc_setColor(r*.5,g*.5,b*.5)
-                drawSide(B,x,y,bx,by)
+                drawCell(B,x,y,bx,by,r,g,b,1)
             end
         end end
     end
@@ -147,11 +146,7 @@ function S.drawHold(n,B,unavailable)
                 r,g,b=unpack(ColorTable[B[y][x].color])
             end
 
-            gc_setColor(r,g,b)
-            gc_rectangle('fill',bx,by,40,40)
-
-            gc_setColor(r*.5,g*.5,b*.5)
-            drawSide(B,x,y,bx,by)
+            drawCell(B,x,y,bx,by,r,g,b,1)
         end
     end end
     gc_pop()

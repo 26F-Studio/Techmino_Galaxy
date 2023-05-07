@@ -48,7 +48,7 @@ function S.drawFieldBorder()
 end
 
 function S.fallingCurve(t) return t end
-function S.drawFieldCells(C)
+function S.drawFieldCell(C)
     local r,g,b=unpack(ColorTable[C.color])
     local a=C.alpha or 1
     gc_setColor(r,g,b,a)

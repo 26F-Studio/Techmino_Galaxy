@@ -1086,7 +1086,7 @@ function PP:render()
 
             -- Grid & Cells
             skin.drawFieldBackground(settings.fieldW)
-            skin.drawFieldCells(self.field)
+            skin.drawFieldCell(self.field)
 
             self:triggerEvent('drawBelowBlock')-- From frame's bottom-left, 40px a cell
 

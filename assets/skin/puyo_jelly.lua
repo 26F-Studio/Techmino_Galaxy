@@ -16,7 +16,7 @@ local function drawSide(B,x,y,bx,by)
     if B[y+1] then t=B[y+1][x  ] if t and t.connClear and t.color==c then gc_rectangle('fill',bx+8,  by,    24, 5) end end
 end
 
-function S.drawFieldCells(F)
+function S.drawFieldCell(F)
     F=F._matrix
     local flashing=S.getTime()%100<=50
     for y=1,#F do for x=1,#F[1] do

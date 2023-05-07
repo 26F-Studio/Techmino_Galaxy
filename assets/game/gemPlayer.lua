@@ -917,7 +917,7 @@ function GP:render()
 
             -- Grid & Cells
             skin.drawFieldBackground(settings.fieldSize)
-            skin.drawFieldCells(self.field)
+            skin.drawFieldCell(self.field)
 
             self:triggerEvent('drawInField')-- From frame's bottom-left, 40px a cell
 

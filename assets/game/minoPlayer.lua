@@ -1632,10 +1632,10 @@ function MP:render()
                             if C then
                                 if C.bias then
                                     gc.translate(C.bias.x,C.bias.y)
-                                    skin.drawFieldCells(C,matrix,x,y)
+                                    skin.drawFieldCell(C,matrix,x,y)
                                     gc.translate(-C.bias.x,-C.bias.y)
                                 else
-                                    skin.drawFieldCells(C,matrix,x,y)
+                                    skin.drawFieldCell(C,matrix,x,y)
                                 end
                             end
                             gc.translate(40,0)
