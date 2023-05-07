@@ -394,14 +394,14 @@ function P:addEvent(name,F,pos)
     if not pos then pos=#self.event[name]+1 end
     if type(F)=='table' then
         for i=1,#F do
-            self:addEvent(name,pos+i-1,F[i])
+            self:addEvent(name,F[i],pos+i-1)
         end
     elseif type(F)=='string' then
         local errMsg
         F,errMsg=loadstring('local P=...\n'..F)
         if F then
             setSafeEnv(F)
-            self:addEvent(name,pos,F)
+            self:addEvent(name,F,pos)
         else
             error('Error in code string: '..errMsg)
         end
@@ -422,14 +422,14 @@ function P:addCodeSeg(name,F,pos)
     if not pos then pos=#self.codeSeg[name]+1 end
     if type(F)=='table' then
         for i=1,#F do
-            self:addCodeSeg(name,pos+i-1,F[i])
+            self:addCodeSeg(name,F[i],pos+i-1)
         end
     elseif type(F)=='string' then
         local errMsg
         F,errMsg=loadstring('local P=...\n'..F)
         if F then
             setSafeEnv(F)
-            self:addCodeSeg(name,pos,F)
+            self:addCodeSeg(name,F,pos)
         else
             error('Error in code string: '..errMsg)
         end
