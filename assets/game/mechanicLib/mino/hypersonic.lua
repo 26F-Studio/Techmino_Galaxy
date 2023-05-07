@@ -1,6 +1,32 @@
 local gc=love.graphics
 local hypersonic={}
 
+function hypersonic.event_playerInit_auto(P,mode)
+    if mode=='low' then
+        hypersonic.event_playerInit(P)
+        hypersonic.low_event_playerInit(P)
+        P:addEvent('afterSpawn',hypersonic.event_afterSpawn)
+        P:addEvent('afterClear',hypersonic.low_event_afterClear)
+        P:addEvent('drawOnPlayer',hypersonic.event_drawOnPlayer)
+    elseif mode=='high' then
+        hypersonic.event_playerInit(P)
+        hypersonic.high_event_playerInit(P)
+        P:addEvent('always',hypersonic.high_event_always)
+        P:addEvent('afterSpawn',hypersonic.event_afterSpawn)
+        P:addEvent('afterClear',hypersonic.high_event_afterClear)
+        P:addEvent('drawOnPlayer',hypersonic.event_drawOnPlayer)
+    elseif mode=='hidden' then
+        hypersonic.event_playerInit(P)
+        hypersonic.hidden_event_playerInit(P)
+        P:addEvent('always',hypersonic.hidden_event_always)
+        P:addEvent('afterSpawn',hypersonic.event_afterSpawn)
+        P:addEvent('afterClear',mechLib.mino.hypersonic.hidden_event_afterClear)
+        P:addEvent('drawOnPlayer',mechLib.mino.hypersonic.hidden_event_drawOnPlayer)
+    else
+        error('No hypersonic mode '..tostring(mode))
+    end
+end
+
 function hypersonic.event_playerInit(P)
     P.modeData.point=0
     P.modeData.level=1
@@ -59,8 +85,8 @@ do-- low
                     md.level=md.level+1
                     md.target=100*md.level
 
-                    P.settings.das=math.max(P.modeData.storedDas,levels[md.level].das)
-                    P.settings.arr=math.max(P.modeData.storedArr,levels[md.level].arr)
+                    P.settings.das=math.max(md.storedDas,levels[md.level].das)
+                    P.settings.arr=math.max(md.storedArr,levels[md.level].arr)
                     P.settings.lockDelay=levels[md.level].lock
                     P.settings.spawnDelay=levels[md.level].spawn
                 else
@@ -87,8 +113,8 @@ do-- high
     }
 
     function hypersonic.high_event_playerInit(P)
+        P.modeData.bumpDelay=false
         P.modeData.bumpTimer=false
-        P.modeData._bumpTimer=false
 
         P.settings.dropDelay=0
         P.settings.das=math.max(P.modeData.storedDas,levels[1].das)
@@ -100,11 +126,13 @@ do-- high
     end
 
     function hypersonic.high_event_always(P)
-        if P.finished or not P.modeData._bumpTimer or P.field:getHeight()==0 then return end
-        P.modeData._bumpTimer=P.modeData._bumpTimer-1
-        if P.modeData._bumpTimer<=0 then
+        if P.finished or not P.modeData.bumpTimer then return end
+        P.modeData.bumpTimer=P.modeData.bumpTimer-1
+        if P.modeData.bumpTimer<=0 then
             local F=P.field
-            P.modeData._bumpTimer=P.modeData.bumpTimer
+            P.modeData.bumpTimer=P.modeData.bumpDelay
+
+            if P.field:getHeight()==0 then return end
 
             local firstLine=F._matrix[1]
             local newLine={}
@@ -143,16 +171,16 @@ do-- high
                     md.level=md.level+1
                     md.target=100*md.level
 
-                    P.settings.das=math.max(P.modeData.storedDas,levels[md.level].das)
-                    P.settings.arr=math.max(P.modeData.storedArr,levels[md.level].arr)
+                    P.settings.das=math.max(md.storedDas,levels[md.level].das)
+                    P.settings.arr=math.max(md.storedArr,levels[md.level].arr)
                     P.settings.lockDelay=levels[md.level].lock
                     P.settings.spawnDelay=levels[md.level].spawn
                     P.settings.clearDelay=levels[md.level].clear
                     P.settings.maxFreshTime=levels[md.level].fresh
 
-                    md.bumpTimer=levels[md.level].bumpInterval
-                    if md.bumpTimer then
-                        md._bumpTimer=md.bumpTimer
+                    md.bumpDelay=levels[md.level].bumpInterval
+                    if md.bumpDelay then
+                        md.bumpTimer=md.bumpDelay
                     end
                 else
                     P:finish('AC')
@@ -209,10 +237,11 @@ do-- hidden
     end
 
     function hypersonic.hidden_event_always(P)
+        local md=P.modeData
         -- Show all after finished
         if P.finished then
-            P.modeData.showAllTimer=(P.modeData.showAllTimer-1)%endAllInterval
-            if P.modeData.showAllTimer==0 then
+            md.showAllTimer=(md.showAllTimer-1)%endAllInterval
+            if md.showAllTimer==0 then
                 for y=1,P.field:getHeight() do
                     for x=1,P.settings.fieldW do
                         local c=P.field:getCell(x,y)
@@ -227,9 +256,9 @@ do-- hidden
         end
 
         -- Swipe show invis periodly
-        local t=P.modeData.swipeTimer
+        local t=md.swipeTimer
         local swiping=t/showInvisStep<=P.field:getHeight()
-        t=t%showInvisPeriod+(swiping and 1 or P.modeData.swipeStep)
+        t=t%showInvisPeriod+(swiping and 1 or md.swipeStep)
         if swiping and t%showInvisStep==0 then
             for x=1,P.settings.fieldW do
                 local c=P.field:getCell(x,t/showInvisStep)
@@ -239,11 +268,11 @@ do-- hidden
                 end
             end
         end
-        P.modeData.swipeTimer=t
+        md.swipeTimer=t
 
         -- Random flashing on beat (may on wrong phase)
-        P.modeData.flashTimer=(P.modeData.flashTimer-1)%flashInterval
-        if P.modeData.flashTimer==0 then
+        md.flashTimer=(md.flashTimer-1)%flashInterval
+        if md.flashTimer==0 then
             for y=1,math.min(P.field:getHeight(),2*P.settings.fieldW) do
                 for x=1,P.settings.fieldW do
                     if P:random()<flashRate then
@@ -281,8 +310,8 @@ do-- hidden
                     md.level=md.level+1
                     md.target=100*md.level
 
-                    P.settings.das=math.max(P.modeData.storedDas,levels[md.level].das)
-                    P.settings.arr=math.max(P.modeData.storedArr,levels[md.level].arr)
+                    P.settings.das=math.max(md.storedDas,levels[md.level].das)
+                    P.settings.arr=math.max(md.storedArr,levels[md.level].arr)
                     P.settings.lockDelay=levels[md.level].lock
                     P.settings.spawnDelay=levels[md.level].spawn
                     P.settings.clearDelay=levels[md.level].clear
