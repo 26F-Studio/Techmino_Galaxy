@@ -90,6 +90,7 @@ do-- low
                     P.settings.lockDelay=levels[md.level].lock
                     P.settings.spawnDelay=levels[md.level].spawn
                 else
+                    md.point=md.target
                     P:finish('AC')
                     return
                 end
@@ -183,6 +184,7 @@ do-- high
                         md.bumpTimer=md.bumpDelay
                     end
                 else
+                    md.point=md.target
                     P:finish('AC')
                     return
                 end
@@ -252,34 +254,33 @@ do-- hidden
                     end
                 end
             end
-            return
-        end
-
-        -- Swipe show invis periodly
-        local t=md.swipeTimer
-        local swiping=t/showInvisStep<=P.field:getHeight()
-        t=t%showInvisPeriod+(swiping and 1 or md.swipeStep)
-        if swiping and t%showInvisStep==0 then
-            for x=1,P.settings.fieldW do
-                local c=P.field:getCell(x,t/showInvisStep)
-                if c then
-                    c.visTimer=math.max(c.visTimer or 0,showVisTime)
-                    c.fadeTime=math.max(c.fadeTime or 0,showFadeTime)
+        else
+            -- Swipe show invis periodly
+            local t=md.swipeTimer
+            local swiping=t/showInvisStep<=P.field:getHeight()
+            t=t%showInvisPeriod+(swiping and 1 or md.swipeStep)
+            if swiping and t%showInvisStep==0 then
+                for x=1,P.settings.fieldW do
+                    local c=P.field:getCell(x,t/showInvisStep)
+                    if c then
+                        c.visTimer=math.max(c.visTimer or 0,showVisTime)
+                        c.fadeTime=math.max(c.fadeTime or 0,showFadeTime)
+                    end
                 end
             end
-        end
-        md.swipeTimer=t
+            md.swipeTimer=t
 
-        -- Random flashing on beat (may on wrong phase)
-        md.flashTimer=(md.flashTimer-1)%flashInterval
-        if md.flashTimer==0 then
-            for y=1,math.min(P.field:getHeight(),2*P.settings.fieldW) do
-                for x=1,P.settings.fieldW do
-                    if P:random()<flashRate then
-                        local c=P.field:getCell(x,y)
-                        if c then
-                            c.visTimer=math.max(c.visTimer or 0,P:random(flashVisTime1,flashVisTime2))
-                            c.fadeTime=math.max(c.fadeTime or 0,flashFadeTime)
+            -- Random flashing on beat (may on wrong phase)
+            md.flashTimer=(md.flashTimer-1)%flashInterval
+            if md.flashTimer==0 then
+                for y=1,math.min(P.field:getHeight(),2*P.settings.fieldW) do
+                    for x=1,P.settings.fieldW do
+                        if P:random()<flashRate then
+                            local c=P.field:getCell(x,y)
+                            if c then
+                                c.visTimer=math.max(c.visTimer or 0,P:random(flashVisTime1,flashVisTime2))
+                                c.fadeTime=math.max(c.fadeTime or 0,flashFadeTime)
+                            end
                         end
                     end
                 end
@@ -298,7 +299,7 @@ do-- hidden
             md.swipeStep=math.max(md.swipeStep+(3-c.line),1)
         end
 
-        local dScore=(P.clearHistory[#P.clearHistory].line-1)*2
+        local dScore=math.floor((P.clearHistory[#P.clearHistory].line)^2/2)
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then
@@ -323,6 +324,7 @@ do-- hidden
                         BGM.set('secret7th/melody1','volume',1,26)
                     end
                 else
+                    md.point=md.target
                     P:finish('AC')
                     return
                 end
