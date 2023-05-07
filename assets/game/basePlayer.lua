@@ -389,23 +389,24 @@ function P:update(dt)
 end
 --------------------------------------------------------------
 -- Builder
-function P:addEvent(name,F)
+function P:addEvent(name,F,pos)
     assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
+    if not pos then pos=#self.event[name]+1 end
     if type(F)=='table' then
         for i=1,#F do
-            self:addEvent(name,F[i])
+            self:addEvent(name,pos+i-1,F[i])
         end
     elseif type(F)=='string' then
         local errMsg
         F,errMsg=loadstring('local P=...\n'..F)
         if F then
             setSafeEnv(F)
-            ins(self.event[name],F)
+            self:addEvent(name,pos,F)
         else
             error('Error in code string: '..errMsg)
         end
     elseif type(F)=='function' then
-        ins(self.event[name],F)
+        ins(self.event[name],pos,F)
     else
         error('event must be function or table of functions')
     end
@@ -416,23 +417,24 @@ function P:delEvent(name,F)
     local pos=TABLE.find(self.event[name],F)
     if pos then rem(self.event[name],pos) end
 end
-function P:addCodeSeg(name,F)
+function P:addCodeSeg(name,F,pos)
     assert(self.codeSeg[name],"Wrong codeSeg key: '"..tostring(name).."'")
+    if not pos then pos=#self.codeSeg[name]+1 end
     if type(F)=='table' then
         for i=1,#F do
-            self:addCodeSeg(name,F[i])
+            self:addCodeSeg(name,pos+i-1,F[i])
         end
     elseif type(F)=='string' then
         local errMsg
         F,errMsg=loadstring('local P=...\n'..F)
         if F then
             setSafeEnv(F)
-            ins(self.codeSeg[name],F)
+            self:addCodeSeg(name,pos,F)
         else
             error('Error in code string: '..errMsg)
         end
     elseif type(F)=='function' then
-        ins(self.codeSeg[name],F)
+        ins(self.codeSeg[name],pos,F)
     end
 end
 function P:delCodeSeg(name,F)

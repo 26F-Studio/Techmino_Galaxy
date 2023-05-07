@@ -212,7 +212,7 @@ do-- hidden
     local showVisTime=1000
     local showFadeTime=1000
 
-    local flashRate=.1626
+    local flashProbability=.1626
     local flashInterval=math.floor(4*60*1000/130/2^(-1/12)+.5)
     local flashVisTime1,flashVisTime2=120,460
     local flashFadeTime=620
@@ -275,7 +275,7 @@ do-- hidden
             if md.flashTimer==0 then
                 for y=1,math.min(P.field:getHeight(),2*P.settings.fieldW) do
                     for x=1,P.settings.fieldW do
-                        if P:random()<flashRate then
+                    if P:random()<flashProbability then
                             local c=P.field:getCell(x,y)
                             if c then
                                 c.visTimer=math.max(c.visTimer or 0,P:random(flashVisTime1,flashVisTime2))
