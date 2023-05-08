@@ -1,6 +1,7 @@
 local gc=love.graphics
 local hypersonic={}
 
+--- @param mode 'low'|'high'|'hidden'
 function hypersonic.event_playerInit_auto(P,mode)
     if mode=='low' then
         hypersonic.event_playerInit(P)

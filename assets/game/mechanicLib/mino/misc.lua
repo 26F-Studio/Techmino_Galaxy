@@ -7,7 +7,7 @@ function misc.finish_TLE(P) P:finish('TLE') end
 function misc.finish_UKE(P) P:finish('UKE') end
 
 do-- timer
-    local list={.1,.3,.4,.3,.25,.2,.16,.13,.1}-- Alpha curve of 'float' timer text, right-to-left
+    local floatMixList={.1,.3,.4,.3,.25,.2,.16,.13,.1}-- Alpha curve of 'float' timer text, right-to-left
     local timer_drawFunc={
         info=function(P,time,time0)
             P:drawInfoPanel(-380,-60,160,120)
@@ -21,42 +21,60 @@ do-- timer
         end,
         float=function(_,time,time0)
             FONT.set(100,'bold')
-            gc.setColor(1,1,1,MATH.listMix(list,time/time0))
+            gc.setColor(1,1,1,MATH.listMix(floatMixList,time/time0))
             GC.mStr(("%.1f"):format(time/1000),0,-70,'center')
         end,
     }
 
     --- @param time number @milliseconds
-    --- @param func function @function(P)
-    --- @param style string|function|nil @name of style or function(P,time,time0)
-    function misc.timer_new(P,time,func,style)
+    --- @param timeUp function @function(P) called when time is up
+    --- @param draw? string|function @name of style or function(P,time,time0)
+    --- @param cancel? function @function(P,time,time0), manually control when to disappear (return true)
+    function misc.timer_new(P,time,timeUp,draw,cancel)
         if not P.modeData.timerList then
             P.modeData.timerList={}
             P:addEvent('always',misc.timer_event_always)
             P:addEvent('drawOnPlayer',misc.timer_event_drawOnPlayer)
         end
-        if type(style)=='string' then
-            style=timer_drawFunc[style]
+        if type(draw)=='string' then
+            draw=timer_drawFunc[draw]
         end
         ins(P.modeData.timerList,{
             time=time,
             time0=time,
-            func=func,
-            drawFunc=style,
+            timeUpFunc=timeUp,
+            drawFunc=draw,
+            cancelFunc=cancel,
         })
     end
 
     function misc.timer_event_always(P)
         if not P.timing then return end
-        local l=P.modeData.timerList
-        if not l then return end
+        local list=P.modeData.timerList
+        if not list then return end
         local i=1
-        while l[i] do
-            l[i].time=l[i].time-1
-            if l[i].time<=0 then
-                l[i].func(P)
-                rem(l,i)
-                if not l[1] then
+        while list[i] do
+            local willRemove
+            local t=list[i]
+            if t.cancelFunc then
+                if t.cancelFunc(P,t.time,t.time0) then
+                    willRemove=true
+                else
+                    t.time=t.time-1
+                    if t.time<=0 then
+                        t.timeUpFunc(P)
+                    end
+                end
+            else
+                t.time=t.time-1
+                if t.time<=0 then
+                    t.timeUpFunc(P)
+                    willRemove=true
+                end
+            end
+            if willRemove then
+                rem(list,i)
+                if not list[1] then
                     P:delEvent('always',misc.timer_event_always)
                     P:delEvent('drawOnPlayer',misc.timer_event_drawOnPlayer)
                     break
