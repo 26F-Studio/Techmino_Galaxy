@@ -413,9 +413,7 @@ end
 function MP:resetPos()-- Move hand piece to the normal spawn position
     self:moveHand('reset',floor(self.settings.fieldW/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1+ceil(self.fieldDived/40))
 
-    for i=1,#self.codeSeg.changeSpawnPos do
-        self.codeSeg.changeSpawnPos[i](self)
-    end
+    self:triggerEvent('changeSpawnPos')
 
     self.deathTimer=false
     while self:isSuffocate() and self.handY<self.settings.spawnH+self.settings.extraSpawnH+1 do self.handY=self.handY+1 end
@@ -773,8 +771,8 @@ function MP:ifoverlap(CB,cx,cy)
     if cx<=0 or cx+#CB[1]-1>self.settings.fieldW or cy<=0 then return true end
 
     -- Special check
-    for i=1,#self.codeSeg.extraSolidCheck do
-        local res=self.codeSeg.extraSolidCheck[i](self,CB,cx,cy)
+    for i=1,#self.event.extraSolidCheck do
+        local res=self.event.extraSolidCheck[i](self,CB,cx,cy)
         if res~=nil then return res end
     end
 
@@ -1913,7 +1911,6 @@ function MP.new()
         -- Start & End
         playerInit={},
         gameStart={},
-        whenSuffocate={},
         gameOver={},
 
         -- Drop
@@ -1935,10 +1932,13 @@ function MP.new()
         drawBelowMarks={},
         drawInField={},
         drawOnPlayer={},
-    }
-    self.codeSeg={
+
+        -- Other
+        whenSuffocate={},
         changeSpawnPos={},
-        extraSolidCheck={},
+
+        -- Special
+        extraSolidCheck={},-- Manually called
     }
     self.soundEvent=setmetatable({},soundEventMeta)
 

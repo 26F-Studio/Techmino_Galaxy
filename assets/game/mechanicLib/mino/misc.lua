@@ -7,7 +7,7 @@ function misc.finish_TLE(P) P:finish('TLE') end
 function misc.finish_UKE(P) P:finish('UKE') end
 
 do-- timer
-    local floatMixList={.1,.3,.4,.3,.25,.2,.16,.13,.1}-- Alpha curve of 'float' timer text, right-to-left
+    local floatMixList={.15,.35,.45,.35,.3,.25,.21,.18,.15}-- Alpha curve of 'float' timer text, right-to-left
     local timer_drawFunc={
         info=function(P,time,time0)
             P:drawInfoPanel(-380,-60,160,120)
@@ -21,8 +21,13 @@ do-- timer
         end,
         float=function(_,time,time0)
             FONT.set(100,'bold')
-            gc.setColor(1,1,1,MATH.listMix(floatMixList,time/time0))
-            GC.mStr(("%.1f"):format(time/1000),0,-70,'center')
+            local text=("%.1f"):format(time/1000)
+            local alpha=MATH.listMix(floatMixList,time/time0)
+            gc.setColor(0,0,0,alpha/2)
+            GC.mStr(text,-2,-69,'center')
+            GC.mStr(text,-1,-68,'center')
+            gc.setColor(1,1,1,alpha)
+            GC.mStr(text,0,-70,'center')
         end,
     }
 
@@ -74,10 +79,11 @@ do-- timer
             end
             if willRemove then
                 rem(list,i)
-                if not list[1] then
+                if #list==0 then
+                    P.modeData.timerList=nil
                     P:delEvent('always',misc.timer_event_always)
                     P:delEvent('drawOnPlayer',misc.timer_event_drawOnPlayer)
-                    break
+                    return
                 end
             else
                 i=i+1

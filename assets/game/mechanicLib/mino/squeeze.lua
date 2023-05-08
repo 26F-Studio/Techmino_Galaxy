@@ -23,9 +23,9 @@ end
 --- @param speed? number
 function squeeze.switch_auto(P,width,wait,depth,speed)
     squeeze.switch(P,width,wait,depth,speed)
-    local setCode,setEvent=P.modeData.squeeze_enabled and P.addCodeSeg or P.delCodeSeg,P.modeData.squeeze_enabled and P.addEvent or P.delEvent
-    setCode(P,'extraSolidCheck',squeeze.codeSeg_extraSolidCheck)
-    setCode(P,'changeSpawnPos',squeeze.codeSeg_changeSpawnPos)
+    local setEvent=P.modeData.squeeze_enabled and P.addEvent or P.delEvent
+    setEvent(P,'extraSolidCheck',squeeze.event_extraSolidCheck)
+    setEvent(P,'changeSpawnPos',squeeze.event_changeSpawnPos)
     setEvent(P,'afterDrop',squeeze.event_afterDrop)
     setEvent(P,'drawInField',squeeze.event_drawInField)
 end
@@ -56,7 +56,7 @@ function squeeze.switch(P,width,wait,depth,speed)
     end
 end
 
-function squeeze.codeSeg_extraSolidCheck(P,CB,cx,_)
+function squeeze.event_extraSolidCheck(P,CB,cx,_)
     local md=P.modeData
     if md.squeeze_enabled and (
         cx<=md.squeeze_pos or
@@ -64,7 +64,7 @@ function squeeze.codeSeg_extraSolidCheck(P,CB,cx,_)
     ) then return true end
 end
 
-function squeeze.codeSeg_changeSpawnPos(P)
+function squeeze.event_changeSpawnPos(P)
     local md=P.modeData
     if md.squeeze_enabled then
         P:moveHand('reset',clamp(floor(md.squeeze_pos+md.squeeze_width/2-#P.hand.matrix[1]/2+1),1,P.settings.fieldW-#P.hand.matrix+1),P.handY)
