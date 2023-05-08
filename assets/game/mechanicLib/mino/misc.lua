@@ -7,29 +7,28 @@ function misc.finish_TLE(P) P:finish('TLE') end
 function misc.finish_UKE(P) P:finish('UKE') end
 
 do-- timer
+    local list={.1,.3,.4,.3,.25,.2,.16,.13,.1}-- Alpha curve of 'float' timer text, right-to-left
     local timer_drawFunc={
-        info=function(_,time,time0)
-            gc.push('transform')
-            gc.translate(-300,0)
-            gc.setLineWidth(2)
-            gc.setColor(.98,.98,.98,.8)
-            gc.rectangle('line',-75,-50,150,100,4)
-            gc.setColor(.98,.98,.98,.4)
-            gc.rectangle('fill',-75+2,-50+2,150-4,100-4,2)
-            FONT.set(50)
+        info=function(P,time,time0)
+            P:drawInfoPanel(-380,-60,160,120)
+            FONT.set(75)
             local text=("%.1f"):format(time/1000)
             gc.setColor(COLOR.lD)
-            GC.mStr(text,2,-33)
-            local t=1-time/time0
-            gc.setColor(1.7*t,2.3-2*t,.3)
-            GC.mStr(text,0,-35)
-            gc.pop()
+            GC.mStr(text,-298,-33)
+            local t=time/time0
+            gc.setColor(1.7-1.7*t,3+2*t,.3)
+            GC.mStr(text,-300,-35)
+        end,
+        float=function(_,time,time0)
+            FONT.set(100,'bold')
+            gc.setColor(1,1,1,MATH.listMix(list,time/time0))
+            GC.mStr(("%.1f"):format(time/1000),0,-70,'center')
         end,
     }
 
     --- @param time number @milliseconds
     --- @param func function @function(P)
-    --- @param style string|function @name of style or function(P,time,time0)
+    --- @param style string|function|nil @name of style or function(P,time,time0)
     function misc.timer_new(P,time,func,style)
         if not P.modeData.timerList then
             P.modeData.timerList={}
