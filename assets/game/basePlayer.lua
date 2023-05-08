@@ -394,14 +394,14 @@ function P:addEvent(name,F,pos)
     if not pos then pos=#self.event[name]+1 end
     if type(F)=='table' then
         for i=1,#F do
-            self:addEvent(name,pos+i-1,F[i])
+            self:addEvent(name,F[i],pos+i-1)
         end
     elseif type(F)=='string' then
         local errMsg
         F,errMsg=loadstring('local P=...\n'..F)
         if F then
             setSafeEnv(F)
-            self:addEvent(name,pos,F)
+            self:addEvent(name,F,pos)
         else
             error('Error in code string: '..errMsg)
         end
@@ -417,32 +417,6 @@ function P:delEvent(name,F)
     local pos=TABLE.find(self.event[name],F)
     if pos then rem(self.event[name],pos) end
 end
-function P:addCodeSeg(name,F,pos)
-    assert(self.codeSeg[name],"Wrong codeSeg key: '"..tostring(name).."'")
-    if not pos then pos=#self.codeSeg[name]+1 end
-    if type(F)=='table' then
-        for i=1,#F do
-            self:addCodeSeg(name,pos+i-1,F[i])
-        end
-    elseif type(F)=='string' then
-        local errMsg
-        F,errMsg=loadstring('local P=...\n'..F)
-        if F then
-            setSafeEnv(F)
-            self:addCodeSeg(name,pos,F)
-        else
-            error('Error in code string: '..errMsg)
-        end
-    elseif type(F)=='function' then
-        ins(self.codeSeg[name],pos,F)
-    end
-end
-function P:delCodeSeg(name,F)
-    assert(self.codeSeg[name],"Wrong codeSeg key: '"..tostring(name).."'")
-    assert(type(F)=='function','codeSeg must be function')
-    local pos=TABLE.find(self.codeSeg[name],F)
-    if pos then rem(self.codeSeg[name],pos) end
-end
 function P:addSoundEvent(name,F)
     assert(self.soundEvent[name],"Wrong soundEvent key: '"..tostring(name).."'")
     assert(type(F)=='function',"soundEvent must be function")
@@ -457,10 +431,6 @@ function P:loadSettings(settings)-- Load data & events from mode settings
         if k=='event' then
             for name,F in next,v do
                 self:addEvent(name,F)
-            end
-        elseif k=='codeSeg' then
-            for name,F in next,v do
-                self:addCodeSeg(name,F)
             end
         elseif k=='soundEvent' then
             for name,F in next,v do

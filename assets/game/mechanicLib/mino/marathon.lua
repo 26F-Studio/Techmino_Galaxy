@@ -35,6 +35,12 @@ local levels={
     {drop=0,   lock=500 ,spawn=70,  par=133},
 }
 
+function marathon.event_playerInit_auto(P)
+    marathon.event_playerInit(P)
+    P:addEvent('afterLock',marathon.event_afterLock)
+    P:addEvent('afterClear',marathon.event_afterClear)
+    P:addEvent('drawOnPlayer',marathon.event_drawOnPlayer)
+end
 function marathon.event_playerInit(P)
     P.settings.das=math.max(P.settings.das,100)
     P.settings.arr=math.max(P.settings.arr,20)
@@ -82,9 +88,6 @@ function marathon.event_afterClear(P)
             md.levelPieces=0
             md.levelStartTime=P.gameTime
 
-            if P.isMain then
-                BGM.set(bgmList['propel'].add,'volume',math.min(md.level/15,1)^2)
-            end
             P:playSound('reach')
         else
             P:finish('AC')

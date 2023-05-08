@@ -8,7 +8,7 @@ end
 
 local _bgmPlaying,_bgmMode
 --- @param mode 'full'|'simp'|'base'|''|nil
---- @param args string|nil
+--- @param args? string
 function playBgm(name,mode,args)
     if not args then args='' end
 

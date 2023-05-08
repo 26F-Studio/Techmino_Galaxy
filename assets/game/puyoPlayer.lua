@@ -1086,7 +1086,7 @@ function PP:render()
 
             -- Grid & Cells
             skin.drawFieldBackground(settings.fieldW)
-            skin.drawFieldCells(self.field)
+            skin.drawFieldCell(self.field)
 
             self:triggerEvent('drawBelowBlock')-- From frame's bottom-left, 40px a cell
 
@@ -1272,7 +1272,6 @@ function PP.new()
         -- Start & End
         playerInit={},
         gameStart={},
-        whenSuffocate={},
         gameOver={},
 
         -- Drop
@@ -1291,8 +1290,9 @@ function PP.new()
         drawBelowMarks={},
         drawInField={},
         drawOnPlayer={},
-    }
-    self.codeSeg={
+
+        -- Other
+        whenSuffocate={},
     }
     self.soundEvent=setmetatable({},soundEventMeta)
 

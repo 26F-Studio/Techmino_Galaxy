@@ -18,14 +18,17 @@ local lineFont={
     95,95,-- 24,25
     100,-- 26+
 }
+local function outStackState(P)
+    return not P.modeData.stack_enabled
+end
 
 local stack={}
 
 --- @param fall? boolean
---- @param autoquit? boolean
-function stack.turnOn_auto(P,fall,autoquit)
+--- @param timeLimit? number @Automatically quit when time up (if given)
+function stack.turnOn_auto(P,fall,timeLimit)
     if not P.modeData.stack_enabled then
-        stack.switch_auto(P,fall,autoquit)
+        stack.switch_auto(P,fall,timeLimit)
     end
 end
 
@@ -37,16 +40,16 @@ end
 
 
 --- @param fall? boolean
---- @param autoquit? boolean
-function stack.switch_auto(P,fall,autoquit)
+--- @param timeLimit? number @Automatically quit when time up (if given)
+function stack.switch_auto(P,fall,timeLimit)
     if fall==nil then fall=true end
-    if autoquit==nil then autoquit=true end
     stack.switch(P)
     local setEvent=P.modeData.stack_enabled and P.addEvent or P.delEvent
     setEvent(P,'always',stack.event_always)
     setEvent(P,'afterLock',fall and stack.event_afterLock or stack.event_afterLock_noFall)
-    if autoquit then setEvent(P,'whenSuffocate',stack.event_whenSuffocate) end
     setEvent(P,'drawOnPlayer',stack.event_drawOnPlayer)
+    setEvent(P,'whenSuffocate',stack.event_whenSuffocate)
+    if timeLimit then mechLib.mino.misc.timer_new(P,timeLimit,stack.event_whenSuffocate,'float',outStackState) end
 end
 function stack.switch(P)
     local md=P.modeData
@@ -188,7 +191,7 @@ end
 
 function stack.event_whenSuffocate(P)
     if P.modeData.stack_enabled then
-        stack.switch(P,false)
+        stack.switch(P)
     end
 end
 

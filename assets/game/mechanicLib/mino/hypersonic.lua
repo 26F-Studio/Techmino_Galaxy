@@ -1,6 +1,7 @@
 local gc=love.graphics
 local hypersonic={}
 
+--- @param mode 'low'|'high'|'hidden'
 function hypersonic.event_playerInit_auto(P,mode)
     if mode=='low' then
         hypersonic.event_playerInit(P)
@@ -319,10 +320,6 @@ do-- hidden
                     P.settings.maxFreshTime=levels[md.level].fresh
                     P.settings.pieceVisTime=levels[md.level].visTime
                     P.settings.pieceFadeTime=levels[md.level].fadeTime
-
-                    if md.level==2 then
-                        BGM.set('secret7th/melody1','volume',1,26)
-                    end
                 else
                     md.point=md.target
                     P:finish('AC')

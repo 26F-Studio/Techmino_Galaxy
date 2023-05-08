@@ -13,7 +13,7 @@ function S.drawFieldBackground(fieldW)
     gc_rectangle('fill',0,0,40*fieldW,-80*fieldW)
 end
 
-function S.drawFieldCells(F)
+function S.drawFieldCell(F)
     F=F._matrix
     local flashing=S.getTime()%100<=50
     for y=1,#F do for x=1,#F[1] do

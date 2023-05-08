@@ -156,7 +156,7 @@ local function drawGem(g)
         gc_rectangle('line',-12,-12,24,24)
     end
 end
-function S.drawFieldCells(F)
+function S.drawFieldCell(F)
     gc_setLineWidth(2)
     for y=1,#F do for x=1,#F[1] do
         local G=F[y][x]

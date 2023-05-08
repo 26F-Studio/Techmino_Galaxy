@@ -118,15 +118,14 @@ TRS[6]={
     [3]={center={1,1}},
     rotate=function(self,dir,ifInit)
         local C=self.hand
-        local F=self.field
         local baseX,baseY=self.handX,self.handY
         self:freshDelay('rotate')
         local transformed
         if
             not self.deathTimer and
             (baseY==self.ghostY and
-                (F:getCell(baseX-1,baseY) or F:getCell(baseX-1,baseY+1)) and
-                (F:getCell(baseX+2,baseY) or F:getCell(baseX+2,baseY+1))
+                self:ifoverlap(self.hand.matrix,baseX-1,self.handY) and
+                self:ifoverlap(self.hand.matrix,baseX+1,self.handY)
             )
         then
             if not self.settings.noOspin then
@@ -146,7 +145,7 @@ TRS[6]={
                                 end
                             end end
 
-                            local x,y=self.handX+test.bias[1],self.handY+test.bias[2]
+                            local x,y=baseX+test.bias[1],baseY+test.bias[2]
                             if
                                 self.deathTimer or
                                 not self:ifoverlap(newMatrix,x,y) and (
