@@ -1,4 +1,8 @@
 return {
+    any={
+        timer=require'assets.game.mechanicLib.any.timer',
+        finish=require'assets.game.mechanicLib.any.finish',
+    },
     mino={
         -- Basic
         statistics=require'assets.game.mechanicLib.mino.statistics',
