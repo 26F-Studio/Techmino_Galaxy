@@ -7,7 +7,7 @@ return {
     end,
     settings={mino={
         event={
-            playerInit="mechLib.any.timer.new(P,120e3,mechLib.any.finish.TLE,'info')",
+            playerInit="mechLib.common.timer.new(P,120e3,mechLib.common.finish.TLE,'info')",
         },
     }},
 }

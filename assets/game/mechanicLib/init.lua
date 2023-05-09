@@ -1,7 +1,7 @@
 return {
-    any={
-        timer=require'assets.game.mechanicLib.any.timer',
-        finish=require'assets.game.mechanicLib.any.finish',
+    common={
+        timer=require'assets.game.mechanicLib.common.timer',
+        finish=require'assets.game.mechanicLib.common.finish',
     },
     mino={
         -- Basic

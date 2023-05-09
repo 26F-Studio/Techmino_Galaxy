@@ -3,7 +3,7 @@ local gc=love.graphics
 
 local floatMixList={.15,.35,.45,.35,.3,.25,.21,.18,.15}-- Alpha curve of 'float' timer text, right-to-left
 
---- @alias mechLib.any.timer.style 'info'|'float'
+--- @alias mechLib.common.timer.style 'info'|'float'
 local timer_drawFunc={
     info=function(P,time,time0)
         P:drawInfoPanel(-380,-60,160,120)
@@ -31,7 +31,7 @@ local timer={}
 
 --- @param time number @milliseconds
 --- @param timeUp function @function(P) called when time is up
---- @param draw? mechLib.any.timer.style|function @name of style or function(P,time,time0)
+--- @param draw? mechLib.common.timer.style|function @name of style or function(P,time,time0)
 --- @param cancel? function @function(P,time,time0), manually control when to disappear (return true)
 function timer.new(P,time,timeUp,draw,cancel)
     if not P.modeData.timerList then
