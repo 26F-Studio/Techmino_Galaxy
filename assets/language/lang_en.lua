@@ -54,9 +54,9 @@ return {
     -- Widget texts
     button_back="Back",
 
-    title_simulation="Simulations",
-    title_graph_mino="M-Graph",-- Traslation warning: from "Knowledge Graph" (AI domain)
-    title_settings="Settings",
+    simulation_title="Simulations",
+    graph_mino_title="M-Graph",-- Traslation warning: from "Knowledge Graph" (AI domain)
+    settings_title="Settings",
 
     setting_das="DAS",
     setting_arr="ARR",
@@ -93,7 +93,7 @@ return {
 
     lang_note="Chinese is the original game language.\nAll translations are contributed by volunteers and it may not be 100% accurate\nThere are some terms not translated directly, please check Zictionary for more information.",
 
-    title_keyset="Keybinds",
+    keyset_title="Keybinds",
     keyset_mino_moveLeft=   "Move Left",
     keyset_mino_moveRight=  "Move Right",
     keyset_mino_rotateCW=   "Twist CW",
@@ -171,7 +171,7 @@ return {
     main_out_single="Single",
     main_out_multi="Multiple",
 
-    title_musicroom="Musicroom",
+    musicroom_title="Musicroom",
     musicroom_fullband="Full Band",
     musicroom_autoplay="Auto Change",
 

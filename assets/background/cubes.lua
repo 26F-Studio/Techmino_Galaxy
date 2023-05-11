@@ -16,7 +16,7 @@ end
 function back.update(dt)
     t=t-1
     if t==0 then
-        local size=SCR.rad*(2+rnd()*3)/100
+        local size=SCR.diam*(2+rnd()*3)/100
         local S={
             x=(SCR.w-size)*rnd(),
             y=(SCR.h-size)*rnd(),
@@ -24,7 +24,7 @@ function back.update(dt)
             size=size,
             color=COLOR.random(2),
         }
-        local speed=SCR.rad*(1+rnd()*2)/6
+        local speed=SCR.diam*(1+rnd()*2)/6
         if rnd()<.5 then
             S.vy=26*(.5-rnd())
             S.vx=speed

@@ -49,7 +49,7 @@ function stack.switch_auto(P,fall,timeLimit)
     setEvent(P,'afterLock',fall and stack.event_afterLock or stack.event_afterLock_noFall)
     setEvent(P,'drawOnPlayer',stack.event_drawOnPlayer)
     setEvent(P,'whenSuffocate',stack.event_whenSuffocate)
-    if timeLimit then mechLib.mino.misc.timer_new(P,timeLimit,stack.event_whenSuffocate,'float',outStackState) end
+    if timeLimit then mechLib.common.timer.new(P,timeLimit,stack.event_whenSuffocate,'float',outStackState) end
 end
 function stack.switch(P)
     local md=P.modeData

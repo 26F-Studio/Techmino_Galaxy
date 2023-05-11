@@ -1,4 +1,8 @@
 return {
+    common={
+        timer=require'assets.game.mechanicLib.common.timer',
+        finish=require'assets.game.mechanicLib.common.finish',
+    },
     mino={
         -- Basic
         statistics=require'assets.game.mechanicLib.mino.statistics',

@@ -54,9 +54,9 @@ return {
     -- Widget texts
     button_back="返回",
 
-    title_simulation="模拟",
-    title_graph_mino="M-图谱",-- 翻译注意：取自“知识图谱”(人工智能领域)
-    title_settings="设置",
+    simulation_title="模拟",
+    graph_mino_title="M-图谱",-- 翻译注意：取自“知识图谱”(人工智能领域)
+    settings_title="设置",
 
     setting_das="DAS",
     setting_arr="ARR",
@@ -93,7 +93,7 @@ return {
 
     lang_note="中文是本游戏的原始语言\n翻译由志愿者贡献，不保证100%准确\n部分术语可能没有翻译，请查阅词典获取更多信息",
 
-    title_keyset="键位绑定",
+    keyset_title="键位绑定",
     keyset_mino_moveLeft=   "左移",
     keyset_mino_moveRight=  "右移",
     keyset_mino_rotateCW=   "顺时针旋转",
@@ -171,7 +171,7 @@ return {
     main_out_single="单机",
     main_out_multi="联机",
 
-    title_musicroom="音乐室",
+    musicroom_title="音乐室",
     musicroom_fullband='全频带',
     musicroom_autoplay="自动切换",
 
