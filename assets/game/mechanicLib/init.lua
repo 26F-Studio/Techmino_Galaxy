@@ -7,6 +7,7 @@ return {
         -- Basic
         statistics=require'assets.game.mechanicLib.mino.statistics',
         sequence=require'assets.game.mechanicLib.mino.sequence',
+        clearRule=require'assets.game.mechanicLib.mino.clearRule',
         attackSys=require'assets.game.mechanicLib.mino.attackSys',
         misc=require'assets.game.mechanicLib.mino.misc',
 

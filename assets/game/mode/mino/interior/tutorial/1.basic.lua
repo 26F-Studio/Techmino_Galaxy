@@ -6,6 +6,7 @@ return {
     end,
     settings={mino={
         skin='mino_interior',
+        clearMovement='teleBack',
         particles=false,
         shakeness=0,
         readyDelay=1,

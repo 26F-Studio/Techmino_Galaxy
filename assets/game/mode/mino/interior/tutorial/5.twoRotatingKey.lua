@@ -61,6 +61,7 @@ return {
     end,
     settings={mino={
         skin='mino_interior',
+        clearMovement='teleBack',
         particles=false,
         shakeness=0,
         readyDelay=1,
@@ -145,10 +146,10 @@ return {
             afterLock=function(P)
                 if #P.nextQueue==0 then
                     P.modeData.signal=
-                        P:isFullLine(1) and
-                        P:isFullLine(2) and
-                        P:isFullLine(3) and
-                        P:isFullLine(4) or false
+                        mechLib.mino.clearRule.line.isFill(P,1) and
+                        mechLib.mino.clearRule.line.isFill(P,2) and
+                        mechLib.mino.clearRule.line.isFill(P,3) and
+                        mechLib.mino.clearRule.line.isFill(P,4) or false
                 end
             end,
             drawBelowMarks=function(P)

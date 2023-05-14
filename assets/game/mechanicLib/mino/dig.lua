@@ -16,7 +16,7 @@ dig.sprint_event_afterClear=TABLE.newPool(function(self,info)
     self[info]=function(P,clear)
         local md=P.modeData
         local cleared=0
-        for _,v in next,clear.lines do
+        for _,v in next,clear.linePos do
             if v<=md.lineExist then
                 cleared=cleared+1
             end

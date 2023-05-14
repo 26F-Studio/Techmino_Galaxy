@@ -4,7 +4,7 @@ local max,min,rnd=math.max,math.min,math.random
 local floor,ceil=math.floor,math.ceil
 local ins,rem=table.insert,table.remove
 
-local clamp=MATH.clamp
+local clamp,expApproach=MATH.clamp,MATH.expApproach
 local inst=SFX.playSample
 
 local MP=setmetatable({},{__index=require'assets.game.basePlayer'})
@@ -1010,19 +1010,16 @@ function MP:hold_float()
         self:popNext(true)
     end
 end
-function MP:clearLines(lines)
-    local n=#lines
-    for i=1,n do
-        self.field:removeLine(lines[i])
-    end
+function MP:doClear(fullLines)
+    mechLib.mino.clearRule[self.settings.clearRule].clear(self,fullLines)
+    local n=#fullLines
     local his={
         combo=self.combo,
         line=n,
-        lines=lines,
+        linePos=fullLines,
         time=self.time,
     }
     ins(self.clearHistory,his)
-    self.clearTimer=self.settings.clearDelay
     self:shakeBoard('-clear',n)
     self:playSound('clear',n)
     if self.settings.particles then
@@ -1030,10 +1027,12 @@ function MP:clearLines(lines)
     end
 
     self:triggerEvent('afterClear',his)
-    if self.finished then return end
 end
+
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if not self.hand or self.deathTimer then return end
+
+    local SET=self.settings
 
     -- Move down
     if self.handY>self.ghostY then
@@ -1045,7 +1044,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     self:triggerEvent('afterDrop')
     if not self.hand or self.finished then return end
 
-    if self.settings.particles then
+    if SET.particles then
         self:createLockParticle(self.handX,self.handY)
     end
 
@@ -1058,7 +1057,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         y=self.handY,
         time=self.time,
     })
-    if self.handY+#self.hand.matrix-1>self.settings.deathH then
+    if self.handY+#self.hand.matrix-1>SET.deathH then
         self:finish('MLE')
         return
     end
@@ -1068,26 +1067,23 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if self.finished then return end
 
     -- Clear
-    local fullLines
-    if self.settings.clearFullLine then
-        fullLines=self:getFullLines()
-        if fullLines then
-            self.combo=self.combo+1
-            self.lastMovement.clear=fullLines
-            self.lastMovement.combo=self.combo
-            self:clearLines(fullLines)
-        else
-            self.combo=0
-        end
+    local fullLines=mechLib.mino.clearRule[SET.clearRule].getFill(self)
+    if fullLines then
+        self.combo=self.combo+1
+        self.lastMovement.clear=fullLines
+        self.lastMovement.combo=self.combo
+        self:doClear(fullLines)
+    else
+        self.combo=0
     end
 
     -- Attack
-    local atk=GAME.initAtk(mechLib.mino.attackSys[self.settings.atkSys].drop(self))
+    local atk=GAME.initAtk(mechLib.mino.attackSys[SET.atkSys].drop(self))
     if atk then
 
         self:triggerEvent('beforeCancel',atk)
 
-        if self.settings.allowCancel then
+        if SET.allowCancel then
             while atk and self.garbageBuffer[1] do
                 local ap=atk.power*(atk.cancelRate or 1)
                 local gbg=self.garbageBuffer[1]
@@ -1121,7 +1117,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     end
 
     -- Lockout check
-    if self.handY>self.settings.lockoutH and (self.settings.strictLockout or not fullLines)  then
+    if self.handY>SET.lockoutH and (SET.strictLockout or not fullLines)  then
         self:finish('CE')
         return
     end
@@ -1134,7 +1130,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if self.finished then return end
 
     -- Update & Release garbage
-    if not (self.settings.clearStuck and fullLines) then
+    if not (SET.clearStuck and fullLines) then
         local iBuffer=1
         while true do
             local g=self.garbageBuffer[iBuffer]
@@ -1157,10 +1153,10 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         end
     end
 
-    self.spawnTimer=self.settings.spawnDelay
+    self.spawnTimer=SET.spawnDelay+(fullLines and mechLib.mino.clearRule[SET.clearRule].getDelay(self,fullLines) or 0)
 
     -- Fresh hand
-    if self.spawnTimer<=0 and self.clearTimer<=0 then
+    if self.spawnTimer<=0 then
         self:popNext()
     end
 end
@@ -1311,26 +1307,6 @@ function MP:setField(arg)
     end
     self:freshGhost()
 end
-function MP:isFullLine(y)
-    local F=self.field
-    for x=1,self.settings.fieldW do
-        if not F:getCell(x,y) then
-            return false
-        end
-    end
-    return true
-end
-function MP:getFullLines()-- Top to bottom, like {4,3,2,1}
-    local fullH={}
-    for y=self.field:getHeight(),1,-1 do
-        if self:isFullLine(y) then
-            ins(fullH,y)
-        end
-    end
-    if #fullH>0 then
-        return fullH
-    end
-end
 function MP:changeFieldWidth(w,origPos)
     if w>0 and w%1==0 then
         if not origPos then origPos=1 end
@@ -1461,12 +1437,6 @@ function MP:updateFrame()
 
         -- Update hand
         repeat
-            -- Wait clearing animation
-            if self.clearTimer>0 then
-                self.clearTimer=self.clearTimer-1
-                break
-            end
-
             -- Try spawn mino if don't have one
             if self.spawnTimer>0 then
                 self.spawnTimer=self.spawnTimer-1
@@ -1541,18 +1511,26 @@ function MP:updateFrame()
             if C.bias then
                 local b=C.bias
                 if b.expBack then
-                    b.x=MATH.expApproach(b.x,0,b.expBack)
-                    b.y=MATH.expApproach(b.y,0,b.expBack)
+                    b.x=expApproach(b.x,0,b.expBack)
+                    b.y=expApproach(b.y,0,b.expBack)
+                    if b.x^2+b.y^2<=.26^2 then
+                        b=false
+                    end
                 elseif b.lineBack then
                     local dist=(b.x^2+b.y^2)^.5
-                    if dist<b.lineBack then
-                        C.bias=nil
+                    if b.lineBack>=dist then
+                        b=false
                     else
                         local k=1-b.lineBack/dist
                         b.x,b.y=b.x*k,b.y*k
                     end
+                elseif b.teleBack then
+                    b.teleBack=b.teleBack-1
+                    if b.teleBack<=0 then
+                        b=false
+                    end
                 end
-                if b.x==0 and b.y==0 then
+                if not b then
                     C.bias=nil
                 end
             end
@@ -1611,20 +1589,9 @@ function MP:render()
                 do-- Field
                     local matrix=self.field._matrix
                     gc.push('transform')
-                    local ptr,lines,fallingRate
-                    if self.clearTimer>0 then
-                        lines=self.clearHistory[#self.clearHistory].lines
-                        fallingRate=self.clearTimer/settings.clearDelay
-                        ptr=#lines
-                    end
 
                     local width=settings.fieldW
                     for y=floor(1+self.fieldDived/40),#matrix do
-                        while ptr and y==lines[ptr]-(#lines-ptr) do
-                            skin.drawClearingEffect(settings.fieldW,fallingRate)
-                            ptr=ptr>1 and ptr-1
-                            gc.translate(0,-40*skin.fallingCurve(fallingRate))
-                        end
                         for x=1,width do
                             local C=matrix[y][x]
                             if C then
@@ -1830,6 +1797,10 @@ local baseEnv={
     deathH=1e99,
     voidH=1260,
 
+    -- Clear
+    clearRule='line',
+    clearMovement='lineBack',
+
     -- Sequence
     seqType='bag7',
     nextSlot=6,
@@ -1873,7 +1844,6 @@ local baseEnv={
 
     -- Other
     strictLockout=false,
-    clearFullLine=true,
     script=false,
 
     -- May be overrode with user setting
@@ -1987,7 +1957,6 @@ function MP:initialize()
     self.dropTimer=0
     self.lockTimer=0
     self.spawnTimer=self.settings.readyDelay
-    self.clearTimer=0
     self.deathTimer=false
 
     self.freshChance=self.settings.freshCount
