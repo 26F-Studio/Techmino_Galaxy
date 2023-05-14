@@ -105,7 +105,7 @@ Những yếu tố ảnh hưởng tới việc xếp gạch của bạn:
 ~~
 (3) Cái gì cũng có mục đích của nó, ngay cả thiết kế cũng vậy. Việc làm quen với chúng có thể giúp bạn.
 ~~
-(4) Cài đặt tham số không phù hợp. Thay đổi cài đặt. (?)
+(4) Cài đặt tham số không phù hợp. Thay đổi cài đặt. (????)
 (5) Improper play posture. It’s not convenient to use force. Change your posture.
 (6) Not being used to the operation after changing the key position or changing the device. Getting used to it or changing the settings might help.
 (7) Muscle fatigue, response, and decreases in coordination abilities. Have some rest and come back later or in a few days.
@@ -122,8 +122,8 @@ Thông thường, các viên gạch có cùng hình dáng sẽ có cùng màu. N
 
 # piece_direction
 @ title Pieces' Directions
-@ titleFull Tetrominos' Directions
-Usually, tetrominos spawn with a consistent rotation state (in other words, it won't spawn in one direction sometimes but in another direction some other times). Some rotation systems also take a tetromino's direction into account when deciding what direction to kick the tetromino.
+@ titleFull Tetrominos' Directions (Hướng của Tetromino)
+Thông thường, tetrominos sẽ được sinh ra với hướng quay nhất định (nói cách khác, đôi khi nó sẽ không sinh theo một hướng mà sẽ theo một hướng khác vào một số thời điểm khác). Một số hệ thống quay cũng tính đến hướng của tetromino khi quyết định hướng đá tetromino.
 
 # next
 @ title Next
@@ -151,7 +151,11 @@ Mặc dù thông thường, bạn chỉ có thể xóa 4 hàng cùng một lúc 
 # b2b
 @ title Back to Back
 @ titleFull Back to Back (BtB, B2B)
-Đề cập tới việc liên tục xóa theo kiểu đặc biệt (thường là Techrash và Spin có xóa hàng) mà không bị ngắt quãng vì xóa theo kiểu bình thường.
+Xóa 4 hàng liên tiếp, hoặc xóa hàng bằng T-spin. Nhưng bạn vẫn có thể đặt gạch mà không bị mất Back to Back (chỉ bị đứt Combo)
+
+~~6
+Một vài game có thể dùng từ "Liên tiếp"
+Ví dụ trong Tetra Legend, nếu bạn làm Techrash - Back to Back thì bạn sẽ thấy dòng chữ "Bốn (Liên tiếp)".
 
 # all_clear
 @ title Perfect Clear
@@ -209,13 +213,13 @@ Xóa nhiều hàng liên tiếp, nhưng không có viên gạch nào không xóa
 # drop_speed
 @ title Drop Speed
 @ titleFull Drop Speed (Tốc độ thả rơi): PPS, BPM, LPM
-Có một số cách để đô tốc độ bạn thả rơi gạch:
+Có vài cách để đô tốc độ bạn thả rơi gạch:
 
-PPS viết tắt của Pieces per Second (gạch/giây).
+PPS viết tắt của Pieces per Second (Số gạch/giây).
 ~~
-BPM viết tắt của Blocks per Minute (gạch/phút). Còn được biết đến với một tên khác là PPM, P là viêt tắt của Pieces (gạch).
+BPM viết tắt của Blocks per Minute (Số gạch/phút). Còn được biết đến với một tên khác là PPM, P là viêt tắt của Pieces (gạch).
 ~~
-LPM viết tắt của Lines per Minute (hàng/phút).
+LPM viết tắt của Lines per Minute (Số hàng/phút).
 Có hai cách để tính số "hàng" ở đây:
     1. Dùng số hàng đã thực sự được xóa
     2. Đổi từ số gạch bạn đã thả rơi. Việc này giúp cho việc tính số hàng ít bị ảnh hưởng từ yếu tố bên ngoài: ví dụ như các hàng rác
@@ -223,26 +227,32 @@ Có hai cách để tính số "hàng" ở đây:
 # key_speed
 @ title Action Speed
 @ titleFull Action Speed: KPS, KPM
-There are a few ways to measure how fast you press buttons.
+Có vài cách để đo tốc độ bạn nhấn phím.
 
-KPS refers to Keys per Second.
-KPM refers to Keys per Minute.
+KPS viết tắt của Keys per Second (Số phím/giây)
+KPM viết tắt của Keys per Minute (Số phím/phút)
 
 # attack_power
-@ title Attack Power
+@ title Sức mạnh tấn công
 @ titleFull Attack Power: APM, APL
-There are a few ways to measure your attack output in multiplayer.
+@ titleFull (Sức mạnh tấn công)
+Có vài cách để đo tốc độ bạn tấn công trong chế độ nhiều người chơi.
 
-APM refers to Attack per Minute.
-APL refers to Attack per Line. Sometimes also called "Efficiency".
+APM viết tắt của Attack per Minute (hàng gửi/phút).
+APL viết tắt của Attack per Line (Số hàng gửi/Số hàng xóa)¹. Đôi lúc còn được gọi là "Efficiency" (Độ hiệu quả).
+
+~~6
+1: Lưu ý phân biệt 2 từ:
+    Số hàng gửi: tức là số hàng rác bạn gửi
+    Số hàng xóa: tức là số hàng trên thực tế bạn xóa trong bảng
 
 # das_arr
 @ title DAS và ARR
-DAS stands for Delayed Auto Shift, and ARR stands for Auto Repeat Rate. The come into play when you hold a direction key to move a piece sideways.
+DAS viết tắt của Delayed Auto Shift, và ARR viết tắt của Auto Repeat Rate. Gạch sẽ bắt đầu di chuyển khi bạn giữ một phím di chuyển để di chuyển gạch sang một bên tương ứng.
 
-Imagine you are in a text editor, and you hold down a letter key. A letter appears first, and after a little pause, more letters begin to appear quickly. The little pause is DAS, and the rate at which the letters appear quickly is ARR.
+Tưởng tượng bạn đang ở trong trình chỉnh sửa văn bản (có thể là Notepad hay Notepad++, hay bất cứ chỗ nào bạn có thể gõ văn bản), và bạn nhấn giữ một phím chữ cái nào đó. Một chữ cái đầu tiên xuất hiện, và rồi nhiều chữ cái sau đó nhanh chóng xuất hiện một lần. Cái khoảng tạm dừng ban đầu là DAS, còn tốc độ mà một chữ cái xuất hiện lần lượt trong những chữ cái nhanh chóng sau đó chính là ARR
 
-A skilled player would tune DAS to be as short as possible while still being able to distinguish between single taps and holds, and tune ARR as close to zero as possible. This gives them the highest potential for speed.
+Một người chơi nghiệp dư (hoặc chuyên nghiệp) sẽ chỉnh DAS ngắn nhất có thể, trong khi họ vẫn có thể nhấn liên tục và giữa; và điều chỉnh ARR gần bằng 0. Từ đó họ sẽ có được lợi thế về mặt tốc độ.
 
 # misaction
 @ title Mis-Action
@@ -251,11 +261,16 @@ Làm một hành động nào đó nhưng bị lỗi/sai sót. Có 2 kiểu: mis
 # gravity
 @ title Tốc độ rơi
 @ titleFull Tốc độ rơi (Falling speed)
-The speed at which pieces naturally fall when you don't press any buttons.
+Tốc độ rơi tự nhiên của viên gạch, khi mà bạn không nhấn nút nào
 
-When falling is relatively slow, the speed is usually described as "X blocks per second" or "one block every X seconds".
+Nếu tốc độ rơi đủ chậm, thì nó thường sẽ được diễn tả là "X ô trên giây" or "một ô sau mỗi X giây".
 
-When it gets fast, the commonly used unit is G, referring to how many blocks the block falls per frame. For example, 1G refers to 1 block per frame, or 60 blocks per second, assuming a frame rate of 60fps. This speed means the piece falls to the bottom in about a third of a second.
+Nhưng khi ở tốc độ cao, thì tốc độ sẽ dùng đơn vị G (Gravity - Trọng lực), ứng với số khung hình mà gạch rơi xuống sau mỗi khung hình. 
+
+~~
+Lấy ví dụ: (giả sử tốc độ khung hình hiện tại là 60FPS)
+1G tức là 1 ô / 1 khung hình <-\--> 60 ô / 1 giây
+20G tức là 20 ô / 1 khung hình <-\--> 1200 ô / 1 giây (đủ nhanh để gạch bỏ qua quá trình rơi và hiện ngay ở phía bên dưới ngay tức khắc!)
 
 # 20g
 @ title 20G
