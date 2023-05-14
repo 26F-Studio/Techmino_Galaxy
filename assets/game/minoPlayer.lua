@@ -1,4 +1,8 @@
 local gc=love.graphics
+local gc_push,gc_pop=gc.push,gc.pop
+local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
+local gc_setColor=gc.setColor
+local gc_draw=gc.draw
 
 local max,min,rnd=math.max,math.min,math.random
 local floor,ceil=math.floor,math.ceil
@@ -1560,54 +1564,54 @@ function MP:render()
     local skin=SKIN.get(settings.skin)
     SKIN.time=self.time
 
-    gc.push('transform')
+    gc_push('transform')
 
     -- Player's transform
     local pos=self.pos
-    gc.translate(pos.x,pos.y)
-    gc.scale(pos.k*(1+pos.dk))
-    gc.translate(pos.dx,pos.dy)
-    gc.rotate(pos.a+pos.da)
+    gc_translate(pos.x,pos.y)
+    gc_scale(pos.k*(1+pos.dk))
+    gc_translate(pos.dx,pos.dy)
+    gc_rotate(pos.a+pos.da)
 
     -- Field's transform
-    gc.push('transform')
+    gc_push('transform')
 
-        gc.translate(-200,400)
+        gc_translate(-200,400)
 
         -- Start field stencil
-        GC.stc_setComp('equal',0)
-        GC.stc_rect(0,0,400,40)
-        gc.scale(10/settings.fieldW)
+        GC.stc_setComp('equal',1)
+        GC.stc_rect(0,0,400,-1600)
+        gc_scale(10/settings.fieldW)
 
             self:triggerEvent('drawBelowField')-- From frame's bottom-left, 40px a cell
 
             -- Grid & Cells
             skin.drawFieldBackground(settings.fieldW)
 
-            gc.translate(0,self.fieldDived)
+            gc_translate(0,self.fieldDived)
 
                 do-- Field
                     local matrix=self.field._matrix
-                    gc.push('transform')
+                    gc_push('transform')
 
                     local width=settings.fieldW
-                    for y=floor(1+self.fieldDived/40),#matrix do
+                    for y=1,#matrix do
                         for x=1,width do
                             local C=matrix[y][x]
                             if C then
                                 if C.bias then
-                                    gc.translate(C.bias.x,C.bias.y)
+                                    gc_translate(C.bias.x,C.bias.y)
                                     skin.drawFieldCell(C,matrix,x,y)
-                                    gc.translate(-C.bias.x,-C.bias.y)
+                                    gc_translate(-C.bias.x,-C.bias.y)
                                 else
                                     skin.drawFieldCell(C,matrix,x,y)
                                 end
                             end
-                            gc.translate(40,0)
+                            gc_translate(40,0)
                         end
-                        gc.translate(-40*width,-40)-- \r\n (Return + Newline)
+                        gc_translate(-40*width,-40)-- \r\n (Return + Newline)
                     end
-                    gc.pop()
+                    gc_pop()
                 end
 
                 self:triggerEvent('drawBelowBlock')-- From field's bottom-left, 40px a cell
@@ -1630,7 +1634,7 @@ function MP:render()
                         if self.handY>self.ghostY then
                             droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
                         end
-                        gc.translate(movingX,droppingY)
+                        gc_translate(movingX,droppingY)
 
                         skin.drawHand(CB,self.handX,self.handY)
 
@@ -1640,11 +1644,11 @@ function MP:render()
                             local state=minoData[self.hand.direction]
                             local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
                             if centerPos then
-                                gc.setColor(1,1,1,.8)
+                                gc_setColor(1,1,1,.8)
                                 GC.mDraw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40,nil,1.26)
                             end
                         end
-                        gc.translate(-movingX,-droppingY)
+                        gc_translate(-movingX,-droppingY)
                     end
                 end
 
@@ -1658,7 +1662,7 @@ function MP:render()
 
                 self:triggerEvent('drawBelowMarks')-- From field's bottom-left, 40px a cell
 
-            gc.translate(0,-self.fieldDived)
+            gc_translate(0,-self.fieldDived)
 
             -- Height lines
             skin.drawHeightLines(-- All unit are pixel
@@ -1676,11 +1680,11 @@ function MP:render()
         GC.stc_stop()
 
         -- Particles
-        gc.setColor(1,1,1)
-        gc.draw(self.particles.star)
-        gc.draw(self.particles.trail)
+        gc_setColor(1,1,1)
+        gc_draw(self.particles.star)
+        gc_draw(self.particles.trail)
 
-    gc.pop()
+    gc_pop()
 
     -- Field border
     skin.drawFieldBorder()
@@ -1704,24 +1708,24 @@ function MP:render()
     skin.drawLockDelayIndicator(settings.freshCondition,self.freshChance)
 
     -- Next (Almost same as drawing hold(s), don't forget to change both)
-    gc.push('transform')
-    gc.translate(200,-400)
+    gc_push('transform')
+    gc_translate(200,-400)
     skin.drawNextBorder(settings.nextSlot)
     for n=1,min(#self.nextQueue,settings.nextSlot) do
         skin.drawNext(n,self.nextQueue[n].matrix,settings.holdMode=='swap' and not settings.infHold and n<=self.holdTime)
     end
-    gc.pop()
+    gc_pop()
 
     -- Hold (Almost same as drawing next(s), don't forget to change both)
-    gc.push('transform')
-    gc.translate(-200,-400)
+    gc_push('transform')
+    gc_translate(-200,-400)
     skin.drawHoldBorder(settings.holdMode,settings.holdSlot)
     if #self.holdQueue>0 then
         for n=1,#self.holdQueue do
             skin.drawHold(n,self.holdQueue[n].matrix,settings.holdMode=='hold' and not settings.infHold and n<=self.holdTime)
         end
     end
-    gc.pop()
+    gc_pop()
 
     -- Timer
     skin.drawTime(self.gameTime)
@@ -1746,7 +1750,7 @@ function MP:render()
     -- gc.setBlendMode('alpha')
     -- gc.setColorMask()
 
-    gc.pop()
+    gc_pop()
 end
 --------------------------------------------------------------
 -- Other

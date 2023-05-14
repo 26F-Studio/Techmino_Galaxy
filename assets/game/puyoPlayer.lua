@@ -1,4 +1,10 @@
 local gc=love.graphics
+local gc_push,gc_pop=gc.push,gc.pop
+local gc_translate,gc_scale,gc_rotate,gc_shear=gc.translate,gc.scale,gc.rotate,gc.shear
+local gc_setBlendMode,gc_setColorMask=gc.setBlendMode,gc.setColorMask
+local gc_setColor=gc.setColor
+local gc_draw,gc_rectangle=gc.draw,gc.rectangle
+
 
 local max,min=math.max,math.min
 local floor=math.floor
@@ -1063,24 +1069,24 @@ function PP:render()
     local skin=SKIN.get(settings.skin)
     SKIN.time=self.time
 
-    gc.push('transform')
+    gc_push('transform')
 
     -- Player's transform
     local pos=self.pos
-    gc.translate(pos.x,pos.y)
-    gc.scale(pos.k*(1+pos.dk))
-    gc.translate(pos.dx,pos.dy)
-    gc.rotate(pos.a+pos.da)
+    gc_translate(pos.x,pos.y)
+    gc_scale(pos.k*(1+pos.dk))
+    gc_translate(pos.dx,pos.dy)
+    gc_rotate(pos.a+pos.da)
 
     -- Field's transform
-    gc.push('transform')
+    gc_push('transform')
 
-        gc.translate(-200,400)
+        gc_translate(-200,400)
 
         -- Start field stencil
         GC.stc_setComp()
         GC.stc_rect(0,0,400,-920)
-        gc.scale(10/settings.fieldW)
+        gc_scale(10/settings.fieldW)
 
             self:triggerEvent('drawBelowField')-- From frame's bottom-left, 40px a cell
 
@@ -1108,9 +1114,9 @@ function PP:render()
                     if self.handY>self.ghostY then
                         droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
                     end
-                    gc.translate(movingX,droppingY)
+                    gc_translate(movingX,droppingY)
                     skin.drawHand(CB,self.handX,self.handY)
-                    gc.translate(-movingX,-droppingY)
+                    gc_translate(-movingX,-droppingY)
                 end
             end
 
@@ -1131,11 +1137,11 @@ function PP:render()
         GC.stc_stop()
 
         -- Particles
-        gc.setColor(1,1,1)
-        gc.draw(self.particles.star)
-        gc.draw(self.particles.trail)
+        gc_setColor(1,1,1)
+        gc_draw(self.particles.star)
+        gc_draw(self.particles.trail)
 
-    gc.pop()
+    gc_pop()
 
     -- Field border
     skin.drawFieldBorder()
@@ -1159,13 +1165,13 @@ function PP:render()
     skin.drawLockDelayIndicator(settings.freshCondition,self.freshChance)
 
     -- Next
-    gc.push('transform')
-    gc.translate(200,-400)
+    gc_push('transform')
+    gc_translate(200,-400)
     skin.drawNextBorder(settings.nextSlot)
     for n=1,min(#self.nextQueue,settings.nextSlot) do
         skin.drawNext(n,self.nextQueue[n].matrix)
     end
-    gc.pop()
+    gc_pop()
 
     -- Timer
     skin.drawTime(self.gameTime)
@@ -1181,16 +1187,16 @@ function PP:render()
     end
 
     -- Upside fade out
-    gc.setBlendMode('multiply','premultiplied')
-    gc.setColorMask(false,false,false,true)
+    gc_setBlendMode('multiply','premultiplied')
+    gc_setColorMask(false,false,false,true)
     for i=0,99,2 do
-        gc.setColor(0,0,0,(1-i/100)^2)
-        gc.rectangle('fill',-200,-422-i,400,-2)
+        gc_setColor(0,0,0,(1-i/100)^2)
+        gc_rectangle('fill',-200,-422-i,400,-2)
     end
-    gc.setBlendMode('alpha')
-    gc.setColorMask()
+    gc_setBlendMode('alpha')
+    gc_setColorMask()
 
-    gc.pop()
+    gc_pop()
 end
 --------------------------------------------------------------
 -- Other
