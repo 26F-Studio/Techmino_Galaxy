@@ -56,20 +56,19 @@ Bạn vừa nhấn phím tắt à? Ngon lành cành đào rồi đây
 Bạn có thể chỉnh một đống thứ ở đây!
 
 # noobGuide
-@ title Xin chào
+@ title Xin chào!
 @ contentSize 20
 Cảm ơn bạn đã tải và chơi Techmino!
-... Hả? Đây là lần đầu bạn chơi game xếp gạch á? Nếu vậy thì...
 Đây là một vài thứ mà bạn nên làm mỗi khi chơi, chúng được sắp xếp thành một nhóm. Tuy xếp thành nhóm, bạn vẫn nên làm cả ba nhóm cùng lúc thay vì làm từng cái một.
 
 A. Stacking (Xếp gạch)
     A1. Suy nghĩ kỹ trước khi đặt gạch. Chưa vừa ý? Suy nghĩ thêm lần nữa.
-    A2. Hãy xếp gạch càng phẳng càng tốt để bạn có thể ra quyết định đặt gạch dễ dàng hơn.
-    A3. Lên kế hoạc trước cách xếp, hãy tận dụng tối đa NEXT và HOLD để giữ được thể đẹp. 
+    A2. Xếp gạch càng phẳng càng tốt để bạn có thể ra quyết định đặt gạch dễ dàng hơn.
+    A3. Lên kế hoạch trước cách xếp, hãy tận dụng tối đa NEXT và HOLD để giữ được thế đẹp. 
 ~~
 B. Efficiency & Speed (Hiệu quả & Tốc độ)
     B1. Trước mỗi lần đặt gạch, hãy suy nghĩ xem bạn sẽ đặt gạch ở đâu? Bấm những phím nào để gạch tới chỗ đó và đứng đúng tư thế? Thay vì dựa dẫm vào gạch ma quá nhiều
-    B2. Nên sử dụng 2 (hoặc 3, tùy game) phím xoay thay vì nhấn 1 phím xoay liên tục trong thời gian dài. Bởi vì làm như vậy trong thời gian dài sẽ làm bạn chậm và làm cho bạn dễ rơi vào trạng thái bị động
+    B2. Nên sử dụng 2 (hoặc 3, tùy game) phím xoay thay vì nhấn 1 phím xoay liên tục trong thời gian dài.
     B3. Đừng lo lắng về tốc độ khi bạn mới tập chơi Finesse, đây là chuyện bình thường. Hơn nữa bạn có thể tập chơi nhanh hơn một khi bạn đã quen tay — việc này không khó đâu!
 ~~
 C. Practice (Luyện tập)
@@ -80,7 +79,7 @@ C. Practice (Luyện tập)
 
 Nhóm C rất linh động, bạn có thể điều chỉnh độ khó dựa trên tình hình/điều kiện của bạn (ví dụ như "không làm bạn chơi quá chậm")
 ~~
-Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm A, đây là một kỹ năng tối quan trọng trong bất kỳ tựa game xếp gạch nào; và bạn sẽ có thể dần dần làm chủ bất kỳ chế độ nào, lúc đó chỉ cần nhìn lướt qua NEXT là đủ rồi.
+Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm A, đây là một kỹ năng RẤT quan trọng trong bất kỳ tựa game xếp gạch nào; và bạn sẽ có thể dần dần làm chủ bất kỳ chế độ nào, lúc đó chỉ cần nhìn lướt qua NEXT là đủ rồi.
 
 # keybinding 
 @ title Gán phím
@@ -90,9 +89,9 @@ Dưới đây là vài lời khuyên hữu ích khi bạn gán phím
 
 1.  Một ngón tay chỉ nên thực hiện một chức năng khác nhau. Ví dụ như: 1 ngón cho sang trái, 1 ngón cho sang phải, 1 ngón cho phím xoay phải, 1 ngón cho rơi mạnh
 ~~
-2.  Trừ khi bạn tự tin với ngót út của mình, thì không nên để ngón tay này làm bất kì việc hết! Hơn hết, nên xài ngón trỏ và ngón giữa vì hai ngón này là nhanh nhẹn nhất, nhưng bạn cũng có thể thoải mái tìm hiểu xem các ngón tay của mình nhanh chậm thế nào, mạnh yếu ra sao.
+2.  Trừ khi bạn tự tin với ngót út của mình, thì không nên để ngón tay này làm bất kì việc hết! Ngoài ra, nên xài ngón trỏ và ngón giữa vì hai ngón này là nhanh nhẹn nhất, nhưng bạn cũng có thể thoải mái tìm hiểu xem các ngón tay của mình nhanh chậm thế nào, mạnh yếu ra sao.
 ~~
-3.  Không nhất thiết phải sao chép cấu hình phím của người khác, vì không ai giống ai. Thay vào đó hãy chỉnh theo cách của bạn, miễn là bạn chơi thoải nái là được.
+3.  Không nhất thiết phải sao chép cấu hình phím của người khác, vì không ai giống ai. Thay vào đó hãy chỉnh theo cách của bạn, miễn là bạn chơi thoải mái là được.
 
 # handling
 @ title Xử lý gạch
@@ -101,7 +100,7 @@ Dưới đây là vài lời khuyên hữu ích khi bạn gán phím
 Những yếu tố ảnh hưởng tới việc xếp gạch của bạn:
 (1) Độ trễ đầu vào, có thể là do cấu hình, thông số hoặc điều kiện của thiết bị. Khởi động lại trò chơi, bảo dưỡng, sửa chữa hoặc thay đổi thiết bị của bạn có thể khắc phục vấn đề này.
 ~~
-(2) Unstable programming or faulty designs. It could be alleviated by lowering the effect settings. Trò chơi không ổn định hoặc thiết kế quá sơ sài và nhiều lỗi. Có thể giảm tình trạng này bằng cách hạ thấp cài đặt hiệu ứng xuống
+(2) Trò chơi không ổn định hoặc thiết kế quá sơ sài và nhiều lỗi. Có thể giảm tình trạng này bằng cách chỉnh sửa cài đặt hiệu ứng để ở mức thấp
 ~~
 (3) Cái gì cũng có mục đích của nó, ngay cả thiết kế cũng vậy. Việc làm quen với chúng có thể giúp bạn.
 ~~
@@ -121,9 +120,17 @@ Mỗi trò xếp gạch đều có tổng cộng có bảy viên gạch khác nh
 Thông thường, các viên gạch có cùng hình dáng sẽ có cùng màu. Nó sẽ giúp bạn dễ dàng phân biệt và nhớ chúng lâu hơn
 
 # piece_direction
-@ title Pieces' Directions
+@ title Hướng của viên gạch
 @ titleFull Tetrominos' Directions (Hướng của Tetromino)
 Thông thường, tetrominos sẽ được sinh ra với hướng quay nhất định (nói cách khác, đôi khi nó sẽ không sinh theo một hướng mà sẽ theo một hướng khác vào một số thời điểm khác). Một số hệ thống quay cũng tính đến hướng của tetromino khi quyết định hướng đá tetromino.
+
+Có vài cách để nói về hướng của tetromino. Các kí tự chủ yếu được dùng là "0", "L", "R", "2"
+
+Trong đó:
+0 - Hướng mặc định của hệ thống xoay
+L - Gạch đã bị xoay trái (xoay ngược chiều)
+R - Gạch đã bị xoay phải (xoay cùng chiều)
+2 - Gạch đã bị lật dọc (xoay 180 độ/xoay trái hoặc phải hai lần)
 
 # next
 @ title Next
@@ -277,10 +284,10 @@ Lấy ví dụ: (giả sử tốc độ khung hình hiện tại là 60FPS)
 Tốc độ nhanh nhất trong các trò xếp gạch hiện đại. Trong các chế độ xài tốc độ 20G, các viên gạch thay vì rơi từ từ, nó sẽ xuất hiện ngay lập tức ở đáy bảng. Việc này đôi khi sẽ làm bạn không thể di chuyển được theo phương ngang như ý bạn muốn; bởi vì gạch đôi khi cũng không thể leo qua chỗ lồi lõm hoặc ra khỏi hố sâu. Bạn có thể tìm hiểu thêm về đơn vị "G" trong mục "Tốc độ rơi"
 
 #lock_delay
-@title Lockdown Delay
-The time between "piece touches the The time between "piece touches the floor" and "piece locking and cannot be moved".
+@title Lockdown Delay (Thời gian chờ khóa gạch)
+Khoảng thời gian nằm giữa "gạch vừa chạm vào đáy bảng" và "gạch bị khóa và không thể di chuyển".
 
-This can usually be reset by actions like moving and rotating, giving the player more reaction time even with a fast falling speed.
+Khoảng thời gian này có thể reset nếu kịp thực hiện một hành động nào đó như di chuyển hay xoa gạch, cho phép người chơi có thêm thời gian phản ứng, ngay cả khi gạch rơi với tốc độ nhanh.
 
 # spawn_delay
 @ title Spawn Delay
@@ -328,10 +335,6 @@ Gạch sẽ biến mất ngay lập tức sau khi nó được đặt xuống.
 Một quy tắc trong đó gạch có thể chìm xuống dưới, xuyên qua cả gạch đã đặt, để xuống lố sâu hơn
 
 Điều này thường được sử dụng khi thử nghiệm, vì nó cho phép các viên gạch tiếp cận bất kỳ lỗ mở nào có thể giữ mảnh mà không phải lo lắng về hệ thống xoay.
-
-~~3
-
-Thông tin thêm: nếu bạn đã từng chơi Gameloft Tetris thì sẽ có một booster tên là "Gạch ma" (đừng nhầm lẫn với "Bóng gạch") thì bạn sẽ để ý rằng loại gạch này có thể đi xuyên qua để xuống cái lỗ chưa. Deep Drop cũng hoạt động giống như thế, nhưng thay vì chỉ là một mino (gạch 1 ô) thì Deep Drop sẽ hiệu lực lên tất cả Tetromino - tức là, nếu bạn có một lỗ chữ Z nằm khá sâu và gạch đang rơi cũng là gạch Z, thì bạn có thể nhấn nút "Rơi tức thì", sau đó nhấn nút "Rơi nhanh" để thực hiện Deep Drop; lập tức gạch Z đã đi xuống lỗ chữ Z bất chấp nó sâu tới mấy và rồi bạn có thể nhấn nút "Đặt mạnh" để chốt vị trí.
 
 # cascade
 @ title Gravity

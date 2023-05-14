@@ -212,13 +212,13 @@ return {
 
         -- Will revert back to "Xóa 100 nhận 100" (alt: "Xóa 100 nhận rác")
         -- when all modes have icons
-        backfire_100=          {"Ăn đòn phản","Xóa 100 hàng nhưng bạn sẽ bị bón hành bởi rác do chính bạn tạo ra!"},
+        backfire_100=          {"Ăn đòn phản","Xóa 100 hàng nhưng bạn đang tự tấn công lại chính mình đấy!"},
         -- This one is "Xóa 100 nhận 2X"
-        backfire_amplify_100=  {"Ăn đòn phản đôi","Xóa 100 hàng, cũng bị ăn rác do chính mình tạo ra, lượng rác trả lại hơi bị nhiều đấy nhé!"},
+        backfire_amplify_100=  {"Ăn đòn phản đôi","Xóa 100 hàng, cũng tự tấn công lại vào chính mình, nhưng với gấp đôi sát thương!"},
         -- This one is "Xóa 100 nhận Phô mai"
-        backfire_cheese_100=   {"Ăn đòn phản - Phô mai","Xóa 100 hàng, cũng bị ăn rác do chính mình tạo ra, nhưng lần này bị bón hành kiểu phô mai"},
+        backfire_cheese_100=   {"Ăn đòn phản - Phô mai","Xóa 100 hàng, cũng tự tấn công lại vào chính mình, nhưng là sát thương của phô mai!"},
 
-        sprint_40=             {"40 hàng","Xóa 40 hàng càng nhanh càng tốt\nĐơn giản vậy thôi"},
+        sprint_40=             {"40 hàng","Xóa 40 hàng, càng nhanh càng tốt"},
         sprint_10=             {"10 hàng","Xoá 10 hàng, càng nhanh càng tốt"},
         sprint_obstacle_20=    {"20 điểm - VCNV","(Vượt chướng ngại vật)\n\nTrò chơi sẽ bắt đầu với các \"chướng ngại vật\" hoàn toàn ngẫu nhiên\nHoàn thành nhiệm vụ này được 20 điểm"},  --based on Hiếu's suggestion
         -- sprint_obstacle_20=    {"20 điểm - VCNV","(Vượt chướng ngại vật)\n\nBây giờ là vòng thi \"Vượt chướng ngại vật\"!\n\nCác thí sinh sẽ cùng nhau đi tìm một \"ẩn số\" gồm có 20 \"chữ cái\""},  --ref from "Đường lên đỉnh Olympia"
@@ -250,8 +250,8 @@ return {
     tutorial_sequence="Next & Hold",
     tutorial_stackBasic="Xếp gạch sao cho đúng?",
     tutorial_twoRotatingKey="Xoay cả 2 hướng",
-    tutorial_piece="Hình dạng của\ncác viên gạch",
-    tutorial_rotating="Tập xoay gạch",
+    tutorial_piece="Hình dạng viên gạch",
+    tutorial_rotating="Xoay gạch",
 
     tutorial_pass="HOÀN THÀNH!", -- Completed (Pass)
     tutorial_notpass="Trượt rồi…",
@@ -267,16 +267,16 @@ return {
     tutorial_sequence_3="Bây giờ bạn có thể nhìn thấy những gạch nào chuẩn bị rơi theo lần lượt. ",
     tutorial_sequence_4="Hãy dùng phím \"Giữ gạch\" để điều chỉnh thứ tự của các gạch.",
 
-    tutorial_shape_1="3. Hình dạng của các viên gạch",
+    tutorial_shape_1="3. Hình dạng viên gạch",
     tutorial_shape_2="Hãy chọn gạch vừa khít nhất.",
     
     tutorial_stackBasic_1="4. Xếp gạch sao cho đúng?",
-    tutorial_stackBasic_m1="Hãy tập trung vào màn hình và làm theo hướng dẫn nè!",
+    tutorial_stackBasic_m1="Hãy tập trung vào màn hình và làm theo hướng dẫn.",
     tutorial_stackBasic_m2="Lúc đầu, hãy giữ cho địa hình gạch phẳng nhất có thể",
     tutorial_stackBasic_m3="Các cục gạch nên được đặt ở tư thế nằm, chứ không phải là tư thế đứng",
     tutorial_stackBasic_m4="Nếu địa hình gạch bằng phẳng thì dễ dàng để đặt gạch hơn, và cố gắng đừng tạo ra bất kì cái hố nào",
     tutorial_stackBasic_m5="Bạn thường được thưởng nhiều hơn khi xóa bốn hàng cùng một lúc, hãy thử làm một cái đi",
-    tutorial_stackBasic_m6="Thử làm Techrash bằng cách dùng những cục gạch cuối cùng này mà không cần hướng dẫn đi",
+    tutorial_stackBasic_m6="Thử làm Techrash bằng cách dùng những viên gạch cuối cùng này mà không cần hướng dẫn đi",
 
     tutorial_twoRotatingKey_1="5. Xoay cả 2 hướng",
     tutorial_twoRotatingKey_m1="Hãy tập trung và làm theo hướng dẫn, nhưng hãy cố gắng xoay gạch ít lần nhất có thể",
@@ -285,7 +285,7 @@ return {
     tutorial_twoRotatingKey_m4="Bây giờ bạn có thể tự quyết định vị trí đặt thả gạch rồi, không cần phải dựa vào gợi ý nữa",
     tutorial_twoRotatingKey_unnecessaryRotation="XOAY QUÁ NHIỀU!",
 
-    tutorial_rotating_1="6. Tập xoay gạch",
+    tutorial_rotating_1="6. Xoay gạch",
     tutorial_rotating_2="Hãy xoay gạch ở trên sao cho giống với gạch ở dưới.",
 }
 
