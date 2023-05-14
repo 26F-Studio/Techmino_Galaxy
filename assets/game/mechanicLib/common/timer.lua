@@ -30,45 +30,43 @@ local timer_drawFunc={
 local timer={}
 
 --- @param time number @milliseconds
---- @param timeUp function @function(P) called when time is up
---- @param draw? mechLib.common.timer.style|function @name of style or function(P,time,time0)
---- @param cancel? function @function(P,time,time0), manually control when to disappear (return true)
-function timer.new(P,time,timeUp,draw,cancel)
+--- @param prop {timeUp:function, draw?:mechLib.common.timer.style|function, cancel?:(fun():boolean), alwaysTiming:boolean}
+function timer.new(P,time,prop)
     if not P.modeData.timerList then
         P.modeData.timerList={}
         P:addEvent('always',timer.event_always)
         P:addEvent('drawOnPlayer',timer.event_drawOnPlayer)
     end
-    if type(draw)=='string' then
-        draw=timer_drawFunc[draw]
+    if type(prop.draw)=='string' then
+        prop.draw=timer_drawFunc[prop.draw]
     end
     ins(P.modeData.timerList,{
         time=time,
         time0=time,
-        timeUpFunc=timeUp,
-        drawFunc=draw,
-        cancelFunc=cancel,
+        timeUpFunc=prop.timeUp,
+        drawFunc=prop.draw,
+        cancelFunc=prop.cancel,
+        alwaysTiming=prop.alwaysTiming,
     })
 end
 
 function timer.event_always(P)
-    if not P.timing then return end
     local list=P.modeData.timerList
     if not list then return end
     local i=1
     while list[i] do
-        local willRemove
         local t=list[i]
+        local willRemove
         if t.cancelFunc then
             if t.cancelFunc(P,t.time,t.time0) then
                 willRemove=true
-            else
+            elseif t.alwaysTiming or P.timing then
                 t.time=t.time-1
                 if t.time<=0 then
                     t.timeUpFunc(P)
                 end
             end
-        else
+        elseif t.alwaysTiming or P.timing then
             t.time=t.time-1
             if t.time<=0 then
                 t.timeUpFunc(P)
