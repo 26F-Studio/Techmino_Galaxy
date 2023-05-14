@@ -97,14 +97,14 @@ Dưới đây là vài lời khuyên hữu ích khi bạn gán phím
 @ title Xử lý gạch
 @ titleFull Mẹo khi xử lý gạch
 @ contentSize 25
-Những yếu tố ảnh hưởng tới việc xếp gạch của bạn:
+Những yếu tố ảnh hưởng tới việc xử lý gạch của bạn:
 (1) Độ trễ đầu vào, có thể là do cấu hình, thông số hoặc điều kiện của thiết bị. Khởi động lại trò chơi, bảo dưỡng, sửa chữa hoặc thay đổi thiết bị của bạn có thể khắc phục vấn đề này.
 ~~
 (2) Trò chơi không ổn định hoặc thiết kế quá sơ sài và nhiều lỗi. Có thể giảm tình trạng này bằng cách chỉnh sửa cài đặt hiệu ứng để ở mức thấp
 ~~
 (3) Cái gì cũng có mục đích của nó, ngay cả thiết kế cũng vậy. Việc làm quen với chúng có thể giúp bạn.
 ~~
-(4) Cài đặt tham số không phù hợp. Thay đổi cài đặt. (????)
+(4) Cài đặt thông số xử lý gạch không phù hợp (ví dụ: SDD, ARR, SDARR,...). Thay đổi cài đặt.
 (5) Improper play posture. It’s not convenient to use force. Change your posture.
 (6) Not being used to the operation after changing the key position or changing the device. Getting used to it or changing the settings might help.
 (7) Muscle fatigue, response, and decreases in coordination abilities. Have some rest and come back later or in a few days.
@@ -113,7 +113,7 @@ Những yếu tố ảnh hưởng tới việc xếp gạch của bạn:
 @ title Những viên gạch
 Trong các trò xếp gạch, các viên gạch là những khối có 4 ô liên kết với nhau
 
-Mỗi trò xếp gạch đều có tổng cộng có bảy viên gạch khác nhau. Chúng được đặt tên theo chữ cái trong bảng chữ cái giống với hình dáng của chúng. Đó là Z, S, J, L, T, O
+Mỗi trò xếp gạch đều có tổng cộng có bảy viên gạch khác nhau. Chúng được đặt tên theo chữ cái trong bảng chữ cái giống với hình dáng của chúng. Đó là Z, S, J, L, T, O, I.
 
 # piece_color
 @ title Màu của gạch
@@ -122,7 +122,7 @@ Thông thường, các viên gạch có cùng hình dáng sẽ có cùng màu. N
 # piece_direction
 @ title Hướng của viên gạch
 @ titleFull Tetrominos' Directions (Hướng của Tetromino)
-Thông thường, tetrominos sẽ được sinh ra với hướng quay nhất định (nói cách khác, đôi khi nó sẽ không sinh theo một hướng mà sẽ theo một hướng khác vào một số thời điểm khác). Một số hệ thống quay cũng tính đến hướng của tetromino khi quyết định hướng đá tetromino.
+Thông thường, tetromino sẽ được sinh ra với hướng xoay nhất định (Nói cách khác: hệ thống xoay sẽ quyết định hướng gạch mặc định khi sinh ra, gạch có cùng hình dạng sẽ được sinh ra với cùng hướng xoay). Với một số hệ thống xoay, hướng xoay của gạch sẽ ảnh hưởng đến việc "đá" gạch
 
 Có vài cách để nói về hướng của tetromino. Các kí tự chủ yếu được dùng là "0", "L", "R", "2"
 
@@ -158,8 +158,7 @@ Mặc dù thông thường, bạn chỉ có thể xóa 4 hàng cùng một lúc 
 # b2b
 @ title Back to Back
 @ titleFull Back to Back (BtB, B2B)
-Xóa 4 hàng liên tiếp, hoặc xóa hàng bằng T-spin. Nhưng bạn vẫn có thể đặt gạch mà không bị mất Back to Back (chỉ bị đứt Combo)
-
+Đề cập tới việc thực hiện hai kiểu xóa đặc biệt (Techrash và T-spin có xóa hàng - ví dụ như T-spin Đơn), và không bị ngắt quãng bằng việc xóa 1-2-3 hàng thông thường.
 ~~6
 Một vài game có thể dùng từ "Liên tiếp"
 Ví dụ trong Tetra Legend, nếu bạn làm Techrash - Back to Back thì bạn sẽ thấy dòng chữ "Bốn (Liên tiếp)".
@@ -178,40 +177,44 @@ Trong trường hợp đặc biệt, nếu xóa một hàng, thì trẻn bảng 
 
 # rotation_system
 @ title Rotation System (Hệ thống xoay gạch)
-Khi xoay gạch, nếu gạch đó chồng chéo lên gạch khác hoặc là đụng tường, trò chơi sẽ kiểm tra lần lượt các vị trí liền kề để xem gạch có thể đặt ở vị trí nào xung quanh hay không. Điều này giúp cho gạch ít có khả năng bị kẹt (hoặc là không xoay được)
+Khi xoay gạch, nếu gạch đó chồng chéo lên gạch khác hoặc là đụng tường, trò chơi sẽ kiểm tra lần lượt các vị trí liền kề để xem gạch có thể đặt ở vị trí nào xung quanh hay không. Điều này giúp cho gạch ít có khả năng bị kẹt (hoặc là không xoay được).
 
 Một hệ thống xác định những vị trí để kiểm tra gạch có xoay được hay không khi xoay gạch chính là rotation system (hệ thống xoay). Và quá trình kiểm tra các vị trí này được gọi là "wall-kicking" ("đá vào tường"), vì có vẻ như gạch đá-ra-khỏi-tường khi xoay gạch; và các vị trí đá thường sẽ được lưu trữ ở trong một cái bảng gọi là "wall-kick table" (có thể hiểu là: "bảng các vị trí gạch nảy ra khi đá vào tường").
 
 ~~6
 
-Ghi chú: Trong tiếng Việt, từ "xoay" đồng nghĩa với từ "quay", bạn có thể gọi Rotation System là "Hệ thống quay gạch" - tùy vào ý thích của bạn
+Ghi chú: Trong tiếng Việt, từ "xoay" đồng nghĩa với từ "quay", bạn có thể gọi Rotation System là "Hệ thống quay gạch" - tùy vào ý thích của bạn.
 
 -- Do not translate "Spin" into "Quay" or "Xoay" because it can be confused
 # spin
 @ title Spin
-Đôi khi bạn có thể xoay gạch để di chuyển tới một vị trí mà thông thường sẽ không tiếp cận được. Hành động này được gọi là "Spin"
+Đôi khi bạn có thể xoay gạch để di chuyển tới một vị trí mà thông thường sẽ không tiếp cận được. Hành động này được gọi là "Spin".
 
 ~~3
 
-CHÚ Ý: Đừng nhầm lẫn với Rotate - Xoay/Quay, mặc dù nhìn lướt qua bạn sẽ thấy cả hai từ có nghĩa tương đương nhau
+CHÚ Ý: Đừng nhầm lẫn với Rotate - Xoay/Quay, mặc dù nhìn lướt qua bạn sẽ thấy cả hai từ có nghĩa tương đương nhau.
 
 ~~3
 Tùy thuộc vào gạch bạn sử dụng để xoay mà hành động này sẽ được gọi với các tên khác nhau. Ví dụ: "Z-spin", "S-spin", v.v.
 
-Đôi khi việc spin gạch không đáp ứng đủ các điều kiện nhất định thì sẽ
-nhận được tiền tố "Mini" vào trong tên. Ví dụ: "Mini Z-spin". Thường thì Mini-spin sẽ gửi ít hàng rác hơn và nhận được ít điểm hơn so với spin thông thường
+Đôi khi việc spin gạch không đáp ứng đủ các điều kiện nhất định thì sẽ nhận được tiền tố "Mini" vào trong tên. Ví dụ: "Mini Z-spin". Thường thì Mini-spin sẽ gửi ít hàng rác hơn và nhận được ít điểm hơn so với spin thông thường.
+
+~~
+Khi bạn xóa được hàng bằng cách sử dụng Spin, bạn vừa thực hiện kiểu xóa hàng với T-spin.
+
+Khi đó, bạn sẽ nhìn thấy được dòng chữ "T-spin Single"/"T-spin Double"/"T-spin Triple" (T-spin Đơn/T-spin Đôi/T-spin Ba) khi bạn xóa được 1/2/3 hàng bằng T-spin.
 
 # all_spin
 @ title All Spin
-Một quy tắc trong đó tất cả các viên gạch đều có thể nhận được điểm thưởng và gửi hàng rác khi spin gạch. Điều này đối lập với "Chỉ làm T=spin" (T-spin only) khi mà chỉ có gạch T nhận được điểm thưởng và gửi hàng rác
+Một quy tắc trong đó tất cả các viên gạch đều có thể nhận được điểm thưởng và gửi hàng rác khi spin gạch. Điều này đối lập với "Chỉ làm T=spin" (T-spin only) khi mà chỉ có gạch T nhận được điểm thưởng và gửi hàng rác.
 
 # combo
 @ title Combo
-Xóa nhiều hàng liên tiếp, nhưng không có viên gạch nào không xóa hàng chen ngang!
+Xóa nhiều hàng liên tiếp, nhưng không được đặt bất kì gạch nào mà không xóa hàng!
 
 # combo_setup
 @ title Combo Setup
-Để dễ dàng thực hiện combo, có một kỹ thuật phổ biến đó là xếp chồng gạch tạo thành một bức tường cao với một cái "hố" rộng từ 2 đến 4 cột, sau đó thả gạch vào "hố" để xóa nhiều hàng liên tiếp
+Để dễ dàng thực hiện combo, có một kỹ thuật phổ biến đó là xếp chồng gạch tạo thành một bức tường cao với một cái "hố" rộng từ 2 đến 4 cột, sau đó thả gạch vào "hố" để xóa nhiều hàng liên tiếp.
 
 # spike
 @ title Spike
@@ -257,7 +260,7 @@ APL viết tắt của Attack per Line (Số hàng gửi/Số hàng xóa)¹. Đ�
 @ title DAS và ARR
 DAS viết tắt của Delayed Auto Shift, và ARR viết tắt của Auto Repeat Rate. Gạch sẽ bắt đầu di chuyển khi bạn giữ một phím di chuyển để di chuyển gạch sang một bên tương ứng.
 
-Tưởng tượng bạn đang ở trong trình chỉnh sửa văn bản (có thể là Notepad hay Notepad++, hay bất cứ chỗ nào bạn có thể gõ văn bản), và bạn nhấn giữ một phím chữ cái nào đó. Một chữ cái đầu tiên xuất hiện, và rồi nhiều chữ cái sau đó nhanh chóng xuất hiện một lần. Cái khoảng tạm dừng ban đầu là DAS, còn tốc độ mà một chữ cái xuất hiện lần lượt trong những chữ cái nhanh chóng sau đó chính là ARR
+Tưởng tượng bạn đang ở trong trình chỉnh sửa văn bản (hay là bất cứ nơi nào bạn có thể gõ văn bản), và nhấn giữ một phím chữ cái nào đó. Một chữ cái đầu tiên xuất hiện, và rồi nhiều chữ cái sau đó nhanh chóng xuất hiện một lần. Cái khoảng tạm dừng ban đầu là DAS, còn tốc độ mà một chữ cái xuất hiện lần lượt trong những chữ cái nhanh chóng sau đó chính là ARR
 
 Một người chơi nghiệp dư (hoặc chuyên nghiệp) sẽ chỉnh DAS ngắn nhất có thể, trong khi họ vẫn có thể nhấn liên tục và giữa; và điều chỉnh ARR gần bằng 0. Từ đó họ sẽ có được lợi thế về mặt tốc độ.
 
@@ -276,6 +279,7 @@ Nhưng khi ở tốc độ cao, thì tốc độ sẽ dùng đơn vị G (Gravit
 
 ~~
 Lấy ví dụ: (giả sử tốc độ khung hình hiện tại là 60FPS)
+1/60G tức là 1/60 ô / 1 khung hình <-\--> 1 ô / 1 giây
 1G tức là 1 ô / 1 khung hình <-\--> 60 ô / 1 giây
 20G tức là 20 ô / 1 khung hình <-\--> 1200 ô / 1 giây (đủ nhanh để gạch bỏ qua quá trình rơi và hiện ngay ở phía bên dưới ngay tức khắc!)
 
@@ -291,7 +295,7 @@ Khoảng thời gian này có thể reset nếu kịp thực hiện một hành 
 
 # spawn_delay
 @ title Spawn Delay
-Time between one piece locking down and the next piece appearing.
+Khoảng thời gian từ lúc gạch bị khóa cho tới khi gạch mới được sinh ra
 
 # clear_delay
 @ title Line Clear Delay
@@ -302,23 +306,29 @@ Time that the line clear animation lasts.
 When a piece spawns overlapping an existing block, it will suffocate. After a short delay without addressing the overlap, it will lockdown and trigger a game over.
 
 # death_condition
-@ title Game Over
-@ titleFull Game Over Conditions
-There are different conditions games use to declare a game over. Usually, one or many of the following conditions are used:
+@ title Trò chơi kết thúc
+@ titleFull Trò chơi kết thúc khi nào?
+Có những điều kiện khác nhau mà trò chơi sử dụng để xem trò chơi đã kết thúc hay chưa:
 
-1. Newly spawned piece overlaps with an existing block ("Block Out").
-2. A piece locks entirely above the skyline ("Lock Out").
-3. The total height of the field exceeds a certain limit ("Top Out").
+1. Gạch mới được sinh ra chồng chéo với một gạch hiện đã đặt ("Block Out").
+2. Một viên gạch chặn vị trí sinh gạch ("Lock Out").
+3. Độ cao của bảng vượt quá độ cao cho phép ("Top Out").
 
 # bag7_sequence
 @ title Bag-7 Sequence
-A common way to randomly generate a piece sequence, where every 7 pieces in the sequence consists of one of each of the 7 different tetrominoes. This is effective at avoiding situations where a piece doesn't come for a long time ("drought") or appears a lot ("flood").
+@ titleFull Bag-7 Sequence (Cách xáo túi 7 gạch)
+Một trong những cách xáo gạch phổ biến
+
+Để dễ hình dung về cách hoạt động của nó, hãy tượng như thế này: Có một đống túi gạch, và mỗi túi có đủ 7 Tetromino: Z, S, J, L, T, O, I. Lấy một túi ngẫu nhiên (và lắc chúng), sau đó mở túi đó ra, bốc 7 viên gạch một cách ngẫu nhiên mà không được nhìn túi. Thứ tự của 7 gạch vừa mang ra chính là chuỗi gạch. Tiếp tục lấy một túi khác và thực hiện liên tục như vậy cho tới khi trò chơi kết thúc.
+
+Cách xáo gạch này cho phép tránh được tình trạng một viên gạch bị sinh ra quá nhiều (flood) hoặc là một gạch chưa được sinh ra trong một khoảng thời gian dài (drought)
 
 # his_sequence
 @ title His Sequence
-A way to randomly generate a piece sequence. It keeps track of the recent few pieces generated, and if the next piece is the same as one of the recent pieces, it will reroll until it rolls a piece that did not appear recently or until a reroll limit is reached.
+@ titleFull His Sequence (Cách xáo His)
+Một cách xáo gạch hoàn toàn ngẫu nhiên. Cách xáo này yêu cầu trò chơi phải nhớ một vài viên gạch mà đã được sinh ra gần nhất. Nếu gạch vừa lấy ra ngẫu nhiên chính là một trong vài viên gạch đã sinh ra trước đó, trò chơi sẽ tiếp tục lấy gạch một cách ngẫu nhiên thêm lần nữa; cho tới khi: gạch sinh ra không còn là một trong vài viên gạch đã sinh ra gần nhất, hoặc là đã quá số lượt lấy lại.
 
-His generator is an improvement over generating the sequence completely randomly, and greatly reduces the chances that a drought or flood happens.
+Cách xáo này giúp cải thiện trong việc tạo chuỗi gạch hoàn toàn ngẫu nhiên và giảm đáng kể tình trạng drought hoặc flood xảy ra.
 
 # half_invis
 @ title Half Invis
