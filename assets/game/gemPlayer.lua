@@ -1,4 +1,9 @@
 local gc=love.graphics
+local gc_push,gc_pop=gc.push,gc.pop
+local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
+local gc_setColor=gc.setColor
+local gc_draw=gc.draw
+
 
 local max,min=math.max,math.min
 local floor=math.floor
@@ -894,24 +899,24 @@ function GP:render()
     local skin=SKIN.get(settings.skin)
     SKIN.time=self.time
 
-    gc.push('transform')
+    gc_push('transform')
 
     -- Player's transform
     local pos=self.pos
-    gc.translate(pos.x,pos.y)
-    gc.scale(pos.k*(1+pos.dk))
-    gc.translate(pos.dx,pos.dy)
-    gc.rotate(pos.a+pos.da)
+    gc_translate(pos.x,pos.y)
+    gc_scale(pos.k*(1+pos.dk))
+    gc_translate(pos.dx,pos.dy)
+    gc_rotate(pos.a+pos.da)
 
     -- Field's transform
-    gc.push('transform')
+    gc_push('transform')
 
-        gc.translate(-360,360)
+        gc_translate(-360,360)
 
         -- Start field stencil
         GC.stc_setComp()
         GC.stc_rect(0,0,720,-720)
-        gc.scale(16/settings.fieldSize)
+        gc_scale(16/settings.fieldSize)
 
             self:triggerEvent('drawBelowField')-- From frame's bottom-left, 40px a cell
 
@@ -925,9 +930,9 @@ function GP:render()
         GC.stc_stop()
 
         -- Particles
-        gc.setColor(1,1,1)
-        gc.draw(self.particles.star)
-        gc.draw(self.particles.trail)
+        gc_setColor(1,1,1)
+        gc_draw(self.particles.star)
+        gc_draw(self.particles.trail)
 
         -- Cursor(s)
         if self.settings.swap then
@@ -937,7 +942,7 @@ function GP:render()
             skin.drawTwistCursor(self.twistX,self.twistY)
         end
 
-    gc.pop()
+    gc_pop()
 
     -- Field border
     skin.drawFieldBorder()
@@ -958,7 +963,7 @@ function GP:render()
         skin.drawStartingCounter(settings.readyDelay)
     end
 
-    gc.pop()
+    gc_pop()
 end
 --------------------------------------------------------------
 -- Other

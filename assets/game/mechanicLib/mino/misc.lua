@@ -70,7 +70,7 @@ end
 
 function misc.noFallAfterClear_event_afterClear(P,clear)
     for i=clear.line,1,-1 do
-        ins(P.field._matrix,clear.lines[i],TABLE.new(false,P.settings.fieldW))
+        ins(P.field._matrix,clear.linePos[i],TABLE.new(false,P.settings.fieldW))
     end
     P.field:fresh()
 end

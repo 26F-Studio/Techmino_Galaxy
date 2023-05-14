@@ -1,10 +1,14 @@
 local gc=love.graphics
+local gc_push,gc_pop=gc.push,gc.pop
+local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
+local gc_setColor=gc.setColor
+local gc_draw=gc.draw
 
 local max,min,rnd=math.max,math.min,math.random
 local floor,ceil=math.floor,math.ceil
 local ins,rem=table.insert,table.remove
 
-local clamp=MATH.clamp
+local clamp,expApproach=MATH.clamp,MATH.expApproach
 local inst=SFX.playSample
 
 local MP=setmetatable({},{__index=require'assets.game.basePlayer'})
@@ -1010,19 +1014,16 @@ function MP:hold_float()
         self:popNext(true)
     end
 end
-function MP:clearLines(lines)
-    local n=#lines
-    for i=1,n do
-        self.field:removeLine(lines[i])
-    end
+function MP:doClear(fullLines)
+    mechLib.mino.clearRule[self.settings.clearRule].clear(self,fullLines)
+    local n=#fullLines
     local his={
         combo=self.combo,
         line=n,
-        lines=lines,
+        linePos=fullLines,
         time=self.time,
     }
     ins(self.clearHistory,his)
-    self.clearTimer=self.settings.clearDelay
     self:shakeBoard('-clear',n)
     self:playSound('clear',n)
     if self.settings.particles then
@@ -1030,10 +1031,12 @@ function MP:clearLines(lines)
     end
 
     self:triggerEvent('afterClear',his)
-    if self.finished then return end
 end
+
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if not self.hand or self.deathTimer then return end
+
+    local SET=self.settings
 
     -- Move down
     if self.handY>self.ghostY then
@@ -1045,7 +1048,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     self:triggerEvent('afterDrop')
     if not self.hand or self.finished then return end
 
-    if self.settings.particles then
+    if SET.particles then
         self:createLockParticle(self.handX,self.handY)
     end
 
@@ -1058,7 +1061,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         y=self.handY,
         time=self.time,
     })
-    if self.handY+#self.hand.matrix-1>self.settings.deathH then
+    if self.handY+#self.hand.matrix-1>SET.deathH then
         self:finish('MLE')
         return
     end
@@ -1068,26 +1071,23 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if self.finished then return end
 
     -- Clear
-    local fullLines
-    if self.settings.clearFullLine then
-        fullLines=self:getFullLines()
-        if fullLines then
-            self.combo=self.combo+1
-            self.lastMovement.clear=fullLines
-            self.lastMovement.combo=self.combo
-            self:clearLines(fullLines)
-        else
-            self.combo=0
-        end
+    local fullLines=mechLib.mino.clearRule[SET.clearRule].getFill(self)
+    if fullLines then
+        self.combo=self.combo+1
+        self.lastMovement.clear=fullLines
+        self.lastMovement.combo=self.combo
+        self:doClear(fullLines)
+    else
+        self.combo=0
     end
 
     -- Attack
-    local atk=GAME.initAtk(mechLib.mino.attackSys[self.settings.atkSys].drop(self))
+    local atk=GAME.initAtk(mechLib.mino.attackSys[SET.atkSys].drop(self))
     if atk then
 
         self:triggerEvent('beforeCancel',atk)
 
-        if self.settings.allowCancel then
+        if SET.allowCancel then
             while atk and self.garbageBuffer[1] do
                 local ap=atk.power*(atk.cancelRate or 1)
                 local gbg=self.garbageBuffer[1]
@@ -1121,7 +1121,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     end
 
     -- Lockout check
-    if self.handY>self.settings.lockoutH and (self.settings.strictLockout or not fullLines)  then
+    if self.handY>SET.lockoutH and (SET.strictLockout or not fullLines)  then
         self:finish('CE')
         return
     end
@@ -1134,7 +1134,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if self.finished then return end
 
     -- Update & Release garbage
-    if not (self.settings.clearStuck and fullLines) then
+    if not (SET.clearStuck and fullLines) then
         local iBuffer=1
         while true do
             local g=self.garbageBuffer[iBuffer]
@@ -1157,10 +1157,10 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         end
     end
 
-    self.spawnTimer=self.settings.spawnDelay
+    self.spawnTimer=SET.spawnDelay+(fullLines and mechLib.mino.clearRule[SET.clearRule].getDelay(self,fullLines) or 0)
 
     -- Fresh hand
-    if self.spawnTimer<=0 and self.clearTimer<=0 then
+    if self.spawnTimer<=0 then
         self:popNext()
     end
 end
@@ -1311,26 +1311,6 @@ function MP:setField(arg)
     end
     self:freshGhost()
 end
-function MP:isFullLine(y)
-    local F=self.field
-    for x=1,self.settings.fieldW do
-        if not F:getCell(x,y) then
-            return false
-        end
-    end
-    return true
-end
-function MP:getFullLines()-- Top to bottom, like {4,3,2,1}
-    local fullH={}
-    for y=self.field:getHeight(),1,-1 do
-        if self:isFullLine(y) then
-            ins(fullH,y)
-        end
-    end
-    if #fullH>0 then
-        return fullH
-    end
-end
 function MP:changeFieldWidth(w,origPos)
     if w>0 and w%1==0 then
         if not origPos then origPos=1 end
@@ -1461,12 +1441,6 @@ function MP:updateFrame()
 
         -- Update hand
         repeat
-            -- Wait clearing animation
-            if self.clearTimer>0 then
-                self.clearTimer=self.clearTimer-1
-                break
-            end
-
             -- Try spawn mino if don't have one
             if self.spawnTimer>0 then
                 self.spawnTimer=self.spawnTimer-1
@@ -1541,18 +1515,26 @@ function MP:updateFrame()
             if C.bias then
                 local b=C.bias
                 if b.expBack then
-                    b.x=MATH.expApproach(b.x,0,b.expBack)
-                    b.y=MATH.expApproach(b.y,0,b.expBack)
+                    b.x=expApproach(b.x,0,b.expBack)
+                    b.y=expApproach(b.y,0,b.expBack)
+                    if b.x^2+b.y^2<=.26^2 then
+                        b=false
+                    end
                 elseif b.lineBack then
                     local dist=(b.x^2+b.y^2)^.5
-                    if dist<b.lineBack then
-                        C.bias=nil
+                    if b.lineBack>=dist then
+                        b=false
                     else
                         local k=1-b.lineBack/dist
                         b.x,b.y=b.x*k,b.y*k
                     end
+                elseif b.teleBack then
+                    b.teleBack=b.teleBack-1
+                    if b.teleBack<=0 then
+                        b=false
+                    end
                 end
-                if b.x==0 and b.y==0 then
+                if not b then
                     C.bias=nil
                 end
             end
@@ -1582,65 +1564,54 @@ function MP:render()
     local skin=SKIN.get(settings.skin)
     SKIN.time=self.time
 
-    gc.push('transform')
+    gc_push('transform')
 
     -- Player's transform
     local pos=self.pos
-    gc.translate(pos.x,pos.y)
-    gc.scale(pos.k*(1+pos.dk))
-    gc.translate(pos.dx,pos.dy)
-    gc.rotate(pos.a+pos.da)
+    gc_translate(pos.x,pos.y)
+    gc_scale(pos.k*(1+pos.dk))
+    gc_translate(pos.dx,pos.dy)
+    gc_rotate(pos.a+pos.da)
 
     -- Field's transform
-    gc.push('transform')
+    gc_push('transform')
 
-        gc.translate(-200,400)
+        gc_translate(-200,400)
 
         -- Start field stencil
-        GC.stc_setComp('equal',0)
-        GC.stc_rect(0,0,400,40)
-        gc.scale(10/settings.fieldW)
+        GC.stc_setComp('equal',1)
+        GC.stc_rect(0,0,400,-1600)
+        gc_scale(10/settings.fieldW)
 
             self:triggerEvent('drawBelowField')-- From frame's bottom-left, 40px a cell
 
             -- Grid & Cells
             skin.drawFieldBackground(settings.fieldW)
 
-            gc.translate(0,self.fieldDived)
+            gc_translate(0,self.fieldDived)
 
                 do-- Field
                     local matrix=self.field._matrix
-                    gc.push('transform')
-                    local ptr,lines,fallingRate
-                    if self.clearTimer>0 then
-                        lines=self.clearHistory[#self.clearHistory].lines
-                        fallingRate=self.clearTimer/settings.clearDelay
-                        ptr=#lines
-                    end
+                    gc_push('transform')
 
                     local width=settings.fieldW
-                    for y=floor(1+self.fieldDived/40),#matrix do
-                        while ptr and y==lines[ptr]-(#lines-ptr) do
-                            skin.drawClearingEffect(settings.fieldW,fallingRate)
-                            ptr=ptr>1 and ptr-1
-                            gc.translate(0,-40*skin.fallingCurve(fallingRate))
-                        end
+                    for y=1,#matrix do
                         for x=1,width do
                             local C=matrix[y][x]
                             if C then
                                 if C.bias then
-                                    gc.translate(C.bias.x,C.bias.y)
+                                    gc_translate(C.bias.x,C.bias.y)
                                     skin.drawFieldCell(C,matrix,x,y)
-                                    gc.translate(-C.bias.x,-C.bias.y)
+                                    gc_translate(-C.bias.x,-C.bias.y)
                                 else
                                     skin.drawFieldCell(C,matrix,x,y)
                                 end
                             end
-                            gc.translate(40,0)
+                            gc_translate(40,0)
                         end
-                        gc.translate(-40*width,-40)-- \r\n (Return + Newline)
+                        gc_translate(-40*width,-40)-- \r\n (Return + Newline)
                     end
-                    gc.pop()
+                    gc_pop()
                 end
 
                 self:triggerEvent('drawBelowBlock')-- From field's bottom-left, 40px a cell
@@ -1663,7 +1634,7 @@ function MP:render()
                         if self.handY>self.ghostY then
                             droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
                         end
-                        gc.translate(movingX,droppingY)
+                        gc_translate(movingX,droppingY)
 
                         skin.drawHand(CB,self.handX,self.handY)
 
@@ -1673,11 +1644,11 @@ function MP:render()
                             local state=minoData[self.hand.direction]
                             local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
                             if centerPos then
-                                gc.setColor(1,1,1,.8)
+                                gc_setColor(1,1,1,.8)
                                 GC.mDraw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40,nil,1.26)
                             end
                         end
-                        gc.translate(-movingX,-droppingY)
+                        gc_translate(-movingX,-droppingY)
                     end
                 end
 
@@ -1691,7 +1662,7 @@ function MP:render()
 
                 self:triggerEvent('drawBelowMarks')-- From field's bottom-left, 40px a cell
 
-            gc.translate(0,-self.fieldDived)
+            gc_translate(0,-self.fieldDived)
 
             -- Height lines
             skin.drawHeightLines(-- All unit are pixel
@@ -1709,11 +1680,11 @@ function MP:render()
         GC.stc_stop()
 
         -- Particles
-        gc.setColor(1,1,1)
-        gc.draw(self.particles.star)
-        gc.draw(self.particles.trail)
+        gc_setColor(1,1,1)
+        gc_draw(self.particles.star)
+        gc_draw(self.particles.trail)
 
-    gc.pop()
+    gc_pop()
 
     -- Field border
     skin.drawFieldBorder()
@@ -1737,24 +1708,24 @@ function MP:render()
     skin.drawLockDelayIndicator(settings.freshCondition,self.freshChance)
 
     -- Next (Almost same as drawing hold(s), don't forget to change both)
-    gc.push('transform')
-    gc.translate(200,-400)
+    gc_push('transform')
+    gc_translate(200,-400)
     skin.drawNextBorder(settings.nextSlot)
     for n=1,min(#self.nextQueue,settings.nextSlot) do
         skin.drawNext(n,self.nextQueue[n].matrix,settings.holdMode=='swap' and not settings.infHold and n<=self.holdTime)
     end
-    gc.pop()
+    gc_pop()
 
     -- Hold (Almost same as drawing next(s), don't forget to change both)
-    gc.push('transform')
-    gc.translate(-200,-400)
+    gc_push('transform')
+    gc_translate(-200,-400)
     skin.drawHoldBorder(settings.holdMode,settings.holdSlot)
     if #self.holdQueue>0 then
         for n=1,#self.holdQueue do
             skin.drawHold(n,self.holdQueue[n].matrix,settings.holdMode=='hold' and not settings.infHold and n<=self.holdTime)
         end
     end
-    gc.pop()
+    gc_pop()
 
     -- Timer
     skin.drawTime(self.gameTime)
@@ -1779,7 +1750,7 @@ function MP:render()
     -- gc.setBlendMode('alpha')
     -- gc.setColorMask()
 
-    gc.pop()
+    gc_pop()
 end
 --------------------------------------------------------------
 -- Other
@@ -1830,6 +1801,10 @@ local baseEnv={
     deathH=1e99,
     voidH=1260,
 
+    -- Clear
+    clearRule='line',
+    clearMovement='lineBack',
+
     -- Sequence
     seqType='bag7',
     nextSlot=6,
@@ -1873,7 +1848,6 @@ local baseEnv={
 
     -- Other
     strictLockout=false,
-    clearFullLine=true,
     script=false,
 
     -- May be overrode with user setting
@@ -1987,7 +1961,6 @@ function MP:initialize()
     self.dropTimer=0
     self.lockTimer=0
     self.spawnTimer=self.settings.readyDelay
-    self.clearTimer=0
     self.deathTimer=false
 
     self.freshChance=self.settings.freshCount

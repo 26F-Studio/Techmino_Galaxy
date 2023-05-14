@@ -19,15 +19,6 @@ function S.drawFieldBorder()
     gc_line(-201,-401,-201,401,201,401,201,-401)
 end
 
-function S.fallingCurve(t) return 1 end
-
-function S.drawClearingEffect(w,rate)
-    if rate>.626 then
-        gc_setColor(1,1,1,.8626)
-        gc_rectangle('fill',0,0,w*40,-40)
-    end
-end
-
 function S.drawHeightLines(fieldW,maxSpawnH,spawnH,lockoutH,deathH,voidH)
 end
 

@@ -7,6 +7,7 @@ return {
     end,
     settings={mino={
         skin='mino_interior',
+        clearMovement='teleBack',
         particles=false,
         shakeness=0,
         soundEvent={countDown=mechLib.mino.misc.interior_soundEvent_countDown},

@@ -6,6 +6,7 @@ return {
     end,
     settings={mino={
         skin='mino_interior',
+        clearMovement='teleBack',
         particles=false,
         shakeness=0,
         readyDelay=1,
@@ -71,7 +72,7 @@ return {
                 elseif P.modeData.quest==4 then
                     if #P.nextQueue+#P.holdQueue==0 then
                         for y=F:getHeight(),1,-1 do
-                            if not P:isFullLine(y) then
+                            if not mechLib.mino.clearRule.line.isFill(P,y) then
                                 P.modeData.signal=false
                                 return
                             end

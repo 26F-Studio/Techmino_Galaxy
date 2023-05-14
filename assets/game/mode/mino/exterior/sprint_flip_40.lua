@@ -9,7 +9,6 @@ return {
     settings={mino={
         event={
             playerInit=mechLib.mino.statistics.event_playerInit,
-            afterLock=mechLib.mino.misc.flipBoardLR,
             afterClear={
                 mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
@@ -19,6 +18,7 @@ return {
                     end
                 end,
             },
+            beforeDiscard=mechLib.mino.misc.flipBoardLR,
             drawInField=mechLib.mino.sprint.event_drawInField[40],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],
         },

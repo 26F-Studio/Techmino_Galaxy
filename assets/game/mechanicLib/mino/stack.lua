@@ -61,7 +61,8 @@ function stack.switch(P)
         md.stackTextHeight=0
         md._stackTextHeight=false-- For line number animation
 
-        P.settings.clearFullLine=false
+        md.stack_original_clearRule=P.settings.clearRule
+        P.settings.clearRule='none'
 
         -- Switch to 0G
         P.dropTimer=P.dropTimer/P.settings.dropDelay*1e99
@@ -83,9 +84,11 @@ function stack.switch(P)
                 styleArg=.626,
             }
         end
-        local lines=P:getFullLines()
+
+        P.settings.clearRule=md.stack_original_clearRule
+        local lines=mechLib.mino.clearRule.line.getFill(P)
         if lines then
-            P:clearLines(lines)
+            P:doClear(lines)
             P:freshGhost()
         end
 
@@ -93,9 +96,8 @@ function stack.switch(P)
         md.stack_lines=false
         md.stack_highestLine=false
         md.stack_lineList=false
+        md.stack_original_clearRule=false
         md._stackTextHeight,md.stackTextHeight=false,false
-
-        P.settings.clearFullLine=true
 
         -- Recover gravity
         P.dropTimer=floor(P.dropTimer/P.settings.dropDelay*md.stack_dropDelay)
@@ -123,7 +125,7 @@ function stack.event_afterLock(P)
         local list={}
         local md=P.modeData
         for y=md.stack_lines+1,F:getHeight() do
-            if P:isFullLine(y) then
+            if mechLib.mino.clearRule.line.isFill(P,y) then
                 table.insert(list,y)
             end
         end
@@ -165,7 +167,7 @@ function stack.event_afterLock_noFall(P)
         local list={}
         local md=P.modeData
         for y=1,F:getHeight() do
-            if not md.stack_lineList[y] and P:isFullLine(y) then
+            if not md.stack_lineList[y] and mechLib.mino.clearRule.line.isFill(P,y) then
                 table.insert(list,y)
                 md.stack_lineList[y]=true
                 if y>md.stack_highestLine then
