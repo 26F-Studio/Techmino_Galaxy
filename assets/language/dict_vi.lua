@@ -105,7 +105,7 @@ Những yếu tố ảnh hưởng tới việc xử lý gạch của bạn:
 (3) Cái gì cũng có mục đích của nó, ngay cả thiết kế cũng vậy. Việc làm quen với chúng có thể giúp bạn.
 ~~
 (4) Cài đặt thông số xử lý gạch không phù hợp (ví dụ: SDD, ARR, SDARR,...). Thay đổi cài đặt.
-(5) Tư thế để tay không hợp lý, có thể gây ra bất tiện trong những thời điểm quan trọng. Nên tìm tư thế để tay sao cho thuận tiện khi chơi
+(5) Tư thế chơi không hợp lý, có thể gây ra bất tiện trong những thời điểm quan trọng. Nên tìm tư thế chơi phù hợp sao cho thuận tiện khi chơi
 (6) Thao tác không quen sau khi đổi vị trí phím hay thay đổi sang thiết bị mới. Tập làm quen với chúng hoặc thay đổi cài đặt có thể hữu ích.
 (7) Mỏi cơ, chuột rút,... làm cho việc phản ứng và phối hợp tay khó khăn hơn. Hãy nghỉ ngơi và trở lại sau một hoặc vài ngày.
 
@@ -160,7 +160,7 @@ Mặc dù thông thường, bạn chỉ có thể xóa 4 hàng cùng một lúc 
 # b2b
 @ title Back to Back
 @ titleFull Back to Back (BtB, B2B)
-Đề cập tới việc thực hiện hai kiểu xóa đặc biệt (Techrash và dùng -spin để xóa hàng - ví dụ như "-spin Đôi") ít nhất 2 lần, và không bị ngắt quãng bằng việc xóa 1-2-3 hàng thông thường.
+Đề cập tới việc thực hiện một trong hai kiểu xóa đặc biệt (Techrash và dùng -spin để xóa hàng - ví dụ như "-spin Đôi") ít nhất 2 lần, và không bị ngắt quãng bằng việc xóa 1-2-3 hàng thông thường.
 
 ~~6
 Một vài game nếu có bản dịch tiếng Việt thì có thể dịch từ "Back-to-Back" thành từ "Liên tiếp"
@@ -216,7 +216,7 @@ Quy tắc này đối lập với quy tắc "Chỉ dùng T-spin" (T-spin only) k
 
 # combo
 @ title Combo
-Xóa nhiều hàng liên tiếp mà không có gạch nào mà không xóa hàng!
+Xóa nhiều hàng liên tiếp mà không có gạch nào không xóa hàng!
 
 # combo_setup
 @ title Combo Setup
@@ -224,7 +224,8 @@ Xóa nhiều hàng liên tiếp mà không có gạch nào mà không xóa hàng
 
 # spike
 @ title Spike
-Đề cập tới việc gửi xóa nhiều hàng liên tiếp trong một khoảng thời gian ngắn.
+Đề cập tới việc liên tục gửi rất nhiều rác trong một khoảng thời gian ngắn.
+Lưu ý: hầu hết trò chơi sẽ tính spike nếu gửi hơn 10 hàng rác cùng một lúc
 
 # drop_speed
 @ title Drop Speed
@@ -262,7 +263,7 @@ DAS viết tắt của Delayed Auto Shift, và ARR viết tắt của Auto Repea
 
 Tưởng tượng bạn đang ở trong trình chỉnh sửa văn bản (hay là bất cứ nơi nào bạn có thể gõ văn bản), và nhấn giữ một phím chữ cái nào đó. Một chữ cái đầu tiên xuất hiện, và rồi nhiều chữ cái sau đó nhanh chóng xuất hiện một lần. Cái khoảng tạm dừng ban đầu là DAS, còn tốc độ mà một chữ cái xuất hiện lần lượt trong những chữ cái nhanh chóng sau đó chính là ARR.
 
-Để tối ưu hóa tốc độ, người chơi thường sẽ chỉnh DAS ngắn nhất có thể và ARR gần bằng 0; điều đó cho phép điều khiển gạch mà không gặp vấn đề
+Để tối ưu hóa tốc độ, người chơi thường sẽ chỉnh DAS ngắn nhất có thể và ARR gần bằng 0; việc này cho phép rút ngắn thời gian di chuyển. Với một số người, họ sẽ thấy rất khó để chơi như thế; nhưng với một số người, nó vẫn cho phép điều khiển gạch mà không gặp vấn đề (bằng cách sử dụng hypertap)
 
 # misaction
 @ title Mis-Action
@@ -317,7 +318,7 @@ Khi một viên gạch xuất hiện chồng lên gạch hiện có, xảy ra hi
 Có những điều kiện khác nhau mà trò chơi sử dụng để xem trò chơi đã kết thúc hay chưa:
 
 1. Gạch mới được sinh ra chồng chéo với một gạch hiện đã đặt ("Block Out").
-2. Một viên gạch chặn vùng skyline (đường chân trời) ("Lock Out").
+2. Có gạch nằm trên vùng skyline (đường chân trời) ("Lock Out").
 3. Độ cao của bảng vượt quá độ cao cho phép ("Top Out").
 
 # bag7_sequence
