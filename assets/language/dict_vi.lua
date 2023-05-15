@@ -105,9 +105,9 @@ Những yếu tố ảnh hưởng tới việc xử lý gạch của bạn:
 (3) Cái gì cũng có mục đích của nó, ngay cả thiết kế cũng vậy. Việc làm quen với chúng có thể giúp bạn.
 ~~
 (4) Cài đặt thông số xử lý gạch không phù hợp (ví dụ: SDD, ARR, SDARR,...). Thay đổi cài đặt.
-(5) Improper play posture. It’s not convenient to use force. Change your posture.
-(6) Not being used to the operation after changing the key position or changing the device. Getting used to it or changing the settings might help.
-(7) Muscle fatigue, response, and decreases in coordination abilities. Have some rest and come back later or in a few days.
+(5) Tư thế để tay không hợp lý, có thể gây ra bất tiện trong những thời điểm quan trọng. Nên tìm tư thế để tay sao cho thuận tiện khi chơi
+(6) Thao tác không quen sau khi đổi vị trí phím hay thay đổi sang thiết bị mới. Tập làm quen với chúng hoặc thay đổi cài đặt có thể hữu ích.
+(7) Mỏi cơ, chuột rút,... làm cho việc phản ứng và phối hợp tay khó khăn hơn. Hãy nghỉ ngơi và trở lại sau một hoặc vài ngày.
 
 # piece_shape
 @ title Những viên gạch
@@ -160,7 +160,7 @@ Mặc dù thông thường, bạn chỉ có thể xóa 4 hàng cùng một lúc 
 # b2b
 @ title Back to Back
 @ titleFull Back to Back (BtB, B2B)
-Đề cập tới việc thực hiện hai kiểu xóa đặc biệt (Techrash và dùng T-spin để xóa hàng - ví dụ như T-spin Đôi), và không bị ngắt quãng bằng việc xóa 1-2-3 hàng thông thường.
+Đề cập tới việc thực hiện hai kiểu xóa đặc biệt (Techrash và dùng -spin để xóa hàng - ví dụ như "-spin Đôi") ít nhất 2 lần, và không bị ngắt quãng bằng việc xóa 1-2-3 hàng thông thường.
 
 ~~6
 Một vài game nếu có bản dịch tiếng Việt thì có thể dịch từ "Back-to-Back" thành từ "Liên tiếp"
@@ -183,7 +183,7 @@ Trong trường hợp đặc biệt, nếu xóa một hàng, thì trẻn bảng 
 @ titleFull Rotation System (Hệ thống xoay gạch)
 Khi xoay gạch, nếu gạch đó chồng chéo lên gạch khác hoặc là đụng tường, trò chơi sẽ kiểm tra lần lượt các vị trí liền kề để xem gạch có thể đặt ở vị trí nào xung quanh hay không. Điều này giúp cho gạch ít có khả năng bị kẹt (hoặc là không xoay được).
 
-Một hệ thống xác định những vị trí để kiểm tra gạch có xoay được hay không khi xoay gạch chính là rotation system (hệ thống xoay). Và quá trình kiểm tra các vị trí này được gọi là "wall-kicking" ("gạch 'đá' tường"), vì có vẻ như gạch đá-ra-khỏi-tường khi xoay gạch; và các vị trí đá thường sẽ được lưu trữ ở trong một cái bảng gọi là "wall-kick table" (có thể hiểu là: "bảng các vị trí sau khi gạch 'đá' tường").
+Một hệ thống xác định những vị trí để kiểm tra gạch có xoay được hay không khi xoay gạch chính là rotation system (hệ thống xoay). Và quá trình kiểm tra các vị trí này được gọi là "wall-kicking" ('đá' tường), vì có vẻ như gạch đá ra khỏi tường khi xoay gạch; và các vị trí đá thường sẽ được lưu trữ ở trong một cái bảng gọi là "wall-kick table" (có thể hiểu là: "bảng các vị trí sau khi gạch 'đá' tường").
 
 ~~6
 Ghi chú: Trong tiếng Việt, từ "xoay" đồng nghĩa với từ "quay", bạn có thể gọi Rotation System là "Hệ thống quay gạch" - tùy vào ý thích của bạn.
@@ -197,7 +197,7 @@ Ghi chú: Trong tiếng Việt, từ "xoay" đồng nghĩa với từ "quay", b�
 
 ~~3
 
-CHÚ Ý: Đừng nhầm lẫn với Rotate - Xoay/Quay, mặc dù nhìn lướt qua bạn sẽ thấy cả hai từ có nghĩa tương đương nhau.
+CHÚ Ý: Đừng nhầm lẫn với Rotate - Xoay, mặc dù nhìn lướt qua bạn sẽ thấy cả hai từ có nghĩa tương đương nhau.
 
 ~~3
 Tùy thuộc vào gạch bạn sử dụng để xoay mà hành động này sẽ được gọi với các tên khác nhau. Ví dụ: "Z-spin", "S-spin", v.v.
@@ -207,15 +207,16 @@ Tùy thuộc vào gạch bạn sử dụng để xoay mà hành động này s�
 ~~
 Khi bạn xóa được hàng bằng cách sử dụng Spin, bạn vừa dùng T-spin để xóa hàng.
 
-Khi đó, bạn sẽ nhìn thấy được dòng chữ "T-spin Single"/"T-spin Double"/"T-spin Triple" (T-spin Đơn/T-spin Đôi/T-spin Tam) khi bạn xóa được 1/2/3 hàng bằng T-spin.
+Khi đó, bạn sẽ nhìn thấy được dòng chữ "-spin Single"/"-spin Double"/"-spin Triple" (-spin Đơn/-spin Đôi/-spin Tam) khi bạn xóa được 1/2/3 hàng bằng T-spin.
 
 # all_spin
 @ title All Spin
-Một quy tắc trong đó tất cả các viên gạch đều có thể nhận được điểm thưởng và gửi hàng rác khi spin gạch. Điều này đối lập với "Chỉ làm T=spin" (T-spin only) khi mà chỉ có gạch T nhận được điểm thưởng và gửi hàng rác.
+Một quy tắc trong đó khi dùng Spin để xóa hàng đều có thể gửi thêm hàng rác (hoặc nhận thêm điểm) so với xóa thông thường. 
+Quy tắc này đối lập với quy tắc "Chỉ dùng T-spin" (T-spin only) khi mà chỉ dùng T-spin để xóa hàng để gửi thêm hàng rác (hoặc nhận thêm điểm).
 
 # combo
 @ title Combo
-Xóa nhiều hàng liên tiếp, nhưng không được đặt bất kì gạch nào mà không xóa hàng!
+Xóa nhiều hàng liên tiếp mà không có gạch nào mà không xóa hàng!
 
 # combo_setup
 @ title Combo Setup
@@ -223,21 +224,21 @@ Xóa nhiều hàng liên tiếp, nhưng không được đặt bất kì gạch 
 
 # spike
 @ title Spike
-Đề cập tới việc gửi xóa nhiều hàng liên tiếp để tấn công mạnh vào đối thủ.
+Đề cập tới việc gửi xóa nhiều hàng liên tiếp trong một khoảng thời gian ngắn.
 
 # drop_speed
 @ title Drop Speed
 @ titleFull Drop Speed (Tốc độ thả rơi): PPS, BPM, LPM
-Có vài cách để đô tốc độ bạn thả rơi gạch:
+Có vài cách để đô tốc độ bạn thả gạch:
 
 PPS viết tắt của Pieces per Second (Số gạch/giây).
 ~~
-BPM viết tắt của Blocks per Minute (Số gạch/phút). Còn được biết đến với một tên khác là PPM, P là viêt tắt của Pieces (gạch).
+BPM viết tắt của Blocks per Minute (Số gạch/phút). Còn được biết đến với một tên khác là PPM, P là viết tắt của Pieces (gạch).
 ~~
 LPM viết tắt của Lines per Minute (Số hàng/phút).
-Có hai cách để tính số "hàng" ở đây:
-    1. Dùng số hàng đã thực sự được xóa.
-    2. Đổi từ số gạch bạn đã thả rơi. Việc này giúp cho việc tính số hàng ít bị ảnh hưởng từ yếu tố bên ngoài: ví dụ như các hàng rác.
+Có hai cách để tính số hàng ở đây:
+    1. Dùng số hàng đã xóa.
+    2. Đổi từ số gạch đã thả. Việc này giúp cho việc tính số hàng ít bị ảnh hưởng từ yếu tố bên ngoài: ví dụ như các hàng rác.
 
 # key_speed
 @ title Action Speed
@@ -248,18 +249,12 @@ KPS viết tắt của Keys per Second (Số phím/giây).
 KPM viết tắt của Keys per Minute (Số phím/phút).
 
 # attack_power
-@ title Sức mạnh tấn công
-@ titleFull Attack Power: APM, APL
-@ titleFull (Sức mạnh tấn công)
-Có vài cách để đo tốc độ bạn tấn công trong chế độ nhiều người chơi.
+@ title Tấn công
+@ titleFull Attack Power (Tấn công): APM, APL
+Có vài cách để đo lường tốc độ bạn tấn công trong chế độ nhiều người chơi.
 
 APM viết tắt của Attack per Minute (hàng gửi/phút).
-APL viết tắt của Attack per Line (Số hàng gửi/Số hàng xóa)¹. Đôi lúc còn được gọi là "Efficiency" (Độ hiệu quả).
-
-~~6
-1: Lưu ý phân biệt 2 từ:
-    Số hàng gửi: tức là số hàng rác bạn gửi
-    Số hàng xóa: tức là số hàng trên thực tế bạn xóa trong bảng
+APL viết tắt của Attack per Line (Số hàng gửi/Số hàng xóa). Đôi lúc còn được gọi là "Efficiency" (Độ hiệu quả).
 
 # das_arr
 @ title DAS và ARR
