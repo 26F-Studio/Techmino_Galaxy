@@ -177,7 +177,7 @@ SFX.init((function()
     local L={}
     for _,v in next,love.filesystem.getDirectoryItems('assets/sfx/') do
         if FILE.isSafe('assets/sfx/'..v) then
-            table.insert(L,v:sub(1,-5))
+            L[v:sub(1,-5)]=v:sub(1,-5)..'.ogg'
         end
     end
     return L
