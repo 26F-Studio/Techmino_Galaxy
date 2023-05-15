@@ -262,11 +262,11 @@ DAS viết tắt của Delayed Auto Shift, và ARR viết tắt của Auto Repea
 
 Tưởng tượng bạn đang ở trong trình chỉnh sửa văn bản (hay là bất cứ nơi nào bạn có thể gõ văn bản), và nhấn giữ một phím chữ cái nào đó. Một chữ cái đầu tiên xuất hiện, và rồi nhiều chữ cái sau đó nhanh chóng xuất hiện một lần. Cái khoảng tạm dừng ban đầu là DAS, còn tốc độ mà một chữ cái xuất hiện lần lượt trong những chữ cái nhanh chóng sau đó chính là ARR.
 
-Một người chơi nghiệp dư (hoặc chuyên nghiệp) sẽ chỉnh DAS ngắn nhất có thể, trong khi họ vẫn có thể nhấn liên tục và giữa; và điều chỉnh ARR gần bằng 0. Từ đó họ sẽ có được lợi thế về mặt tốc độ.
+Để tối ưu hóa tốc độ, người chơi thường sẽ chỉnh DAS ngắn nhất có thể và ARR gần bằng 0; điều đó cho phép điều khiển gạch mà không gặp vấn đề
 
 # misaction
 @ title Mis-Action
-Làm một hành động nào đó nhưng bị lỗi/sai sót. Có 2 kiểu: mis-drop (thả gạch nhầm chỗ/sai thời điểm) và mis-hold (vô tình giữ/đổi gạch)
+Làm một hành động nào đó nhưng bị lỗi/sai sót. Có 2 kiểu: mis-drop (thả gạch nhầm chỗ) và mis-hold (vô tình giữ/đổi gạch)
 
 # gravity
 @ title Tốc độ rơi
@@ -281,7 +281,7 @@ Nhưng khi ở tốc độ cao, thì tốc độ sẽ dùng đơn vị G (Gravit
 Lấy ví dụ: (giả sử tốc độ khung hình hiện tại là 60FPS)
 1/60G tức là 1/60 ô / 1 khung hình <-\--> 1 ô / 1 giây
 1G tức là 1 ô / 1 khung hình <-\--> 60 ô / 1 giây
-20G tức là 20 ô / 1 khung hình <-\--> 1200 ô / 1 giây (đủ nhanh để gạch bỏ qua quá trình rơi và hiện ngay ở phía bên dưới ngay tức khắc!).
+20G tức là 20 ô / 1 khung hình <-\--> 1200 ô / 1 giây
 
 # 20g
 @ title 20G
