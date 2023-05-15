@@ -111,17 +111,19 @@ Những yếu tố ảnh hưởng tới việc xử lý gạch của bạn:
 
 # piece_shape
 @ title Những viên gạch
+@ titleFull Tetromino
 Trong các trò xếp gạch, các viên gạch là những khối có 4 ô liên kết với nhau
 
 Mỗi trò xếp gạch đều có tổng cộng có bảy viên gạch khác nhau. Chúng được đặt tên theo chữ cái trong bảng chữ cái giống với hình dáng của chúng. Đó là Z, S, J, L, T, O, I.
 
 # piece_color
 @ title Màu của gạch
+@ titleFull Màu của Tetromino
 Thông thường, các viên gạch có cùng hình dáng sẽ có cùng màu. Nó sẽ giúp bạn dễ dàng phân biệt và nhớ chúng lâu hơn
 
 # piece_direction
 @ title Hướng của viên gạch
-@ titleFull Tetrominos' Directions (Hướng của Tetromino)
+@ titleFull Hướng của Tetromino
 Thông thường, tetromino sẽ được sinh ra với hướng xoay nhất định (Nói cách khác: hệ thống xoay sẽ quyết định hướng gạch mặc định khi sinh ra, gạch có cùng hình dạng sẽ được sinh ra với cùng hướng xoay). Với một số hệ thống xoay, hướng xoay của gạch sẽ ảnh hưởng đến việc "đá" gạch
 
 Có vài cách để nói về hướng của tetromino. Các kí tự chủ yếu được dùng là "0", "L", "R", "2"
@@ -141,7 +143,7 @@ Hiện nhưng viên gạch sẽ lần lượt rơi xuống. Có thể sử dụn
 Lưu gạch hiện tại để dùng lại sau và lấy gạch đang giữ ra dùng (hoặc là lấy gạch tiếp theo, nếu chưa giữ gạch nào trước đó). Cho phép bạn đổi thứ tự gạch sẽ xuất hiện. Có thể dùng một cách chiến lược, hay đơn giản hơn là thử gạch khác nếu gạch hiện tại không có chỗ đặt lý tưởng.
 
 # clear
-@ title Xóa mấy hàng?
+@ title Xóa 1/2/3/4 hàng
 @ titleFull Single, Double, Triple và Techrash
 Đề cập tới số hàng bạn xóa sau khi bạn đặt gạch
 
@@ -158,9 +160,10 @@ Mặc dù thông thường, bạn chỉ có thể xóa 4 hàng cùng một lúc 
 # b2b
 @ title Back to Back
 @ titleFull Back to Back (BtB, B2B)
-Đề cập tới việc thực hiện hai kiểu xóa đặc biệt (Techrash và T-spin có xóa hàng - ví dụ như T-spin Đơn), và không bị ngắt quãng bằng việc xóa 1-2-3 hàng thông thường.
+Đề cập tới việc thực hiện hai kiểu xóa đặc biệt (Techrash và dùng T-spin để xóa hàng - ví dụ như T-spin Đôi), và không bị ngắt quãng bằng việc xóa 1-2-3 hàng thông thường.
+
 ~~6
-Một vài game có thể dùng từ "Liên tiếp"
+Một vài game nếu có bản dịch tiếng Việt thì có thể dịch từ "Back-to-Back" thành từ "Liên tiếp"
 Ví dụ trong Tetra Legend, nếu bạn làm Techrash - Back to Back thì bạn sẽ thấy dòng chữ "Bốn (Liên tiếp)".
 
 # all_clear
@@ -176,18 +179,20 @@ Một biến thể của All Clear, Half Clear chính là All Clear "nhưng vẫ
 Trong trường hợp đặc biệt, nếu xóa một hàng, thì trẻn bảng không được còn gạch do người chơi đặt.
 
 # rotation_system
-@ title Rotation System (Hệ thống xoay gạch)
+@ title Hệ thống xoay gạch
+@ titleFull Rotation System (Hệ thống xoay gạch)
 Khi xoay gạch, nếu gạch đó chồng chéo lên gạch khác hoặc là đụng tường, trò chơi sẽ kiểm tra lần lượt các vị trí liền kề để xem gạch có thể đặt ở vị trí nào xung quanh hay không. Điều này giúp cho gạch ít có khả năng bị kẹt (hoặc là không xoay được).
 
-Một hệ thống xác định những vị trí để kiểm tra gạch có xoay được hay không khi xoay gạch chính là rotation system (hệ thống xoay). Và quá trình kiểm tra các vị trí này được gọi là "wall-kicking" ("đá vào tường"), vì có vẻ như gạch đá-ra-khỏi-tường khi xoay gạch; và các vị trí đá thường sẽ được lưu trữ ở trong một cái bảng gọi là "wall-kick table" (có thể hiểu là: "bảng các vị trí gạch nảy ra khi đá vào tường").
+Một hệ thống xác định những vị trí để kiểm tra gạch có xoay được hay không khi xoay gạch chính là rotation system (hệ thống xoay). Và quá trình kiểm tra các vị trí này được gọi là "wall-kicking" ("gạch 'đá' tường"), vì có vẻ như gạch đá-ra-khỏi-tường khi xoay gạch; và các vị trí đá thường sẽ được lưu trữ ở trong một cái bảng gọi là "wall-kick table" (có thể hiểu là: "bảng các vị trí sau khi gạch 'đá' tường").
 
 ~~6
-
 Ghi chú: Trong tiếng Việt, từ "xoay" đồng nghĩa với từ "quay", bạn có thể gọi Rotation System là "Hệ thống quay gạch" - tùy vào ý thích của bạn.
 
--- Do not translate "Spin" into "Quay" or "Xoay" because it can be confused
 # spin
 @ title Spin
+--
+-- Do not translate "Spin" into "Quay" or "Xoay" because it can be confused!
+--
 Đôi khi bạn có thể xoay gạch để di chuyển tới một vị trí mà thông thường sẽ không tiếp cận được. Hành động này được gọi là "Spin".
 
 ~~3
@@ -200,9 +205,9 @@ Tùy thuộc vào gạch bạn sử dụng để xoay mà hành động này s�
 Đôi khi việc spin gạch không đáp ứng đủ các điều kiện nhất định thì sẽ nhận được tiền tố "Mini" vào trong tên. Ví dụ: "Mini Z-spin". Thường thì Mini-spin sẽ gửi ít hàng rác hơn và nhận được ít điểm hơn so với spin thông thường.
 
 ~~
-Khi bạn xóa được hàng bằng cách sử dụng Spin, bạn vừa thực hiện kiểu xóa hàng với T-spin.
+Khi bạn xóa được hàng bằng cách sử dụng Spin, bạn vừa dùng T-spin để xóa hàng.
 
-Khi đó, bạn sẽ nhìn thấy được dòng chữ "T-spin Single"/"T-spin Double"/"T-spin Triple" (T-spin Đơn/T-spin Đôi/T-spin Ba) khi bạn xóa được 1/2/3 hàng bằng T-spin.
+Khi đó, bạn sẽ nhìn thấy được dòng chữ "T-spin Single"/"T-spin Double"/"T-spin Triple" (T-spin Đơn/T-spin Đôi/T-spin Tam) khi bạn xóa được 1/2/3 hàng bằng T-spin.
 
 # all_spin
 @ title All Spin
@@ -218,7 +223,7 @@ Xóa nhiều hàng liên tiếp, nhưng không được đặt bất kì gạch 
 
 # spike
 @ title Spike
-Đề cập tới việc gửi xóa nhiều hàng liên tiếp để tấn công mạnh vào đối thủ
+Đề cập tới việc gửi xóa nhiều hàng liên tiếp để tấn công mạnh vào đối thủ.
 
 # drop_speed
 @ title Drop Speed
@@ -231,16 +236,16 @@ BPM viết tắt của Blocks per Minute (Số gạch/phút). Còn được bi�
 ~~
 LPM viết tắt của Lines per Minute (Số hàng/phút).
 Có hai cách để tính số "hàng" ở đây:
-    1. Dùng số hàng đã thực sự được xóa
-    2. Đổi từ số gạch bạn đã thả rơi. Việc này giúp cho việc tính số hàng ít bị ảnh hưởng từ yếu tố bên ngoài: ví dụ như các hàng rác
+    1. Dùng số hàng đã thực sự được xóa.
+    2. Đổi từ số gạch bạn đã thả rơi. Việc này giúp cho việc tính số hàng ít bị ảnh hưởng từ yếu tố bên ngoài: ví dụ như các hàng rác.
 
 # key_speed
 @ title Action Speed
 @ titleFull Action Speed: KPS, KPM
 Có vài cách để đo tốc độ bạn nhấn phím.
 
-KPS viết tắt của Keys per Second (Số phím/giây)
-KPM viết tắt của Keys per Minute (Số phím/phút)
+KPS viết tắt của Keys per Second (Số phím/giây).
+KPM viết tắt của Keys per Minute (Số phím/phút).
 
 # attack_power
 @ title Sức mạnh tấn công
@@ -260,7 +265,7 @@ APL viết tắt của Attack per Line (Số hàng gửi/Số hàng xóa)¹. Đ�
 @ title DAS và ARR
 DAS viết tắt của Delayed Auto Shift, và ARR viết tắt của Auto Repeat Rate. Gạch sẽ bắt đầu di chuyển khi bạn giữ một phím di chuyển để di chuyển gạch sang một bên tương ứng.
 
-Tưởng tượng bạn đang ở trong trình chỉnh sửa văn bản (hay là bất cứ nơi nào bạn có thể gõ văn bản), và nhấn giữ một phím chữ cái nào đó. Một chữ cái đầu tiên xuất hiện, và rồi nhiều chữ cái sau đó nhanh chóng xuất hiện một lần. Cái khoảng tạm dừng ban đầu là DAS, còn tốc độ mà một chữ cái xuất hiện lần lượt trong những chữ cái nhanh chóng sau đó chính là ARR
+Tưởng tượng bạn đang ở trong trình chỉnh sửa văn bản (hay là bất cứ nơi nào bạn có thể gõ văn bản), và nhấn giữ một phím chữ cái nào đó. Một chữ cái đầu tiên xuất hiện, và rồi nhiều chữ cái sau đó nhanh chóng xuất hiện một lần. Cái khoảng tạm dừng ban đầu là DAS, còn tốc độ mà một chữ cái xuất hiện lần lượt trong những chữ cái nhanh chóng sau đó chính là ARR.
 
 Một người chơi nghiệp dư (hoặc chuyên nghiệp) sẽ chỉnh DAS ngắn nhất có thể, trong khi họ vẫn có thể nhấn liên tục và giữa; và điều chỉnh ARR gần bằng 0. Từ đó họ sẽ có được lợi thế về mặt tốc độ.
 
@@ -271,7 +276,7 @@ Làm một hành động nào đó nhưng bị lỗi/sai sót. Có 2 kiểu: mis
 # gravity
 @ title Tốc độ rơi
 @ titleFull Tốc độ rơi (Falling speed)
-Tốc độ rơi tự nhiên của viên gạch, khi mà bạn không nhấn nút nào
+Tốc độ rơi tự nhiên của viên gạch, khi mà bạn không nhấn nút nào.
 
 Nếu tốc độ rơi đủ chậm, thì nó thường sẽ được diễn tả là "X ô trên giây" or "một ô sau mỗi X giây".
 
@@ -281,29 +286,36 @@ Nhưng khi ở tốc độ cao, thì tốc độ sẽ dùng đơn vị G (Gravit
 Lấy ví dụ: (giả sử tốc độ khung hình hiện tại là 60FPS)
 1/60G tức là 1/60 ô / 1 khung hình <-\--> 1 ô / 1 giây
 1G tức là 1 ô / 1 khung hình <-\--> 60 ô / 1 giây
-20G tức là 20 ô / 1 khung hình <-\--> 1200 ô / 1 giây (đủ nhanh để gạch bỏ qua quá trình rơi và hiện ngay ở phía bên dưới ngay tức khắc!)
+20G tức là 20 ô / 1 khung hình <-\--> 1200 ô / 1 giây (đủ nhanh để gạch bỏ qua quá trình rơi và hiện ngay ở phía bên dưới ngay tức khắc!).
 
 # 20g
 @ title 20G
-Tốc độ nhanh nhất trong các trò xếp gạch hiện đại. Trong các chế độ xài tốc độ 20G, các viên gạch thay vì rơi từ từ, nó sẽ xuất hiện ngay lập tức ở đáy bảng. Việc này đôi khi sẽ làm bạn không thể di chuyển được theo phương ngang như ý bạn muốn; bởi vì gạch đôi khi cũng không thể leo qua chỗ lồi lõm hoặc ra khỏi hố sâu. Bạn có thể tìm hiểu thêm về đơn vị "G" trong mục "Tốc độ rơi"
+Tốc độ nhanh nhất trong các trò xếp gạch hiện đại. Trong các chế độ xài tốc độ 20G, các viên gạch thay vì rơi từ từ, nó sẽ xuất hiện ngay lập tức ở đáy bảng. Việc này đôi khi sẽ làm bạn không thể di chuyển được theo phương ngang như ý bạn muốn; bởi vì gạch đôi khi cũng không thể leo qua chỗ lồi lõm hoặc ra khỏi hố sâu. Bạn có thể tìm hiểu thêm về đơn vị "G" trong mục "Tốc độ rơi".
 
 #lock_delay
-@title Lockdown Delay (Thời gian chờ khóa gạch)
+@ title Lockdown Delay
+@ titleFull Lockdown Delay
+@ titleFull (Thời gian chờ khóa gạch)
 Khoảng thời gian nằm giữa "gạch vừa chạm vào đáy bảng" và "gạch bị khóa và không thể di chuyển".
 
 Khoảng thời gian này có thể reset nếu kịp thực hiện một hành động nào đó như di chuyển hay xoa gạch, cho phép người chơi có thêm thời gian phản ứng, ngay cả khi gạch rơi với tốc độ nhanh.
 
 # spawn_delay
 @ title Spawn Delay
-Khoảng thời gian từ lúc gạch bị khóa cho tới khi gạch mới được sinh ra
+@ titleFull Spawn Delay
+@ titleFull (Thời gian chờ gạch sinh ra)
+Khoảng thời gian từ lúc gạch bị khóa cho tới khi gạch mới được sinh ra.
 
 # clear_delay
 @ title Line Clear Delay
-Time that the line clear animation lasts.
+@ titleFull Line Clear Delay
+@ titleFull (Thời gian chờ hàng gạch được lấp đầy đã xóa)
+Thời gian để hiệu ứng xóa gạch chạy.
 
 # death_delay
 @ title Death Delay
-When a piece spawns overlapping an existing block, it will suffocate. After a short delay without addressing the overlap, it will lockdown and trigger a game over.
+@ titleFull Death Delay (Thời gian chờ chết)
+Khi một viên gạch xuất hiện chồng lên gạch hiện có, xảy ra hiện tượng "Nghẽn gạch". Sau một khoảng thời gian mà không giải quyết được hiện tượng đó, trò chơi kết thúc.
 
 # death_condition
 @ title Trò chơi kết thúc
@@ -316,16 +328,18 @@ Có những điều kiện khác nhau mà trò chơi sử dụng để xem trò 
 
 # bag7_sequence
 @ title Bag-7 Sequence
-@ titleFull Bag-7 Sequence (Cách xáo túi 7 gạch)
-Một trong những cách xáo gạch phổ biến
+@ titleFull Bag-7 Sequence (Cách bốc gạch kiểu Túi 7 gạch)
+Một trong những cách xáo gạch phổ biến trong các trò xếp gạch.
 
 Để dễ hình dung về cách hoạt động của nó, hãy tượng như thế này: Có một đống túi gạch, và mỗi túi có đủ 7 Tetromino: Z, S, J, L, T, O, I. Lấy một túi ngẫu nhiên (và lắc chúng), sau đó mở túi đó ra, bốc 7 viên gạch một cách ngẫu nhiên mà không được nhìn túi. Thứ tự của 7 gạch vừa mang ra chính là chuỗi gạch. Tiếp tục lấy một túi khác và thực hiện liên tục như vậy cho tới khi trò chơi kết thúc.
 
-Cách xáo gạch này cho phép tránh được tình trạng một viên gạch bị sinh ra quá nhiều (flood) hoặc là một gạch chưa được sinh ra trong một khoảng thời gian dài (drought)
+Cách xáo gạch này cho phép tránh được hai tình trạng sau:
+    - Flood: tình trạng một viên gạch nào đó bị sinh ra quá nhiều trong một khoảng thời gian dài
+    - Drought: tình trạng một viên gạch nào đó không được sinh ra trong một khoảng thời gian dài.
 
 # his_sequence
 @ title His Sequence
-@ titleFull His Sequence (Cách xáo His)
+@ titleFull His Sequence (Cách bốc gạch kiểu His)
 Một cách xáo gạch hoàn toàn ngẫu nhiên. Cách xáo này yêu cầu trò chơi phải nhớ một vài viên gạch mà đã được sinh ra gần nhất. Nếu gạch vừa lấy ra ngẫu nhiên chính là một trong vài viên gạch đã sinh ra trước đó, trò chơi sẽ tiếp tục lấy gạch một cách ngẫu nhiên thêm lần nữa; cho tới khi: gạch sinh ra không còn là một trong vài viên gạch đã sinh ra gần nhất, hoặc là đã quá số lượt lấy lại.
 
 Cách xáo này giúp cải thiện trong việc tạo chuỗi gạch hoàn toàn ngẫu nhiên và giảm đáng kể tình trạng drought hoặc flood xảy ra.
@@ -342,7 +356,7 @@ Gạch sẽ biến mất ngay lập tức sau khi nó được đặt xuống.
 
 # deepdrop
 @ title Deep Drop
-Một quy tắc trong đó gạch có thể chìm xuống dưới, xuyên qua cả gạch đã đặt, để xuống lố sâu hơn
+Một quy tắc trong đó gạch có thể chìm xuống dưới, xuyên qua cả gạch đã đặt, để xuống lố sâu hơn.
 
 Điều này thường được sử dụng khi thử nghiệm, vì nó cho phép các viên gạch tiếp cận bất kỳ lỗ mở nào có thể giữ mảnh mà không phải lo lắng về hệ thống xoay.
 
@@ -350,7 +364,7 @@ Một quy tắc trong đó gạch có thể chìm xuống dưới, xuyên qua c�
 @ title Gravity
 Một quy tắc trong đó các gạch nổi hoặc bị mất liên kết có thể rơi xuống sau khi xóa một hàng. Điều này có thể tạo ra các chuỗi xóa hàng được gọi là "Cascade".
 
-"Cascade" (thác (nước)) là từ hay dùng nhiều để nói về quy tắc này, bởi vì hai từ "gravity" (trọng lực) and "falling speed" (tốc độ rơi) có thể gây nhầm lẫn.
+"Cascade" (thác nước) là từ hay dùng nhiều để nói về quy tắc này, bởi vì hai từ "gravity" (trọng lực) and "falling speed" (tốc độ rơi) có thể gây nhầm lẫn với hai khái niệm khác.
 
 #mph
 @ title MPH 
@@ -366,9 +380,10 @@ Nếu bạn có thể dùng cả 3 nút xoay: xoay trái, xoay phải và xoay 1
 
 # finesse
 @ title Finesse
-A technique where you move a piece to a target position using the least number of button presses, saving time and potential to make mistakes.
+@ title Finesse (tạm dịch: Sự khéo léo)
+Một kỹ thuật mà bạn di chuyển gạch đến vị trí bạn muốn bằng cách bấm phím sao cho số lần nhấn ít nhất có thể; giúp tiết kiệm thời gian và giảm khả năng mắc lỗi di chuyển
 
-Usually Finesse only deals with situations where you can directly drop the piece from high up, and does not consider situations where you need to tuck (soft drop then move) or spin.
+Thông thường Finesse chỉ tính những trường hợp mà bạn có thể thả gạch từ trên cao xuống dưới, không tính những trường hợp mà cần phải tuck (rơi nhẹ rồi di chuyển) hoặc xoay gạch.
 
 # hypertap
 @ title Hypertap
@@ -379,5 +394,5 @@ Kỹ năng này được dùng nhiều trong xếp gạch cổ điển (Classic 
 
 # 26f_studio
 @ title 26F Studio
-Một nhóm
+Một tổ chức
 ]]

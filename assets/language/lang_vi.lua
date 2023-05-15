@@ -54,9 +54,9 @@ return {
     -- Widget texts
     button_back="Trở về",
 
-    title_simulation="Trình giả lập",
-    title_graph_mino="M-Graph (Đồ thị Mino)",   -- from "Knowledge Graph" (AI domain) -- it used to be translated to "M-Graph (Bản đồ Mino)"
-    title_settings="Cài đặt",
+    simulation_title="Trình giả lập",
+    graph_mino_title="M-Graph (Đồ thị Mino)",   -- from "Knowledge Graph" (AI domain) -- it used to be translated to "M-Graph (Bản đồ Mino)"
+    settings_title="Cài đặt",
 
     setting_das="DAS",
     setting_arr="ARR",
