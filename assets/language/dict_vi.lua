@@ -285,7 +285,8 @@ Lấy ví dụ: (giả sử tốc độ khung hình hiện tại là 60FPS)
 
 # 20g
 @ title 20G
-Tốc độ nhanh nhất trong các trò xếp gạch hiện đại. Trong các chế độ xài tốc độ 20G, các viên gạch thay vì rơi từ từ, nó sẽ xuất hiện ngay lập tức ở đáy bảng. Việc này đôi khi sẽ làm bạn không thể di chuyển được theo phương ngang như ý bạn muốn; bởi vì gạch đôi khi cũng không thể leo qua chỗ lồi lõm hoặc ra khỏi hố sâu. Bạn có thể tìm hiểu thêm về đơn vị "G" trong mục "Tốc độ rơi".
+Tốc độ nhanh nhất trong các trò xếp gạch hiện đại. Trong các chế độ xài tốc độ 20G, các viên gạch thay vì rơi từ từ, nó sẽ xuất hiện ngay lập tức ở đáy bảng. Việc này đôi khi sẽ làm bạn không thể di chuyển được theo phương ngang như ý bạn muốn; vì gạch không thể leo qua chỗ lồi lõm hoặc ra khỏi hố sâu.
+Bạn có thể tìm hiểu thêm về đơn vị "G" trong mục "Tốc độ rơi".
 
 #lock_delay
 @ title Lockdown Delay
@@ -293,19 +294,17 @@ Tốc độ nhanh nhất trong các trò xếp gạch hiện đại. Trong các 
 @ titleFull (Thời gian chờ khóa gạch)
 Khoảng thời gian nằm giữa "gạch vừa chạm vào đáy bảng" và "gạch bị khóa và không thể di chuyển".
 
-Khoảng thời gian này có thể reset nếu kịp thực hiện một hành động nào đó như di chuyển hay xoa gạch, cho phép người chơi có thêm thời gian phản ứng, ngay cả khi gạch rơi với tốc độ nhanh.
+Khoảng thời gian này có thể reset nếu kịp thực hiện một hành động nào đó như di chuyển hay xóa gạch, cho phép người chơi có thêm thời gian phản ứng, ngay cả khi gạch rơi với tốc độ nhanh.
 
 # spawn_delay
 @ title Spawn Delay
-@ titleFull Spawn Delay
-@ titleFull (Thời gian chờ gạch sinh ra)
+@ titleFull Spawn Delay (Thời gian chờ gạch sinh ra)
 Khoảng thời gian từ lúc gạch bị khóa cho tới khi gạch mới được sinh ra.
 
 # clear_delay
 @ title Line Clear Delay
-@ titleFull Line Clear Delay
-@ titleFull (Thời gian chờ hàng gạch được lấp đầy đã xóa)
-Thời gian để hiệu ứng xóa gạch chạy.
+@ titleFull Line Clear Delay (Thời gian chờ xóa hàng)
+Thời gian để hiệu ứng xóa hàng thực hiện xong.
 
 # death_delay
 @ title Death Delay
@@ -318,7 +317,7 @@ Khi một viên gạch xuất hiện chồng lên gạch hiện có, xảy ra hi
 Có những điều kiện khác nhau mà trò chơi sử dụng để xem trò chơi đã kết thúc hay chưa:
 
 1. Gạch mới được sinh ra chồng chéo với một gạch hiện đã đặt ("Block Out").
-2. Một viên gạch chặn vị trí sinh gạch ("Lock Out").
+2. Một viên gạch chặn vùng skyline (đường chân trời) ("Lock Out").
 3. Độ cao của bảng vượt quá độ cao cho phép ("Top Out").
 
 # bag7_sequence
@@ -326,7 +325,7 @@ Có những điều kiện khác nhau mà trò chơi sử dụng để xem trò 
 @ titleFull Bag-7 Sequence (Cách bốc gạch kiểu Túi 7 gạch)
 Một trong những cách xáo gạch phổ biến trong các trò xếp gạch.
 
-Để dễ hình dung về cách hoạt động của nó, hãy tượng như thế này: Có một đống túi gạch, và mỗi túi có đủ 7 Tetromino: Z, S, J, L, T, O, I. Lấy một túi ngẫu nhiên (và lắc chúng), sau đó mở túi đó ra, bốc 7 viên gạch một cách ngẫu nhiên mà không được nhìn túi. Thứ tự của 7 gạch vừa mang ra chính là chuỗi gạch. Tiếp tục lấy một túi khác và thực hiện liên tục như vậy cho tới khi trò chơi kết thúc.
+Để dễ hình dung về cách hoạt động của nó, hãy tưởng tượng như thế này: Có một đống túi gạch, và mỗi túi có đủ 7 Tetromino: Z, S, J, L, T, O, I. Lấy một túi ngẫu nhiên (và lắc chúng), sau đó mở túi đó ra, bốc 7 viên gạch một cách ngẫu nhiên mà không được nhìn túi. Thứ tự của 7 gạch vừa mang ra chính là chuỗi gạch. Tiếp tục lấy một túi khác và thực hiện liên tục như vậy cho tới khi trò chơi kết thúc.
 
 Cách xáo gạch này cho phép tránh được hai tình trạng sau:
     - Flood: tình trạng một viên gạch nào đó bị sinh ra quá nhiều trong một khoảng thời gian dài
@@ -335,9 +334,9 @@ Cách xáo gạch này cho phép tránh được hai tình trạng sau:
 # his_sequence
 @ title His Sequence
 @ titleFull His Sequence (Cách bốc gạch kiểu His)
-Một cách xáo gạch hoàn toàn ngẫu nhiên. Cách xáo này yêu cầu trò chơi phải nhớ một vài viên gạch mà đã được sinh ra gần nhất. Nếu gạch vừa lấy ra ngẫu nhiên chính là một trong vài viên gạch đã sinh ra trước đó, trò chơi sẽ tiếp tục lấy gạch một cách ngẫu nhiên thêm lần nữa; cho tới khi: gạch sinh ra không còn là một trong vài viên gạch đã sinh ra gần nhất, hoặc là đã quá số lượt lấy lại.
+Một cách xáo ngẫu nhiên. Cách xáo này sẽ nhớ một vài gạch đã được sinh ra gần nhất. Nếu gạch vừa bốc ngẫu nhiên bị trùng với bất kì miếng nào trong bộ nhớ đó, một viên gạch sẽ được bốc lại; cho tới khi: gạch vừa bốc ra không còn trùng nữa, hoặc là đã quá số lượt bốc lại.
 
-Cách xáo này giúp cải thiện trong việc tạo chuỗi gạch hoàn toàn ngẫu nhiên và giảm đáng kể tình trạng drought hoặc flood xảy ra.
+Cách xáo này là một cải tiến lớn so với cách xáo gạch hoàn toàn ngẫu nhiên và giảm đáng kể tình trạng drought hoặc flood xảy ra.
 
 # half_invis
 @ title Half Invis
@@ -353,7 +352,7 @@ Gạch sẽ biến mất ngay lập tức sau khi nó được đặt xuống.
 @ title Deep Drop
 Một quy tắc trong đó gạch có thể chìm xuống dưới, xuyên qua cả gạch đã đặt, để xuống lố sâu hơn.
 
-Điều này thường được sử dụng khi thử nghiệm, vì nó cho phép các viên gạch tiếp cận bất kỳ lỗ mở nào có thể giữ mảnh mà không phải lo lắng về hệ thống xoay.
+Điều này thường được sử dụng khi thử nghiệm, vì nó cho phép các viên gạch tiếp cận bất kỳ hố nào có thể chứa miếng gạch mà không cần lo lắng về hệ thống xoay.
 
 # cascade
 @ title Gravity
@@ -371,12 +370,12 @@ Sự kết hợp của ba quy tắc: "Không nhớ gì" (chuỗi gạch tạo ra
 @ titleFull Hãy dùng hai hoặc ba phím xoay
 Dùng cả 2 nút xoay phải và xoay trái có thể giảm số lần nhấn nút bằng cách nhấn một nút xoay này thay vì ba lần nút xoay kia. Đây cũng là một trong những kỹ thuật quan trọng trong Finesse.
 
-Nếu bạn có thể dùng cả 3 nút xoay: xoay trái, xoay phải và xoay 180 độ; thì có thể giảm số nút cần để xoay. Nhưng hãy lưu ý rằng sử dụng nút xoay 180 độ (có thể) không giúp bạn cải thiện kỹ năng chơi. Mặt khác, nút này không phải ở chế độ nào hay game nào cũng có!
+Nếu bạn có thể dùng cả 3 nút xoay: xoay trái, xoay phải và xoay 180 độ; thì có thể giảm số nút cần để xoay. Nhưng hãy lưu ý rằng sử dụng nút xoay 180 độ có thể không giúp bạn cải thiện kỹ năng chơi, vì nút này không phải ở chế độ nào hay game nào cũng có.
 
 # finesse
 @ title Finesse
 @ title Finesse (tạm dịch: Sự khéo léo)
-Một kỹ thuật mà bạn di chuyển gạch đến vị trí bạn muốn bằng cách bấm phím sao cho số lần nhấn ít nhất có thể; giúp tiết kiệm thời gian và giảm khả năng mắc lỗi di chuyển
+Một kỹ thuật mà bạn di chuyển gạch đến vị trí bạn muốn bằng cách bấm phím với số lần nhấn phím ít nhất có thể; giúp tiết kiệm thời gian và giảm khả năng mắc lỗi di chuyển
 
 Thông thường Finesse chỉ tính những trường hợp mà bạn có thể thả gạch từ trên cao xuống dưới, không tính những trường hợp mà cần phải tuck (rơi nhẹ rồi di chuyển) hoặc xoay gạch.
 
