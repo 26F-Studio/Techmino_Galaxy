@@ -57,7 +57,7 @@ Bạn có thể chỉnh một đống thứ ở đây!
 
 # noobGuide
 @ title Xin chào!
-@ contentSize 20
+@ contentSize 25
 Cảm ơn bạn đã tải và chơi Techmino!
 Đây là một vài thứ mà bạn nên làm mỗi khi chơi, chúng được sắp xếp thành một nhóm. Tuy xếp thành nhóm, bạn vẫn nên làm cả ba nhóm cùng lúc thay vì làm từng cái một.
 
@@ -84,7 +84,7 @@ Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm 
 # keybinding 
 @ title Gán phím
 @ titleFull Lời khuyên cho việc Gán phím
-@ contentSize 20
+@ contentSize 25
 Dưới đây là vài lời khuyên hữu ích khi bạn gán phím
 
 1.  Một ngón tay chỉ nên thực hiện một chức năng khác nhau. Ví dụ như: 1 ngón cho sang trái, 1 ngón cho sang phải, 1 ngón cho phím xoay phải, 1 ngón cho rơi mạnh
@@ -98,15 +98,19 @@ Dưới đây là vài lời khuyên hữu ích khi bạn gán phím
 @ titleFull Mẹo khi xử lý gạch
 @ contentSize 25
 Những yếu tố ảnh hưởng tới việc xử lý gạch của bạn:
+
 (1) Độ trễ đầu vào, có thể là do cấu hình, thông số hoặc điều kiện của thiết bị. Khởi động lại trò chơi, bảo dưỡng, sửa chữa hoặc thay đổi thiết bị của bạn có thể khắc phục vấn đề này.
 ~~
-(2) Trò chơi không ổn định hoặc thiết kế quá sơ sài và nhiều lỗi. Có thể giảm tình trạng này bằng cách chỉnh sửa cài đặt hiệu ứng để ở mức thấp
+(2) Trò chơi không ổn định hoặc thiết kế quá sơ sài và nhiều lỗi. Có thể giảm tình trạng này bằng cách chỉnh sửa cài đặt hiệu ứng để ở mức thấp.
 ~~
 (3) Cái gì cũng có mục đích của nó, ngay cả thiết kế cũng vậy. Việc làm quen với chúng có thể giúp bạn.
 ~~
 (4) Cài đặt thông số xử lý gạch không phù hợp (ví dụ: SDD, ARR, SDARR,...). Thay đổi cài đặt.
-(5) Tư thế chơi không hợp lý, có thể gây ra bất tiện trong những thời điểm quan trọng. Nên tìm tư thế chơi phù hợp sao cho thuận tiện khi chơi
+~~
+(5) Tư thế chơi không hợp lý, có thể gây ra bất tiện trong những thời điểm quan trọng. Nên tìm tư thế chơi phù hợp sao cho thuận tiện khi chơi.
+~~
 (6) Thao tác không quen sau khi đổi vị trí phím hay thay đổi sang thiết bị mới. Tập làm quen với chúng hoặc thay đổi cài đặt có thể hữu ích.
+~~
 (7) Mỏi cơ, chuột rút,... làm cho việc phản ứng và phối hợp tay khó khăn hơn. Hãy nghỉ ngơi và trở lại sau một hoặc vài ngày.
 
 # piece_shape
@@ -124,6 +128,7 @@ Thông thường, các viên gạch có cùng hình dáng sẽ có cùng màu. N
 # piece_direction
 @ title Hướng của viên gạch
 @ titleFull Hướng của Tetromino
+@ contentSize 25
 Thông thường, tetromino sẽ được sinh ra với hướng xoay nhất định (Nói cách khác: hệ thống xoay sẽ quyết định hướng gạch mặc định khi sinh ra, gạch có cùng hình dạng sẽ được sinh ra với cùng hướng xoay). Với một số hệ thống xoay, hướng xoay của gạch sẽ ảnh hưởng đến việc "đá" gạch
 
 Có vài cách để nói về hướng của tetromino. Các kí tự chủ yếu được dùng là "0", "L", "R", "2"
@@ -135,11 +140,11 @@ R - Gạch đã bị xoay phải (xoay cùng chiều)
 2 - Gạch đã bị lật dọc (xoay 180 độ/xoay trái hoặc phải hai lần)
 
 # next
-@ title Next
+@ title Next (Kế/Tiếp)
 Hiện nhưng viên gạch sẽ lần lượt rơi xuống. Có thể sử dụng ô này để lên kế hoạch trước cách xếp một cách tốt hơn. 
 
 # hold
-@ title Hold
+@ title Hold (Giữ)
 Lưu gạch hiện tại để dùng lại sau và lấy gạch đang giữ ra dùng (hoặc là lấy gạch tiếp theo, nếu chưa giữ gạch nào trước đó). Cho phép bạn đổi thứ tự gạch sẽ xuất hiện. Có thể dùng một cách chiến lược, hay đơn giản hơn là thử gạch khác nếu gạch hiện tại không có chỗ đặt lý tưởng.
 
 # clear
@@ -154,7 +159,7 @@ Techrash = Xóa 4 hàng.
 
 # clear_big
 @ title Xóa >4 hàng?
-@ titleFull Xóa nhiều hơn cả Techrash?
+@ titleFull Có thể xóa hơn 4 hàng không?
 Mặc dù thông thường, bạn chỉ có thể xóa 4 hàng cùng một lúc (Techrash), nhưng có những chế độ với các quy tắc đặc biệt cho phép bạn xóa nhiều hàng hơn cùng một lúc. Ví dụ: xóa 5 hàng được gọi là Pentacrash và xóa 6 hàng được gọi là Hexacrash.
 
 # b2b
@@ -205,14 +210,14 @@ Tùy thuộc vào gạch bạn sử dụng để xoay mà hành động này s�
 Đôi khi việc spin gạch không đáp ứng đủ các điều kiện nhất định thì sẽ nhận được tiền tố "Mini" vào trong tên. Ví dụ: "Mini Z-spin". Thường thì Mini-spin sẽ gửi ít hàng rác hơn và nhận được ít điểm hơn so với spin thông thường.
 
 ~~
-Khi bạn xóa được hàng bằng cách sử dụng Spin, bạn vừa dùng T-spin để xóa hàng.
+Khi bạn xóa được hàng bằng cách sử dụng Spin, bạn vừa dùng Spin để xóa hàng.
 
 Khi đó, bạn sẽ nhìn thấy được dòng chữ "-spin Single"/"-spin Double"/"-spin Triple" (-spin Đơn/-spin Đôi/-spin Tam) khi bạn xóa được 1/2/3 hàng bằng T-spin.
 
 # all_spin
 @ title All Spin
 Một quy tắc trong đó khi dùng Spin để xóa hàng đều có thể gửi thêm hàng rác (hoặc nhận thêm điểm) so với xóa thông thường. 
-Quy tắc này đối lập với quy tắc "Chỉ dùng T-spin" (T-spin only) khi mà chỉ dùng T-spin để xóa hàng để gửi thêm hàng rác (hoặc nhận thêm điểm).
+Quy tắc này đối lập với quy tắc "Chỉ dùng T-spin" (T-spin only) khi mà chỉ được dùng T-spin để xóa hàng để gửi thêm hàng rác (hoặc nhận thêm điểm).
 
 # combo
 @ title Combo
@@ -228,9 +233,10 @@ Xóa nhiều hàng liên tiếp mà không có gạch nào không xóa hàng!
 Lưu ý: hầu hết trò chơi sẽ tính spike nếu gửi hơn 10 hàng rác cùng một lúc
 
 # drop_speed
-@ title Drop Speed
+@ title Tốc độ thả rơi
 @ titleFull Drop Speed (Tốc độ thả rơi): PPS, BPM, LPM
-Có vài cách để đô tốc độ bạn thả gạch:
+@ titleSize 40
+Có vài cách để đo tốc độ bạn thả gạch:
 
 PPS viết tắt của Pieces per Second (Số gạch/giây).
 ~~
@@ -242,17 +248,18 @@ Có hai cách để tính số hàng ở đây:
     2. Đổi từ số gạch đã thả. Việc này giúp cho việc tính số hàng ít bị ảnh hưởng từ yếu tố bên ngoài: ví dụ như các hàng rác.
 
 # key_speed
-@ title Action Speed
-@ titleFull Action Speed: KPS, KPM
+@ title Tốc độ hành động
+@ titleFull Action Speed (Tốc độ hành động): KPS, KPM
+@ titleSize 40
 Có vài cách để đo tốc độ bạn nhấn phím.
 
 KPS viết tắt của Keys per Second (Số phím/giây).
 KPM viết tắt của Keys per Minute (Số phím/phút).
 
 # attack_power
-@ title Tấn công
+@ title Khả năng tấn công
 @ titleFull Attack Power (Tấn công): APM, APL
-Có vài cách để đo lường tốc độ bạn tấn công trong chế độ nhiều người chơi.
+Có vài cách để đo khả năng tấn công trong chế độ nhiều người chơi.
 
 APM viết tắt của Attack per Minute (hàng gửi/phút).
 APL viết tắt của Attack per Line (Số hàng gửi/Số hàng xóa). Đôi lúc còn được gọi là "Efficiency" (Độ hiệu quả).
@@ -261,9 +268,19 @@ APL viết tắt của Attack per Line (Số hàng gửi/Số hàng xóa). Đôi
 @ title DAS và ARR
 DAS viết tắt của Delayed Auto Shift, và ARR viết tắt của Auto Repeat Rate. Gạch sẽ bắt đầu di chuyển khi bạn giữ một phím di chuyển để di chuyển gạch sang một bên tương ứng.
 
-Tưởng tượng bạn đang ở trong trình chỉnh sửa văn bản (hay là bất cứ nơi nào bạn có thể gõ văn bản), và nhấn giữ một phím chữ cái nào đó. Một chữ cái đầu tiên xuất hiện, và rồi nhiều chữ cái sau đó nhanh chóng xuất hiện một lần. Cái khoảng tạm dừng ban đầu là DAS, còn tốc độ mà một chữ cái xuất hiện lần lượt trong những chữ cái nhanh chóng sau đó chính là ARR.
+~~
+Tưởng tượng bạn đang ở trong trình chỉnh sửa văn bản (hay là bất cứ nơi nào bạn có thể gõ văn bản), và nhấn giữ một phím chữ cái nào đó. Một chữ cái đầu tiên xuất hiện, rồi nhiều chữ cái sau đó nhanh chóng xuất hiện theo.
+Giải thích:
+    Sau khi chữ cái thứ nhất xuất hiện, máy tính chờ một khoảng thời gian - khoảng đó là DAS - rồi hiện chữ cái thứ hai.
+    Chữ cái thứ hai xuất hiện, máy tính chờ tiếp một khoảng thời gian nhưng lần này ngắn hơn - khoảng này là ARR - rồi hiện chữ cái thứ ba.
+    Chữ cái thứ ba xuất hiện, máy tính tiếp tục chờ tiếp một khoảng thời gian ngắn - ARR - rồi hiện chữ cái thứ tư.
+    Cứ tiếp tục như vậy cho tới khi bạn nhả tay ra.
 
-Để tối ưu hóa tốc độ, người chơi thường sẽ chỉnh DAS ngắn nhất có thể và ARR gần bằng 0; việc này cho phép rút ngắn thời gian di chuyển. Với một số người, họ sẽ thấy rất khó để chơi như thế; nhưng với một số người, nó vẫn cho phép điều khiển gạch mà không gặp vấn đề (bằng cách sử dụng hypertap)
+Hoặc là bạn cũng có thể nhìn vào cột biểu diễn thời gian ở bên dưới cho dễ hình dung
+<-\--\--DAS-\--\--><-ARR-><-ARR-><-ARR-><-ARR-><-ARR->…
+
+~~
+Trên thực tế, để tối ưu hóa tốc độ, nhiều người chơi thường sẽ chỉnh DAS ngắn nhất có thể và ARR gần bằng 0; việc này giúp cho họ cho rút ngắn được thời gian di chuyển, trong khi vẫn có thể điều khiển được gạch theo ý họ muốn. LƯU Ý: Không phải ai chỉnh như vậy vẫn có thể chơi mà không gặp vấn đề đâu!
 
 # misaction
 @ title Mis-Action
@@ -289,10 +306,10 @@ Lấy ví dụ: (giả sử tốc độ khung hình hiện tại là 60FPS)
 Tốc độ nhanh nhất trong các trò xếp gạch hiện đại. Trong các chế độ xài tốc độ 20G, các viên gạch thay vì rơi từ từ, nó sẽ xuất hiện ngay lập tức ở đáy bảng. Việc này đôi khi sẽ làm bạn không thể di chuyển được theo phương ngang như ý bạn muốn; vì gạch không thể leo qua chỗ lồi lõm hoặc ra khỏi hố sâu.
 Bạn có thể tìm hiểu thêm về đơn vị "G" trong mục "Tốc độ rơi".
 
-#lock_delay
+# lock_delay
 @ title Lockdown Delay
-@ titleFull Lockdown Delay
-@ titleFull (Thời gian chờ khóa gạch)
+@ titleFull Lockdown Delay (Thời gian chờ khóa gạch)
+@ titleSize 45
 Khoảng thời gian nằm giữa "gạch vừa chạm vào đáy bảng" và "gạch bị khóa và không thể di chuyển".
 
 Khoảng thời gian này có thể reset nếu kịp thực hiện một hành động nào đó như di chuyển hay xóa gạch, cho phép người chơi có thêm thời gian phản ứng, ngay cả khi gạch rơi với tốc độ nhanh.
@@ -305,6 +322,7 @@ Khoảng thời gian từ lúc gạch bị khóa cho tới khi gạch mới đư
 # clear_delay
 @ title Line Clear Delay
 @ titleFull Line Clear Delay (Thời gian chờ xóa hàng)
+@ titleSize 45
 Thời gian để hiệu ứng xóa hàng thực hiện xong.
 
 # death_delay
@@ -324,6 +342,7 @@ Có những điều kiện khác nhau mà trò chơi sử dụng để xem trò 
 # bag7_sequence
 @ title Bag-7 Sequence
 @ titleFull Bag-7 Sequence (Cách bốc gạch kiểu Túi 7 gạch)
+@ titleSize 40
 Một trong những cách xáo gạch phổ biến trong các trò xếp gạch.
 
 Để dễ hình dung về cách hoạt động của nó, hãy tưởng tượng như thế này: Có một đống túi gạch, và mỗi túi có đủ 7 Tetromino: Z, S, J, L, T, O, I. Lấy một túi ngẫu nhiên (và lắc chúng), sau đó mở túi đó ra, bốc 7 viên gạch một cách ngẫu nhiên mà không được nhìn túi. Thứ tự của 7 gạch vừa mang ra chính là chuỗi gạch. Tiếp tục lấy một túi khác và thực hiện liên tục như vậy cho tới khi trò chơi kết thúc.
@@ -375,7 +394,7 @@ Nếu bạn có thể dùng cả 3 nút xoay: xoay trái, xoay phải và xoay 1
 
 # finesse
 @ title Finesse
-@ title Finesse (tạm dịch: Sự khéo léo)
+@ titleFull Finesse (tạm dịch: Sự khéo léo)
 Một kỹ thuật mà bạn di chuyển gạch đến vị trí bạn muốn bằng cách bấm phím với số lần nhấn phím ít nhất có thể; giúp tiết kiệm thời gian và giảm khả năng mắc lỗi di chuyển
 
 Thông thường Finesse chỉ tính những trường hợp mà bạn có thể thả gạch từ trên cao xuống dưới, không tính những trường hợp mà cần phải tuck (rơi nhẹ rồi di chuyển) hoặc xoay gạch.
