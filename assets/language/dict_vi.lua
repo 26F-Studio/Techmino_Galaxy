@@ -280,7 +280,7 @@ Hoặc là bạn cũng có thể nhìn vào cột biểu diễn thời gian ở 
 <-\--\--DAS-\--\--><-ARR-><-ARR-><-ARR-><-ARR-><-ARR->…
 
 ~~
-Trên thực tế, để tối ưu hóa tốc độ, nhiều người chơi thường sẽ chỉnh DAS ngắn nhất có thể và ARR gần bằng 0; việc này giúp cho họ cho rút ngắn được thời gian di chuyển, trong khi vẫn có thể điều khiển được gạch theo ý họ muốn. LƯU Ý: Không phải ai chỉnh như vậy vẫn có thể chơi mà không gặp vấn đề đâu!
+Trên thực tế, để tối ưu hóa tốc độ, nhiều người chơi thường sẽ chỉnh DAS ngắn nhất có thể và ARR gần bằng 0; việc này giúp cho họ cho rút ngắn được thời gian di chuyển, trong khi vẫn có thể điều khiển được gạch theo ý họ muốn.
 
 # misaction
 @ title Mis-Action
