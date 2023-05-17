@@ -207,7 +207,7 @@ jobs:
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
-          copyright: "Copyright © 2019-2022 26F-Studio. Some Rights Reserved."
+          copyright: "Copyright © 2019-2023 26F-Studio. Some Rights Reserved."
           icon-path: ./.github/build/iOS/${{ env.BUILD_TYPE }}/icon
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
           product-name: ${{ steps.process-app-name.outputs.product-name }}
@@ -350,7 +350,7 @@ jobs:
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
-          copyright: "Copyright © 2019-2022 26F-Studio. Some Rights Reserved."
+          copyright: "Copyright © 2019-2023 26F-Studio. Some Rights Reserved."
           icon-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/icon.icns
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
           product-name: ${{ steps.process-app-name.outputs.product-name }}
@@ -423,7 +423,7 @@ jobs:
         with:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
-          copyright: "Copyright © 2019-2022 26F-Studio. Some Rights Reserved."
+          copyright: "Copyright © 2019-2023 26F-Studio. Some Rights Reserved."
           icon-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/icon.icns
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
           product-name: ${{ steps.process-app-name.outputs.product-name }}
