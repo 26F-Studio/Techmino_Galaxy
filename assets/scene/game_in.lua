@@ -10,7 +10,7 @@ function scene.enter()
     if SCN.args[1] then
         startGame(SCN.args[1])
     end
-    resetVCTRL(GAME.mainPlayer and GAME.mainPlayer.gameMode)
+    resetVirtualKeyMode(GAME.mainPlayer and GAME.mainPlayer.gameMode)
     scene.widgetList.pause.text=canPause() and CHAR.icon.pause or CHAR.icon.back
     WIDGET._reset()
 end
@@ -105,6 +105,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{name='pause',type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
+    WIDGET.new{name='pause',type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
 }
 return scene

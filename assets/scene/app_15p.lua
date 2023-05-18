@@ -316,7 +316,7 @@ scene.widgetList={
     WIDGET.new{type='checkBox',pos={0,.5},x=240, y=-50, text="Slide",widthLimit=200,fontSize=40,disp=function() return slide end,  code=WIDGET.c_pressKey'e',visibleFunc=notGaming},
     WIDGET.new{type='checkBox',pos={0,.5},x=240, y=50,  text="Path", widthLimit=200,fontSize=40,disp=function() return pathVis end,code=WIDGET.c_pressKey'r',visibleFunc=function() return state~=1 and slide end},
     WIDGET.new{type='checkBox',pos={0,.5},x=240, y=150, text="RevKB",widthLimit=200,fontSize=40,disp=function() return revKB end,  code=WIDGET.c_pressKey't',visibleFunc=notGaming},
-    WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 
 return scene

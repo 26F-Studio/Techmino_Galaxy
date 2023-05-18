@@ -14,17 +14,11 @@
 -- 4. Except "gcinfo" function of Lua itself, other "gc"s are short for "graphics";
 
 -------------------------------------------------------------
--- Var leak check
--- setmetatable(_G,{__newindex=function(self,k,v)print('>>'..k..string.rep(" ",26-#k),debug.traceback():match("\n.-\n\t(.-): "))rawset(self,k,v)end})
--- Visible collectgarbage
--- local _gc=collectgarbage function collectgarbage()_gc()print(debug.traceback())end
--------------------------------------------------------------
 -- Load Zenitha
 require("Zenitha")
 DEBUG.checkLoadTime("Load Zenitha")
---------------------------------------------------------------
--- Global Vars Declaration
-VERSION=require"version"
+-- DEBUG.runVarMonitor()
+-- DEBUG.setCollectGarvageVisible()
 --------------------------------------------------------------
 -- System setting
 math.randomseed(os.time()*626)
@@ -43,6 +37,7 @@ for _,v in next,{'conf','progress','replay','cache','lib'} do
 end
 --------------------------------------------------------------
 -- Misc modules
+VERSION=require"version"
 GAME=require'assets.game'
 AI=require'assets.ai'
 PROGRESS=require'assets.progress'
@@ -124,10 +119,10 @@ SCR.setSize(1600,1000)
 BGM.setMaxSources(16)
 VOC.setDiversion(.62)
 WIDGET._prototype.base.lineWidth=2
-WIDGET._prototype.button.sound='button_norm'
+WIDGET._prototype.button.sound_trigger='button_norm'
 WIDGET._prototype.checkBox.sound_on='check_on'
 WIDGET._prototype.checkBox.sound_off='check_off'
-WIDGET._prototype.selector.sound='selector'
+WIDGET._prototype.selector.sound_trigger='selector'
 WIDGET._prototype.listBox.sound_select='listBox_select'
 WIDGET._prototype.listBox.sound_click='listBox_click'
 WIDGET._prototype.inputBox.sound_input='inputBox_input'

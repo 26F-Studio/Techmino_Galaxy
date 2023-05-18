@@ -49,8 +49,8 @@ dig.practice_event_playerInit=TABLE.newPool(function(self,lineStart)
     return self[lineStart]
 end)
 function dig.practice_event_afterClear(P,clear)
-    for i=1,#clear.lines do
-        if clear.lines[i]<=P.modeData.lineExist then
+    for i=1,#clear.linePos do
+        if clear.linePos[i]<=P.modeData.lineExist then
             P.modeData.lineExist=P.modeData.lineExist-1
             if P.modeData.lineExist==0 then
                 P:finish('AC')
@@ -98,7 +98,7 @@ dig.shale_event_afterClear=TABLE.newPool(function(self,info)
     self[info]=function(P,clear)
         local md=P.modeData
         local cleared=0
-        for _,v in next,clear.lines do
+        for _,v in next,clear.linePos do
             if v<=md.lineExist then
                 cleared=cleared+1
             end
@@ -144,7 +144,7 @@ dig.vocanics_event_afterClear=TABLE.newPool(function(self,info)
     self[info]=function(P,clear)
         local md=P.modeData
         local cleared=0
-        for _,v in next,clear.lines do
+        for _,v in next,clear.linePos do
             if v<=md.lineExist then
                 cleared=cleared+1
             end

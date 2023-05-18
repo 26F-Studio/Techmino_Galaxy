@@ -64,9 +64,9 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,0},  x= 120,y= 80, w=160,h=80,sound='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
-    WIDGET.new{type='button',pos={.5,.5},x= 0,  y=-160,w=180,h=90,fontSize=60,sound=false,text=CHAR.icon.retry,    code=function() sysAction('restart') end},
-    WIDGET.new{type='button',pos={.5,.5},x=-110,y= 170,w=180,h=90,fontSize=60,sound=false,text=CHAR.icon.play,     code=function() sysAction('back') end},
-    WIDGET.new{type='button',pos={.5,.5},x= 110,y= 170,w=180,h=90,fontSize=60,sound=false,text=CHAR.icon.settings, code=function() sysAction('setting') end},
+    WIDGET.new{type='button',pos={0,0},  x= 120,y= 80, w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={.5,.5},x= 0,  y=-160,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.retry,    code=function() sysAction('restart') end},
+    WIDGET.new{type='button',pos={.5,.5},x=-110,y= 170,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.play,     code=function() sysAction('back') end},
+    WIDGET.new{type='button',pos={.5,.5},x= 110,y= 170,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.settings, code=function() sysAction('setting') end},
 }
 return scene

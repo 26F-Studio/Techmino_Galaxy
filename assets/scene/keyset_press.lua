@@ -1,19 +1,19 @@
 local scene={}
 
-local map,act
+local mode,act
 local keyLangStr
 local result
 local quitTimer
 local escTimerWTF
 
 function scene.enter()
-    map=SCN.args[1]
+    mode=SCN.args[1]
     act=SCN.args[2]
-    keyLangStr='keyset_'..map..'_'..act
+    keyLangStr='keyset_'..mode..'_'..act
     result=false
     quitTimer=0
     escTimerWTF=false
-    if SETTINGS.system.touchControl then resetVCTRL(map) end
+    if SETTINGS.system.touchControl then resetVirtualKeyMode(mode) end
 end
 
 function scene.keyDown(key,isRep)
@@ -22,15 +22,15 @@ function scene.keyDown(key,isRep)
     if key=='escape' and not escTimerWTF then
         escTimerWTF=.626
     elseif key=='backspace' then
-        local L=KEYMAP[map]:getKeys(act)
+        local L=KEYMAP[mode]:getKeys(act)
         if L then TABLE.cut(L) end
         result=Text.keyset_deleted
         SFX.play('beep_down')
     else
         escTimerWTF=false
         result=key
-        KEYMAP[map]:remKey(key)
-        KEYMAP[map]:addKey(act,key)
+        KEYMAP[mode]:remKey(key)
+        KEYMAP[mode]:addKey(act,key)
         SFX.play('beep_rise')
     end
 end
@@ -82,8 +82,8 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={1,0},x=-300,y=80,w=160,h=80,sound=false,fontSize=60,text=CHAR.key.backspace,code=WIDGET.c_pressKey('backspace')},
-    WIDGET.new{type='button',pos={1,0},x=-120,y=80,w=160,h=80,sound='button_back',fontSize=60,text=CHAR.icon.back,code=function() SCN.back('none',SCN.args[1]) end},
+    WIDGET.new{type='button',pos={1,0},x=-300,y=80,w=160,h=80,sound_trigger=false,fontSize=60,text=CHAR.key.backspace,code=WIDGET.c_pressKey('backspace')},
+    WIDGET.new{type='button',pos={1,0},x=-120,y=80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=function() SCN.back('none',SCN.args[1]) end},
 }
 
 return scene

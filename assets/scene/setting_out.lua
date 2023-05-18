@@ -53,13 +53,13 @@ local function sliderShow_fps(S)  return S.disp().." FPS" end
 local function sliderShow_mul(S)  return S.disp().."%"    end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
 
     WIDGET.new{type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'settings_title'},
-    WIDGET.new{name='S1',type='button_invis',pos={1,0},x=-800,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.settings,  sound='move',code=function() if page~='1' then SCN.swapTo('setting_out','none',1) end end},
-    WIDGET.new{name='S2',type='button_invis',pos={1,0},x=-600,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.volUp,     sound='move',code=function() if page~='2' then SCN.swapTo('setting_out','none',2) end end},
-    WIDGET.new{name='S3',type='button_invis',pos={1,0},x=-400,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.video,     sound='move',code=function() if page~='3' then SCN.swapTo('setting_out','none',3) end end},
-    WIDGET.new{name='S4',type='button_invis',pos={1,0},x=-200,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.controller,sound='move',code=function() if page~='4' then SCN.swapTo('setting_out','none',4) end end},
+    WIDGET.new{name='S1',type='button_invis',pos={1,0},x=-800,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.settings,  sound_trigger='move',code=function() if page~='1' then SCN.swapTo('setting_out','none',1) end end},
+    WIDGET.new{name='S2',type='button_invis',pos={1,0},x=-600,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.volUp,     sound_trigger='move',code=function() if page~='2' then SCN.swapTo('setting_out','none',2) end end},
+    WIDGET.new{name='S3',type='button_invis',pos={1,0},x=-400,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.video,     sound_trigger='move',code=function() if page~='3' then SCN.swapTo('setting_out','none',3) end end},
+    WIDGET.new{name='S4',type='button_invis',pos={1,0},x=-200,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.controller,sound_trigger='move',code=function() if page~='4' then SCN.swapTo('setting_out','none',4) end end},
 
     -- Controls
     WIDGET.new{name='1',type='slider', pos={0,0},x=340, y=220,w=650, fontSize=40,text=LANG'setting_das',     widthLimit=260,axis={0,260,1},smooth=true,disp=TABLE.func_getVal(SETTINGS.game_mino,'das'),     valueShow=sliderShow_time, code=function(v) SETTINGS.game_mino.das=v; SETTINGS.game_mino.arr=math.min(SETTINGS.game_mino.arr,SETTINGS.game_mino.das); SETTINGS.game_mino.dasHalt=math.min(SETTINGS.game_mino.dasHalt,SETTINGS.game_mino.das) end},

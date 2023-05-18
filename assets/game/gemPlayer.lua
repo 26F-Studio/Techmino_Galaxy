@@ -1107,9 +1107,7 @@ function GP:initialize()
     self:loadScript(self.settings.script)
 
     self.particles={}
-    for k,v in next,particleSystemTemplate do
-        self.particles[k]=v:clone()
-    end
+    TABLE.setAutoFill(self.particles,particleSystemTemplate)
 end
 --------------------------------------------------------------
 

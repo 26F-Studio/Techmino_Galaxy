@@ -77,7 +77,7 @@ function button:draw(setting)
         )
     end
 end
-function button:setDrawable(img)
+function button:setTexture(img)
     self.drawable=img
 end
 function button:export()
@@ -152,7 +152,7 @@ function stick2way:reset()
     self.state='wait'
     self.stickX=0
 end
-function stick2way:setDrawable(i,img)
+function stick2way:setTexture(i,img)
     self.drawable[i]=img
 end
 function stick2way:draw(setting)
@@ -263,7 +263,7 @@ function stick4way:reset()
     self.state='wait'
     self.stickX=0
 end
-function stick4way:setDrawable(i,img)
+function stick4way:setTexture(i,img)
     self.drawable[i]=img
 end
 function stick4way:draw(setting)
