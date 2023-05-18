@@ -47,7 +47,7 @@ Zictionary sẽ dạy cho bạn mọi thứ về xếp gạch
 # aboutDict_hidden
 @ title Cái gì đây?
 Nó sẽ dạy cho bạn mọi thứ về xếp gạch.
-... Khoan, chờ khoảng chừng 2 giây!
+… Khoan, chờ khoảng chừng 2 giây!
 Bạn vừa nhấn phím tắt à? Ngon lành cành đào rồi đây
 
 # setting_out
@@ -111,7 +111,7 @@ Những yếu tố ảnh hưởng tới việc xử lý gạch của bạn:
 ~~
 (6) Thao tác không quen sau khi đổi vị trí phím hay thay đổi sang thiết bị mới. Tập làm quen với chúng hoặc thay đổi cài đặt có thể hữu ích.
 ~~
-(7) Mỏi cơ, chuột rút,... làm cho việc phản ứng và phối hợp tay khó khăn hơn. Hãy nghỉ ngơi và trở lại sau một hoặc vài ngày.
+(7) Mỏi cơ, chuột rút,… làm cho việc phản ứng và phối hợp tay khó khăn hơn. Hãy nghỉ ngơi và trở lại sau một hoặc vài ngày.
 
 # piece_shape
 @ title Những viên gạch
