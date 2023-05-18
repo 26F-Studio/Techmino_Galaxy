@@ -53,7 +53,6 @@ local function _setLang(lid)
         style='appear',
         duration=1,inPoint=0,outPoint=0,
     }
-    collectgarbage()
     WIDGET._reset()
 end
 

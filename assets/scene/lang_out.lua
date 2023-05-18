@@ -61,7 +61,6 @@ local function _setLang(lid)
         style='zoomout',
         duration=1.26,
     }
-    collectgarbage()
     WIDGET._reset()
 end
 
