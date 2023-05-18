@@ -13,7 +13,7 @@ function scene.enter()
     if SCN.args[1] then
         startGame(SCN.args[1])
     end
-    resetVCTRL(GAME.mainPlayer and GAME.mainPlayer.gameMode)
+    resetVirtualKeyMode(GAME.mainPlayer and GAME.mainPlayer.gameMode)
     scene.widgetList.pause.text=canPause() and CHAR.icon.pause or CHAR.icon.back
     WIDGET._reset()
 end
@@ -101,6 +101,11 @@ function scene.mouseMove(x,y,dx,dy) scene.touchMove(x,y,dx,dy,1) end
 scene.mouseUp=scene.touchUp
 
 function scene.update(dt)
+    if love.keyboard.isDown('q') then
+        dt=dt*.1
+    elseif love.keyboard.isDown('w') then
+        dt=dt*2.6
+    end
     GAME.update(dt)
 end
 
@@ -122,6 +127,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{name='pause',type='button',pos={0,0},x=120,y=80,w=160,h=80,sound='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
+    WIDGET.new{name='pause',type='button',pos={0,0},x=120,y=80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
 }
 return scene

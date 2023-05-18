@@ -191,7 +191,7 @@ end
 
 scene.widgetList={
     WIDGET.new{type='button',pos={0,0},x=160, y=100,w=180,h=100,color='lR',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
-    WIDGET.new{type='button',          x=1150,y=370,w=140,h=80,fontSize=45,sound=false,text='自摸',code=WIDGET.c_pressKey'return'},
-    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',          x=1150,y=370,w=140,h=80,fontSize=45,sound_trigger=false,text='自摸',code=WIDGET.c_pressKey'return'},
+    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 return scene

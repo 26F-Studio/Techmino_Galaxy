@@ -56,7 +56,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
+    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
 
     B{name='T1',x=nil, y=-200,text=LANG'tutorial_basic',          code=playInterior'mino/interior/tutorial/1.basic'},
     B{name='T2',x=nil, y= 0,  text=LANG'tutorial_sequence',       code=playInterior'mino/interior/tutorial/2.sequence'},

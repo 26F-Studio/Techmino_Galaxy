@@ -1027,7 +1027,7 @@ function MP:doClear(fullLines)
     self:shakeBoard('-clear',n)
     self:playSound('clear',n)
     if self.settings.particles then
-        self:createFrenzyParticle(n*26)
+        self:createFrenzyParticle(min(n^2*6,260))
     end
 
     self:triggerEvent('afterClear',his)
@@ -2016,9 +2016,7 @@ function MP:initialize()
     self:loadScript(self.settings.script)
 
     self.particles={}
-    for k,v in next,particleSystemTemplate do
-        self.particles[k]=v:clone()
-    end
+    TABLE.setAutoFill(self.particles,particleSystemTemplate)
 end
 --------------------------------------------------------------
 
