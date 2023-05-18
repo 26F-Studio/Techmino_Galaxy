@@ -105,7 +105,7 @@ Những yếu tố ảnh hưởng tới việc xử lý gạch của bạn:
 ~~
 (3) Cái gì cũng có mục đích của nó, ngay cả thiết kế cũng vậy. Việc làm quen với chúng có thể giúp bạn.
 ~~
-(4) Cài đặt thông số xử lý gạch không phù hợp (ví dụ: SDD, ARR, SDARR,...). Thay đổi cài đặt.
+(4) Cài đặt thông số xử lý gạch không phù hợp (ví dụ: DAS, ARR, SDARR,...). Thay đổi cài đặt.
 ~~
 (5) Tư thế chơi không hợp lý, có thể gây ra bất tiện trong những thời điểm quan trọng. Nên tìm tư thế chơi phù hợp sao cho thuận tiện khi chơi.
 ~~
@@ -212,11 +212,11 @@ Tùy thuộc vào gạch bạn sử dụng để xoay mà hành động này s�
 ~~
 Khi bạn xóa được hàng bằng cách sử dụng Spin, bạn vừa dùng Spin để xóa hàng.
 
-Khi đó, bạn sẽ nhìn thấy được dòng chữ "-spin Single"/"-spin Double"/"-spin Triple" (-spin Đơn/-spin Đôi/-spin Tam) khi bạn xóa được 1/2/3 hàng bằng T-spin.
+Khi đó, bạn sẽ nhìn thấy được dòng chữ "-spin Single"/"-spin Double"/"-spin Triple" (-spin Đơn/-spin Đôi/-spin Tam) khi bạn xóa được 1/2/3 hàng bằng spin.
 
 # all_spin
 @ title All Spin
-Một quy tắc trong đó khi dùng Spin để xóa hàng đều có thể gửi thêm hàng rác (hoặc nhận thêm điểm) so với xóa thông thường. 
+Một quy tắc trong đó khi dùng Spin nào để xóa hàng đều có thể gửi thêm hàng rác (hoặc nhận thêm điểm) so với xóa thông thường. 
 Quy tắc này đối lập với quy tắc "Chỉ dùng T-spin" (T-spin only) khi mà chỉ được dùng T-spin để xóa hàng để gửi thêm hàng rác (hoặc nhận thêm điểm).
 
 # combo
