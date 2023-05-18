@@ -172,13 +172,13 @@ do-- Widgets
     }
     copyButton=WIDGET.new{
         type='button',pos={.5,.5},x=mainX+mainW-50,y=210,w=80,h=80,
-        sound=false,lineWidth=4,cornerR=0,
+        sound_trigger=false,lineWidth=4,cornerR=0,
         fontSize=60,text=CHAR.icon.copy,
         code=copyText,
     }
     linkButton=WIDGET.new{
         type='button',pos={.5,.5},x=mainX+mainW-150,y=210,w=80,h=80,
-        sound=false,lineWidth=4,cornerR=0,
+        sound_trigger=false,lineWidth=4,cornerR=0,
         fontSize=60,text=CHAR.icon.earth,
         code=openLink,
     }
@@ -497,6 +497,6 @@ scene.widgetList={
     inputBox,
     copyButton,
     linkButton,
-    WIDGET.new{type='button',pos={.5,.5},x=mainX+mainW+70,y=-310,w=80,h=80,sound=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.cross_big,code=close},
+    WIDGET.new{type='button',pos={.5,.5},x=mainX+mainW+70,y=-310,w=80,h=80,sound_trigger=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.cross_big,code=close},
 }
 return scene

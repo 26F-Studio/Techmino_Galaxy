@@ -119,10 +119,10 @@ SCR.setSize(1600,1000)
 BGM.setMaxSources(16)
 VOC.setDiversion(.62)
 WIDGET._prototype.base.lineWidth=2
-WIDGET._prototype.button.sound='button_norm'
+WIDGET._prototype.button.sound_trigger='button_norm'
 WIDGET._prototype.checkBox.sound_on='check_on'
 WIDGET._prototype.checkBox.sound_off='check_off'
-WIDGET._prototype.selector.sound='selector'
+WIDGET._prototype.selector.sound_trigger='selector'
 WIDGET._prototype.listBox.sound_select='listBox_select'
 WIDGET._prototype.listBox.sound_click='listBox_click'
 WIDGET._prototype.inputBox.sound_input='inputBox_input'

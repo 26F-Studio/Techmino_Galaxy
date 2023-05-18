@@ -46,7 +46,7 @@ function scene.mouseUp(x,y,k) if k==1 then scene.touchUp(x,y,1) end end
 function scene.draw() VCTRL.draw(true) end
 
 scene.widgetList={
-    WIDGET.new{type='button',                pos={0,.5}, x=210, y=-360,w=200,h=80,sound='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none'),lineWidth=4,cornerR=0},
+    WIDGET.new{type='button',                pos={0,.5}, x=210, y=-360,w=200,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none'),lineWidth=4,cornerR=0},
 
     WIDGET.new{type='button',                pos={.5,.5},x=-330,y=-360,w=200,h=80,fontSize=25,text=LANG'stick2_switch',code=WIDGET.c_pressKey('q'),lineWidth=4,cornerR=0},
     WIDGET.new{type='button',                pos={.5,.5},x=-330,y=-270,w=200,h=80,fontSize=25,text=LANG'stick4_switch',code=WIDGET.c_pressKey('w'),lineWidth=4,cornerR=0},

@@ -127,6 +127,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{name='pause',type='button',pos={0,0},x=120,y=80,w=160,h=80,sound='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
+    WIDGET.new{name='pause',type='button',pos={0,0},x=120,y=80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
 }
 return scene
