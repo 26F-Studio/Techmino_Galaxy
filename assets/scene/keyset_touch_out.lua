@@ -1,7 +1,7 @@
 local scene={}
 
 function scene.enter()
-    resetVCTRL('mino')
+    resetVirtualKeyMode('mino')
     updateWidgetVisible(scene.widgetList)
 end
 

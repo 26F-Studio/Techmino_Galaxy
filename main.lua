@@ -20,9 +20,6 @@ DEBUG.checkLoadTime("Load Zenitha")
 -- DEBUG.runVarMonitor()
 -- DEBUG.setCollectGarvageVisible()
 --------------------------------------------------------------
--- Global Vars Declaration
-VERSION=require"version"
---------------------------------------------------------------
 -- System setting
 math.randomseed(os.time()*626)
 love.setDeprecationOutput(false)
@@ -40,6 +37,7 @@ for _,v in next,{'conf','progress','replay','cache','lib'} do
 end
 --------------------------------------------------------------
 -- Misc modules
+VERSION=require"version"
 GAME=require'assets.game'
 AI=require'assets.ai'
 PROGRESS=require'assets.progress'
