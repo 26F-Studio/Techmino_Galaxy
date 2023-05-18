@@ -41,7 +41,7 @@ do-- line
 
     function clearRule.line.getFill(P)
         local fullLines={}
-        for y=P.field:getHeight(),1,-1 do
+        for y=1,P.field:getHeight() do
             if mechLib.mino.clearRule.line.isFill(P,y) then
                 ins(fullLines,y)
             end
@@ -54,11 +54,11 @@ do-- line
     function clearRule.line.clear(P,lines)
         local F=P.field
         local sum=0
-        local ptr=#lines
+        local ptr=1
         for y=1,F:getHeight() do
-            if ptr>0 and y==lines[ptr] then
+            if y==lines[ptr] then
                 sum=sum+1
-                ptr=ptr-1
+                ptr=ptr+1
             elseif sum>0 then
                 for x=1,P.settings.fieldW do
                     setBias(P,x,y,0,sum,P.settings.clearMovement,P.settings.clearDelay)
@@ -66,7 +66,7 @@ do-- line
             end
         end
 
-        for i=1,#lines do
+        for i=#lines,1,-1 do
             F:removeLine(lines[i])
         end
     end
@@ -91,14 +91,30 @@ do-- triplets (tetr.js)
 
     function clearRule.triplets.getFill(P)
         local fullLines={}
-        for y=P.field:getHeight(),1,-1 do
+        for y=1,P.field:getHeight() do
             if mechLib.mino.clearRule.triplets.isFill(P,y) then
                 ins(fullLines,y)
             end
         end
 
+        local marks={}
         -- Filter not in triplets
-        -- TODO
+        for i=1,#fullLines-2 do
+            for j=i+1,#fullLines-1 do
+                local p=TABLE.find(fullLines,2*fullLines[j]-fullLines[i],j+1)
+                if p then
+                    marks[fullLines[i]]=true
+                    marks[fullLines[j]]=true
+                    marks[fullLines[p]]=true
+                end
+            end
+        end
+
+        fullLines={}
+        for k in next,marks do
+            ins(fullLines,k)
+        end
+        table.sort(fullLines)
 
         if #fullLines>0 then
             return fullLines
@@ -126,7 +142,7 @@ do-- cheese
 
     function clearRule.cheese.getFill(P)
         local fullLines={}
-        for y=P.field:getHeight(),1,-1 do
+        for y=1,P.field:getHeight() do
             if mechLib.mino.clearRule.cheese.isFill(P,y) then
                 ins(fullLines,y)
             end

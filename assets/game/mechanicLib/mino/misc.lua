@@ -69,7 +69,7 @@ function misc.noMove_event_playerInit(P)
 end
 
 function misc.noFallAfterClear_event_afterClear(P,clear)
-    for i=clear.line,1,-1 do
+    for i=1,clear.line do
         ins(P.field._matrix,clear.linePos[i],TABLE.new(false,P.settings.fieldW))
     end
     P.field:fresh()
