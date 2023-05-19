@@ -15,14 +15,14 @@ local function setBias(P,x,y,dx,dy,moveType,clearDelay)
     P:setCellBias(x,y,{x=dx,y=dy,[moveType]=v})
 end
 
-do-- none
+do-- none (no line clear)
     clearRule.none={}
     function clearRule.none.getDelay() return 0 end
     clearRule.none.getFill=NULL
     clearRule.none.clear=NULL
 end
 
-do-- line
+do-- line (fill row to clear)
     clearRule.line={}
 
     function clearRule.line.getDelay(P,lines)
@@ -72,7 +72,7 @@ do-- line
     end
 end
 
-do-- triplets (tetr.js)
+do-- triplets (filled lines which form arithmetic progression to clear, from tetr.js)
     clearRule.triplets={}
 
     function clearRule.triplets.getDelay(P,lines)
@@ -97,24 +97,25 @@ do-- triplets (tetr.js)
             end
         end
 
-        local marks={}
-        -- Filter not in triplets
+        -- Mark lines not in triplets
+        local marks=TABLE.new(false,#fullLines)
         for i=1,#fullLines-2 do
             for j=i+1,#fullLines-1 do
                 local p=TABLE.find(fullLines,2*fullLines[j]-fullLines[i],j+1)
                 if p then
-                    marks[fullLines[i]]=true
-                    marks[fullLines[j]]=true
-                    marks[fullLines[p]]=true
+                    marks[i]=true
+                    marks[j]=true
+                    marks[p]=true
                 end
             end
         end
 
-        fullLines={}
-        for k in next,marks do
-            ins(fullLines,k)
+        -- Remove not in triplets
+        for i=#marks,1,-1 do
+            if not marks[i] then
+                rem(fullLines,i)
+            end
         end
-        table.sort(fullLines)
 
         if #fullLines>0 then
             return fullLines
@@ -124,7 +125,7 @@ do-- triplets (tetr.js)
     clearRule.triplets.clear=clearRule.line.clear
 end
 
-do-- cheese
+do-- cheese (90% fill to clear)
     clearRule.cheese={}
 
     clearRule.cheese.getDelay=clearRule.line.getDelay
