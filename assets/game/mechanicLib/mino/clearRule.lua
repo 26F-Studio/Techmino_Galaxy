@@ -156,4 +156,22 @@ do-- cheese (90% fill to clear)
     clearRule.cheese.clear=clearRule.line.clear
 end
 
+do-- line_float (fill row to clear, but not move above lines down)
+    --- @type Techmino.mino.clearRule
+    clearRule.line_float={}
+
+    clearRule.line_float.getDelay=clearRule.line.getDelay
+    clearRule.line_float.isFill=clearRule.line.isFill
+    clearRule.line_float.getFill=clearRule.line.getFill
+
+    function clearRule.line_float.clear(P,lines)
+        local F=P.field
+
+        for i=#lines,1,-1 do
+            F._matrix[lines[i]]=TABLE.new(false,F._width)
+        end
+        F:fresh()
+    end
+end
+
 return clearRule
