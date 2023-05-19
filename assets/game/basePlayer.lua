@@ -204,7 +204,45 @@ end
 function P:triggerEvent(name,...)
     -- if name~='always' and name:sub(1,4)~='draw' then print(name) end
     local L=self.event[name]
-    if L then for i=1,#L do L[i](self,...) end end
+    if L then
+        local i=1
+        while L[i] do
+            if L[i](self,...) then
+                rem(L,i)
+            else
+                i=i+1
+            end
+        end
+    end
+end
+function P:addEvent(name,F,pos)
+    assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
+    if not pos then pos=#self.event[name]+1 end
+    if type(F)=='table' then
+        for i=1,#F do
+            self:addEvent(name,F[i],pos+i-1)
+        end
+    elseif type(F)=='string' then
+        local errMsg
+        F,errMsg=loadstring('local P=...\n'..F)
+        if F then
+            setSafeEnv(F)
+            self:addEvent(name,F,pos)
+        else
+            error('Error in code string: '..errMsg)
+        end
+    elseif type(F)=='function' then
+        ins(self.event[name],pos,F)
+    else
+        error('event must be function or table of functions')
+    end
+end
+local function _scrap() return true end
+function P:delEvent(name,F)
+    assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
+    assert(type(F)=='function','event must be function')
+    local pos=TABLE.find(self.event[name],F)
+    if pos then self.event[name][pos]=_scrap end
 end
 --- @param reason Techmino.EndReason
 function P:finish(reason)
@@ -419,34 +457,6 @@ function P:update(dt)
 end
 --------------------------------------------------------------
 -- Builder
-function P:addEvent(name,F,pos)
-    assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
-    if not pos then pos=#self.event[name]+1 end
-    if type(F)=='table' then
-        for i=1,#F do
-            self:addEvent(name,F[i],pos+i-1)
-        end
-    elseif type(F)=='string' then
-        local errMsg
-        F,errMsg=loadstring('local P=...\n'..F)
-        if F then
-            setSafeEnv(F)
-            self:addEvent(name,F,pos)
-        else
-            error('Error in code string: '..errMsg)
-        end
-    elseif type(F)=='function' then
-        ins(self.event[name],pos,F)
-    else
-        error('event must be function or table of functions')
-    end
-end
-function P:delEvent(name,F)
-    assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
-    assert(type(F)=='function','event must be function')
-    local pos=TABLE.find(self.event[name],F)
-    if pos then rem(self.event[name],pos) end
-end
 function P:addSoundEvent(name,F)
     assert(self.soundEvent[name],"Wrong soundEvent key: '"..tostring(name).."'")
     assert(type(F)=='function',"soundEvent must be function")
