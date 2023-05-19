@@ -391,7 +391,7 @@ do-- Cascade
     function misc.cascade_event_afterClear(P)
         if misc.cascade_check(P) and not P.modeData.cascading then
             P.modeData.cascading=true
-            P.modeData.cascadeDelay=math.max(math.floor(P.settings.clearDelay^.5),26)
+            P.modeData.cascadeDelay=math.max(math.floor(P.settings.clearDelay^.9),62)
             P.modeData.cascadeTimer=0
             P.modeData.storedClearDelay=P.settings.clearDelay
             P.settings.clearDelay=1e99
