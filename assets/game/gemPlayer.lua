@@ -12,6 +12,7 @@ local ins,rem=table.insert,table.remove
 local inst=SFX.playSample
 
 --- @class Techmino.Player.gem: Techmino.Player
+--- @field field any[][]
 local GP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
 
 --[[ Gem tags:

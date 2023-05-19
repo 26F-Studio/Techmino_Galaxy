@@ -14,6 +14,7 @@ local ins,rem=table.insert,table.remove
 local inst=SFX.playSample
 
 --- @class Techmino.Player.puyo: Techmino.Player
+--- @field field Techmino.RectField
 local PP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
 
 --------------------------------------------------------------

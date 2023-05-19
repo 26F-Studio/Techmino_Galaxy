@@ -12,6 +12,7 @@ local clamp,expApproach=MATH.clamp,MATH.expApproach
 local inst=SFX.playSample
 
 --- @class Techmino.Player.mino: Techmino.Player
+--- @field field Techmino.RectField
 local MP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
 
 --------------------------------------------------------------
