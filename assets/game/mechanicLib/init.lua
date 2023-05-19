@@ -1,3 +1,8 @@
+--- @alias Techmino.Mech.base table<string,table|fun(P:Techmino.Player|any):any>
+--- @alias Techmino.Mech.mino table<string,table|fun(P:Techmino.Player.mino|any):any>
+--- @alias Techmino.Mech.puyo table<string,table|fun(P:Techmino.Player.puyo|any):any>
+--- @alias Techmino.Mech.gem table<string,table|fun(P:Techmino.Player.gem|any):any>
+
 return {
     common={
         timer=require'assets.game.mechanicLib.common.timer',

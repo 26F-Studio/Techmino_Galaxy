@@ -1,3 +1,4 @@
+--- @type Techmino.Mech.mino
 local stat={}
 
 function stat.event_playerInit(P)

@@ -1,3 +1,4 @@
+--- @type Techmino.Mech.mino
 local dig={}
 
 dig.sprint_event_playerInit=TABLE.newPool(function(self,lineStay)

@@ -22,6 +22,7 @@ local function outStackState(P)
     return not P.modeData.stack_enabled
 end
 
+--- @type Techmino.Mech.mino
 local stack={}
 
 --- @param fall? boolean

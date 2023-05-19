@@ -1,6 +1,7 @@
 local min,max=math.min,math.max
 local ins,rem=table.insert,table.remove
 
+--- @type Techmino.Mech.mino
 local sequence={}
 
 function sequence.none()
