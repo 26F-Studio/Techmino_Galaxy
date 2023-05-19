@@ -11,7 +11,8 @@ local ins,rem=table.insert,table.remove
 
 local inst=SFX.playSample
 
-local GP=setmetatable({},{__index=require'assets.game.basePlayer'})
+--- @class Techmino.Player.gem: Techmino.Player
+local GP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
 
 --[[ Gem tags:
     int color <1~7>
@@ -1008,17 +1009,12 @@ local baseEnv={
     shakeness=.26,
     inputDelay=0,
 }
-local soundTimeMeta={
-    __index=function(self,k) rawset(self,k,0) return -1e99 end,
-    __metatable=true,
-}
 local soundEventMeta={
     __index=defaultSoundFunc,
     __metatable=true,
 }
 function GP.new()
-    local self=setmetatable({},{__index=GP,__metatable=true})
-    self.sound=false
+    local self=setmetatable(require'assets.game.basePlayer'.new(),{__index=GP,__metatable=true})
     self.settings=TABLE.copy(baseEnv)
     self.event={
         -- Press & Release
@@ -1051,24 +1047,7 @@ function GP.new()
     return self
 end
 function GP:initialize()
-    self.buffedKey={}
-    self.modeData={}
-    self.soundTimeHistory=setmetatable({},soundTimeMeta)
-
-    self.RND=love.math.newRandomGenerator(GAME.seed+626)
-
-    self.pos={
-        x=0,y=0,k=1,a=0,
-
-        dx=0,dy=0,dk=0,da=0,
-        vx=0,vy=0,vk=0,va=0,
-    }
-
-    self.finished=false -- Did game finish
-    self.realTime=0     -- Real time, [float] s
-    self.time=0         -- Inside timer for player, [int] ms
-    self.gameTime=0     -- Game time of player, [int] ms
-    self.timing=false   -- Is gameTime running?
+    require'assets.game.basePlayer'.initialize(self)
 
     self.field={}
     for y=1,self.settings.fieldSize do
@@ -1092,22 +1071,7 @@ function GP:initialize()
 
     self.garbageBuffer={}
 
-    self.actionHistory={}
-    self.texts=TEXT.new()
-
-    -- Generate available actions
-    do
-        self.actions=TABLE.copy(GP._actions,0)
-        self.keyState={}
-        for k in next,self.actions do
-            self.keyState[k]=false
-        end
-    end
-
     self:loadScript(self.settings.script)
-
-    self.particles={}
-    TABLE.setAutoFill(self.particles,particleSystemTemplate)
 end
 --------------------------------------------------------------
 

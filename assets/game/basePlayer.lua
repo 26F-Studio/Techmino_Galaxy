@@ -5,6 +5,45 @@ local ins,rem=table.insert,table.remove
 
 local sign,expApproach=MATH.sign,MATH.expApproach
 
+--- @alias Techmino.EndReason
+---| 'AC'  Win
+---| 'WA'  Block out
+---| 'CE'  Lock out
+---| 'MLE' Top out
+---| 'TLE' Time out
+---| 'OLE' Finesse fault
+---| 'ILE' Ran out pieces
+---| 'PE'  Mission failed
+---| 'UKE' Other reason
+
+--- @class Techmino.Player
+--- @field isMain boolean
+--- @field sound boolean
+--- @field settings table
+--- @field buffedKey table
+--- @field modeData table
+--- @field soundTimeHistory table
+--- @field RND love.RandomGenerator
+--- @field pos {x:number,y:number,k:number,a:number,dx:number,dy:number,dk:number,da:number,vx:number,vy:number,vk:number,va:number}
+--- @field finished Techmino.EndReason|boolean
+--- @field realTime number
+--- @field time number
+--- @field gameTime number
+--- @field timing boolean
+--- @field texts Zenitha.Text
+--- @field particles table<string,love.ParticleSystem>
+---
+--- @field updateFrame function
+--- @field scriptCmd function
+--- @field decodeScript function
+--- @field checkScriptSyntax function
+---
+--- @field hand table|false @Piece object
+--- @field handX number
+--- @field handY number
+--- @field event table
+--- @field soundEvent table
+--- @field _actions table
 local P={}
 
 --------------------------------------------------------------
@@ -127,17 +166,17 @@ function P:_getActionObj(a)
         return setmetatable({
             press=a,
             release=NULL,
-        },{__call=function(self,P)
-            self.press(P)
+        },{__call=function(_P,act)
+            _P.press(act)
         end})
     elseif type(a)=='table' then
         assert(type(a.press)=='function' and type(a.release)=='function',"WTF why action do not contain func press() & func release()")
         return setmetatable({
             press=a.press,
             release=a.release,
-        },{__call=function(self,P)
-            self.press(P)
-            self.release(P)
+        },{__call=function(_P,act)
+            _P.press(act)
+            _P.release(act)
         end})
     else
         error("Invalid action: should be function or table contain 'press' and 'release' fields")
@@ -167,16 +206,7 @@ function P:triggerEvent(name,...)
     local L=self.event[name]
     if L then for i=1,#L do L[i](self,...) end end
 end
---- @param reason
----| 'AC'  Win
----| 'WA'  Block out
----| 'CE'  Lock out
----| 'MLE' Top out
----| 'TLE' Time out
----| 'OLE' Finesse fault
----| 'ILE' Ran out pieces
----| 'PE'  Mission failed
----| 'UKE' Other reason
+--- @param reason Techmino.EndReason
 function P:finish(reason)
     if self.finished then return end
     self.timing=false
@@ -619,7 +649,7 @@ function P:loadScript(script)-- Parse time stamps and labels, check syntax of lu
                     assert(type(arg)=='table',errMsg.."arg must be table")
                     assert(arg.v~=nil,errMsg.."Need arg 'v'") assert(type(arg.v)=='string',errMsg.."Wrong arg 'v', need string")
                     for k in next,arg do if not k=='v' then error(errMsg.."Wrong arg name '"..k.."'") end end
-                elseif self.checkScriptLine then
+                elseif self.checkScriptSyntax then
                     self:checkScriptSyntax(cmd,arg,errMsg)
                 end
             elseif type(cmd)~='nil' and type(cmd)~='function' then
@@ -631,6 +661,49 @@ function P:loadScript(script)-- Parse time stamps and labels, check syntax of lu
     end
     self.scriptLine=1
     self.scriptWait=script[1].t or 0
+end
+local soundTimeMeta={
+    __index=function(self,k) rawset(self,k,0) return -1e99 end,
+    __metatable=true,
+}
+--- @return Techmino.Player
+function P.new()
+    local self={}
+    self.isMain=false
+    self.sound=false
+
+    self.buffedKey={}
+    self.modeData={}
+    self.soundTimeHistory=setmetatable({},soundTimeMeta)
+
+    self.RND=love.math.newRandomGenerator(GAME.seed+626)
+
+    self.pos={
+        x=0,y=0,k=1,a=0,
+
+        dx=0,dy=0,dk=0,da=0,
+        vx=0,vy=0,vk=0,va=0,
+    }
+
+    self.finished=false -- Did game finish
+    self.realTime=0     -- Real time, [float] s
+    self.time=0         -- Inside timer for player, [int] ms
+    self.gameTime=0     -- Game time of player, [int] ms
+    self.timing=false   -- Is gameTime running?
+
+    self.texts=TEXT.new()
+    self.particles={}
+    TABLE.setAutoFill(self.particles,particleSystemTemplate)
+
+    return self
+end
+function P:initialize()
+    self.actions=TABLE.copy(self._actions,0)
+    self.actionHistory={}
+    self.keyState={}
+    for k in next,self.actions do
+        self.keyState[k]=false
+    end
 end
 --------------------------------------------------------------
 

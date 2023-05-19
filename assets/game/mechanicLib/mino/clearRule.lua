@@ -1,5 +1,12 @@
 local ins,rem=table.insert,table.remove
 
+--- @class Techmino.mino.clearRule
+--- @field getDelay fun(P:Techmino.Player,lines:number[]): number?
+--- @field isFill fun(P:Techmino.Player,y:number): boolean
+--- @field getFill fun(P:Techmino.Player): number[]?
+--- @field clear fun(P:Techmino.Player,lines:number[])
+
+--- @type Techmino.mino.clearRule[]
 local clearRule={}
 
 local function setBias(P,x,y,dx,dy,moveType,clearDelay)
@@ -16,6 +23,7 @@ local function setBias(P,x,y,dx,dy,moveType,clearDelay)
 end
 
 do-- none (no line clear)
+    --- @type Techmino.mino.clearRule
     clearRule.none={}
     function clearRule.none.getDelay() return 0 end
     clearRule.none.getFill=NULL
@@ -23,6 +31,7 @@ do-- none (no line clear)
 end
 
 do-- line (fill row to clear)
+    --- @type Techmino.mino.clearRule
     clearRule.line={}
 
     function clearRule.line.getDelay(P,lines)
@@ -73,26 +82,16 @@ do-- line (fill row to clear)
 end
 
 do-- triplets (filled lines which form arithmetic progression to clear, from tetr.js)
+    --- @type Techmino.mino.clearRule
     clearRule.triplets={}
 
-    function clearRule.triplets.getDelay(P,lines)
-        return P.settings.clearDelay
-    end
-
-    function clearRule.triplets.isFill(P,y)
-        local F=P.field
-        for x=1,P.settings.fieldW do
-            if not F:getCell(x,y) then
-                return false
-            end
-        end
-        return true
-    end
+    clearRule.triplets.getDelay=clearRule.line.getDelay
+    clearRule.triplets.isFill=clearRule.line.isFill
 
     function clearRule.triplets.getFill(P)
         local fullLines={}
         for y=1,P.field:getHeight() do
-            if mechLib.mino.clearRule.triplets.isFill(P,y) then
+            if mechLib.mino.clearRule.line.isFill(P,y) then
                 ins(fullLines,y)
             end
         end
@@ -126,6 +125,7 @@ do-- triplets (filled lines which form arithmetic progression to clear, from tet
 end
 
 do-- cheese (90% fill to clear)
+    --- @type Techmino.mino.clearRule
     clearRule.cheese={}
 
     clearRule.cheese.getDelay=clearRule.line.getDelay
