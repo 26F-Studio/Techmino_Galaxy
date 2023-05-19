@@ -5,6 +5,7 @@ return {
         playBgm('race','full')
     end,
     settings={mino={
+        seqType='bag7_sprint',
         event={
             playerInit=mechLib.mino.statistics.event_playerInit,
             afterClear={

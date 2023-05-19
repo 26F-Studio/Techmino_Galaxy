@@ -15,14 +15,14 @@ local function setBias(P,x,y,dx,dy,moveType,clearDelay)
     P:setCellBias(x,y,{x=dx,y=dy,[moveType]=v})
 end
 
-do-- none
+do-- none (no line clear)
     clearRule.none={}
     function clearRule.none.getDelay() return 0 end
     clearRule.none.getFill=NULL
     clearRule.none.clear=NULL
 end
 
-do-- line
+do-- line (fill row to clear)
     clearRule.line={}
 
     function clearRule.line.getDelay(P,lines)
@@ -41,7 +41,7 @@ do-- line
 
     function clearRule.line.getFill(P)
         local fullLines={}
-        for y=P.field:getHeight(),1,-1 do
+        for y=1,P.field:getHeight() do
             if mechLib.mino.clearRule.line.isFill(P,y) then
                 ins(fullLines,y)
             end
@@ -54,11 +54,11 @@ do-- line
     function clearRule.line.clear(P,lines)
         local F=P.field
         local sum=0
-        local ptr=#lines
+        local ptr=1
         for y=1,F:getHeight() do
-            if ptr>0 and y==lines[ptr] then
+            if y==lines[ptr] then
                 sum=sum+1
-                ptr=ptr-1
+                ptr=ptr+1
             elseif sum>0 then
                 for x=1,P.settings.fieldW do
                     setBias(P,x,y,0,sum,P.settings.clearMovement,P.settings.clearDelay)
@@ -66,13 +66,13 @@ do-- line
             end
         end
 
-        for i=1,#lines do
+        for i=#lines,1,-1 do
             F:removeLine(lines[i])
         end
     end
 end
 
-do-- triplets (tetr.js)
+do-- triplets (filled lines which form arithmetic progression to clear, from tetr.js)
     clearRule.triplets={}
 
     function clearRule.triplets.getDelay(P,lines)
@@ -91,14 +91,31 @@ do-- triplets (tetr.js)
 
     function clearRule.triplets.getFill(P)
         local fullLines={}
-        for y=P.field:getHeight(),1,-1 do
+        for y=1,P.field:getHeight() do
             if mechLib.mino.clearRule.triplets.isFill(P,y) then
                 ins(fullLines,y)
             end
         end
 
-        -- Filter not in triplets
-        -- TODO
+        -- Mark lines not in triplets
+        local marks=TABLE.new(false,#fullLines)
+        for i=1,#fullLines-2 do
+            for j=i+1,#fullLines-1 do
+                local p=TABLE.find(fullLines,2*fullLines[j]-fullLines[i],j+1)
+                if p then
+                    marks[i]=true
+                    marks[j]=true
+                    marks[p]=true
+                end
+            end
+        end
+
+        -- Remove not in triplets
+        for i=#marks,1,-1 do
+            if not marks[i] then
+                rem(fullLines,i)
+            end
+        end
 
         if #fullLines>0 then
             return fullLines
@@ -108,7 +125,7 @@ do-- triplets (tetr.js)
     clearRule.triplets.clear=clearRule.line.clear
 end
 
-do-- cheese
+do-- cheese (90% fill to clear)
     clearRule.cheese={}
 
     clearRule.cheese.getDelay=clearRule.line.getDelay
@@ -126,7 +143,7 @@ do-- cheese
 
     function clearRule.cheese.getFill(P)
         local fullLines={}
-        for y=P.field:getHeight(),1,-1 do
+        for y=1,P.field:getHeight() do
             if mechLib.mino.clearRule.cheese.isFill(P,y) then
                 ins(fullLines,y)
             end

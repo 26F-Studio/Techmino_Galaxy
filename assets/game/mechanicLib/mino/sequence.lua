@@ -1,3 +1,4 @@
+local min,max=math.min,math.max
 local ins,rem=table.insert,table.remove
 
 local sequence={}
@@ -23,6 +24,35 @@ function sequence.bag7b1(P)
             if not l0[1] then for i=1,7 do l0[i]=i end end
             l[8]=rem(l0,P:random(#l0))
         end
+        coroutine.yield(rem(l,P:random(#l)))
+    end
+end
+
+function sequence.bag7_sprint(P)
+    -- First Bag, try to prevent early S/Z/O
+    local l={}
+    for i=1,7 do l[i]=i end
+    for i=7,2,-1 do ins(l,rem(l,P:random(1,i))) end
+    for _=1,2 do
+        if l[1]==1 or l[1]==2 or l[1]==6 then
+            ins(l,P:random(7),rem(l,1))
+        end
+    end
+    for i=1,7 do coroutine.yield(l[i]) end
+
+    -- Second to fourth Bag, gradually increase the shuffle range
+    local rndRange=4
+    while rndRange<7 do
+        local l2={}
+        for _=1,7 do ins(l2,rem(l,P:random(min(#l,rndRange)))) end
+        for i=1,7 do coroutine.yield(l2[i]) end
+        l=l2
+        rndRange=rndRange+1
+    end
+
+    -- Completely random from fifth Bag
+    while true do
+        if not l[1] then for i=1,7 do l[i]=i end end
         coroutine.yield(rem(l,P:random(#l)))
     end
 end

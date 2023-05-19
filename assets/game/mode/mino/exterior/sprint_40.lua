@@ -8,6 +8,7 @@ return {
         playBgm('race','base')
     end,
     settings={mino={
+        seqType='bag7_sprint',
         event={
             playerInit=function(P)
                 P.modeData.keyCount={}

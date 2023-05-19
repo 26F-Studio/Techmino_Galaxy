@@ -49,7 +49,7 @@ dig.practice_event_playerInit=TABLE.newPool(function(self,lineStart)
     return self[lineStart]
 end)
 function dig.practice_event_afterClear(P,clear)
-    for i=1,#clear.linePos do
+    for i=#clear.linePos,1,-1 do
         if clear.linePos[i]<=P.modeData.lineExist then
             P.modeData.lineExist=P.modeData.lineExist-1
             if P.modeData.lineExist==0 then
