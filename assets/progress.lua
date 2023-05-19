@@ -120,7 +120,7 @@ function PROGRESS.swapMainScene()
     elseif prgs.main<=4 then
         SCN.swapTo('main_out')
     else
-        -- TODO
+        -- TODO: phase 5+
     end
 end
 function PROGRESS.applyCoolWaitTemplate()
@@ -311,7 +311,7 @@ function PROGRESS.quit()
             end,
         }
     else
-        -- TODO
+        -- TODO: phase 5+
     end
 end
 function PROGRESS.drawExteriorHeader(h)

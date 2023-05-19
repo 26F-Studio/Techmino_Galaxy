@@ -68,13 +68,6 @@ function misc.noMove_event_playerInit(P)
     P:switchAction('moveRight',false)
 end
 
-function misc.noFallAfterClear_event_afterClear(P,clear)
-    for i=1,clear.line do
-        ins(P.field._matrix,clear.linePos[i],TABLE.new(false,P.settings.fieldW))
-    end
-    P.field:fresh()
-end
-
 do-- swapDirection
     function misc.swapDirection_event_playerInit(P)
         P.modeData.flip=false
@@ -305,6 +298,11 @@ do-- obstacle
         end
         return self[lineCount]
     end)
+end
+
+do-- Cascade
+    function misc.cascade_event_afterClear(P)
+    end
 end
 
 return misc

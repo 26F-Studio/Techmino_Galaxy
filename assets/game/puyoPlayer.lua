@@ -13,7 +13,9 @@ local ins,rem=table.insert,table.remove
 
 local inst=SFX.playSample
 
-local PP=setmetatable({},{__index=require'assets.game.basePlayer'})
+--- @class Techmino.Player.puyo: Techmino.Player
+--- @field field Techmino.RectField
+local PP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
 
 --------------------------------------------------------------
 -- Function tables
@@ -1026,7 +1028,7 @@ function PP:updateFrame()
                 end
                 break
             else
-                if self.dropDelay~=0 then
+                if self.dropTimer>0 then
                     self.dropTimer=self.dropTimer-1
                     if self.dropTimer<=0 then
                         self.dropTimer=SET.dropDelay
@@ -1256,17 +1258,12 @@ local baseEnv={
     shakeness=.26,
     inputDelay=0,
 }
-local soundTimeMeta={
-    __index=function(self,k) rawset(self,k,0) return -1e99 end,
-    __metatable=true,
-}
 local soundEventMeta={
     __index=defaultSoundFunc,
     __metatable=true,
 }
 function PP.new()
-    local self=setmetatable({},{__index=PP,__metatable=true})
-    self.sound=false
+    local self=setmetatable(require'assets.game.basePlayer'.new(),{__index=PP,__metatable=true})
     self.settings=TABLE.copy(baseEnv)
     self.event={
         -- Press & Release
@@ -1305,24 +1302,7 @@ function PP.new()
     return self
 end
 function PP:initialize()
-    self.buffedKey={}
-    self.modeData={}
-    self.soundTimeHistory=setmetatable({},soundTimeMeta)
-
-    self.RND=love.math.newRandomGenerator(GAME.seed+626)
-
-    self.pos={
-        x=0,y=0,k=1,a=0,
-
-        dx=0,dy=0,dk=0,da=0,
-        vx=0,vy=0,vk=0,va=0,
-    }
-
-    self.finished=false -- Did game finish
-    self.realTime=0     -- Real time, [float] s
-    self.time=0         -- Inside timer for player, [int] ms
-    self.gameTime=0     -- Game time of player, [int] ms
-    self.timing=false   -- Is gameTime running?
+    require'assets.game.basePlayer'.initialize(self)
 
     self.field=require'assets.game.rectField'.new(self.settings.fieldW)
     self.clearingGroups={}
@@ -1361,7 +1341,6 @@ function PP:initialize()
     self.hdLockATimer=0
     self.hdLockMTimer=0
 
-    self.actionHistory={}
     self.keyBuffer={
         move=false,
         rotate=false,
@@ -1369,21 +1348,9 @@ function PP:initialize()
     }
     self.dropHistory={}
     self.clearHistory={}
-    self.texts=TEXT.new()
-
-    -- Generate available actions
-    do
-        self.actions=TABLE.copy(PP._actions,0)
-        self.keyState={}
-        for k in next,self.actions do
-            self.keyState[k]=false
-        end
-    end
 
     self:loadScript(self.settings.script)
-
-    self.particles={}
-    TABLE.setAutoFill(self.particles,particleSystemTemplate)
 end
 --------------------------------------------------------------
+
 return PP

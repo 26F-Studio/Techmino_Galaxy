@@ -266,7 +266,6 @@ function GAME.newPlayer(id,pType)
     P.gameMode=pType
     P.id=id
     P.group=0
-    P.isMain=false
     GAME.playerMap[id]=P
     table.insert(GAME.playerList,P)
 end

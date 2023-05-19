@@ -63,8 +63,10 @@ local panel={
 local scene={}
 
 function scene.enter()
+    local fullVersion=true -- TODO
     panel:setSel(false)
     MINOMAP:reset()
+    MINOMAP:setFullVersion(fullVersion)
     PROGRESS.setExteriorBG()
     PROGRESS.playExteriorBGM()
 end

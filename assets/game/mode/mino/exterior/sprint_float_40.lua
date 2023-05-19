@@ -7,10 +7,10 @@ return {
         playBgm('race','base')
     end,
     settings={mino={
+        clearRule='line_float',
         event={
             playerInit=mechLib.mino.statistics.event_playerInit,
             afterClear={
-                mechLib.mino.misc.noFallAfterClear_event_afterClear,
                 mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
                 function(P)

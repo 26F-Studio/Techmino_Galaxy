@@ -1,5 +1,8 @@
 local gc=love.graphics
 
+--- @class Techmino.RectField
+--- @field _width number
+--- @field _matrix any[][]
 local F={}
 
 --------------------------------------------------------------
@@ -118,7 +121,7 @@ function F.new(width)
         _width=width,
         _matrix={},
     }
-    f._matrix._f=f
+    f._matrix=f
     setmetatable(f,{__index=F,__metatable=true})
 
     return f

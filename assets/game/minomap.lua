@@ -160,6 +160,9 @@ local focused=false
 --- @type table|false
 local selected=false
 
+--- @type boolean
+local full=false
+
 local map={}
 
 -- Map methods
@@ -191,6 +194,10 @@ function map:reset()
     enterFX.timer=false
     focused=false
     selected=false
+end
+
+function map:setFullVersion(bool)
+    full=bool
 end
 
 function map:hideCursor() mapCursor=false end
@@ -226,13 +233,19 @@ local function _enterMode(m)
 end
 
 function map:moveCam(dx,dy)
-    cam:move(dx,dy)
+    if full then
+        cam:move(dx,dy)
+    end
 end
 function map:rotateCam(da)
-    cam:rotate(da)
+    if full then
+        cam:rotate(da)
+    end
 end
 function map:scaleCam(dk)
-    cam:scale(dk)
+    if full then
+        cam:scale(dk)
+    end
 end
 
 function map:mouseMove(x,y)
@@ -279,26 +292,28 @@ function map:update(dt)
     for _,b in next,bridges do
         b.timer=b.timer+dt
     end
-    if love.keyboard.isDown('up','down','left','right') then
-        self:showCursor()
-        if isCtrlPressed() then
-            if love.keyboard.isDown('up')    then cam:scale(2.6^dt) end
-            if love.keyboard.isDown('down')  then cam:scale(1/2.6^dt) end
-            if love.keyboard.isDown('right') then cam:rotate(dt*2.6) end
-            if love.keyboard.isDown('left')  then cam:rotate(-dt*2.6) end
-        else
-            local dx,dy=0,0
-            if love.keyboard.isDown('up')    then dy=dy+dt*1260 end
-            if love.keyboard.isDown('down')  then dy=dy-dt*1260 end
-            if love.keyboard.isDown('left')  then dx=dx+dt*1260 end
-            if love.keyboard.isDown('right') then dx=dx-dt*1260 end
-            cam:move(dx,dy)
+    if full then
+        if love.keyboard.isDown('up','down','left','right') then
+            self:showCursor()
+            if isCtrlPressed() then
+                if love.keyboard.isDown('up')    then cam:scale(2.6^dt) end
+                if love.keyboard.isDown('down')  then cam:scale(1/2.6^dt) end
+                if love.keyboard.isDown('right') then cam:rotate(dt*2.6) end
+                if love.keyboard.isDown('left')  then cam:rotate(-dt*2.6) end
+            else
+                local dx,dy=0,0
+                if love.keyboard.isDown('up')    then dy=dy+dt*1260 end
+                if love.keyboard.isDown('down')  then dy=dy-dt*1260 end
+                if love.keyboard.isDown('left')  then dx=dx+dt*1260 end
+                if love.keyboard.isDown('right') then dx=dx-dt*1260 end
+                cam:move(dx,dy)
+            end
         end
+        pSys[1]:update(dt)
+        pSys[2]:update(dt)
+        pSys[3]:update(dt)
     end
     cam:update(dt)
-    pSys[1]:update(dt)
-    pSys[2]:update(dt)
-    pSys[3]:update(dt)
     if enterFX.timer then
         enterFX.timer=enterFX.timer+dt
     end
@@ -383,9 +398,11 @@ function map:draw()
     gc.rotate(-tau/4)gc.setColor(1,0,0,.01)gc.polygon('fill',mapPoly)gc.scale(.5)gc.setColor(0,0,0,.0626)gc.polygon('fill',mapPoly)gc.scale(2)
     gc.rotate(tau/3) gc.setColor(0,1,0,.01)gc.polygon('fill',mapPoly)gc.scale(.5)gc.setColor(0,0,0,.0626)gc.polygon('fill',mapPoly)gc.scale(2)
     gc.rotate(tau/3) gc.setColor(0,0,1,.01)gc.polygon('fill',mapPoly)gc.scale(.5)gc.setColor(0,0,0,.0626)gc.polygon('fill',mapPoly)gc.scale(2)
-    gc.rotate(tau/3) gc.setColor(1,.26,.26)gc.draw(pSys[1])
-    gc.rotate(tau/3) gc.setColor(.26,1,.26)gc.draw(pSys[2])
-    gc.rotate(tau/3) gc.setColor(.26,.26,1)gc.draw(pSys[3])
+    if full then
+        gc.rotate(tau/3) gc.setColor(1,.26,.26)gc.draw(pSys[1])
+        gc.rotate(tau/3) gc.setColor(.26,1,.26)gc.draw(pSys[2])
+        gc.rotate(tau/3) gc.setColor(.26,.26,1)gc.draw(pSys[3])
+    end
 
     -- Keyboard cursor
     gc.replaceTransform(SCR.xOy_m)
