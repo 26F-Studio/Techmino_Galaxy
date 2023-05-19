@@ -1,5 +1,7 @@
 local ins,rem=table.insert,table.remove
 local gc=love.graphics
+
+--- @type table<string,table|fun(P:Techmino.Player.mino|any):any>
 local misc={}
 
 function misc.interior_soundEvent_countDown(num)
@@ -301,7 +303,100 @@ do-- obstacle
 end
 
 do-- Cascade
+    local function getSolidMat(P)
+        local F=P.field
+        local visitedMat={}
+        for y=1,F:getHeight() do
+            visitedMat[y]=TABLE.new(false,F._width)
+        end
+
+        local pointsToCheck={}
+        for x=1,F._width do
+            ins(pointsToCheck,{x,1})
+        end
+        local ptr=#pointsToCheck
+        while ptr>0 do
+            local x,y=pointsToCheck[ptr][1],pointsToCheck[ptr][2]
+            ptr=ptr-1
+            if F:getCell(x,y) and not visitedMat[y][x] then
+                local L=P:getConnectedCells(x,y)
+                for i=1,#L do
+                    local x2,y2=L[i][1],L[i][2]
+                    visitedMat[y2][x2]=true
+                    if visitedMat[y+1] then
+                        pointsToCheck[ptr+1]={x2,y2+1}
+                        ptr=ptr+1
+                    end
+                end
+            end
+        end
+        return visitedMat
+    end
+    function misc.cascade_check(P)
+        local F=P.field
+        local solidMat=getSolidMat(P)
+
+        for y=1,#solidMat do
+            for x=1,F._width do
+                if not solidMat[y][x] and F:getCell(x,y) then
+                    return true
+                end
+            end
+        end
+
+        return false
+    end
+    function misc.cascade_fall(P)
+        local F=P.field
+        local solidMat=getSolidMat(P)
+
+        for y=1,#solidMat do
+            for x=1,F._width do
+                if not solidMat[y][x] and F:getCell(x,y) then
+                    local C=F:getCell(x,y)
+                    F:setCell(false,x,y)
+                    F:setCell(C,x,y-1)
+                    P:setCellBias(x,y-1,{y=1,lineBack=40/P.modeData.cascadeDelay})
+                end
+            end
+        end
+        F:fresh()
+    end
+    function misc.cascade_event_always(P)
+        if P.modeData.cascading then
+            P.modeData.cascadeTimer=P.modeData.cascadeTimer-1
+            if P.modeData.cascadeTimer<=0 then
+                if misc.cascade_check(P) then
+                    misc.cascade_fall(P)
+                    P.modeData.cascadeTimer=P.modeData.cascadeDelay
+                else
+                    local fullLines=mechLib.mino.clearRule[P.settings.clearRule].getFill(P)
+                    if fullLines then
+                        P:doClear(fullLines)
+                    else
+                        P.settings.clearDelay=P.modeData.storedClearDelay
+                        P.spawnTimer=P.settings.spawnDelay
+
+                        P.modeData.cascading=false
+                        P.modeData.cascadeTimer=false
+                        P.modeData.cascadeDelay=false
+                        P.modeData.storedClearDelay=nil
+                    end
+                end
+            end
+        else
+            P:delEvent('always',misc.cascade_event_always)
+        end
+    end
     function misc.cascade_event_afterClear(P)
+        if misc.cascade_check(P) and not P.modeData.cascading then
+            P.modeData.cascading=true
+            P.modeData.cascadeDelay=math.max(math.floor(P.settings.clearDelay^.5),26)
+            P.modeData.cascadeTimer=0
+            P.modeData.storedClearDelay=P.settings.clearDelay
+            P.settings.clearDelay=1e99
+            P:addEvent('always',misc.cascade_event_always)
+        end
     end
 end
 
