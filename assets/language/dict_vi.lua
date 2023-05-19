@@ -105,7 +105,7 @@ Những yếu tố ảnh hưởng tới việc xử lý gạch của bạn:
 ~~
 (3) Cái gì cũng có mục đích của nó, ngay cả thiết kế cũng vậy. Việc làm quen với chúng có thể giúp bạn.
 ~~
-(4) Cài đặt thông số xử lý gạch không phù hợp (ví dụ: DAS, ARR, SDARR,...). Thay đổi cài đặt.
+(4) Cài đặt thông số xử lý gạch không phù hợp (ví dụ: DAS, ARR, SDARR,…). Thay đổi cài đặt.
 ~~
 (5) Tư thế chơi không hợp lý, có thể gây ra bất tiện trong những thời điểm quan trọng. Nên tìm tư thế chơi phù hợp sao cho thuận tiện khi chơi.
 ~~
