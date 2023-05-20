@@ -217,7 +217,7 @@ return {
         sprint_1000=           {"Sprint 1000","Clear 1000 lines"},
         sprint_drought_40=     {"Sprint 40 Drought","Clear 40 lines without I pieces"},
         sprint_flood_40=       {"Sprint 40 Flood","Clear 40 lines with too many S & Z pieces"},
-        sprint_penta_40=       {"Sprint 40 Penta","Clear 40 lines with pentominoes"},
+        sprint_pento_40=       {"Sprint 40 Pento","Clear 40 lines with pentominoes"},
         sprint_sym_40=         {"Sprint 40 Sym","Clear 40 lines with a symmetric field"},
         sprint_mph_40=         {"Sprint 40 MPH","Clear 40 lines without the sequence info"},
         sprint_delay_20=       {"Sprint 20 Delay","Clear 20 lines with a massive input delay"},
