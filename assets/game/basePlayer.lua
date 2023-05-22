@@ -24,14 +24,14 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 --- @field modeData table
 --- @field soundTimeHistory table
 --- @field RND love.RandomGenerator
---- @field pos {x:number,y:number,k:number,a:number,dx:number,dy:number,dk:number,da:number,vx:number,vy:number,vk:number,va:number}
+--- @field pos {x:number, y:number, k:number, a:number, dx:number, dy:number, dk:number, da:number, vx:number, vy:number, vk:number, va:number}
 --- @field finished Techmino.EndReason|boolean
 --- @field realTime number
 --- @field time number
 --- @field gameTime number
 --- @field timing boolean
 --- @field texts Zenitha.Text
---- @field particles table<string,love.ParticleSystem>
+--- @field particles Techmino.particleSystems
 ---
 --- @field updateFrame function
 --- @field scriptCmd function
@@ -43,7 +43,7 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 --- @field handY number
 --- @field event table
 --- @field soundEvent table
---- @field _actions table
+--- @field _actions table<string, {press:fun(P:Techmino.Player), release:fun(P:Techmino.Player)}>
 local P={}
 
 --------------------------------------------------------------

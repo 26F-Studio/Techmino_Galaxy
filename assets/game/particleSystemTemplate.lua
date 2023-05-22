@@ -1,3 +1,10 @@
+--- @class Techmino.particleSystems
+--- @field star love.ParticleSystem
+--- @field sparkle love.ParticleSystem
+--- @field cornerCheck love.ParticleSystem
+--- @field rotateFail love.ParticleSystem
+--- @field trail love.ParticleSystem
+--- @field minoMapBack love.ParticleSystem
 local p={}
 
 do-- Moving trail & Frenzy
