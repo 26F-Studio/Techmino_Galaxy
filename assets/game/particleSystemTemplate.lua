@@ -1,6 +1,6 @@
 local p={}
 
-do-- Moving trail
+do-- Moving trail & Frenzy
     p.star=love.graphics.newParticleSystem(GC.load{7,7,
         {'setLW',1},
         {'line',0,3.5,6.5,3.5},
@@ -10,6 +10,41 @@ do-- Moving trail
     p.star:setSizes(.26,1,.8,.6,.4,.2,0)
     p.star:setSpread(MATH.tau)
     p.star:setSpeed(0,20)
+end
+
+do-- Touching spark
+    p.sparkle=love.graphics.newParticleSystem(GC.load{5,5,
+        {'clear',1,1,1,1},
+    },260)
+    p.sparkle:setSizes(.6,.9,1,1)
+    p.sparkle:setColors(1,1,1,1,1,1,1,0)
+    p.sparkle:setDirection(math.pi/2)
+    p.sparkle:setSpread(0)
+    p.sparkle:setSpeed(40,120)
+    p.sparkle:setLinearDamping(6,16)
+    p.sparkle:setParticleLifetime(1.26)
+end
+
+do-- Rotating corner check
+    p.cornerCheck=love.graphics.newParticleSystem(GC.load{1,1,
+        {'clear',1,1,1,1},
+    },26)
+    p.cornerCheck:setSizes(26)
+    p.cornerCheck:setColors(1,1,1,.126,1,1,1,0)
+    p.cornerCheck:setRotation(0)
+    p.cornerCheck:setSpeed(0)
+    p.cornerCheck:setParticleLifetime(.126)
+end
+
+do-- Rotating failed
+    p.rotateFail=love.graphics.newParticleSystem(GC.load{1,1,
+        {'clear',1,0,0},
+    },26)
+    p.rotateFail:setSizes(60,50,30,0)
+    p.rotateFail:setColors(1,1,1,1,1,1,1,0)
+    p.rotateFail:setRotation(-.26,.26)
+    p.rotateFail:setSpin(-2.6,2.6)
+    p.rotateFail:setParticleLifetime(.42)
 end
 
 do-- Harddrop light

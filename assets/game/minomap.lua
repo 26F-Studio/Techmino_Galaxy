@@ -127,7 +127,7 @@ for _,link in next,bridgeLinks do
     end
 end
 
-local pSys={} for i=1,3 do pSys[i]=particleSystemTemplate.minoMapBack:clone() end
+local pSys={} for i=1,3 do pSys[i]=require'assets.game.particleSystemTemplate'.minoMapBack:clone() end
 local mapPoly={
     0,0,
     6200,10738.715,

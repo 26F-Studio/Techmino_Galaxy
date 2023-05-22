@@ -703,7 +703,7 @@ function P.new()
 
     self.texts=TEXT.new()
     self.particles={}
-    TABLE.setAutoFill(self.particles,particleSystemTemplate)
+    TABLE.setAutoFill(self.particles,require'assets.game.particleSystemTemplate')
 
     return self
 end
