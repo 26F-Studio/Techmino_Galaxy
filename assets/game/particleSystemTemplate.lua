@@ -37,7 +37,7 @@ do-- Rotating corner check
         {'clear',1,1,1,1},
     },26)
     p.cornerCheck:setSizes(26)
-    p.cornerCheck:setColors(1,1,1,.126,1,1,1,0)
+    p.cornerCheck:setColors(1,1,1,.26,1,1,1,0)
     p.cornerCheck:setRotation(0)
     p.cornerCheck:setSpeed(0)
     p.cornerCheck:setParticleLifetime(.126)

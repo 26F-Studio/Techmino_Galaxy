@@ -78,7 +78,7 @@ function P:shakeBoard(args,v)
 end
 function P:playSound(event,...)
     if not self.sound then return end
-    if self.time-self.soundTimeHistory[event]>=16 then
+    if self.time-self.soundTimeHistory[event]>=26 then
         self.soundTimeHistory[event]=self.time
         if self.soundEvent[event] then
             self.soundEvent[event](...)

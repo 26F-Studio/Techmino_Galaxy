@@ -305,22 +305,19 @@ end
 function MP:createTouchEffect()
     local p=self.particles.sparkle
     local mat=self.hand.matrix
-    local width,height=#mat[1],#mat
     local cell=Minoes.O1.shape
     local cx,cy=self.handX,self.handY
-    for x=1,width do
-        for y=1,height do
-            if mat[y][x] and self:ifoverlap(cell,cx+x-1,cy+y-2) then
-                for _=1,2 do
-                    p:setPosition(
-                        (cx+x-2+rnd())*40,
-                        -(cy+y-2)*40
-                    )
-                    p:emit(1)
-                end
+    for x=1,#mat[1] do for y=1,#mat do
+        if mat[y][x] and self:ifoverlap(cell,cx+x-1,cy+y-2) then
+            for _=1,4 do
+                p:setPosition(
+                    (cx+x-2+rnd())*40,
+                    -(cy+y-2)*40
+                )
+                p:emit(1)
             end
         end
-    end
+    end end
 end
 function MP:createTuckEffect()
 end
@@ -380,7 +377,7 @@ function MP:moveHand(action,a,b,c,d)
         self:checkLanding()
     elseif action=='drop' then
         self.handY=self.handY+a
-        self:checkLanding()
+        self:checkLanding(true)
     elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
     else
@@ -554,7 +551,6 @@ function MP:resetPosCheck()
 
         self:freshGhost()
         self:freshDelay('spawn')
-        self:checkLanding()
     end
 
     if self.settings.dasHalt>0 then-- DAS halt
@@ -845,10 +841,10 @@ function MP:ifoverlap(CB,cx,cy)
     -- No collision
     return false
 end
-function MP:checkLanding()
+function MP:checkLanding(sparkles)
     if self.handY==self.ghostY then
         self:playSound('touch')
-        if self.settings.particles then
+        if sparkles and self.settings.particles then
             self:createTouchEffect()
         end
     end
@@ -1481,6 +1477,9 @@ function MP:updateFrame()
                         self:playSound('move')
                         if self.handY==self.ghostY then
                             self:shakeBoard('-down')
+                        end
+                        if self.settings.particles then
+                            self:createTouchEffect()
                         end
                     end
                 end
