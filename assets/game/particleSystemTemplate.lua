@@ -20,16 +20,16 @@ do-- Moving trail & Frenzy
 end
 
 do-- Touching spark
-    p.sparkle=love.graphics.newParticleSystem(GC.load{5,5,
+    p.sparkle=love.graphics.newParticleSystem(GC.load{4,4,
         {'clear',1,1,1,1},
     },260)
     p.sparkle:setSizes(.6,.9,1,1)
     p.sparkle:setColors(1,1,1,1,1,1,1,0)
     p.sparkle:setDirection(math.pi/2)
     p.sparkle:setSpread(0)
-    p.sparkle:setSpeed(40,120)
-    p.sparkle:setLinearDamping(6,16)
-    p.sparkle:setParticleLifetime(1.26)
+    p.sparkle:setSpeed(40,100)
+    p.sparkle:setLinearDamping(6,12)
+    p.sparkle:setParticleLifetime(.42)
 end
 
 do-- Rotating corner check
@@ -47,11 +47,11 @@ do-- Rotating failed
     p.rotateFail=love.graphics.newParticleSystem(GC.load{1,1,
         {'clear',1,0,0},
     },26)
-    p.rotateFail:setSizes(60,50,30,0)
+    p.rotateFail:setSizes(60,50,25,0)
     p.rotateFail:setColors(1,1,1,1,1,1,1,0)
     p.rotateFail:setRotation(-.26,.26)
     p.rotateFail:setSpin(-2.6,2.6)
-    p.rotateFail:setParticleLifetime(.42)
+    p.rotateFail:setParticleLifetime(.26)
 end
 
 do-- Harddrop light

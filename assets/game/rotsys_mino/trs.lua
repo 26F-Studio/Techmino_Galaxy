@@ -170,12 +170,14 @@ TRS[6]={
                                 self:playSound('rotate_special')
 
                                 -- Create particles
-                                local p=self.particles.star
-                                local w,h=#newMatrix[1],#newMatrix
-                                p:setParticleLifetime(.26,1.26)
-                                p:setEmissionArea('uniform',(w/2+.5)*40,(h/2+.5)*40,0,true)
-                                p:setPosition((self.handX-1+w/2)*40,-(self.handY-1+h/2)*40)
-                                p:emit(26)
+                                if self.settings.particles then
+                                    local p=self.particles.star
+                                    local w,h=#newMatrix[1],#newMatrix
+                                    p:setParticleLifetime(.26,1.26)
+                                    p:setEmissionArea('uniform',(w/2+.5)*40,(h/2+.5)*40,0,true)
+                                    p:setPosition((self.handX-1+w/2)*40,-(self.handY-1+h/2)*40)
+                                    p:emit(26)
+                                end
 
                                 transformed=true
                                 break
@@ -192,9 +194,7 @@ TRS[6]={
         if not transformed then
             self:playSound(ifInit and 'initrotate' or 'rotate')
         end
-        if self.handY==self.ghostY then
-            self:playSound('touch')
-        end
+        self:checkLanding()
     end,
 }-- O
 TRS[7]={
