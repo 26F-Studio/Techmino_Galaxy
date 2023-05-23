@@ -1,4 +1,40 @@
 local O,_=true,false
+
+--- @class Techmino.mino
+--- @field name string
+--- @field id number
+--- @field shape boolean[][]
+
+--- @class Techmino.minos
+--- @field Z Techmino.mino
+--- @field S Techmino.mino
+--- @field J Techmino.mino
+--- @field L Techmino.mino
+--- @field T Techmino.mino
+--- @field O Techmino.mino
+--- @field I Techmino.mino
+--- @field Z5 Techmino.mino
+--- @field S5 Techmino.mino
+--- @field P Techmino.mino
+--- @field Q Techmino.mino
+--- @field F Techmino.mino
+--- @field E Techmino.mino
+--- @field T5 Techmino.mino
+--- @field U Techmino.mino
+--- @field V Techmino.mino
+--- @field W Techmino.mino
+--- @field X Techmino.mino
+--- @field J5 Techmino.mino
+--- @field L5 Techmino.mino
+--- @field R Techmino.mino
+--- @field Y Techmino.mino
+--- @field N Techmino.mino
+--- @field H Techmino.mino
+--- @field I5 Techmino.mino
+--- @field I3 Techmino.mino
+--- @field C Techmino.mino
+--- @field I2 Techmino.mino
+--- @field O1 Techmino.mino
 local minoes={
     -- Tetromino
     {name='Z', id=01,shape={{_,O,O},{O,O,_}}},

@@ -1,5 +1,6 @@
 local floor,clamp=math.floor,MATH.clamp
 
+--- @type Techmino.Mech.mino
 local squeeze={}
 
 --- @param width? number

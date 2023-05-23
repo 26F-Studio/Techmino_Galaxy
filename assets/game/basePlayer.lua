@@ -24,14 +24,14 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 --- @field modeData table
 --- @field soundTimeHistory table
 --- @field RND love.RandomGenerator
---- @field pos {x:number,y:number,k:number,a:number,dx:number,dy:number,dk:number,da:number,vx:number,vy:number,vk:number,va:number}
+--- @field pos {x:number, y:number, k:number, a:number, dx:number, dy:number, dk:number, da:number, vx:number, vy:number, vk:number, va:number}
 --- @field finished Techmino.EndReason|boolean
 --- @field realTime number
 --- @field time number
 --- @field gameTime number
 --- @field timing boolean
 --- @field texts Zenitha.Text
---- @field particles table<string,love.ParticleSystem>
+--- @field particles Techmino.particleSystems
 ---
 --- @field updateFrame function
 --- @field scriptCmd function
@@ -43,7 +43,7 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 --- @field handY number
 --- @field event table
 --- @field soundEvent table
---- @field _actions table
+--- @field _actions table<string, {press:fun(P:Techmino.Player), release:fun(P:Techmino.Player)}>
 local P={}
 
 --------------------------------------------------------------
@@ -78,7 +78,7 @@ function P:shakeBoard(args,v)
 end
 function P:playSound(event,...)
     if not self.sound then return end
-    if self.time-self.soundTimeHistory[event]>=16 then
+    if self.time-self.soundTimeHistory[event]>=26 then
         self.soundTimeHistory[event]=self.time
         if self.soundEvent[event] then
             self.soundEvent[event](...)
@@ -204,7 +204,45 @@ end
 function P:triggerEvent(name,...)
     -- if name~='always' and name:sub(1,4)~='draw' then print(name) end
     local L=self.event[name]
-    if L then for i=1,#L do L[i](self,...) end end
+    if L then
+        local i=1
+        while L[i] do
+            if L[i](self,...) then
+                rem(L,i)
+            else
+                i=i+1
+            end
+        end
+    end
+end
+function P:addEvent(name,F,pos)
+    assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
+    if not pos then pos=#self.event[name]+1 end
+    if type(F)=='table' then
+        for i=1,#F do
+            self:addEvent(name,F[i],pos+i-1)
+        end
+    elseif type(F)=='string' then
+        local errMsg
+        F,errMsg=loadstring('local P=...\n'..F)
+        if F then
+            setSafeEnv(F)
+            self:addEvent(name,F,pos)
+        else
+            error('Error in code string: '..errMsg)
+        end
+    elseif type(F)=='function' then
+        ins(self.event[name],pos,F)
+    else
+        error('event must be function or table of functions')
+    end
+end
+local function _scrap() return true end
+function P:delEvent(name,F)
+    assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
+    assert(type(F)=='function','event must be function')
+    local pos=TABLE.find(self.event[name],F)
+    if pos then self.event[name][pos]=_scrap end
 end
 --- @param reason Techmino.EndReason
 function P:finish(reason)
@@ -419,34 +457,6 @@ function P:update(dt)
 end
 --------------------------------------------------------------
 -- Builder
-function P:addEvent(name,F,pos)
-    assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
-    if not pos then pos=#self.event[name]+1 end
-    if type(F)=='table' then
-        for i=1,#F do
-            self:addEvent(name,F[i],pos+i-1)
-        end
-    elseif type(F)=='string' then
-        local errMsg
-        F,errMsg=loadstring('local P=...\n'..F)
-        if F then
-            setSafeEnv(F)
-            self:addEvent(name,F,pos)
-        else
-            error('Error in code string: '..errMsg)
-        end
-    elseif type(F)=='function' then
-        ins(self.event[name],pos,F)
-    else
-        error('event must be function or table of functions')
-    end
-end
-function P:delEvent(name,F)
-    assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
-    assert(type(F)=='function','event must be function')
-    local pos=TABLE.find(self.event[name],F)
-    if pos then rem(self.event[name],pos) end
-end
 function P:addSoundEvent(name,F)
     assert(self.soundEvent[name],"Wrong soundEvent key: '"..tostring(name).."'")
     assert(type(F)=='function',"soundEvent must be function")
@@ -693,7 +703,7 @@ function P.new()
 
     self.texts=TEXT.new()
     self.particles={}
-    TABLE.setAutoFill(self.particles,particleSystemTemplate)
+    TABLE.setAutoFill(self.particles,require'assets.game.particleSystemTemplate')
 
     return self
 end

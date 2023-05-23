@@ -1,5 +1,6 @@
 local gc=love.graphics
 
+--- @type Techmino.Mech.mino
 local marathon={}
 
 local levels={

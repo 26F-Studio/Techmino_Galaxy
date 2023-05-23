@@ -1,6 +1,6 @@
 local gc=love.graphics
 local gc_push,gc_pop=gc.push,gc.pop
-local gc_translate,gc_scale,gc_rotate,gc_shear=gc.translate,gc.scale,gc.rotate,gc.shear
+local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
 local gc_setBlendMode,gc_setColorMask=gc.setBlendMode,gc.setColorMask
 local gc_setColor=gc.setColor
 local gc_draw,gc_rectangle=gc.draw,gc.rectangle
