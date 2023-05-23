@@ -1,7 +1,15 @@
 local min,max=math.min,math.max
 local ins,rem=table.insert,table.remove
 
+local shift=TABLE.shift
+
+--- @type Techmino.Mech.mino
 local sequence={}
+
+local Tetros={1,2,3,4,5,6,7}
+local Pentos={8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}
+local easyPentos={10,11,14,19,20,23,24,25}-- P Q T5 J5 L5 N H I5
+local hardPentos={8,9,12,13,15,16,17,18,21,22}-- Z5 S5 F E U V W X R Y
 
 function sequence.none()
     while true do coroutine.yield() end
@@ -10,19 +18,18 @@ end
 function sequence.bag7(P)
     local l={}
     while true do
-        if not l[1] then for i=1,7 do l[i]=i end end
+        if not l[1] then l=shift(Tetros) end
         coroutine.yield(rem(l,P:random(#l)))
     end
 end
 
-function sequence.bag7b1(P)
-    local l0={}
-    local l={}
+function sequence.bag7_bag1(P)
+    local l,ex={},{}
     while true do
         if not l[1] then
-            for i=1,7 do l[i]=i end
-            if not l0[1] then for i=1,7 do l0[i]=i end end
-            l[8]=rem(l0,P:random(#l0))
+            l=shift(Tetros)
+            if not ex[1] then ex=shift(Tetros) end
+            l[8]=rem(ex,P:random(#ex))
         end
         coroutine.yield(rem(l,P:random(#l)))
     end
@@ -30,8 +37,7 @@ end
 
 function sequence.bag7_sprint(P)
     -- First Bag, try to prevent early S/Z/O
-    local l={}
-    for i=1,7 do l[i]=i end
+    local l=shift(Tetros)
     for i=7,2,-1 do ins(l,rem(l,P:random(1,i))) end
     for _=1,2 do
         if l[1]==1 or l[1]==2 or l[1]==6 then
@@ -52,20 +58,19 @@ function sequence.bag7_sprint(P)
 
     -- Completely random from fifth Bag
     while true do
-        if not l[1] then for i=1,7 do l[i]=i end end
+        if not l[1] then l=shift(Tetros) end
         coroutine.yield(rem(l,P:random(#l)))
     end
 end
 
-function sequence.bag7steal1(P)
+function sequence.bag7_steal1(P)
     local l={}
-    local victim={}
-    for i=1,7 do victim[i]=i end
+    local victim=shift(Tetros)
     rem(victim,P:random(7))
     while true do
         if not l[1] then
             l,victim=victim,l
-            for i=1,7 do victim[i]=i end
+            victim=shift(Tetros)
             ins(l,rem(victim,P:random(#victim)))
         end
         coroutine.yield(rem(l,P:random(#l)))
@@ -87,7 +92,7 @@ function sequence.bag7_flood(P)-- bag7 with extra 3 S pieces and 3 Z pieces
     local l={}
     while true do
         if not l[1] then
-            for i=1,7 do l[i]=i end
+            l=shift(Tetros)
             l[8],l[9],l[10]=1,1,1
             l[11],l[12],l[13]=2,2,2
         end
@@ -95,7 +100,7 @@ function sequence.bag7_flood(P)-- bag7 with extra 3 S pieces and 3 Z pieces
     end
 end
 
-function sequence.h4r2(P)
+function sequence.his4_roll2(P)
     local history=TABLE.new(0,2)
     while true do
         local r
@@ -150,10 +155,24 @@ function sequence.mess(P)
     end
 end
 
-function sequence.penta_bag18(P)
+function sequence.pento_bag18(P)
     local l={}
     while true do
-        if not l[1] then for i=8,25 do ins(l,i) end end
+        if not l[1] then l=shift(Pentos) end
+        coroutine.yield(rem(l,P:random(#l)))
+    end
+end
+
+function sequence.pento_bag_ez8hd4Bag10(P)
+    local l,ex={},{}
+    while true do
+        if not l[1] then
+            l=shift(easyPentos)
+            for _=1,4 do
+                if not ex[1] then ex=shift(hardPentos) end
+                ins(l,rem(ex,P:random(#ex)))
+            end
+        end
         coroutine.yield(rem(l,P:random(#l)))
     end
 end

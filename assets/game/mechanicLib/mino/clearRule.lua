@@ -1,10 +1,10 @@
 local ins,rem=table.insert,table.remove
 
 --- @class Techmino.mino.clearRule
---- @field getDelay fun(P:Techmino.Player.mino,lines:number[]): number?
---- @field isFill fun(P:Techmino.Player.mino,y:number): boolean
+--- @field getDelay fun(P:Techmino.Player.mino, lines:number[]): number?
+--- @field isFill fun(P:Techmino.Player.mino, y:number): boolean
 --- @field getFill fun(P:Techmino.Player.mino): number[]?
---- @field clear fun(P:Techmino.Player.mino,lines:number[])
+--- @field clear fun(P:Techmino.Player.mino, lines:number[])
 
 --- @type Techmino.mino.clearRule[]
 local clearRule={}

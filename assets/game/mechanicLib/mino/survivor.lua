@@ -2,6 +2,7 @@ local floor,ceil=math.floor,math.ceil
 local max,min=math.max,math.min
 local gc=love.graphics
 
+--- @type Techmino.Mech.mino
 local survivor={}
 
 function survivor.event_playerInit(P)

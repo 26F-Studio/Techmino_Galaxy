@@ -1,4 +1,6 @@
 local gc=love.graphics
+
+--- @type Techmino.Mech.mino
 local hypersonic={}
 
 --- @param mode 'low'|'high'|'hidden'

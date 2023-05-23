@@ -139,9 +139,6 @@ MP._actions.moveLeft={
         if P.hand then
             if P:moveLeft() then
                 P:playSound('move')
-                if P.handY==P.ghostY then
-                    P:playSound('touch')
-                end
             else
                 P:freshDelay('move')
                 P:playSound('move_failed')
@@ -162,9 +159,6 @@ MP._actions.moveRight={
         if P.hand then
             if P:moveRight() then
                 P:playSound('move')
-                if P.handY==P.ghostY then
-                    P:playSound('touch')
-                end
             else
                 P:freshDelay('move')
                 P:playSound('move_failed')
@@ -267,7 +261,7 @@ MP._actions.func6=NULL
 for k,v in next,MP._actions do MP._actions[k]=MP:_getActionObj(v) end
 --------------------------------------------------------------
 -- Effects
-function MP:createMoveParticle(x1,y1,x2,y2)
+function MP:createMoveEffect(x1,y1,x2,y2)
     local p=self.particles.star
     p:setParticleLifetime(.26,.5)
     p:setEmissionArea('none')
@@ -279,20 +273,74 @@ function MP:createMoveParticle(x1,y1,x2,y2)
         p:emit(1)
     end end
 end
-function MP:createFrenzyParticle(amount)
+function MP:createRotateEffect()
+end
+function MP:createRotateCornerEffect(cx,cy)
+    local p=self.particles.cornerCheck
+    for x=-1,1,2 do
+        for y=-1,1,2 do
+            p:setPosition(
+                (cx+x-.5)*40,
+                -(cy+y-.5)*40
+            )
+            p:emit(1)
+        end
+    end
+end
+function MP:createRotateFailedEffect(CB,bx,by)
+    local p=self.particles.rotateFail
+    for y=1,#CB do for x=1,#CB[1] do
+        local c=CB[y][x]
+        if c then
+            p:setPosition(
+                (bx+x-1.5)*40,
+                -(by+y-1.5)*40
+            )
+            p:emit(1)
+        end
+    end end
+end
+function MP:createRotateLockedEffect()
+end
+function MP:createTouchEffect()
+    local p=self.particles.sparkle
+    local mat=self.hand.matrix
+    local cell=Minoes.O1.shape
+    local cx,cy=self.handX,self.handY
+    for x=1,#mat[1] do for y=1,#mat do
+        if mat[y][x] and self:ifoverlap(cell,cx+x-1,cy+y-2) then
+            for _=1,4 do
+                p:setPosition(
+                    (cx+x-2+rnd())*40,
+                    -(cy+y-2)*40
+                )
+                p:emit(1)
+            end
+        end
+    end end
+end
+function MP:createTuckEffect()
+end
+function MP:createHoldEffect()
+end
+function MP:createFrenzyEffect(amount)
     local p=self.particles.star
     p:setParticleLifetime(.626,1.6)
     p:setEmissionArea('uniform',200,400,0,true)
     p:setPosition(200,-400)
     p:emit(amount)
 end
-function MP:createLockParticle(x,y)
+function MP:createLockEffect(x,y)
     local p=self.particles.trail
     p:setPosition(
         (x+#self.hand.matrix[1]/2-1)*40,
         -(y+#self.hand.matrix/2-1)*40
     )
     p:emit(1)
+end
+function MP:createSuffocateEffect()
+end
+function MP:createDesuffocateEffect()
 end
 function MP:setCellBias(x,y,bias)
     local c=self.field:getCell(x,y)
@@ -322,15 +370,14 @@ end
 -- Game methods
 function MP:moveHand(action,a,b,c,d)
     if action=='moveX' then
-        if self.settings.particles then
-            self:createMoveParticle(self.handX,self.handY,self.handX+a,self.handY)
-        end
         self.handX=self.handX+a
-    elseif action=='drop' or action=='moveY' then
-        if self.settings.particles then
-            self:createMoveParticle(self.handX,self.handY,self.handX,self.handY+a)
-        end
+        self:checkLanding()
+    elseif action=='moveY' then
         self.handY=self.handY+a
+        self:checkLanding()
+    elseif action=='drop' then
+        self.handY=self.handY+a
+        self:checkLanding(true)
     elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
     else
@@ -354,7 +401,9 @@ function MP:moveHand(action,a,b,c,d)
         then
             movement.tuck=true
             self:playSound('tuck')
+            self:createTuckEffect()
         end
+    elseif action=='moveY' then
     elseif action=='rotate' then
         if not self.deathTimer then
             if
@@ -367,34 +416,31 @@ function MP:moveHand(action,a,b,c,d)
                 movement.immobile=true
                 self:shakeBoard(c=='L' and '-ccw' or c=='R' and '-cw' or '-180')
                 self:playSound('rotate_locked')
+                self:createRotateLockedEffect()
             end
             if self.settings.spin_corners then
                 local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
                 local state=minoData[self.hand.direction]
                 local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
                 if centerPos then
-                    local cx=self.handX+centerPos[1]-.5
-                    if floor(cx)==cx then
-                        local cy=self.handY+centerPos[2]-.5
-                        if floor(cy)==cy then
-                            local corners=0
-                            if self.field:getCell(cx-1,cy-1) then corners=corners+1 end
-                            if self.field:getCell(cx+1,cy-1) then corners=corners+1 end
-                            if self.field:getCell(cx-1,cy+1) then corners=corners+1 end
-                            if self.field:getCell(cx+1,cy+1) then corners=corners+1 end
-                            if corners>=self.settings.spin_corners then
-                                movement.corners=true
-                                self:playSound('rotate_corners')
-                            end
+                    local cx,cy=self.handX+centerPos[1]-.5,self.handY+centerPos[2]-.5
+                    if cx%1+cy%1==0 then
+                        local corners=0
+                        if self.field:getCell(cx-1,cy-1) then corners=corners+1 end
+                        if self.field:getCell(cx+1,cy-1) then corners=corners+1 end
+                        if self.field:getCell(cx-1,cy+1) then corners=corners+1 end
+                        if self.field:getCell(cx+1,cy+1) then corners=corners+1 end
+                        if corners>=self.settings.spin_corners then
+                            movement.corners=true
+                            self:playSound('rotate_corners')
+                            self:createRotateCornerEffect(cx,cy)
                         end
                     end
                 end
             end
-            if self.handY==self.ghostY then
-                self:playSound('touch')
-            end
         end
         self:playSound(d and 'initrotate' or 'rotate')
+        self:createRotateEffect()
     end
     self.lastMovement=movement
 
@@ -405,6 +451,7 @@ function MP:moveHand(action,a,b,c,d)
             self.deathTimer=t
         else
             self:playSound('desuffocate')
+            self:createDesuffocateEffect()
         end
     end
 end
@@ -444,6 +491,7 @@ function MP:resetPosCheck()
         if self.settings.deathDelay>0 then
             self.deathTimer=self.settings.deathDelay
             self:playSound('suffocate')
+            self:createSuffocateEffect()
 
             -- Suffocate IMS, always trigger when held
             if self.keyState.softDrop then self:moveDown() end
@@ -463,7 +511,6 @@ function MP:resetPosCheck()
                 self.keyBuffer.rotate=false
             end
         else
-
             self:triggerEvent('whenSuffocate')
             self:freshGhost()
 
@@ -504,9 +551,6 @@ function MP:resetPosCheck()
 
         self:freshGhost()
         self:freshDelay('spawn')
-        if self.handY==self.ghostY then
-            self:playSound('touch')
-        end
     end
 
     if self.settings.dasHalt>0 then-- DAS halt
@@ -797,6 +841,14 @@ function MP:ifoverlap(CB,cx,cy)
     -- No collision
     return false
 end
+function MP:checkLanding(sparkles)
+    if self.handY==self.ghostY then
+        self:playSound('touch')
+        if sparkles and self.settings.particles then
+            self:createTouchEffect()
+        end
+    end
+end
 function MP:isSuffocate()
     return self.hand and self:ifoverlap(self.hand.matrix,self.handX,self.handY)
 end
@@ -894,9 +946,6 @@ function MP:moveDown()
     if not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
         self:moveHand('moveY',-1)
         self:freshDelay('drop')
-        if self.handY==self.ghostY then
-            self:playSound('touch')
-        end
         return true
     end
 end
@@ -943,11 +992,13 @@ function MP:rotate(dir,ifInit)
                     self.hand.direction=kick.target
                     self:moveHand('rotate',ix,iy,dir,ifInit)
                     self:freshGhost()
+                    self:checkLanding()
                     return
                 end
             end
             self:freshDelay('rotate')
             self:playSound('rotate_failed')
+            self:createRotateFailedEffect(self.hand.matrix,self.handX,self.handY)
         else
             error("WTF why no state in minoData")
         end
@@ -964,6 +1015,7 @@ function MP:hold(ifInit)
     end
 
     self.holdTime=self.holdTime+1
+    self:createHoldEffect()
     self:playSound(ifInit and 'inithold' or 'hold')
 end
 function MP:hold_hold()
@@ -1029,7 +1081,7 @@ function MP:doClear(fullLines)
     self:shakeBoard('-clear',n)
     self:playSound('clear',n)
     if self.settings.particles then
-        self:createFrenzyParticle(min(n^2*6,260))
+        self:createFrenzyEffect(min(n^2*6,260))
     end
 
     self:triggerEvent('afterClear',his)
@@ -1042,6 +1094,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
 
     -- Move down
     if self.handY>self.ghostY then
+        self.soundTimeHistory.touch=self.time-- Cancel touching sound
         self:moveHand('drop',self.ghostY-self.handY)
         self:shakeBoard('-drop',1)
         self:playSound('drop')
@@ -1051,7 +1104,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if not self.hand or self.finished then return end
 
     if SET.particles then
-        self:createLockParticle(self.handX,self.handY)
+        self:createLockEffect(self.handX,self.handY)
     end
 
     -- Lock to field
@@ -1393,9 +1446,6 @@ function MP:updateFrame()
                     end
                     if self.handX~=ox then
                         self:playSound('move')
-                        if self.handY==self.ghostY then
-                            self:playSound('touch')
-                        end
                     end
                 end
             else
@@ -1427,7 +1477,9 @@ function MP:updateFrame()
                         self:playSound('move')
                         if self.handY==self.ghostY then
                             self:shakeBoard('-down')
-                            self:playSound('touch')
+                        end
+                        if self.settings.particles then
+                            self:createTouchEffect()
                         end
                     end
                 end
@@ -1468,9 +1520,6 @@ function MP:updateFrame()
                     if self.dropTimer<=0 then
                         self.dropTimer=SET.dropDelay
                         self:moveHand('drop',-1)
-                        if self.handY==self.ghostY then
-                            self:playSound('touch')
-                        end
                     end
                 elseif self.handY~=self.ghostY then-- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
                     self:freshDelay('drop')
@@ -1618,6 +1667,9 @@ function MP:render()
 
                 self:triggerEvent('drawBelowBlock')-- From field's bottom-left, 40px a cell
 
+                gc_setColor(1,1,1)
+                gc_draw(self.particles.rotateFail)
+
                 if self.hand then
                     local CB=self.hand.matrix
 
@@ -1664,8 +1716,6 @@ function MP:render()
 
                 self:triggerEvent('drawBelowMarks')-- From field's bottom-left, 40px a cell
 
-            gc_translate(0,-self.fieldDived)
-
             -- Height lines
             skin.drawHeightLines(-- All unit are pixel
                 settings.fieldW*40,   -- Field Width
@@ -1678,13 +1728,18 @@ function MP:render()
 
             self:triggerEvent('drawInField')-- From frame's bottom-left, 40px a cell
 
+            gc_setColor(1,1,1)
+            gc_draw(self.particles.cornerCheck)
+            gc_draw(self.particles.trail)
+            gc_draw(self.particles.sparkle)
+
+            gc_translate(0,-self.fieldDived)
+
         -- Stop field stencil
         GC.stc_stop()
 
-        -- Particles
         gc_setColor(1,1,1)
         gc_draw(self.particles.star)
-        gc_draw(self.particles.trail)
 
     gc_pop()
 

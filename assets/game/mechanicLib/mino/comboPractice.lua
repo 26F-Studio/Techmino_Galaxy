@@ -1,3 +1,4 @@
+--- @type Techmino.Mech.mino
 local comboPractice={}
 
 local function newMap(P)
