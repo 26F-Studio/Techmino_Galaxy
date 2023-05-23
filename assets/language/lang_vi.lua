@@ -226,7 +226,7 @@ return {
         sprint_1000=           {"1000 hàng","Xóa 1000 hàng\n\n(Tay của bạn còn ổn không?)"},
         sprint_drought_40=     {"40 hàng - Drought","Xóa 40 hàng…\nỦa mà khoan, nãy giờ chơi sao không thấy gạch I rơi???"},
         sprint_flood_40=       {"40 hàng - Flood","Xóa 40 hàng, nhưng khoan…\nSao cái túi có nhiều gạch S với gạch Z vậy?!"},
-        sprint_penta_40=       {"40 hàng - Penta","Xóa 40 hàng, nhưng lần này với gạch 5 ô (pentominoes)"},
+        sprint_pento_40=       {"40 hàng - Pento","Xóa 40 hàng, nhưng lần này với gạch 5 ô (pentominoes)"},
         sprint_sym_40=         {"40 hàng - Sym","Xóa 40 hàng, nhưng bạn phải chơi theo kiểu đối xứng!"},
         sprint_mph_40=         {"40 hàng - MPH","Xóa 40 hàng, nhưng không có NEXT và HOLD!"},
         sprint_delay_20=       {"20 hàng - Delay","Xóa 20 hàng, nhưng cái điều khiển nó bị chập mạch!"},
