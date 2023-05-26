@@ -1,5 +1,3 @@
-local O,_=true,false
-
 --- @class Techmino.mino
 --- @field name string
 --- @field id number
@@ -35,6 +33,10 @@ local O,_=true,false
 --- @field C Techmino.mino
 --- @field I2 Techmino.mino
 --- @field O1 Techmino.mino
+
+local O,_=true,false
+
+--- @type Techmino.minos
 local minoes={
     -- Tetromino
     {name='Z', id=01,shape={{_,O,O},{O,O,_}}},
