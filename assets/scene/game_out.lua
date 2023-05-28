@@ -10,6 +10,7 @@ local function startGame(modeName)
     GAME.load(modeName)
 end
 function scene.enter()
+    PROGRESS.setExteriorBG()
     if SCN.args[1] then
         startGame(SCN.args[1])
     end

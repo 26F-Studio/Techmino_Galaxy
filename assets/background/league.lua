@@ -21,7 +21,7 @@ end
 
 local W,H
 function back.init()
-    BG.resize(SCR.w,SCR.h)
+    back.resize(SCR.w,SCR.h)
 end
 function back.resize(w,h)
     W,H=w,h

@@ -7,6 +7,7 @@ local function startGame(modeName)
     GAME.load(modeName)
 end
 function scene.enter()
+    PROGRESS.setInteriorBG()
     if SCN.args[1] then
         startGame(SCN.args[1])
     end
@@ -23,7 +24,6 @@ local function sysAction(action)
         startGame(GAME.mode.name)
     elseif action=='back' then
         if canPause() then
-            SFX.play('pause')
             SCN.swapTo('pause_in','none')
         else
             SCN.back('none')
