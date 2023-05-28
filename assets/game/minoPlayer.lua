@@ -303,6 +303,19 @@ function MP:createRotateCornerEffect(cx,cy)
         end
     end
 end
+function MP:createRotateLockedEffect(CB,bx,by)
+    local p=self.particles.rotateLock
+    for y=1,#CB do for x=1,#CB[1] do
+        local c=CB[y][x]
+        if c then
+            p:setPosition(
+                (bx+x-1.5)*40,
+                -(by+y-1.5)*40
+            )
+            p:emit(1)
+        end
+    end end
+end
 function MP:createRotateFailedEffect(CB,bx,by)
     local p=self.particles.rotateFail
     for y=1,#CB do for x=1,#CB[1] do
@@ -315,8 +328,6 @@ function MP:createRotateFailedEffect(CB,bx,by)
             p:emit(1)
         end
     end end
-end
-function MP:createRotateLockedEffect()
 end
 function MP:createTouchEffect()
     local p=self.particles.sparkle
@@ -432,7 +443,7 @@ function MP:moveHand(action,a,b,c,d)
                 movement.immobile=true
                 self:shakeBoard(c=='L' and '-ccw' or c=='R' and '-cw' or '-180')
                 self:playSound('rotate_locked')
-                self:createRotateLockedEffect()
+                self:createRotateLockedEffect(self.hand.matrix,self.handX,self.handY)
             end
             if self.settings.spin_corners then
                 local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
@@ -1684,6 +1695,7 @@ function MP:render()
                 self:triggerEvent('drawBelowBlock')-- From field's bottom-left, 40px a cell
 
                 gc_setColor(1,1,1)
+                gc_draw(self.particles.rotateLock)
                 gc_draw(self.particles.rotateFail)
 
                 if self.hand then

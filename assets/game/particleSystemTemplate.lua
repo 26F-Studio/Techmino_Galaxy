@@ -3,71 +3,89 @@
 --- @field line love.ParticleSystem
 --- @field sparkle love.ParticleSystem
 --- @field cornerCheck love.ParticleSystem
+--- @field rotateLock love.ParticleSystem
 --- @field rotateFail love.ParticleSystem
 --- @field trail love.ParticleSystem
 --- @field minoMapBack love.ParticleSystem
-local p={}
+local ps={}
 
 do-- Moving trail & Frenzy
-    p.star=love.graphics.newParticleSystem(GC.load{7,7,
+    local p=love.graphics.newParticleSystem(GC.load{7,7,
         {'setLW',1},
         {'line',0,3.5,6.5,3.5},
         {'line',3.5,0,3.5,6.5},
         {'fRect',2,2,3,3},
     },2600)
-    p.star:setSizes(.26,1,.8,.6,.4,.2,0)
-    p.star:setSpread(MATH.tau)
-    p.star:setSpeed(0,20)
+    p:setSizes(.26,1,.8,.6,.4,.2,0)
+    p:setSpread(MATH.tau)
+    p:setSpeed(0,20)
+    ps.star=p
 end
 
 do-- Moving trail & Frenzy
-    p.line=love.graphics.newParticleSystem(GC.load{10,3,
+    local p=love.graphics.newParticleSystem(GC.load{10,3,
         {'clear',1,1,1,1},
     },2600)
-    p.line:setSizes(.6,1,.5,.2,0)
-    p.line:setRelativeRotation(true)
+    p:setSizes(.6,1,.5,.2,0)
+    p:setRelativeRotation(true)
+    ps.line=p
 end
 
 do-- Touching spark
-    p.sparkle=love.graphics.newParticleSystem(GC.load{4,4,
+    local p=love.graphics.newParticleSystem(GC.load{4,4,
         {'clear',1,1,1,1},
     },260)
-    p.sparkle:setSizes(.6,.9,1,1)
-    p.sparkle:setColors(1,1,1,1,1,1,1,0)
-    p.sparkle:setDirection(math.pi/2)
-    p.sparkle:setSpread(0)
-    p.sparkle:setSpeed(40,100)
-    p.sparkle:setLinearDamping(6,12)
-    p.sparkle:setParticleLifetime(.42)
+    p:setSizes(.6,.9,1,1)
+    p:setColors(1,1,1,1,1,1,1,0)
+    p:setDirection(math.pi/2)
+    p:setSpread(0)
+    p:setSpeed(40,100)
+    p:setLinearDamping(6,12)
+    p:setParticleLifetime(.42)
+    ps.sparkle=p
 end
 
 do-- Rotating corner check
-    p.cornerCheck=love.graphics.newParticleSystem(GC.load{1,1,
+    local p=love.graphics.newParticleSystem(GC.load{1,1,
         {'clear',1,1,1,1},
     },26)
-    p.cornerCheck:setSizes(26)
-    p.cornerCheck:setColors(1,1,1,.26,1,1,1,0)
-    p.cornerCheck:setRotation(0)
-    p.cornerCheck:setSpeed(0)
-    p.cornerCheck:setParticleLifetime(.126)
+    p:setSizes(26)
+    p:setColors(1,1,1,.62,1,1,1,0)
+    p:setRotation(0)
+    p:setSpeed(0)
+    p:setParticleLifetime(.126)
+    ps.cornerCheck=p
+end
+
+do-- Rotating locked
+    local p=love.graphics.newParticleSystem(GC.load{1,1,
+        {'clear',1,1,1},
+    },26)
+    p:setSizes(60,50,25,0)
+    p:setColors(1,1,1,1,1,1,1,0)
+    p:setRotation(-.26,.26)
+    p:setSpin(-2.6,2.6)
+    p:setParticleLifetime(.26)
+    ps.rotateLock=p
 end
 
 do-- Rotating failed
-    p.rotateFail=love.graphics.newParticleSystem(GC.load{1,1,
+    local p=love.graphics.newParticleSystem(GC.load{1,1,
         {'clear',1,0,0},
     },26)
-    p.rotateFail:setSizes(60,50,25,0)
-    p.rotateFail:setColors(1,1,1,1,1,1,1,0)
-    p.rotateFail:setRotation(-.26,.26)
-    p.rotateFail:setSpin(-2.6,2.6)
-    p.rotateFail:setParticleLifetime(.26)
+    p:setSizes(60,50,25,0)
+    p:setColors(1,1,1,1,1,1,1,0)
+    p:setRotation(-.26,.26)
+    p:setSpin(-2.6,2.6)
+    p:setParticleLifetime(.26)
+    ps.rotateFail=p
 end
 
 do-- Harddrop light
     local width=80
     local height=240
     local fadeLength=40
-    p.trail=love.graphics.newParticleSystem((function()
+    local p=love.graphics.newParticleSystem((function()
         local L={width,height}
         for i=1,width/2 do
             table.insert(L,{'setCL',1,1,1,i/(width/2)})
@@ -86,9 +104,9 @@ do-- Harddrop light
         end
         return GC.load(L)
     end)(),12)
-    p.trail:setOffset(width/2,height)
-    p.trail:setParticleLifetime(.32)
-    p.trail:setColors(
+    p:setOffset(width/2,height)
+    p:setParticleLifetime(.32)
+    p:setColors(
         1,1,1,0.0,
         1,1,1,1.0,
         1,1,1,0.8,
@@ -97,23 +115,25 @@ do-- Harddrop light
         1,1,1,0.2,
         1,1,1,0.0
     )
+    ps.trail=p
 end
 
 do-- Background light of mino map
-    p.minoMapBack=love.graphics.newParticleSystem(GC.load{10,10,
+    local p=love.graphics.newParticleSystem(GC.load{10,10,
         {'setCL',1,1,1,.5},
         {'fRect',0,0,10,10},
         {'fRect',1,1,8,8},
         {'fRect',2,2,6,6},
     },260)
-    p.minoMapBack:setSizes(26)
-    p.minoMapBack:setColors(1,1,1,0,1,1,1,.062,1,1,1,.162,1,1,1,.26,1,1,1,0)
-    p.minoMapBack:setRotation(0,MATH.tau)
-    p.minoMapBack:setSpin(-.26,.26)
-    p.minoMapBack:setSpread(2.6)
-    p.minoMapBack:setParticleLifetime(5.62,7.26)
-    p.minoMapBack:setSpeed(620,1260)
-    p.minoMapBack:setEmissionRate(10)
+    p:setSizes(26)
+    p:setColors(1,1,1,0,1,1,1,.062,1,1,1,.162,1,1,1,.26,1,1,1,0)
+    p:setRotation(0,MATH.tau)
+    p:setSpin(-.26,.26)
+    p:setSpread(2.6)
+    p:setParticleLifetime(5.62,7.26)
+    p:setSpeed(620,1260)
+    p:setEmissionRate(10)
+    ps.minoMapBack=p
 end
 
-return p
+return ps
