@@ -1710,11 +1710,13 @@ function MP:render()
                     if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
                         -- Smooth
                         local movingX,droppingY=0,0
-                        if not self.deathTimer and self.moveDir and self.moveCharge<settings.das then
-                            movingX=15*self.moveDir*(max(self.moveCharge,0)/settings.das-.5)
-                        end
-                        if self.handY>self.ghostY then
-                            droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
+                        if not self.deathTimer then
+                            if self.moveDir and self.moveCharge<settings.das then
+                                movingX=15*self.moveDir*(max(self.moveCharge,0)/settings.das-.5)
+                            end
+                            if self.handY>self.ghostY then
+                                droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
+                            end
                         end
                         gc_translate(movingX,droppingY)
 
