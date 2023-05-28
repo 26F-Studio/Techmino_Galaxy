@@ -1,5 +1,6 @@
 --- @class Techmino.particleSystems
 --- @field star love.ParticleSystem
+--- @field line love.ParticleSystem
 --- @field sparkle love.ParticleSystem
 --- @field cornerCheck love.ParticleSystem
 --- @field rotateFail love.ParticleSystem
@@ -17,6 +18,14 @@ do-- Moving trail & Frenzy
     p.star:setSizes(.26,1,.8,.6,.4,.2,0)
     p.star:setSpread(MATH.tau)
     p.star:setSpeed(0,20)
+end
+
+do-- Moving trail & Frenzy
+    p.line=love.graphics.newParticleSystem(GC.load{10,3,
+        {'clear',1,1,1,1},
+    },2600)
+    p.line:setSizes(.6,1,.5,.2,0)
+    p.line:setRelativeRotation(true)
 end
 
 do-- Touching spark

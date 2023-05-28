@@ -263,8 +263,8 @@ for k,v in next,MP._actions do MP._actions[k]=MP:_getActionObj(v) end
 -- Effects
 function MP:createMoveEffect(x1,y1,x2,y2)
     local p=self.particles.star
-    p:setParticleLifetime(.26,.5)
     p:setEmissionArea('none')
+    p:setParticleLifetime(.26,.5)
     for x=x1,x2,x2>x1 and 1 or -1 do for y=y1,y2,y2>y1 and 1 or -1 do
         p:setPosition(
             (x+rnd()*#self.hand.matrix[1]-1)*40,
@@ -273,7 +273,23 @@ function MP:createMoveEffect(x1,y1,x2,y2)
         p:emit(1)
     end end
 end
-function MP:createRotateEffect()
+function MP:createRotateEffect(dir)
+    local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
+    local state=minoData[self.hand.direction]
+    local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
+    local cx,cy
+    if centerPos then
+        cx,cy=self.handX+centerPos[1]-.5,self.handY+centerPos[2]-.5
+    else
+        cx,cy=self.handX+#self.hand.matrix[1]/2-.5,self.handY+#self.hand.matrix/2-.5
+    end
+    local p=self.particles.line
+    p:setEmissionArea('uniform',40,40,MATH.tau,true)
+    p:setParticleLifetime(.26,.42)
+    p:setSpeed(80,120)
+    p:setTangentialAcceleration(dir=='L' and -2600 or 0,dir=='R' and 2600 or 0)
+    p:setPosition((cx-.5)*40,-(cy-.5)*40)
+    p:emit(12)
 end
 function MP:createRotateCornerEffect(cx,cy)
     local p=self.particles.cornerCheck
@@ -440,7 +456,7 @@ function MP:moveHand(action,a,b,c,d)
             end
         end
         self:playSound(d and 'initrotate' or 'rotate')
-        self:createRotateEffect()
+        self:createRotateEffect(c)
     end
     self.lastMovement=movement
 
@@ -1740,6 +1756,7 @@ function MP:render()
 
         gc_setColor(1,1,1)
         gc_draw(self.particles.star)
+        gc_draw(self.particles.line)
 
     gc_pop()
 
