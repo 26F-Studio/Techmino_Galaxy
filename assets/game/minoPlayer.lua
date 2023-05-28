@@ -498,7 +498,7 @@ function MP:resetPos()-- Move hand piece to the normal spawn position
     self.deathTimer=false
     while self:isSuffocate() and self.handY<self.settings.spawnH+self.settings.extraSpawnH+1 do self.handY=self.handY+1 end
     self.minY=self.handY
-    self.ghostY=self.handY
+    self.ghostY=false
     self:resetPosCheck()
 
     self:triggerEvent('afterResetPos')
