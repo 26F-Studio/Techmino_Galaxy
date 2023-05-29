@@ -3,8 +3,8 @@
 --- @field line love.ParticleSystem
 --- @field sparkle love.ParticleSystem
 --- @field cornerCheck love.ParticleSystem
---- @field rotateLock love.ParticleSystem
---- @field rotateFail love.ParticleSystem
+--- @field lockCheck love.ParticleSystem
+--- @field controlFail love.ParticleSystem
 --- @field trail love.ParticleSystem
 --- @field minoMapBack love.ParticleSystem
 local ps={}
@@ -66,7 +66,7 @@ do-- Rotating locked
     p:setRotation(-.26,.26)
     p:setSpin(-2.6,2.6)
     p:setParticleLifetime(.26)
-    ps.rotateLock=p
+    ps.lockCheck=p
 end
 
 do-- Rotating failed
@@ -78,7 +78,7 @@ do-- Rotating failed
     p:setRotation(-.26,.26)
     p:setSpin(-2.6,2.6)
     p:setParticleLifetime(.26)
-    ps.rotateFail=p
+    ps.controlFail=p
 end
 
 do-- Harddrop light

@@ -12,6 +12,7 @@ local baseDict={
     {'term: hold'},
     {'term: clear'},
     {'term: clear_big'},
+    {'term: clear_huge',hidden=function() return false end},
     {'term: b2b'},
     {'term: all_clear'},
     {'term: half_clear'},
