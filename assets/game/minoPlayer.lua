@@ -535,7 +535,9 @@ function MP:resetPosCheck()
                 end
             elseif self.keyBuffer.rotate then
                 self:rotate(self.keyBuffer.rotate,true)
-                self.keyBuffer.rotate=false
+                if not self.keyBuffer.hold then
+                    self.keyBuffer.rotate=false
+                end
             end
         else
             self:triggerEvent('whenSuffocate')
@@ -572,7 +574,9 @@ function MP:resetPosCheck()
 
             if self.keyBuffer.rotate then
                 self:rotate(self.keyBuffer.rotate,true)
-                self.keyBuffer.rotate=false
+                if not self.keyBuffer.hold then
+                    self.keyBuffer.rotate=false
+                end
             end
         end
 
