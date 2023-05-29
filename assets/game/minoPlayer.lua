@@ -142,6 +142,7 @@ MP._actions.moveLeft={
             else
                 P:freshDelay('move')
                 P:playSound('move_failed')
+                P:createCtrlFailedEffect()
             end
         else
             P.keyBuffer.move='L'
@@ -162,6 +163,7 @@ MP._actions.moveRight={
             else
                 P:freshDelay('move')
                 P:playSound('move_failed')
+                P:createCtrlFailedEffect()
             end
         else
             P.keyBuffer.move='R'
@@ -304,7 +306,7 @@ function MP:createRotateCornerEffect(cx,cy)
     end
 end
 function MP:createRotateLockedEffect(CB,bx,by)
-    local p=self.particles.rotateLock
+    local p=self.particles.lockCheck
     for y=1,#CB do for x=1,#CB[1] do
         local c=CB[y][x]
         if c then
@@ -316,14 +318,16 @@ function MP:createRotateLockedEffect(CB,bx,by)
         end
     end end
 end
-function MP:createRotateFailedEffect(CB,bx,by)
-    local p=self.particles.rotateFail
+function MP:createCtrlFailedEffect()
+    local CB,bx,by=self.hand.matrix,self.handX,self.handY
+    local dx,dy=self:getSmoothPos()
+    local p=self.particles.controlFail
     for y=1,#CB do for x=1,#CB[1] do
         local c=CB[y][x]
         if c then
             p:setPosition(
-                (bx+x-1.5)*40,
-                -(by+y-1.5)*40
+                (bx+x-1.5)*40+dx,
+                -(by+y-1.5)*40+dy
             )
             p:emit(1)
         end
@@ -391,6 +395,15 @@ function MP:showInvis(visStep,visMax)
                 c.visMax=visMax
             end
         end
+    end
+end
+function MP:getSmoothPos()
+    if self.deathTimer then
+        return 0,0
+    else
+        return
+            self.moveDir and self.moveCharge<self.settings.das and 15*self.moveDir*(max(self.moveCharge,0)/self.settings.das-.5) or 0,
+            self.handY>self.ghostY and 40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6 or 0
     end
 end
 --------------------------------------------------------------
@@ -599,7 +612,7 @@ end
 function MP:freshGhost()
     if self.hand then
         if self.deathTimer then
-            self.ghostY=self.handY
+            self.ghostY=false
         else
             self.ghostY=min(self.field:getHeight()+1,self.handY)
 
@@ -1037,7 +1050,7 @@ function MP:rotate(dir,ifInit)
             end
             self:freshDelay('rotate')
             self:playSound('rotate_failed')
-            self:createRotateFailedEffect(self.hand.matrix,self.handX,self.handY)
+            self:createCtrlFailedEffect()
         else
             error("WTF why no state in minoData")
         end
@@ -1707,8 +1720,8 @@ function MP:render()
                 self:triggerEvent('drawBelowBlock')-- From field's bottom-left, 40px a cell
 
                 gc_setColor(1,1,1)
-                gc_draw(self.particles.rotateLock)
-                gc_draw(self.particles.rotateFail)
+                gc_draw(self.particles.lockCheck)
+                gc_draw(self.particles.controlFail)
 
                 if self.hand then
                     local CB=self.hand.matrix
@@ -1721,16 +1734,8 @@ function MP:render()
                     -- Hand
                     if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
                         -- Smooth
-                        local movingX,droppingY=0,0
-                        if not self.deathTimer then
-                            if self.moveDir and self.moveCharge<settings.das then
-                                movingX=15*self.moveDir*(max(self.moveCharge,0)/settings.das-.5)
-                            end
-                            if self.handY>self.ghostY then
-                                droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
-                            end
-                        end
-                        gc_translate(movingX,droppingY)
+                        local dx,dy=self:getSmoothPos()
+                        gc_translate(dx,dy)
 
                         skin.drawHand(CB,self.handX,self.handY)
 
@@ -1744,7 +1749,8 @@ function MP:render()
                                 GC.mDraw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40,nil,1.26)
                             end
                         end
-                        gc_translate(-movingX,-droppingY)
+
+                        gc_translate(-dx,-dy)
                     end
                 end
 
@@ -1957,8 +1963,8 @@ local baseEnv={
     dasHalt=0,
     hdLockA=1000,
     hdLockM=100,
-    easyInitCtrl=false,
-    IRSpushUp=false,
+    easyInitCtrl=true,
+    IRSpushUp=true,
     skin='mino_plastic',
     particles=true,
     shakeness=.26,
