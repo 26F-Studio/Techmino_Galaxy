@@ -554,29 +554,37 @@ function MP:resetPosCheck()
         if self.settings.easyInitCtrl then
             if self.keyState.softDrop then self:moveDown() end
             if self.keyState.moveRight~=self.keyState.moveLeft then
+                local origY=self.handY-- For canceling 20G effect of IMS
                 if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
+                self.handY=origY
             end
 
+            local origY=self.handY-- For canceling 20G effect of IRS
             if self.keyState.rotate180 then
                 self:rotate('F',true)
             elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                 self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
             end
+            if self.settings.IRSpushUp then self.handY=origY end
         else
             if self.keyBuffer.move then
+                local origY=self.handY-- For canceling 20G effect of IMS
                 if self.keyBuffer.move=='L' then
                     self:moveLeft()
                 elseif self.keyBuffer.move=='R' then
                     self:moveRight()
                 end
                 self.keyBuffer.move=false
+                self.handY=origY
             end
 
             if self.keyBuffer.rotate then
+                local origY=self.handY-- For canceling 20G effect of IRS
                 self:rotate(self.keyBuffer.rotate,true)
                 if not self.keyBuffer.hold then
                     self.keyBuffer.rotate=false
                 end
+                if self.settings.IRSpushUp then self.handY=origY end
             end
         end
 
@@ -1950,6 +1958,7 @@ local baseEnv={
     hdLockA=1000,
     hdLockM=100,
     easyInitCtrl=false,
+    IRSpushUp=false,
     skin='mino_plastic',
     particles=true,
     shakeness=.26,
