@@ -36,6 +36,7 @@ return {
         "Ultracrash",
         "Impossicrash",
     },
+    clearLines="$1 Lines",
 
     combo_small="$1 Combo",
     combo_large="$1 Combo!",
