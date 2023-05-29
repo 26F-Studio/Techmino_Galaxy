@@ -1,3 +1,13 @@
+--- @alias Techmino.mode.playerType 'mino'|'puyo'|'gem'
+
+--- @class Techmino.mode
+--- @field initialize function Called when initializing the mode
+--- @field settings table<Techmino.mode.playerType, table>
+--- @field layout 'default' Layout mode
+--- @field checkFinish function Return if the game should end when a player finishes
+--- @field result function Called when the game ends
+--- @field resultPage fun(time:number) Drawing the result page
+
 local floor=math.floor
 
 Minoes=require'assets.game.minoes'

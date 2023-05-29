@@ -263,8 +263,8 @@ for k,v in next,MP._actions do MP._actions[k]=MP:_getActionObj(v) end
 -- Effects
 function MP:createMoveEffect(x1,y1,x2,y2)
     local p=self.particles.star
-    p:setParticleLifetime(.26,.5)
     p:setEmissionArea('none')
+    p:setParticleLifetime(.26,.5)
     for x=x1,x2,x2>x1 and 1 or -1 do for y=y1,y2,y2>y1 and 1 or -1 do
         p:setPosition(
             (x+rnd()*#self.hand.matrix[1]-1)*40,
@@ -273,7 +273,23 @@ function MP:createMoveEffect(x1,y1,x2,y2)
         p:emit(1)
     end end
 end
-function MP:createRotateEffect()
+function MP:createRotateEffect(dir)
+    local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
+    local state=minoData[self.hand.direction]
+    local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
+    local cx,cy
+    if centerPos then
+        cx,cy=self.handX+centerPos[1]-.5,self.handY+centerPos[2]-.5
+    else
+        cx,cy=self.handX+#self.hand.matrix[1]/2-.5,self.handY+#self.hand.matrix/2-.5
+    end
+    local p=self.particles.line
+    p:setEmissionArea('uniform',40,40,MATH.tau,true)
+    p:setParticleLifetime(.26,.42)
+    p:setSpeed(80,120)
+    p:setTangentialAcceleration(dir=='L' and -2600 or 0,dir=='R' and 2600 or 0)
+    p:setPosition((cx-.5)*40,-(cy-.5)*40)
+    p:emit(12)
 end
 function MP:createRotateCornerEffect(cx,cy)
     local p=self.particles.cornerCheck
@@ -287,6 +303,19 @@ function MP:createRotateCornerEffect(cx,cy)
         end
     end
 end
+function MP:createRotateLockedEffect(CB,bx,by)
+    local p=self.particles.rotateLock
+    for y=1,#CB do for x=1,#CB[1] do
+        local c=CB[y][x]
+        if c then
+            p:setPosition(
+                (bx+x-1.5)*40,
+                -(by+y-1.5)*40
+            )
+            p:emit(1)
+        end
+    end end
+end
 function MP:createRotateFailedEffect(CB,bx,by)
     local p=self.particles.rotateFail
     for y=1,#CB do for x=1,#CB[1] do
@@ -299,8 +328,6 @@ function MP:createRotateFailedEffect(CB,bx,by)
             p:emit(1)
         end
     end end
-end
-function MP:createRotateLockedEffect()
 end
 function MP:createTouchEffect()
     local p=self.particles.sparkle
@@ -416,7 +443,7 @@ function MP:moveHand(action,a,b,c,d)
                 movement.immobile=true
                 self:shakeBoard(c=='L' and '-ccw' or c=='R' and '-cw' or '-180')
                 self:playSound('rotate_locked')
-                self:createRotateLockedEffect()
+                self:createRotateLockedEffect(self.hand.matrix,self.handX,self.handY)
             end
             if self.settings.spin_corners then
                 local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
@@ -440,7 +467,7 @@ function MP:moveHand(action,a,b,c,d)
             end
         end
         self:playSound(d and 'initrotate' or 'rotate')
-        self:createRotateEffect()
+        self:createRotateEffect(c)
     end
     self.lastMovement=movement
 
@@ -471,7 +498,7 @@ function MP:resetPos()-- Move hand piece to the normal spawn position
     self.deathTimer=false
     while self:isSuffocate() and self.handY<self.settings.spawnH+self.settings.extraSpawnH+1 do self.handY=self.handY+1 end
     self.minY=self.handY
-    self.ghostY=self.handY
+    self.ghostY=false
     self:resetPosCheck()
 
     self:triggerEvent('afterResetPos')
@@ -1668,6 +1695,7 @@ function MP:render()
                 self:triggerEvent('drawBelowBlock')-- From field's bottom-left, 40px a cell
 
                 gc_setColor(1,1,1)
+                gc_draw(self.particles.rotateLock)
                 gc_draw(self.particles.rotateFail)
 
                 if self.hand then
@@ -1682,11 +1710,13 @@ function MP:render()
                     if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
                         -- Smooth
                         local movingX,droppingY=0,0
-                        if not self.deathTimer and self.moveDir and self.moveCharge<settings.das then
-                            movingX=15*self.moveDir*(max(self.moveCharge,0)/settings.das-.5)
-                        end
-                        if self.handY>self.ghostY then
-                            droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
+                        if not self.deathTimer then
+                            if self.moveDir and self.moveCharge<settings.das then
+                                movingX=15*self.moveDir*(max(self.moveCharge,0)/settings.das-.5)
+                            end
+                            if self.handY>self.ghostY then
+                                droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
+                            end
                         end
                         gc_translate(movingX,droppingY)
 
@@ -1740,6 +1770,7 @@ function MP:render()
 
         gc_setColor(1,1,1)
         gc_draw(self.particles.star)
+        gc_draw(self.particles.line)
 
     gc_pop()
 
