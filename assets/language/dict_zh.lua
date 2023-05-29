@@ -106,14 +106,35 @@ C4.稳定全消四完成40行（不能用hold）
 # clear
 @ title 消1/2/3/4
 落下一块后消除的行数。
-Single: 1行
-Double: 2行
-Triple: 3行
-Techrash: 4行
+1行: Single
+2行: Double
+3行: Triple
+4行: Techrash
 
 # clear_big
-@ title 消5/6/...
-单次消除至少五行的大型消除，仅在特殊规则下可行。
+@ title 消5/6/7
+单次消除四行以上的大型消除，仅在特殊规则下可行。
+5行: Pentacrash
+6行: Hexacrash
+7行: Heptacrash
+
+# clear_huge
+@ title 消8+
+单次消除至少八行的巨型消除。
+8行: Octacrash
+9行: Nonacrash
+10行: Decacrash
+11行: Undecacrash
+12行: Dodecacrash
+13行: Tridecacrash
+14行: Tetradecacrash
+15行: Pentadecacrash
+16行: Hexadecacrash
+17行: Heptadecacrash
+18行: Octadecacrash
+19行: Nonadecacrash
+20行: Ultracrash
+21行: Impossicrash
 
 # b2b
 @ title 满贯（B2B）

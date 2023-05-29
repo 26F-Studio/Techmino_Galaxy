@@ -76,14 +76,22 @@ function stack.switch(P)
     else
         if md.stack_lines>0 then
             P:say{
-                text=tostring(md.stack_lines),
-                y=md._stackTextHeight or md.stackTextHeight,
+                text=Text.clearName[min(md.stack_lines,21)],
                 size=min(lineFont[min(md.stack_lines,26)]*2,100),
                 duration=min(md.stack_lines^.5*.626,3),
                 type='bold',
                 style='zoomout',
                 styleArg=.626,
             }
+            if md.stack_lines>=8 then
+                P:say{
+                    text=Text.clearLines:repD(md.stack_lines),
+                    y=100,
+                    size=min(lineFont[min(md.stack_lines,26)]*2,100)/2,
+                    duration=min(md.stack_lines^.5*.626,3),
+                    styleArg=.626,
+                }
+            end
         end
 
         P.settings.clearRule=md.stack_original_clearRule
