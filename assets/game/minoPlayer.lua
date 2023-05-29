@@ -213,7 +213,7 @@ MP._actions.rotate180={
 MP._actions.softDrop={
     press=function(P)
         P.downCharge=0
-        if P.hand and (P.handY>P.ghostY or P.deathTimer) and P:moveDown() then
+        if P.hand and (P.handY>(P.ghostY or 1) or P.deathTimer) and P:moveDown() then
             P:playSound('move')
         end
     end,
@@ -1154,7 +1154,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     local SET=self.settings
 
     -- Move down
-    if self.handY>self.ghostY then
+    if self.ghostY and self.handY>self.ghostY then
         self.soundTimeHistory.touch=self.time-- Cancel touching sound
         self:moveHand('drop',self.ghostY-self.handY)
         self:shakeBoard('-drop',1)
