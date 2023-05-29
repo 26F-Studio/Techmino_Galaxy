@@ -403,7 +403,7 @@ function MP:getSmoothPos()
     else
         return
             self.moveDir and self.moveCharge<self.settings.das and 15*self.moveDir*(max(self.moveCharge,0)/self.settings.das-.5) or 0,
-            self.handY>self.ghostY and 40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6 or 0
+            self.ghostY and self.handY>self.ghostY and 40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6 or 0
     end
 end
 --------------------------------------------------------------
@@ -484,16 +484,7 @@ function MP:moveHand(action,a,b,c,d)
     end
     self.lastMovement=movement
 
-    if self.deathTimer then
-        local t=self.deathTimer
-        self.deathTimer=false-- Cancel deathTimer temporarily, prevent ifoverlap method treat anything as air
-        if self:isSuffocate() then
-            self.deathTimer=t
-        else
-            self:playSound('desuffocate')
-            self:createDesuffocateEffect()
-        end
-    end
+    self:tryCancelSuffocate()
 end
 function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside, like shape, name, direction)
     if mino._origin then
@@ -541,17 +532,23 @@ function MP:resetPosCheck()
 
             -- Suffocate IRS
             if self.settings.easyInitCtrl then
+                local origY=self.handY-- For canceling 20G effect of IRS
                 if self.keyState.rotate180 then
                     self:rotate('F',true)
                 elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                     self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                 end
+                if self.settings.IRSpushUp then self.handY=origY end
             elseif self.keyBuffer.rotate then
+                local origY=self.handY-- For canceling 20G effect of IRS
                 self:rotate(self.keyBuffer.rotate,true)
                 if not self.keyBuffer.hold then
                     self.keyBuffer.rotate=false
                 end
+                if self.settings.IRSpushUp then self.handY=origY end
             end
+            self:tryCancelSuffocate()
+            self:freshGhost()
         else
             self:triggerEvent('whenSuffocate')
             self:freshGhost()
@@ -630,6 +627,18 @@ function MP:freshGhost()
             else
                 self:freshDelay('move')
             end
+        end
+    end
+end
+function MP:tryCancelSuffocate()
+    if self.deathTimer then
+        local t=self.deathTimer
+        self.deathTimer=false-- Cancel deathTimer temporarily, prevent ifoverlap method treat anything as air
+        if self:isSuffocate() then
+            self.deathTimer=t
+        else
+            self:playSound('desuffocate')
+            self:createDesuffocateEffect()
         end
     end
 end
@@ -1727,7 +1736,7 @@ function MP:render()
                     local CB=self.hand.matrix
 
                     -- Ghost
-                    if not self.deathTimer then
+                    if not self.deathTimer and self.ghostY then
                         skin.drawGhost(CB,self.handX,self.ghostY)
                     end
 
@@ -1963,8 +1972,8 @@ local baseEnv={
     dasHalt=0,
     hdLockA=1000,
     hdLockM=100,
-    easyInitCtrl=true,
-    IRSpushUp=true,
+    easyInitCtrl=false,
+    IRSpushUp=false,
     skin='mino_plastic',
     particles=true,
     shakeness=.26,
