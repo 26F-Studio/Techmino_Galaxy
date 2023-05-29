@@ -108,6 +108,7 @@ local function endGame(passLevel)
         inPoint=.1,
         outPoint=0,
     }
+    if passLevel>0 then SFX.play('win') end
     autoQuitInterior()
 end
 
@@ -151,7 +152,6 @@ function scene.keyDown(key,isRep)
                 if score%40==0 then
                     -- End game check
                     if time==0 then
-                        SFX.play('win')
                         -- Just pass
                         endGame(1)
                         PROGRESS.setTutorialPassed(6)
