@@ -375,7 +375,9 @@ do-- Cascade
                         P:doClear(fullLines)
                     else
                         P.settings.clearDelay=P.modeData.storedClearDelay
-                        P.spawnTimer=P.settings.spawnDelay
+                        if not P.finished then
+                            P.spawnTimer=P.settings.spawnDelay
+                        end
 
                         P.modeData.cascading=false
                         P.modeData.cascadeTimer=false

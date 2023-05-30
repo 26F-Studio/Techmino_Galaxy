@@ -41,7 +41,6 @@ VERSION=require"version"
 GAME=require'assets.game'
 AI=require'assets.ai'
 PROGRESS=require'assets.progress'
-MINOMAP=require'assets.game.minomap'
 VCTRL=require'assets.vctrl'
 KEYMAP=require'assets.keymap'
 SKIN=require'assets.skin'
@@ -218,7 +217,6 @@ if SETTINGS.system.portrait then-- Brute fullscreen config
     SCR.resize(love.graphics.getWidth(),love.graphics.getHeight())
 end
 PROGRESS.load()
-MINOMAP:loadUnlocked(PROGRESS.getMinoModeUnlocked())
 VCTRL.importSettings(FILE.load('conf/touch','-json -canskip'))
 KEYMAP.mino=KEYMAP.new{
     {act='moveLeft',    keys={'left'}},

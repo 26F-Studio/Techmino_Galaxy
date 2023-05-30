@@ -1,3 +1,4 @@
+local minoMap
 local panel={
     selected=false,
     timer=2.6,
@@ -63,71 +64,74 @@ local panel={
 local scene={}
 
 function scene.enter()
-    local fullVersion=true -- TODO
+    if not minoMap then
+        minoMap=require'assets.game.minomap'
+        minoMap:loadUnlocked(PROGRESS.getMinoModeUnlocked())
+    end
+    minoMap:reset()
+    minoMap:setFullVersion(false)
     panel:setSel(false)
-    MINOMAP:reset()
-    MINOMAP:setFullVersion(fullVersion)
     PROGRESS.setExteriorBG()
     PROGRESS.playExteriorBGM()
 end
 
 function scene.mouseMove(x,y,dx,dy)
-    MINOMAP:hideCursor()
+    minoMap:hideCursor()
     if love.mouse.isDown(1) then
-        MINOMAP:moveCam(dx,dy)
+        minoMap:moveCam(dx,dy)
     else
         x,y=SCR.xOy:transformPoint(x,y)
-        MINOMAP:mouseMove(x,y)
+        minoMap:mouseMove(x,y)
     end
 end
 function scene.mouseClick(x,y,k)
-    MINOMAP:hideCursor()
+    minoMap:hideCursor()
     if k==1 then
         x,y=SCR.xOy:transformPoint(x,y)
-        panel:setSel(MINOMAP:mouseClick(x,y))
+        panel:setSel(minoMap:mouseClick(x,y))
     end
 end
 function scene.wheelMoved(dx,dy)
-    MINOMAP:hideCursor()
+    minoMap:hideCursor()
     if isCtrlPressed() then
-        MINOMAP:rotateCam(-(dx+dy)*.26)
+        minoMap:rotateCam(-(dx+dy)*.26)
     else
-        MINOMAP:scaleCam(1.1^(dx+dy))
+        minoMap:scaleCam(1.1^(dx+dy))
     end
 end
 function scene.touchMove(_,_,dx,dy)
-    MINOMAP:hideCursor()
-    MINOMAP:moveCam(dx,dy)
+    minoMap:hideCursor()
+    minoMap:moveCam(dx,dy)
 end
 function scene.touchDown()
-    MINOMAP:hideCursor()
+    minoMap:hideCursor()
 end
 function scene.touchClick(x,y)
-    MINOMAP:hideCursor()
+    minoMap:hideCursor()
     scene.mouseClick(x,y,1)
 end
 function scene.keyDown(key,isRep)
     if isRep then return end
     if KEYMAP.sys:getAction(key)=='select' then
-        panel:setSel(MINOMAP:keyboardSelect())
+        panel:setSel(minoMap:keyboardSelect())
     elseif KEYMAP.sys:getAction(key)=='back' then
         if PROGRESS.getMinoUnlocked() and not PROGRESS.getPuyoUnlocked() and not PROGRESS.getGemUnlocked() then
             SCN._pop()
             SCN.back('fadeHeader')
         end
     -- elseif key=='z' then
-    --     MINOMAP:_printModePos()
+    --     minoMap:_printModePos()
     end
 end
 
 function scene.update(dt)
-    MINOMAP:update(dt)
-    MINOMAP:keyboardMove(SCR.xOy:transformPoint(800,600))
+    minoMap:update(dt)
+    minoMap:keyboardMove(SCR.xOy:transformPoint(800,600))
     panel:update(dt)
 end
 
 function scene.draw()
-    MINOMAP:draw()
+    minoMap:draw()
     panel:draw()
     PROGRESS.drawExteriorHeader()
 end
