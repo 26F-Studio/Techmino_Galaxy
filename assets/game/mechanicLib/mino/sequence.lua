@@ -177,4 +177,29 @@ function sequence.pento_bag_ez8hd4Bag10(P)
     end
 end
 
+local weight_bag7={1,3,6,10,15,21,28,34,39,43,46,48,49}
+function sequence.distWeight_bag7(P)
+    local dist={1,1,1,1,1,1,1}
+    local rate={0,0,0,0,0,0,0}
+    while true do
+        for i=1,7 do
+            dist[i]=dist[i]+1
+            rate[i]=weight_bag7[dist[i]] or 2e6
+        end
+        local sum=0
+        for i=1,7 do
+            sum=sum+rate[i]
+        end
+        local r=P:random()*sum
+        for i=1,7 do
+            r=r-rate[i]
+            if r<=0 then
+                coroutine.yield(i)
+                dist[i]=0
+                break
+            end
+        end
+    end
+end
+
 return sequence
