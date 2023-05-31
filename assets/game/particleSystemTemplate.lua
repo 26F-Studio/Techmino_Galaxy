@@ -3,8 +3,7 @@
 --- @field line love.ParticleSystem
 --- @field sparkle love.ParticleSystem
 --- @field cornerCheck love.ParticleSystem
---- @field lockCheck love.ParticleSystem
---- @field controlFail love.ParticleSystem
+--- @field tiltRect love.ParticleSystem
 --- @field trail love.ParticleSystem
 --- @field minoMapBack love.ParticleSystem
 local ps={}
@@ -57,28 +56,15 @@ do-- Rotating corner check
     ps.cornerCheck=p
 end
 
-do-- Rotating locked
+do-- Rotating failed
     local p=love.graphics.newParticleSystem(GC.load{1,1,
         {'clear',1,1,1},
     },26)
     p:setSizes(60,50,25,0)
-    p:setColors(1,1,1,1,1,1,1,0)
     p:setRotation(-.26,.26)
     p:setSpin(-2.6,2.6)
     p:setParticleLifetime(.26)
-    ps.lockCheck=p
-end
-
-do-- Rotating failed
-    local p=love.graphics.newParticleSystem(GC.load{1,1,
-        {'clear',1,0,0},
-    },26)
-    p:setSizes(60,50,25,0)
-    p:setColors(1,1,1,1,1,1,1,0)
-    p:setRotation(-.26,.26)
-    p:setSpin(-2.6,2.6)
-    p:setParticleLifetime(.26)
-    ps.controlFail=p
+    ps.tiltRect=p
 end
 
 do-- Harddrop light
