@@ -59,7 +59,7 @@ Bạn có thể chỉnh một đống thứ ở đây!
 @ title Xin chào!
 @ contentSize 25
 Cảm ơn bạn đã tải và chơi Techmino!
-Đây là một vài thứ mà bạn nên làm mỗi khi chơi, chúng được sắp xếp thành một nhóm. Tuy xếp thành nhóm, bạn vẫn nên làm cả ba nhóm cùng lúc thay vì làm từng cái một.
+Đây là một vài đề xuất mà bạn nên làm theo khi chơi. Tuy những đề xuất này được xếp thành nhóm, bạn vẫn nên làm cả ba nhóm cùng lúc thay vì làm từng cái một.
 
 A. Stacking (Xếp gạch)
     A1. Suy nghĩ kỹ trước khi đặt gạch. Chưa vừa ý? Suy nghĩ thêm lần nữa.

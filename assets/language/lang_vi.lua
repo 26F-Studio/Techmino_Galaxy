@@ -37,6 +37,8 @@ return {
         "Impossicrash",
     },
 
+    clearLines="$1 Hàng",
+
     combo_small="$1 Combo",
     combo_large="$1 Combo!",
     mega_combo="MEGACMB",
