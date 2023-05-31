@@ -179,23 +179,22 @@ end
 
 local weight_bag7={1,3,6,10,15,21,28,34,39,43,46,48,49}
 function sequence.distWeight_bag7(P)
-    local dist={1,1,1,1,1,1,1}
-    local rate={0,0,0,0,0,0,0}
+    local distances=shift(Tetros)-- Borrow the list from the bag7
+    for i=7,2,-1 do ins(distances,rem(distances,P:random(1,i))) end
+    local weights=TABLE.new(false,7)
     while true do
-        for i=1,7 do
-            dist[i]=dist[i]+1
-            rate[i]=weight_bag7[dist[i]] or 2e6
-        end
         local sum=0
         for i=1,7 do
-            sum=sum+rate[i]
+            distances[i]=distances[i]+1
+            weights[i]=weight_bag7[distances[i]] or 2e6
+            sum=sum+weights[i]
         end
         local r=P:random()*sum
         for i=1,7 do
-            r=r-rate[i]
+            r=r-weights[i]
             if r<=0 then
                 coroutine.yield(i)
-                dist[i]=0
+                distances[i]=0
                 break
             end
         end
