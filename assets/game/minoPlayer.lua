@@ -163,7 +163,7 @@ MP._actions.moveRight={
             else
                 P:freshDelay('move')
                 P:playSound('move_failed')
-                P:createHandEffect(1,.62,0)
+                P:createHandEffect(1,.26,0)
             end
         else
             P.keyBuffer.move='R'
