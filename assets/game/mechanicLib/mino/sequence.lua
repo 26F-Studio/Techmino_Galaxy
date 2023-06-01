@@ -177,4 +177,28 @@ function sequence.pento_bag_ez8hd4Bag10(P)
     end
 end
 
+local weight_bag7={1,3,6,10,15,21,28,34,39,43,46,48,49}
+function sequence.distWeight_bag7(P)
+    local distances=shift(Tetros)-- Borrow the list from the bag7
+    for i=7,2,-1 do ins(distances,rem(distances,P:random(1,i))) end
+    local weights=TABLE.new(false,7)
+    while true do
+        local sum=0
+        for i=1,7 do
+            distances[i]=distances[i]+1
+            weights[i]=weight_bag7[distances[i]] or 2e6
+            sum=sum+weights[i]
+        end
+        local r=P:random()*sum
+        for i=1,7 do
+            r=r-weights[i]
+            if r<=0 then
+                coroutine.yield(i)
+                distances[i]=0
+                break
+            end
+        end
+    end
+end
+
 return sequence

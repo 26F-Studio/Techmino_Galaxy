@@ -330,15 +330,25 @@ function PP:resetPosCheck()
             end
 
             -- Suffocate IRS
-            if self.settings.easyInitCtrl then
-                if self.keyState.rotate180 then
-                    self:rotate('F',true)
-                elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
-                    self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
+            if self.settings.initRotate then
+                if self.settings.initRotate=='hold' then
+                    local origY=self.handY-- For canceling 20G effect of IRS
+                    if self.keyState.rotate180 then
+                        self:rotate('F',true)
+                    elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
+                        self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
+                    end
+                    if self.settings.IRSpushUp then self.handY=origY end
+                elseif self.settings.initRotate=='buffer' then
+                    if self.keyBuffer.rotate then
+                        local origY=self.handY-- For canceling 20G effect of IRS
+                        self:rotate(self.keyBuffer.rotate,true)
+                        if not self.keyBuffer.hold then
+                            self.keyBuffer.rotate=false
+                        end
+                        if self.settings.IRSpushUp then self.handY=origY end
+                    end
                 end
-            elseif self.keyBuffer.rotate then
-                self:rotate(self.keyBuffer.rotate,true)
-                self.keyBuffer.rotate=false
             end
         else
 
@@ -352,31 +362,48 @@ function PP:resetPosCheck()
             return
         end
     else
-        -- IMS & IRS
-        if self.settings.easyInitCtrl then
-            if self.keyState.softDrop then self:moveDown() end
-            if self.keyState.moveRight~=self.keyState.moveLeft then
-                if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
-            end
-
-            if self.keyState.rotate180 then
-                self:rotate('F',true)
-            elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
-                self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
-            end
-        else
-            if self.keyBuffer.move then
-                if self.keyBuffer.move=='L' then
-                    self:moveLeft()
-                elseif self.keyBuffer.move=='R' then
-                    self:moveRight()
+        -- IMS
+        if self.settings.initMove then
+            if self.settings.initMove=='hold' then
+                if self.keyState.softDrop then self:moveDown() end
+                if self.keyState.moveRight~=self.keyState.moveLeft then
+                    local origY=self.handY-- For canceling 20G effect of IMS
+                    if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
+                    self.handY=origY
                 end
-                self.keyBuffer.move=false
+            elseif self.settings.initMove=='buffer' then
+                if self.keyBuffer.move then
+                    local origY=self.handY-- For canceling 20G effect of IMS
+                    if self.keyBuffer.move=='L' then
+                        self:moveLeft()
+                    elseif self.keyBuffer.move=='R' then
+                        self:moveRight()
+                    end
+                    self.keyBuffer.move=false
+                    self.handY=origY
+                end
             end
+        end
 
-            if self.keyBuffer.rotate then
-                self:rotate(self.keyBuffer.rotate,true)
-                self.keyBuffer.rotate=false
+        -- IRS
+        if self.settings.initRotate then
+            if self.settings.initRotate=='hold' then
+                local origY=self.handY-- For canceling 20G effect of IRS
+                if self.keyState.rotate180 then
+                    self:rotate('F',true)
+                elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
+                    self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
+                end
+                if self.settings.IRSpushUp then self.handY=origY end
+            elseif self.settings.initRotate=='buffer' then
+                if self.keyBuffer.rotate then
+                    local origY=self.handY-- For canceling 20G effect of IRS
+                    self:rotate(self.keyBuffer.rotate,true)
+                    if not self.keyBuffer.hold then
+                        self.keyBuffer.rotate=false
+                    end
+                    if self.settings.IRSpushUp then self.handY=origY end
+                end
             end
         end
 
@@ -1252,7 +1279,8 @@ local baseEnv={
     dasHalt=0,
     hdLockA=1000,
     hdLockM=100,
-    easyInitCtrl=false,
+    initMove='buffer',
+    initRotate='buffer',
     skin='puyo_jelly',
     particles=true,
     shakeness=.26,

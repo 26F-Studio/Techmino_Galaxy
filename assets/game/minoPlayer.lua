@@ -163,7 +163,7 @@ MP._actions.moveRight={
             else
                 P:freshDelay('move')
                 P:playSound('move_failed')
-                P:createHandEffect(1,.62,0)
+                P:createHandEffect(1,.26,0)
             end
         else
             P.keyBuffer.move='R'
@@ -264,18 +264,14 @@ for k,v in next,MP._actions do MP._actions[k]=MP:_getActionObj(v) end
 --------------------------------------------------------------
 -- Effects
 function MP:createMoveEffect(x1,y1,x2,y2)
-    local p=self.particles.star
-    p:setEmissionArea('none')
-    p:setParticleLifetime(.26,.5)
+    local p=self.particles.rectShade
+    local dx,dy=self:getSmoothPos()
     for x=x1,x2,x2>x1 and 1 or -1 do for y=y1,y2,y2>y1 and 1 or -1 do
-        p:setPosition(
-            (x+rnd()*#self.hand.matrix[1]-1)*40,
-            -(y+rnd()*#self.hand.matrix-1)*40
-        )
+        p:setPosition((x-.5)*40+dx,-(y-.5)*40+dy)
         p:emit(1)
     end end
 end
-function MP:createRotateEffect(dir)
+function MP:createRotateEffect(dir,ifInit)
     local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
     local state=minoData[self.hand.direction]
     local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
@@ -286,9 +282,12 @@ function MP:createRotateEffect(dir)
         cx,cy=self.handX+#self.hand.matrix[1]/2-.5,self.handY+#self.hand.matrix/2-.5
     end
     local p=self.particles.line
-    p:setEmissionArea('uniform',40,40,MATH.tau,true)
     p:setParticleLifetime(.26,.42)
-    p:setSpeed(80,120)
+    if ifInit then
+        p:setSpeed(260,620)
+    else
+        p:setSpeed(80,120)
+    end
     p:setTangentialAcceleration(dir=='L' and -2600 or 0,dir=='R' and 2600 or 0)
     p:setPosition((cx-.5)*40,-(cy-.5)*40)
     p:emit(12)
@@ -340,7 +339,10 @@ function MP:createTouchEffect()
 end
 function MP:createTuckEffect()
 end
-function MP:createHoldEffect()
+function MP:createHoldEffect(ifInit)
+    local cx,cy=self.handX+#self.hand.matrix[1]/2-.5,self.handY+#self.hand.matrix/2-.5
+    local p=self.particles.spinArrow
+    p:new((cx-.5)*40,-(cy-.5)*40,ifInit)
 end
 function MP:createFrenzyEffect(amount)
     local p=self.particles.star
@@ -397,15 +399,59 @@ end
 --------------------------------------------------------------
 -- Game methods
 function MP:moveHand(action,a,b,c,d)
+    --[[
+        moveX:  dx
+        moveY:  dy
+        drop:   dy
+        rotate: x,y,dir,ifInit
+        reset:  x,y
+    ]]
     if action=='moveX' then
         self.handX=self.handX+a
         self:checkLanding()
-    elseif action=='moveY' then
+        if self.settings.particles then
+            local hx,hy=self.handX,self.handY
+            local mat=self.hand.matrix
+            local w,h=#mat[1],#mat
+            if a<0 then
+                for y=1,h do for x=w,1,-1 do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1+1,hy+y-1,hx+x-1+1-a-1,hy+y-1)
+                        break
+                    end end
+                end
+            elseif a>0 then
+                for y=1,h do for x=1,w do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1-1,hy+y-1,hx+x-1-1-a+1,hy+y-1)
+                        break
+                    end end
+                end
+            end
+        end
+    elseif action=='moveY' or action=='drop' then
         self.handY=self.handY+a
-        self:checkLanding()
-    elseif action=='drop' then
-        self.handY=self.handY+a
-        self:checkLanding(true)
+        self:checkLanding(action=='drop')
+        if self.settings.particles then
+            local hx,hy=self.handX,self.handY
+            local mat=self.hand.matrix
+            local w,h=#mat[1],#mat
+            if a<0 then
+                for x=1,w do for y=h,1,-1 do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1,hy+y-1+1,hx+x-1,hy+y-1+1-a-1)
+                        break
+                    end end
+                end
+            elseif a>0 then
+                for x=1,w do for y=1,h do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1,hy+y-1-1,hx+x-1,hy+y-1-1-a+1)
+                        break
+                    end end
+                end
+            end
+        end
     elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
     else
@@ -468,7 +514,7 @@ function MP:moveHand(action,a,b,c,d)
             end
         end
         self:playSound(d and 'initrotate' or 'rotate')
-        self:createRotateEffect(c)
+        self:createRotateEffect(c,d)
     end
     self.lastMovement=movement
 
@@ -509,8 +555,6 @@ function MP:resetPosCheck()
     if suffocated then
         if self.settings.deathDelay>0 then
             self.deathTimer=self.settings.deathDelay
-            self:playSound('suffocate')
-            self:createSuffocateEffect()
 
             -- Suffocate IMS, always trigger when held
             if self.keyState.softDrop then self:moveDown() end
@@ -519,24 +563,33 @@ function MP:resetPosCheck()
             end
 
             -- Suffocate IRS
-            if self.settings.easyInitCtrl then
-                local origY=self.handY-- For canceling 20G effect of IRS
-                if self.keyState.rotate180 then
-                    self:rotate('F',true)
-                elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
-                    self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
+            if self.settings.initRotate then
+                if self.settings.initRotate=='hold' then
+                    local origY=self.handY-- For canceling 20G effect of IRS
+                    if self.keyState.rotate180 then
+                        self:rotate('F',true)
+                    elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
+                        self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
+                    end
+                    if self.settings.IRSpushUp then self.handY=origY end
+                elseif self.settings.initRotate=='buffer' then
+                    if self.keyBuffer.rotate then
+                        local origY=self.handY-- For canceling 20G effect of IRS
+                        self:rotate(self.keyBuffer.rotate,true)
+                        if not self.keyBuffer.hold then
+                            self.keyBuffer.rotate=false
+                        end
+                        if self.settings.IRSpushUp then self.handY=origY end
+                    end
                 end
-                if self.settings.IRSpushUp then self.handY=origY end
-            elseif self.keyBuffer.rotate then
-                local origY=self.handY-- For canceling 20G effect of IRS
-                self:rotate(self.keyBuffer.rotate,true)
-                if not self.keyBuffer.hold then
-                    self.keyBuffer.rotate=false
-                end
-                if self.settings.IRSpushUp then self.handY=origY end
             end
             self:tryCancelSuffocate()
             self:freshGhost()
+
+            if self.deathTimer then
+                self:playSound('suffocate')
+                self:createSuffocateEffect()
+            end
         else
             self:triggerEvent('whenSuffocate')
             self:freshGhost()
@@ -548,41 +601,48 @@ function MP:resetPosCheck()
             return
         end
     else
-        -- IMS & IRS
-        if self.settings.easyInitCtrl then
-            if self.keyState.softDrop then self:moveDown() end
-            if self.keyState.moveRight~=self.keyState.moveLeft then
-                local origY=self.handY-- For canceling 20G effect of IMS
-                if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
-                self.handY=origY
-            end
-
-            local origY=self.handY-- For canceling 20G effect of IRS
-            if self.keyState.rotate180 then
-                self:rotate('F',true)
-            elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
-                self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
-            end
-            if self.settings.IRSpushUp then self.handY=origY end
-        else
-            if self.keyBuffer.move then
-                local origY=self.handY-- For canceling 20G effect of IMS
-                if self.keyBuffer.move=='L' then
-                    self:moveLeft()
-                elseif self.keyBuffer.move=='R' then
-                    self:moveRight()
+        -- IMS
+        if self.settings.initMove then
+            if self.settings.initMove=='hold' then
+                if self.keyState.softDrop then self:moveDown() end
+                if self.keyState.moveRight~=self.keyState.moveLeft then
+                    local origY=self.handY-- For canceling 20G effect of IMS
+                    if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
+                    self.handY=origY
                 end
-                self.keyBuffer.move=false
-                self.handY=origY
+            elseif self.settings.initMove=='buffer' then
+                if self.keyBuffer.move then
+                    local origY=self.handY-- For canceling 20G effect of IMS
+                    if self.keyBuffer.move=='L' then
+                        self:moveLeft()
+                    elseif self.keyBuffer.move=='R' then
+                        self:moveRight()
+                    end
+                    self.keyBuffer.move=false
+                    self.handY=origY
+                end
             end
+        end
 
-            if self.keyBuffer.rotate then
+        -- IRS
+        if self.settings.initRotate then
+            if self.settings.initRotate=='hold' then
                 local origY=self.handY-- For canceling 20G effect of IRS
-                self:rotate(self.keyBuffer.rotate,true)
-                if not self.keyBuffer.hold then
-                    self.keyBuffer.rotate=false
+                if self.keyState.rotate180 then
+                    self:rotate('F',true)
+                elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
+                    self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                 end
                 if self.settings.IRSpushUp then self.handY=origY end
+            elseif self.settings.initRotate=='buffer' then
+                if self.keyBuffer.rotate then
+                    local origY=self.handY-- For canceling 20G effect of IRS
+                    self:rotate(self.keyBuffer.rotate,true)
+                    if not self.keyBuffer.hold then
+                        self.keyBuffer.rotate=false
+                    end
+                    if self.settings.IRSpushUp then self.handY=origY end
+                end
             end
         end
 
@@ -750,14 +810,16 @@ function MP:popNext(ifHold)
     self:resetPos()
 
     -- IHS
-    if not ifHold then
-        if self.settings.easyInitCtrl then
+    if not ifHold and self.settings.initHold then
+        if self.settings.initHold=='hold' then
             if self.keyState.holdPiece then
                 self:hold(true)
             end
-        elseif self.keyBuffer.hold then
-            self.keyBuffer.hold=false
-            self:hold(true)
+        elseif self.settings.initHold=='buffer' then
+            if self.keyBuffer.hold then
+                self.keyBuffer.hold=false
+                self:hold(true)
+            end
         end
     end
 
@@ -1064,7 +1126,7 @@ function MP:hold(ifInit)
     end
 
     self.holdTime=self.holdTime+1
-    self:createHoldEffect()
+    self:createHoldEffect(ifInit)
     self:playSound(ifInit and 'inithold' or 'hold')
 end
 function MP:hold_hold()
@@ -1717,6 +1779,7 @@ function MP:render()
                 self:triggerEvent('drawBelowBlock')-- From field's bottom-left, 40px a cell
 
                 gc_setColor(1,1,1)
+                gc_draw(self.particles.rectShade)
                 gc_draw(self.particles.tiltRect)
 
                 if self.hand then
@@ -1774,6 +1837,7 @@ function MP:render()
 
             gc_setColor(1,1,1)
             gc_draw(self.particles.cornerCheck)
+            self.particles.spinArrow:draw()
             gc_draw(self.particles.trail)
             gc_draw(self.particles.sparkle)
 
@@ -1959,7 +2023,9 @@ local baseEnv={
     dasHalt=0,
     hdLockA=1000,
     hdLockM=100,
-    easyInitCtrl=false,
+    initMove='buffer',
+    initRotate='buffer',
+    initHold='buffer',
     IRSpushUp=false,
     skin='mino_plastic',
     particles=true,

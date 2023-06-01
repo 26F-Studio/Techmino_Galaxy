@@ -26,6 +26,7 @@ local baseDict={
     {'term: key_speed'},
     {'term: attack_power'},
     {'term: das_arr'},
+    {'term: init_control'},
     {'term: misaction'},
     {'term: gravity'},
     {'term: 20g'},
