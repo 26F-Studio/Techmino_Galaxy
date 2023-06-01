@@ -339,13 +339,15 @@ function PP:resetPosCheck()
                         self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                     end
                     if self.settings.IRSpushUp then self.handY=origY end
-                elseif self.settings.initRotate=='buffer' and self.keyBuffer.rotate then
-                    local origY=self.handY-- For canceling 20G effect of IRS
-                    self:rotate(self.keyBuffer.rotate,true)
-                    if not self.keyBuffer.hold then
-                        self.keyBuffer.rotate=false
+                elseif self.settings.initRotate=='buffer' then
+                    if self.keyBuffer.rotate then
+                        local origY=self.handY-- For canceling 20G effect of IRS
+                        self:rotate(self.keyBuffer.rotate,true)
+                        if not self.keyBuffer.hold then
+                            self.keyBuffer.rotate=false
+                        end
+                        if self.settings.IRSpushUp then self.handY=origY end
                     end
-                    if self.settings.IRSpushUp then self.handY=origY end
                 end
             end
         else
@@ -369,15 +371,17 @@ function PP:resetPosCheck()
                     if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
                     self.handY=origY
                 end
-            elseif self.settings.initMove=='buffer' and self.keyBuffer.move then
-                local origY=self.handY-- For canceling 20G effect of IMS
-                if self.keyBuffer.move=='L' then
-                    self:moveLeft()
-                elseif self.keyBuffer.move=='R' then
-                    self:moveRight()
+            elseif self.settings.initMove=='buffer' then
+                if self.keyBuffer.move then
+                    local origY=self.handY-- For canceling 20G effect of IMS
+                    if self.keyBuffer.move=='L' then
+                        self:moveLeft()
+                    elseif self.keyBuffer.move=='R' then
+                        self:moveRight()
+                    end
+                    self.keyBuffer.move=false
+                    self.handY=origY
                 end
-                self.keyBuffer.move=false
-                self.handY=origY
             end
         end
 
@@ -391,13 +395,15 @@ function PP:resetPosCheck()
                     self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                 end
                 if self.settings.IRSpushUp then self.handY=origY end
-            elseif self.settings.initRotate=='buffer' and self.keyBuffer.rotate then
-                local origY=self.handY-- For canceling 20G effect of IRS
-                self:rotate(self.keyBuffer.rotate,true)
-                if not self.keyBuffer.hold then
-                    self.keyBuffer.rotate=false
+            elseif self.settings.initRotate=='buffer' then
+                if self.keyBuffer.rotate then
+                    local origY=self.handY-- For canceling 20G effect of IRS
+                    self:rotate(self.keyBuffer.rotate,true)
+                    if not self.keyBuffer.hold then
+                        self.keyBuffer.rotate=false
+                    end
+                    if self.settings.IRSpushUp then self.handY=origY end
                 end
-                if self.settings.IRSpushUp then self.handY=origY end
             end
         end
 
