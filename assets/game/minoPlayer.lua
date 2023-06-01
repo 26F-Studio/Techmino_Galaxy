@@ -264,14 +264,9 @@ for k,v in next,MP._actions do MP._actions[k]=MP:_getActionObj(v) end
 --------------------------------------------------------------
 -- Effects
 function MP:createMoveEffect(x1,y1,x2,y2)
-    local p=self.particles.star
-    p:setEmissionArea('none')
-    p:setParticleLifetime(.26,.5)
+    local p=self.particles.rectShade
     for x=x1,x2,x2>x1 and 1 or -1 do for y=y1,y2,y2>y1 and 1 or -1 do
-        p:setPosition(
-            (x+rnd()*#self.hand.matrix[1]-1)*40,
-            -(y+rnd()*#self.hand.matrix-1)*40
-        )
+        p:setPosition((x-.5)*40,-(y-.5)*40)
         p:emit(1)
     end end
 end
@@ -286,7 +281,6 @@ function MP:createRotateEffect(dir,ifInit)
         cx,cy=self.handX+#self.hand.matrix[1]/2-.5,self.handY+#self.hand.matrix/2-.5
     end
     local p=self.particles.line
-    p:setEmissionArea('uniform',40,40,MATH.tau,true)
     p:setParticleLifetime(.26,.42)
     if ifInit then
         p:setSpeed(260,620)
@@ -402,12 +396,21 @@ end
 -- Game methods
 function MP:moveHand(action,a,b,c,d)
     if action=='moveX' then
+        if self.settings.particles then
+            self:createMoveEffect(self.handX,self.handY,self.handX+a,self.handY+#self.hand.matrix-1)
+        end
         self.handX=self.handX+a
         self:checkLanding()
     elseif action=='moveY' then
+        if self.settings.particles then
+            self:createMoveEffect(self.handX,self.handY,self.handX+#self.hand.matrix[1]-1,self.handY+a)
+        end
         self.handY=self.handY+a
         self:checkLanding()
     elseif action=='drop' then
+        if self.settings.particles then
+            self:createMoveEffect(self.handX,self.handY,self.handX+#self.hand.matrix[1]-1,self.handY+a)
+        end
         self.handY=self.handY+a
         self:checkLanding(true)
     elseif action=='rotate' or action=='reset' then
@@ -1734,6 +1737,7 @@ function MP:render()
                 self:triggerEvent('drawBelowBlock')-- From field's bottom-left, 40px a cell
 
                 gc_setColor(1,1,1)
+                gc_draw(self.particles.rectShade)
                 gc_draw(self.particles.tiltRect)
 
                 if self.hand then

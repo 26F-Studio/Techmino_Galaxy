@@ -1,4 +1,5 @@
 --- @class Techmino.particleSystems
+--- @field rectShade love.ParticleSystem
 --- @field star love.ParticleSystem
 --- @field line love.ParticleSystem
 --- @field sparkle love.ParticleSystem
@@ -8,7 +9,19 @@
 --- @field minoMapBack love.ParticleSystem
 local ps={}
 
-do-- Moving trail & Frenzy
+do-- Moving
+    local p=love.graphics.newParticleSystem(GC.load{1,1,
+        {'clear',1,1,1,1},
+    },260)
+    p:setSizes(40)
+    p:setColors(1,1,1,.26,1,1,1,0)
+    p:setSpread(0)
+    p:setSpeed(0)
+    p:setParticleLifetime(.16)
+    ps.rectShade=p
+end
+
+do-- Clearing
     local p=love.graphics.newParticleSystem(GC.load{7,7,
         {'setLW',1},
         {'line',0,3.5,6.5,3.5},
@@ -21,10 +34,11 @@ do-- Moving trail & Frenzy
     ps.star=p
 end
 
-do-- Moving trail & Frenzy
+do-- Rotate
     local p=love.graphics.newParticleSystem(GC.load{10,3,
         {'clear',1,1,1,1},
     },2600)
+    p:setEmissionArea('uniform',40,40,MATH.tau,true)
     p:setSizes(.6,1,.5,.2,0)
     p:setRelativeRotation(true)
     ps.line=p
