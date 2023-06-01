@@ -321,13 +321,13 @@ function MP:createHandEffect(r,g,b,a)
     end end
 end
 function MP:createTouchEffect()
-    local p=self.particles.sparkle
+    local p=self.particles.hitSparkle
     local mat=self.hand.matrix
     local cell=Minoes.O1.shape
     local cx,cy=self.handX,self.handY
     for x=1,#mat[1] do for y=1,#mat do
         if mat[y][x] and self:ifoverlap(cell,cx+x-1,cy+y-2) then
-            for _=1,4 do
+            for _=1,rnd(3,4) do
                 p:setPosition(
                     (cx+x-2+rnd())*40,
                     -(cy+y-2)*40
@@ -431,7 +431,7 @@ function MP:moveHand(action,a,b,c,d)
         end
     elseif action=='moveY' or action=='drop' then
         self.handY=self.handY+a
-        self:checkLanding(action=='drop')
+        self:checkLanding(true)
         if self.settings.particles then
             local hx,hy=self.handX,self.handY
             local mat=self.hand.matrix
@@ -1117,6 +1117,7 @@ function MP:rotate(dir,ifInit)
 end
 function MP:hold(ifInit)
     if self.holdTime>=self.settings.holdSlot and not self.settings.infHold then return end
+    self:createHoldEffect(ifInit)
 
     local mode=self.settings.holdMode
     if     mode=='hold'  then self:hold_hold()
@@ -1126,7 +1127,6 @@ function MP:hold(ifInit)
     end
 
     self.holdTime=self.holdTime+1
-    self:createHoldEffect(ifInit)
     self:playSound(ifInit and 'inithold' or 'hold')
 end
 function MP:hold_hold()
@@ -1839,7 +1839,7 @@ function MP:render()
             gc_draw(self.particles.cornerCheck)
             self.particles.spinArrow:draw()
             gc_draw(self.particles.trail)
-            gc_draw(self.particles.sparkle)
+            gc_draw(self.particles.hitSparkle)
 
             gc_translate(0,-self.fieldDived)
 
