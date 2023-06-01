@@ -555,8 +555,6 @@ function MP:resetPosCheck()
     if suffocated then
         if self.settings.deathDelay>0 then
             self.deathTimer=self.settings.deathDelay
-            self:playSound('suffocate')
-            self:createSuffocateEffect()
 
             -- Suffocate IMS, always trigger when held
             if self.keyState.softDrop then self:moveDown() end
@@ -587,6 +585,11 @@ function MP:resetPosCheck()
             end
             self:tryCancelSuffocate()
             self:freshGhost()
+
+            if self.deathTimer then
+                self:playSound('suffocate')
+                self:createSuffocateEffect()
+            end
         else
             self:triggerEvent('whenSuffocate')
             self:freshGhost()
