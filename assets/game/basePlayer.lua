@@ -702,8 +702,10 @@ function P.new()
     self.timing=false   -- Is gameTime running?
 
     self.texts=TEXT.new()
-    self.particles={}
-    TABLE.setAutoFill(self.particles,require'assets.game.particleSystemTemplate')
+    self.particles=setmetatable({},{__index=function(p,k)
+        p[k]=require'assets.game.particleSystemTemplate'[k]:clone()
+        return p[k]
+    end})
 
     return self
 end
