@@ -265,8 +265,9 @@ for k,v in next,MP._actions do MP._actions[k]=MP:_getActionObj(v) end
 -- Effects
 function MP:createMoveEffect(x1,y1,x2,y2)
     local p=self.particles.rectShade
+    local dx,dy=self:getSmoothPos()
     for x=x1,x2,x2>x1 and 1 or -1 do for y=y1,y2,y2>y1 and 1 or -1 do
-        p:setPosition((x-.5)*40,-(y-.5)*40)
+        p:setPosition((x-.5)*40+dx,-(y-.5)*40+dy)
         p:emit(1)
     end end
 end
@@ -398,18 +399,59 @@ end
 --------------------------------------------------------------
 -- Game methods
 function MP:moveHand(action,a,b,c,d)
+    --[[
+        moveX:  dx
+        moveY:  dy
+        drop:   dy
+        rotate: x,y,dir,ifInit
+        reset:  x,y
+    ]]
     if action=='moveX' then
-        if self.settings.particles then
-            self:createMoveEffect(self.handX,self.handY,self.handX+a,self.handY+#self.hand.matrix-1)
-        end
         self.handX=self.handX+a
         self:checkLanding()
-    elseif action=='moveY' or action=='drop' then
         if self.settings.particles then
-            self:createMoveEffect(self.handX,self.handY,self.handX+#self.hand.matrix[1]-1,self.handY+a)
+            local hx,hy=self.handX,self.handY
+            local mat=self.hand.matrix
+            local w,h=#mat[1],#mat
+            if a<0 then
+                for y=1,h do for x=w,1,-1 do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1+1,hy+y-1,hx+x-1+1-a-1,hy+y-1)
+                        break
+                    end end
+                end
+            elseif a>0 then
+                for y=1,h do for x=1,w do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1-1,hy+y-1,hx+x-1-1-a+1,hy+y-1)
+                        break
+                    end end
+                end
+            end
         end
+    elseif action=='moveY' or action=='drop' then
         self.handY=self.handY+a
         self:checkLanding(action=='drop')
+        if self.settings.particles then
+            local hx,hy=self.handX,self.handY
+            local mat=self.hand.matrix
+            local w,h=#mat[1],#mat
+            if a<0 then
+                for x=1,w do for y=h,1,-1 do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1,hy+y-1+1,hx+x-1,hy+y-1+1-a-1)
+                        break
+                    end end
+                end
+            elseif a>0 then
+                for x=1,w do for y=1,h do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1,hy+y-1-1,hx+x-1,hy+y-1-1-a+1)
+                        break
+                    end end
+                end
+            end
+        end
     elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
     else
