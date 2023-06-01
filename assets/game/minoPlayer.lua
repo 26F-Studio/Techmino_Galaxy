@@ -338,7 +338,10 @@ function MP:createTouchEffect()
 end
 function MP:createTuckEffect()
 end
-function MP:createHoldEffect()
+function MP:createHoldEffect(ifInit)
+    local cx,cy=self.handX+#self.hand.matrix[1]/2-.5,self.handY+#self.hand.matrix/2-.5
+    local p=self.particles.spinArrow
+    p:new((cx-.5)*40,-(cy-.5)*40,ifInit)
 end
 function MP:createFrenzyEffect(amount)
     local p=self.particles.star
@@ -401,18 +404,12 @@ function MP:moveHand(action,a,b,c,d)
         end
         self.handX=self.handX+a
         self:checkLanding()
-    elseif action=='moveY' then
+    elseif action=='moveY' or action=='drop' then
         if self.settings.particles then
             self:createMoveEffect(self.handX,self.handY,self.handX+#self.hand.matrix[1]-1,self.handY+a)
         end
         self.handY=self.handY+a
-        self:checkLanding()
-    elseif action=='drop' then
-        if self.settings.particles then
-            self:createMoveEffect(self.handX,self.handY,self.handX+#self.hand.matrix[1]-1,self.handY+a)
-        end
-        self.handY=self.handY+a
-        self:checkLanding(true)
+        self:checkLanding(action=='drop')
     elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
     else
@@ -1084,7 +1081,7 @@ function MP:hold(ifInit)
     end
 
     self.holdTime=self.holdTime+1
-    self:createHoldEffect()
+    self:createHoldEffect(ifInit)
     self:playSound(ifInit and 'inithold' or 'hold')
 end
 function MP:hold_hold()
@@ -1795,6 +1792,7 @@ function MP:render()
 
             gc_setColor(1,1,1)
             gc_draw(self.particles.cornerCheck)
+            self.particles.spinArrow:draw()
             gc_draw(self.particles.trail)
             gc_draw(self.particles.sparkle)
 

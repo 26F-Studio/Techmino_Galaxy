@@ -1,5 +1,6 @@
 --- @class Techmino.particleSystems
 --- @field rectShade love.ParticleSystem
+--- @field spinArrow table
 --- @field star love.ParticleSystem
 --- @field line love.ParticleSystem
 --- @field sparkle love.ParticleSystem
@@ -19,6 +20,45 @@ do-- Moving
     p:setSpeed(0)
     p:setParticleLifetime(.16)
     ps.rectShade=p
+end
+
+do-- Hold
+    local texture=GC.newText(FONT.get(80,'symbols'),CHAR.icon.sync)
+    local p={}
+    function p:clone()
+        return setmetatable({list={}},{__index=p})
+    end
+    function p:new(x,y,ifInit)
+        table.insert(self.list,{
+            x=x,y=y,t=0,
+            a=math.random()*MATH.tau,
+            va=ifInit and MATH.rand(16,22) or MATH.rand(2.6,6.2),
+            lifeTime=.26,
+        })
+    end
+    function p:update(dt)
+        for i=#self.list,1,-1 do
+            local v=self.list[i]
+            v.t=v.t+dt/v.lifeTime
+            if v.t>1 then
+                table.remove(self.list,i)
+            else
+                v.a=v.a+v.va*dt
+                v.va=math.max(v.va-dt*62,4.2)
+            end
+        end
+    end
+    function p:draw()
+        local r,g,b,a=GC.getColor()
+        a=a*.7023
+        for i=1,#self.list do
+            local v=self.list[i]
+            local t=v.t
+            GC.setColor(r,g,b,a*(1-t)^.626)
+            GC.mDraw(texture,v.x,v.y,v.a,2.6*(.5+t^.5*.626))
+        end
+    end
+    ps.spinArrow=p
 end
 
 do-- Clearing
