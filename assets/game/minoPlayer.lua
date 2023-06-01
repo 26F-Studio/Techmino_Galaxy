@@ -275,7 +275,7 @@ function MP:createMoveEffect(x1,y1,x2,y2)
         p:emit(1)
     end end
 end
-function MP:createRotateEffect(dir)
+function MP:createRotateEffect(dir,ifInit)
     local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
     local state=minoData[self.hand.direction]
     local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
@@ -288,7 +288,11 @@ function MP:createRotateEffect(dir)
     local p=self.particles.line
     p:setEmissionArea('uniform',40,40,MATH.tau,true)
     p:setParticleLifetime(.26,.42)
-    p:setSpeed(80,120)
+    if ifInit then
+        p:setSpeed(260,620)
+    else
+        p:setSpeed(80,120)
+    end
     p:setTangentialAcceleration(dir=='L' and -2600 or 0,dir=='R' and 2600 or 0)
     p:setPosition((cx-.5)*40,-(cy-.5)*40)
     p:emit(12)
@@ -468,7 +472,7 @@ function MP:moveHand(action,a,b,c,d)
             end
         end
         self:playSound(d and 'initrotate' or 'rotate')
-        self:createRotateEffect(c)
+        self:createRotateEffect(c,d)
     end
     self.lastMovement=movement
 
