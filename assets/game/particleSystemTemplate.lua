@@ -3,7 +3,7 @@
 --- @field spinArrow table
 --- @field star love.ParticleSystem
 --- @field line love.ParticleSystem
---- @field sparkle love.ParticleSystem
+--- @field hitSparkle love.ParticleSystem
 --- @field cornerCheck love.ParticleSystem
 --- @field tiltRect love.ParticleSystem
 --- @field trail love.ParticleSystem
@@ -92,10 +92,10 @@ do-- Touching spark
     p:setColors(1,1,1,1,1,1,1,0)
     p:setDirection(math.pi/2)
     p:setSpread(0)
-    p:setSpeed(40,100)
-    p:setLinearDamping(6,12)
-    p:setParticleLifetime(.42)
-    ps.sparkle=p
+    p:setSpeed(120,260)
+    p:setLinearDamping(12,16)
+    p:setParticleLifetime(.872)
+    ps.hitSparkle=p
 end
 
 do-- Rotating corner check

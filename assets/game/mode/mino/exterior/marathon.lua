@@ -13,14 +13,10 @@ return {
                 if not P.modeData.marathon_bgmLevel then P.modeData.marathon_bgmLevel=1 end
                 if P.isMain and P.modeData.level>P.modeData.marathon_bgmLevel then
                     if P.modeData.marathon_bgmLevel<15 then
-                        BGM.set({
-                            'propel/accompany1',
-                            'propel/accompany3',
-                            'propel/bass3',
-                        },'volume',math.min(P.modeData.level/15,1)^2)
+                        BGM.set(bgmPack('propel','a1','a3','b3'),'volume',math.min(P.modeData.level/15,1)^2)
                     end
                     if P.modeData.level>=25 and P.modeData.marathon_bgmLevel<25 then
-                        BGM.set({'propel/melody','propel/accompany1','propel/accompany3'},'volume',0,26)
+                        BGM.set(bgmPack('propel','a1','a3'),'volume',0,26)
                     end
                     if P.modeData.level>=20 then
                         BGM.set('propel/drum','volume',math.min(.2+(P.modeData.level-20)*.8,1),10)

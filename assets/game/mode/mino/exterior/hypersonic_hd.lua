@@ -25,7 +25,7 @@ return {
                     end
                     if not P.modeData.hypersonic_bgmTransition2 then
                         if P.modeData.level>=9 then
-                            BGM.set({'secret7th/melody2','secret7th/accompany'},'volume',0,26)
+                            BGM.set(bgmPack('secret7th','m2','a'),'volume',0,26)
                             P.modeData.hypersonic_bgmTransition2=true
                         end
                     end

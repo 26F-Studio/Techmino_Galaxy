@@ -49,6 +49,15 @@ return {
     allClear="ALL CLEAR",
     halfClear="Half Clear",
 
+    target_piece="Piece",
+    target_line="Line",
+    target_time="Time",
+    target_pc="PC",
+    target_hpc="HPC",
+    target_tsd="TSD",
+    target_techrash="Techrash",
+    target_wave="Wave",
+
     -- About-Game
     pause="Pause",
 

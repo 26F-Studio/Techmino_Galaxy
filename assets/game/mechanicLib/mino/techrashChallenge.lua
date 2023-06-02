@@ -74,7 +74,7 @@ end
 function techrash.easy_event_drawOnPlayer(P)
     P:drawInfoPanel(-380,-60,160,120)
     FONT.set(80) GC.mStr(P.modeData.techrash,-300,-70)
-    FONT.set(30) GC.mStr("Techrash",-300,15)
+    FONT.set(30) GC.mStr(Text.target_techrash,-300,15)
 end
 
 local initPower=3

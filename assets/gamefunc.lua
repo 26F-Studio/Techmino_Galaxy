@@ -49,6 +49,21 @@ function getBgm()
     return _bgmPlaying,_bgmMode
 end
 
+local trackNick={
+    m='melody',
+    a='accompany',
+    d='decoration',
+    b='bass',
+    p='drum',
+    s='sfx',
+}
+function bgmPack(name,...)
+    local tracks={...}
+    for i=1,#tracks do
+        tracks[i]=name..'/'..trackNick[tracks[i]:sub(1,1)]..tracks[i]:sub(2)
+    end
+end
+
 local interiorModeMeta={__call=function(self)
     local success,errInfo=pcall(GAME.getMode,self.name)
     if success then
