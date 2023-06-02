@@ -69,7 +69,7 @@ function scene.enter()
         minoMap:loadUnlocked(PROGRESS.getMinoModeUnlocked())
     end
     minoMap:reset()
-    minoMap:setFullVersion(false)
+    minoMap:setFullVersion(true)
     panel:setSel(false)
     PROGRESS.setExteriorBG()
     PROGRESS.playExteriorBGM()
