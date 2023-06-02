@@ -110,7 +110,7 @@ do-- Rotating corner check
     ps.cornerCheck=p
 end
 
-do-- Rotating failed
+do-- Piece controlling effect
     local p=love.graphics.newParticleSystem(GC.load{1,1,
         {'clear',1,1,1},
     },26)

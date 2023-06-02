@@ -351,11 +351,11 @@ function MP:createFrenzyEffect(amount)
     p:setPosition(200,-400)
     p:emit(amount)
 end
-function MP:createLockEffect(x,y)
+function MP:createLockEffect()
     local p=self.particles.trail
     p:setPosition(
-        (x+#self.hand.matrix[1]/2-1)*40,
-        -(y+#self.hand.matrix/2-1)*40
+        (self.handX+#self.hand.matrix[1]/2-1)*40,
+        -(self.handY+#self.hand.matrix/2-1)*40
     )
     p:emit(1)
 end
@@ -454,6 +454,7 @@ function MP:moveHand(action,a,b,c,d)
         end
     elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
+        self:checkLanding()
     else
         error("WTF why action is "..tostring(action))
     end
@@ -468,7 +469,7 @@ function MP:moveHand(action,a,b,c,d)
 
     if action=='moveX' then
         if
-            not self.deathTimer and
+            not self.ghostState and
             self.settings.tuck and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY+1)
@@ -479,7 +480,7 @@ function MP:moveHand(action,a,b,c,d)
         end
     elseif action=='moveY' then
     elseif action=='rotate' then
-        if not self.deathTimer then
+        if not self.ghostState then
             if
                 self.settings.spin_immobile and
                 self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
@@ -534,20 +535,22 @@ function MP:resetPos()-- Move hand piece to the normal spawn position
     self:triggerEvent('changeSpawnPos')
 
     self.deathTimer=false
+    self.ghostState=false
+
     while self:isSuffocate() and self.handY<self.settings.spawnH+self.settings.extraSpawnH+1 do self.handY=self.handY+1 end
     self.minY=self.handY
     self.ghostY=false
     self:resetPosCheck()
 
     self:triggerEvent('afterResetPos')
+
 end
 function MP:resetPosCheck()
     local suffocated
     if self.deathTimer then
-        local bufferedDeathTimer=self.deathTimer
-        self.deathTimer=false-- Cancel deathTimer temporarily, or we cannot apply IMS when hold in suffcating
+        self.ghostState=false
         suffocated=self:isSuffocate()
-        self.deathTimer=bufferedDeathTimer
+        self.ghostState=true
     else
         suffocated=self:isSuffocate()
     end
@@ -555,6 +558,7 @@ function MP:resetPosCheck()
     if suffocated then
         if self.settings.deathDelay>0 then
             self.deathTimer=self.settings.deathDelay
+            self.ghostState=true
 
             -- Suffocate IMS, always trigger when held
             if self.keyState.softDrop then self:moveDown() end
@@ -565,21 +569,17 @@ function MP:resetPosCheck()
             -- Suffocate IRS
             if self.settings.initRotate then
                 if self.settings.initRotate=='hold' then
-                    local origY=self.handY-- For IRS pushing up
                     if self.keyState.rotate180 then
                         self:rotate('F',true)
                     elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                         self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                     end
-                    if self.settings.IRSpushUp then self.handY=origY end
                 elseif self.settings.initRotate=='buffer' then
                     if self.keyBuffer.rotate then
-                        local origY=self.handY-- For IRS pushing up
                         self:rotate(self.keyBuffer.rotate,true)
                         if not self.keyBuffer.hold then
                             self.keyBuffer.rotate=false
                         end
-                        if self.settings.IRSpushUp then self.handY=origY end
                     end
                 end
             end
@@ -591,6 +591,7 @@ function MP:resetPosCheck()
                 self:createSuffocateEffect()
             end
         else
+
             self:triggerEvent('whenSuffocate')
             self:freshGhost()
 
@@ -627,21 +628,17 @@ function MP:resetPosCheck()
         -- IRS
         if self.settings.initRotate then
             if self.settings.initRotate=='hold' then
-                local origY=self.handY-- For IRS pushing up
                 if self.keyState.rotate180 then
                     self:rotate('F',true)
                 elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                     self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                 end
-                if self.settings.IRSpushUp then self.handY=origY end
             elseif self.settings.initRotate=='buffer' then
                 if self.keyBuffer.rotate then
-                    local origY=self.handY-- For IRS pushing up
                     self:rotate(self.keyBuffer.rotate,true)
                     if not self.keyBuffer.hold then
                         self.keyBuffer.rotate=false
                     end
-                    if self.settings.IRSpushUp then self.handY=origY end
                 end
             end
         end
@@ -656,7 +653,7 @@ function MP:resetPosCheck()
 end
 function MP:freshGhost()
     if self.hand then
-        if self.deathTimer then
+        if self.ghostState then
             self.ghostY=false
         else
             self.ghostY=min(self.field:getHeight()+1,self.handY)
@@ -680,11 +677,11 @@ function MP:freshGhost()
 end
 function MP:tryCancelSuffocate()
     if self.deathTimer then
-        local t=self.deathTimer
-        self.deathTimer=false-- Cancel deathTimer temporarily, prevent ifoverlap method treat anything as air
+        self.ghostState=false
         if self:isSuffocate() then
-            self.deathTimer=t
+            self.ghostState=true
         else
+            self.deathTimer=false
             self:playSound('desuffocate')
             self:createDesuffocateEffect()
         end
@@ -940,7 +937,7 @@ function MP:ifoverlap(CB,cx,cy)
     -- Must in air
     if cy>F:getHeight() then return false end
 
-    if not self.deathTimer then
+    if not self.ghostState then
         -- Check field
         for y=1,#CB do for x=1,#CB[1] do
             if CB[y][x] and self.field:getCell(cx+x-1,cy+y-1) then
@@ -1075,6 +1072,7 @@ function MP:rotate(dir,ifInit)
     local origY=self.handY-- For IRS pushing up
     if minoData.rotate then-- Custom rotate function
         minoData.rotate(self,dir,ifInit)
+        if self.ghostState and self.settings.IRSpushUp then self.handY=origY end
     else-- Normal rotate procedure
         local preState=minoData[self.hand.direction]
         if preState then
@@ -1104,8 +1102,8 @@ function MP:rotate(dir,ifInit)
                     self.hand.direction=kick.target
                     self:moveHand('rotate',ix,iy,dir,ifInit)
                     self:freshGhost()
-                    self:checkLanding()
-                    goto BREAK_SUCCESS
+                    if self.ghostState and self.settings.IRSpushUp then self.handY=origY end
+                    return
                 end
             end
             self:freshDelay('rotate')
@@ -1115,8 +1113,6 @@ function MP:rotate(dir,ifInit)
             error("WTF why no state in minoData")
         end
     end
-    ::BREAK_SUCCESS::
-    if self.deathTimer and self.settings.IRSpushUp then self.handY=origY end
 end
 function MP:hold(ifInit)
     if self.holdTime>=self.settings.holdSlot and not self.settings.infHold then return end
@@ -1199,10 +1195,11 @@ function MP:doClear(fullLines)
     end
 
     self:triggerEvent('afterClear',his)
+
 end
 
 function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
-    if not self.hand or self.deathTimer then return end
+    if not self.hand or self.ghostState then return end
 
     local SET=self.settings
 
@@ -1218,7 +1215,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if not self.hand or self.finished then return end
 
     if SET.particles then
-        self:createLockEffect(self.handX,self.handY)
+        self:createLockEffect()
     end
 
     -- Lock to field
@@ -1644,6 +1641,7 @@ function MP:updateFrame()
         self.deathTimer=self.deathTimer-1
         if self.deathTimer<=0 then
             self.deathTimer=false
+            self.ghostState=false
 
             self:triggerEvent('whenSuffocate')
             self:freshGhost()
@@ -2112,6 +2110,7 @@ function MP:initialize()
     self.lockTimer=0
     self.spawnTimer=self.settings.readyDelay
     self.deathTimer=false
+    self.ghostState=false
 
     self.freshChance=self.settings.freshCount
     self.freshTimeRemain=0
