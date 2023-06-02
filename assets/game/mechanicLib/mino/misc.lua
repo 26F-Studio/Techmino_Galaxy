@@ -362,7 +362,7 @@ do-- Cascade
         end
         F:fresh()
     end
-    function misc.cascade_event_always(P)
+    function misc.cascade_autoEvent_always(P)-- Auto added, no need to manually add it
         if P.modeData.cascading then
             P.modeData.cascadeTimer=P.modeData.cascadeTimer-1
             if P.modeData.cascadeTimer<=0 then
@@ -387,17 +387,17 @@ do-- Cascade
                 end
             end
         else
-            P:delEvent('always',misc.cascade_event_always)
+            P:delEvent('always',misc.cascade_autoEvent_always)
         end
     end
-    function misc.cascade_event_afterClear(P)
+    function misc.cascade_event_afterClear(P)-- Just addresses this to enabled cascade, and need clearRule='line_float'
         if misc.cascade_check(P) and not P.modeData.cascading then
             P.modeData.cascading=true
             P.modeData.cascadeDelay=math.max(math.floor(P.settings.clearDelay^.9),62)
             P.modeData.cascadeTimer=0
             P.modeData.storedClearDelay=P.settings.clearDelay
             P.settings.clearDelay=1e99
-            P:addEvent('always',misc.cascade_event_always)
+            P:addEvent('always',misc.cascade_autoEvent_always)
         end
     end
 end

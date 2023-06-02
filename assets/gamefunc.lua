@@ -57,11 +57,16 @@ local trackNick={
     p='drum',
     s='sfx',
 }
+--- comment
+--- @param name string
+--- @param ... string m/a/d/b/p/s(N)
+--- @return string[]
 function bgmPack(name,...)
     local tracks={...}
     for i=1,#tracks do
         tracks[i]=name..'/'..trackNick[tracks[i]:sub(1,1)]..tracks[i]:sub(2)
     end
+    return tracks
 end
 
 local interiorModeMeta={__call=function(self)
