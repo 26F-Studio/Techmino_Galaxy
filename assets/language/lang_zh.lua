@@ -49,6 +49,15 @@ return {
     allClear='ALL CLEAR',
     halfClear='Half Clear',
 
+    target_piece="块数",
+    target_line="行数",
+    target_time="时间",
+    target_pc="全消",
+    target_hpc="半全消",
+    target_tsd="TSD",
+    target_techrash="消四",
+    target_wave="波数",
+
     -- About-Game
     pause="暂停",
 
@@ -195,9 +204,9 @@ return {
         tsd_practice=          {"TSD练习","完成更多的TSD练习题目"},
         tsd_easy=              {"TSD-易","连续消除更多的TSD"},
         tsd_hard=              {"TSD-难","连续消除更多的TSD，但不能在同一列"},
-        pc_easy=               {"PC-易","使用模板完成PC"},
-        pc_hard=               {"PC-难","使用更复杂的模板完成PC"},
-        pc_challenge=          {"PC挑战","尽可能完成更多PC"},
+        pc_easy=               {"全消-易","使用模板完成全消"},
+        pc_hard=               {"全消-难","使用更复杂的模板完成全消"},
+        pc_challenge=          {"全消挑战","尽可能完成更多全消"},
         dig_practice=          {"挖掘练习","消除垃圾行"},
         dig_40=                {"挖掘40","消除40行随机的垃圾行"},
         dig_100=               {"挖掘100","消除100行随机的垃圾行"},

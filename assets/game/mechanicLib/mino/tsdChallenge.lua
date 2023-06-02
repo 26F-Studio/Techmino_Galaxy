@@ -17,7 +17,7 @@ end
 function tsd.easy_event_drawOnPlayer(P)
     P:drawInfoPanel(-380,-60,160,120)
     FONT.set(80) GC.mStr(P.modeData.tsd,-300,-70)
-    FONT.set(30) GC.mStr("TSD",-300,15)
+    FONT.set(30) GC.mStr(Text.target_tsd,-300,15)
 end
 
 local tsdCharge=3

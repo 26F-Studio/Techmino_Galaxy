@@ -24,7 +24,8 @@ end)
 sprint.event_drawOnPlayer=TABLE.newPool(function(self,lineCount)
     self[lineCount]=function(P)
         P:drawInfoPanel(-380,-60,160,120)
-        FONT.set(80) GC.mStr(lineCount-P.modeData.line,-300,-55)
+        FONT.set(80) GC.mStr(lineCount-P.modeData.line,-300,-70)
+        FONT.set(30) GC.mStr(Text.target_line,-300,15)
     end
     return self[lineCount]
 end)
