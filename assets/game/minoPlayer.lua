@@ -565,7 +565,7 @@ function MP:resetPosCheck()
             -- Suffocate IRS
             if self.settings.initRotate then
                 if self.settings.initRotate=='hold' then
-                    local origY=self.handY-- For canceling 20G effect of IRS
+                    local origY=self.handY-- For IRS pushing up
                     if self.keyState.rotate180 then
                         self:rotate('F',true)
                     elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
@@ -574,7 +574,7 @@ function MP:resetPosCheck()
                     if self.settings.IRSpushUp then self.handY=origY end
                 elseif self.settings.initRotate=='buffer' then
                     if self.keyBuffer.rotate then
-                        local origY=self.handY-- For canceling 20G effect of IRS
+                        local origY=self.handY-- For IRS pushing up
                         self:rotate(self.keyBuffer.rotate,true)
                         if not self.keyBuffer.hold then
                             self.keyBuffer.rotate=false
@@ -627,7 +627,7 @@ function MP:resetPosCheck()
         -- IRS
         if self.settings.initRotate then
             if self.settings.initRotate=='hold' then
-                local origY=self.handY-- For canceling 20G effect of IRS
+                local origY=self.handY-- For IRS pushing up
                 if self.keyState.rotate180 then
                     self:rotate('F',true)
                 elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
@@ -636,7 +636,7 @@ function MP:resetPosCheck()
                 if self.settings.IRSpushUp then self.handY=origY end
             elseif self.settings.initRotate=='buffer' then
                 if self.keyBuffer.rotate then
-                    local origY=self.handY-- For canceling 20G effect of IRS
+                    local origY=self.handY-- For IRS pushing up
                     self:rotate(self.keyBuffer.rotate,true)
                     if not self.keyBuffer.hold then
                         self.keyBuffer.rotate=false
@@ -1072,6 +1072,7 @@ function MP:rotate(dir,ifInit)
     local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
     if not minoData then return end
 
+    local origY=self.handY-- For IRS pushing up
     if minoData.rotate then-- Custom rotate function
         minoData.rotate(self,dir,ifInit)
     else-- Normal rotate procedure
@@ -1104,7 +1105,7 @@ function MP:rotate(dir,ifInit)
                     self:moveHand('rotate',ix,iy,dir,ifInit)
                     self:freshGhost()
                     self:checkLanding()
-                    return
+                    goto BREAK_SUCCESS
                 end
             end
             self:freshDelay('rotate')
@@ -1114,6 +1115,8 @@ function MP:rotate(dir,ifInit)
             error("WTF why no state in minoData")
         end
     end
+    ::BREAK_SUCCESS::
+    if self.deathTimer and self.settings.IRSpushUp then self.handY=origY end
 end
 function MP:hold(ifInit)
     if self.holdTime>=self.settings.holdSlot and not self.settings.infHold then return end
