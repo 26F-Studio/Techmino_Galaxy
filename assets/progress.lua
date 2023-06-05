@@ -376,11 +376,11 @@ function PROGRESS.setInteriorScore(mode,score)
         PROGRESS.save()
     end
 end
-function PROGRESS.setPuyoUnlocked(bool) prgs.puyoUnlocked=bool end
-function PROGRESS.setMinoUnlocked(bool) prgs.minoUnlocked=bool end
-function PROGRESS.setGemUnlocked(bool) prgs.gemUnlocked=bool end
--- function PROGRESS.setPuyoModeUnlocked(name,state) prgs.puyoModeUnlocked[name]=state or 0  end
-function PROGRESS.setMinoModeUnlocked(name,state) prgs.minoModeUnlocked[name]=state or 0  end
--- function PROGRESS.setGemModeUnlocked(name,state) prgs.gemModeUnlocked[name]=state or 0  end
+function PROGRESS.setPuyoUnlocked(bool) prgs.puyoUnlocked=bool; PROGRESS.save() end
+function PROGRESS.setMinoUnlocked(bool) prgs.minoUnlocked=bool; PROGRESS.save() end
+function PROGRESS.setGemUnlocked(bool)  prgs.gemUnlocked =bool; PROGRESS.save() end
+function PROGRESS.setPuyoModeUnlocked(name,state) prgs.puyoModeUnlocked[name]=state or 0; PROGRESS.save() end
+function PROGRESS.setMinoModeUnlocked(name,state) prgs.minoModeUnlocked[name]=state or 0; PROGRESS.save() end
+function PROGRESS.setGemModeUnlocked(name,state)  prgs.gemModeUnlocked[name] =state or 0; PROGRESS.save() end
 
 return PROGRESS

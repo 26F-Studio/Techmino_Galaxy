@@ -66,7 +66,9 @@ local scene={}
 function scene.enter()
     if not minoMap then
         minoMap=require'assets.game.minomap'
-        minoMap:loadUnlocked(PROGRESS.getMinoModeUnlocked())
+        minoMap:freshUnlocked(PROGRESS.getMinoModeUnlocked(),true)
+    else
+        minoMap:freshUnlocked(PROGRESS.getMinoModeUnlocked())
     end
     minoMap:reset()
     minoMap:setFullVersion(true)
