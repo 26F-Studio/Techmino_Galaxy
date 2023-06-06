@@ -30,6 +30,7 @@ return {
         -- Special
         stack=require'assets.game.mechanicLib.mino.stack',
         squeeze=require'assets.game.mechanicLib.mino.squeeze',
+        progress=require'assets.game.mechanicLib.mino.progress',
     },
     puyo={
         -- Basic
