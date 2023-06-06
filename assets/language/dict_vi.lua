@@ -335,7 +335,7 @@ Khi một viên gạch xuất hiện chồng lên gạch hiện có, xảy ra hi
 @ titleFull Trò chơi kết thúc khi nào?
 Có những điều kiện khác nhau mà trò chơi sử dụng để xem trò chơi đã kết thúc hay chưa:
 
-1. Gạch mới được sinh ra chồng chéo với một gạch hiện đã đặt ("Block Out").
+1. Gạch mới được sinh ra chồng chéo với một gạch đã đặt ("Block Out").
 2. Có gạch nằm trên vùng skyline (đường chân trời) ("Lock Out").
 3. Độ cao của bảng vượt quá độ cao cho phép ("Top Out").
 
