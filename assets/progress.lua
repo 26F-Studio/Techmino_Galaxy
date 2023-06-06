@@ -17,12 +17,14 @@ local prgs={
     puyoUnlocked=false,
     gemUnlocked=false,
     bgmUnlocked={},
+    puyoModeUnlocked={},
     minoModeUnlocked={
         -- 0 = reached, 1~5 = rank reached
         sprint_40=0,
         marathon=0,
         dig_practice=0,
     },
+    gemModeUnlocked={},
 }
 
 local function sysInfoFunc()
@@ -338,9 +340,9 @@ function PROGRESS.getTotalInteriorScore() return prgs.interiorScore.dig+prgs.int
 function PROGRESS.getPuyoUnlocked() return prgs.puyoUnlocked end
 function PROGRESS.getMinoUnlocked() return prgs.minoUnlocked end
 function PROGRESS.getGemUnlocked() return prgs.gemUnlocked end
--- function PROGRESS.getPuyoModeUnlocked(name) return name and prgs.puyoModeUnlocked[name] or prgs.puyoModeUnlocked end
-function PROGRESS.getMinoModeUnlocked(name) return name and prgs.minoModeUnlocked[name] or prgs.minoModeUnlocked end
--- function PROGRESS.getGemModeUnlocked(name) return name and prgs.gemModeUnlocked[name] or prgs.gemModeUnlocked end
+function PROGRESS.getPuyoModeUnlocked(name) if name then return name and prgs.puyoModeUnlocked[name] else return prgs.puyoModeUnlocked end end
+function PROGRESS.getMinoModeUnlocked(name) if name then return name and prgs.minoModeUnlocked[name] else return prgs.minoModeUnlocked end end
+function PROGRESS.getGemModeUnlocked(name) if name then return name and prgs.gemModeUnlocked[name] else return prgs.gemModeUnlocked end end
 
 -- Set
 function PROGRESS.setMain(n)
@@ -379,8 +381,27 @@ end
 function PROGRESS.setPuyoUnlocked(bool) prgs.puyoUnlocked=bool; PROGRESS.save() end
 function PROGRESS.setMinoUnlocked(bool) prgs.minoUnlocked=bool; PROGRESS.save() end
 function PROGRESS.setGemUnlocked(bool)  prgs.gemUnlocked =bool; PROGRESS.save() end
-function PROGRESS.setPuyoModeUnlocked(name,state) prgs.puyoModeUnlocked[name]=state or 0; PROGRESS.save() end
-function PROGRESS.setMinoModeUnlocked(name,state) prgs.minoModeUnlocked[name]=state or 0; PROGRESS.save() end
-function PROGRESS.setGemModeUnlocked(name,state)  prgs.gemModeUnlocked[name] =state or 0; PROGRESS.save() end
+function PROGRESS.setPuyoModeUnlocked(name,state,force)
+    if not state then state=0 end
+    if state>(prgs.puyoModeUnlocked[name] or -1) or force then
+        prgs.puyoModeUnlocked[name]=state
+        PROGRESS.save()
+    end
+end
+function PROGRESS.setMinoModeUnlocked(name,state,force)
+    if not state then state=0 end
+    if state>(prgs.minoModeUnlocked[name] or -1) or force then
+        prgs.minoModeUnlocked[name]=state
+        PROGRESS.save()
+        SFX.play('map_unlock_background')
+    end
+end
+function PROGRESS.setGemModeUnlocked(name,state,force)
+    if not state then state=0 end
+    if state>(prgs.gemModeUnlocked[name] or -1) or force then
+        prgs.gemModeUnlocked[name]=state
+        PROGRESS.save()
+    end
+end
 
 return PROGRESS
