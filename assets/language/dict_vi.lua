@@ -293,7 +293,7 @@ Tốc độ rơi tự nhiên của viên gạch, khi mà bạn không nhấn nú
 
 Nếu tốc độ rơi đủ chậm, thì nó thường sẽ được diễn tả là "X ô trên giây" hoặc "một ô sau mỗi X giây".
 
-Nhưng khi ở tốc độ cao, thì tốc độ sẽ dùng đơn vị G (Gravity - Trọng lực), ứng với số khung hình mà gạch rơi xuống sau mỗi khung hình. 
+Nhưng khi ở tốc độ cao, thì tốc độ sẽ dùng đơn vị G (Gravity - Trọng lực), ứng với số ô mà gạch rơi xuống sau mỗi khung hình. 
 
 ~~
 Lấy ví dụ: (giả sử tốc độ khung hình hiện tại là 60FPS)
