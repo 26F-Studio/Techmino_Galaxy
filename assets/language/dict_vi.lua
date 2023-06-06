@@ -135,9 +135,9 @@ Có vài cách để nói về hướng của tetromino. Các kí tự chủ y�
 
 Trong đó:
 0 - Hướng mặc định của hệ thống xoay
-L - Gạch đã bị xoay trái (xoay ngược chiều)
-R - Gạch đã bị xoay phải (xoay cùng chiều)
-2 - Gạch đã bị lật dọc (xoay 180 độ/xoay trái hoặc phải hai lần)
+L - Xoay trái (xoay ngược chiều)
+R - Xoay phải (xoay cùng chiều)
+2 - Lật dọc   (xoay 180 độ/xoay trái hoặc phải hai lần)
 
 # next
 @ title Next (Kế/Tiếp)

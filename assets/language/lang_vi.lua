@@ -50,6 +50,15 @@ return {
     allClear="ALL CLEAR",
     halfClear="Half Clear",
 
+    target_piece="Gạch",
+    target_line="Hàng",
+    target_time="T.gian",
+    target_pc="PC",
+    target_hpc="HPC",
+    target_tsd="TSD",
+    target_techrash="Techrash",
+    target_wave="Đợt tấn công",
+
     -- About-Game
     pause="Đã tạm dừng",
 
