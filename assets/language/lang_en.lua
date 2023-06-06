@@ -61,6 +61,8 @@ return {
     -- About-Game
     pause="Pause",
 
+    new_level_unlocked="Assessment passed",
+
     -- Widget texts
     button_back="Back",
 

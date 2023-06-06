@@ -394,6 +394,7 @@ function PROGRESS.setMinoModeUnlocked(name,state,force)
         prgs.minoModeUnlocked[name]=state
         PROGRESS.save()
         SFX.play('map_unlock_background')
+        MSG.new('check',Text.new_level_unlocked,2.6)
     end
 end
 function PROGRESS.setGemModeUnlocked(name,state,force)
