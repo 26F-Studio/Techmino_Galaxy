@@ -58,7 +58,7 @@ local modes={
 }
 -- Initialize modes' graphic values
 for _,m in next,modes do
-    m.enable=true
+    m.enable=false
     m.state=-1
     m.active=0
     m.x=30*(m.pos[1]-m.pos[2])*(3^.5/2)
@@ -197,7 +197,7 @@ function map:reset()
 end
 
 function map:setFullVersion(bool)
-    full=true
+    full=false
 end
 
 function map:hideCursor() mapCursor=false end
