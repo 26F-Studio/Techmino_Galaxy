@@ -13,7 +13,7 @@ local color,invis='color1'
 local slide,pathVis,revKB
 
 local function notGaming()return state~=1 end
-local colorSelector=WIDGET.new{type='selector',pos={0,0},x=150,y=240,w=200,text="Color",labelPos='up',labelDistance=20,list={'color1','rainbow','color2','gray','black'},disp=function() return color end,code=function(v) if state~=1 then color=v end end,visibleFunc=notGaming}
+local colorSelector=WIDGET.new{type='selector',pos={0,0},x=150,y=240,w=200,text="Color",labelPos='up',labelDistance=20,list={'color1','rainbow','color2','gray','black'},disp=function() return color end,code=function(v) if state~=1 then color=v end end,visibleTick=notGaming}
 
 function scene.enter()
     BG.set('rainbow2')
@@ -312,10 +312,10 @@ end
 scene.widgetList={
     WIDGET.new{type='button',  pos={0,0},x=160, y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'space'},
     colorSelector,
-    WIDGET.new{type='checkBox',pos={0,.5},x=240, y=-150,text="Invis",widthLimit=200,fontSize=40,disp=function() return invis end,  code=WIDGET.c_pressKey'w',visibleFunc=notGaming},
-    WIDGET.new{type='checkBox',pos={0,.5},x=240, y=-50, text="Slide",widthLimit=200,fontSize=40,disp=function() return slide end,  code=WIDGET.c_pressKey'e',visibleFunc=notGaming},
-    WIDGET.new{type='checkBox',pos={0,.5},x=240, y=50,  text="Path", widthLimit=200,fontSize=40,disp=function() return pathVis end,code=WIDGET.c_pressKey'r',visibleFunc=function() return state~=1 and slide end},
-    WIDGET.new{type='checkBox',pos={0,.5},x=240, y=150, text="RevKB",widthLimit=200,fontSize=40,disp=function() return revKB end,  code=WIDGET.c_pressKey't',visibleFunc=notGaming},
+    WIDGET.new{type='checkBox',pos={0,.5},x=240, y=-150,text="Invis",widthLimit=200,fontSize=40,disp=function() return invis end,  code=WIDGET.c_pressKey'w',visibleTick=notGaming},
+    WIDGET.new{type='checkBox',pos={0,.5},x=240, y=-50, text="Slide",widthLimit=200,fontSize=40,disp=function() return slide end,  code=WIDGET.c_pressKey'e',visibleTick=notGaming},
+    WIDGET.new{type='checkBox',pos={0,.5},x=240, y=50,  text="Path", widthLimit=200,fontSize=40,disp=function() return pathVis end,code=WIDGET.c_pressKey'r',visibleTick=function() return state~=1 and slide end},
+    WIDGET.new{type='checkBox',pos={0,.5},x=240, y=150, text="RevKB",widthLimit=200,fontSize=40,disp=function() return revKB end,  code=WIDGET.c_pressKey't',visibleTick=notGaming},
     WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 

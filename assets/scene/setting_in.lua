@@ -33,7 +33,7 @@ scene.widgetList={
 
     WIDGET.new{type='button',   pos={0,.5},x=290,y=-180,w=360,h=80,lineWidth=4,cornerR=0,                 fontSize=40,text=LANG'setting_keymapping',     code=WIDGET.c_goScn('keyset_in','none')},
     WIDGET.new{type='checkBox', pos={0,.5},x=130,y=-60, w=40,      lineWidth=4,cornerR=0,labelPos='right',fontSize=40,text=LANG'setting_enableTouching', disp=TABLE.func_getVal(SETTINGS.system,'touchControl'),code=TABLE.func_revVal(SETTINGS.system,'touchControl')},
-    WIDGET.new{type='button',   pos={0,.5},x=290,y=20,  w=360,h=80,lineWidth=4,cornerR=0,                 fontSize=40,text=LANG'setting_touching',       code=WIDGET.c_goScn('keyset_touch_in','none'),visibleFunc=TABLE.func_getVal(SETTINGS.system,'touchControl')},
+    WIDGET.new{type='button',   pos={0,.5},x=290,y=20,  w=360,h=80,lineWidth=4,cornerR=0,                 fontSize=40,text=LANG'setting_touching',       code=WIDGET.c_goScn('keyset_touch_in','none'),visibleTick=TABLE.func_getVal(SETTINGS.system,'touchControl')},
     WIDGET.new{type='checkBox', pos={0,.5},x=130,y=250, w=40,      lineWidth=4,cornerR=0,labelPos='right',fontSize=40,text=LANG'setting_fullscreen',     disp=TABLE.func_getVal(SETTINGS.system,'fullscreen'), code=TABLE.func_revVal(SETTINGS.system,'fullscreen')},
     WIDGET.new{type='checkBox', pos={0,.5},x=130,y=350, w=40,      lineWidth=4,cornerR=0,labelPos='right',fontSize=40,text=LANG'setting_autoMute',       disp=TABLE.func_getVal(SETTINGS.system,'autoMute'),   code=TABLE.func_revVal(SETTINGS.system,'autoMute')},
 
