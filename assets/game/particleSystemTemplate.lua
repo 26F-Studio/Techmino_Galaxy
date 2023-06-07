@@ -23,7 +23,7 @@ do-- Moving
 end
 
 do-- Hold
-    local texture=GC.newText(FONT.get(80,'symbols'),CHAR.icon.sync)
+    local texture=GC.newText(FONT.get(80,'symbols'),CHAR.key.mac_pgdn_alt)
     local p={}
     function p:clone()
         return setmetatable({list={}},{__index=p})
@@ -31,20 +31,19 @@ do-- Hold
     function p:new(x,y,ifInit)
         table.insert(self.list,{
             x=x,y=y,t=0,
-            a=math.random()*MATH.tau,
-            va=ifInit and MATH.rand(16,22) or MATH.rand(2.6,6.2),
+            dx=0,vx=ifInit and MATH.rand(320,420) or MATH.rand(160,220),
             lifeTime=.26,
         })
     end
     function p:update(dt)
         for i=#self.list,1,-1 do
             local v=self.list[i]
+            v.dx=v.dx+dt*v.vx
             v.t=v.t+dt/v.lifeTime
             if v.t>1 then
                 table.remove(self.list,i)
             else
-                v.a=v.a+v.va*dt
-                v.va=math.max(v.va-dt*62,4.2)
+                v.vx=math.max(v.vx-dt*620,200)
             end
         end
     end
@@ -55,7 +54,8 @@ do-- Hold
             local v=self.list[i]
             local t=v.t
             GC.setColor(r,g,b,a*(1-t)^.626)
-            GC.mDraw(texture,v.x,v.y,v.a,2.6*(.5+t^.5*.626))
+            GC.mDraw(texture,v.x+26-v.dx,v.y-20,math.pi/2)
+            GC.mDraw(texture,v.x-26+v.dx,v.y+20,-math.pi/2)
         end
     end
     ps.spinArrow=p
@@ -110,7 +110,7 @@ do-- Rotating corner check
     ps.cornerCheck=p
 end
 
-do-- Rotating failed
+do-- Piece controlling effect
     local p=love.graphics.newParticleSystem(GC.load{1,1,
         {'clear',1,1,1},
     },26)

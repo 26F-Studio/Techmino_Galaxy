@@ -28,12 +28,12 @@ local levels={
     {drop=0,   lock=580 ,spawn=75,  par=227},
     {drop=0,   lock=570 ,spawn=75,  par=217},
     {drop=0,   lock=560 ,spawn=75,  par=200},
-    {drop=0,   lock=550 ,spawn=75,  par=185},
-    {drop=0,   lock=540 ,spawn=70,  par=172},
-    {drop=0,   lock=530 ,spawn=70,  par=161},
-    {drop=0,   lock=520 ,spawn=70,  par=147},
-    {drop=0,   lock=510 ,spawn=70,  par=142},
-    {drop=0,   lock=500 ,spawn=70,  par=133},
+    {drop=0,   lock=550 ,spawn=75,  par=189},
+    {drop=0,   lock=540 ,spawn=70,  par=179},
+    {drop=0,   lock=530 ,spawn=70,  par=169},
+    {drop=0,   lock=520 ,spawn=70,  par=161},
+    {drop=0,   lock=510 ,spawn=70,  par=154},
+    {drop=0,   lock=500 ,spawn=70,  par=143},
 }
 
 function marathon.event_playerInit_auto(P)
@@ -69,6 +69,7 @@ function marathon.event_afterClear(P)
     while md.line>=md.target do
         if md.target<200 then
             local autoLevel=md.level
+            -- Ignore spawn delay, Assume clear 3 times
             local averageDropTime=(P.gameTime-md.levelStartTime-P.settings.clearDelay*3)/md.levelPieces-P.settings.spawnDelay
             while averageDropTime<levels[autoLevel].par and autoLevel<30 do
                 autoLevel=autoLevel+1

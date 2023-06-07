@@ -115,11 +115,10 @@ PP._actions.moveLeft={
         if P.hand then
             if P:moveLeft() then
                 P:playSound('move')
-                if P.handY==P.ghostY then
-                    P:playSound('touch')
-                end
             else
+                P:freshDelay('move')
                 P:playSound('move_failed')
+                P:createHandEffect(1,.26,0)
             end
         else
             P.keyBuffer.move='L'
@@ -137,11 +136,10 @@ PP._actions.moveRight={
         if P.hand then
             if P:moveRight() then
                 P:playSound('move')
-                if P.handY==P.ghostY then
-                    P:playSound('touch')
-                end
             else
+                P:freshDelay('move')
                 P:playSound('move_failed')
+                P:createHandEffect(1,.26,0)
             end
         else
             P.keyBuffer.move='R'
@@ -225,47 +223,133 @@ PP._actions.func6=NULL
 for k,v in next,PP._actions do PP._actions[k]=PP:_getActionObj(v) end
 --------------------------------------------------------------
 -- Effects
-function PP:createMoveParticle(x1,y1,x2,y2)
-    local p=self.particles.star
-    p:setParticleLifetime(.26,.5)
-    p:setEmissionArea('none')
+function PP:createMoveEffect(x1,y1,x2,y2)
+    local p=self.particles.rectShade
+    local dx,dy=self:getSmoothPos()
     for x=x1,x2,x2>x1 and 1 or -1 do for y=y1,y2,y2>y1 and 1 or -1 do
-        p:setPosition(
-            (x+rnd()*#self.hand.matrix[1]-1)*40,
-            -(y+rnd()*#self.hand.matrix-1)*40
-        )
+        p:setPosition((x-.5)*40+dx,-(y-.5)*40+dy)
         p:emit(1)
     end end
 end
-function PP:createClearParticle(x,y)
+function PP:createHandEffect(r,g,b,a)
+    local CB,bx,by=self.hand.matrix,self.handX,self.handY
+    local dx,dy=self:getSmoothPos()
+    local p=self.particles.tiltRect
+    p:setColors(r,g,b,a or 1,r,g,b,0)
+    for y=1,#CB do for x=1,#CB[1] do
+        local c=CB[y][x]
+        if c then
+            p:setPosition(
+                (bx+x-1.5)*40+dx,
+                -(by+y-1.5)*40+dy
+            )
+            p:emit(1)
+        end
+    end end
+end
+function PP:createTuckEffect()
+end
+function PP:createLockEffect()
+    local p=self.particles.trail
+    p:setPosition(
+        (self.handX+#self.hand.matrix[1]/2-1)*40,
+        -(self.handY+#self.hand.matrix/2-1)*40
+    )
+    p:emit(1)
+end
+function PP:createClearEffect(x,y)
     local p=self.particles.star
     p:setParticleLifetime(.26,.626)
     p:setEmissionArea('ellipse',30,30,0,true)
-    p:setPosition(40*x-20,-40*y+20)
+    p:setPosition(40*(x-.5),-40*(y-.5))
     p:emit(6)
 end
-function PP:createLockParticle(x,y)
-    local p=self.particles.trail
-    p:setPosition(
-        (x+#self.hand.matrix[1]/2-1)*40,
-        -(y+#self.hand.matrix/2-1)*40
-    )
-    p:emit(1)
+function PP:createSuffocateEffect()
+end
+function PP:createDesuffocateEffect()
+end
+function PP:setCellBias(x,y,bias)
+    local c=self.field:getCell(x,y)
+    if c then
+        bias.x=40*(bias.x or 0)
+        bias.y=-40*(bias.y or 0)
+        if c.bias then
+            bias.x=bias.x+c.bias.x
+            bias.y=bias.y+c.bias.y
+        end
+        c.bias=bias
+    end
+end
+function PP:showInvis(visStep,visMax)
+    for y=1,self.field:getHeight() do
+        for x=1,self.settings.fieldW do
+            local c=self.field:getCell(x,y)
+            if c then
+                c.visTimer=c.visTimer or 0
+                c.visStep=visStep or 1
+                c.visMax=visMax
+            end
+        end
+    end
+end
+function PP:getSmoothPos()
+    if self.deathTimer then
+        return 0,0
+    else
+        return
+            self.moveDir and self.moveCharge<self.settings.das and 15*self.moveDir*(max(self.moveCharge,0)/self.settings.das-.5) or 0,
+            self.ghostY and self.handY>self.ghostY and 40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6 or 0
+    end
 end
 --------------------------------------------------------------
 -- Game methods
 function PP:moveHand(action,a,b,c)
     if action=='moveX' then
-        if self.settings.particles then
-            self:createMoveParticle(self.handX,self.handY,self.handX+a,self.handY)
-        end
         self.handX=self.handX+a
-    elseif action=='drop' or action=='moveY' then
+        self:checkLanding()
         if self.settings.particles then
-            self:createMoveParticle(self.handX,self.handY,self.handX,self.handY+a)
+            local hx,hy=self.handX,self.handY
+            local mat=self.hand.matrix
+            local w,h=#mat[1],#mat
+            if a<0 then
+                for y=1,h do for x=w,1,-1 do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1+1,hy+y-1,hx+x-1+1-a-1,hy+y-1)
+                        break
+                    end end
+                end
+            elseif a>0 then
+                for y=1,h do for x=1,w do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1-1,hy+y-1,hx+x-1-1-a+1,hy+y-1)
+                        break
+                    end end
+                end
+            end
         end
+    elseif action=='drop' or action=='moveY' then
         self.handY=self.handY+a
-    elseif action=='rotate' or action=='reset' then
+        self:checkLanding(true)
+        if self.settings.particles then
+            local hx,hy=self.handX,self.handY
+            local mat=self.hand.matrix
+            local w,h=#mat[1],#mat
+            if a<0 then
+                for x=1,w do for y=h,1,-1 do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1,hy+y-1+1,hx+x-1,hy+y-1+1-a-1)
+                        break
+                    end end
+                end
+            elseif a>0 then
+                for x=1,w do for y=1,h do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1,hy+y-1-1,hx+x-1,hy+y-1-1-a+1)
+                        break
+                    end end
+                end
+            end
+        end    elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
     else
         error("WTF why action is "..tostring(action))
@@ -275,20 +359,10 @@ function PP:moveHand(action,a,b,c)
 
     if action=='rotate' then
         self:playSound(c and 'initrotate' or 'rotate')
-        if self.handY==self.ghostY then
-            self:playSound('touch')
-        end
+        self:checkLanding()
     end
 
-    if self.deathTimer then
-        local t=self.deathTimer
-        self.deathTimer=false
-        if self:isSuffocate() then
-            self.deathTimer=t
-        else
-            self:playSound('desuffocate')
-        end
-    end
+    self:tryCancelSuffocate()
 end
 function PP:restorePuyoState(puyo)-- Restore a puyo object's state (only inside, like shape, name, direction)
     if puyo._origin then
@@ -300,6 +374,10 @@ function PP:restorePuyoState(puyo)-- Restore a puyo object's state (only inside,
 end
 function PP:resetPos()-- Move hand piece to the normal spawn position
     self:moveHand('reset',floor(self.settings.fieldW/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
+
+    self.deathTimer=false
+    self.ghostState=false
+
     self.minY=self.handY
     self.ghostY=self.handY
     self:resetPosCheck()
@@ -310,10 +388,9 @@ end
 function PP:resetPosCheck()
     local suffocated-- Cancel deathTimer temporarily, or we cannot apply IMS when hold in suffcating
     if self.deathTimer then
-        local bufferedDeathTimer=self.deathTimer
-        self.deathTimer=false
+        self.ghostState=false
         suffocated=self:isSuffocate()
-        self.deathTimer=bufferedDeathTimer
+        self.ghostState=true
     else
         suffocated=self:isSuffocate()
     end
@@ -321,7 +398,7 @@ function PP:resetPosCheck()
     if suffocated then
         if self.settings.deathDelay>0 then
             self.deathTimer=self.settings.deathDelay
-            self:playSound('suffocate')
+            self.ghostState=true
 
             -- Suffocate IMS, always trigger when held
             if self.keyState.softDrop then self:moveDown() end
@@ -332,23 +409,26 @@ function PP:resetPosCheck()
             -- Suffocate IRS
             if self.settings.initRotate then
                 if self.settings.initRotate=='hold' then
-                    local origY=self.handY-- For canceling 20G effect of IRS
                     if self.keyState.rotate180 then
                         self:rotate('F',true)
                     elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                         self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                     end
-                    if self.settings.IRSpushUp then self.handY=origY end
                 elseif self.settings.initRotate=='buffer' then
                     if self.keyBuffer.rotate then
-                        local origY=self.handY-- For canceling 20G effect of IRS
                         self:rotate(self.keyBuffer.rotate,true)
                         if not self.keyBuffer.hold then
                             self.keyBuffer.rotate=false
                         end
-                        if self.settings.IRSpushUp then self.handY=origY end
                     end
                 end
+            end
+            self:tryCancelSuffocate()
+            self:freshGhost()
+
+            if self.deathTimer then
+                self:playSound('suffocate')
+                self:createSuffocateEffect()
             end
         else
 
@@ -388,30 +468,23 @@ function PP:resetPosCheck()
         -- IRS
         if self.settings.initRotate then
             if self.settings.initRotate=='hold' then
-                local origY=self.handY-- For canceling 20G effect of IRS
                 if self.keyState.rotate180 then
                     self:rotate('F',true)
                 elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                     self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                 end
-                if self.settings.IRSpushUp then self.handY=origY end
             elseif self.settings.initRotate=='buffer' then
                 if self.keyBuffer.rotate then
-                    local origY=self.handY-- For canceling 20G effect of IRS
                     self:rotate(self.keyBuffer.rotate,true)
                     if not self.keyBuffer.hold then
                         self.keyBuffer.rotate=false
                     end
-                    if self.settings.IRSpushUp then self.handY=origY end
                 end
             end
         end
 
         self:freshGhost()
         self:freshDelay('spawn')
-        if self.handY==self.ghostY then
-            self:playSound('touch')
-        end
     end
 
     if self.settings.dasHalt>0 then-- DAS halt
@@ -435,6 +508,18 @@ function PP:freshGhost()
             self:shakeBoard('-drop',-dY/self.settings.spawnH)
         else
             self:freshDelay('move')
+        end
+    end
+end
+function PP:tryCancelSuffocate()
+    if self.deathTimer then
+        self.ghostState=false
+        if self:isSuffocate() then
+            self.ghostState=true
+        else
+            self.deathTimer=false
+            self:playSound('desuffocate')
+            self:createDesuffocateEffect()
         end
     end
 end
@@ -549,7 +634,7 @@ function PP:ifoverlap(CB,cx,cy)
     if cy>self.field:getHeight() then return false end
 
     -- Check field
-    if not self.deathTimer then
+    if not self.ghostState then
         for y=1,#CB do for x=1,#CB[1] do
             if CB[y][x] and self.field:getCell(cx+x-1,cy+y-1) then
                 return true
@@ -559,6 +644,11 @@ function PP:ifoverlap(CB,cx,cy)
 
     -- No collision
     return false
+end
+function PP:checkLanding()
+    if self.handY==self.ghostY then
+        self:playSound('touch')
+    end
 end
 function PP:isSuffocate()
     return self:ifoverlap(self.hand.matrix,self.handX,self.handY)
@@ -581,9 +671,6 @@ function PP:moveDown()
     if not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
         self:moveHand('moveY',-1)
         self:freshDelay('drop')
-        if self.handY==self.ghostY then
-            self:playSound('touch')
-        end
         return true
     end
 end
@@ -626,6 +713,7 @@ local PRS={
 function PP:rotate(dir,ifInit)
     if not self.hand then return end
     if dir~='R' and dir~='L' and dir~='F' then error("WTF why dir isn't R/L/F ("..tostring(dir)..")") end
+    local origY=self.handY-- For IRS pushing up
 
     -- Rotate matrix
     local cb=self.hand.matrix
@@ -639,7 +727,7 @@ function PP:rotate(dir,ifInit)
             self.hand.direction=kicks.target
             self:moveHand('rotate',ix,iy,ifInit)
             self:freshGhost()
-            return
+            if self.settings.IRSpushUp then self.handY=origY end
         end
     end
     self:freshDelay('rotate')
@@ -655,7 +743,7 @@ function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
         self:playSound('drop')
     end
     if self.settings.particles then
-        self:createLockParticle(self.handX,self.handY)
+        self:createLockEffect()
     end
 
     self:triggerEvent('afterDrop')
@@ -864,7 +952,7 @@ function PP:clearField()
             end
             F:setCell(k,pos[1],pos[2])
             if self.settings.particles then
-                self:createClearParticle(pos[1],pos[2])
+                self:createClearEffect(pos[1],pos[2])
             end
         end
     end
@@ -960,9 +1048,6 @@ function PP:updateFrame()
                     end
                     if self.handX~=ox then
                         self:playSound('move')
-                        if self.handY==self.ghostY then
-                            self:playSound('touch')
-                        end
                     end
                 end
             else
@@ -994,7 +1079,6 @@ function PP:updateFrame()
                         self:playSound('move')
                         if self.handY==self.ghostY then
                             self:shakeBoard('-down')
-                            self:playSound('touch')
                         end
                     end
                 end
@@ -1060,9 +1144,6 @@ function PP:updateFrame()
                     if self.dropTimer<=0 then
                         self.dropTimer=SET.dropDelay
                         self:moveHand('drop',-1)
-                        if self.handY==self.ghostY then
-                            self:playSound('touch')
-                        end
                     end
                 elseif self.handY~=self.ghostY then-- If switch to 20G during game, puyo won't dropped to bottom instantly so we force fresh it
                     self:freshDelay('drop')
@@ -1073,6 +1154,7 @@ function PP:updateFrame()
         self.deathTimer=self.deathTimer-1
         if self.deathTimer<=0 then
             self.deathTimer=false
+            self.ghostState=false
 
             self:triggerEvent('whenSuffocate')
             self:freshGhost()
@@ -1129,23 +1211,17 @@ function PP:render()
                 local CB=self.hand.matrix
 
                 -- Ghost
-                if not self.deathTimer then
+                if not self.deathTimer and self.ghostY then
                     skin.drawGhost(CB,self.handX,self.ghostY)
                 end
 
                 -- Hand
                 if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
                     -- Smooth
-                    local movingX,droppingY=0,0
-                    if not self.deathTimer and self.moveDir and self.moveCharge<self.settings.das then
-                        movingX=15*self.moveDir*(self.moveCharge/self.settings.das-.5)
-                    end
-                    if self.handY>self.ghostY then
-                        droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
-                    end
-                    gc_translate(movingX,droppingY)
+                    local dx,dy=self:getSmoothPos()
+                    gc_translate(dx,dy)
                     skin.drawHand(CB,self.handX,self.handY)
-                    gc_translate(-movingX,-droppingY)
+                    gc_translate(-dx,-dy)
                 end
             end
 
@@ -1281,6 +1357,7 @@ local baseEnv={
     hdLockM=100,
     initMove='buffer',
     initRotate='buffer',
+    IRSpushUp=false,
     skin='puyo_jelly',
     particles=true,
     shakeness=.26,
@@ -1352,6 +1429,7 @@ function PP:initialize()
     self.fallTimer=0
     self.clearTimer=0
     self.deathTimer=false
+    self.ghostState=false
 
     self.freshChance=self.settings.freshCount
     self.freshTimeRemain=0

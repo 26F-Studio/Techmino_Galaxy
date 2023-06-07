@@ -61,6 +61,8 @@ return {
     -- About-Game
     pause="暂停",
 
+    new_level_unlocked="评估通过",
+
     -- Widget texts
     button_back="返回",
 

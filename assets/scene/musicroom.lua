@@ -77,7 +77,7 @@ local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1
             BGM.set('all','seek',v*BGM.getDuration())
         end
     end,
-    visibleFunc=function() return BGM.isPlaying() end,
+    visibleTick=function() return BGM.isPlaying() end,
 }
 
 
@@ -237,8 +237,8 @@ scene.widgetList={
     progressBar,
 
     -- Play/Stop
-    WIDGET.new{type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=WIDGET.c_pressKey'space',visibleFunc=function() return not BGM.isPlaying() end},
-    WIDGET.new{type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleFunc=function() return BGM.isPlaying() end},
+    WIDGET.new{type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return not BGM.isPlaying() end},
+    WIDGET.new{type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return BGM.isPlaying() end},
 
     -- Fullband Switch
     WIDGET.new{type='switch',pos={.5,.5},x=-650,y=360,h=50,widthLimit=260,labelPos='right',disp=function() return fullband end,
@@ -253,7 +253,7 @@ scene.widgetList={
                 scene.enter()
             end
         end,
-        visibleFunc=function()
+        visibleTick=function()
             return fullband~=nil and bgmList[selected].base
         end,
     },
