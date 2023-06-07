@@ -1675,18 +1675,18 @@ function MP:updateFrame()
                     C.visTimer=nil
                 end
             end
-            if C.bias then
-                local b=C.bias
+            local b=C.bias
+            if b then
                 if b.expBack then
                     b.x=expApproach(b.x,0,b.expBack)
                     b.y=expApproach(b.y,0,b.expBack)
                     if b.x^2+b.y^2<=.26^2 then
-                        b=false
+                        C.bias=nil
                     end
                 elseif b.lineBack then
                     local dist=(b.x^2+b.y^2)^.5
                     if b.lineBack>=dist then
-                        b=false
+                        C.bias=nil
                     else
                         local k=1-b.lineBack/dist
                         b.x,b.y=b.x*k,b.y*k
@@ -1694,11 +1694,8 @@ function MP:updateFrame()
                 elseif b.teleBack then
                     b.teleBack=b.teleBack-1
                     if b.teleBack<=0 then
-                        b=false
+                        C.bias=nil
                     end
-                end
-                if not b then
-                    C.bias=nil
                 end
             end
         end
