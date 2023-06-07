@@ -1,5 +1,3 @@
-local floor,clamp=math.floor,MATH.clamp
-
 --- @type Techmino.Mech.mino
 local progress={}
 
@@ -17,6 +15,34 @@ function progress.marathon_afterClear(P)
             PROGRESS.setMinoModeUnlocked('hypersonic_lo')
         end
         P.modeData.marathon_bgmLevel=P.modeData.level
+    end
+end
+
+do-- hypersonic_lo
+    local bgmTransBegin,bgmTransFinish=100,300
+    function progress.hypersonic_lo_afterSpawn(P)
+        if P.modeData.point>bgmTransBegin and P.modeData.point<bgmTransFinish+10 and P.isMain then
+            BGM.set(bgmList['secret8th'].add,'volume',math.min((P.modeData.point-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),1)
+        end
+    end
+    function progress.hypersonic_lo_afterClear(P)
+        if P.modeData.point==500 then
+            PROGRESS.setMinoModeUnlocked('hypersonic_hi')
+        end
+    end
+end
+
+do-- hypersonic_hi
+    local bgmTransBegin,bgmTransFinish=100,500
+    function progress.hypersonic_hi_afterSpawn(P)
+        if P.modeData.point>bgmTransBegin and P.modeData.point<bgmTransFinish+10 and P.isMain then
+            BGM.set(bgmList['secret7th'].add,'volume',math.min((P.modeData.point-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),1)
+        end
+end
+    function progress.hypersonic_hi_afterClear(P)
+        if P.modeData.point==1000 then
+            PROGRESS.setMinoModeUnlocked('hypersonic_ti')
+        end
     end
 end
 
