@@ -74,9 +74,9 @@ do-- low
         P.settings.clearDelay=300
     end
 
-    function hypersonic.low_event_afterClear(P)
+    function hypersonic.low_event_afterClear(P,clear)
         local md=P.modeData
-        local dScore=math.floor((P.clearHistory[#P.clearHistory].line+1)^2/4)
+        local dScore=math.floor((clear.line+1)^2/4)-- 1,2,4,6
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then
@@ -112,8 +112,8 @@ do-- high
         {lock=300,fresh=3400,spawn=100,clear=180,das=96, arr=24,bumpInterval=10000},
         {lock=300,fresh=3200,spawn=95, clear=160,das=92, arr=23,bumpInterval=8000},
         {lock=300,fresh=3000,spawn=90, clear=140,das=88, arr=22,bumpInterval=6000},
-        {lock=300,fresh=2800,spawn=85, clear=120,das=84, arr=21,bumpInterval=4000},
-        {lock=300,fresh=2600,spawn=80, clear=100,das=80, arr=20,bumpInterval=3000},
+        {lock=300,fresh=2800,spawn=85, clear=120,das=84, arr=21,bumpInterval=5000},
+        {lock=300,fresh=2600,spawn=80, clear=100,das=80, arr=20,bumpInterval=4000},
     }
 
     function hypersonic.high_event_playerInit(P)
@@ -161,9 +161,9 @@ do-- high
         end
     end
 
-    function hypersonic.high_event_afterClear(P)
+    function hypersonic.high_event_afterClear(P,clear)
         local md=P.modeData
-        local dScore=math.floor((P.clearHistory[#P.clearHistory].line+1)^2/4)
+        local dScore=math.floor((clear.line+1)^2/4)-- 1,2,4,6
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then
@@ -291,7 +291,7 @@ do-- hidden
         end
     end
 
-    function hypersonic.hidden_event_afterClear(P)
+    function hypersonic.hidden_event_afterClear(P,clear)
         local md=P.modeData
 
         -- Update showInvis speed
@@ -302,7 +302,7 @@ do-- hidden
             md.swipeStep=math.max(md.swipeStep+(3-c.line),1)
         end
 
-        local dScore=math.floor((P.clearHistory[#P.clearHistory].line)^2/2)
+        local dScore=math.floor((clear.line)^2/2)-- 0,2,4,8
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then
