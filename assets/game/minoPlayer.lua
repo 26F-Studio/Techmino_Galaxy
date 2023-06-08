@@ -143,7 +143,9 @@ MP._actions.moveLeft={
             else
                 P:freshDelay('move')
                 P:playSound('move_failed')
-                P:createHandEffect(1,.26,0)
+                if P.settings.particles then
+                    P:createHandEffect(1,.26,0)
+                end
             end
         else
             P.keyBuffer.move='L'
@@ -164,7 +166,9 @@ MP._actions.moveRight={
             else
                 P:freshDelay('move')
                 P:playSound('move_failed')
-                P:createHandEffect(1,.26,0)
+                if P.settings.particles then
+                    P:createHandEffect(1,.26,0)
+                end
             end
         else
             P.keyBuffer.move='R'
@@ -477,7 +481,9 @@ function MP:moveHand(action,a,b,c,d)
         then
             movement.tuck=true
             self:playSound('tuck')
-            self:createTuckEffect()
+            if self.settings.particles then
+                self:createTuckEffect()
+            end
         end
     elseif action=='moveY' then
     elseif action=='rotate' then
@@ -492,7 +498,9 @@ function MP:moveHand(action,a,b,c,d)
                 movement.immobile=true
                 self:shakeBoard(c=='L' and '-ccw' or c=='R' and '-cw' or '-180')
                 self:playSound('rotate_locked')
-                self:createHandEffect(.942,1,1)
+                if self.settings.particles then
+                    self:createHandEffect(.942,1,1)
+                end
             end
             if self.settings.spin_corners then
                 local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
@@ -509,14 +517,18 @@ function MP:moveHand(action,a,b,c,d)
                         if corners>=self.settings.spin_corners then
                             movement.corners=true
                             self:playSound('rotate_corners')
-                            self:createRotateCornerEffect(cx,cy)
+                            if self.settings.particles then
+                                self:createRotateCornerEffect(cx,cy)
+                            end
                         end
                     end
                 end
             end
         end
         self:playSound(d and 'initrotate' or 'rotate')
-        self:createRotateEffect(c,d)
+        if self.settings.particles then
+            self:createRotateEffect(c,d)
+        end
     end
     self.lastMovement=movement
 
@@ -589,7 +601,9 @@ function MP:resetPosCheck()
 
             if self.deathTimer then
                 self:playSound('suffocate')
-                self:createSuffocateEffect()
+                if self.settings.particles then
+                    self:createSuffocateEffect()
+                end
             end
         else
 
@@ -684,7 +698,9 @@ function MP:tryCancelSuffocate()
         else
             self.deathTimer=false
             self:playSound('desuffocate')
-            self:createDesuffocateEffect()
+            if self.settings.particles then
+                self:createDesuffocateEffect()
+            end
         end
     end
 end
@@ -1111,7 +1127,9 @@ function MP:rotate(dir,ifInit)
             end
             self:freshDelay('rotate')
             self:playSound('rotate_failed')
-            self:createHandEffect(1,.26,.26)
+            if self.settings.particles then
+                self:createHandEffect(1,.26,.26)
+            end
         else
             error("WTF why no state in minoData")
         end
@@ -1119,7 +1137,9 @@ function MP:rotate(dir,ifInit)
 end
 function MP:hold(ifInit)
     if self.holdTime>=self.settings.holdSlot and not self.settings.infHold then return end
-    self:createHoldEffect(ifInit)
+    if self.settings.particles then
+        self:createHoldEffect(ifInit)
+    end
 
     local mode=self.settings.holdMode
     if     mode=='hold'  then self:hold_hold()
