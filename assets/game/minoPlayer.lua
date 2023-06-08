@@ -41,15 +41,15 @@ local defaultSoundFunc={
             inst('bass',2.2-num/5,'A2','E3')
         end
     end,
-    move=           function() SFX.play('move',.626)        end,
-    move_down=      function() SFX.play('move_down',.626)   end,
-    move_failed=    function() SFX.play('control_failed')   end,
+    move=           function() SFX.play('move',.6)          end,
+    move_down=      function() SFX.play('move_down',.6)     end,
+    move_failed=    function() SFX.play('move_failed')      end,
     tuck=           function() SFX.play('tuck')             end,
     rotate=         function() SFX.play('rotate')           end,
     initrotate=     function() SFX.play('initrotate')       end,
     rotate_locked=  function() SFX.play('rotate_locked')    end,
     rotate_corners= function() SFX.play('rotate_corners')   end,
-    rotate_failed=  function() SFX.play('control_failed')   end,
+    rotate_failed=  function() SFX.play('rotate_failed')    end,
     rotate_special= function() SFX.play('rotate_special')   end,
     hold=           function() SFX.play('hold')             end,
     inithold=       function() SFX.play('inithold')         end,
@@ -1110,7 +1110,7 @@ function MP:rotate(dir,ifInit)
                 end
             end
             self:freshDelay('rotate')
-            self:playSound('move_failed')
+            self:playSound('rotate_failed')
             self:createHandEffect(1,.26,.26)
         else
             error("WTF why no state in minoData")

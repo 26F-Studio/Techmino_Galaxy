@@ -43,12 +43,12 @@ local defaultSoundFunc={
             inst('bass',2.2-num/5,'A2','E3')
         end
     end,
-    move=           function() SFX.play('move',.626)        end,
-    move_down=      function() SFX.play('move_down',.626)   end,
-    move_failed=    function() SFX.play('control_failed')   end,
+    move=           function() SFX.play('move',.6)          end,
+    move_down=      function() SFX.play('move_down',.6)     end,
+    move_failed=    function() SFX.play('move_failed')      end,
     rotate=         function() SFX.play('rotate')           end,
     initrotate=     function() SFX.play('initrotate')       end,
-    rotate_failed=  function() SFX.play('control_failed')   end,
+    rotate_failed=  function() SFX.play('rotate_failed')    end,
     rotate_special= function() SFX.play('rotate_special')   end,
     touch=          function() SFX.play('touch')            end,
     drop=           function() SFX.play('drop')             end,
