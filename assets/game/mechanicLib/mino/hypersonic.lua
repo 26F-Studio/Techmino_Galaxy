@@ -74,9 +74,9 @@ do-- low
         P.settings.clearDelay=300
     end
 
-    function hypersonic.low_event_afterClear(P)
+    function hypersonic.low_event_afterClear(P,clear)
         local md=P.modeData
-        local dScore=math.floor((P.clearHistory[#P.clearHistory].line+1)^2/4)
+        local dScore=math.floor((clear.line+1)^2/4)-- 1,2,4,6
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then
@@ -161,9 +161,9 @@ do-- high
         end
     end
 
-    function hypersonic.high_event_afterClear(P)
+    function hypersonic.high_event_afterClear(P,clear)
         local md=P.modeData
-        local dScore=math.floor((P.clearHistory[#P.clearHistory].line+1)^2/4)
+        local dScore=math.floor((clear.line+1)^2/4)-- 1,2,4,6
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then
@@ -291,7 +291,7 @@ do-- hidden
         end
     end
 
-    function hypersonic.hidden_event_afterClear(P)
+    function hypersonic.hidden_event_afterClear(P,clear)
         local md=P.modeData
 
         -- Update showInvis speed
@@ -302,7 +302,7 @@ do-- hidden
             md.swipeStep=math.max(md.swipeStep+(3-c.line),1)
         end
 
-        local dScore=math.floor((P.clearHistory[#P.clearHistory].line)^2/2)
+        local dScore=math.floor((clear.line)^2/2)-- 0,2,4,8
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then

@@ -38,10 +38,17 @@ do-- hypersonic_hi
         if P.modeData.point>bgmTransBegin and P.modeData.point<bgmTransFinish+10 and P.isMain then
             BGM.set(bgmList['secret7th'].add,'volume',math.min((P.modeData.point-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),1)
         end
-end
-    function progress.hypersonic_hi_afterClear(P)
+    end
+    function progress.hypersonic_hi_afterClear(P,clear)
+        if clear.line==4 then
+            P.modeData.hypersonic_hi_techrash=(P.modeData.hypersonic_hi_techrash or 0)+1
+            if P.modeData.hypersonic_hi_techrash==42 then
+                PROGRESS.setMinoModeUnlocked('hypersonic_hd')
+            end
+        end
         if P.modeData.point==1000 then
             PROGRESS.setMinoModeUnlocked('hypersonic_ti')
+            return true
         end
     end
 end
