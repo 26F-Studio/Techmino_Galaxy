@@ -112,8 +112,8 @@ do-- high
         {lock=300,fresh=3400,spawn=100,clear=180,das=96, arr=24,bumpInterval=10000},
         {lock=300,fresh=3200,spawn=95, clear=160,das=92, arr=23,bumpInterval=8000},
         {lock=300,fresh=3000,spawn=90, clear=140,das=88, arr=22,bumpInterval=6000},
-        {lock=300,fresh=2800,spawn=85, clear=120,das=84, arr=21,bumpInterval=4000},
-        {lock=300,fresh=2600,spawn=80, clear=100,das=80, arr=20,bumpInterval=3000},
+        {lock=300,fresh=2800,spawn=85, clear=120,das=84, arr=21,bumpInterval=5000},
+        {lock=300,fresh=2600,spawn=80, clear=100,das=80, arr=20,bumpInterval=4000},
     }
 
     function hypersonic.high_event_playerInit(P)
