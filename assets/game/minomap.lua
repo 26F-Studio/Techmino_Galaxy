@@ -226,7 +226,7 @@ function map:reset()
 end
 
 function map:setFullVersion(bool)
-    full=false
+    full=bool
 end
 
 function map:hideCursor() mapCursor=false end
