@@ -63,9 +63,9 @@ end
 function marathon.event_afterLock(P)
     P.modeData.levelPieces=P.modeData.levelPieces+1
 end
-function marathon.event_afterClear(P)
+function marathon.event_afterClear(P,clear)
     local md=P.modeData
-    md.line=math.min(md.line+P.clearHistory[#P.clearHistory].line,200)
+    md.line=math.min(md.line+clear.line,200)
     while md.line>=md.target do
         if md.target<200 then
             local autoLevel=md.level

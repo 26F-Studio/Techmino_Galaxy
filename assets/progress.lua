@@ -13,18 +13,24 @@ local prgs={
         sprint=0,
         marathon=0,
     },
-    minoUnlocked=true,
-    puyoUnlocked=false,
-    gemUnlocked=false,
     bgmUnlocked={},
-    puyoModeUnlocked={},
-    minoModeUnlocked={
-        -- 0 = reached, 1~5 = rank reached
-        sprint_40=0,
-        marathon=0,
-        dig_practice=0,
+    mino={
+        unlocked=true,
+        modeUnlocked={
+            -- 0 = reached, 1~5 = rank reached
+            sprint_40=0,
+            marathon=0,
+            dig_practice=0,
+        },
     },
-    gemModeUnlocked={},
+    puyo={
+        unlocked=false,
+        modeUnlocked={},
+    },
+    gem={
+        unlocked=false,
+        modeUnlocked={},
+    },
 }
 
 local function sysInfoFunc()
@@ -106,7 +112,7 @@ function PROGRESS.load()
     if success then
         if res then
             if res.hash==PROGRESS.getHash(res) then
-                TABLE.coverR(res,prgs)
+                TABLE.update(res,prgs)
             else
                 MSG.new('info',"Hash not match")
             end
@@ -337,12 +343,12 @@ function PROGRESS.getTutorialPassed(n)
 end
 function PROGRESS.getInteriorScore(mode) return prgs.interiorScore[mode] end
 function PROGRESS.getTotalInteriorScore() return prgs.interiorScore.dig+prgs.interiorScore.sprint+prgs.interiorScore.marathon end
-function PROGRESS.getPuyoUnlocked() return prgs.puyoUnlocked end
-function PROGRESS.getMinoUnlocked() return prgs.minoUnlocked end
-function PROGRESS.getGemUnlocked() return prgs.gemUnlocked end
-function PROGRESS.getPuyoModeUnlocked(name) if name then return name and prgs.puyoModeUnlocked[name] else return prgs.puyoModeUnlocked end end
-function PROGRESS.getMinoModeUnlocked(name) if name then return name and prgs.minoModeUnlocked[name] else return prgs.minoModeUnlocked end end
-function PROGRESS.getGemModeUnlocked(name) if name then return name and prgs.gemModeUnlocked[name] else return prgs.gemModeUnlocked end end
+function PROGRESS.getPuyoUnlocked() return prgs.puyo.unlocked end
+function PROGRESS.getMinoUnlocked() return prgs.mino.unlocked end
+function PROGRESS.getGemUnlocked() return prgs.gem.unlocked end
+function PROGRESS.getPuyoModeUnlocked(name) if name then return name and prgs.puyo.modeUnlocked[name] else return prgs.puyo.modeUnlocked end end
+function PROGRESS.getMinoModeUnlocked(name) if name then return name and prgs.mino.modeUnlocked[name] else return prgs.mino.modeUnlocked end end
+function PROGRESS.getGemModeUnlocked(name) if name then return name and prgs.gem.modeUnlocked[name] else return prgs.gem.modeUnlocked end end
 
 -- Set
 function PROGRESS.setMain(n)
@@ -378,20 +384,20 @@ function PROGRESS.setInteriorScore(mode,score)
         PROGRESS.save()
     end
 end
-function PROGRESS.setPuyoUnlocked(bool) prgs.puyoUnlocked=bool; PROGRESS.save() end
-function PROGRESS.setMinoUnlocked(bool) prgs.minoUnlocked=bool; PROGRESS.save() end
-function PROGRESS.setGemUnlocked(bool)  prgs.gemUnlocked =bool; PROGRESS.save() end
+function PROGRESS.setPuyoUnlocked(bool) prgs.puyo.unlocked=bool; PROGRESS.save() end
+function PROGRESS.setMinoUnlocked(bool) prgs.mino.unlocked=bool; PROGRESS.save() end
+function PROGRESS.setGemUnlocked(bool)  prgs.gem.unlocked =bool; PROGRESS.save() end
 function PROGRESS.setPuyoModeUnlocked(name,state,force)
     if not state then state=0 end
-    if state>(prgs.puyoModeUnlocked[name] or -1) or force then
-        prgs.puyoModeUnlocked[name]=state
+    if state>(prgs.puyo.modeUnlocked[name] or -1) or force then
+        prgs.puyo.modeUnlocked[name]=state
         PROGRESS.save()
     end
 end
 function PROGRESS.setMinoModeUnlocked(name,state,force)
     if not state then state=0 end
-    if state>(prgs.minoModeUnlocked[name] or -1) or force then
-        prgs.minoModeUnlocked[name]=state
+    if state>(prgs.mino.modeUnlocked[name] or -1) or force then
+        prgs.mino.modeUnlocked[name]=state
         PROGRESS.save()
         SFX.play('map_unlock_background')
         MSG.new('check',Text.new_level_unlocked,2.6)
@@ -399,8 +405,8 @@ function PROGRESS.setMinoModeUnlocked(name,state,force)
 end
 function PROGRESS.setGemModeUnlocked(name,state,force)
     if not state then state=0 end
-    if state>(prgs.gemModeUnlocked[name] or -1) or force then
-        prgs.gemModeUnlocked[name]=state
+    if state>(prgs.gem.modeUnlocked[name] or -1) or force then
+        prgs.gem.modeUnlocked[name]=state
         PROGRESS.save()
     end
 end

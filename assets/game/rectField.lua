@@ -1,8 +1,14 @@
 local gc=love.graphics
 
+--- @class Techmino.Cell
+--- @field id number ascending piece number
+--- @field color number 0~63
+--- @field conn table<Techmino.Cell,true>
+--- @field bias {expBack:number?, lineBack:number?, teleBack:number?, x:number, y:number}
+
 --- @class Techmino.RectField
 --- @field _width number
---- @field _matrix any[][]
+--- @field _matrix (Techmino.Cell|false|any)[][]
 local F={}
 
 --------------------------------------------------------------
@@ -91,10 +97,14 @@ function F:drawThumbnail_color(step,size)
         end
     end
 end
+
+---@return number
 function F:getHeight()
     return #self._matrix
 end
+
 local wallCell=setmetatable({},{__newIndex=NULL,__metatable=true})
+--- @return Techmino.Cell|false
 function F:getCell(x,y)
     if x<=0 or x>self._width or y<=0 then return wallCell end
     if y>#self._matrix then return false end

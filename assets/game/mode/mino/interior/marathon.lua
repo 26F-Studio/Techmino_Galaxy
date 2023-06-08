@@ -24,9 +24,9 @@ return {
                 P.modeData.line=0
                 P.modeData.target=10
             end,
-            afterClear=function(P)
+            afterClear=function(P,clear)
                 local md=P.modeData
-                md.line=math.min(md.line+P.clearHistory[#P.clearHistory].line,200)
+                md.line=math.min(md.line+clear.line,200)
                 if md.line>=md.target then
                     if md.target<200 then
                         if PROGRESS.getMain()>=2 and md.target<=150 and P.isMain then
