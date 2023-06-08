@@ -72,12 +72,12 @@ local defaultSoundFunc={
         end
     end,
     move=           function() SFX.play('move')          end,
-    move_failed=    function() SFX.play('move_failed')   end,
+    move_failed=    function() SFX.play('control_failed')end,
     swap=           function() SFX.play('rotate')        end,
     swap_failed=    function() SFX.play('tuck')          end,
     twist=          function() SFX.play('rotate')        end,
     twist_failed=   function() SFX.play('tuck')          end,
-    move_back=      function() SFX.play('rotate_failed') end,
+    move_back=      function() SFX.play('control_failed')end,
     touch=          function() SFX.play('lock')          end,
     clear=function(lines)
         SFX.play(

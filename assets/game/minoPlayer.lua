@@ -41,18 +41,19 @@ local defaultSoundFunc={
             inst('bass',2.2-num/5,'A2','E3')
         end
     end,
-    move=           function() SFX.play('move')             end,
-    move_failed=    function() SFX.play('move_failed')      end,
+    move=           function() SFX.play('move',.626)        end,
+    move_down=      function() SFX.play('move_down',.626)   end,
+    move_failed=    function() SFX.play('control_failed')   end,
     tuck=           function() SFX.play('tuck')             end,
     rotate=         function() SFX.play('rotate')           end,
     initrotate=     function() SFX.play('initrotate')       end,
     rotate_locked=  function() SFX.play('rotate_locked')    end,
     rotate_corners= function() SFX.play('rotate_corners')   end,
-    rotate_failed=  function() SFX.play('rotate_failed')    end,
+    rotate_failed=  function() SFX.play('control_failed')   end,
     rotate_special= function() SFX.play('rotate_special')   end,
     hold=           function() SFX.play('hold')             end,
     inithold=       function() SFX.play('inithold')         end,
-    touch=          function() SFX.play('touch',.5)         end,
+    touch=          function() SFX.play('touch')            end,
     drop=           function() SFX.play('drop')             end,
     lock=           function() SFX.play('lock')             end,
     b2b=            function(lv) SFX.play('b2b_'..min(lv,10)) end,
@@ -80,26 +81,26 @@ local defaultSoundFunc={
         end
     end,
     combo=setmetatable({
-        function() inst('bass',.70,'A2') end,-- 1 combo
-        function() inst('bass',.75,'C3') end,-- 2 combo
-        function() inst('bass',.80,'D3') end,-- 3 combo
-        function() inst('bass',.85,'E3') end,-- 4 combo
-        function() inst('bass',.90,'G3') end,-- 5 combo
-        function() inst('bass',.90,'A3') inst('lead',.20,'A2') end,-- 6 combo
-        function() inst('bass',.75,'C4') inst('lead',.40,'C3') end,-- 7 combo
-        function() inst('bass',.60,'D4') inst('lead',.60,'D3') end,-- 8 combo
-        function() inst('bass',.40,'E4') inst('lead',.75,'E3') end,-- 9 combo
-        function() inst('bass',.20,'G4') inst('lead',.90,'G3') end,-- 10 combo
-        function() inst('bass',.20,'A4') inst('lead',.85,'A3') end,-- 11 combo
-        function() inst('bass',.40,'A4') inst('lead',.80,'C4') end,-- 12 combo
-        function() inst('bass',.60,'A4') inst('lead',.75,'D4') end,-- 13 combo
-        function() inst('bass',.75,'A4') inst('lead',.70,'E4') end,-- 14 combo
-        function() inst('bass',.90,'A4') inst('lead',.65,'G4') end,-- 15 combo
-        function() inst('bass',.90,'A4') inst('bass',.70,'E5') inst('lead','A4') end,-- 16 combo
-        function() inst('bass',.85,'A4') inst('bass',.75,'E5') inst('lead','C5') end,-- 17 combo
-        function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end,-- 18 combo
-        function() inst('bass',.75,'A4') inst('bass',.85,'E5') inst('lead','E5') end,-- 19 combo
-        function() inst('bass',.70,'A4') inst('bass',.90,'E5') inst('lead','G5') end,-- 20 combo
+        function() inst('bass',.70,'A2') end,-- 1
+        function() inst('bass',.75,'C3') end,-- 2
+        function() inst('bass',.80,'D3') end,-- 3
+        function() inst('bass',.85,'E3') end,-- 4
+        function() inst('bass',.90,'G3') end,-- 5
+        function() inst('bass',.90,'A3') inst('lead',.20,'A2') end,-- 6
+        function() inst('bass',.75,'C4') inst('lead',.40,'C3') end,-- 7
+        function() inst('bass',.60,'D4') inst('lead',.60,'D3') end,-- 8
+        function() inst('bass',.40,'E4') inst('lead',.75,'E3') end,-- 9
+        function() inst('bass',.20,'G4') inst('lead',.90,'G3') end,-- 10
+        function() inst('bass',.20,'A4') inst('lead',.85,'A3') end,-- 11
+        function() inst('bass',.40,'A4') inst('lead',.80,'C4') end,-- 12
+        function() inst('bass',.60,'A4') inst('lead',.75,'D4') end,-- 13
+        function() inst('bass',.75,'A4') inst('lead',.70,'E4') end,-- 14
+        function() inst('bass',.90,'A4') inst('lead',.65,'G4') end,-- 15
+        function() inst('bass',.90,'A4') inst('bass',.70,'E5') inst('lead','A4') end,-- 16
+        function() inst('bass',.85,'A4') inst('bass',.75,'E5') inst('lead','C5') end,-- 17
+        function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end,-- 18
+        function() inst('bass',.75,'A4') inst('bass',.85,'E5') inst('lead','E5') end,-- 19
+        function() inst('bass',.70,'A4') inst('bass',.90,'E5') inst('lead','G5') end,-- 20
     },{__call=function(self,combo)
         if self[combo] then
             self[combo]()
@@ -214,7 +215,7 @@ MP._actions.softDrop={
     press=function(P)
         P.downCharge=0
         if P.hand and (P.handY>(P.ghostY or 1) or P.deathTimer) and P:moveDown() then
-            P:playSound('move')
+            P:playSound('move_down')
         end
     end,
     release=function(P)
@@ -431,7 +432,7 @@ function MP:moveHand(action,a,b,c,d)
         end
     elseif action=='moveY' or action=='drop' then
         self.handY=self.handY+a
-        self:checkLanding(true)
+        self:checkLanding(true,true)
         if self.settings.particles then
             local hx,hy=self.handX,self.handY
             local mat=self.hand.matrix
@@ -949,9 +950,11 @@ function MP:ifoverlap(CB,cx,cy)
     -- No collision
     return false
 end
-function MP:checkLanding(sparkles)
+function MP:checkLanding(sparkles,drop)
     if self.handY==self.ghostY then
-        self:playSound('touch')
+        if drop then
+            self:playSound('touch')
+        end
         if sparkles and self.settings.particles then
             self:createTouchEffect()
         end
@@ -1107,7 +1110,7 @@ function MP:rotate(dir,ifInit)
                 end
             end
             self:freshDelay('rotate')
-            self:playSound('rotate_failed')
+            self:playSound('move_failed')
             self:createHandEffect(1,.26,.26)
         else
             error("WTF why no state in minoData")
@@ -1585,7 +1588,7 @@ function MP:updateFrame()
                     end
                     if oy~=self.handY then
                         self:freshDelay('drop')
-                        self:playSound('move')
+                        self:playSound('move_down')
                         if self.handY==self.ghostY then
                             self:shakeBoard('-down')
                         end
