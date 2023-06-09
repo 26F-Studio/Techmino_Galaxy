@@ -43,13 +43,14 @@ local defaultSoundFunc={
             inst('bass',2.2-num/5,'A2','E3')
         end
     end,
-    move=           function() SFX.play('move')             end,
+    move=           function() SFX.play('move',.6)          end,
+    move_down=      function() SFX.play('move_down',.6)     end,
     move_failed=    function() SFX.play('move_failed')      end,
     rotate=         function() SFX.play('rotate')           end,
     initrotate=     function() SFX.play('initrotate')       end,
     rotate_failed=  function() SFX.play('rotate_failed')    end,
     rotate_special= function() SFX.play('rotate_special')   end,
-    touch=          function() SFX.play('touch',.5)         end,
+    touch=          function() SFX.play('touch')            end,
     drop=           function() SFX.play('drop')             end,
     lock=           function() SFX.play('lock')             end,
     clear=function(lines)
@@ -190,7 +191,7 @@ PP._actions.softDrop={
     press=function(P)
         P.downCharge=0
         if P.hand and (P.handY>P.ghostY or P.deathTimer) and P:moveDown() then
-            P:playSound('move')
+            P:playSound('move_down')
         end
     end,
     release=function(P)
@@ -1076,7 +1077,7 @@ function PP:updateFrame()
                     end
                     if oy~=self.handY then
                         self:freshDelay('drop')
-                        self:playSound('move')
+                        self:playSound('move_down')
                         if self.handY==self.ghostY then
                             self:shakeBoard('-down')
                         end

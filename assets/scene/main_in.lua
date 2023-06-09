@@ -81,7 +81,7 @@ scene.widgetList={
             SCN.go('setting_in','none')
         else
             consoleClickCount=consoleClickCount+1
-            SFX.play('move_failed')
+            SFX.play('rotate_failed')
             SFX.play('suffocate',nil,nil,consoleClickCount-5.626)
             if consoleClickCount==6 then
                 consoleClickCount=0

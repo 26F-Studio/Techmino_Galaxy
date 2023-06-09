@@ -88,19 +88,22 @@ end
 
 local PROGRESS={}
 
-function PROGRESS.getHash(t)
+local function zDump(t)
     local list={}
     for k,v in next,t do
         if k~='hash' then
             if type(v)=='number' or type(v)=='string' or type(v)=='boolean' then
                 table.insert(list,k..tostring(v))
             elseif type(v)=='table' then
-                table.insert(list,k)
+                table.insert(list,k..zDump(v))
             end
         end
     end
     table.sort(list)
-    return love.data.encode('string','base64',STRING.digezt(table.concat(list)))
+    return table.concat(list)
+end
+function PROGRESS.getHash(t)
+    return love.data.encode('string','base64',STRING.digezt(zDump(t)))
 end
 function PROGRESS.save()
     prgs.rnd=math.random(26,2e6)
@@ -399,8 +402,10 @@ function PROGRESS.setMinoModeUnlocked(name,state,force)
     if state>(prgs.mino.modeUnlocked[name] or -1) or force then
         prgs.mino.modeUnlocked[name]=state
         PROGRESS.save()
-        SFX.play('map_unlock_background')
-        MSG.new('check',Text.new_level_unlocked,2.6)
+        if TASK.lock('minomap_unlockSound_background',1) then
+            SFX.play('map_unlock_background')
+            MSG.new('check',Text.new_level_unlocked,2.6)
+        end
     end
 end
 function PROGRESS.setGemModeUnlocked(name,state,force)
