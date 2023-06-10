@@ -115,7 +115,7 @@ function PROGRESS.load()
     if success then
         if res then
             if res.hash==PROGRESS.getHash(res) then
-                TABLE.update(res,prgs)
+                TABLE.coverR(res,prgs)
             else
                 MSG.new('info',"Hash not match")
             end
