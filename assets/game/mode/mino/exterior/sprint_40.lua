@@ -10,11 +10,14 @@ return {
     settings={mino={
         seqType='bag7_sprint',
         event={
-            playerInit=function(P)
-                P.modeData.keyCount={}
-                P.modeData.curKeyCount=0
-                P.modeData.line=0
-            end,
+            playerInit={
+                function(P)
+                    P.modeData.keyCount={}
+                    P.modeData.curKeyCount=0
+                    P.modeData.line=0
+                end,
+                "P:addEvent('afterClear',mechLib.mino.progress.sprint_40_afterClear)",
+            },
             beforePress=function(P)
                 P.modeData.curKeyCount=P.modeData.curKeyCount+1
             end,
@@ -25,11 +28,6 @@ return {
             afterClear={
                 mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
-                function(P)
-                    if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
-                        BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
-                    end
-                end,
             },
             drawInField=mechLib.mino.sprint.event_drawInField[40],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],

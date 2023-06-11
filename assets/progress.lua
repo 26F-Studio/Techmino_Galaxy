@@ -115,7 +115,7 @@ function PROGRESS.load()
     if success then
         if res then
             if res.hash==PROGRESS.getHash(res) then
-                TABLE.update(res,prgs)
+                TABLE.coverR(res,prgs)
             else
                 MSG.new('info',"Hash not match")
             end
@@ -402,7 +402,7 @@ function PROGRESS.setMinoModeUnlocked(name,state,force)
     if state>(prgs.mino.modeUnlocked[name] or -1) or force then
         prgs.mino.modeUnlocked[name]=state
         PROGRESS.save()
-        if TASK.lock('minomap_unlockSound_background',1) then
+        if TASK.lock('minomap_unlockSound_background',2.6) then
             SFX.play('map_unlock_background')
             MSG.new('check',Text.new_level_unlocked,2.6)
         end

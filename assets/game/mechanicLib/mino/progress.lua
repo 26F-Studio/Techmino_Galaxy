@@ -4,6 +4,21 @@
 --- @type Techmino.Mech.mino
 local progress={}
 
+do-- sprint_40
+    local bgmTransBegin,bgmTransFinish=10,30
+    function progress.sprint_40_afterClear(P,clear)
+        if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
+            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
+        end
+        if P.isMain then
+            P.modeData.maxHeight=math.max(P.modeData.maxHeight or 0,P.field:getHeight())
+            if P.finished and P.modeData.maxHeight<=8 then
+                PROGRESS.setMinoModeUnlocked('sprint_10')
+            end
+        end
+    end
+end
+
 function progress.marathon_afterClear(P,clear)
     if not P.modeData.marathon_lastLevel then P.modeData.marathon_lastLevel=1 end
     if P.modeData.level>P.modeData.marathon_lastLevel then
