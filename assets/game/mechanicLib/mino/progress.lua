@@ -7,14 +7,89 @@ local progress={}
 do-- sprint_40
     local bgmTransBegin,bgmTransFinish=10,30
     function progress.sprint_40_afterClear(P,clear)
-        if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
+        if not P.isMain then return true end
+        if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
         end
-        if P.isMain then
-            P.modeData.maxHeight=math.max(P.modeData.maxHeight or 0,P.field:getHeight())
-            if P.finished and P.modeData.maxHeight<=8 then
+        P.modeData.maxHeight=math.max(P.modeData.maxHeight or 0,P.field:getHeight())
+        if P.finished then
+            if P.modeData.maxHeight<=8 then
                 PROGRESS.setMinoModeUnlocked('sprint_10')
             end
+            PROGRESS.setMinoModeUnlocked('sprint_big_80')
+        end
+    end
+end
+
+do-- sprint_200
+    local bgmTransBegin,bgmTransFinish=100,150
+    function progress.sprint_200_afterClear(P,clear)
+        if not P.isMain then return true end
+        if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
+        end
+        if P.finished then
+            PROGRESS.setMinoModeUnlocked('sprint_1000')
+        end
+    end
+end
+
+do-- sprint_1000
+    local bgmTransBegin,bgmTransFinish=750,900
+    function progress.sprint_1000_afterClear(P,clear)
+        if not P.isMain then return true end
+        if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
+        end
+    end
+end
+
+do-- sprint_hide_40
+    local bgmTransBegin,bgmTransFinish=10,30
+    function progress.sprint_hide_40_afterClear(P,clear)
+        if not P.isMain then return true end
+        if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
+        end
+        if P.finished then
+            PROGRESS.setMinoModeUnlocked('sprint_1000')
+        end
+    end
+end
+
+do-- sprint_invis_40
+    local bgmTransBegin,bgmTransFinish=10,30
+    function progress.sprint_invis_40_afterClear(P,clear)
+        if not P.isMain then return true end
+        if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
+        end
+        if P.finished then
+            PROGRESS.setMinoModeUnlocked('sprint_1000')
+        end
+    end
+end
+
+do-- sprint_blind_40
+    local bgmTransBegin,bgmTransFinish=10,30
+    function progress.sprint_blind_40_afterClear(P,clear)
+        if not P.isMain then return true end
+        if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
+        end
+    end
+end
+
+do-- sprint_big_80
+    local bgmTransBegin,bgmTransFinish=40,60
+    function progress.sprint_big_80_afterClear(P,clear)
+        if not P.isMain then return true end
+        if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
+        end
+        if P.finished then
+            PROGRESS.setMinoModeUnlocked('sprint_small_20')
+            PROGRESS.setMinoModeUnlocked('sprint_low_40')
         end
     end
 end
