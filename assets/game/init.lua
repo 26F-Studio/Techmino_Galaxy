@@ -159,6 +159,16 @@ local function task_switchToResult()
     end
 end
 
+--- @class Techmino.game
+--- @field playing boolean
+--- @field playerList table<number, Techmino.Player>|false
+--- @field playerMap table<number, Techmino.Player>|false
+--- @field camera Zenitha.Camera
+--- @field hitWaves table
+--- @field seed number|false
+--- @field mode Techmino.mode|false
+--- @field mainID number|false
+--- @field mainPlayer Techmino.Player|false
 local GAME={
     playing=false,
 
