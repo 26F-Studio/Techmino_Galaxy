@@ -221,11 +221,11 @@ do-- wind
         local md=P.modeData
         md._windStrength=md._windStrength+MATH.sign(md.windStrength-md._windStrength)
         md.windCounter=md.windCounter+math.abs(md._windStrength)
-        if md.windCounter>=62000 then
+        if md.windCounter>=62e3 then
             if P.hand then
                 P[md._windStrength<0 and 'moveLeft' or 'moveRight'](P)
             end
-            md.windCounter=md.windCounter-62000
+            md.windCounter=md.windCounter-62e3
         end
     end
     function misc.wind_event_afterClear(P)

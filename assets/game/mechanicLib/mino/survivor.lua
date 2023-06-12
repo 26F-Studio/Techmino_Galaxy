@@ -48,7 +48,7 @@ function survivor.b2b_event_always(P)
             power=4+P:random(0,MATH.clamp(math.floor(wave/30-P.field:getHeight()/10),0,3)),
             mode=0,
             time=
-                (wave<50 and 100000/(100+2*wave)+500 or 1000)+
+                (wave<50 and 100e3/(100+2*wave)+500 or 1000)+
                 MATH.clamp(400-wave,150,350)*max(P.field:getHeight()+P.garbageSum-8,0),
             fatal=math.floor(min(30+wave/2,50)),
             -- speed=?,
@@ -76,7 +76,7 @@ function survivor.cheese_event_always(P)
             power=P:random(0,10)+P:random(-5,5)>=P.field:getHeight() and 2 or 1,
             defendRate=wave<60 and 2 or 3,
             mode=0,
-            time=wave<50 and 100000/(50+wave)-1000 or 0,
+            time=wave<50 and 100e3/(50+wave)-1000 or 0,
             fatal=MATH.clamp(
                 (
                     wave<100 and MATH.interpolate(wave,0,20,100,60) or
@@ -100,9 +100,9 @@ function survivor.spike_event_always(P)
 
         local wave=md.wave
         md.curWaveTime=floor(
-            wave<=10 and MATH.interpolate(wave,0,20000,10,15000) or
-            wave<=30 and MATH.interpolate(wave,10,15000,30,12000) or
-            max(MATH.interpolate(wave,30,12000,60,10000),10000)
+            wave<=10 and MATH.interpolate(wave,0,20e3,10,15e3) or
+            wave<=30 and MATH.interpolate(wave,10,15e3,30,12e3) or
+            max(MATH.interpolate(wave,30,12e3,60,10e3),10e3)
         )
         md.waveTimer=md.curWaveTime
         for i=1,3 do

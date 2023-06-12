@@ -13,7 +13,7 @@ do-- sprint_40
         end
         P.modeData.maxHeight=math.max(P.modeData.maxHeight or 0,P.field:getHeight())
         if P.finished then
-            if P.gameTime<=86 then
+            if P.gameTime<=86e3 then
                 PROGRESS.setMinoModeUnlocked('sprint_hide_40')
             end
             if P.modeData.maxHeight<=8 then

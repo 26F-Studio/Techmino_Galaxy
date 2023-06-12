@@ -43,10 +43,10 @@ return {
         local finRate=P.modeData.line/P.modeData.lineTarget
         local averageTime=finalTime/#P.dropHistory
 
-        local lastPieceTime=3000
+        local lastPieceTime=0
         for i,d in next,P.dropHistory do
             table.insert(dropInfo,{
-                x=(d.time-3000)/finalTime*finRate,
+                x=d.time/finalTime*finRate,
                 y=i/#P.dropHistory*finRate,
                 choke=math.min(averageTime/(d.time-lastPieceTime),1),
                 key=P.modeData.keyCount[i] or 0,
@@ -55,10 +55,10 @@ return {
         end
 
         local _cleared=0
-        for _,d in next,P.clearHistory do
-            _cleared=math.min(_cleared+d.line,P.modeData.lineTarget)
+        for _,c in next,P.clearHistory do
+            _cleared=math.min(_cleared+c.line,P.modeData.lineTarget)
             table.insert(clearInfo,{
-                x=(d.time-3000)/finalTime*finRate,
+                x=c.time/finalTime*finRate,
                 y=_cleared/P.modeData.lineTarget*(100/#P.dropHistory)*finRate,
             })
         end

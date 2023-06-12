@@ -25,7 +25,7 @@ return {
 
         for i,d in next,P.dropHistory do
             table.insert(dropInfo,{
-                x=(d.time-3000)/finalTime,
+                x=d.time/finalTime,
                 y=i/#P.dropHistory,
             })
         end
