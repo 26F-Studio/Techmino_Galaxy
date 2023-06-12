@@ -19,7 +19,9 @@ do-- sprint_40
             if P.modeData.maxHeight<=8 then
                 PROGRESS.setMinoModeUnlocked('sprint_10')
             end
-            PROGRESS.setMinoModeUnlocked('sprint_big_80')
+            if #P.dropHistory<110 then
+                PROGRESS.setMinoModeUnlocked('sprint_big_80')
+            end
         end
     end
 end
@@ -27,7 +29,7 @@ end
 do-- sprint_10
     function progress.sprint_10_afterClear(P,clear)
         if not P.isMain then return true end
-        if P.finished then
+        if P.finished and #P.dropHistory<30 then
             PROGRESS.setMinoModeUnlocked('sprint_obstacle_20')
         end
     end
@@ -104,7 +106,8 @@ do-- sprint_mph_40
             BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
         end
         if P.finished then
-            PROGRESS.setMinoModeUnlocked('sprint_pento_40')
+            PROGRESS.setMinoModeUnlocked('sprint_fix_20')
+            PROGRESS.setMinoModeUnlocked('sprint_lock_20')
         end
     end
 end
@@ -116,7 +119,7 @@ do-- sprint_hide_40
         if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
         end
-        if P.finished then
+        if P.finished and #P.dropHistory<110 then
             PROGRESS.setMinoModeUnlocked('sprint_invis_40')
         end
     end
@@ -129,7 +132,7 @@ do-- sprint_invis_40
         if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
         end
-        if P.finished then
+        if P.finished and #P.dropHistory<110 then
             PROGRESS.setMinoModeUnlocked('sprint_blind_40')
         end
     end
