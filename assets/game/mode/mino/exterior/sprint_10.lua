@@ -7,7 +7,10 @@ return {
     settings={mino={
         seqType='bag7_sprint',
         event={
-            playerInit=mechLib.mino.statistics.event_playerInit,
+            playerInit={
+                mechLib.mino.statistics.event_playerInit,
+                "P:addEvent('afterClear',mechLib.mino.progress.sprint_10_afterClear)",
+            },
             afterClear={
                 mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[10],
