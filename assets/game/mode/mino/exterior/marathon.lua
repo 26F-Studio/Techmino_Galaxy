@@ -21,7 +21,7 @@ return {
 
         local dropInfo={}
 
-        local finalTime=P.time-3000
+        local finalTime=P.gameTime
 
         for i,d in next,P.dropHistory do
             table.insert(dropInfo,{
