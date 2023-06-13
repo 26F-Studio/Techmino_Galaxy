@@ -8,7 +8,6 @@ local gc_draw,gc_rectangle=gc.draw,gc.rectangle
 
 local max,min=math.max,math.min
 local floor=math.floor
-local rnd=math.random
 local ins,rem=table.insert,table.remove
 
 local inst=SFX.playSample
@@ -1404,6 +1403,8 @@ function PP.new()
         whenSuffocate={},
     }
     self.soundEvent=setmetatable({},soundEventMeta)
+
+    mechLib.puyo.statistics.event_playerInit(self)
 
     return self
 end

@@ -2105,6 +2105,8 @@ function MP.new()
     }
     self.soundEvent=setmetatable({},soundEventMeta)
 
+    mechLib.mino.statistics.event_playerInit(self)
+
     return self
 end
 function MP:initialize()
