@@ -8,24 +8,22 @@ return {
         spawnDelay=130,
         clearDelay=300,
         event={
-            playerInit={
-                mechLib.mino.marathon.event_playerInit_auto,
-                "P:addEvent('afterClear',mechLib.mino.progress.marathon_afterClear)",
-            },
+            playerInit=mechLib.mino.marathon.event_playerInit_auto,
+            afterClear=mechLib.mino.progress.marathon_afterClear,
         },
     }},
     result=function()
         local P=GAME.mainPlayer
         if not P then return end
-        if P.modeData.line<40 then return end
+        if P.modeData.stat.line<40 then return end
 
         local dropInfo={}
 
-        local finalTime=P.time-3000
+        local finalTime=P.gameTime
 
         for i,d in next,P.dropHistory do
             table.insert(dropInfo,{
-                x=(d.time-3000)/finalTime,
+                x=d.time/finalTime,
                 y=i/#P.dropHistory,
             })
         end
@@ -39,7 +37,7 @@ return {
         if not P.modeData.finalTime then
             FONT.set(100)
             GC.setColor(1,1,1,math.min(time*2.6,1))
-            GC.mStr(P.modeData.line.." / 200",800,400)
+            GC.mStr(P.modeData.stat.line.." / 200",800,400)
             return
         end
 

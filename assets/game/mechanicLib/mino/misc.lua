@@ -221,11 +221,11 @@ do-- wind
         local md=P.modeData
         md._windStrength=md._windStrength+MATH.sign(md.windStrength-md._windStrength)
         md.windCounter=md.windCounter+math.abs(md._windStrength)
-        if md.windCounter>=62000 then
+        if md.windCounter>=62e3 then
             if P.hand then
                 P[md._windStrength<0 and 'moveLeft' or 'moveRight'](P)
             end
-            md.windCounter=md.windCounter-62000
+            md.windCounter=md.windCounter-62e3
         end
     end
     function misc.wind_event_afterClear(P)
@@ -283,7 +283,7 @@ do-- obstacle
     misc.obstacle_event_afterClear=TABLE.newPool(function(self,lineCount)
         self[lineCount]=function(P,clear)
             local score=math.ceil((clear.line+1)/2)
-            P.modeData.line=math.min(P.modeData.line+score,lineCount)
+            P.modeData.score=math.min(P.modeData.score+score,lineCount)
             P.texts:add{
                 text="+"..score,
                 fontSize=80,
@@ -292,11 +292,19 @@ do-- obstacle
                 inPoint=0,
                 outPoint=1,
             }
-            if P.modeData.line>=lineCount then
+            if P.modeData.score>=lineCount then
                 P:finish('AC')
             else
                 misc.obstacle_generateField(P)
             end
+        end
+        return self[lineCount]
+    end)
+    misc.obstacle_event_drawOnPlayer=TABLE.newPool(function(self,lineCount)
+        self[lineCount]=function(P)
+            P:drawInfoPanel(-380,-60,160,120)
+            FONT.set(80) GC.mStr(lineCount-P.modeData.score,-300,-70)
+            FONT.set(30) GC.mStr(Text.target_line,-300,15)
         end
         return self[lineCount]
     end)

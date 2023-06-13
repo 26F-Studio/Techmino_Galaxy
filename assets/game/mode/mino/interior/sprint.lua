@@ -12,13 +12,11 @@ return {
         shakeness=0,
         soundEvent={countDown=mechLib.mino.misc.interior_soundEvent_countDown},
         event={
-            playerInit=mechLib.mino.statistics.event_playerInit,
             afterClear={
-                mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
                 function(P)
-                    if PROGRESS.getMain()>=2 and P.modeData.line>10 and P.isMain then
-                        BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-10)/20,1),2.6)
+                    if PROGRESS.getMain()>=2 and P.modeData.stat.line>10 and P.isMain then
+                        BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-10)/20,1),2.6)
                     end
                 end,
             },
@@ -38,15 +36,15 @@ return {
                 40
             )
         else
-            PROGRESS.setInteriorScore('marathon',P.modeData.line*0.75)
-            PROGRESS.setInteriorScore('sprint',P.modeData.line)
+            PROGRESS.setInteriorScore('marathon',P.modeData.stat.line*0.75)
+            PROGRESS.setInteriorScore('sprint',P.modeData.stat.line)
         end
     end,
     resultPage=function(time)
         local P=GAME.mainPlayer
         if not P then return end
 
-        local line=math.min(P.modeData.line,math.floor(math.max(time-.26,0)*62))
+        local line=math.min(P.modeData.stat.line,math.floor(math.max(time-.26,0)*62))
 
         -- XX/40
         FONT.set(100)

@@ -20,7 +20,6 @@ return {
         soundEvent={countDown=NULL},
         event={
             playerInit=function(P)
-                P.modeData.line=0
                 P:switchAction('rotateCW',false)
                 P:switchAction('rotateCCW',false)
                 P:switchAction('rotate180',false)

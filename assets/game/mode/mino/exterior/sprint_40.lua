@@ -1,6 +1,3 @@
-local lineTarget=40
-local bgmTransBegin,bgmTransFinish=10,30
-
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -10,14 +7,11 @@ return {
     settings={mino={
         seqType='bag7_sprint',
         event={
-            playerInit={
-                function(P)
-                    P.modeData.keyCount={}
-                    P.modeData.curKeyCount=0
-                    P.modeData.line=0
-                end,
-                "P:addEvent('afterClear',mechLib.mino.progress.sprint_40_afterClear)",
-            },
+            playerInit=function(P)
+                P.modeData.stat.lineTarget=40
+                P.modeData.keyCount={}
+                P.modeData.curKeyCount=0
+            end,
             beforePress=function(P)
                 P.modeData.curKeyCount=P.modeData.curKeyCount+1
             end,
@@ -26,8 +20,8 @@ return {
                 P.modeData.curKeyCount=0
             end,
             afterClear={
-                mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
+                mechLib.mino.progress.sprint_40_afterClear,
             },
             drawInField=mechLib.mino.sprint.event_drawInField[40],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],
@@ -36,19 +30,19 @@ return {
     result=function()
         local P=GAME.mainPlayer
         if not P then return end
-        if P.modeData.line<10 then return end
+        if P.modeData.stat.line<10 then return end
 
         local dropInfo={}
         local clearInfo={}
 
-        local finalTime=P.time-3000
-        local finRate=P.modeData.line/lineTarget
+        local finalTime=P.gameTime
+        local finRate=P.modeData.stat.line/P.modeData.stat.lineTarget
         local averageTime=finalTime/#P.dropHistory
 
-        local lastPieceTime=3000
+        local lastPieceTime=0
         for i,d in next,P.dropHistory do
             table.insert(dropInfo,{
-                x=(d.time-3000)/finalTime*finRate,
+                x=d.time/finalTime*finRate,
                 y=i/#P.dropHistory*finRate,
                 choke=math.min(averageTime/(d.time-lastPieceTime),1),
                 key=P.modeData.keyCount[i] or 0,
@@ -57,11 +51,11 @@ return {
         end
 
         local _cleared=0
-        for _,d in next,P.clearHistory do
-            _cleared=math.min(_cleared+d.line,lineTarget)
+        for _,c in next,P.clearHistory do
+            _cleared=math.min(_cleared+c.line,P.modeData.stat.lineTarget)
             table.insert(clearInfo,{
-                x=(d.time-3000)/finalTime*finRate,
-                y=_cleared/lineTarget*(100/#P.dropHistory)*finRate,
+                x=c.time/finalTime*finRate,
+                y=_cleared/P.modeData.stat.lineTarget*(100/#P.dropHistory)*finRate,
             })
         end
 
@@ -75,7 +69,7 @@ return {
         if not P.modeData.finalTime then
             FONT.set(100)
             GC.setColor(1,1,1,math.min(time*2.6,1))
-            GC.mStr(P.modeData.line.." / "..lineTarget,800,400)
+            GC.mStr(P.modeData.stat.line.." / "..P.modeData.stat.lineTarget,800,400)
             return
         end
 
@@ -89,7 +83,7 @@ return {
         -- Reference line
         GC.setLineWidth(6)
         GC.setColor(1,1,.626,.5)
-        if P.modeData.line==lineTarget then
+        if P.modeData.stat.line==P.modeData.stat.lineTarget then
             GC.line(0,0,800*t,(100/#P.dropHistory)*600*t)
         else
             GC.line(0,0,800*t,600*t)

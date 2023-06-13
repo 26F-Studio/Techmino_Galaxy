@@ -6,11 +6,9 @@ return {
     end,
     settings={mino={
         event={
-            playerInit={
-                "mechLib.mino.hypersonic.event_playerInit_auto(P,'high')",
-                "P:addEvent('afterSpawn',mechLib.mino.progress.hypersonic_hi_afterSpawn)",
-                "P:addEvent('afterClear',mechLib.mino.progress.hypersonic_hi_afterClear)",
-            },
+            playerInit="mechLib.mino.hypersonic.event_playerInit_auto(P,'high')",
+            afterSpawn=mechLib.mino.progress.hypersonic_hi_afterSpawn,
+            afterClear=mechLib.mino.progress.hypersonic_hi_afterClear,
         },
     }},
 }

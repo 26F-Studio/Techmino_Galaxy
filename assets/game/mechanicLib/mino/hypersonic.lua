@@ -109,11 +109,11 @@ do-- high
         {lock=360,fresh=4000,spawn=130,clear=300,das=110,arr=27,bumpInterval=false},
         {lock=330,fresh=3800,spawn=120,clear=260,das=105,arr=26,bumpInterval=false},
         {lock=300,fresh=3600,spawn=110,clear=220,das=100,arr=25,bumpInterval=false},
-        {lock=300,fresh=3400,spawn=100,clear=180,das=96, arr=24,bumpInterval=10000},
-        {lock=300,fresh=3200,spawn=95, clear=160,das=92, arr=23,bumpInterval=8000},
-        {lock=300,fresh=3000,spawn=90, clear=140,das=88, arr=22,bumpInterval=6000},
-        {lock=300,fresh=2800,spawn=85, clear=120,das=84, arr=21,bumpInterval=5000},
-        {lock=300,fresh=2600,spawn=80, clear=100,das=80, arr=20,bumpInterval=4000},
+        {lock=300,fresh=3400,spawn=100,clear=180,das=96, arr=24,bumpInterval=10e3},
+        {lock=300,fresh=3200,spawn=95, clear=160,das=92, arr=23,bumpInterval=8e3},
+        {lock=300,fresh=3000,spawn=90, clear=140,das=88, arr=22,bumpInterval=6e3},
+        {lock=300,fresh=2800,spawn=85, clear=120,das=84, arr=21,bumpInterval=5e3},
+        {lock=300,fresh=2600,spawn=80, clear=100,das=80, arr=20,bumpInterval=4e3},
     }
 
     function hypersonic.high_event_playerInit(P)

@@ -217,7 +217,7 @@ return {
         dig_volcanics=         {"Dig Volcanics","Clear some compilicated garbage lines"},
         dig_checker=           {"Dig Checker","Clear 10 checkerboard garbage lines"},
         survivor_cheese=       {"Survivor Cheese","Survive under scattered attacks"},
-        survivor_b2b=          {"Survivor B2b","Survive under heavy attacks"},
+        survivor_b2b=          {"Survivor B2B","Survive under heavy attacks"},
         survivor_spike=        {"Survivor Spike","Survive under huge spike attacks"},
         backfire_100=          {"Backfire 100","Clear 100 lines, but with backfire"},
         backfire_amplify_100=  {"Backfire Amplify 100","Clear 100 lines, but with increased backfire"},
@@ -245,7 +245,7 @@ return {
         sprint_flip_40=        {"Sprint 40 Flip","Clear 40 lines with a flipping field\nYou spin me right round, baby right round like a record, baby right round right round"},
         sprint_dizzy_40=       {"Sprint 40 Dizzy","Clear 40 lines with strange directions\nSomething's fishy with the directions here."},
         sprint_float_40=       {"Sprint 40 Float","Clear 40 lines without gravity"},
-        sprint_randctrl_40=    {"Sprint 40 Random","Clear 40 lines with a broken input device"},
+        sprint_randctrl_40=    {"Sprint 40 Clumsy","Clear 40 lines with a broken input device"},
     },
 
     -- Level

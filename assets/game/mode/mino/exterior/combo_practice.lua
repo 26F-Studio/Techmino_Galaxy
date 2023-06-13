@@ -1,5 +1,3 @@
-local bgmTransBegin,bgmTransFinish=50,100
-
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -14,14 +12,13 @@ return {
             playerInit=mechLib.mino.comboPractice.event_playerInit,
             afterDrop=mechLib.mino.comboPractice.event_afterDrop,
             afterLock=mechLib.mino.comboPractice.event_afterLock,
-            afterClear=mechLib.mino.comboPractice.event_afterClear,
+            afterClear={
+                mechLib.mino.comboPractice.event_afterClear,
+                mechLib.mino.progress.combo_practice_afterClear,
+            },
             beforeDiscard={
                 mechLib.mino.comboPractice.event_beforeDiscard[200],
-                function(P)
-                    if P.modeData.comboCount>bgmTransBegin and P.modeData.comboCount<=bgmTransFinish and P.isMain then
-                        BGM.set(bgmList['oxygen'].add,'volume',math.min((P.modeData.comboCount-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
-                    end
-                end,
+                mechLib.mino.progress.combo_practice_beforeDiscard,
             },
             drawOnPlayer=mechLib.mino.comboPractice.event_drawOnPlayer[200],
         },
