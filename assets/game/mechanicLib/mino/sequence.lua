@@ -177,7 +177,7 @@ function sequence.pento_bag_ez8hd4Bag10(P)
     end
 end
 
-local weight_bag7={1,3,6,10,15,21,28,34,39,43,46,48,49}
+local weight_bag7={64606156304596,131327514360144,203786783816133,287098623729448,390038487466665,531106246225509,762542509117884,896123925124349,1108610016824348,1476868735064520,2236067394570951,4591633945951618,1e99}
 function sequence.distWeight_bag7(P)
     local distances=shift(Tetros)-- Borrow the list from the bag7
     for i=7,2,-1 do ins(distances,rem(distances,P:random(1,i))) end
