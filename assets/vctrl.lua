@@ -1,7 +1,10 @@
 local gc_setLineWidth,gc_setColor=GC.setLineWidth,GC.setColor
 local gc_line=GC.line
 local gc_rectangle,gc_circle=GC.rectangle,GC.circle
+local max,min=math.max,math.min
+local floor,abs=math.floor,math.abs
 local sin,cos=math.sin,math.cos
+local tau=MATH.tau
 
 
 local touches={}
@@ -33,7 +36,7 @@ function button:getDistance(x,y)
     if self.shape=='circle' then
         return MATH.distance(x,y,self.x,self.y)/self.r
     elseif self.shape=='square' then
-        return math.max(math.abs(x-self.x),math.abs(y-self.y))/self.r
+        return max(abs(x-self.x),abs(y-self.y))/self.r
     end
 end
 function button:press(_,_,id)
@@ -73,7 +76,7 @@ function button:draw(setting)
         GC.mDraw(
             self.drawable,
             self.x,self.y,0,
-            self.iconSize/100*math.min(self.r*2/self.drawable:getWidth(),self.r*2/self.drawable:getHeight())
+            self.iconSize/100*min(self.r*2/self.drawable:getWidth(),self.r*2/self.drawable:getHeight())
         )
     end
 end
@@ -83,8 +86,8 @@ end
 function button:export()
     return {
         type=self.type,
-        x=math.floor(self.x),
-        y=math.floor(self.y),
+        x=floor(self.x),
+        y=floor(self.y),
         r=self.r,
         shape=self.shape,
         key=self.key,
@@ -114,7 +117,7 @@ function stick2way:new(data)
 end
 function stick2way:getDistance(x,y)
     return (
-        (math.abs(x-self.x)<self.len/2 and math.abs(y-self.y)<self.h/2) or
+        (abs(x-self.x)<self.len/2 and abs(y-self.y)<self.h/2) or
         MATH.distance(x,y,self.x-self.len/2,self.y)<self.h/2 or
         MATH.distance(x,y,self.x+self.len/2,self.y)<self.h/2
     ) and 0 or 1e99
@@ -172,10 +175,10 @@ function stick2way:draw(setting)
         gc_setColor(1,1,1,setting and 1 or .4)
         local drawable=self.drawable
         if drawable[1] then
-            GC.mDraw(drawable[1],self.x-self.len/2,self.y,0,self.iconSize/100*math.min(self.h/drawable[1]:getWidth(),self.h/drawable[1]:getHeight()))
+            GC.mDraw(drawable[1],self.x-self.len/2,self.y,0,self.iconSize/100*min(self.h/drawable[1]:getWidth(),self.h/drawable[1]:getHeight()))
         end
         if drawable[2] then
-            GC.mDraw(drawable[2],self.x+self.len/2,self.y,0,self.iconSize/100*math.min(self.h/drawable[2]:getWidth(),self.h/drawable[2]:getHeight()))
+            GC.mDraw(drawable[2],self.x+self.len/2,self.y,0,self.iconSize/100*min(self.h/drawable[2]:getWidth(),self.h/drawable[2]:getHeight()))
         end
     end
 end
@@ -183,8 +186,8 @@ function stick2way:export()
     return {
         type=self.type,
         available=self.available,
-        x=math.floor(self.x),
-        y=math.floor(self.y),
+        x=floor(self.x),
+        y=floor(self.y),
         len=self.len,
         h=self.h,
         iconSize=self.iconSize,
@@ -203,7 +206,8 @@ function stick4way:new(data)
         y=data.y or 700,
         r=data.r or 160,
         ball=data.ball or .3,
-        threshold=data.threshold or .26,
+        distThreshold=data.distThreshold or .26,
+        angleThreshold=data.angleThreshold or .26,
         iconSize=data.iconSize or 80,
 
         stickD=0,stickA=0,
@@ -219,15 +223,16 @@ function stick4way:updatePos(x,y)
     if not x then
         self.stickD,self.stickA=0,0
     else
-        self.stickD=math.min(MATH.distance(x,y,self.x,self.y)/self.r,1)
+        self.stickD=min(MATH.distance(x,y,self.x,self.y)/self.r,1)
         self.stickA=math.atan2(y-self.y,x-self.x)
     end
     local newState
-    if self.stickD<=self.threshold then
+    if self.stickD<=self.distThreshold then
         newState='wait'
     else
-        local a=self.stickA%MATH.tau/MATH.tau
+        local a=self.stickA/tau%1
         newState=
+            abs(a%.25-.125)/.125<self.angleThreshold and 'wait' or
             a<1/8 and 'right' or
             a<3/8 and 'down' or
             a<5/8 and 'left' or
@@ -292,8 +297,8 @@ function stick4way:draw(setting)
         local drawable=self.drawable
         for i=1,4 do if drawable[i] then
             local d=(bigR+ballR)*.5
-            local angle=i*math.pi/2
-            GC.mDraw(drawable[i],self.x+d*cos(angle),self.y+d*sin(angle),0,self.iconSize/100*math.min((bigR-ballR)/drawable[i]:getWidth(),(bigR-ballR)/drawable[i]:getHeight()))
+            local angle=i*tau/4
+            GC.mDraw(drawable[i],self.x+d*cos(angle),self.y+d*sin(angle),0,self.iconSize/100*min((bigR-ballR)/drawable[i]:getWidth(),(bigR-ballR)/drawable[i]:getHeight()))
         end end
     end
 end
@@ -301,11 +306,12 @@ function stick4way:export()
     return {
         type=self.type,
         available=self.available,
-        x=math.floor(self.x),
-        y=math.floor(self.y),
+        x=floor(self.x),
+        y=floor(self.y),
         r=self.r,
         ball=self.ball,
-        threshold=self.threshold,
+        distThreshold=self.distThreshold,
+        angleThreshold=self.angleThreshold,
         iconSize=self.iconSize or 80,
     }
 end
