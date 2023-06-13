@@ -1,5 +1,3 @@
-local bgmTransBegin,bgmTransFinish=30,80
-
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -18,11 +16,7 @@ return {
         event={
             playerInit=mechLib.mino.survivor.event_playerInit,
             always=mechLib.mino.survivor.cheese_event_always,
-            afterClear=function(P)
-                if P.modeData.wave>bgmTransBegin and P.modeData.wave<=bgmTransFinish and P.isMain then
-                    BGM.set(bgmList['here'].add,'volume',math.min((P.modeData.wave-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
-                end
-            end,
+            afterClear=mechLib.mino.progress.survivor_cheese_afterClear,
             drawOnPlayer=mechLib.mino.survivor.event_drawOnPlayer,
         },
     }},

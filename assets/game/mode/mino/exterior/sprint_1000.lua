@@ -6,13 +6,9 @@ return {
     end,
     settings={mino={
         event={
-            playerInit={
-                mechLib.mino.statistics.event_playerInit,
-                "P:addEvent('afterClear',mechLib.mino.progress.sprint_1000_afterClear)",
-            },
             afterClear={
-                mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[1000],
+                mechLib.mino.progress.sprint_1000_afterClear,
             },
             drawInField=mechLib.mino.sprint.event_drawInField[1000],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[1000],

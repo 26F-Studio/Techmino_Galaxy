@@ -8,14 +8,10 @@ return {
         pieceVisTime=120,
         pieceFadeTime=120,
         event={
-            playerInit={
-                mechLib.mino.statistics.event_playerInit,
-                mechLib.mino.misc.coverField_switch_auto,
-                "P:addEvent('afterClear',mechLib.mino.progress.sprint_blind_40_afterClear)",
-            },
+            playerInit=mechLib.mino.misc.coverField_switch_auto,
             afterClear={
-                mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
+                mechLib.mino.progress.sprint_blind_40_afterClear,
             },
             drawInField={
                 mechLib.mino.sprint.event_drawInField[40],

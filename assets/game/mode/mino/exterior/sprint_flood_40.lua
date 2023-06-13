@@ -7,13 +7,9 @@ return {
     settings={mino={
         seqType='bag7_flood',
         event={
-            playerInit={
-                mechLib.mino.statistics.event_playerInit,
-                "P:addEvent('afterClear',mechLib.mino.progress.sprint_flood_40_afterClear)",
-            },
             afterClear={
-                mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
+                mechLib.mino.progress.sprint_flood_40_afterClear,
             },
             drawInField=mechLib.mino.sprint.event_drawInField[40],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],

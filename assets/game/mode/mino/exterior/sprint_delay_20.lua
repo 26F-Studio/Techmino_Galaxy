@@ -11,9 +11,7 @@ return {
     settings={mino={
         inputDelay=620,
         event={
-            playerInit=mechLib.mino.statistics.event_playerInit,
             afterClear={
-                mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[20],
             },
             drawInField=mechLib.mino.sprint.event_drawInField[20],

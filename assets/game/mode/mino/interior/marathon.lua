@@ -21,51 +21,50 @@ return {
                 P.settings.sdarr=math.max(P.settings.sdarr,20)
 
                 P.settings.dropDelay=dropSpeed[1]
-                P.modeData.line=0
-                P.modeData.target=10
+                P.modeData.lineTarget=10
             end,
-            afterClear=function(P,clear)
+            afterClear=function(P)
                 local md=P.modeData
-                md.line=math.min(md.line+clear.line,200)
-                if md.line>=md.target then
-                    if md.target<200 then
-                        if PROGRESS.getMain()>=2 and md.target<=150 and P.isMain then
-                            BGM.set(bgmList['push'].add,'volume',(md.target/150)^2,2.6)
+                while md.stat.line>=md.lineTarget do
+                    if md.lineTarget<200 then
+                        if PROGRESS.getMain()>=2 and md.lineTarget<=150 and P.isMain then
+                            BGM.set(bgmList['push'].add,'volume',(md.lineTarget/150)^2,2.6)
                         end
-                        P.settings.dropDelay=dropSpeed[md.target/10+1]
-                        md.target=md.target+10
+                        P.settings.dropDelay=dropSpeed[md.lineTarget/10+1]
+                        md.lineTarget=md.lineTarget+10
                         P:playSound('reach')
                     else
                         P:finish('AC')
+                        return
                     end
                 end
             end,
             drawOnPlayer=function(P)
                 gc.setColor(COLOR.L)
                 FONT.set(70)
-                GC.mStr(P.modeData.line,-300,-90)
+                GC.mStr(P.modeData.stat.line,-300,-90)
                 gc.rectangle('fill',-375,-2,150,4)
-                GC.mStr(P.modeData.target,-300,-5)
+                GC.mStr(P.modeData.lineTarget,-300,-5)
             end,
         },
     }},
     result=function()
         local P=GAME.mainPlayer
         if not P then return end
-        PROGRESS.setInteriorScore('sprint',math.min(P.modeData.line*4/3,40))
+        PROGRESS.setInteriorScore('sprint',math.min(P.modeData.stat.line*4/3,40))
         PROGRESS.setInteriorScore('marathon',
-            P.modeData.line>=200 and 160 or
-            P.modeData.line>=130 and MATH.interpolate(P.modeData.line,130,120,200,160) or
-            P.modeData.line>=80  and MATH.interpolate(P.modeData.line,80,90,130,120) or
-            P.modeData.line>=40  and MATH.interpolate(P.modeData.line,40,40,80,90) or
-            MATH.interpolate(P.modeData.line,0,0,40,40)
+            P.modeData.stat.line>=200 and 160 or
+            P.modeData.stat.line>=130 and MATH.interpolate(P.modeData.stat.line,130,120,200,160) or
+            P.modeData.stat.line>=80  and MATH.interpolate(P.modeData.stat.line,80,90,130,120) or
+            P.modeData.stat.line>=40  and MATH.interpolate(P.modeData.stat.line,40,40,80,90) or
+            MATH.interpolate(P.modeData.stat.line,0,0,40,40)
         )
     end,
     resultPage=function(time)
         local P=GAME.mainPlayer
         if not P then return end
 
-        local line=math.min(P.modeData.line,math.floor(math.max(time-.26,0)*162))
+        local line=math.min(P.modeData.stat.line,math.floor(math.max(time-.26,0)*162))
 
         -- XX/200
         FONT.set(100)

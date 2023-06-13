@@ -8,13 +8,9 @@ return {
         fieldW=6,
         spawnH=12,
         event={
-            playerInit={
-                mechLib.mino.statistics.event_playerInit,
-                "P:addEvent('afterClear',mechLib.mino.progress.sprint_big_80_afterClear)",
-            },
             afterClear={
-                mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[80],
+                mechLib.mino.progress.sprint_big_80_afterClear,
             },
             drawInField=mechLib.mino.sprint.event_drawInField[80],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[80],
