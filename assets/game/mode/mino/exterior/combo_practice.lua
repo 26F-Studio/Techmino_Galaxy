@@ -12,7 +12,10 @@ return {
             playerInit=mechLib.mino.comboPractice.event_playerInit,
             afterDrop=mechLib.mino.comboPractice.event_afterDrop,
             afterLock=mechLib.mino.comboPractice.event_afterLock,
-            afterClear=mechLib.mino.comboPractice.event_afterClear,
+            afterClear={
+                mechLib.mino.comboPractice.event_afterClear,
+                mechLib.mino.progress.combo_practice_afterClear,
+            },
             beforeDiscard={
                 mechLib.mino.comboPractice.event_beforeDiscard[200],
                 mechLib.mino.progress.combo_practice_beforeDiscard,
