@@ -138,7 +138,7 @@ end
 do-- Widgets
     listBox={
         type='listBox',pos={.5,.5},x=mainX-listW,y=-listH/2,w=listW-10,h=listH,
-        lineHeight=40,cornerR=5,
+        lineHeight=40,
         scrollBarWidth=5,
         scrollBarDist=12,
         scrollBarColor=COLOR.lY,
@@ -167,18 +167,17 @@ do-- Widgets
 
     inputBox=WIDGET.new{
         type='inputBox',pos={.5,.5},x=mainX,y=280,w=mainW,h=searchH-10,
-        cornerR=5,
         frameColor={0,0,0,0},
     }
     copyButton=WIDGET.new{
         type='button',pos={.5,.5},x=mainX+mainW-50,y=210,w=80,h=80,
-        sound_trigger=false,lineWidth=4,cornerR=0,
+        sound_trigger=false,lineWidth=4,
         fontSize=60,text=CHAR.icon.copy,
         code=copyText,
     }
     linkButton=WIDGET.new{
         type='button',pos={.5,.5},x=mainX+mainW-150,y=210,w=80,h=80,
-        sound_trigger=false,lineWidth=4,cornerR=0,
+        sound_trigger=false,lineWidth=4,
         fontSize=60,text=CHAR.icon.earth,
         code=openLink,
     }
@@ -247,7 +246,10 @@ end
 function scene.enter()
     local target=SCN.args[1] or 'aboutDict'
 
-    time=0
+    if SCN.prev~='zeta_input_method' then
+        time=0
+        SFX.play('dict_open')
+    end
     searchTimer,lastSearchText=0,''
     freshWidgetPos()
 
@@ -323,7 +325,6 @@ function scene.enter()
     listBox:setList(dispDict)
     if selectedNum then listBox:select(selectedNum or 1)end
     listBox._scrollPos1=listBox._scrollPos
-    SFX.play('dict_open')
     collectgarbage()
 end
 
@@ -497,6 +498,6 @@ scene.widgetList={
     inputBox,
     copyButton,
     linkButton,
-    WIDGET.new{type='button',pos={.5,.5},x=mainX+mainW+70,y=-310,w=80,h=80,sound_trigger=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.cross_big,code=close},
+    WIDGET.new{type='button',pos={.5,.5},x=mainX+mainW+70,y=-310,w=80,h=80,sound_trigger=false,lineWidth=4,fontSize=60,text=CHAR.icon.cross_big,code=close},
 }
 return scene
