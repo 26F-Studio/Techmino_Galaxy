@@ -6,12 +6,12 @@ return {
     end,
     settings={mino={
         event={
-            playerInit=mechLib.mino.misc.obstacle_generateField,
+            playerInit=mechLib.mino.misc.obstacle_event_playerInit,
             afterClear={
                 mechLib.mino.misc.obstacle_event_afterClear[20],
                 mechLib.mino.progress.sprint_obstacle_20_afterClear,
             },
-            drawOnPlayer=mechLib.mino.sprint.obstacle_event_drawOnPlayer[20],
+            drawOnPlayer=mechLib.mino.misc.obstacle_event_drawOnPlayer[20],
         },
     }},
 }

@@ -280,6 +280,11 @@ do-- obstacle
         end
     end
 
+    function misc.obstacle_event_playerInit(P)
+        P.modeData.score=0
+        misc.obstacle_generateField(P)
+    end
+
     misc.obstacle_event_afterClear=TABLE.newPool(function(self,lineCount)
         self[lineCount]=function(P,clear)
             local score=math.ceil((clear.line+1)/2)
@@ -304,7 +309,7 @@ do-- obstacle
         self[lineCount]=function(P)
             P:drawInfoPanel(-380,-60,160,120)
             FONT.set(80) GC.mStr(lineCount-P.modeData.score,-300,-70)
-            FONT.set(30) GC.mStr(Text.target_line,-300,15)
+            FONT.set(30) GC.mStr(Text.target_score,-300,15)
         end
         return self[lineCount]
     end)
