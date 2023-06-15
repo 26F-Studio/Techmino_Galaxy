@@ -10,7 +10,7 @@ local scene={}
 
 local prevScene
 local time,quiting
-local writing=false
+local writing
 local database
 local inputs
 local results
@@ -133,6 +133,7 @@ end
 function scene.enter()
     prevScene=SCN.scenes[SCN.stack[#SCN.stack-1]] or NONE
     time,quiting=0,false
+    writing=false
     inputs={}
     results={}
     charQueue={}
@@ -170,7 +171,7 @@ end
 function scene.mouseDown(x,y,k)
     if k==1 and not writing then
         ins(inputs,{stroke={x,y},weight={0,0,0,0,0}})
-        writing=true
+        writing=k
     elseif k==2 then
         writing=false
         scene.keyDown('z')
@@ -179,22 +180,36 @@ function scene.mouseDown(x,y,k)
         scene.keyDown('x')
     end
 end
-
 function scene.mouseMove(x,y)
     if writing then
         local s=inputs[#inputs].stroke
-        if s then
-            ins(s,x)
-            ins(s,y)
-        end
+        if s then ins(s,x) ins(s,y) end
     end
 end
-function scene.mouseUp(x,y,k)
-    if k==1 and writing then
+function scene.mouseUp(_,_,k)
+    if k==1 and writing==k then
         writing=false
-        if not parseStroke(inputs[#inputs]) then
-            rem(inputs)
-        end
+        if not parseStroke(inputs[#inputs]) then rem(inputs) end
+        freshResult()
+    end
+end
+
+function scene.touchDown(x,y,id)
+    if not writing then
+        ins(inputs,{stroke={x,y},weight={0,0,0,0,0}})
+        writing=id
+    end
+end
+function scene.touchMove(x,y,_,_,id)
+    if writing==id then
+        local s=inputs[#inputs].stroke
+        if s then ins(s,x) ins(s,y) end
+    end
+end
+function scene.touchUp(_,_,id)
+    if writing==id then
+        writing=false
+        if not parseStroke(inputs[#inputs]) then rem(inputs) end
         freshResult()
     end
 end
