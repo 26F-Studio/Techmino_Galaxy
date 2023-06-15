@@ -304,11 +304,11 @@ function scene.draw()
     -- Results
     for i=1,#results do
         local x=800+90*(i-(#results+1)*.5)
-        local t=results[i].diff*.42
-        gc.setColor(2*t,2-2*t,.42,time)
+        local p=results[i].diff*.42
+        gc.setColor(2*p,2-2*p,.42-p*.26,time)
         FONT.set(70)
         GC.mStr(results[i].char,x,730)
-        gc.setColor(2*t,2-2*t,.626,time)
+        gc.setColor(2*p,2-2*p,.626-p*.42,time)
         FONT.set(20,'bold')
         GC.mStr(results[i].dispDiff,x,820)
         if i<=10 then
