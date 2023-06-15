@@ -329,6 +329,7 @@ function scene.enter()
 end
 
 function scene.keyDown(key,isRep)
+    if WIDGET.isFocus(inputBox) and #key==1 then return end
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
         if not (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
