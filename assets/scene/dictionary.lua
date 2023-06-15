@@ -244,6 +244,7 @@ local function parseDict(data)
 end
 
 function scene.enter()
+    listBox._scrollPos1=listBox._scrollPos
     if SCN.prev=='zeta_input_method' and SCN.args[1] then
         inputBox:addText(SCN.args[1])
         return
@@ -327,7 +328,6 @@ function scene.enter()
     if not selected then selectItem(dispDict[1]) end
     listBox:setList(dispDict)
     if selectedNum then listBox:select(selectedNum or 1)end
-    listBox._scrollPos1=listBox._scrollPos
     collectgarbage()
 end
 
