@@ -12,7 +12,7 @@ local prevScene
 local time,quiting
 local writing
 local database
-local inputs
+local inputs,cheat
 local results
 
 local charQueue={}
@@ -134,7 +134,7 @@ function scene.enter()
     prevScene=SCN.scenes[SCN.stack[#SCN.stack-1]] or NONE
     time,quiting=0,false
     writing=false
-    inputs={}
+    inputs,cheat={},false
     results={}
     charQueue={}
 
@@ -217,9 +217,11 @@ end
 function scene.keyDown(k)
     if k=='z' then-- Undo stroke
         rem(inputs)
+        cheat=false
+        for i=1,#inputs do if inputs[i].cheat then cheat=true break end end
         freshResult()
     elseif k=='x' then-- Clear strokes
-        inputs={}
+        inputs,cheat={},false
         freshResult()
     elseif k=='backspace' then-- Delete a char
         rem(charQueue)
@@ -235,9 +237,10 @@ function scene.keyDown(k)
         if k:match("[0-9]") then-- Select char
             selChar((k-1)%10+1)
         elseif ('qwert'):find(k) then-- Manual input stroke
-            local input={stroke={},weight={0,0,0,0,0}}
+            local input={stroke={},weight={0,0,0,0,0},cheat=true}
             input.weight[('qwert'):find(k)]=1
             ins(inputs,input)
+            cheat=true
             freshResult()
         end
     end
@@ -282,10 +285,10 @@ function scene.draw()
     gc.setColor(1,1,1,time)
     gc.rectangle('line',areaX-areaR,areaY-areaR,600,600,10)
 
-    if inputs[1] then
-        FONT.set(40,'bold')
-        gc.printf(#inputs,areaX-areaR-220,areaY+areaR-50,200,'right')
-    end
+    -- Stroke count
+    FONT.set(40,'bold')
+    gc.setColor(cheat and COLOR.LB or COLOR.L)
+    gc.print(#inputs,areaX-areaR+10,areaY+areaR-50)
 
     -- Strokes
     gc.setColor(.8,.8,.8,time)
@@ -324,19 +327,50 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-240,w=100, sound_trigger='move',lineWidth=3,fontSize=80,color='LY',text=CHAR.key.backspace,code=WIDGET.c_pressKey'backspace'},
-    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-240,w=100,sound_trigger='move',lineWidth=3,fontSize=80,color='LY',text=CHAR.key.mac_clear,code=WIDGET.c_pressKey'delete'},
-    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-240,w=100,sound_trigger='move',lineWidth=3,fontSize=80,color='LY',text=CHAR.icon.check_circ,code=WIDGET.c_pressKey'return'},
-    WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-50,w=100,  sound_trigger='move',lineWidth=3,fontSize=80,text=CHAR.icon.back,code=WIDGET.c_pressKey'z'},
-    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-50,w=100, sound_trigger='move',lineWidth=3,fontSize=80,text=CHAR.icon.delete,code=WIDGET.c_pressKey'x'},
-    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-50,w=100, sound_trigger='move',lineWidth=3,fontSize=80,text=CHAR.icon.cross_big,code=WIDGET.c_pressKey'escape'},
+    WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-240,w=100, sound_trigger='move',fontSize=80,color='LY',text=CHAR.key.backspace,code=WIDGET.c_pressKey'backspace'},
+    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-240,w=100,sound_trigger='move',fontSize=80,color='LY',text=CHAR.key.mac_clear,code=WIDGET.c_pressKey'delete'},
+    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-240,w=100,sound_trigger='move',fontSize=80,color='LY',text=CHAR.icon.check_circ,code=WIDGET.c_pressKey'return'},
+    WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-50,w=100,  sound_trigger='move',fontSize=80,text=CHAR.icon.back,code=WIDGET.c_pressKey'z'},
+    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-50,w=100, sound_trigger='move',fontSize=80,text=CHAR.icon.delete,code=WIDGET.c_pressKey'x'},
+    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-50,w=100, sound_trigger='move',fontSize=80,text=CHAR.icon.cross_big,code=WIDGET.c_pressKey'escape'},
 }
+
+local fwSymbols={
+    {'（','）','【','】','《','》'},
+    {'：','：','“','”','‘','’'},
+    {'，','。','、','？','！','…'},
+}
+for i=1,#fwSymbols do
+    for j=1,#fwSymbols[i] do
+        ins(scene.widgetList,WIDGET.new{
+            type='button',
+            x=areaX-areaR+25-75*(#fwSymbols[i]-j+1),
+            y=areaY+areaR-360+75*i,
+            w=70,sound_trigger='move',
+            fontSize=60,color='LR',
+            text=fwSymbols[i][j],
+            code=function() ins(charQueue,fwSymbols[i][j]) end
+        })
+    end
+end
+
+local strokeSymbol={'一','丨','丿','丶','乚'}
+for i=1,#strokeSymbol do
+    ins(scene.widgetList,WIDGET.new{
+        type='button',
+        x=areaX-areaR+30-90*(#strokeSymbol-i+1),
+        y=areaY+areaR-40,w=80,sound_trigger='move',
+        fontSize=70,color='LB',
+        text=strokeSymbol[i],
+        code=WIDGET.c_pressKey(('qwert'):sub(i,i))
+    })
+end
 
 for i=1,15 do
     ins(scene.widgetList,WIDGET.new{
         type='button',
         x=-2600,y=780,w=80,sound_trigger='move',
-        lineWidth=3,fontSize=80,code=function() selChar(i) end
+        fontSize=80,code=function() selChar(i) end
     })
 end
 
