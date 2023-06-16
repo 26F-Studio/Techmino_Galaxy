@@ -30,8 +30,13 @@ end
 do-- sprint_10
     function progress.sprint_10_afterClear(P)
         if not P.isMain then return true end
-        if P.finished=='AC' and P.modeData.stat.piece<30 then
-            PROGRESS.setMinoModeUnlocked('sprint_obstacle_20')
+        if P.finished=='AC' then
+            if P.modeData.stat.piece<30 then
+                PROGRESS.setMinoModeUnlocked('sprint_obstacle_20')
+            end
+            if P.modeData.stat.clears[4]>0 then
+                PROGRESS.setMinoModeUnlocked('sprint_200')
+            end
         end
     end
 end
@@ -131,16 +136,19 @@ do-- sprint_mph_40
             BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
         if P.finished=='AC' then
-            PROGRESS.setMinoModeUnlocked('sprint_fix_20')
+            PROGRESS.setMinoModeUnlocked('sprint_lock_20')
         end
     end
 end
 
-do-- sprint_wind_40
-    local bgmTransP1,bgmTransP2=10,30
-    function progress.sprint_wind_40_afterClear(P)
+do-- sprint_lock_20
+    local bgmTransP1,bgmTransP2=5,15
+    function progress.sprint_lock_20_afterClear(P)
         if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 and P.isMain then
             BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        end
+        if P.finished=='AC' then
+            PROGRESS.setMinoModeUnlocked('sprint_fix_20')
         end
     end
 end
@@ -151,15 +159,12 @@ do-- sprint_fix_20
         if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 and P.isMain then
             BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' then
-            PROGRESS.setMinoModeUnlocked('sprint_lock_20')
-        end
     end
 end
 
-do-- sprint_lock_20
-    local bgmTransP1,bgmTransP2=5,15
-    function progress.sprint_lock_20_afterClear(P)
+do-- sprint_wind_40
+    local bgmTransP1,bgmTransP2=10,30
+    function progress.sprint_wind_40_afterClear(P)
         if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 and P.isMain then
             BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
