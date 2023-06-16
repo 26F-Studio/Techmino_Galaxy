@@ -8,6 +8,13 @@ local areaX,areaY,areaR=800,400,300
 
 local scene={}
 
+local widgetList_result={}
+local widgetList_stroke={}
+local strokeKeys={
+    'Q','W','E','R','T',
+    q=1,w=2,e=3,r=4,t=5,
+}
+
 local prevScene
 local time,quiting
 local writing
@@ -119,7 +126,7 @@ local function freshResult()
         end
     end
     for i=1,15 do
-        local b=scene.widgetList[#scene.widgetList-15+i]
+        local b=widgetList_result[i]
         if results[i] then
             b.x=800+90*(i-(#results+1)*.5)
             b:setVisible(true)
@@ -236,9 +243,9 @@ function scene.keyDown(k)
     elseif #k==1 then
         if k:match("[0-9]") then-- Select char
             selChar((k-1)%10+1)
-        elseif ('qwert'):find(k) then-- Manual input stroke
+        elseif strokeKeys[k] then-- Manual input stroke
             local input={stroke={},weight={0,0,0,0,0},cheat=true}
-            input.weight[('qwert'):find(k)]=1
+            input.weight[strokeKeys[k]]=1
             ins(inputs,input)
             cheat=true
             freshResult()
@@ -304,23 +311,32 @@ function scene.draw()
         end
     end
 
+    -- Stroke keyhint
+    FONT.set(30,'bold')
+    gc.setColor(COLOR.LB)
+    for i=1,5 do
+        gc.print(strokeKeys[i],widgetList_stroke[i]._x-30,widgetList_stroke[i]._y-80)
+    end
+
     -- Results
     for i=1,#results do
-        local x=800+90*(i-(#results+1)*.5)
+        local x=widgetList_result[i]._x
+        local y=widgetList_result[i]._y
         local p=results[i].diff*.42
         gc.setColor(2*p,2-2*p,.42-p*.26,time)
         FONT.set(70)
-        GC.mStr(results[i].char,x,730)
+        GC.mStr(results[i].char,x,y-50)
         gc.setColor(2*p,2-2*p,.626-p*.42,time)
         FONT.set(20,'bold')
-        GC.mStr(results[i].dispDiff,x,820)
+        GC.mStr(results[i].dispDiff,x,y+40)
         if i<=10 then
             FONT.set(30,'bold')
             gc.setColor(COLOR.L)
-            gc.print(i%10,x-36,700)
+            gc.print(i%10,x-36,y-80)
         end
     end
 
+    -- Char queue
     FONT.set(80)
     gc.setColor(1,1,.8,time)
     gc.print(charQueue,areaX+areaR+20,areaY-100)
@@ -345,7 +361,7 @@ for i=1,#fwSymbols do
         ins(scene.widgetList,WIDGET.new{
             type='button',
             x=areaX-areaR+25-75*(#fwSymbols[i]-j+1),
-            y=areaY+areaR-360+75*i,
+            y=areaY+areaR-390+75*i,
             w=70,sound_trigger='move',
             fontSize=60,color='LR',
             text=fwSymbols[i][j],
@@ -356,22 +372,26 @@ end
 
 local strokeSymbol={'一','丨','丿','丶','乚'}
 for i=1,#strokeSymbol do
-    ins(scene.widgetList,WIDGET.new{
+    local w=WIDGET.new{
         type='button',
         x=areaX-areaR+30-90*(#strokeSymbol-i+1),
         y=areaY+areaR-40,w=80,sound_trigger='move',
         fontSize=70,color='LB',
         text=strokeSymbol[i],
         code=WIDGET.c_pressKey(('qwert'):sub(i,i))
-    })
+    }
+    ins(scene.widgetList,w)
+    ins(widgetList_stroke,w)
 end
 
 for i=1,15 do
-    ins(scene.widgetList,WIDGET.new{
+    local w=WIDGET.new{
         type='button',
-        x=-2600,y=780,w=80,sound_trigger='move',
+        x=-2600,y=790,w=80,sound_trigger='move',
         fontSize=80,code=function() selChar(i) end
-    })
+    }
+    ins(scene.widgetList,w)
+    ins(widgetList_result,w)
 end
 
 return scene
