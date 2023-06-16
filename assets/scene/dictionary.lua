@@ -19,7 +19,7 @@ local mainX=100-mainW/2
 local listW,listH=300,600
 local searchH=80
 
-local prevScene
+local aboveScene
 local searchTimer,lastSearchText
 local time,quiting
 local selected
@@ -138,7 +138,7 @@ end
 do-- Widgets
     listBox={
         type='listBox',pos={.5,.5},x=mainX-listW,y=-listH/2,w=listW-10,h=listH,
-        lineHeight=40,cornerR=5,
+        lineHeight=40,
         scrollBarWidth=5,
         scrollBarDist=12,
         scrollBarColor=COLOR.lY,
@@ -167,18 +167,17 @@ do-- Widgets
 
     inputBox=WIDGET.new{
         type='inputBox',pos={.5,.5},x=mainX,y=280,w=mainW,h=searchH-10,
-        cornerR=5,
         frameColor={0,0,0,0},
     }
     copyButton=WIDGET.new{
         type='button',pos={.5,.5},x=mainX+mainW-50,y=210,w=80,h=80,
-        sound_trigger=false,lineWidth=4,cornerR=0,
+        sound_trigger=false,lineWidth=4,
         fontSize=60,text=CHAR.icon.copy,
         code=copyText,
     }
     linkButton=WIDGET.new{
         type='button',pos={.5,.5},x=mainX+mainW-150,y=210,w=80,h=80,
-        sound_trigger=false,lineWidth=4,cornerR=0,
+        sound_trigger=false,lineWidth=4,
         fontSize=60,text=CHAR.icon.earth,
         code=openLink,
     }
@@ -245,14 +244,21 @@ local function parseDict(data)
 end
 
 function scene.enter()
+    listBox._scrollPos1=listBox._scrollPos
+    if SCN.prev=='zeta_input_method' and SCN.args[1] then
+        inputBox:addText(SCN.args[1])
+        return
+    end
     local target=SCN.args[1] or 'aboutDict'
 
+    quiting=false
     time=0
+    aboveScene=SCN.scenes[SCN.stack[#SCN.stack-1]] or NONE
     searchTimer,lastSearchText=0,''
+    inputBox._value=''
+    SFX.play('dict_open')
     freshWidgetPos()
 
-    quiting=false
-    prevScene=SCN.scenes[SCN.stack[#SCN.stack-1]] or NONE
     selectItem(false)
 
     -- Initialize dictionary for current language (if need)
@@ -322,12 +328,11 @@ function scene.enter()
     if not selected then selectItem(dispDict[1]) end
     listBox:setList(dispDict)
     if selectedNum then listBox:select(selectedNum or 1)end
-    listBox._scrollPos1=listBox._scrollPos
-    SFX.play('dict_open')
     collectgarbage()
 end
 
 function scene.keyDown(key,isRep)
+    if WIDGET.isFocus(inputBox) and #key==1 then return end
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
         if not (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
@@ -396,8 +401,8 @@ function scene.wheelMoved(_,y)
 end
 
 function scene.update(dt)
-    if prevScene.update then
-        prevScene.update(dt)
+    if aboveScene.update then
+        aboveScene.update(dt)
     end
     if quiting then
         time=math.max(time-12.6*dt,0)
@@ -425,12 +430,12 @@ end
 
 function scene.draw()
     -- Previous scene's things
-    if prevScene.draw then
-        prevScene.draw()
+    if aboveScene.draw then
+        aboveScene.draw()
     end
-    if prevScene.widgetList then
+    if aboveScene.widgetList then
         gc_replaceTransform(SCR.xOy)
-        WIDGET.draw(prevScene.widgetList)
+        WIDGET.draw(aboveScene.widgetList)
     end
 
     -- Dark background
@@ -497,6 +502,11 @@ scene.widgetList={
     inputBox,
     copyButton,
     linkButton,
-    WIDGET.new{type='button',pos={.5,.5},x=mainX+mainW+70,y=-310,w=80,h=80,sound_trigger=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.cross_big,code=close},
+    WIDGET.new{type='button',pos={.5,.5},x=mainX+mainW+70,y=-310,w=80,h=80,sound_trigger=false,lineWidth=4,fontSize=60,text=CHAR.icon.cross_big,code=close},
+    WIDGET.new{
+        type='button',pos={.5,.5},x=mainX+mainW+70,y=320,w=80,h=80,sound_trigger='move',lineWidth=4,fontSize=50,text="写",
+        code=WIDGET.c_goScn('zeta_input_method','none'),
+        visibleFunc=function() return SETTINGS._system.locale=='zh' end,
+    },
 }
 return scene
