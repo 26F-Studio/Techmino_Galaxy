@@ -204,7 +204,7 @@ function scene.mouseUp(_,_,k)
 end
 
 function scene.touchDown(x,y,id)
-    if not writing then
+    if not writing and not WIDGET.sel then
         ins(inputs,{stroke={x,y},weight={0,0,0,0,0}})
         writing=id
     end
