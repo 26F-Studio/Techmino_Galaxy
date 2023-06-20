@@ -345,6 +345,7 @@ end
 function MP:createTuckEffect()
 end
 function MP:createHoldEffect(ifInit)
+    if not self.handX then return end
     local cx,cy=self.handX+#self.hand.matrix[1]/2-.5,self.handY+#self.hand.matrix/2-.5
     local p=self.particles.spinArrow
     p:new((cx-.5)*40,-(cy-.5)*40,ifInit)
@@ -622,20 +623,16 @@ function MP:resetPosCheck()
             if self.settings.initMove=='hold' then
                 if self.keyState.softDrop then self:moveDown() end
                 if self.keyState.moveRight~=self.keyState.moveLeft then
-                    local origY=self.handY-- For canceling 20G effect of IMS
-                    if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
-                    self.handY=origY
+                    if self.keyState.moveRight then self:moveRight(true) else self:moveLeft(true) end
                 end
             elseif self.settings.initMove=='buffer' then
                 if self.keyBuffer.move then
-                    local origY=self.handY-- For canceling 20G effect of IMS
                     if self.keyBuffer.move=='L' then
-                        self:moveLeft()
+                        self:moveLeft(true)
                     elseif self.keyBuffer.move=='R' then
-                        self:moveRight()
+                        self:moveRight(true)
                     end
                     self.keyBuffer.move=false
-                    self.handY=origY
                 end
             end
         end
@@ -821,7 +818,6 @@ function MP:popNext(ifHold)
         self:finish('ILE')
         return
     end
-    self:resetPos()
 
     -- IHS
     local IHSused
@@ -837,6 +833,8 @@ function MP:popNext(ifHold)
             end
         end
     end
+
+    self:resetPos()
 
     if not IHSused then
         self:triggerEvent('afterSpawn')
@@ -1058,17 +1056,17 @@ function MP:calculateHolePos(count,splitRate,copyRate,sandwichRate)
     end
     return holePos
 end
-function MP:moveLeft()
+function MP:moveLeft(ifInit)
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
         self:moveHand('moveX',-1)
-        self:freshGhost()
+        if not ifInit then self:freshGhost() end
         return true
     end
 end
-function MP:moveRight()
+function MP:moveRight(ifInit)
     if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
         self:moveHand('moveX',1)
-        self:freshGhost()
+        if not ifInit then self:freshGhost() end
         return true
     end
 end
@@ -1128,7 +1126,7 @@ function MP:rotate(dir,ifInit)
                     return
                 end
             end
-            self:freshDelay('rotate')
+            if not ifInit then self:freshDelay('rotate') end
             self:playSound('rotate_failed')
             if self.settings.particles then
                 self:createHandEffect(1,.26,.26)
