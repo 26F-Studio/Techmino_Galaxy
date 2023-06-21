@@ -820,25 +820,22 @@ function MP:popNext(ifHold)
     end
 
     -- IHS
-    local IHSused
     if not ifHold and self.settings.initHold then
         if self.settings.initHold=='hold' then
             if self.keyState.holdPiece then
-                IHSused=self:hold(true)
+                self:hold(true)
             end
         elseif self.settings.initHold=='buffer' then
             if self.keyBuffer.hold then
                 self.keyBuffer.hold=false
-                IHSused=self:hold(true)
+                self:hold(true)
             end
         end
     end
 
     self:resetPos()
 
-    if not IHSused then
-        self:triggerEvent('afterSpawn')
-    end
+    self:triggerEvent('afterSpawn')
 
     if self.keyBuffer.hardDrop then-- IHdS
         self.keyBuffer.hardDrop=false
@@ -1151,7 +1148,6 @@ function MP:hold(ifInit)
 
     self.holdTime=self.holdTime+1
     self:playSound(ifInit and 'inithold' or 'hold')
-    return true
 end
 function MP:hold_hold()
     if not self.settings.holdKeepState then
