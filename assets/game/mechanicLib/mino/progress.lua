@@ -417,6 +417,21 @@ do-- combo_practice
     end
 end
 
+do-- dig_practice
+    function progress.dig_practice_afterClear(P)
+        if not P.isMain then return true end
+        if P.modeData.lineExist==0 then
+            PROGRESS.setMinoModeUnlocked('dig_shale')
+            if P.gameTime<30e3 then
+                PROGRESS.setMinoModeUnlocked('survivor_b2b')
+            end
+            if P.modeData.stat.piece<62 then
+                PROGRESS.setMinoModeUnlocked('dig_40')
+            end
+        end
+    end
+end
+
 do-- dig_shale
     local bgmTransP1,bgmTransP2=10,30
     function progress.dig_shale_afterClear(P)
