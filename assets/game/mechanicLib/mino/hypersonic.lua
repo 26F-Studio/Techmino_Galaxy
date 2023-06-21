@@ -34,16 +34,21 @@ function hypersonic.event_playerInit(P)
     P.modeData.point=0
     P.modeData.level=1
     P.modeData.target=100
+    P.modeData.maxHold=0
     P.modeData.storedDas=P.settings.das
     P.modeData.storedArr=P.settings.arr
 end
 
 function hypersonic.event_afterSpawn(P)
     local md=P.modeData
-    if md.point<md.target-1 then
-        md.point=md.point+1
-        if md.point==md.target-1 then
-            P:playSound('notice')
+    if md.maxHold<#P.holdQueue then
+        md.maxHold=#P.holdQueue
+    else
+        if md.point<md.target-1 then
+            md.point=md.point+1
+            if md.point==md.target-1 then
+                P:playSound('notice')
+            end
         end
     end
 end
