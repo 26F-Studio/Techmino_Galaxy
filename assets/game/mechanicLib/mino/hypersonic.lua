@@ -64,10 +64,10 @@ end
 do-- low
     local levels={
         {lock=1e3,spawn=320,das=200,arr=36},
-        {lock=850,spawn=290,das=170,arr=32},
-        {lock=700,spawn=260,das=140,arr=28},
-        {lock=550,spawn=230,das=120,arr=24},
-        {lock=400,spawn=200,das=100,arr=20},
+        {lock=850,spawn=290,das=170,arr=33},
+        {lock=700,spawn=260,das=140,arr=30},
+        {lock=550,spawn=230,das=120,arr=28},
+        {lock=400,spawn=200,das=100,arr=26},
     }
 
     function hypersonic.low_event_playerInit(P)
