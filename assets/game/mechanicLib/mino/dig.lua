@@ -121,7 +121,7 @@ dig.shale_event_afterClear=TABLE.newPool(function(self,info)
     return self[info]
 end)
 
-local function pushVocanicsGarbage(P)
+local function pushVolcanicsGarbage(P)
     P:riseGarbage(P:calculateHolePos(
         P:random(3,4),-- count
         .2,-- splitRate
@@ -129,16 +129,16 @@ local function pushVocanicsGarbage(P)
         .1 -- sandwichRate
     ))
 end
-dig.vocanics_event_playerInit=TABLE.newPool(function(self,lineStay)
+dig.volcanics_event_playerInit=TABLE.newPool(function(self,lineStay)
     self[lineStay]=function(P)
-        for _=1,lineStay do pushVocanicsGarbage(P) end
+        for _=1,lineStay do pushVolcanicsGarbage(P) end
         P.fieldDived=0
         P.modeData.lineDig=0
         P.modeData.lineExist=lineStay
     end
     return self[lineStay]
 end)
-dig.vocanics_event_afterClear=TABLE.newPool(function(self,info)
+dig.volcanics_event_afterClear=TABLE.newPool(function(self,info)
     assert(type(info)=='string')
     local lineCount,lineStay=info:match('(%d+),(%d+)')
     lineCount,lineStay=tonumber(lineCount),tonumber(lineStay)
@@ -158,7 +158,7 @@ dig.vocanics_event_afterClear=TABLE.newPool(function(self,info)
                 md.lineExist=md.lineExist-cleared
                 local add=math.min(lineCount-md.lineDig,lineStay)-md.lineExist
                 if add>0 then
-                    for _=1,add do pushVocanicsGarbage(P) end
+                    for _=1,add do pushVolcanicsGarbage(P) end
                     md.lineExist=md.lineExist+add
                 end
             end

@@ -436,21 +436,21 @@ do-- dig_shale
     local bgmTransP1,bgmTransP2=10,30
     function progress.dig_shale_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.lineDig>bgmTransP1 and P.modeData.stat.lineDig<bgmTransP2+4 then
-            BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.stat.lineDig-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        if P.modeData.lineDig>bgmTransP1 and P.modeData.lineDig<bgmTransP2+4 then
+            BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.lineDig-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
         if P.finished=='AC' then
-            PROGRESS.setMinoModeUnlocked('dig_vocanics')
+            PROGRESS.setMinoModeUnlocked('dig_volcanics')
         end
     end
 end
 
-do-- dig_vocanics
+do-- dig_volcanics
     local bgmTransP1,bgmTransP2=0,10
-    function progress.dig_vocanics_afterClear(P)
+    function progress.dig_volcanics_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.lineDig>bgmTransP1 and P.modeData.stat.lineDig<bgmTransP2+4 then
-            BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.stat.lineDig-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        if P.modeData.lineDig>bgmTransP1 and P.modeData.lineDig<bgmTransP2+4 then
+            BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.lineDig-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
 end
@@ -464,7 +464,7 @@ do-- dig_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.dig_40_afterClear(P)
         if not P.isMain then return true end
-        local pt=P.modeData.stat.lineDig
+        local pt=P.modeData.lineDig
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['way'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
@@ -478,7 +478,7 @@ do-- dig_100
     local bgmTransP1,bgmTransP2=50,75
     function progress.dig_100_afterClear(P)
         if not P.isMain then return true end
-        local pt=P.modeData.stat.lineDig
+        local pt=P.modeData.lineDig
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['way'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
@@ -492,7 +492,7 @@ do-- dig_400
     local bgmTransP1,bgmTransP2=200,300
     function progress.dig_400_afterClear(P)
         if not P.isMain then return true end
-        local pt=P.modeData.stat.lineDig
+        local pt=P.modeData.lineDig
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['way'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
