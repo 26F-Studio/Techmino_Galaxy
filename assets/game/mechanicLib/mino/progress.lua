@@ -198,9 +198,9 @@ do-- sprint_invis_40
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        -- if P.finished=='AC' and P.modeData.stat.piece<110 then
-        --     PROGRESS.setMinoModeUnlocked('sprint_blind_40')
-        -- end
+        if P.finished=='AC' and P.modeData.stat.clears[4]==10 then
+            PROGRESS.setMinoModeUnlocked('sprint_blind_40')
+        end
     end
 end
 
@@ -453,11 +453,6 @@ do-- dig_volcanics
             BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.lineDig-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
-end
-
-do-- dig_checker
-    -- function progress.dig_checker_afterClear(P)
-    -- end
 end
 
 do-- dig_40
