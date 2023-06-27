@@ -17,6 +17,7 @@ return {
             },
             drawInField=mechLib.mino.sprint.event_drawInField[100],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[100],
+            gameOver=mechLib.mino.progress.backfire_amplify_100_gameOver,
         },
     }},
 }

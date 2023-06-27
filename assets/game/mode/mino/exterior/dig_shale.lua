@@ -12,6 +12,7 @@ return {
                 mechLib.mino.progress.dig_shale_afterClear,
             },
             drawOnPlayer=mechLib.mino.dig.event_drawOnPlayer[40],
+            gameOver=mechLib.mino.progress.dig_shale_gameOver,
         },
     }},
 }

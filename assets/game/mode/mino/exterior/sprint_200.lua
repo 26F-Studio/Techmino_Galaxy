@@ -12,6 +12,7 @@ return {
             },
             drawInField=mechLib.mino.sprint.event_drawInField[200],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[200],
+            gameOver=mechLib.mino.progress.sprint_200_gameOver,
         },
     }},
 }

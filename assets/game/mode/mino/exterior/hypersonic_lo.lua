@@ -8,7 +8,7 @@ return {
         event={
             playerInit="mechLib.mino.hypersonic.event_playerInit_auto(P,'low')",
             afterSpawn=mechLib.mino.progress.hypersonic_lo_afterSpawn,
-            afterClear=mechLib.mino.progress.hypersonic_lo_afterClear,
+            gameOver=mechLib.mino.progress.hypersonic_lo_gameOver,
         },
     }},
 }

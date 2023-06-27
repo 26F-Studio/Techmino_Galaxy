@@ -13,7 +13,10 @@ do-- sprint_40
             BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
         P.modeData.maxHeight=math.max(P.modeData.maxHeight or 0,P.field:getHeight())
-        if P.finished=='AC' then
+    end
+    function progress.sprint_40_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             if P.gameTime<=86e3 then
                 PROGRESS.setMinoModeUnlocked('sprint_hide_40')
             end
@@ -28,14 +31,17 @@ do-- sprint_40
 end
 
 do-- sprint_10
-    function progress.sprint_10_afterClear(P)
+    function progress.sprint_10_afterClear(P,clear)
         if not P.isMain then return true end
-        if P.finished=='AC' then
+        if clear.line==4 then
+            PROGRESS.setMinoModeUnlocked('sprint_200')
+        end
+    end
+    function progress.sprint_10_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             if P.modeData.stat.piece<30 then
                 PROGRESS.setMinoModeUnlocked('sprint_obstacle_20')
-            end
-            if P.modeData.stat.clears[4]>0 then
-                PROGRESS.setMinoModeUnlocked('sprint_200')
             end
         end
     end
@@ -49,7 +55,10 @@ do-- sprint_200
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' then
+    end
+    function progress.sprint_200_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             PROGRESS.setMinoModeUnlocked('sprint_1000')
         end
     end
@@ -74,7 +83,10 @@ do-- sprint_obstacle_20
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' then
+    end
+    function progress.sprint_obstacle_20_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             PROGRESS.setMinoModeUnlocked('sprint_drought_40')
         end
     end
@@ -88,7 +100,10 @@ do-- sprint_drought_40
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' then
+    end
+    function progress.sprint_drought_40_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             PROGRESS.setMinoModeUnlocked('sprint_flood_40')
             PROGRESS.setMinoModeUnlocked('sprint_mph_40')
         end
@@ -103,7 +118,10 @@ do-- sprint_flood_40
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' then
+    end
+    function progress.sprint_flood_40_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             PROGRESS.setMinoModeUnlocked('sprint_pento_40')
         end
     end
@@ -137,7 +155,10 @@ do-- sprint_mph_40
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' then
+    end
+    function progress.sprint_mph_40_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             PROGRESS.setMinoModeUnlocked('sprint_lock_20')
         end
     end
@@ -150,7 +171,10 @@ do-- sprint_lock_20
         if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' then
+    end
+    function progress.sprint_lock_20_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             PROGRESS.setMinoModeUnlocked('sprint_fix_20')
         end
     end
@@ -184,7 +208,10 @@ do-- sprint_hide_40
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' and P.modeData.stat.piece<110 then
+    end
+    function progress.sprint_hide_40_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' and P.modeData.stat.piece<110 then
             PROGRESS.setMinoModeUnlocked('sprint_invis_40')
         end
     end
@@ -198,7 +225,10 @@ do-- sprint_invis_40
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' and P.modeData.stat.clears[4]==10 then
+    end
+    function progress.sprint_invis_40_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' and P.modeData.stat.clears[4]==10 then
             PROGRESS.setMinoModeUnlocked('sprint_blind_40')
         end
     end
@@ -223,7 +253,10 @@ do-- sprint_big_80
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' then
+    end
+    function progress.sprint_big_80_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             PROGRESS.setMinoModeUnlocked('sprint_small_20')
             PROGRESS.setMinoModeUnlocked('sprint_low_40')
         end
@@ -248,7 +281,10 @@ do-- sprint_low_40
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' then
+    end
+    function progress.sprint_low_40_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             PROGRESS.setMinoModeUnlocked('sprint_float_40')
         end
     end
@@ -282,7 +318,10 @@ do-- sprint_flip_40
         if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' and P.gameTime<=60e3 then
+    end
+    function progress.sprint_flip_40_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' and P.gameTime<=60e3 then
             PROGRESS.setMinoModeUnlocked('sprint_dizzy_40')
         end
     end
@@ -338,13 +377,11 @@ do-- hypersonic_lo
             BGM.set(bgmList['secret8th'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),1)
         end
     end
-    function progress.hypersonic_lo_afterClear(P)
+    function progress.hypersonic_lo_gameOver(P)
         if not P.isMain then return true end
+        PROGRESS.setMinoModeUnlocked('hypersonic_hi')
         if P.modeData.stat.clears[4]==36 then
             PROGRESS.setMinoModeUnlocked('techrash_hard')
-        end
-        if P.modeData.point>=500 then
-            PROGRESS.setMinoModeUnlocked('hypersonic_hi')
         end
     end
 end
@@ -439,7 +476,10 @@ do-- dig_shale
         if P.modeData.lineDig>bgmTransP1 and P.modeData.lineDig<bgmTransP2+4 then
             BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.lineDig-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' then
+    end
+    function progress.dig_shale_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             PROGRESS.setMinoModeUnlocked('dig_volcanics')
         end
     end
@@ -463,7 +503,10 @@ do-- dig_40
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['way'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' then
+    end
+    function progress.dig_40_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             PROGRESS.setMinoModeUnlocked('dig_100')
         end
     end
@@ -477,7 +520,10 @@ do-- dig_100
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['way'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' then
+    end
+    function progress.dig_100_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             PROGRESS.setMinoModeUnlocked('dig_400')
         end
     end
@@ -538,7 +584,10 @@ do-- backfire_100
         if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
             BGM.set(bgmList['echo'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' then
+    end
+    function progress.backfire_100_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             PROGRESS.setMinoModeUnlocked('backfire_amplify_100')
         end
     end
@@ -551,7 +600,10 @@ do-- backfire_amplify_100
         if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
             BGM.set(bgmList['echo'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.finished=='AC' then
+    end
+    function progress.backfire_amplify_100_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
             PROGRESS.setMinoModeUnlocked('backfire_cheese_100')
         end
     end

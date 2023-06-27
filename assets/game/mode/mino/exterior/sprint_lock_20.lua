@@ -14,6 +14,7 @@ return {
             },
             drawInField=mechLib.mino.sprint.event_drawInField[20],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[20],
+            gameOver=mechLib.mino.progress.sprint_lock_20_gameOver,
         },
     }},
 }
