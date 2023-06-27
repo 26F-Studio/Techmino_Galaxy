@@ -17,6 +17,9 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 ---| 'UKE' Other reason
 
 --- @class Techmino.Player
+--- @field gameMode Techmino.mode.playerType
+--- @field id number limited to 1~1000
+--- @field group number
 --- @field isMain boolean
 --- @field sound boolean
 --- @field settings table
@@ -44,6 +47,9 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 --- @field event table
 --- @field soundEvent table
 --- @field _actions table<string, {press:fun(P:Techmino.Player), release:fun(P:Techmino.Player)}>
+---
+--- @field receive function
+--- @field render function
 local P={}
 
 --------------------------------------------------------------
