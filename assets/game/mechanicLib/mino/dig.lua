@@ -16,12 +16,18 @@ dig.sprint_event_afterClear=TABLE.newPool(function(self,info)
     lineCount,lineStay=tonumber(lineCount),tonumber(lineStay)
     self[info]=function(P,clear)
         local md=P.modeData
-        if clear.line>0 then
-            md.lineDig=md.lineDig+clear.line
+        local digLine=0
+        for _,v in next,clear.linePos do
+            if v<=md.lineExist then
+                digLine=digLine+1
+            end
+        end
+        if digLine>0 then
+            md.lineDig=md.lineDig+digLine
             if md.lineDig>=lineCount then
                 P:finish('AC')
             else
-                md.lineExist=md.lineExist-clear.line
+                md.lineExist=md.lineExist-digLine
                 local add=math.min(lineCount-md.lineDig,lineStay)-md.lineExist
                 if add>0 then
                     for _=1,add do P:riseGarbage() end

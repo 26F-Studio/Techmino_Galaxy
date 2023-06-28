@@ -12,6 +12,7 @@ return {
                 mechLib.mino.progress.dig_volcanics_afterClear,
             },
             drawOnPlayer=mechLib.mino.dig.event_drawOnPlayer[20],
+            gameOver=mechLib.mino.progress.dig_volcanics_gameOver,
         },
     }},
 }

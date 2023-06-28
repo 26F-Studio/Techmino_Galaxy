@@ -13,10 +13,9 @@ return {
                 mechLib.mino.sprint.event_afterClear[40],
                 mechLib.mino.progress.sprint_blind_40_afterClear,
             },
-            drawInField={
-                mechLib.mino.sprint.event_drawInField[40],
-            },
+            drawInField=mechLib.mino.sprint.event_drawInField[40],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],
+            gameOver=mechLib.mino.progress.sprint_blind_40_gameOver,
         },
     }},
 }

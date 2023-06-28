@@ -6,11 +6,14 @@ return {
     end,
     settings={mino={
         seqType='bag7_sprint',
+        -- clearRule='line_float',
         event={
             playerInit=function(P)
                 P.modeData.stat.lineTarget=40
                 P.modeData.keyCount={}
                 P.modeData.curKeyCount=0
+                -- mechLib.mino.squeeze.turnOn_auto(P,4)
+                -- P:setAction('func1',function(P) mechLib.mino.stack.turnOn_auto(P,true,60e3) end)
             end,
             beforePress=function(P)
                 P.modeData.curKeyCount=P.modeData.curKeyCount+1
@@ -20,6 +23,7 @@ return {
                 P.modeData.curKeyCount=0
             end,
             afterClear={
+                -- mechLib.mino.misc.cascade_event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
                 mechLib.mino.progress.sprint_40_afterClear,
             },
