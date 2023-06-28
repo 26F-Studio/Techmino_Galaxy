@@ -34,16 +34,24 @@ function hypersonic.event_playerInit(P)
     P.modeData.point=0
     P.modeData.level=1
     P.modeData.target=100
+    P.modeData.maxHold=0
     P.modeData.storedDas=P.settings.das
     P.modeData.storedArr=P.settings.arr
+    P.settings.initMove='hold'
+    P.settings.initRotate='hold'
+    P.settings.initHold='hold'
 end
 
 function hypersonic.event_afterSpawn(P)
     local md=P.modeData
-    if md.point<md.target-1 then
-        md.point=md.point+1
-        if md.point==md.target-1 then
-            P:playSound('notice')
+    if md.maxHold<#P.holdQueue then
+        md.maxHold=#P.holdQueue
+    else
+        if md.point<md.target-1 then
+            md.point=md.point+1
+            if md.point==md.target-1 then
+                P:playSound('notice')
+            end
         end
     end
 end
@@ -59,10 +67,10 @@ end
 do-- low
     local levels={
         {lock=1e3,spawn=320,das=200,arr=36},
-        {lock=850,spawn=290,das=170,arr=32},
-        {lock=700,spawn=260,das=140,arr=28},
-        {lock=550,spawn=230,das=120,arr=24},
-        {lock=400,spawn=200,das=100,arr=20},
+        {lock=850,spawn=290,das=170,arr=33},
+        {lock=700,spawn=260,das=140,arr=30},
+        {lock=550,spawn=230,das=120,arr=28},
+        {lock=400,spawn=200,das=100,arr=26},
     }
 
     function hypersonic.low_event_playerInit(P)

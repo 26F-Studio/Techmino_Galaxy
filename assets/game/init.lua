@@ -7,6 +7,7 @@
 --- @field checkFinish function Return if the game should end when a player finishes
 --- @field result function Called when the game ends
 --- @field resultPage fun(time:number) Drawing the result page
+--- @field name string Mode name, for debug use
 
 local floor=math.floor
 

@@ -12,6 +12,7 @@ return {
                 mechLib.mino.progress.dig_100_afterClear,
             },
             drawOnPlayer=mechLib.mino.dig.event_drawOnPlayer[100],
+            gameOver=mechLib.mino.progress.dig_100_gameOver,
         },
     }},
 }

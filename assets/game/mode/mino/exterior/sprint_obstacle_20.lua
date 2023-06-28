@@ -12,6 +12,7 @@ return {
                 mechLib.mino.progress.sprint_obstacle_20_afterClear,
             },
             drawOnPlayer=mechLib.mino.misc.obstacle_event_drawOnPlayer[20],
+            gameOver=mechLib.mino.progress.sprint_obstacle_20_gameOver,
         },
     }},
 }

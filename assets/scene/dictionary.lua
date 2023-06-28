@@ -121,9 +121,9 @@ local function search(str)
         for i=1,#dispDict do
             local obj=dispDict[i]
             obj._priority=
-                (obj.title:lower():find(str) and 26 or 0)+
-                (obj.titleFull and obj.titleFull:lower():find(str) and 16 or 0)+
-                (#str>=3 and obj.content:lower():find(str) and 3*math.min(#str,5) or 0)
+                (obj.title:lower():find(str,nil,true) and 26 or 0)+
+                (obj.titleFull and obj.titleFull:lower():find(str,nil,true) and 16 or 0)+
+                (#str>=3 and obj.content:lower():find(str,nil,true) and 3*math.min(#str,5) or 0)
             if obj._priority>0 then
                 ins(filteredDict,obj)
             end

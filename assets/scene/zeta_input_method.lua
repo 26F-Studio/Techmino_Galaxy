@@ -8,6 +8,15 @@ local areaX,areaY,areaR=800,400,300
 
 local scene={}
 
+local widgetList_ui
+local widgetList_result={}
+local strokeKeys={q=1,w=2,e=3,r=4,t=5}
+local uiKeyHint={
+    'BkSp','Del','Enter',
+    'Z','X','Esc',
+    'Q','W','E','R','T',
+}
+
 local prevScene
 local time,quiting
 local writing
@@ -119,7 +128,7 @@ local function freshResult()
         end
     end
     for i=1,15 do
-        local b=scene.widgetList[#scene.widgetList-15+i]
+        local b=widgetList_result[i]
         if results[i] then
             b.x=800+90*(i-(#results+1)*.5)
             b:setVisible(true)
@@ -195,7 +204,7 @@ function scene.mouseUp(_,_,k)
 end
 
 function scene.touchDown(x,y,id)
-    if not writing then
+    if not writing and not WIDGET.sel then
         ins(inputs,{stroke={x,y},weight={0,0,0,0,0}})
         writing=id
     end
@@ -236,9 +245,9 @@ function scene.keyDown(k)
     elseif #k==1 then
         if k:match("[0-9]") then-- Select char
             selChar((k-1)%10+1)
-        elseif ('qwert'):find(k) then-- Manual input stroke
+        elseif strokeKeys[k] then-- Manual input stroke
             local input={stroke={},weight={0,0,0,0,0},cheat=true}
-            input.weight[('qwert'):find(k)]=1
+            input.weight[strokeKeys[k]]=1
             ins(inputs,input)
             cheat=true
             freshResult()
@@ -306,34 +315,61 @@ function scene.draw()
 
     -- Results
     for i=1,#results do
-        local x=800+90*(i-(#results+1)*.5)
+        local x=widgetList_result[i]._x
+        local y=widgetList_result[i]._y
         local p=results[i].diff*.42
         gc.setColor(2*p,2-2*p,.42-p*.26,time)
         FONT.set(70)
-        GC.mStr(results[i].char,x,730)
+        GC.mStr(results[i].char,x,y-50)
         gc.setColor(2*p,2-2*p,.626-p*.42,time)
         FONT.set(20,'bold')
-        GC.mStr(results[i].dispDiff,x,820)
+        GC.mStr(results[i].dispDiff,x,y+40)
         if i<=10 then
             FONT.set(30,'bold')
             gc.setColor(COLOR.L)
-            gc.print(i%10,x-36,700)
+            gc.print(i%10,x-36,y-80)
         end
     end
 
+    -- Char queue
     FONT.set(80)
     gc.setColor(1,1,.8,time)
-    gc.print(charQueue,areaX+areaR+20,areaY-100)
+    gc.print(charQueue,areaX+areaR+20,areaY-120)
+
+    -- UI key hint
+    gc.replaceTransform(SCR.xOy)
+    FONT.set(30,'bold')
+    for i=1,#widgetList_ui do
+        local w=widgetList_ui[i]
+        gc.setColor(w.color)
+        gc.print(uiKeyHint[i],w._x-w.w/2,w._y-w.h/2-40)
+    end
 end
 
-scene.widgetList={
-    WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-240,w=100, sound_trigger='move',fontSize=80,color='LY',text=CHAR.key.backspace,code=WIDGET.c_pressKey'backspace'},
-    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-240,w=100,sound_trigger='move',fontSize=80,color='LY',text=CHAR.key.mac_clear,code=WIDGET.c_pressKey'delete'},
-    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-240,w=100,sound_trigger='move',fontSize=80,color='LY',text=CHAR.icon.check_circ,code=WIDGET.c_pressKey'return'},
+scene.widgetList={}
+
+widgetList_ui={
+    WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-250,w=100, sound_trigger='move',fontSize=80,color='LY',text=CHAR.key.backspace,code=WIDGET.c_pressKey'backspace'},
+    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-250,w=100,sound_trigger='move',fontSize=80,color='LY',text=CHAR.key.mac_clear,code=WIDGET.c_pressKey'delete'},
+    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-250,w=100,sound_trigger='move',fontSize=80,color='LY',text=CHAR.icon.check_circ,code=WIDGET.c_pressKey'return'},
     WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-50,w=100,  sound_trigger='move',fontSize=80,text=CHAR.icon.back,code=WIDGET.c_pressKey'z'},
     WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-50,w=100, sound_trigger='move',fontSize=80,text=CHAR.icon.delete,code=WIDGET.c_pressKey'x'},
     WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-50,w=100, sound_trigger='move',fontSize=80,text=CHAR.icon.cross_big,code=WIDGET.c_pressKey'escape'},
 }
+local strokeSymbol={'一','丨','丿','丶','乚'}
+for i=1,#strokeSymbol do
+    local w=WIDGET.new{
+        type='button',
+        x=areaX-areaR+30-90*(#strokeSymbol-i+1),
+        y=areaY+areaR-40,w=80,sound_trigger='move',
+        fontSize=70,color='LB',
+        text=strokeSymbol[i],
+        code=WIDGET.c_pressKey(('qwert'):sub(i,i))
+    }
+    ins(widgetList_ui,w)
+end
+
+TABLE.connect(scene.widgetList,widgetList_ui)
 
 local fwSymbols={
     {'（','）','【','】','《','》'},
@@ -345,7 +381,7 @@ for i=1,#fwSymbols do
         ins(scene.widgetList,WIDGET.new{
             type='button',
             x=areaX-areaR+25-75*(#fwSymbols[i]-j+1),
-            y=areaY+areaR-360+75*i,
+            y=areaY+areaR-400+75*i,
             w=70,sound_trigger='move',
             fontSize=60,color='LR',
             text=fwSymbols[i][j],
@@ -354,24 +390,14 @@ for i=1,#fwSymbols do
     end
 end
 
-local strokeSymbol={'一','丨','丿','丶','乚'}
-for i=1,#strokeSymbol do
-    ins(scene.widgetList,WIDGET.new{
-        type='button',
-        x=areaX-areaR+30-90*(#strokeSymbol-i+1),
-        y=areaY+areaR-40,w=80,sound_trigger='move',
-        fontSize=70,color='LB',
-        text=strokeSymbol[i],
-        code=WIDGET.c_pressKey(('qwert'):sub(i,i))
-    })
-end
-
 for i=1,15 do
-    ins(scene.widgetList,WIDGET.new{
+    local w=WIDGET.new{
         type='button',
-        x=-2600,y=780,w=80,sound_trigger='move',
+        x=-2600,y=790,w=80,sound_trigger='move',
         fontSize=80,code=function() selChar(i) end
-    })
+    }
+    ins(scene.widgetList,w)
+    ins(widgetList_result,w)
 end
 
 return scene
