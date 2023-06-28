@@ -3,6 +3,7 @@
 local subject={
     {-- Mino
         trigger=function()
+            DEBUG.yieldUntilNextScene()
             SCN.go('mode_mino','fadeHeader')
         end,
         draw=function()
@@ -23,6 +24,7 @@ local subject={
     },
     {-- Puyo
         trigger=function()
+            DEBUG.yieldUntilNextScene()
             SCN.go('mode_puyo','fadeHeader')
         end,
         draw=function()
@@ -34,6 +36,7 @@ local subject={
     },
     {-- Gem
         trigger=function()
+            DEBUG.yieldUntilNextScene()
             SCN.go('mode_gem','fadeHeader')
         end,
         draw=function()
@@ -140,7 +143,7 @@ function scene.update(dt)
             s.size=390+120*s.active
             if s.trigTimer then
                 if s.trigTimer<.62 and s.trigTimer+dt>.62 then
-                    s.trigger()
+                    TASK.new(s.trigger)
                 end
                 s.trigTimer=s.trigTimer+dt
             end
