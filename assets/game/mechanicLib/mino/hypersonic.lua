@@ -37,6 +37,9 @@ function hypersonic.event_playerInit(P)
     P.modeData.maxHold=0
     P.modeData.storedDas=P.settings.das
     P.modeData.storedArr=P.settings.arr
+    P.settings.initMove='hold'
+    P.settings.initRotate='hold'
+    P.settings.initHold='hold'
 end
 
 function hypersonic.event_afterSpawn(P)
