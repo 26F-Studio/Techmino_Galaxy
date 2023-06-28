@@ -82,16 +82,16 @@ Nhóm C rất linh động, bạn có thể điều chỉnh độ khó dựa tr�
 Sau khi bạn hoàn thành hết nhóm C, hãy tiếp tục luyện tập nhóm A, đây là một kỹ năng RẤT quan trọng trong bất kỳ tựa game xếp gạch nào; và bạn sẽ có thể dần dần làm chủ bất kỳ chế độ nào, lúc đó chỉ cần nhìn lướt qua NEXT là đủ rồi.
 
 # keybinding 
-@ title Gán phím
-@ titleFull Lời khuyên cho việc Gán phím
+@ title Bố cục phím
+@ titleFull Lời khuyên về việc làm bố cục phím
 @ contentSize 25
-Dưới đây là vài lời khuyên hữu ích khi bạn gán phím
+Dưới đây là vài lời khuyên hữu ích khi bạn đang chỉnh sửa bố cục phím
 
 1.  Một ngón tay chỉ nên thực hiện một chức năng khác nhau. Ví dụ như: 1 ngón cho sang trái, 1 ngón cho sang phải, 1 ngón cho phím xoay phải, 1 ngón cho rơi mạnh
 ~~
 2.  Trừ khi bạn tự tin với ngót út của mình, thì không nên để ngón tay này làm bất kì việc hết! Ngoài ra, nên xài ngón trỏ và ngón giữa vì hai ngón này là nhanh nhẹn nhất, nhưng bạn cũng có thể thoải mái tìm hiểu xem các ngón tay của mình nhanh chậm thế nào, mạnh yếu ra sao.
 ~~
-3.  Không nhất thiết phải sao chép cấu hình phím của người khác, vì không ai giống ai. Thay vào đó hãy chỉnh theo cách của bạn, miễn là bạn chơi thoải mái là được.
+3.  Không nhất thiết phải sao chép bố cục phím của người khác, vì không ai giống ai. Thay vào đó hãy chỉnh theo cách của bạn, miễn là bạn chơi thoải mái là được.
 
 # handling
 @ title Xử lý gạch
@@ -99,7 +99,7 @@ Dưới đây là vài lời khuyên hữu ích khi bạn gán phím
 @ contentSize 25
 Những yếu tố ảnh hưởng tới việc xử lý gạch của bạn:
 
-(1) Độ trễ đầu vào, có thể là do cấu hình, thông số hoặc điều kiện của thiết bị. Khởi động lại trò chơi, bảo dưỡng, sửa chữa hoặc thay đổi thiết bị của bạn có thể khắc phục vấn đề này.
+(1) Độ trễ đầu vào, có thể là do cấu hình, thông số hoặc tình trạng của thiết bị. Khởi động lại trò chơi, bảo dưỡng, sửa chữa hoặc thay đổi thiết bị của bạn có thể khắc phục vấn đề này.
 ~~
 (2) Trò chơi không ổn định hoặc thiết kế quá sơ sài và nhiều lỗi. Có thể giảm tình trạng này bằng cách chỉnh sửa cài đặt hiệu ứng để ở mức thấp.
 ~~
@@ -322,7 +322,6 @@ Khoảng thời gian từ lúc gạch bị khóa cho tới khi gạch mới đư
 # clear_delay
 @ title Line Clear Delay
 @ titleFull Line Clear Delay (Thời gian chờ xóa hàng)
-@ titleSize 45
 Thời gian để hiệu ứng xóa hàng thực hiện xong.
 
 # death_delay
@@ -341,11 +340,11 @@ Có những điều kiện khác nhau mà trò chơi sử dụng để xem trò 
 
 # bag7_sequence
 @ title Bag-7 Sequence
-@ titleFull Bag-7 Sequence (Cách bốc gạch kiểu Túi 7 gạch)
+@ titleFull Bag-7 Sequence (Kiểu xáo Túi 7 gạch)
 @ titleSize 40
-Một trong những cách xáo gạch phổ biến trong các trò xếp gạch.
+Một trong những kiểu xáo gạch được dùng rộng rãi trong các trò xếp gạch.
 
-Để dễ hình dung về cách hoạt động của nó, hãy tưởng tượng như thế này: Có một đống túi gạch, và mỗi túi có đủ 7 Tetromino: Z, S, J, L, T, O, I. Lấy một túi ngẫu nhiên (và lắc chúng), sau đó mở túi đó ra, bốc 7 viên gạch một cách ngẫu nhiên mà không được nhìn túi. Thứ tự của 7 gạch vừa mang ra chính là chuỗi gạch. Tiếp tục lấy một túi khác và thực hiện liên tục như vậy cho tới khi trò chơi kết thúc.
+Để dễ hình dung về cách hoạt động của nó, hãy tưởng tượng như thế này: Bạn có một chiếc hộp có vô số túi, và mỗi túi trong đó có đủ 7 Tetromino: Z, S, J, L, T, O, I. Lấy một túi ngẫu nhiên rồi mở nó ra, bốc 7 viên gạch một cách ngẫu nhiên mà không được nhìn túi. Thứ tự của 7 gạch vừa mang ra chính là một chuỗi gạch. Tiếp tục lấy một túi khác và thực hiện liên tục như vậy cho tới khi trò chơi kết thúc.
 
 Cách xáo gạch này cho phép tránh được hai tình trạng sau:
     - Flood: tình trạng một viên gạch nào đó bị sinh ra quá nhiều trong một khoảng thời gian dài
@@ -353,8 +352,8 @@ Cách xáo gạch này cho phép tránh được hai tình trạng sau:
 
 # his_sequence
 @ title His Sequence
-@ titleFull His Sequence (Cách bốc gạch kiểu His)
-Một cách xáo ngẫu nhiên. Cách xáo này sẽ nhớ một vài gạch đã được sinh ra gần nhất. Nếu gạch vừa bốc ngẫu nhiên bị trùng với bất kì miếng nào trong bộ nhớ đó, một viên gạch sẽ được bốc lại; cho tới khi: gạch vừa bốc ra không còn trùng nữa, hoặc là đã quá số lượt bốc lại.
+@ titleFull His Sequence (Kiểu xáo His)
+Một kiểu xáo ngẫu nhiên. Kiểu xáo này sẽ nhớ một vài gạch đã được sinh ra gần nhất. Nếu gạch vừa bốc ngẫu nhiên bị trùng với bất kì miếng nào trong bộ nhớ đó, một viên gạch sẽ được bốc lại; cho tới khi: gạch vừa bốc ra không còn trùng nữa, hoặc là đã quá số lượt bốc lại.
 
 Cách xáo này là một cải tiến lớn so với cách xáo gạch hoàn toàn ngẫu nhiên và giảm đáng kể tình trạng drought hoặc flood xảy ra.
 
@@ -380,7 +379,7 @@ Một quy tắc trong đó các gạch nổi hoặc bị mất liên kết có t
 
 "Cascade" (thác nước) là từ hay dùng nhiều để nói về quy tắc này, bởi vì hai từ "gravity" (trọng lực) and "falling speed" (tốc độ rơi) có thể gây nhầm lẫn với hai khái niệm khác.
 
-#mph
+# mph
 @ title MPH 
 @ titleFull Memoryless, Previewless, Holdless
 Sự kết hợp của ba quy tắc: "Không nhớ gì" (chuỗi gạch tạo ra hoàn toàn ngẫu nhiên), "Không biết trước gạch nào sẽ tới" (không hiện NEXT), và "Không giữ được".

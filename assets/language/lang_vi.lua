@@ -58,9 +58,12 @@ return {
     target_tsd="TSD",
     target_techrash="Techrash",
     target_wave="Đợt tấn công",
+    target_score="Điểm",
 
     -- About-Game
     pause="Đã tạm dừng",
+
+    new_level_unlocked="Đã mở được mode mới",       -- Tạm dịch
 
     -- Widget texts
     button_back="Trở về",
@@ -94,7 +97,7 @@ return {
     setting_clean="Tăng tốc độ VRAM",
     setting_fullscreen="Toàn màn hình",
     setting_portrait="Màn hình hướng dọc",
-    setting_autoMute="Tự động tắt tiếng khi mở cửa số khác",
+    setting_autoMute="Tắt tiếng khi ở ngoài game",
     setting_showTouch="Hiện vị trí vừa chạm",
 
     setting_maxFPS="FPS tối đa",
@@ -107,7 +110,7 @@ return {
             --                                                                                                                                                                                             |---------------------------------------------------------------------------------------------------------| <-- only appear in Vietnamese
 
     -- GHI CHÚ: Viết hoa các từ "Trái", "Phải", "Lên", "Xuống"
-    title_keyset="Gán phím",
+    title_keyset="Bố cục phím",
     keyset_mino_moveLeft=   "Sang Trái",
     keyset_mino_moveRight=  "Sang Phải",
     keyset_mino_rotateCW=   "Twist (Xoay) Phải",
@@ -122,8 +125,8 @@ return {
     keyset_puyo_rotateCW=   "Xoay Phải",
     keyset_puyo_rotateCCW=  "Xoay Trái",
     keyset_puyo_rotate180=  "Xoay 180",
-    keyset_puyo_softDrop=   "Rơi Nhẹ",
-    keyset_puyo_hardDrop=   "Rơi Mạnh",
+    keyset_puyo_softDrop=   "Thả Nhẹ",
+    keyset_puyo_hardDrop=   "Thả Mạnh",
 
     keyset_gem_swapLeft=    "Vuốt sang Trái",
     keyset_gem_swapRight=   "Vuốt sang Phải",
@@ -144,7 +147,7 @@ return {
     keyset_func5= "Chức năng 5 (F5)",
     keyset_func6= "Chức năng 6 (F6)",
 
-    keyset_sys_view=    "Đổi view (Gần/Xa)",
+    keyset_sys_view=    "Phóng to/nhỏ bảng",
     keyset_sys_restart= "Chơi lại",
     keyset_sys_back=    "Trở về",
     keyset_sys_quit=    "DỪNG game",
@@ -201,8 +204,9 @@ return {
         techrash_hard=         {"Chỉ làm Techrash - Khó","Cố làm nhiều Techrash nhất có thể, nhưng đừng có làm cùng chung một vị trí quá nhiều lần!"},
         hypersonic_lo=         {"Hypersonic LO","Hypersonic\n\"Xin chào mọi người!\nEm đang tập chơi 20G.\""},
         hypersonic_hi=         {"Hypersonic HI","Hypersonic\nThử thách \"khó nuốt\""},
-        hypersonic_ti=         {"Hypersonic TI","Hypersonic\nVelocital Trepidation\n(Không nhanh như Level 15 đâu, mà nó nhanh tới mức đáng sợ!)"},
-        hypersonic_hd=         {"Hypersonic HD","Hypersonic (nhưng mà gạch sẽ biến mất sau một khoảng thời gian!)"},
+        hypersonic_ti=         {"Hypersonic TI","Hypersonic\nVelocital Trepidation\n(Vận tốc ánh sáng!)"},
+     -- hypersonic_hd=         {"Hypersonic HD","Hypersonic (nhưng mà gạch sẽ biến mất sau một khoảng thời gian!)"},
+        hypersonic_hd=         {"Hypersonic HD","Hypersonic + Tàng hình (Dễ)"},
         combo_practice=        {"Tập làm combo","Hãy tập làm mấy combo liên tiếp đi!"},
         tsd_practice=          {"Tập làm TSD","Hãy tập xóa hàng bằng T-spin Double đi"},
         tsd_easy=              {"Chỉ làm TSD - Dễ","Hãy cố làm nhiều TSD nhất có thể (không được dùng kiểu xóa nào khác)"},
@@ -217,7 +221,7 @@ return {
         dig_shale=             {"Đào \"đá phiến\"","(Dig Shale)\n\nDọn một số lượng hàng rác ngẫu nhiên nhưng được xếp thành từng lớp"},
         dig_volcanics=         {"Đào núi lửa","(Dig Volcanics)\n\nDọn một số lượng hàng rác nhưng chúng khá là phức tạp"},
         dig_checker=           {"Đào bàn cờ","(Dig Checker)\n\nDọn 10 hàng rác nhưng chúng được xếp như bàn cờ vua!"},
-        survivor_cheese=       {"Sống sót - Phô mai","Cố sống sót dưới những cuộc tấn công của phô mai"},    -- Based on a joke in Vietnam Tetris Community
+        survivor_cheese=       {"Sống sót - Phô mai","Cố sống sót dưới những cuộc tấn công của phô mai"},    -- Based on a joke in Tetris Vietnam Community
         survivor_b2b=          {"Sống sót - B2B","Cố sống sót dưới những cuộc tấn công ác liệt của Back-to-back"},
         survivor_spike=        {"Sống sót - Spike","Cố sống sót dưới các cuộc tấn công kinh hoàng"},
 
@@ -231,8 +235,7 @@ return {
 
         sprint_40=             {"40 hàng","Xóa 40 hàng, càng nhanh càng tốt"},
         sprint_10=             {"10 hàng","Xoá 10 hàng, càng nhanh càng tốt"},
-        sprint_obstacle_20=    {"20 điểm - VCNV","(Vượt chướng ngại vật)\n\nTrò chơi sẽ bắt đầu với các \"chướng ngại vật\" hoàn toàn ngẫu nhiên\nHoàn thành nhiệm vụ này được 20 điểm"},  --based on Hiếu's suggestion
-        -- sprint_obstacle_20=    {"20 điểm - VCNV","(Vượt chướng ngại vật)\n\nBây giờ là vòng thi \"Vượt chướng ngại vật\"!\n\nCác thí sinh sẽ cùng nhau đi tìm một \"ẩn số\" gồm có 20 \"chữ cái\""},  --ref from "Đường lên đỉnh Olympia"
+        sprint_obstacle_20=    {"20 điểm - VCNV","(Vượt chướng ngại vật)\n\nCùng hoàn thành toàn bộ “chướng ngại vật” với mục tiêu là 20 điểm"},
         sprint_200=            {"200 hàng","Xóa 200 hàng\n\n(Nhớ để ý kẻo mỏi tay)"},
         sprint_1000=           {"1000 hàng","Xóa 1000 hàng\n\n(Tay của bạn còn ổn không?)"},
         sprint_drought_40=     {"40 hàng - Drought","Xóa 40 hàng…\nỦa mà khoan, nãy giờ chơi sao không thấy gạch I rơi???"},
