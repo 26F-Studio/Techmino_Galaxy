@@ -432,25 +432,33 @@ do-- sprint_dizzy_40
     end
 end
 
-function progress.marathon_afterClear(P)
-    if not P.isMain then return true end
-    local md=P.modeData
-    if not md.marathon_lastLevel then md.marathon_lastLevel=1 end
-    if md.level>md.marathon_lastLevel then
-        if md.marathon_lastLevel<15 then
-            BGM.set(bgmPack('propel','a1','a3','b3'),'volume',math.min(md.level/15,1)^2)
+do-- marathon
+    function progress.marathon_afterClear(P)
+        if not P.isMain then return true end
+        local md=P.modeData
+        if not md.marathon_lastLevel then md.marathon_lastLevel=1 end
+        if md.level>md.marathon_lastLevel then
+            if md.marathon_lastLevel<15 then
+                BGM.set(bgmPack('propel','a1','a3','b3'),'volume',math.min(md.level/15,1)^2)
+            end
+            if md.level>=22 then
+                BGM.set('propel/drum','volume',math.min(.2+(md.level-20)*.8,1),6.26)
+                PROGRESS.setMinoModeState('hypersonic_lo')
+            end
+            if md.level>=25 and md.marathon_lastLevel<25 then
+                BGM.set(bgmPack('propel','a1','a3'),'volume',0,26)
+            end
+            md.marathon_lastLevel=md.level
         end
-        if md.level>=22 then
-            BGM.set('propel/drum','volume',math.min(.2+(md.level-20)*.8,1),6.26)
-            PROGRESS.setMinoModeState('hypersonic_lo')
+        if md.stat.clears[4]==16 then
+            PROGRESS.setMinoModeState('techrash_easy')
         end
-        if md.level>=25 and md.marathon_lastLevel<25 then
-            BGM.set(bgmPack('propel','a1','a3'),'volume',0,26)
-        end
-        md.marathon_lastLevel=md.level
     end
-    if md.stat.clears[4]==16 then
-        PROGRESS.setMinoModeState('techrash_easy')
+    function progress.marathon_gameOver(P,reason)
+        if not P.isMain then return true end
+        if reason=='AC' then
+            PROGRESS.setMinoModeState('marathon',1)
+        end
     end
 end
 
