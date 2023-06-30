@@ -820,20 +820,25 @@ function MP:popNext(ifHold)
     end
 
     -- IHS
+    local IHStriggered
     if not ifHold and self.settings.initHold then
         if self.settings.initHold=='hold' then
             if self.keyState.holdPiece then
                 self:hold(true)
+                IHStriggered=true
             end
         elseif self.settings.initHold=='buffer' then
             if self.keyBuffer.hold then
                 self.keyBuffer.hold=false
                 self:hold(true)
+                IHStriggered=true
             end
         end
     end
 
-    self:resetPos()
+    if not IHStriggered then
+        self:resetPos()
+    end
 
     self:triggerEvent('afterSpawn')
 
