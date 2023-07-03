@@ -32,18 +32,13 @@ do-- sprint_40
 end
 
 do-- sprint_10
-    function progress.sprint_10_afterClear(P,clear)
-        if not P.isMain then return true end
-        if clear.line==4 then
-            PROGRESS.setMinoModeState('sprint_200')
-        end
-    end
     function progress.sprint_10_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
             if P.modeData.stat.piece<30 then
                 PROGRESS.setMinoModeState('sprint_obstacle_20')
             end
+            PROGRESS.setMinoModeState('sprint_200')
             PROGRESS.setMinoModeState('sprint_10',1)
         end
     end
