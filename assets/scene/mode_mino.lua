@@ -66,12 +66,16 @@ local scene={}
 function scene.enter()
     if not minoMap then
         minoMap=require'assets.game.minomap'
-        minoMap:freshUnlocked(PROGRESS.getMinoModeUnlocked(),true)
+        minoMap:freshUnlocked(PROGRESS.getMinoModeState(),true)
     else
-        minoMap:freshUnlocked(PROGRESS.getMinoModeUnlocked())
+        minoMap:freshUnlocked(PROGRESS.getMinoModeState())
     end
     minoMap:reset()
-    minoMap:setFullVersion(true)
+    minoMap:setFullVersion(
+        PROGRESS.getMinoModeState('sprint_40')>0 or
+        PROGRESS.getMinoModeState('marathon')>0 or
+        PROGRESS.getMinoModeState('dig_practice')>0
+    )
     panel:setSel(false)
     PROGRESS.setExteriorBG()
     PROGRESS.playExteriorBGM()

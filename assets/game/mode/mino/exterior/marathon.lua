@@ -10,6 +10,7 @@ return {
         event={
             playerInit=mechLib.mino.marathon.event_playerInit_auto,
             afterClear=mechLib.mino.progress.marathon_afterClear,
+            gameOver=mechLib.mino.progress.marathon_gameOver,
         },
     }},
     result=function()

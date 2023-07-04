@@ -21,6 +21,7 @@ return {
                 mechLib.mino.progress.combo_practice_beforeDiscard,
             },
             drawOnPlayer=mechLib.mino.comboPractice.event_drawOnPlayer[200],
+            gameOver=mechLib.mino.progress.combo_practice_gameOver,
         },
     }},
 }

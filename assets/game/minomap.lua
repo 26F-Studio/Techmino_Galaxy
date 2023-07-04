@@ -4,7 +4,7 @@ local gc_replaceTransform=gc.replaceTransform
 local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
 local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
 local gc_draw,gc_line=gc.draw,gc.line
-local gc_rectangle,gc_circle,gc_polygon=gc.rectangle,gc.circle,gc.polygon
+local gc_circle,gc_polygon=gc.circle,gc.polygon
 
 
 -- Y X

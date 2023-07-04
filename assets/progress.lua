@@ -349,9 +349,9 @@ function PROGRESS.getTotalInteriorScore() return prgs.interiorScore.dig+prgs.int
 function PROGRESS.getPuyoUnlocked() return prgs.puyo.unlocked end
 function PROGRESS.getMinoUnlocked() return prgs.mino.unlocked end
 function PROGRESS.getGemUnlocked() return prgs.gem.unlocked end
-function PROGRESS.getPuyoModeUnlocked(name) if name then return name and prgs.puyo.modeUnlocked[name] else return prgs.puyo.modeUnlocked end end
-function PROGRESS.getMinoModeUnlocked(name) if name then return name and prgs.mino.modeUnlocked[name] else return prgs.mino.modeUnlocked end end
-function PROGRESS.getGemModeUnlocked(name) if name then return name and prgs.gem.modeUnlocked[name] else return prgs.gem.modeUnlocked end end
+function PROGRESS.getPuyoModeState(name) if name then return name and prgs.puyo.modeUnlocked[name] else return prgs.puyo.modeUnlocked end end
+function PROGRESS.getMinoModeState(name) if name then return name and prgs.mino.modeUnlocked[name] else return prgs.mino.modeUnlocked end end
+function PROGRESS.getGemModeState(name) if name then return name and prgs.gem.modeUnlocked[name] else return prgs.gem.modeUnlocked end end
 
 -- Set
 function PROGRESS.setMain(n)
@@ -390,25 +390,27 @@ end
 function PROGRESS.setPuyoUnlocked(bool) prgs.puyo.unlocked=bool; PROGRESS.save() end
 function PROGRESS.setMinoUnlocked(bool) prgs.mino.unlocked=bool; PROGRESS.save() end
 function PROGRESS.setGemUnlocked(bool)  prgs.gem.unlocked =bool; PROGRESS.save() end
-function PROGRESS.setPuyoModeUnlocked(name,state,force)
+function PROGRESS.setPuyoModeState(name,state,force)
     if not state then state=0 end
     if state>(prgs.puyo.modeUnlocked[name] or -1) or force then
         prgs.puyo.modeUnlocked[name]=state
         PROGRESS.save()
     end
 end
-function PROGRESS.setMinoModeUnlocked(name,state,force)
+function PROGRESS.setMinoModeState(name,state,force)
     if not state then state=0 end
     if state>(prgs.mino.modeUnlocked[name] or -1) or force then
         prgs.mino.modeUnlocked[name]=state
         PROGRESS.save()
-        if TASK.lock('minomap_unlockSound_background',2.6) then
-            SFX.play('map_unlock_background')
-            MSG.new('check',Text.new_level_unlocked,2.6)
+        if state==0 then
+            if TASK.lock('minomap_unlockSound_background',2.6) then
+                SFX.play('map_unlock_background')
+                MSG.new('check',Text.new_level_unlocked,2.6)
+            end
         end
     end
 end
-function PROGRESS.setGemModeUnlocked(name,state,force)
+function PROGRESS.setGemModeState(name,state,force)
     if not state then state=0 end
     if state>(prgs.gem.modeUnlocked[name] or -1) or force then
         prgs.gem.modeUnlocked[name]=state
