@@ -10,7 +10,7 @@ return {
         event={
             playerInit="mechLib.mino.hypersonic.event_playerInit_auto(P,'hidden')",
             afterSpawn=mechLib.mino.progress.hypersonic_hd_afterSpawn,
-            afterClear=mechLib.mino.progress.hypersonic_hd_afterClear,
+            gameOver=mechLib.mino.progress.hypersonic_hd_gameOver,
         },
     }},
 }

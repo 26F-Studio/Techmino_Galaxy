@@ -277,13 +277,13 @@ do-- sprint_invis_40
         if pt>bgmTransP1 and pt<bgmTransP2+4 then
             BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
+        if P.modeData.stat.clears[4]==10 then
+            PROGRESS.setMinoModeState('sprint_blind_40')
+        end
     end
     function progress.sprint_invis_40_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            if P.modeData.stat.clears[4]==10 then
-                PROGRESS.setMinoModeState('sprint_blind_40')
-            end
             PROGRESS.setMinoModeState('sprint_invis_40',1)
         end
     end
@@ -479,12 +479,15 @@ do-- hypersonic_lo
             BGM.set(bgmList['secret8th'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),1)
         end
     end
-    function progress.hypersonic_lo_gameOver(P,reason)
+    function progress.hypersonic_lo_afterClear(P)
         if not P.isMain then return true end
-        PROGRESS.setMinoModeState('hypersonic_hi')
         if P.modeData.stat.clears[4]==36 then
             PROGRESS.setMinoModeState('techrash_hard')
         end
+    end
+    function progress.hypersonic_lo_gameOver(P,reason)
+        if not P.isMain then return true end
+        PROGRESS.setMinoModeState('hypersonic_hi')
         if reason=='AC' then
             PROGRESS.setMinoModeState('hypersonic_lo',1)
         end
@@ -518,6 +521,9 @@ do-- hypersonic_hi
         if P.modeData.stat.clears[4]==42 then
             PROGRESS.setMinoModeState('hypersonic_hd')
         end
+    end
+    function progress.hypersonic_hi_gameOver(P)
+        if not P.isMain then return true end
         if P.modeData.point>=1000 then
             PROGRESS.setMinoModeState('hypersonic_ti')
             PROGRESS.setMinoModeState('hypersonic_hi',1)
@@ -545,9 +551,24 @@ do-- hypersonic_hd
             end
         end
     end
-    function progress.hypersonic_hd_afterClear(P)
+    function progress.hypersonic_hd_gameOver(P)
         if P.modeData.point>=1000 then
             PROGRESS.setMinoModeState('hypersonic_hd',1)
+        end
+    end
+end
+
+do-- hypersonic_ti
+    local bgmTransP1,bgmTransP2=200,600
+    function progress.hypersonic_ti_afterSpawn(P)
+        if not P.isMain then return end
+        if P.modeData.point>bgmTransP1 and P.modeData.point<bgmTransP2+10 then
+            BGM.set(bgmList['distortion'].add,'volume',math.min((P.modeData.point-bgmTransP1)/(bgmTransP2-bgmTransP1),1),1)
+        end
+    end
+    function progress.hypersonic_ti_gameOver(P)
+        if P.modeData.point>=1000 then
+            PROGRESS.setMinoModeState('hypersonic_ti',1)
         end
     end
 end
