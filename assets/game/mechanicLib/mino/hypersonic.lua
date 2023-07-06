@@ -407,8 +407,9 @@ do--  titanium
         GC.mStr(P.modeData.point,-300,-90)
         gc.rectangle('fill',-375,-2,150,4)
         GC.mStr(P.modeData.target,-300,-5)
-        GC.setAlpha(.7023+.1*math.sin(P.time))
-        GC.mStr(P.modeData.point,-300+10*math.sin(P.time),-90)
+        FONT.set(85)
+        GC.setAlpha(.42+.162*math.sin(P.time/126))
+        GC.mStr(P.modeData.point,-300,-100)
     end
 end
 
