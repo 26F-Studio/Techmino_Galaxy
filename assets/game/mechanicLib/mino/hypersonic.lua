@@ -3,28 +3,31 @@ local gc=love.graphics
 --- @type Techmino.Mech.mino
 local hypersonic={}
 
---- @param mode 'low'|'high'|'hidden'
+--- @param mode 'low'|'high'|'hidden'|'titanium'
 function hypersonic.event_playerInit_auto(P,mode)
+    hypersonic.event_playerInit(P)
     if mode=='low' then
-        hypersonic.event_playerInit(P)
         hypersonic.low_event_playerInit(P)
         P:addEvent('afterSpawn',hypersonic.event_afterSpawn)
         P:addEvent('afterClear',hypersonic.low_event_afterClear)
         P:addEvent('drawOnPlayer',hypersonic.event_drawOnPlayer)
     elseif mode=='high' then
-        hypersonic.event_playerInit(P)
         hypersonic.high_event_playerInit(P)
         P:addEvent('always',hypersonic.high_event_always)
         P:addEvent('afterSpawn',hypersonic.event_afterSpawn)
         P:addEvent('afterClear',hypersonic.high_event_afterClear)
         P:addEvent('drawOnPlayer',hypersonic.event_drawOnPlayer)
     elseif mode=='hidden' then
-        hypersonic.event_playerInit(P)
         hypersonic.hidden_event_playerInit(P)
         P:addEvent('always',hypersonic.hidden_event_always)
         P:addEvent('afterSpawn',hypersonic.event_afterSpawn)
-        P:addEvent('afterClear',mechLib.mino.hypersonic.hidden_event_afterClear)
-        P:addEvent('drawOnPlayer',mechLib.mino.hypersonic.hidden_event_drawOnPlayer)
+        P:addEvent('afterClear',hypersonic.hidden_event_afterClear)
+        P:addEvent('drawOnPlayer',hypersonic.hidden_event_drawOnPlayer)
+    elseif mode=='titanium' then
+        hypersonic.titanium_event_playerInit(P)
+        P:addEvent('afterSpawn',hypersonic.event_afterSpawn)
+        P:addEvent('afterClear',hypersonic.titanium_event_afterClear)
+        P:addEvent('drawOnPlayer',hypersonic.titanium_event_drawOnPlayer)
     else
         error('No hypersonic mode '..tostring(mode))
     end
@@ -118,10 +121,10 @@ do-- high
         {lock=330,fresh=3800,spawn=120,clear=260,das=105,arr=26,bumpInterval=false},
         {lock=300,fresh=3600,spawn=110,clear=220,das=100,arr=25,bumpInterval=false},
         {lock=300,fresh=3400,spawn=100,clear=180,das=96, arr=24,bumpInterval=10e3},
-        {lock=300,fresh=3200,spawn=95, clear=160,das=92, arr=23,bumpInterval=8e3},
-        {lock=300,fresh=3000,spawn=90, clear=140,das=88, arr=22,bumpInterval=6e3},
-        {lock=300,fresh=2800,spawn=85, clear=120,das=84, arr=21,bumpInterval=5e3},
-        {lock=300,fresh=2600,spawn=80, clear=100,das=80, arr=20,bumpInterval=4e3},
+        {lock=290,fresh=3200,spawn=95, clear=160,das=92, arr=23,bumpInterval=8e3},
+        {lock=280,fresh=3000,spawn=90, clear=140,das=88, arr=22,bumpInterval=6e3},
+        {lock=270,fresh=2800,spawn=85, clear=120,das=84, arr=21,bumpInterval=5e3},
+        {lock=260,fresh=2600,spawn=80, clear=100,das=80, arr=20,bumpInterval=4e3},
     }
 
     function hypersonic.high_event_playerInit(P)
@@ -310,7 +313,7 @@ do-- hidden
             md.swipeStep=math.max(md.swipeStep+(3-c.line),1)
         end
 
-        local dScore=math.floor((clear.line)^2/2)-- 0,2,4,8
+        local dScore=math.floor(clear.line^2/2)-- 0,2,4,8
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then
@@ -347,6 +350,66 @@ do-- hidden
         GC.mStr(P.modeData.target,-300,-5)
         GC.setAlpha(.7023)
         GC.mStr(P.modeData.point,-300+10*math.sin(P.time),-90)
+    end
+end
+
+do--  titanium
+    local levels={
+        {lock=450,spawn=170,clear=380,das=96,arr=29},
+        {lock=400,spawn=160,clear=340,das=92,arr=28},
+        {lock=360,spawn=150,clear=300,das=88,arr=27},
+        {lock=330,spawn=140,clear=260,das=84,arr=26},
+        {lock=300,spawn=130,clear=220,das=80,arr=25},
+        {lock=300,spawn=120,clear=180,das=76,arr=24},
+        {lock=300,spawn=115,clear=160,das=72,arr=23},
+        {lock=300,spawn=110,clear=140,das=68,arr=22},
+        {lock=300,spawn=105,clear=120,das=64,arr=21},
+        {lock=300,spawn=100,clear=100,das=60,arr=20},
+    }
+    function hypersonic.titanium_event_playerInit(P)
+        P.settings.dropDelay=0
+        P.settings.das=math.max(P.modeData.storedDas,levels[1].das)
+        P.settings.arr=math.max(P.modeData.storedArr,levels[1].arr)
+        P.settings.lockDelay=levels[1].lock
+        P.settings.spawnDelay=levels[1].spawn
+        P.settings.clearDelay=levels[1].clear
+    end
+    function hypersonic.titanium_event_afterClear(P,clear)
+        local md=P.modeData
+        local dScore=math.floor(clear.line^2/3+2)-- 2,3,5,7
+        if dScore==0 then return end
+        md.point=md.point+dScore
+        if md.point==md.target-1 then
+            P:playSound('notice')
+        else
+            while md.point>=md.target do
+                if md.level<10 then
+                    P:playSound('reach')
+                    md.level=md.level+1
+                    md.target=100*md.level
+
+                    P.settings.das=math.max(md.storedDas,levels[md.level].das)
+                    P.settings.arr=math.max(md.storedArr,levels[md.level].arr)
+                    P.settings.lockDelay=levels[md.level].lock
+                    P.settings.spawnDelay=levels[md.level].spawn
+                    P.settings.clearDelay=levels[md.level].clear
+                else
+                    md.point=md.target
+                    P:finish('AC')
+                    return
+                end
+            end
+        end
+    end
+    function hypersonic.titanium_event_drawOnPlayer(P)
+        P:drawInfoPanel(-380,-80,160,160)
+        FONT.set(70)
+        GC.mStr(P.modeData.point,-300,-90)
+        gc.rectangle('fill',-375,-2,150,4)
+        GC.mStr(P.modeData.target,-300,-5)
+        FONT.set(85)
+        GC.setAlpha(.42+.162*math.sin(P.time/126))
+        GC.mStr(P.modeData.point,-300,-100)
     end
 end
 

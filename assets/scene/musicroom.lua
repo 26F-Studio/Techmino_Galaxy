@@ -72,7 +72,6 @@ local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1
     disp=function() return fakeProgress end,
     code=function(v,mode)
         fakeProgress=v
-        print(mode)
         if mode=='release' then
             BGM.set('all','seek',v*BGM.getDuration())
         end
