@@ -309,7 +309,7 @@ do-- obstacle
         self[lineCount]=function(P)
             P:drawInfoPanel(-380,-60,160,120)
             FONT.set(80) GC.mStr(lineCount-P.modeData.score,-300,-70)
-            FONT.set(30) GC.mStr(Text.target_score,-300,15)
+            FONT.set(30) GC.mStr(Text.target_line,-300,15)
         end
         return self[lineCount]
     end)
