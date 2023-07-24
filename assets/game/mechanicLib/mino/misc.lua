@@ -19,6 +19,14 @@ function misc.invincible_event_afterLock(P)
     end
 end
 
+function misc.suffocateLock_event_whenSuffocate(P)
+    local clearCount=#P.clearHistory
+    P:minoDropped()
+    if clearCount==#P.clearHistory then
+        P:finish('WA')
+    end
+end
+
 function misc.slowHide_event_gameOver(P)
     P:showInvis(4,626)
 end
