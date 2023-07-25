@@ -126,7 +126,7 @@ PP._actions.moveLeft={
     end,
     release=function(P)
         if P.keyBuffer.move=='L' then P.keyBuffer.move=false end
-        if P.deathTimer then P:moveRight() end
+        if P.hand and P.deathTimer then P:moveRight() end
     end
 }
 PP._actions.moveRight={
@@ -147,7 +147,7 @@ PP._actions.moveRight={
     end,
     release=function(P)
         if P.keyBuffer.move=='R' then P.keyBuffer.move=false end
-        if P.deathTimer then P:moveLeft() end
+        if P.hand and P.deathTimer then P:moveLeft() end
     end
 }
 PP._actions.rotateCW={
@@ -194,7 +194,7 @@ PP._actions.softDrop={
         end
     end,
     release=function(P)
-        if P.deathTimer then P:moveUp() end
+        if P.hand and P.deathTimer then P:moveUp() end
     end
 }
 PP._actions.hardDrop={
@@ -1357,7 +1357,7 @@ local baseEnv={
     hdLockM=100,
     initMove='buffer',
     initRotate='buffer',
-    IRSpushUp=false,
+    IRSpushUp=true,
     skin='puyo_jelly',
     particles=true,
     shakeness=.26,

@@ -153,7 +153,7 @@ MP._actions.moveLeft={
     end,
     release=function(P)
         if P.keyBuffer.move=='L' then P.keyBuffer.move=false end
-        if P.deathTimer then P:moveRight() end
+        if P.hand and P.deathTimer then P:moveRight() end
     end
 }
 MP._actions.moveRight={
@@ -176,7 +176,7 @@ MP._actions.moveRight={
     end,
     release=function(P)
         if P.keyBuffer.move=='R' then P.keyBuffer.move=false end
-        if P.deathTimer then P:moveLeft() end
+        if P.hand and P.deathTimer then P:moveLeft() end
     end
 }
 MP._actions.rotateCW={
@@ -223,7 +223,7 @@ MP._actions.softDrop={
         end
     end,
     release=function(P)
-        if P.deathTimer then P:moveUp() end
+        if P.hand and P.deathTimer then P:moveUp() end
     end
 }
 MP._actions.hardDrop={

@@ -21,6 +21,9 @@ end
 
 function misc.suffocateLock_event_whenSuffocate(P)
     local clearCount=#P.clearHistory
+    P.deathTimer=false
+    P.ghostState=false
+    P:createDesuffocateEffect()
     P:minoDropped()
     if clearCount==#P.clearHistory then
         P:finish('WA')
