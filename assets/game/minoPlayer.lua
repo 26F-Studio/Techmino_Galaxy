@@ -1094,7 +1094,8 @@ function MP:rotate(dir,ifInit)
     local origY=self.handY-- For IRS pushing up
     if minoData.rotate then-- Custom rotate function
         minoData.rotate(self,dir,ifInit)
-        if self.ghostState and self.settings.IRSpushUp then self.handY=origY end
+        if self.ghostState and self.settings.IRSpushUp then self:moveHand('moveY',origY-self.handY) end
+        self:freshGhost()
     else-- Normal rotate procedure
         local preState=minoData[self.hand.direction]
         if preState then
@@ -1123,8 +1124,8 @@ function MP:rotate(dir,ifInit)
                     self.hand.matrix=icb
                     self.hand.direction=kick.target
                     self:moveHand('rotate',ix,iy,dir,ifInit)
+                    if self.ghostState and self.settings.IRSpushUp then self:moveHand('moveY',origY-self.handY) end
                     self:freshGhost()
-                    if self.ghostState and self.settings.IRSpushUp then self.handY=origY end
                     return
                 end
             end

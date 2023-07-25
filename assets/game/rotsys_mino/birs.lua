@@ -87,7 +87,6 @@ local function r(self,dir)
                     C.matrix=icb
                     C.direction=idir
                     self:moveHand('rotate',ix,iy,dir)
-                    self:freshGhost()
                     return
                 end
             end

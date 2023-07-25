@@ -727,7 +727,7 @@ function PP:rotate(dir,ifInit)
             self.hand.direction=kicks.target
             self:moveHand('rotate',ix,iy,ifInit)
             self:freshGhost()
-            if self.settings.IRSpushUp then self.handY=origY end
+            if self.ghostState and self.settings.IRSpushUp then self:moveHand('moveY',origY-self.handY) end
         end
     end
     self:freshDelay('rotate')
