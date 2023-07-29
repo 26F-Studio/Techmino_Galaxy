@@ -153,7 +153,7 @@ MP._actions.moveLeft={
     end,
     release=function(P)
         if P.keyBuffer.move=='L' then P.keyBuffer.move=false end
-        if P.deathTimer then P:moveRight() end
+        if P.hand and P.deathTimer then P:moveRight() end
     end
 }
 MP._actions.moveRight={
@@ -176,7 +176,7 @@ MP._actions.moveRight={
     end,
     release=function(P)
         if P.keyBuffer.move=='R' then P.keyBuffer.move=false end
-        if P.deathTimer then P:moveLeft() end
+        if P.hand and P.deathTimer then P:moveLeft() end
     end
 }
 MP._actions.rotateCW={
@@ -223,7 +223,7 @@ MP._actions.softDrop={
         end
     end,
     release=function(P)
-        if P.deathTimer then P:moveUp() end
+        if P.hand and P.deathTimer then P:moveUp() end
     end
 }
 MP._actions.hardDrop={
@@ -1094,7 +1094,8 @@ function MP:rotate(dir,ifInit)
     local origY=self.handY-- For IRS pushing up
     if minoData.rotate then-- Custom rotate function
         minoData.rotate(self,dir,ifInit)
-        if self.ghostState and self.settings.IRSpushUp then self.handY=origY end
+        if self.ghostState and self.settings.IRSpushUp then self:moveHand('moveY',origY-self.handY) end
+        self:freshGhost()
     else-- Normal rotate procedure
         local preState=minoData[self.hand.direction]
         if preState then
@@ -1123,8 +1124,8 @@ function MP:rotate(dir,ifInit)
                     self.hand.matrix=icb
                     self.hand.direction=kick.target
                     self:moveHand('rotate',ix,iy,dir,ifInit)
+                    if self.ghostState and self.settings.IRSpushUp then self:moveHand('moveY',origY-self.handY) end
                     self:freshGhost()
-                    if self.ghostState and self.settings.IRSpushUp then self.handY=origY end
                     return
                 end
             end
@@ -2050,7 +2051,7 @@ local baseEnv={
     initMove='buffer',
     initRotate='buffer',
     initHold='buffer',
-    IRSpushUp=false,
+    IRSpushUp=true,
     skin='mino_plastic',
     particles=true,
     shakeness=.26,

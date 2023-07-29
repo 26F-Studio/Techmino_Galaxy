@@ -19,6 +19,17 @@ function misc.invincible_event_afterLock(P)
     end
 end
 
+function misc.suffocateLock_event_whenSuffocate(P)
+    local clearCount=#P.clearHistory
+    P.deathTimer=false
+    P.ghostState=false
+    P:createDesuffocateEffect()
+    P:minoDropped()
+    if clearCount==#P.clearHistory then
+        P:finish('WA')
+    end
+end
+
 function misc.slowHide_event_gameOver(P)
     P:showInvis(4,626)
 end
@@ -309,7 +320,7 @@ do-- obstacle
         self[lineCount]=function(P)
             P:drawInfoPanel(-380,-60,160,120)
             FONT.set(80) GC.mStr(lineCount-P.modeData.score,-300,-70)
-            FONT.set(30) GC.mStr(Text.target_score,-300,15)
+            FONT.set(30) GC.mStr(Text.target_line,-300,15)
         end
         return self[lineCount]
     end)
