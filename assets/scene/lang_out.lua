@@ -9,10 +9,10 @@ local langList={
     ja="日本語",
 }
 local languages={
-    "Language  Langue  Lingua",
-    "语言  言語  언어",
-    "Idioma  Línguas  Sprache",
-    "Язык  Γλώσσα  Bahasa",
+    "Language  语言  Idioma",
+    "Luḡa  Bahasa  Ngôn Ngữ",
+    "言語  언어  Linguagem",
+    "Langue  Язык  Spache",
 }
 local curLang=1
 
