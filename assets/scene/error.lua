@@ -8,7 +8,7 @@ local texts={
     "Ha ocurrido un error y Techmino necesita reiniciarse. Se creó un registro de error, puedes enviarlo al autor.",
     "Techmino mengalami eror dan harus memuat ulang. Anda bisa mengirim log eror ke developer.",
     "問題が発生！ゲームを再起動してください、できるならエラーログを開発者に送ってください。",
-    "Techmino遭受了雷击，需要重新启动。我们已收集了一些错误信息，你可以向作者进行反馈。",
+    "Techmino终端被高能粒子射线击中产生错误，需要重新启动。你可以将上面的错误信息反馈给作者。",
 }
 local scene={}
 
