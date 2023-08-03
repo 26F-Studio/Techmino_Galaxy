@@ -192,50 +192,52 @@ local function parseDict(data)
     local buffer
     for lineNum,line in next,data do
         local commentPos=line:find('%-%-')
-        if commentPos then
-            if line:sub(commentPos-1,commentPos-1)~='\\' then
-                line=line:gsub('%-%-.*',''):trim()
-                if #line==0 then goto CONTINUE end
+        while 1 do
+            if commentPos then
+                if line:sub(commentPos-1,commentPos-1)~='\\' then
+                    line=line:gsub('%-%-.*',''):trim()
+                    if #line==0 then break end
+                end
+                line=line:gsub('\\(%-%-+)','%1')
             end
-            line=line:gsub('\\(%-%-+)','%1')
+            local head=line:sub(1,1)
+            if head=='#' then
+                if buffer then
+                    assertObj(not result[buffer._id],'Duplicate ID',buffer)
+                    result[buffer._id]=buffer
+                    buffer.content=buffer.content:trim()
+                end
+                buffer={
+                    _id=line:sub(2):trim(),
+                    _line=lineNum,
+                }
+                assertObj(#buffer._id>0,'Empty ID',buffer)
+            elseif head=='@' then
+                local key,value=line:match('@%s*(%w+)%s*(.+)')
+                if key=='title' then
+                    value=value:gsub('%%n','\n')
+                    buffer.title=not buffer.title and value or buffer.title..'\n'..value
+                    assertObj(#buffer.title>0,'Empty title',buffer)
+                elseif key=='titleFull' then
+                    value=value:gsub('%%n','\n')
+                    buffer.titleFull=not buffer.titleFull and value or buffer.titleFull..'\n'..value
+                elseif key=='titleSize' then
+                    assertObj(not buffer.titleSize,'Duplicate @titleSize',buffer)
+                    buffer.titleSize=tonumber(value)
+                    assertObj(buffer.titleSize and buffer.titleSize>0,'Invalid titleSize',buffer)
+                elseif key=='contentSize' then
+                    assertObj(not buffer.contentSize,'Duplicate @contentSize',buffer)
+                    buffer.contentSize=tonumber(value)
+                    assertObj(buffer.contentSize and buffer.contentSize>0,'Invalid contentSize',buffer)
+                elseif key=='link' then
+                    assertObj(not buffer.link,'Duplicate @link',buffer)
+                    buffer.link=value
+                end
+            else
+                buffer.content=not buffer.content and line or buffer.content..'\n'..line
+            end
+            break
         end
-        local head=line:sub(1,1)
-        if head=='#' then
-            if buffer then
-                assertObj(not result[buffer._id],'Duplicate ID',buffer)
-                result[buffer._id]=buffer
-                buffer.content=buffer.content:trim()
-            end
-            buffer={
-                _id=line:sub(2):trim(),
-                _line=lineNum,
-            }
-            assertObj(#buffer._id>0,'Empty ID',buffer)
-        elseif head=='@' then
-            local key,value=line:match('@%s*(%w+)%s*(.+)')
-            if key=='title' then
-                value=value:gsub('%%n','\n')
-                buffer.title=not buffer.title and value or buffer.title..'\n'..value
-                assertObj(#buffer.title>0,'Empty title',buffer)
-            elseif key=='titleFull' then
-                value=value:gsub('%%n','\n')
-                buffer.titleFull=not buffer.titleFull and value or buffer.titleFull..'\n'..value
-            elseif key=='titleSize' then
-                assertObj(not buffer.titleSize,'Duplicate @titleSize',buffer)
-                buffer.titleSize=tonumber(value)
-                assertObj(buffer.titleSize and buffer.titleSize>0,'Invalid titleSize',buffer)
-            elseif key=='contentSize' then
-                assertObj(not buffer.contentSize,'Duplicate @contentSize',buffer)
-                buffer.contentSize=tonumber(value)
-                assertObj(buffer.contentSize and buffer.contentSize>0,'Invalid contentSize',buffer)
-            elseif key=='link' then
-                assertObj(not buffer.link,'Duplicate @link',buffer)
-                buffer.link=value
-            end
-        else
-            buffer.content=not buffer.content and line or buffer.content..'\n'..line
-        end
-        ::CONTINUE::
     end
     if buffer then
         result[buffer._id]=buffer

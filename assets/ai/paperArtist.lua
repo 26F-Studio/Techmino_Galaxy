@@ -25,14 +25,17 @@ function paperArtist.calculateFieldScore(field,cb,cy)
     -- Clear filled lines
     for y=cy+#cb-1,cy,-1 do
         if field[y] then
+            local full=true
             for x=1,10 do
                 if not field[y][x] then
-                    goto CONTINUE_notFull
+                    full=false
+                    break
                 end
             end
-            table.remove(field,y)
-            clear=clear+1
-            ::CONTINUE_notFull::
+            if full then
+                table.remove(field,y)
+                clear=clear+1
+            end
         end
     end
 
