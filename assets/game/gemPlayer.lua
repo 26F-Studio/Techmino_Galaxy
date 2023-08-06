@@ -215,7 +215,6 @@ GP._actions.func2=NULL
 GP._actions.func3=NULL
 GP._actions.func4=NULL
 GP._actions.func5=NULL
-GP._actions.func6=NULL
 
 for k,v in next,GP._actions do GP._actions[k]=GP:_getActionObj(v) end
 --------------------------------------------------------------

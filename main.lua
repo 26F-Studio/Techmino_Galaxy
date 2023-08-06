@@ -137,39 +137,49 @@ WIDGET._prototype.inputBox.sound_clear='inputBox_clear'
 --[Attention] Not loading IMG/SFX/BGM files here, just read file paths
 IMG.init{
     actionIcons={
-        mino={
-            moveLeft='assets/image/actionIcons/mino/moveLeft.png',
-            moveRight='assets/image/actionIcons/mino/moveRight.png',
-            rotateCW='assets/image/actionIcons/mino/rotateCW.png',
-            rotateCCW='assets/image/actionIcons/mino/rotateCCW.png',
-            rotate180='assets/image/actionIcons/mino/rotate180.png',
-            softDrop='assets/image/actionIcons/mino/softDrop.png',
-            hardDrop='assets/image/actionIcons/mino/hardDrop.png',
-            holdPiece='assets/image/actionIcons/mino/holdPiece.png',
-            func1='assets/image/actionIcons/mino/func1.png',
-            func2='assets/image/actionIcons/mino/func2.png',
-            func3='assets/image/actionIcons/mino/func2.png',
-            func4='assets/image/actionIcons/mino/func2.png',
-            func5='assets/image/actionIcons/mino/func2.png',
-            func6='assets/image/actionIcons/mino/func2.png',
-        },
-        puyo={
-            moveLeft='assets/image/actionIcons/puyo/moveLeft.png',
-            moveRight='assets/image/actionIcons/puyo/moveRight.png',
-            rotateCW='assets/image/actionIcons/puyo/rotateCW.png',
-            rotateCCW='assets/image/actionIcons/puyo/rotateCCW.png',
-            rotate180='assets/image/actionIcons/puyo/rotate180.png',
-            softDrop='assets/image/actionIcons/puyo/softDrop.png',
-            hardDrop='assets/image/actionIcons/puyo/hardDrop.png',
-            holdPiece='assets/image/actionIcons/puyo/holdPiece.png',
-            func1='assets/image/actionIcons/puyo/func1.png',
-            func2='assets/image/actionIcons/puyo/func2.png',
-            func3='assets/image/actionIcons/puyo/func2.png',
-            func4='assets/image/actionIcons/puyo/func2.png',
-            func5='assets/image/actionIcons/puyo/func2.png',
-            func6='assets/image/actionIcons/puyo/func2.png',
-        },
-        gem={},
+        texture='assets/image/action_icon.png',
+        mino=(function()
+            local t={}
+            for i,name in next,{
+                'moveLeft','moveRight','','softDrop','hardDrop',
+                'rotateCW','rotateCCW','rotate180','holdPiece','skip',
+                '','','','','',
+                'func1','func2','func3','func4','func5',
+            } do if name~='' then t[name]=love.graphics.newQuad((i-1)%5*90,math.floor((i-1)/5)*90,90,90,450,450) end end
+            return t
+        end)(),
+        puyo=(function()
+            local t={}
+            for i,name in next,{
+                'moveLeft','moveRight','','softDrop','hardDrop',
+                'rotateCW','rotateCCW','rotate180','holdPiece','skip',
+                '','','','','',
+                'func1','func2','func3','func4','func5',
+            } do if name~='' then t[name]=love.graphics.newQuad((i-1)%5*90,math.floor((i-1)/5)*90,90,90,450,450) end end
+            return t
+        end)(),
+        gem=(function()
+            local t={}
+            for i,name in next,{
+                'swapLeft','swapRight','swapUp','swapDown','',
+                'twistCW','twistCCW','twist180','','skip',
+                'moveLeft','moveRight','','softDrop','hardDrop',
+                'func1','func2','func3','func4','func5',
+            } do if name~='' then t[name]=love.graphics.newQuad((i-1)%5*90,math.floor((i-1)/5)*90,90,90,450,450) end end
+            return t
+        end)(),
+        sys=(function()
+            local t={}
+            for i,name in next,{
+                '','','','','',
+                '','','','','',
+                '','','','','',
+                'view','restart','back','quit','',
+                'setting','help','chat','','',
+                'left','right','up','down','select',
+            } do if name~='' then t[name]=love.graphics.newQuad((i-1)%5*90,math.floor((i-1)/5)*90,90,90,450,450) end end
+            return t
+        end)(),
     },
     title_techmino='assets/image/title_techmino.png',
 }
@@ -237,7 +247,6 @@ KEYMAP.mino=KEYMAP.new{
     {act='func3',       keys={'d'}},
     {act='func4',       keys={'q'}},
     {act='func5',       keys={'w'}},
-    {act='func6',       keys={'e'}},
 }
 KEYMAP.puyo=KEYMAP.new{
     {act='moveLeft',    keys={'left'}},
@@ -252,7 +261,6 @@ KEYMAP.puyo=KEYMAP.new{
     {act='func3',       keys={'d'}},
     {act='func4',       keys={'q'}},
     {act='func5',       keys={'w'}},
-    {act='func6',       keys={'e'}},
 }
 KEYMAP.gem=KEYMAP.new{
     {act='swapLeft',    keys={'left'}},
@@ -271,20 +279,19 @@ KEYMAP.gem=KEYMAP.new{
     {act='func3',       keys={'d'}},
     {act='func4',       keys={'q'}},
     {act='func5',       keys={'w'}},
-    {act='func6',       keys={'e'}},
 }
 KEYMAP.sys=KEYMAP.new{
     {act='view',        keys={'lshift'}},
     {act='restart',     keys={'r','`'}},
+    {act='chat',        keys={'t'}},
     {act='back',        keys={'escape'}},
     {act='quit',        keys={'q'}},
     {act='setting',     keys={'s'}},
     {act='help',        keys={'h'}},
-    {act='chat',        keys={'t'}},
-    {act='up',          keys={'up'}},
-    {act='down',        keys={'down'}},
     {act='left',        keys={'left'}},
     {act='right',       keys={'right'}},
+    {act='up',          keys={'up'}},
+    {act='down',        keys={'down'}},
     {act='select',      keys={'return'}},
 }
 local keys=FILE.load('conf/keymap','-json -canskip')

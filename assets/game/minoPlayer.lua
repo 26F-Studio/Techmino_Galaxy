@@ -263,7 +263,6 @@ MP._actions.func2=NULL
 MP._actions.func3=NULL
 MP._actions.func4=NULL
 MP._actions.func5=NULL
-MP._actions.func6=NULL
 
 for k,v in next,MP._actions do MP._actions[k]=MP:_getActionObj(v) end
 --------------------------------------------------------------
