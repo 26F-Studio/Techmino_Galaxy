@@ -192,7 +192,9 @@ TRS[6]={
         end
         if not transformed then
             self:playSound(ifInit and 'initrotate' or 'rotate')
-            self:createRotateEffect(dir,ifInit)
+            if self.settings.particles then
+                self:createRotateEffect(dir,ifInit)
+            end
         end
         self:checkLanding()
     end,
