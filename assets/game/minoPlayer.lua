@@ -919,6 +919,22 @@ function MP:getConnectedCells(x0,y0)
         return {}
     end
 end
+function MP:compareMatrix(S1,S2)
+    if not S2 then
+        if not self.hand then return false end
+        S2=self.hand.matrix
+    end
+    if #S1~=#S2 then return false end
+    for y=1,#S1 do
+        if #S1[y]~=#S2[y] then return false end
+        for x=1,#S1[1] do
+            if not not S1[y][x]~=not not S2[y][x] then
+                return false
+            end
+        end
+    end
+    return true
+end
 function MP:cutConnection(y)-- y is cutting line height to ground
     local F=self.field
     if y<1 or y>F:getHeight() then return end
