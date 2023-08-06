@@ -16,7 +16,7 @@ local function sysAction(action)
     elseif action=='back' then
         SCN.swapTo('game_in','none')
     elseif action=='restart' then
-        SCN.swapTo('game_in',nil,GAME.mode.name)
+        SCN.swapTo('game_in','none',GAME.mode.name)
     elseif action=='setting' then
         SCN.go('setting_in','none')
     end
