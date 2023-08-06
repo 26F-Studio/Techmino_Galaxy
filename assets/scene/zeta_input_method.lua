@@ -334,7 +334,7 @@ function scene.draw()
     -- Char queue
     FONT.set(80)
     gc.setColor(1,1,.8,time)
-    gc.print(charQueue,areaX+areaR+20,areaY-120)
+    gc.print(charQueue,areaX+areaR+20,areaY-130)
 
     -- UI key hint
     gc.replaceTransform(SCR.xOy)

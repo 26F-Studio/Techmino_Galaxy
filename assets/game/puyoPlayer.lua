@@ -218,7 +218,6 @@ PP._actions.func2=NULL
 PP._actions.func3=NULL
 PP._actions.func4=NULL
 PP._actions.func5=NULL
-PP._actions.func6=NULL
 
 for k,v in next,PP._actions do PP._actions[k]=PP:_getActionObj(v) end
 --------------------------------------------------------------

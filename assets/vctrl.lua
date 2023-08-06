@@ -1,6 +1,7 @@
 local gc_setLineWidth,gc_setColor=GC.setLineWidth,GC.setColor
 local gc_line=GC.line
 local gc_rectangle,gc_circle=GC.rectangle,GC.circle
+local mDrawQ=GC.mDrawQ
 local max,min=math.max,math.min
 local floor,abs=math.floor,math.abs
 local sin,cos=math.sin,math.cos
@@ -24,7 +25,7 @@ function button:new(data)
         iconSize=data.iconSize or 80,
 
         lastPressTime=-1e99,
-        drawable=false,
+        quad=false,
     },self)
 end
 function button:reset()
@@ -71,17 +72,19 @@ function button:draw(setting)
         gc_setColor(1,1,1)
         gc_rectangle('line',self.x-self.r-2,self.y-self.r-2,self.r*2+4,self.r*2+4)
     end
-    if self.iconSize>0 and self.drawable then
+    if self.iconSize>0 and self.quad then
         gc_setColor(1,1,1,setting and 1 or .4)
-        GC.mDraw(
-            self.drawable,
+        local _,_,w,h=self.quad:getViewport()
+        mDrawQ(
+            IMG.actionIcons.texture,
+            self.quad,
             self.x,self.y,0,
-            self.iconSize/100*min(self.r*2/self.drawable:getWidth(),self.r*2/self.drawable:getHeight())
+            self.iconSize/100*min(self.r*2/w,self.r*2/h)
         )
     end
 end
-function button:setTexture(img)
-    self.drawable=img
+function button:setTexture(quad)
+    self.quad=quad
 end
 function button:export()
     return {
@@ -112,7 +115,7 @@ function stick2way:new(data)
         touchID=false,
         state='wait',
         stickX=0,
-        drawable={false,false},
+        quad={false,false},
     },self)
 end
 function stick2way:getDistance(x,y)
@@ -155,8 +158,8 @@ function stick2way:reset()
     self.state='wait'
     self.stickX=0
 end
-function stick2way:setTexture(i,img)
-    self.drawable[i]=img
+function stick2way:setTexture(i,quad)
+    self.quad[i]=quad
 end
 function stick2way:draw(setting)
     gc_setLineWidth(4)
@@ -173,12 +176,14 @@ function stick2way:draw(setting)
     end
     if self.iconSize>0 then
         gc_setColor(1,1,1,setting and 1 or .4)
-        local drawable=self.drawable
-        if drawable[1] then
-            GC.mDraw(drawable[1],self.x-self.len/2,self.y,0,self.iconSize/100*min(self.h/drawable[1]:getWidth(),self.h/drawable[1]:getHeight()))
+        local quad=self.quad
+        if quad[1] then
+            local _,_,w,h=quad[1]:getViewport()
+            mDrawQ(IMG.actionIcons.texture,quad[1],self.x-self.len/2,self.y,0,self.iconSize/100*min(self.h/w,self.h/h))
         end
-        if drawable[2] then
-            GC.mDraw(drawable[2],self.x+self.len/2,self.y,0,self.iconSize/100*min(self.h/drawable[2]:getWidth(),self.h/drawable[2]:getHeight()))
+        if quad[2] then
+            local _,_,w,h=quad[2]:getViewport()
+            mDrawQ(IMG.actionIcons.texture,quad[2],self.x+self.len/2,self.y,0,self.iconSize/100*min(self.h/w,self.h/h))
         end
     end
 end
@@ -213,7 +218,7 @@ function stick4way:new(data)
         stickD=0,stickA=0,
         touchID=false,
         state='wait',
-        drawable={false,false,false,false},
+        quad={false,false,false,false},
     },self)
 end
 function stick4way:getDistance(x,y)
@@ -268,8 +273,8 @@ function stick4way:reset()
     self.state='wait'
     self.stickX=0
 end
-function stick4way:setTexture(i,img)
-    self.drawable[i]=img
+function stick4way:setTexture(i,quad)
+    self.quad[i]=quad
 end
 function stick4way:draw(setting)
     gc_setLineWidth(4)
@@ -294,11 +299,12 @@ function stick4way:draw(setting)
     end
     if self.iconSize>0 then
         gc_setColor(1,1,1,setting and 1 or .4)
-        local drawable=self.drawable
-        for i=1,4 do if drawable[i] then
+        local quad=self.quad
+        for i=1,4 do if quad[i] then
             local d=(bigR+ballR)*.5
             local angle=i*tau/4
-            GC.mDraw(drawable[i],self.x+d*cos(angle),self.y+d*sin(angle),0,self.iconSize/100*min((bigR-ballR)/drawable[i]:getWidth(),(bigR-ballR)/drawable[i]:getHeight()))
+            local _,_,w,h=quad:getViewport()
+            mDrawQ(IMG.actionIcons.texture,quad[i],self.x+d*cos(angle),self.y+d*sin(angle),0,self.iconSize/100*min((bigR-ballR)/w,(bigR-ballR)/h))
         end end
     end
 end

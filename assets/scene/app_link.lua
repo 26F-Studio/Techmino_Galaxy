@@ -127,8 +127,9 @@ local function checkLink(x1,y1,x2,y2)-- Most important function!
         while ruy>1       and not field[ruy-1][x2] do ruy=ruy-1 end
         while rdy<field.r and not field[rdy+1][x2] do rdy=rdy+1 end
         for y=max(luy,ruy),min(ldy,rdy) do
-            for x=x1+1,x2-1 do if field[y][x] then goto CONTINUE_nextRow end end
-            do
+            local nextRow
+            for x=x1+1,x2-1 do if field[y][x] then nextRow=true break end end
+            if not nextRow then
                 local len=abs(x1-x2)+abs(y-y1)+abs(y-y2)
                 if len<bestLen then
                     bestLen=len
@@ -138,7 +139,6 @@ local function checkLink(x1,y1,x2,y2)-- Most important function!
                     addPoint(bestLine,x2,y2)
                 end
             end
-            ::CONTINUE_nextRow::
         end
     end
     -- X-Y-X Check
@@ -150,8 +150,9 @@ local function checkLink(x1,y1,x2,y2)-- Most important function!
         while dlx>1       and not field[y2][dlx-1] do dlx=dlx-1 end
         while drx<field.c and not field[y2][drx+1] do drx=drx+1 end
         for x=max(ulx,dlx),min(urx,drx) do
-            for y=y1+1,y2-1 do if field[y][x] then goto CONTINUE_nextCol end end
-            do
+            local nextCol
+            for y=y1+1,y2-1 do if field[y][x] then nextCol=true break end end
+            if not nextCol then
                 local len=abs(y1-y2)+abs(x-x1)+abs(x-x2)
                 if len<bestLen then
                     bestLen=len
@@ -161,7 +162,6 @@ local function checkLink(x1,y1,x2,y2)-- Most important function!
                     addPoint(bestLine,x2,y2)
                 end
             end
-            ::CONTINUE_nextCol::
         end
     end
     return bestLine

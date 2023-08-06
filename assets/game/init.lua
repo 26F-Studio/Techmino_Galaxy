@@ -186,6 +186,8 @@ local GAME={
     mainPlayer=false,
 }
 
+GAME.camera.moveSpeed=12
+
 function GAME.getMode(name)
     if modeLib[name] and not love.keyboard.isDown('f5') then
         return modeLib[name]

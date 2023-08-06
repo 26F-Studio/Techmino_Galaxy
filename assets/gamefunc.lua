@@ -152,6 +152,14 @@ function isCtrlPressed() return isKeyDown('lctrl','rctrl') end
 function isShiftPressed() return isKeyDown('lshift','rshift') end
 function isAltPressed() return isKeyDown('lalt','ralt') end
 
+local function _getActMode(mode,key)
+    local act=KEYMAP[mode]:getAction(key)
+    if act then
+        return mode,act
+    else
+        return 'sys',KEYMAP.sys:getAction(key)
+    end
+end
 local function _getActImg(mode,act)
     return IMG.actionIcons[mode][act]
 end
@@ -162,20 +170,17 @@ function resetVirtualKeyMode(mode)
     for i=1,#VCTRL do
         local obj=VCTRL[i]
         if obj.type=='button' then
-            local act=KEYMAP[mode]:getAction(obj.key)
-            local res,texture=pcall(_getActImg,mode,act)
-            obj:setTexture(res and texture or act and GC.newText(FONT.get(30),act))
+            local res,texture=pcall(_getActImg,_getActMode(mode,(obj.key)))
+            obj:setTexture(res and texture)
         elseif obj.type=='stick2way' then
             for j,suffix in next,{'left','right'} do
-                local act=KEYMAP[mode]:getAction('vj2'..suffix)
-                local res,texture=pcall(_getActImg,mode,act)
-                obj:setTexture(j,res and texture or act and GC.newText(FONT.get(30),act))
+                local res,texture=pcall(_getActImg,_getActMode(mode,'vj2'..suffix))
+                obj:setTexture(j,res and texture)
             end
         elseif obj.type=='stick4way' then
             for j,suffix in next,{'down','left','up','right'} do
-                local act=KEYMAP[mode]:getAction('vj4'..suffix)
-                local res,texture=pcall(_getActImg,mode,act)
-                obj:setTexture(j,res and texture or act and GC.newText(FONT.get(30),act))
+                local res,texture=pcall(_getActImg,_getActMode(mode,'vj4'..suffix))
+                obj:setTexture(j,res and texture)
             end
         end
     end
