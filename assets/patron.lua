@@ -147,4 +147,6 @@ return {
     {score=25,name="Sthantom"},
     {score=25,name="T9348"},
     {score=25,name="T1206"},
+    {score=25,name="V我50吃肉讨饭人"},
+    {score=25,name="电蜥蜴"},
 }
