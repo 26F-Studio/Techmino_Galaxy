@@ -18,15 +18,15 @@ do-- sprint_40
         if not P.isMain then return true end
         if reason=='AC' then
             if P.gameTime<=86e3 then
-                PROGRESS.setMinoModeState('sprint_hide_40')
+                PROGRESS.setModeState('mino_stdMap','sprint_hide_40')
             end
             if P.modeData.maxHeight<=8 then
-                PROGRESS.setMinoModeState('sprint_10')
+                PROGRESS.setModeState('mino_stdMap','sprint_10')
             end
             if P.modeData.stat.piece<110 then
-                PROGRESS.setMinoModeState('sprint_big_80')
+                PROGRESS.setModeState('mino_stdMap','sprint_big_80')
             end
-            PROGRESS.setMinoModeState('sprint_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_40',1)
         end
     end
 end
@@ -36,10 +36,10 @@ do-- sprint_10
         if not P.isMain then return true end
         if reason=='AC' then
             if P.modeData.stat.piece<30 then
-                PROGRESS.setMinoModeState('sprint_obstacle_20')
+                PROGRESS.setModeState('mino_stdMap','sprint_obstacle_20')
             end
-            PROGRESS.setMinoModeState('sprint_200')
-            PROGRESS.setMinoModeState('sprint_10',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_200')
+            PROGRESS.setModeState('mino_stdMap','sprint_10',1)
         end
     end
 end
@@ -56,8 +56,8 @@ do-- sprint_200
     function progress.sprint_200_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_1000')
-            PROGRESS.setMinoModeState('sprint_200',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_1000')
+            PROGRESS.setModeState('mino_stdMap','sprint_200',1)
         end
     end
 end
@@ -74,7 +74,7 @@ do-- sprint_1000
     function progress.sprint_1000_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_1000',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_1000',1)
         end
     end
 end
@@ -91,8 +91,8 @@ do-- sprint_obstacle_20
     function progress.sprint_obstacle_20_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_drought_40')
-            PROGRESS.setMinoModeState('sprint_obstacle_20',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_drought_40')
+            PROGRESS.setModeState('mino_stdMap','sprint_obstacle_20',1)
         end
     end
 end
@@ -109,9 +109,9 @@ do-- sprint_drought_40
     function progress.sprint_drought_40_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_flood_40')
-            PROGRESS.setMinoModeState('sprint_mph_40')
-            PROGRESS.setMinoModeState('sprint_drought_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_flood_40')
+            PROGRESS.setModeState('mino_stdMap','sprint_mph_40')
+            PROGRESS.setModeState('mino_stdMap','sprint_drought_40',1)
         end
     end
 end
@@ -128,8 +128,8 @@ do-- sprint_flood_40
     function progress.sprint_flood_40_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_pento_40')
-            PROGRESS.setMinoModeState('sprint_flood_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_pento_40')
+            PROGRESS.setModeState('mino_stdMap','sprint_flood_40',1)
         end
     end
 end
@@ -145,7 +145,7 @@ do-- sprint_pento_40
     function progress.sprint_pento_40_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_pento_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_pento_40',1)
         end
     end
 end
@@ -161,7 +161,7 @@ do-- sprint_sym_40
     function progress.sprint_sym_40_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_sym_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_sym_40',1)
         end
     end
 end
@@ -178,8 +178,8 @@ do-- sprint_mph_40
     function progress.sprint_mph_40_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_lock_20')
-            PROGRESS.setMinoModeState('sprint_mph_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_lock_20')
+            PROGRESS.setModeState('mino_stdMap','sprint_mph_40',1)
         end
     end
 end
@@ -195,8 +195,8 @@ do-- sprint_lock_20
     function progress.sprint_lock_20_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_fix_20')
-            PROGRESS.setMinoModeState('sprint_lock_20',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_fix_20')
+            PROGRESS.setModeState('mino_stdMap','sprint_lock_20',1)
         end
     end
 end
@@ -212,7 +212,7 @@ do-- sprint_fix_20
     function progress.sprint_fix_20_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_fix_20',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_fix_20',1)
         end
     end
 end
@@ -228,7 +228,7 @@ do-- sprint_wind_40
     function progress.sprint_wind_40_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_wind_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_wind_40',1)
         end
     end
 end
@@ -244,7 +244,7 @@ do-- sprint_delay_20
     function progress.sprint_delay_20_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_delay_20',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_delay_20',1)
         end
     end
 end
@@ -262,9 +262,9 @@ do-- sprint_hide_40
         if not P.isMain then return true end
         if reason=='AC' then
             if P.modeData.stat.piece<110 then
-                PROGRESS.setMinoModeState('sprint_invis_40')
+                PROGRESS.setModeState('mino_stdMap','sprint_invis_40')
             end
-            PROGRESS.setMinoModeState('sprint_hide_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_hide_40',1)
         end
     end
 end
@@ -278,13 +278,13 @@ do-- sprint_invis_40
             BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
         if P.modeData.stat.clears[4]==10 then
-            PROGRESS.setMinoModeState('sprint_blind_40')
+            PROGRESS.setModeState('mino_stdMap','sprint_blind_40')
         end
     end
     function progress.sprint_invis_40_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_invis_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_invis_40',1)
         end
     end
 end
@@ -301,7 +301,7 @@ do-- sprint_blind_40
     function progress.sprint_blind_40_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_blind_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_blind_40',1)
         end
     end
 end
@@ -318,9 +318,9 @@ do-- sprint_big_80
     function progress.sprint_big_80_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_small_20')
-            PROGRESS.setMinoModeState('sprint_low_40')
-            PROGRESS.setMinoModeState('sprint_big_80',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_small_20')
+            PROGRESS.setModeState('mino_stdMap','sprint_low_40')
+            PROGRESS.setModeState('mino_stdMap','sprint_big_80',1)
         end
     end
 end
@@ -336,7 +336,7 @@ do-- sprint_small_20
     function progress.sprint_small_20_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_small_20',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_small_20',1)
         end
     end
 end
@@ -353,8 +353,8 @@ do-- sprint_low_40
     function progress.sprint_low_40_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_float_40')
-            PROGRESS.setMinoModeState('sprint_low_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_float_40')
+            PROGRESS.setModeState('mino_stdMap','sprint_low_40',1)
         end
     end
 end
@@ -371,7 +371,7 @@ do-- sprint_float_40
     function progress.sprint_float_40_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_float_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_float_40',1)
         end
     end
 end
@@ -387,7 +387,7 @@ do-- sprint_randctrl_40
     function progress.sprint_randctrl_40_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_randctrl_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_randctrl_40',1)
         end
     end
 end
@@ -404,9 +404,9 @@ do-- sprint_flip_40
         if not P.isMain then return true end
         if reason=='AC' then
             if P.gameTime<=60e3 then
-                PROGRESS.setMinoModeState('sprint_dizzy_40')
+                PROGRESS.setModeState('mino_stdMap','sprint_dizzy_40')
             end
-            PROGRESS.setMinoModeState('sprint_flip_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_flip_40',1)
         end
     end
 end
@@ -422,7 +422,7 @@ do-- sprint_dizzy_40
     function progress.sprint_dizzy_40_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('sprint_dizzy_40',1)
+            PROGRESS.setModeState('mino_stdMap','sprint_dizzy_40',1)
         end
     end
 end
@@ -438,7 +438,7 @@ do-- marathon
             end
             if md.level>=22 then
                 BGM.set('propel/drum','volume',math.min(.2+(md.level-20)*.8,1),6.26)
-                PROGRESS.setMinoModeState('hypersonic_lo')
+                PROGRESS.setModeState('mino_stdMap','hypersonic_lo')
             end
             if md.level>=25 and md.marathon_lastLevel<25 then
                 BGM.set(bgmPack('propel','a1','a3'),'volume',0,26)
@@ -446,13 +446,13 @@ do-- marathon
             md.marathon_lastLevel=md.level
         end
         if md.stat.clears[4]==16 then
-            PROGRESS.setMinoModeState('techrash_easy')
+            PROGRESS.setModeState('mino_stdMap','techrash_easy')
         end
     end
     function progress.marathon_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('marathon',1)
+            PROGRESS.setModeState('mino_stdMap','marathon',1)
         end
     end
 end
@@ -465,7 +465,7 @@ do-- techrash_easy
             BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.techrash-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
         if P.modeData.stat.clears[4]>=20 then
-            PROGRESS.setMinoModeState('techrash_easy',1)
+            PROGRESS.setModeState('mino_stdMap','techrash_easy',1)
         end
     end
 end
@@ -482,14 +482,14 @@ do-- hypersonic_lo
     function progress.hypersonic_lo_afterClear(P)
         if not P.isMain then return true end
         if P.modeData.stat.clears[4]==36 then
-            PROGRESS.setMinoModeState('techrash_hard')
+            PROGRESS.setModeState('mino_stdMap','techrash_hard')
         end
     end
     function progress.hypersonic_lo_gameOver(P,reason)
         if not P.isMain then return true end
-        PROGRESS.setMinoModeState('hypersonic_hi')
+        PROGRESS.setModeState('mino_stdMap','hypersonic_hi')
         if reason=='AC' then
-            PROGRESS.setMinoModeState('hypersonic_lo',1)
+            PROGRESS.setModeState('mino_stdMap','hypersonic_lo',1)
         end
     end
 end
@@ -502,7 +502,7 @@ do-- techrash_hard
             BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.techrash-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
         if P.modeData.stat.clears[4]>=20 then
-            PROGRESS.setMinoModeState('techrash_easy',1)
+            PROGRESS.setModeState('mino_stdMap','techrash_easy',1)
         end
     end
 end
@@ -519,14 +519,14 @@ do-- hypersonic_hi
     function progress.hypersonic_hi_afterClear(P)
         if not P.isMain then return true end
         if P.modeData.stat.clears[4]==42 then
-            PROGRESS.setMinoModeState('hypersonic_hd')
+            PROGRESS.setModeState('mino_stdMap','hypersonic_hd')
         end
     end
     function progress.hypersonic_hi_gameOver(P)
         if not P.isMain then return true end
         if P.modeData.point>=1000 then
-            PROGRESS.setMinoModeState('hypersonic_ti')
-            PROGRESS.setMinoModeState('hypersonic_hi',1)
+            PROGRESS.setModeState('mino_stdMap','hypersonic_ti')
+            PROGRESS.setModeState('mino_stdMap','hypersonic_hi',1)
         end
     end
 end
@@ -553,7 +553,7 @@ do-- hypersonic_hd
     end
     function progress.hypersonic_hd_gameOver(P)
         if P.modeData.point>=1000 then
-            PROGRESS.setMinoModeState('hypersonic_hd',1)
+            PROGRESS.setModeState('mino_stdMap','hypersonic_hd',1)
         end
     end
 end
@@ -568,7 +568,7 @@ do-- hypersonic_ti
     end
     function progress.hypersonic_ti_gameOver(P)
         if P.modeData.point>=1000 then
-            PROGRESS.setMinoModeState('hypersonic_ti',1)
+            PROGRESS.setModeState('mino_stdMap','hypersonic_ti',1)
         end
     end
 end
@@ -578,7 +578,7 @@ do-- combo_practice
     function progress.combo_practice_afterClear(P)
         if not P.isMain then return true end
         if P.modeData.cleared==12 then
-            PROGRESS.setMinoModeState('tsd_easy')
+            PROGRESS.setModeState('mino_stdMap','tsd_easy')
         end
     end
     function progress.combo_practice_beforeDiscard(P)
@@ -590,7 +590,7 @@ do-- combo_practice
     function progress.combo_practice_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('combo_practice',1)
+            PROGRESS.setModeState('mino_stdMap','combo_practice',1)
         end
     end
 end
@@ -599,14 +599,14 @@ do-- dig_practice
     function progress.dig_practice_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('dig_shale')
+            PROGRESS.setModeState('mino_stdMap','dig_shale')
             if P.gameTime<30e3 then
-                PROGRESS.setMinoModeState('survivor_b2b')
+                PROGRESS.setModeState('mino_stdMap','survivor_b2b')
             end
             if P.modeData.stat.piece<62 then
-                PROGRESS.setMinoModeState('dig_40')
+                PROGRESS.setModeState('mino_stdMap','dig_40')
             end
-            PROGRESS.setMinoModeState('dig_practice',1)
+            PROGRESS.setModeState('mino_stdMap','dig_practice',1)
         end
     end
 end
@@ -622,8 +622,8 @@ do-- dig_shale
     function progress.dig_shale_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('dig_volcanics')
-            PROGRESS.setMinoModeState('dig_shale',1)
+            PROGRESS.setModeState('mino_stdMap','dig_volcanics')
+            PROGRESS.setModeState('mino_stdMap','dig_shale',1)
         end
     end
 end
@@ -639,7 +639,7 @@ do-- dig_volcanics
     function progress.dig_volcanics_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('dig_volcanics',1)
+            PROGRESS.setModeState('mino_stdMap','dig_volcanics',1)
         end
     end
 end
@@ -647,7 +647,7 @@ end
 function progress.dig_checkers_gameOver(P,reason)
     if not P.isMain then return true end
     if reason=='AC' then
-        PROGRESS.setMinoModeState('dig_checkers',1)
+        PROGRESS.setModeState('mino_stdMap','dig_checkers',1)
     end
 end
 
@@ -663,8 +663,8 @@ do-- dig_40
     function progress.dig_40_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('dig_100')
-            PROGRESS.setMinoModeState('dig_40',1)
+            PROGRESS.setModeState('mino_stdMap','dig_100')
+            PROGRESS.setModeState('mino_stdMap','dig_40',1)
         end
     end
 end
@@ -681,8 +681,8 @@ do-- dig_100
     function progress.dig_100_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('dig_400')
-            PROGRESS.setMinoModeState('dig_100',1)
+            PROGRESS.setModeState('mino_stdMap','dig_400')
+            PROGRESS.setModeState('mino_stdMap','dig_100',1)
         end
     end
 end
@@ -699,7 +699,7 @@ do-- dig_400
     function progress.dig_400_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('dig_400',1)
+            PROGRESS.setModeState('mino_stdMap','dig_400',1)
         end
     end
 end
@@ -712,9 +712,9 @@ do-- survivor_b2b
             BGM.set(bgmList['here'].add,'volume',math.min((P.modeData.wave-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
         if P.modeData.wave==42 then
-            PROGRESS.setMinoModeState('backfire_100')
-            PROGRESS.setMinoModeState('survivor_cheese')
-            PROGRESS.setMinoModeState('survivor_b2b',1)
+            PROGRESS.setModeState('mino_stdMap','backfire_100')
+            PROGRESS.setModeState('mino_stdMap','survivor_cheese')
+            PROGRESS.setModeState('mino_stdMap','survivor_b2b',1)
         end
     end
 end
@@ -727,8 +727,8 @@ do-- survivor_cheese
             BGM.set(bgmList['here'].add,'volume',math.min((P.modeData.wave-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
         if P.modeData.wave==62 then
-            PROGRESS.setMinoModeState('survivor_spike')
-            PROGRESS.setMinoModeState('sprint_randctrl_40',1)
+            PROGRESS.setModeState('mino_stdMap','survivor_spike')
+            PROGRESS.setModeState('mino_stdMap','sprint_randctrl_40',1)
         end
     end
 end
@@ -741,7 +741,7 @@ do-- survivor_spike
             BGM.set(bgmList['here'].add,'volume',math.min((P.modeData.wave-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
         if P.modeData.wave==20 then
-            PROGRESS.setMinoModeState('survivor_spike',1)
+            PROGRESS.setModeState('mino_stdMap','survivor_spike',1)
         end
     end
 end
@@ -757,8 +757,8 @@ do-- backfire_100
     function progress.backfire_100_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('backfire_amplify_100')
-            PROGRESS.setMinoModeState('backfire_100',1)
+            PROGRESS.setModeState('mino_stdMap','backfire_amplify_100')
+            PROGRESS.setModeState('mino_stdMap','backfire_100',1)
         end
     end
 end
@@ -774,8 +774,8 @@ do-- backfire_amplify_100
     function progress.backfire_amplify_100_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('backfire_cheese_100')
-            PROGRESS.setMinoModeState('backfire_amplify_100',1)
+            PROGRESS.setModeState('mino_stdMap','backfire_cheese_100')
+            PROGRESS.setModeState('mino_stdMap','backfire_amplify_100',1)
         end
     end
 end
@@ -791,7 +791,7 @@ do-- backfire_cheese_100
     function progress.backfire_cheese_100_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
-            PROGRESS.setMinoModeState('backfire_cheese_100',1)
+            PROGRESS.setModeState('mino_stdMap','backfire_cheese_100',1)
         end
     end
 end

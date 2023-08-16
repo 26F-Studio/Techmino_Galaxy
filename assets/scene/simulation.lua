@@ -67,9 +67,9 @@ function scene.enter()
         s.trigTimer=false
     end
     subjectFocused=false
-    subject[1].valid=PROGRESS.getMinoUnlocked()
-    subject[2].valid=PROGRESS.getPuyoUnlocked()
-    subject[3].valid=PROGRESS.getGemUnlocked()
+    subject[1].valid=PROGRESS.getModeUnlocked('mino_stdMap')
+    subject[2].valid=PROGRESS.getModeUnlocked('puyo_wip')
+    subject[3].valid=PROGRESS.getModeUnlocked('gem_wip')
     scene.update(0)
     PROGRESS.setExteriorBG()
     PROGRESS.playExteriorBGM()

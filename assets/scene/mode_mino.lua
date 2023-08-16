@@ -66,15 +66,15 @@ local scene={}
 function scene.enter()
     if not minoMap then
         minoMap=require'assets.game.minomap'
-        minoMap:freshUnlocked(PROGRESS.getMinoModeState(),true)
+        minoMap:freshUnlocked(PROGRESS.getModeState('mino_stdMap'),true)
     else
-        minoMap:freshUnlocked(PROGRESS.getMinoModeState())
+        minoMap:freshUnlocked(PROGRESS.getModeState('mino_stdMap'))
     end
     minoMap:reset()
     minoMap:setFullVersion(
-        PROGRESS.getMinoModeState('sprint_40')>0 or
-        PROGRESS.getMinoModeState('marathon')>0 or
-        PROGRESS.getMinoModeState('dig_practice')>0
+        PROGRESS.getModeState('mino_stdMap','sprint_40')>0 or
+        PROGRESS.getModeState('mino_stdMap','marathon')>0 or
+        PROGRESS.getModeState('mino_stdMap','dig_practice')>0
     )
     panel:setSel(false)
     PROGRESS.setExteriorBG()
@@ -121,7 +121,7 @@ function scene.keyDown(key,isRep)
     if KEYMAP.sys:getAction(key)=='select' then
         panel:setSel(minoMap:keyboardSelect())
     elseif KEYMAP.sys:getAction(key)=='back' then
-        if PROGRESS.getMinoUnlocked() and not PROGRESS.getPuyoUnlocked() and not PROGRESS.getGemUnlocked() then
+        if PROGRESS.getModeUnlocked('gem_wip') and not PROGRESS.getModeUnlocked('puyo_wip') and not PROGRESS.getModeUnlocked('mino_stdMap') then
             SCN._pop()
             SCN.back('fadeHeader')
         end
