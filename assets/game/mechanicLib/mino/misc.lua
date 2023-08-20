@@ -426,4 +426,29 @@ do-- Cascade
     end
 end
 
+do-- variabalNext
+    function misc.variabalNext_stackHigh_event_afterLock(P)
+        if not P.modeData.storedNextSlot then
+            P.modeData.storedNextSlot=P.settings.nextSlot
+        end
+        P.settings.nextSlot=math.floor(
+            P.modeData.storedNextSlot/6*(
+                math.min(P.field:getHeight()/P.settings.spawnH,1.5)
+                ^2*7+.62
+            )
+        )
+    end
+    function misc.variabalNext_stackLow_event_afterLock(P)
+        if not P.modeData.storedNextSlot then
+            P.modeData.storedNextSlot=P.settings.nextSlot
+        end
+        P.settings.nextSlot=math.floor(
+            P.modeData.storedNextSlot/6*(
+                math.max(1-P.field:getHeight()/P.settings.spawnH,0)
+                ^2*7+.62
+            )
+        )
+    end
+end
+
 return misc
