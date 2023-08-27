@@ -125,9 +125,9 @@ scene.widgetList={
     WIDGET.new{type='button',name='sys', x=900,y=410,w=200,h=60,text=LANG"keyset_sys_down",        fontSize=20, color='lC',code=selAct('sys', 'down'   )},
     WIDGET.new{type='button',name='sys', x=900,y=480,w=200,h=60,text=LANG"keyset_sys_select",      fontSize=20, color='lC',code=selAct('sys', 'select' )},
 
-    WIDGET.new{type='button_invis',name='Sgem', pos={1,0},x=-800,y=60,w=150,h=100,cornerR=20,fontSize=60,text="G",fontType='bold',sound_trigger='move',code=function() if keyMode~='gem'  then scene.enter('gem')  end end,visibleFunc=PROGRESS.getGemUnlocked},
-    WIDGET.new{type='button_invis',name='Spuyo',pos={1,0},x=-600,y=60,w=150,h=100,cornerR=20,fontSize=60,text="P",fontType='bold',sound_trigger='move',code=function() if keyMode~='puyo' then scene.enter('puyo') end end,visibleFunc=PROGRESS.getPuyoUnlocked},
-    WIDGET.new{type='button_invis',name='Smino',pos={1,0},x=-400,y=60,w=150,h=100,cornerR=20,fontSize=60,text="M",fontType='bold',sound_trigger='move',code=function() if keyMode~='mino' then scene.enter('mino') end end,visibleFunc=PROGRESS.getMinoUnlocked},
+    WIDGET.new{type='button_invis',name='Sgem', pos={1,0},x=-800,y=60,w=150,h=100,cornerR=20,fontSize=60,text="G",fontType='bold',sound_trigger='move',code=function() if keyMode~='gem'  then scene.enter('gem')  end end,visibleFunc=function() return PROGRESS.getModeUnlocked('gem_wip') end},
+    WIDGET.new{type='button_invis',name='Spuyo',pos={1,0},x=-600,y=60,w=150,h=100,cornerR=20,fontSize=60,text="P",fontType='bold',sound_trigger='move',code=function() if keyMode~='puyo' then scene.enter('puyo') end end,visibleFunc=function() return PROGRESS.getModeUnlocked('puyo_wip') end},
+    WIDGET.new{type='button_invis',name='Smino',pos={1,0},x=-400,y=60,w=150,h=100,cornerR=20,fontSize=60,text="M",fontType='bold',sound_trigger='move',code=function() if keyMode~='mino' then scene.enter('mino') end end,visibleFunc=function() return PROGRESS.getModeUnlocked('mino_stdMap') end},
     WIDGET.new{type='button_invis',name='Ssys', pos={1,0},x=-200,y=60,w=150,h=100,cornerR=20,fontSize=60,text="S",fontType='bold',sound_trigger='move',code=function() if keyMode~='sys'  then scene.enter('sys')  end end},
 
     WIDGET.new{type='button',pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG"setting_test",fontSize=40,code=playExterior'mino/exterior/test',visibleFunc=function() return not GAME.mode end},

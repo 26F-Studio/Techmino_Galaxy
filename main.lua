@@ -183,11 +183,12 @@ IMG.init{
     },
     title_techmino='assets/image/title_techmino.png',
 }
-SFX.init((function()
+SFX.load((function()
+    local path='assets/sfx/'
     local L={}
-    for _,v in next,love.filesystem.getDirectoryItems('assets/sfx/') do
-        if FILE.isSafe('assets/sfx/'..v) then
-            L[v:sub(1,-5)]=v:sub(1,-5)..'.ogg'
+    for _,v in next,love.filesystem.getDirectoryItems(path) do
+        if FILE.isSafe(path..v) then
+            L[v:sub(1,-5)]=path..v:sub(1,-5)..'.ogg'
         end
     end
     return L
@@ -195,7 +196,6 @@ end)())
 SFX.loadSample{name='bass',path='assets/sample/bass',base='A2'}-- A2~C5
 SFX.loadSample{name='lead',path='assets/sample/lead',base='A3'}-- A3~C6
 
-SFX.load('assets/sfx/')
 BGM.load((function()
     local path='assets/music/'
     local L={}

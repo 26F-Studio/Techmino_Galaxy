@@ -14,22 +14,14 @@ local prgs={
         marathon=0,
     },
     bgmUnlocked={},
-    mino={
+    mino_stdMap={
         unlocked=true,
         modeUnlocked={
-            -- 0 = reached, 1~5 = rank reached
+            -- 0 = unlocked, 1~5 = rank got
             sprint_40=0,
             marathon=0,
             dig_practice=0,
         },
-    },
-    puyo={
-        unlocked=false,
-        modeUnlocked={},
-    },
-    gem={
-        unlocked=false,
-        modeUnlocked={},
     },
 }
 
@@ -114,11 +106,12 @@ function PROGRESS.load()
     local success,res=pcall(FILE.load,'conf/progress','-json -canskip')
     if success then
         if res then
-            if res.hash==PROGRESS.getHash(res) then
-                TABLE.coverR(res,prgs)
-            else
-                MSG.new('info',"Hash not match")
-            end
+            TABLE.coverR(res,prgs)
+            -- if res.hash==PROGRESS.getHash(res) then
+            --     TABLE.coverR(res,prgs)
+            -- else
+            --     MSG.new('info',"Hash not match")
+            -- end
         end
     else
         MSG.new('info',"Load progress failed: "..res)
@@ -346,12 +339,8 @@ function PROGRESS.getTutorialPassed(n)
 end
 function PROGRESS.getInteriorScore(mode) return prgs.interiorScore[mode] end
 function PROGRESS.getTotalInteriorScore() return prgs.interiorScore.dig+prgs.interiorScore.sprint+prgs.interiorScore.marathon end
-function PROGRESS.getPuyoUnlocked() return prgs.puyo.unlocked end
-function PROGRESS.getMinoUnlocked() return prgs.mino.unlocked end
-function PROGRESS.getGemUnlocked() return prgs.gem.unlocked end
-function PROGRESS.getPuyoModeState(name) if name then return name and prgs.puyo.modeUnlocked[name] else return prgs.puyo.modeUnlocked end end
-function PROGRESS.getMinoModeState(name) if name then return name and prgs.mino.modeUnlocked[name] else return prgs.mino.modeUnlocked end end
-function PROGRESS.getGemModeState(name) if name then return name and prgs.gem.modeUnlocked[name] else return prgs.gem.modeUnlocked end end
+function PROGRESS.getModeUnlocked(mode) return prgs[mode] and prgs[mode].unlocked end
+function PROGRESS.getModeState(style,mode) return prgs[style] and (mode and prgs[style].modeUnlocked[mode] or prgs[style].modeUnlocked) end
 
 -- Set
 function PROGRESS.setMain(n)
@@ -387,34 +376,24 @@ function PROGRESS.setInteriorScore(mode,score)
         PROGRESS.save()
     end
 end
-function PROGRESS.setPuyoUnlocked(bool) prgs.puyo.unlocked=bool; PROGRESS.save() end
-function PROGRESS.setMinoUnlocked(bool) prgs.mino.unlocked=bool; PROGRESS.save() end
-function PROGRESS.setGemUnlocked(bool)  prgs.gem.unlocked =bool; PROGRESS.save() end
-function PROGRESS.setPuyoModeState(name,state,force)
-    if not state then state=0 end
-    if state>(prgs.puyo.modeUnlocked[name] or -1) or force then
-        prgs.puyo.modeUnlocked[name]=state
-        PROGRESS.save()
-    end
+function PROGRESS.setModeUnlocked(style,bool)
+    if not prgs[style] then return end
+    prgs[style].unlocked=bool
+    PROGRESS.save()
 end
-function PROGRESS.setMinoModeState(name,state,force)
+function PROGRESS.setModeState(style,name,state,force)
+    if not prgs[style] then return end
     if not state then state=0 end
-    if state>(prgs.mino.modeUnlocked[name] or -1) or force then
-        prgs.mino.modeUnlocked[name]=state
+    local orgState=prgs[style].modeUnlocked[name] or -1
+    if state>orgState or force then
+        prgs[style].modeUnlocked[name]=state
         PROGRESS.save()
-        if state==0 then
+        if state==0 and state>orgState then
             if TASK.lock('minomap_unlockSound_background',2.6) then
                 SFX.play('map_unlock_background')
                 MSG.new('check',Text.new_level_unlocked,2.6)
             end
         end
-    end
-end
-function PROGRESS.setGemModeState(name,state,force)
-    if not state then state=0 end
-    if state>(prgs.gem.modeUnlocked[name] or -1) or force then
-        prgs.gem.modeUnlocked[name]=state
-        PROGRESS.save()
     end
 end
 

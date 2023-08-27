@@ -66,15 +66,15 @@ local scene={}
 function scene.enter()
     if not minoMap then
         minoMap=require'assets.game.minomap'
-        minoMap:freshUnlocked(PROGRESS.getMinoModeState(),true)
+        minoMap:freshUnlocked(PROGRESS.getModeState('mino_stdMap'),true)
     else
-        minoMap:freshUnlocked(PROGRESS.getMinoModeState())
+        minoMap:freshUnlocked(PROGRESS.getModeState('mino_stdMap'))
     end
     minoMap:reset()
     minoMap:setFullVersion(
-        PROGRESS.getMinoModeState('sprint_40')>0 or
-        PROGRESS.getMinoModeState('marathon')>0 or
-        PROGRESS.getMinoModeState('dig_practice')>0
+        PROGRESS.getModeState('mino_stdMap','sprint_40')>0 or
+        PROGRESS.getModeState('mino_stdMap','marathon')>0 or
+        PROGRESS.getModeState('mino_stdMap','dig_practice')>0
     )
     panel:setSel(false)
     PROGRESS.setExteriorBG()
@@ -116,18 +116,21 @@ function scene.touchClick(x,y)
     minoMap:hideCursor()
     scene.mouseClick(x,y,1)
 end
+
+local function sysAction(action)
+    if action=='select' then
+        panel:setSel(minoMap:keyboardSelect())
+    elseif action=='back' then
+        if not PROGRESS.getModeUnlocked('gem_wip') and not PROGRESS.getModeUnlocked('puyo_wip') and PROGRESS.getModeUnlocked('mino_stdMap') then
+            SCN._pop()
+        end
+        SCN.back('fadeHeader')
+    end
+end
 function scene.keyDown(key,isRep)
     if isRep then return end
-    if KEYMAP.sys:getAction(key)=='select' then
-        panel:setSel(minoMap:keyboardSelect())
-    elseif KEYMAP.sys:getAction(key)=='back' then
-        if PROGRESS.getMinoUnlocked() and not PROGRESS.getPuyoUnlocked() and not PROGRESS.getGemUnlocked() then
-            SCN._pop()
-            SCN.back('fadeHeader')
-        end
-    -- elseif key=='z' then
-    --     minoMap:_printModePos()
-    end
+    -- if key=='z' then minoMap:_printModePos() return end
+    sysAction(KEYMAP.sys:getAction(key))
 end
 
 function scene.update(dt)
@@ -143,7 +146,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_pressKey'escape'},
+    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=function() sysAction('back') end},
     WIDGET.new{type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'graph_mino_title'},
 }
 return scene

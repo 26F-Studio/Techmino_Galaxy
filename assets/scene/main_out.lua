@@ -11,16 +11,18 @@ function scene.enter()
     terminalName:set(("TERM[%s]"):format(SYSTEM:sub(1,3):upper()))
 end
 
-function scene.keyDown(key,isRep)
-    if isRep then return end
-    local act=KEYMAP.sys:getAction(key)
-    if act=='help' then
+local function sysAction(action)
+    if action=='help' then
         callDict('aboutDict_hidden')
-    elseif act=='setting' then
+    elseif action=='setting' then
         SCN.go('setting_out','fadeHeader')
-    elseif act=='back' then
+    elseif action=='back' then
         if sureCheck('quit') then PROGRESS.quit() end
     end
+end
+function scene.keyDown(key,isRep)
+    if isRep then return end
+    sysAction(KEYMAP.sys:getAction(key))
 end
 
 function scene.update(dt)
@@ -49,7 +51,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=60,y=60,w=80,color='R',cornerR=15,sound_trigger='button_back',fontSize=70,text=CHAR.icon.power,code=WIDGET.c_pressKey'escape',visibleFunc=function() return SYSTEM~='iOS' end},
+    WIDGET.new{type='button_fill',pos={0,0},x=60,y=60,w=80,color='R',cornerR=15,sound_trigger='button_back',fontSize=70,text=CHAR.icon.power,code=function() sysAction('back') end,visibleFunc=function() return SYSTEM~='iOS' end},
 
     WIDGET.new{type='button_invis',pos={1,0},x=-200,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.video,     sound_trigger='move',code=WIDGET.c_goScn('main_in','none')},
     WIDGET.new{type='button_invis',pos={1,0},x=-400,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.info_circ, sound_trigger='move',code=WIDGET.c_goScn('about_out','fadeHeader')},

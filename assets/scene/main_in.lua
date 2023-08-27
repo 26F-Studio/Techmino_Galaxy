@@ -19,16 +19,18 @@ function scene.enter()
     end
 end
 
-function scene.keyDown(key,isRep)
-    if key=='s' then SCN.swapTo('main_out','none') end
-    if isRep then return end
-    if KEYMAP.sys:getAction(key)=='back' then
+local function sysAction(action)
+    if action=='back' then
         if PROGRESS.getMain()<=2 then
             if sureCheck('quit') then PROGRESS.quit() end
         else
             SCN.back('none')
         end
     end
+end
+function scene.keyDown(key,isRep)
+    if isRep then return end
+    sysAction(KEYMAP.sys:getAction(key))
 end
 
 local function scoreColor(x,score)
@@ -61,7 +63,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=60,y=60,w=80,color='R',cornerR=0,sound_trigger='button_back',fontSize=70,text=CHAR.icon.back_chevron,code=WIDGET.c_pressKey'escape'},
+    WIDGET.new{type='button_fill',pos={0,0},x=60,y=60,w=80,color='R',cornerR=0,sound_trigger='button_back',fontSize=70,text=CHAR.icon.back_chevron,code=function() sysAction('back') end},
 
     WIDGET.new{name='1',type='button_fill',pos={.5,.5},x=-270,y=-40,w=500,h=140, color='F',text=LANG'main_in_sprint',  fontSize=40,cornerR=0,code=playInterior'mino/interior/sprint'},
     WIDGET.new{name='1',type='button_fill',pos={.5,.5},x=270, y=-40,w=500,h=140, color='F',text=LANG'main_in_marathon',fontSize=40,cornerR=0,code=playInterior'mino/interior/marathon'},
