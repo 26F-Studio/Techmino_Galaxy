@@ -124,6 +124,7 @@ SCR.setSize(1600,1000)
 BGM.setMaxSources(16)
 VOC.setDiversion(.62)
 WIDGET._prototype.base.lineWidth=2
+WIDGET._prototype.button_fill.textColor='L'
 WIDGET._prototype.button.sound_trigger='button_norm'
 WIDGET._prototype.checkBox.sound_on='check_on'
 WIDGET._prototype.checkBox.sound_off='check_off'
