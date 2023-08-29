@@ -1,16 +1,16 @@
 -- Game mode selecting for exterior menu
 
----@class Techmino.simulation
----@field trigger function
----@field draw function
----@field valid boolean
----@field active number
----@field x number
----@field y number
----@field size number
----@field trigTimer number|false
+--- @class Techmino.simulation
+--- @field trigger function
+--- @field draw function
+--- @field valid boolean
+--- @field active number
+--- @field x number
+--- @field y number
+--- @field size number
+--- @field trigTimer number|false
 
----@type Techmino.simulation[]
+--- @type Techmino.simulation[]
 local sims={
     {-- Mino
         trigger=function()

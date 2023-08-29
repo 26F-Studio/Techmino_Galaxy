@@ -180,7 +180,7 @@ end
 function scene.mouseDown(x,y,k)
     if k==1 and not writing then
         ins(inputs,{stroke={x,y},weight={0,0,0,0,0}})
-        writing=k
+        writing=1
     elseif k==2 then
         writing=false
         scene.keyDown('z')

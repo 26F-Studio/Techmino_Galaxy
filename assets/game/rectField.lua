@@ -98,7 +98,7 @@ function F:drawThumbnail_color(step,size)
     end
 end
 
----@return number
+--- @return number
 function F:getHeight()
     return #self._matrix
 end
