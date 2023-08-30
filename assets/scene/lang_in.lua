@@ -7,6 +7,7 @@ local langList={
     pt="Português",
     id="Bahasa Indonesia",
     ja="日本語",
+    vi="Tiếng Việt",
 }
 local languages={
     "Language  语言  Idioma",
@@ -64,7 +65,7 @@ scene.widgetList={
     WIDGET.new{type='button_fill',    x=350,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=35, text='',          color='K'},
     WIDGET.new{type='button_fill',    x=350,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=35, text='',          color='G'},
 
-    WIDGET.new{type='button_fill',    x=800,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='O'},
+    WIDGET.new{type='button',         x=800,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.vi, color='O', sound_trigger='check_on',code=function() _setLang('vi') end},
     WIDGET.new{type='button_fill',    x=800,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='A'},
     WIDGET.new{type='button_fill',    x=800,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='J'},
     WIDGET.new{type='button_fill',    x=800,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='P'},
