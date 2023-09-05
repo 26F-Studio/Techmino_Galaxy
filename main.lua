@@ -340,7 +340,7 @@ for _,v in next,{
     end
 end
 SCN.addSwap('fadeHeader',{
-    duration=.5,changeTime=.25,
+    duration=.5,timeChange=.25,
     draw=function(t)
         local a=t>.25 and 2-t*4 or t*4
         local h=120*SCR.k
@@ -353,7 +353,7 @@ SCN.addSwap('fadeHeader',{
     end,
 })
 SCN.addSwap('fastFadeHeader',{
-    duration=.2,changeTime=.1,
+    duration=.2,timeChange=.1,
     draw=function(t)
         local a=t>.1 and 2-t*10 or t*10
         local h=120*SCR.k
