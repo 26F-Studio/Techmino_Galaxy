@@ -79,7 +79,6 @@ end
 
 local directions={'0','R','F','L'}
 function paperArtist.findPosition(field,shape)
-    local weights=SETTINGS.ai_parameters.paper_artist
     local best={
         score=-1e99,
         x=4,y=4,dir='0',
@@ -92,11 +91,11 @@ function paperArtist.findPosition(field,shape)
             local cy,colH=simulateDrop(F,shape,cx)
             local score=0
             local clear,rowB,colB=paperArtist.calculateFieldScore(F,shape,cx,cy)
-            score=score+clear*weights.clear+rowB*weights.hgap+colB*weights.vgap
-            score=score+cy*weights.ypos
+            score=score+clear*2-rowB*3-colB*2
+            score=score-cy
             local minH=math.min(unpack(colH))
             for i=1,#colH do
-                score=score+(colH[i]-minH)*weights.holes
+                score=score-(colH[i]-minH)*1.26
             end
 
             if score>best.score then
