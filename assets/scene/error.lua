@@ -91,8 +91,8 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={.5,1},x=-130,y=-100,w=220,h=100,fontSize=75,text=CHAR.icon.console,code=WIDGET.c_goScn'_console'},
-    WIDGET.new{type='button',pos={.5,1},x=130,y=-100,w=220,h=100,fontSize=70,text=CHAR.icon.cross_big,code=WIDGET.c_pressKey'escape'},
+    {type='button',pos={.5,1},x=-130,y=-100,w=220,h=100,fontSize=75,text=CHAR.icon.console,code=WIDGET.c_goScn'_console'},
+    {type='button',pos={.5,1},x=130,y=-100,w=220,h=100,fontSize=70,text=CHAR.icon.cross_big,code=WIDGET.c_pressKey'escape'},
 }
 
 return scene

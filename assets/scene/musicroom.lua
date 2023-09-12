@@ -229,18 +229,18 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
-    WIDGET.new{type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'musicroom_title'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'musicroom_title'},
 
     musicListBox,
     progressBar,
 
     -- Play/Stop
-    WIDGET.new{type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return not BGM.isPlaying() end},
-    WIDGET.new{type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return BGM.isPlaying() end},
+    {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return not BGM.isPlaying() end},
+    {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return BGM.isPlaying() end},
 
     -- Fullband Switch
-    WIDGET.new{type='switch',pos={.5,.5},x=-650,y=360,h=50,widthLimit=260,labelPos='right',disp=function() return fullband end,
+    {type='switch',pos={.5,.5},x=-650,y=360,h=50,widthLimit=260,labelPos='right',disp=function() return fullband end,
         name='fullband',text=LANG'musicroom_fullband',
         sound_on=false,sound_off=false,
         code=function()
@@ -257,7 +257,7 @@ scene.widgetList={
         end,
     },
     -- Auto Switching Switch
-    WIDGET.new{type='switch',pos={.5,.5},x=-650,y=150,h=50,widthLimit=260,labelPos='right',disp=function() return autoplay end,
+    {type='switch',pos={.5,.5},x=-650,y=150,h=50,widthLimit=260,labelPos='right',disp=function() return autoplay end,
         name='autoplay',text=LANG'musicroom_autoplay',
         sound_on=false,sound_off=false,
         code=function()
@@ -270,7 +270,7 @@ scene.widgetList={
     },
 
     -- Volume slider
-    WIDGET.new{type='slider_progress',pos={.5,.5},x=450,y=360,w=250,text=CHAR.icon.volUp,fontSize=60,disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
+    {type='slider_progress',pos={.5,.5},x=450,y=360,w=250,text=CHAR.icon.volUp,fontSize=60,disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
 }
 
 return scene

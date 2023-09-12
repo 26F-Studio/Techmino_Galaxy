@@ -71,17 +71,17 @@ Zenitha.setOnFnKeys({
     function() MSG.new('check',PROFILE.switch() and "Profile start!" or "Profile report copied!") end,
     function() if love['_openConsole'] then love['_openConsole']() end end,
     function() for k,v in next,_G do print(k,v) end end,
-    function() local w=WIDGET.getSelected() print(w and w:getInfo() or "No widget selected") end,
+    function() print(WIDGET.sel and WIDGET.sel:getInfo() or "No widget selected") end,
     function() end,
     function() end,
 })
 Zenitha.setDebugInfo{
-    {"Cache",gcinfo},
-    {"Tasks",TASK.getCount},
+    {"Cache", gcinfo},
+    {"Tasks", TASK.getCount},
     {"Voices",VOC.getQueueCount},
     {"Audios",love.audio.getSourceCount},
 }
-do-- Zenitha.setOnFocus
+do -- Zenitha.setOnFocus
     local function task_autoSoundOff()
         repeat
             local v=math.max(love.audio.getVolume()/SETTINGS.system.mainVol-coroutine.yield()/.26,0)
@@ -194,8 +194,8 @@ SFX.load((function()
     end
     return L
 end)())
-SFX.loadSample{name='bass',path='assets/sample/bass',base='A2'}-- A2~C5
-SFX.loadSample{name='lead',path='assets/sample/lead',base='A3'}-- A3~C6
+SFX.loadSample{name='bass',path='assets/sample/bass',base='A2'} -- A2~C5
+SFX.loadSample{name='lead',path='assets/sample/lead',base='A3'} -- A3~C6
 
 BGM.load((function()
     local path='assets/music/'
@@ -227,80 +227,83 @@ DEBUG.checkLoadTime("Load Zenitha resources")
 --------------------------------------------------------------
 -- Load saving data
 TABLE.coverR(FILE.load('conf/settings','-json -canskip') or {},SETTINGS)
-for k,v in next,SETTINGS._system do SETTINGS._system[k]=nil SETTINGS.system[k]=v end-- Gurantee triggering all setting-triggers
-if SETTINGS.system.portrait then-- Brute fullscreen config
+for k,v in next,SETTINGS._system do
+    SETTINGS._system[k]=nil
+    SETTINGS.system[k]=v
+end                              -- Gurantee triggering all setting-triggers
+if SETTINGS.system.portrait then -- Brute fullscreen config
     SCR.setSize(1600,2560)
     SCR.resize(love.graphics.getWidth(),love.graphics.getHeight())
 end
 PROGRESS.load()
 VCTRL.importSettings(FILE.load('conf/touch','-json -canskip'))
 KEYMAP.mino=KEYMAP.new{
-    {act='moveLeft',    keys={'left'}},
-    {act='moveRight',   keys={'right'}},
-    {act='rotateCW',    keys={'up'}},
-    {act='rotateCCW',   keys={'down'}},
-    {act='rotate180',   keys={'c'}},
-    {act='softDrop',    keys={'x'}},
-    {act='hardDrop',    keys={'z'}},
-    {act='holdPiece',   keys={'space'}},
-    {act='func1',       keys={'a'}},
-    {act='func2',       keys={'s'}},
-    {act='func3',       keys={'d'}},
-    {act='func4',       keys={'q'}},
-    {act='func5',       keys={'w'}},
+    {act='moveLeft', keys={'left'}},
+    {act='moveRight',keys={'right'}},
+    {act='rotateCW', keys={'up'}},
+    {act='rotateCCW',keys={'down'}},
+    {act='rotate180',keys={'c'}},
+    {act='softDrop', keys={'x'}},
+    {act='hardDrop', keys={'z'}},
+    {act='holdPiece',keys={'space'}},
+    {act='func1',    keys={'a'}},
+    {act='func2',    keys={'s'}},
+    {act='func3',    keys={'d'}},
+    {act='func4',    keys={'q'}},
+    {act='func5',    keys={'w'}},
 }
 KEYMAP.puyo=KEYMAP.new{
-    {act='moveLeft',    keys={'left'}},
-    {act='moveRight',   keys={'right'}},
-    {act='rotateCW',    keys={'up'}},
-    {act='rotateCCW',   keys={'down'}},
-    {act='rotate180',   keys={'c'}},
-    {act='softDrop',    keys={'x'}},
-    {act='hardDrop',    keys={'z'}},
-    {act='func1',       keys={'a'}},
-    {act='func2',       keys={'s'}},
-    {act='func3',       keys={'d'}},
-    {act='func4',       keys={'q'}},
-    {act='func5',       keys={'w'}},
+    {act='moveLeft', keys={'left'}},
+    {act='moveRight',keys={'right'}},
+    {act='rotateCW', keys={'up'}},
+    {act='rotateCCW',keys={'down'}},
+    {act='rotate180',keys={'c'}},
+    {act='softDrop', keys={'x'}},
+    {act='hardDrop', keys={'z'}},
+    {act='func1',    keys={'a'}},
+    {act='func2',    keys={'s'}},
+    {act='func3',    keys={'d'}},
+    {act='func4',    keys={'q'}},
+    {act='func5',    keys={'w'}},
 }
 KEYMAP.gem=KEYMAP.new{
-    {act='swapLeft',    keys={'left'}},
-    {act='swapRight',   keys={'right'}},
-    {act='swapUp',      keys={'up'}},
-    {act='swapDown',    keys={'down'}},
-    {act='twistCW',     keys={'e'}},
-    {act='twistCCW',    keys={'q'}},
-    {act='twist180',    keys={'z'}},
-    {act='moveLeft',    keys={'a'}},
-    {act='moveRight',   keys={'d'}},
-    {act='moveUp',      keys={'w'}},
-    {act='moveDown',    keys={'s'}},
-    {act='func1',       keys={'a'}},
-    {act='func2',       keys={'s'}},
-    {act='func3',       keys={'d'}},
-    {act='func4',       keys={'q'}},
-    {act='func5',       keys={'w'}},
+    {act='swapLeft', keys={'left'}},
+    {act='swapRight',keys={'right'}},
+    {act='swapUp',   keys={'up'}},
+    {act='swapDown', keys={'down'}},
+    {act='twistCW',  keys={'e'}},
+    {act='twistCCW', keys={'q'}},
+    {act='twist180', keys={'z'}},
+    {act='moveLeft', keys={'a'}},
+    {act='moveRight',keys={'d'}},
+    {act='moveUp',   keys={'w'}},
+    {act='moveDown', keys={'s'}},
+    {act='func1',    keys={'a'}},
+    {act='func2',    keys={'s'}},
+    {act='func3',    keys={'d'}},
+    {act='func4',    keys={'q'}},
+    {act='func5',    keys={'w'}},
 }
 KEYMAP.sys=KEYMAP.new{
-    {act='view',        keys={'lshift'}},
-    {act='restart',     keys={'r','`'}},
-    {act='chat',        keys={'t'}},
-    {act='back',        keys={'escape'}},
-    {act='quit',        keys={'q'}},
-    {act='setting',     keys={'s'}},
-    {act='help',        keys={'h'}},
-    {act='left',        keys={'left'}},
-    {act='right',       keys={'right'}},
-    {act='up',          keys={'up'}},
-    {act='down',        keys={'down'}},
-    {act='select',      keys={'return'}},
+    {act='view',   keys={'lshift'}},
+    {act='restart',keys={'r','`'}},
+    {act='chat',   keys={'t'}},
+    {act='back',   keys={'escape'}},
+    {act='quit',   keys={'q'}},
+    {act='setting',keys={'s'}},
+    {act='help',   keys={'h'}},
+    {act='left',   keys={'left'}},
+    {act='right',  keys={'right'}},
+    {act='up',     keys={'up'}},
+    {act='down',   keys={'down'}},
+    {act='select', keys={'return'}},
 }
 local keys=FILE.load('conf/keymap','-json -canskip')
 if keys then
     KEYMAP.mino:import(keys['mino'])
     KEYMAP.puyo:import(keys['puyo'])
-    KEYMAP.gem :import(keys['gem'])
-    KEYMAP.sys :import(keys['sys'])
+    KEYMAP.gem:import(keys['gem'])
+    KEYMAP.sys:import(keys['sys'])
 end
 DEBUG.checkLoadTime("Load settings & data")
 --------------------------------------------------------------
@@ -325,12 +328,12 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
     end
 end
 for _,v in next,{
-    'mino_template',-- Shouldn't be used
+    'mino_template', -- Shouldn't be used
     'mino_plastic',
     'mino_simp',
     'mino_interior',
 
-    'puyo_template',-- Shouldn't be used
+    'puyo_template', -- Shouldn't be used
     'puyo_jelly',
 
     'gem_template',
@@ -340,7 +343,8 @@ for _,v in next,{
     end
 end
 SCN.addSwap('fadeHeader',{
-    duration=.5,timeChange=.25,
+    duration=.5,
+    timeChange=.25,
     draw=function(t)
         local a=t>.25 and 2-t*4 or t*4
         local h=120*SCR.k
@@ -353,7 +357,8 @@ SCN.addSwap('fadeHeader',{
     end,
 })
 SCN.addSwap('fastFadeHeader',{
-    duration=.2,timeChange=.1,
+    duration=.2,
+    timeChange=.1,
     draw=function(t)
         local a=t>.1 and 2-t*10 or t*10
         local h=120*SCR.k

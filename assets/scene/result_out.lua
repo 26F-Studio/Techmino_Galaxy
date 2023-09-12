@@ -38,6 +38,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,0},x=120,y=80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    {type='button',pos={0,0},x=120,y=80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 return scene
