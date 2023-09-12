@@ -8,8 +8,8 @@ local sequence={}
 
 local Tetros={1,2,3,4,5,6,7}
 local Pentos={8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}
-local easyPentos={10,11,14,19,20,23,24,25}-- P Q T5 J5 L5 N H I5
-local hardPentos={8,9,12,13,15,16,17,18,21,22}-- Z5 S5 F E U V W X R Y
+local easyPentos={10,11,14,19,20,23,24,25}     -- P Q T5 J5 L5 N H I5
+local hardPentos={8,9,12,13,15,16,17,18,21,22} -- Z5 S5 F E U V W X R Y
 
 function sequence.none()
     while true do coroutine.yield() end
@@ -77,18 +77,20 @@ function sequence.bag7_steal1(P)
     end
 end
 
-function sequence.bag12_drought(P)-- bag14 without I piece
+function sequence.bag12_drought(P) -- bag14 without I piece
     local l={}
     while true do
-        if not l[1] then for i=1,6 do
-            ins(l,i)
-            ins(l,i)
-        end end
+        if not l[1] then
+            for i=1,6 do
+                ins(l,i)
+                ins(l,i)
+            end
+        end
         coroutine.yield(rem(l,P:random(#l)))
     end
 end
 
-function sequence.bag7_flood(P)-- bag7 with extra 3 S pieces and 3 Z pieces
+function sequence.bag7_flood(P) -- bag7 with extra 3 S pieces and 3 Z pieces
     local l={}
     while true do
         if not l[1] then
@@ -104,7 +106,7 @@ function sequence.his4_roll2(P)
     local history=TABLE.new(0,2)
     while true do
         local r
-        for _=1,#history do-- Reroll up to [hisLen] times
+        for _=1,#history do -- Reroll up to [hisLen] times
             r=P:random(7)
             local repeated
             for i=1,#history do
@@ -113,11 +115,11 @@ function sequence.his4_roll2(P)
                     break
                 end
             end
-            if not repeated then break end-- Not repeated means success, available r value
+            if not repeated then break end -- Not repeated means success, available r value
         end
         rem(history,1)
         ins(history,r)
-        if history[1]~=0 then-- Initializing, just continue generating until history is full
+        if history[1]~=0 then -- Initializing, just continue generating until history is full
             coroutine.yield(r)
         end
     end
@@ -163,7 +165,7 @@ function sequence.pento_bag18(P)
     end
 end
 
-function sequence.pento_bag_ez8hd4Bag10(P)
+function sequence.pento_bag_EZ8plusHD4fromBag10(P)
     local l,ex={},{}
     while true do
         if not l[1] then
@@ -177,28 +179,55 @@ function sequence.pento_bag_ez8hd4Bag10(P)
     end
 end
 
-local weight_bag7={64606156304596,131327514360144,203786783816133,287098623729448,390038487466665,531106246225509,762542509117884,896123925124349,1108610016824348,1476868735064520,2236067394570951,4591633945951618,1e99}
-function sequence.distWeight_bag7(P)
-    local distances=shift(Tetros)-- Borrow the list from the bag7
-    for i=7,2,-1 do ins(distances,rem(distances,P:random(1,i))) end
-    local weights=TABLE.new(false,7)
-    while true do
-        local sum=0
-        for i=1,7 do
-            distances[i]=distances[i]+1
-            weights[i]=weight_bag7[distances[i]] or 2e6
-            sum=sum+weights[i]
-        end
-        local r=P:random()*sum
-        for i=1,7 do
-            r=r-weights[i]
-            if r<=0 then
-                coroutine.yield(i)
-                distances[i]=0
-                break
+local distWeight_data={
+    fake7bag={
+        pieces=Tetros,
+        weights={64606156304596,131327514360144,203786783816133,287098623729448,390038487466665,531106246225509,762542509117884,896123925124349,1108610016824348,1476868735064520,2236067394570951,4591633945951618,1e99}, -- Data from Farter
+    },
+    noDrought={
+        pieces=Tetros,
+        weights={1,1,1,1,1,1,1,1,1,1,1,1,1e99},
+    },
+    hardDrought={
+        pieces=Tetros,
+        weights={1,1,1,1,2,3,4,5,6,7,8,9,26},
+    },
+    easyFlood={
+        pieces=Tetros,
+        weights={10,10,10,10,9,8,7,6,5},
+    },
+}
+sequence.distWeight=TABLE.newPool(function(self,mode)
+    assert(distWeight_data[mode])
+    self[mode]=function(P)
+        local pieces=distWeight_data[mode].pieces
+        local weights=distWeight_data[mode].weights
+        local len=#pieces
+
+        local distances={}
+        for i=1,len do distances[i]=i end
+        for i=len,2,-1 do ins(distances,rem(distances,P:random(1,i))) end
+
+        local tempWei=TABLE.new(false,len)
+        while true do
+            local sum=0
+            for i=1,len do
+                distances[i]=distances[i]+1
+                tempWei[i]=weights[distances[i]] or weights[#weights]
+                sum=sum+tempWei[i]
+            end
+            local r=P:random()*sum
+            for i=1,len do
+                r=r-tempWei[i]
+                if r<=0 then
+                    coroutine.yield(pieces[i])
+                    distances[i]=0
+                    break
+                end
             end
         end
     end
-end
+    return self[mode]
+end)
 
 return sequence

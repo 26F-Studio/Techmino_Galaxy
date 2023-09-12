@@ -5,6 +5,7 @@ return {
         playBgm('race','base')
     end,
     settings={mino={
+        -- seqType=mechLib.mino.sequence.distWeight.fake7bag,
         seqType='bag7_sprint',
         -- clearRule='line_float',
         event={
