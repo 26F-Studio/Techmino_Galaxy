@@ -5,7 +5,7 @@ return {
         playBgm('beat5th','base')
     end,
     settings={mino={
-        seqType='pento_bag_ez8hd4Bag10',
+        seqType='pento_bag_EZ8plusHD4fromBag10',
         event={
             afterClear={
                 mechLib.mino.sprint.event_afterClear[40],
