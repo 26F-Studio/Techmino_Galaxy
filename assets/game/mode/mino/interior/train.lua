@@ -11,6 +11,7 @@ return {
         readyDelay=0,
         dropDelay=1e99,
         lockDelay=1e99,
+        deathDelay=0,
         infHold=true,
         -- spawnDelay=26,
         soundEvent={countDown=mechLib.mino.misc.interior_soundEvent_countDown},

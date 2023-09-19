@@ -37,6 +37,7 @@ return {
         spawnDelay=62,
         dropDelay=1e99,
         lockDelay=1e99,
+        deathDelay=0,
         nextSlot=3,
         holdSlot=0,
         seqType='none',

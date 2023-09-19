@@ -10,6 +10,7 @@ return {
         clearMovement='teleBack',
         particles=false,
         shakeness=0,
+        deathDelay=0,
         soundEvent={countDown=mechLib.mino.misc.interior_soundEvent_countDown},
         event={
             playerInit=mechLib.mino.dig.practice_event_playerInit[12],

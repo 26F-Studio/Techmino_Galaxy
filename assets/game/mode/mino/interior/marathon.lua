@@ -13,6 +13,7 @@ return {
         particles=false,
         spawnDelay=130,
         clearDelay=300,
+        deathDelay=0,
         soundEvent={countDown=mechLib.mino.misc.interior_soundEvent_countDown},
         event={
             playerInit=function(P)

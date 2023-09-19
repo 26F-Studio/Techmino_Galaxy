@@ -13,9 +13,9 @@ return {
         spawnDelay=260,
         dropDelay=1e99,
         lockDelay=1e99,
+        deathDelay=0,
         nextSlot=0,
         holdSlot=0,
-        deathDelay=0,
         seqType='none',
         soundEvent={countDown=NULL},
         event={
