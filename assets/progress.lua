@@ -282,6 +282,7 @@ function PROGRESS.quit()
             end,
         }
     elseif prgs.main<=4 then
+        BGM.stop()
         local t=1
         WAIT.setDefaultDraw(NULL)
         WAIT{
