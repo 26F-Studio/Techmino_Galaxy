@@ -60,8 +60,8 @@ local function parseStroke(input)-- 横 竖 撇 捺 折
     if s[1]<areaX-areaR and s[#s-1]<areaX-areaR or s[1]>areaX+areaR and s[#s-1]>areaX+areaR then return end
     if s[2]<areaY-areaR and s[#s]<areaY-areaR or s[2]>areaY+areaR and s[#s]>areaY+areaR then return end
 
-    w[1]=-w[5]+min(MATH.interpolate(width/height,1/2.6,0,2.6,1),1)
-    w[2]=-w[5]+min(MATH.interpolate(height/width,1.6,0,2.6,1),1)
+    w[1]=-w[5]+min(MATH.interpolate(1/2.6,0,2.6,1,width/height),1)
+    w[2]=-w[5]+min(MATH.interpolate(1.6,0,2.6,1,height/width),1)
     w[3]=-w[5]*.62+1-abs(dir/pi-.8)*3
     w[4]=-w[5]*.62+1-abs(dir/pi-.4)
 

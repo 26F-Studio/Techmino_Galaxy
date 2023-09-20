@@ -55,10 +55,10 @@ return {
         PROGRESS.setInteriorScore('sprint',math.min(P.modeData.stat.line*4/3,40))
         PROGRESS.setInteriorScore('marathon',
             P.modeData.stat.line>=200 and 160 or
-            P.modeData.stat.line>=130 and MATH.interpolate(P.modeData.stat.line,130,120,200,160) or
-            P.modeData.stat.line>=80  and MATH.interpolate(P.modeData.stat.line,80,90,130,120) or
-            P.modeData.stat.line>=40  and MATH.interpolate(P.modeData.stat.line,40,40,80,90) or
-            MATH.interpolate(P.modeData.stat.line,0,0,40,40)
+            P.modeData.stat.line>=130 and MATH.interpolate(130,120,200,160,P.modeData.stat.line) or
+            P.modeData.stat.line>=80  and MATH.interpolate(80,90,130,120,P.modeData.stat.line) or
+            P.modeData.stat.line>=40  and MATH.interpolate(40,40,80,90,P.modeData.stat.line) or
+            MATH.interpolate(0,0,40,40,P.modeData.stat.line)
         )
     end,
     resultPage=function(time)

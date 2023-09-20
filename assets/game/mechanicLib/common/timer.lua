@@ -18,7 +18,7 @@ local timer_drawFunc={
     float=function(_,time,time0)
         FONT.set(100,'bold')
         local text=("%.1f"):format(time/1000)
-        local alpha=MATH.listMix(floatMixList,time/time0)
+        local alpha=MATH.listLerp(floatMixList,time/time0)
         gc.setColor(0,0,0,alpha)
         GC.mStr(text,-2,-69,'center')
         GC.mStr(text,-1,-68,'center')

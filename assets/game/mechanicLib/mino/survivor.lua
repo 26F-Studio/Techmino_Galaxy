@@ -38,9 +38,9 @@ function survivor.b2b_event_always(P)
 
         local wave=md.wave
         md.curWaveTime=math.floor(
-            wave<=40 and MATH.interpolate(wave,0,6000,40,4000) or
-            wave<=80 and MATH.interpolate(wave,40,4000,80,1500) or
-            max(MATH.interpolate(wave,80,1500,150,800),800)
+            wave<=40 and MATH.interpolate(0,6000,40,4000,wave) or
+            wave<=80 and MATH.interpolate(40,4000,80,1500,wave) or
+            max(MATH.interpolate(80,1500,150,800,wave),800)
         )
         md.waveTimer=md.curWaveTime
         GAME.send(nil,GAME.initAtk{
@@ -66,8 +66,8 @@ function survivor.cheese_event_always(P)
 
         local wave=md.wave
         md.curWaveTime=math.floor(
-            wave<=80 and MATH.interpolate(wave,0,3000,80,2000) or
-            wave<=150 and MATH.interpolate(wave,80,2000,150,2500) or
+            wave<=80 and MATH.interpolate(0,3000,80,2000,wave) or
+            wave<=150 and MATH.interpolate(80,2000,150,2500,wave) or
             math.max(2000-(wave-150)*10,1000)
         )
         md.waveTimer=md.curWaveTime
@@ -79,8 +79,8 @@ function survivor.cheese_event_always(P)
             time=wave<50 and 100e3/(50+wave)-1000 or 0,
             fatal=MATH.clamp(
                 (
-                    wave<100 and MATH.interpolate(wave,0,20,100,60) or
-                    wave<200 and MATH.interpolate(wave,100,60,200,100) or
+                    wave<100 and MATH.interpolate(0,20,100,60,wave) or
+                    wave<200 and MATH.interpolate(100,60,200,100,wave) or
                     100
                 )+math.floor((P:random()*2-1)*min(wave,100)/5),
                 0,100
@@ -100,9 +100,9 @@ function survivor.spike_event_always(P)
 
         local wave=md.wave
         md.curWaveTime=floor(
-            wave<=10 and MATH.interpolate(wave,0,20e3,10,15e3) or
-            wave<=30 and MATH.interpolate(wave,10,15e3,30,12e3) or
-            max(MATH.interpolate(wave,30,12e3,60,10e3),10e3)
+            wave<=10 and MATH.interpolate(0,20e3,10,15e3,wave) or
+            wave<=30 and MATH.interpolate(10,15e3,30,12e3,wave) or
+            max(MATH.interpolate(30,12e3,60,10e3,wave),10e3)
         )
         md.waveTimer=md.curWaveTime
         for i=1,3 do

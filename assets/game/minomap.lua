@@ -6,6 +6,11 @@ local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
 local gc_draw,gc_line=gc.draw,gc.line
 local gc_circle,gc_polygon=gc.circle,gc.polygon
 
+local linear=MATH.interpolate
+local expAppr=MATH.expApproach
+local dist=MATH.distance
+local tau=MATH.tau
+
 
 -- Y X
 --  *
@@ -104,7 +109,7 @@ local bridges={}
 local function _newBridge(m1,m2)
     local x1,y1=m1.x,m1.y
     local x2,y2=m2.x,m2.y
-    local dist=MATH.distance(x1,y1,x2,y2)
+    local dist=dist(x1,y1,x2,y2)
 
     -- Cut in-mode parts
     local p1,p2=(m1.r*1.2)/dist,1-(m2.r*1.2)/dist
@@ -237,7 +242,7 @@ local function _onMode(x,y)
     x,y=SCR.xOy_m:inverseTransformPoint(x,y)
     x,y=cam.transform:inverseTransformPoint(x,y-100)
     for _,m in next,modes do
-        if m.enable and MATH.distance(x,y,m.x,m.y)<m.r*1.26 then
+        if m.enable and dist(x,y,m.x,m.y)<m.r*1.26 then
             return m
         end
     end
@@ -316,7 +321,7 @@ function map:update(dt)
     -- end
     for _,m in next,modes do
         if m.enable then
-            m.active=MATH.expApproach(m.active,(m==focused) and 1 or 0,dt*6)
+            m.active=expAppr(m.active,(m==focused) and 1 or 0,dt*6)
         end
     end
     for _,b in next,bridges do
@@ -366,7 +371,6 @@ function map:update(dt)
     end
 end
 
-local tau=MATH.tau
 function map:draw()
     gc_replaceTransform(SCR.xOy_m)
     gc_translate(0,100)
@@ -377,8 +381,8 @@ function map:draw()
         if b.enable then
             local x1,y1,x2,y2=b.x1,b.y1,b.x2,b.y2
             if animations[b] then
-                local t=MATH.expApproach(0,1,animations[b].t*2.6)
-                x2,y2=MATH.interpolate(t,0,x1,1,x2),MATH.interpolate(t,0,y1,1,y2)
+                local t=expAppr(0,1,animations[b].t*2.6)
+                x2,y2=linear(0,x1,1,x2,t),linear(0,y1,1,y2,t)
             end
             if x1~=x2 or y1~=y2 then
                 gc_setColor(1,1,1,.8)
@@ -390,7 +394,7 @@ function map:draw()
                 for i=0,.75,.25 do
                     local t=(b.timer/2.6+i)%1
                     gc_setColor(1,1,1,-t*(t-1)*4)
-                    gc_circle('fill',MATH.interpolate(t,0,x1,1,x2),MATH.interpolate(t,0,y1,1,y2),6,6)
+                    gc_circle('fill',linear(0,x1,1,x2,t),linear(0,y1,1,y2,t),6,6)
                 end
             end
         end
@@ -403,7 +407,7 @@ function map:draw()
             gc_translate(m.x,m.y)
             gc_scale(1+m.active*.1)
             if animations[m] then
-                gc_scale(MATH.expApproach(0,1,animations[m].t*6.26))
+                gc_scale(expAppr(0,1,animations[m].t*6.26))
             end
             gc_rotate(-cam.a)
 
