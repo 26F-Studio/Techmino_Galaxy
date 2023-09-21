@@ -5,6 +5,7 @@ return {
         playBgm('secret7th','base')
         BGM.set('secret7th/melody1','volume',0,0)
         BGM.set('all','pitch',2^(-1/12),0)
+        BGM.set('all','seek',MATH.roundUnit(BGM.tell(),60/130))
     end,
     settings={mino={
         event={

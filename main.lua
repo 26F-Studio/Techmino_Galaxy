@@ -189,7 +189,7 @@ SFX.load((function()
     local L={}
     for _,v in next,love.filesystem.getDirectoryItems(path) do
         if FILE.isSafe(path..v) then
-            L[v:sub(1,-5)]=path..v:sub(1,-5)..'.ogg'
+            L[v:sub(1,-5)]=path..v
         end
     end
     return L

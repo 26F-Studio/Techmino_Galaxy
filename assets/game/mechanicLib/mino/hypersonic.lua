@@ -226,12 +226,13 @@ do-- hidden
     local showVisTime=1000
     local showFadeTime=1000
 
+    local bpm=130
     local flashProbability=.1626
-    local flashInterval=math.floor(4*60*1000/130/2^(-1/12)+.5)
+    local flashInterval=math.floor(4*60*1000/bpm/2^(-1/12)+.5)
     local flashVisTime1,flashVisTime2=120,460
     local flashFadeTime=620
 
-    local endAllInterval=math.floor(60*1000/130/2^(-1/12)+.5)
+    local endAllInterval=math.floor(60*1000/bpm/2^(-1/12)+.5)
     local endVisTime1,endVisTime2=620,723
     local endFadeTime=1260
 
