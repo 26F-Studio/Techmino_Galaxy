@@ -5,51 +5,7 @@ local ins,rem=table.insert,table.remove
 
 local sign,expApproach=MATH.sign,MATH.expApproach
 
---- @alias Techmino.EndReason
----| 'AC'  Win
----| 'WA'  Block out
----| 'CE'  Lock out
----| 'MLE' Top out
----| 'TLE' Time out
----| 'OLE' Finesse fault
----| 'ILE' Ran out pieces
----| 'PE'  Mission failed
----| 'UKE' Other reason
-
 --- @class Techmino.Player
---- @field gameMode Techmino.mode.playerType
---- @field id number limited to 1~1000
---- @field group number
---- @field isMain boolean
---- @field sound boolean
---- @field settings table
---- @field buffedKey table
---- @field modeData table
---- @field soundTimeHistory table
---- @field RND love.RandomGenerator
---- @field pos {x:number, y:number, k:number, a:number, dx:number, dy:number, dk:number, da:number, vx:number, vy:number, vk:number, va:number}
---- @field finished Techmino.EndReason|boolean
---- @field realTime number
---- @field time number
---- @field gameTime number
---- @field timing boolean
---- @field texts Zenitha.Text
---- @field particles Techmino.particleSystems
----
---- @field updateFrame function
---- @field scriptCmd function
---- @field decodeScript function
---- @field checkScriptSyntax function
----
---- @field hand table|false @Piece object
---- @field handX number
---- @field handY number
---- @field event table
---- @field soundEvent table
---- @field _actions table<string, {press:fun(P:Techmino.Player), release:fun(P:Techmino.Player)}>
----
---- @field receive function
---- @field render function
 local P={}
 
 --------------------------------------------------------------

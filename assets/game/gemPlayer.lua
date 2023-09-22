@@ -977,6 +977,7 @@ function GP:checkScriptSyntax(cmd,arg,errMsg)
 end
 --------------------------------------------------------------
 -- Builder
+--- @class Techmino.Mode.Setting.Gem
 local baseEnv={
     -- Size
     fieldSize=8,

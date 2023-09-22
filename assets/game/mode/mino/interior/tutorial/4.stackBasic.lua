@@ -22,6 +22,7 @@ local correctPositions={
     }
 }
 
+--- @type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')

@@ -1,14 +1,6 @@
 local gc=love.graphics
 
---- @class Techmino.Cell
---- @field id number ascending piece number
---- @field color number 0~63
---- @field conn table<Techmino.Cell,true>
---- @field bias {expBack:number?, lineBack:number?, teleBack:number?, x:number, y:number}
-
 --- @class Techmino.RectField
---- @field _width number
---- @field _matrix (Techmino.Cell|false|any)[][]
 local F={}
 
 --------------------------------------------------------------

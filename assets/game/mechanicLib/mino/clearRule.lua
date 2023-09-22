@@ -1,12 +1,6 @@
---- @class Techmino.mino.clearRule
---- @field getDelay fun(P:Techmino.Player.mino, lines:number[]): number?
---- @field isFill fun(P:Techmino.Player.mino, y:number): boolean
---- @field getFill fun(P:Techmino.Player.mino): number[]?
---- @field clear fun(P:Techmino.Player.mino, lines:number[])
-
 local ins,rem=table.insert,table.remove
 
---- @type Techmino.mino.clearRule[]
+--- @type table<string,Techmino.mino.clearRule>
 local clearRule={}
 
 local function setBias(P,x,y,dx,dy,moveType,clearDelay)

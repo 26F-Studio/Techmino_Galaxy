@@ -1,13 +1,4 @@
---- @class Techmino.particleSystems
---- @field rectShade love.ParticleSystem
---- @field spinArrow table
---- @field star love.ParticleSystem
---- @field line love.ParticleSystem
---- @field hitSparkle love.ParticleSystem
---- @field cornerCheck love.ParticleSystem
---- @field tiltRect love.ParticleSystem
---- @field trail love.ParticleSystem
---- @field minoMapBack love.ParticleSystem
+--- @type Techmino.ParticleSystems
 local ps={}
 
 do-- Moving

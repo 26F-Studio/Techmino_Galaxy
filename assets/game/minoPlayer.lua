@@ -1998,6 +1998,7 @@ function MP:checkScriptSyntax(cmd,arg,errMsg)
 end
 --------------------------------------------------------------
 -- Builder
+--- @class Techmino.Mode.Setting.Mino
 local baseEnv={
     -- Size
     fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'

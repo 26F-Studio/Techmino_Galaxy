@@ -53,6 +53,7 @@ local correctPositions={
     {x=10, y=1, dir={1,3}},
 }
 
+--- @type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')

@@ -1,14 +1,3 @@
---- @alias Techmino.mode.playerType 'mino'|'puyo'|'gem'
-
---- @class Techmino.mode
---- @field initialize function Called when initializing the mode
---- @field settings table<Techmino.mode.playerType, table>
---- @field layout 'default' Layout mode
---- @field checkFinish function Return if the game should end when a player finishes
---- @field result function Called when the game ends
---- @field resultPage fun(time:number) Drawing the result page
---- @field name string Mode name, for debug use
-
 local floor=math.floor
 
 Minoes=require'assets.game.minoes'
@@ -160,16 +149,7 @@ local function task_switchToResult()
     end
 end
 
---- @class Techmino.game
---- @field playing boolean
---- @field playerList table<number, Techmino.Player>|false
---- @field playerMap table<number, Techmino.Player>|false
---- @field camera Zenitha.Camera
---- @field hitWaves table
---- @field seed number|false
---- @field mode Techmino.mode|false
---- @field mainID number|false
---- @field mainPlayer Techmino.Player|false
+--- @class Techmino.Game
 local GAME={
     playing=false,
 
@@ -188,6 +168,7 @@ local GAME={
 
 GAME.camera.moveSpeed=12
 
+--- @return Techmino.Mode
 function GAME.getMode(name)
     if modeLib[name] and not love.keyboard.isDown('f5') then
         return modeLib[name]

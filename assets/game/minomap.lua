@@ -70,7 +70,7 @@ local modes={
 }
 -- Initialize modes' graphic values
 for _,m in next,modes do
-    m.enable=false
+    m.enable=1
     m.state=-1
     m.active=0
     m.x=30*(m.pos[1]-m.pos[2])*(3^.5/2)
