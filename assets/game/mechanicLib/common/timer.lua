@@ -30,7 +30,7 @@ local timer_drawFunc={
 --- @type Techmino.Mech.base
 local timer={}
 
---- @param time number @milliseconds
+--- @param time number milliseconds
 --- @param prop {timeUp:function, draw?:mechLib.common.timer.style|function, cancel?:(fun():boolean), alwaysTiming:boolean}
 function timer.new(P,time,prop)
     if not P.modeData.timerList then

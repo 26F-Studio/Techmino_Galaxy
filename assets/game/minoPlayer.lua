@@ -1389,6 +1389,7 @@ function MP:lock()-- Put mino into field
             F:setCell(c,self.handX+x-1,self.handY+y-1)
         end
     end end
+    for k,v in next,self do print(TABLE.dump(self))end
 end
 function MP:diveDown(cells)
     if self.fieldDived==0 then

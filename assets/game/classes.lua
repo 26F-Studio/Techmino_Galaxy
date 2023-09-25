@@ -123,7 +123,7 @@
 --- @field decodeScript function
 --- @field checkScriptSyntax function
 ---
---- @field hand table|false @Piece object
+--- @field hand table|false Piece object
 --- @field handX number
 --- @field handY number
 --- @field event table

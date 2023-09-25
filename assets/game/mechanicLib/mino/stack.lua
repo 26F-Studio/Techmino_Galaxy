@@ -26,7 +26,7 @@ end
 local stack={}
 
 --- @param fall? boolean
---- @param timeLimit? number @Automatically quit when time up (if given)
+--- @param timeLimit? number Automatically quit when time up (if given)
 function stack.turnOn_auto(P,fall,timeLimit)
     if not P.modeData.stack_enabled then
         stack.switch_auto(P,fall,timeLimit)
@@ -41,7 +41,7 @@ end
 
 
 --- @param fall? boolean
---- @param timeLimit? number @Automatically quit when time up (if given)
+--- @param timeLimit? number Automatically quit when time up (if given)
 function stack.switch_auto(P,fall,timeLimit)
     if fall==nil then fall=true end
     stack.switch(P)
