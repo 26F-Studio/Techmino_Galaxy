@@ -10,6 +10,7 @@ return {
     },
     mino={
         -- Basic
+        actions=require'assets.game.mechanicLib.mino.actions',
         statistics=require'assets.game.mechanicLib.mino.statistics',
         sequence=require'assets.game.mechanicLib.mino.sequence',
         clearRule=require'assets.game.mechanicLib.mino.clearRule',
@@ -34,10 +35,14 @@ return {
     },
     puyo={
         -- Basic
+        actions=require'assets.game.mechanicLib.puyo.actions',
         statistics=require'assets.game.mechanicLib.puyo.statistics',
         sequence=require'assets.game.mechanicLib.puyo.sequence',
         attackSys=require'assets.game.mechanicLib.puyo.attackSys',
         misc=require'assets.game.mechanicLib.puyo.misc',
     },
-    gem={},
+    gem={
+        -- Basic
+        actions=require'assets.game.mechanicLib.gem.actions',
+    },
 }

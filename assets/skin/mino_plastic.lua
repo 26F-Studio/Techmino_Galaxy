@@ -15,7 +15,7 @@ local COLOR=COLOR
 local S={}
 S.base='mino_template'
 
-local X=3-- Cell border width
+local X=3 -- Cell border width
 
 local function drawCell(B,x,y,bx,by,r,g,b,a)
     gc_setColor(r,g,b,a)

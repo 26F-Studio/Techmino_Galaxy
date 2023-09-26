@@ -1,6 +1,6 @@
 minoRotSys={}
 
-minoRotSys._defaultCenterTex=GC.load{1,1}-- No texture
+minoRotSys._defaultCenterTex=GC.load{1,1} -- No texture
 minoRotSys._defaultCenterPos={
     common={-- For SRS-like RSs
         -- Tetromino
@@ -87,7 +87,7 @@ function minoRotSys._flipList(O)
     return L
 end
 
-function minoRotSys._reflect(m)-- Only available for 4/2/1 state minoes
+function minoRotSys._reflect(m) -- Only available for 4/2/1 state minoes
     local m2=TABLE.copy(m)
     if m2[0] and m2[1] and m2[2] and m2[3] then
         m2[0].R.test,m2[0].L.test,m2[0].F.test,

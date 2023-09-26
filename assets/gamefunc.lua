@@ -34,7 +34,7 @@ function playBgm(name,mode,args)
             else
                 BGM.set(bgmList[name].add,'volume',0,1)
             end
-        else-- if mode=='full' then
+        else -- if mode=='full' then
             BGM.play(bgmList[name].full,args)
         end
     end
@@ -221,4 +221,34 @@ local sandBoxEnv={
 }
 function setSafeEnv(func)
     setfenv(func,TABLE.copy(sandBoxEnv))
+end
+
+local funcToStr={}
+local strToFunc={}
+--- Flatten a table of functions into string-to-function and function-to-string maps
+--- @param obj table|function
+--- @param path string
+function regFuncLib(obj,path)
+    if type(obj)=='table' then
+        for k,v in next,obj do
+            regFuncLib(v,path.."."..k)
+        end
+    elseif type(obj)=='function' then
+        funcToStr[obj]=path
+        strToFunc[path]=obj
+    end
+end
+--- Get the flattened string of a function
+--- @param func function
+--- @return string
+function regFuncToStr(func)
+    print("Converting FuncToStr:"..tostring(func))
+    return funcToStr[func]
+end
+--- Get the function of a flattened string
+--- @param str string
+--- @return function
+function regStrToFunc(str)
+    print("Converting StrToFunc:"..tostring(str))
+    return strToFunc[str]
 end

@@ -39,7 +39,7 @@ local function newMap(P)
 
     -- 4w base
     if wellWidth==4 then
-        if P:random()<.626 then-- 6-res
+        if P:random()<.626 then -- 6-res
             for x=wellL,wellR do
                 for y=1,2 do
                     F._matrix[y][x]={color=0,conn={}}
@@ -47,13 +47,13 @@ local function newMap(P)
             end
             F._matrix[1][P:random(wellL,wellR)]=false
             F._matrix[2][P:random(wellL,wellR)]=false
-        else-- 3-res
-            if P:random()<.626 then-- Hook pattern
+        else -- 3-res
+            if P:random()<.626 then -- Hook pattern
                 local L=P:random()<.5
                 F._matrix[1][L and wellL   or wellR  ]={color=0,conn={}}
                 F._matrix[2][L and wellL   or wellR  ]={color=0,conn={}}
                 F._matrix[2][L and wellL+1 or wellR-1]={color=0,conn={}}
-            else-- Flat
+            else -- Flat
                 for x=wellL,wellR do
                     F._matrix[1][x]={color=0,conn={}}
                 end

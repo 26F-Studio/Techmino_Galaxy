@@ -4,7 +4,7 @@
 --- @type Techmino.Mech.mino
 local progress={}
 
-do-- sprint_40
+do -- sprint_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_40_afterClear(P)
         if not P.isMain then return true end
@@ -31,7 +31,7 @@ do-- sprint_40
     end
 end
 
-do-- sprint_10
+do -- sprint_10
     function progress.sprint_10_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
@@ -44,7 +44,7 @@ do-- sprint_10
     end
 end
 
-do-- sprint_200
+do -- sprint_200
     local bgmTransP1,bgmTransP2=100,150
     function progress.sprint_200_afterClear(P)
         if not P.isMain then return true end
@@ -62,7 +62,7 @@ do-- sprint_200
     end
 end
 
-do-- sprint_1000
+do -- sprint_1000
     local bgmTransP1,bgmTransP2=750,900
     function progress.sprint_1000_afterClear(P)
         if not P.isMain then return true end
@@ -79,7 +79,7 @@ do-- sprint_1000
     end
 end
 
-do-- sprint_obstacle_20
+do -- sprint_obstacle_20
     local bgmTransP1,bgmTransP2=5,15
     function progress.sprint_obstacle_20_afterClear(P)
         if not P.isMain then return true end
@@ -97,7 +97,7 @@ do-- sprint_obstacle_20
     end
 end
 
-do-- sprint_drought_40
+do -- sprint_drought_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_drought_40_afterClear(P)
         if not P.isMain then return true end
@@ -116,7 +116,7 @@ do-- sprint_drought_40
     end
 end
 
-do-- sprint_flood_40
+do -- sprint_flood_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_flood_40_afterClear(P)
         if not P.isMain then return true end
@@ -134,7 +134,7 @@ do-- sprint_flood_40
     end
 end
 
-do-- sprint_pento_40
+do -- sprint_pento_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_pento_40_afterClear(P)
         if not P.isMain then return true end
@@ -150,7 +150,7 @@ do-- sprint_pento_40
     end
 end
 
-do-- sprint_sym_40
+do -- sprint_sym_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_sym_40_afterClear(P)
         if not P.isMain then return true end
@@ -166,7 +166,7 @@ do-- sprint_sym_40
     end
 end
 
-do-- sprint_mph_40
+do -- sprint_mph_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_mph_40_afterClear(P)
         if not P.isMain then return true end
@@ -184,7 +184,7 @@ do-- sprint_mph_40
     end
 end
 
-do-- sprint_lock_20
+do -- sprint_lock_20
     local bgmTransP1,bgmTransP2=5,15
     function progress.sprint_lock_20_afterClear(P)
         if not P.isMain then return true end
@@ -201,7 +201,7 @@ do-- sprint_lock_20
     end
 end
 
-do-- sprint_fix_20
+do -- sprint_fix_20
     local bgmTransP1,bgmTransP2=5,15
     function progress.sprint_fix_20_afterClear(P)
         if not P.isMain then return true end
@@ -217,7 +217,7 @@ do-- sprint_fix_20
     end
 end
 
-do-- sprint_wind_40
+do -- sprint_wind_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_wind_40_afterClear(P)
         if not P.isMain then return true end
@@ -233,7 +233,7 @@ do-- sprint_wind_40
     end
 end
 
-do-- sprint_delay_20
+do -- sprint_delay_20
     local bgmTransP1,bgmTransP2=5,15
     function progress.sprint_delay_20_afterClear(P)
         if not P.isMain then return true end
@@ -249,7 +249,7 @@ do-- sprint_delay_20
     end
 end
 
-do-- sprint_hide_40
+do -- sprint_hide_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_hide_40_afterClear(P)
         if not P.isMain then return true end
@@ -269,7 +269,7 @@ do-- sprint_hide_40
     end
 end
 
-do-- sprint_invis_40
+do -- sprint_invis_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_invis_40_afterClear(P)
         if not P.isMain then return true end
@@ -289,7 +289,7 @@ do-- sprint_invis_40
     end
 end
 
-do-- sprint_blind_40
+do -- sprint_blind_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_blind_40_afterClear(P)
         if not P.isMain then return true end
@@ -306,7 +306,7 @@ do-- sprint_blind_40
     end
 end
 
-do-- sprint_big_80
+do -- sprint_big_80
     local bgmTransP1,bgmTransP2=40,60
     function progress.sprint_big_80_afterClear(P)
         if not P.isMain then return true end
@@ -325,7 +325,7 @@ do-- sprint_big_80
     end
 end
 
-do-- sprint_small_20
+do -- sprint_small_20
     local bgmTransP1,bgmTransP2=5,15
     function progress.sprint_small_20_afterClear(P)
         if not P.isMain then return true end
@@ -341,7 +341,7 @@ do-- sprint_small_20
     end
 end
 
-do-- sprint_low_40
+do -- sprint_low_40
     local bgmTransP1,bgmTransP2=40,60
     function progress.sprint_low_40_afterClear(P)
         if not P.isMain then return true end
@@ -359,7 +359,7 @@ do-- sprint_low_40
     end
 end
 
-do-- sprint_float_40
+do -- sprint_float_40
     local bgmTransP1,bgmTransP2=40,60
     function progress.sprint_float_40_afterClear(P)
         if not P.isMain then return true end
@@ -376,7 +376,7 @@ do-- sprint_float_40
     end
 end
 
-do-- sprint_randctrl_40
+do -- sprint_randctrl_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_randctrl_40_afterClear(P)
         if not P.isMain then return true end
@@ -392,7 +392,7 @@ do-- sprint_randctrl_40
     end
 end
 
-do-- sprint_flip_40
+do -- sprint_flip_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_flip_40_afterClear(P)
         if not P.isMain then return true end
@@ -411,7 +411,7 @@ do-- sprint_flip_40
     end
 end
 
-do-- sprint_dizzy_40
+do -- sprint_dizzy_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_dizzy_40_afterClear(P)
         if not P.isMain then return true end
@@ -427,7 +427,7 @@ do-- sprint_dizzy_40
     end
 end
 
-do-- marathon
+do -- marathon
     function progress.marathon_afterClear(P)
         if not P.isMain then return true end
         local md=P.modeData
@@ -457,7 +457,7 @@ do-- marathon
     end
 end
 
-do-- techrash_easy
+do -- techrash_easy
     local bgmTransP1,bgmTransP2=4,10
     function progress.techrash_easy_afterClear(P)
         if not P.isMain then return true end
@@ -470,7 +470,7 @@ do-- techrash_easy
     end
 end
 
-do-- hypersonic_lo
+do -- hypersonic_lo
     local bgmTransP1,bgmTransP2=100,300
     function progress.hypersonic_lo_afterSpawn(P)
         if not P.isMain then return true end
@@ -494,7 +494,7 @@ do-- hypersonic_lo
     end
 end
 
-do-- techrash_hard
+do -- techrash_hard
     local bgmTransP1,bgmTransP2=4,10
     function progress.techrash_hard_afterClear(P)
         if not P.isMain then return true end
@@ -507,7 +507,7 @@ do-- techrash_hard
     end
 end
 
-do-- hypersonic_hi
+do -- hypersonic_hi
     local bgmTransP1,bgmTransP2=100,500
     function progress.hypersonic_hi_afterSpawn(P)
         if not P.isMain then return true end
@@ -531,7 +531,7 @@ do-- hypersonic_hi
     end
 end
 
-do-- hypersonic_hd
+do -- hypersonic_hd
     local bgmTransP1,bgmTransP2=100,500
     function progress.hypersonic_hd_afterSpawn(P)
         if not P.isMain then return end
@@ -558,7 +558,7 @@ do-- hypersonic_hd
     end
 end
 
-do-- hypersonic_ti
+do -- hypersonic_ti
     local bgmTransP1,bgmTransP2=200,600
     function progress.hypersonic_ti_afterSpawn(P)
         if not P.isMain then return end
@@ -573,7 +573,7 @@ do-- hypersonic_ti
     end
 end
 
-do-- combo_practice
+do -- combo_practice
     local bgmTransP1,bgmTransP2=50,100
     function progress.combo_practice_afterClear(P)
         if not P.isMain then return true end
@@ -595,7 +595,7 @@ do-- combo_practice
     end
 end
 
-do-- dig_practice
+do -- dig_practice
     function progress.dig_practice_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
@@ -611,7 +611,7 @@ do-- dig_practice
     end
 end
 
-do-- dig_shale
+do -- dig_shale
     local bgmTransP1,bgmTransP2=10,30
     function progress.dig_shale_afterClear(P)
         if not P.isMain then return true end
@@ -628,7 +628,7 @@ do-- dig_shale
     end
 end
 
-do-- dig_volcanics
+do -- dig_volcanics
     local bgmTransP1,bgmTransP2=0,10
     function progress.dig_volcanics_afterClear(P)
         if not P.isMain then return true end
@@ -651,7 +651,7 @@ function progress.dig_checkers_gameOver(P,reason)
     end
 end
 
-do-- dig_40
+do -- dig_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.dig_40_afterClear(P)
         if not P.isMain then return true end
@@ -669,7 +669,7 @@ do-- dig_40
     end
 end
 
-do-- dig_100
+do -- dig_100
     local bgmTransP1,bgmTransP2=50,75
     function progress.dig_100_afterClear(P)
         if not P.isMain then return true end
@@ -687,7 +687,7 @@ do-- dig_100
     end
 end
 
-do-- dig_400
+do -- dig_400
     local bgmTransP1,bgmTransP2=200,300
     function progress.dig_400_afterClear(P)
         if not P.isMain then return true end
@@ -704,7 +704,7 @@ do-- dig_400
     end
 end
 
-do-- survivor_b2b
+do -- survivor_b2b
     local bgmTransP1,bgmTransP2=20,50
     function progress.survivor_b2b_afterClear(P)
         if not P.isMain then return true end
@@ -719,7 +719,7 @@ do-- survivor_b2b
     end
 end
 
-do-- survivor_cheese
+do -- survivor_cheese
     local bgmTransP1,bgmTransP2=30,80
     function progress.survivor_cheese_afterClear(P)
         if not P.isMain then return true end
@@ -733,7 +733,7 @@ do-- survivor_cheese
     end
 end
 
-do-- survivor_spike
+do -- survivor_spike
     local bgmTransP1,bgmTransP2=10,30
     function progress.survivor_spike_afterClear(P)
         if not P.isMain then return true end
@@ -746,7 +746,7 @@ do-- survivor_spike
     end
 end
 
-do-- backfire_100
+do -- backfire_100
     local bgmTransP1,bgmTransP2=40,75
     function progress.backfire_100_afterClear(P)
         if not P.isMain then return true end
@@ -763,7 +763,7 @@ do-- backfire_100
     end
 end
 
-do-- backfire_amplify_100
+do -- backfire_amplify_100
     local bgmTransP1,bgmTransP2=40,75
     function progress.backfire_amplify_100_afterClear(P)
         if not P.isMain then return true end
@@ -780,7 +780,7 @@ do-- backfire_amplify_100
     end
 end
 
-do-- backfire_cheese_100
+do -- backfire_cheese_100
     local bgmTransP1,bgmTransP2=40,75
     function progress.backfire_cheese_100_afterClear(P)
         if not P.isMain then return true end

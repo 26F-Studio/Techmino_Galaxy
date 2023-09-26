@@ -68,6 +68,6 @@ SRS[7]={-- I
         F={test={'+0+0','+0-3','+0+3'}},
     },
 }
-for i=8,29 do SRS[i]=minoRotSys.TRS[i] end-- Add non-tetrominos' rotations
+for i=8,29 do SRS[i]=minoRotSys.TRS[i] end -- Add non-tetrominos' rotations
 
 return SRS

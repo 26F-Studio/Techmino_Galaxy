@@ -38,7 +38,7 @@ function misc.fastHide_event_gameOver(P)
     P:showInvis(1,100)
 end
 
-do-- coverField
+do -- coverField
     function misc.coverField_switch_auto(P)
         local md=P.modeData
         if not md._coverAlpha then
@@ -81,7 +81,7 @@ function misc.noMove_event_playerInit(P)
     P:switchAction('moveRight',false)
 end
 
-do-- swapDirection
+do -- swapDirection
     function misc.swapDirection_event_playerInit(P)
         P.modeData.flip=false
     end
@@ -143,7 +143,7 @@ function misc.spinBoard(P,dx)
     P:freshGhost()
 end
 
-do-- randomPress
+do -- randomPress
     local decreaseLimit,decreaseAmount=260,120
     local minInterval,maxInterval=1620,2600
     function misc.randomPress_event_playerInit(P)
@@ -175,7 +175,7 @@ do-- randomPress
     end
 end
 
-do-- symmetery
+do -- symmetery
     function misc.symmetery_event_afterLock(P)
         local currentPos={}
 
@@ -201,7 +201,7 @@ do-- symmetery
     end
 end
 
-do-- wind
+do -- wind
     function misc.wind_switch_auto(P)
         local md=P.modeData
         if md.wind_enabled then
@@ -258,7 +258,7 @@ do-- wind
     end
 end
 
-do-- obstacle
+do -- obstacle
     local minDist=3
     local maxHeight=3
     local extraCount=3
@@ -326,7 +326,7 @@ do-- obstacle
     end)
 end
 
-do-- Cascade
+do -- Cascade
     local function getSolidMat(P)
         local F=P.field
         local visitedMat={}
@@ -386,7 +386,7 @@ do-- Cascade
         end
         F:fresh()
     end
-    function misc.cascade_autoEvent_always(P)-- Auto added, no need to manually add it
+    function misc.cascade_autoEvent_always(P) -- Auto added, no need to manually add it
         if P.modeData.cascading then
             P.modeData.cascadeTimer=P.modeData.cascadeTimer-1
             if P.modeData.cascadeTimer<=0 then
@@ -414,7 +414,7 @@ do-- Cascade
             P:delEvent('always',misc.cascade_autoEvent_always)
         end
     end
-    function misc.cascade_event_afterClear(P)-- Just addresses this to enabled cascade, and need clearRule='line_float'
+    function misc.cascade_event_afterClear(P) -- Just addresses this to enabled cascade, and need clearRule='line_float'
         if misc.cascade_check(P) and not P.modeData.cascading then
             P.modeData.cascading=true
             P.modeData.cascadeDelay=math.max(math.floor(P.settings.clearDelay^.9),62)
@@ -426,7 +426,7 @@ do-- Cascade
     end
 end
 
-do-- variabalNext
+do -- variabalNext
     function misc.variabalNext_stackHigh_event_afterLock(P)
         if not P.modeData.storedNextSlot then
             P.modeData.storedNextSlot=P.settings.nextSlot

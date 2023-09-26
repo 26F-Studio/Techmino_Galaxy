@@ -44,7 +44,7 @@ function techrash.easy_event_afterLock(P)
     P.modeData.minH=minH
 end
 function techrash.easy_event_afterClear(P,clear)
-    P:triggerEvent('afterLock')-- Force refresh
+    P:triggerEvent('afterLock') -- Force refresh
     if P.hand.name=='I' and clear.line>=4 then
         P.modeData.techrash=P.modeData.techrash+1
         local semiPC=P.field:getHeight()==0

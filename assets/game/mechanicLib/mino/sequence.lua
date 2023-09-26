@@ -1,7 +1,5 @@
-local min,max=math.min,math.max
+local min=math.min
 local ins,rem=table.insert,table.remove
-
-local shift=TABLE.shift
 
 --- @type Techmino.Mech.mino
 local sequence={}
@@ -11,175 +9,198 @@ local Pentos={8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}
 local easyPentos={10,11,14,19,20,23,24,25}     -- P Q T5 J5 L5 N H I5
 local hardPentos={8,9,12,13,15,16,17,18,21,22} -- Z5 S5 F E U V W X R Y
 
-function sequence.none()
-    while true do coroutine.yield() end
+--- @param P Techmino.Player.mino
+--- @param d table cached data of generator
+--- @param init boolean true if this is the first initializating call
+--- @diagnostic disable-next-line: unused-local
+function sequence.none(P,d,init)
 end
 
-function sequence.bag7(P)
-    local l={}
-    while true do
-        if not l[1] then l=shift(Tetros) end
-        coroutine.yield(rem(l,P:random(#l)))
+function sequence.bag7(P,d,init)
+    if init then
+        d.bag={}
+        return
     end
+    if not d.bag[1] then d.bag=TABLE.shift(Tetros) end
+    return rem(d.bag,P:random(#d.bag))
 end
 
-function sequence.bag7_bag1(P)
-    local l,ex={},{}
-    while true do
-        if not l[1] then
-            l=shift(Tetros)
-            if not ex[1] then ex=shift(Tetros) end
-            l[8]=rem(ex,P:random(#ex))
-        end
-        coroutine.yield(rem(l,P:random(#l)))
+function sequence.bag7_bag1(P,d,init)
+    if init then
+        d.bag={}
+        d.extra={}
+        return
     end
+    if not d.bag[1] then
+        d.bag=TABLE.shift(Tetros)
+        if not d.extra[1] then d.extra=TABLE.shift(Tetros) end
+        d.bag[8]=rem(d.extra,P:random(#d.extra))
+    end
+    return rem(d.bag,P:random(#d.bag))
 end
 
-function sequence.bag7_sprint(P)
-    -- First Bag, try to prevent early S/Z/O
-    local l=shift(Tetros)
-    for i=7,2,-1 do ins(l,rem(l,P:random(1,i))) end
-    for _=1,2 do
-        if l[1]==1 or l[1]==2 or l[1]==6 then
-            ins(l,P:random(7),rem(l,1))
-        end
-    end
-    for i=1,7 do coroutine.yield(l[i]) end
+function sequence.bag7_sprint(P,d,init)
+    if init then
+        d.bag={}
 
-    -- Second to fourth Bag, gradually increase the shuffle range
-    local rndRange=4
-    while rndRange<7 do
-        local l2={}
-        for _=1,7 do ins(l2,rem(l,P:random(min(#l,rndRange)))) end
-        for i=1,7 do coroutine.yield(l2[i]) end
-        l=l2
-        rndRange=rndRange+1
-    end
+        local mixture
+        d.start={}
 
-    -- Completely random from fifth Bag
-    while true do
-        if not l[1] then l=shift(Tetros) end
-        coroutine.yield(rem(l,P:random(#l)))
-    end
-end
-
-function sequence.bag7_steal1(P)
-    local l={}
-    local victim=shift(Tetros)
-    rem(victim,P:random(7))
-    while true do
-        if not l[1] then
-            l,victim=victim,l
-            victim=shift(Tetros)
-            ins(l,rem(victim,P:random(#victim)))
-        end
-        coroutine.yield(rem(l,P:random(#l)))
-    end
-end
-
-function sequence.bag12_drought(P) -- bag14 without I piece
-    local l={}
-    while true do
-        if not l[1] then
-            for i=1,6 do
-                ins(l,i)
-                ins(l,i)
+        -- First bag, try to prevent early S/Z/O
+        mixture=TABLE.shift(Tetros)
+        for i=7,2,-1 do ins(mixture,rem(mixture,P:random(1,i))) end
+        for _=1,2 do
+            if mixture[1]==1 or mixture[1]==2 or mixture[1]==6 then
+                ins(mixture,P:random(3,7),rem(mixture,1))
             end
         end
-        coroutine.yield(rem(l,P:random(#l)))
-    end
-end
+        TABLE.connect(d.start,mixture)
 
-function sequence.bag7_flood(P) -- bag7 with extra 3 S pieces and 3 Z pieces
-    local l={}
-    while true do
-        if not l[1] then
-            l=shift(Tetros)
-            l[8],l[9],l[10]=1,1,1
-            l[11],l[12],l[13]=2,2,2
-        end
-        coroutine.yield(rem(l,P:random(#l)))
-    end
-end
-
-function sequence.his4_roll2(P)
-    local history=TABLE.new(0,2)
-    while true do
-        local r
-        for _=1,#history do -- Reroll up to [hisLen] times
-            r=P:random(7)
-            local repeated
-            for i=1,#history do
-                if r==history[i] then
-                    repeated=true
-                    break
-                end
-            end
-            if not repeated then break end -- Not repeated means success, available r value
-        end
-        rem(history,1)
-        ins(history,r)
-        if history[1]~=0 then -- Initializing, just continue generating until history is full
-            coroutine.yield(r)
-        end
-    end
-end
-
-function sequence.c2(P)
-    local weight=TABLE.new(0,7)
-    while true do
-        local maxK=1
-        for i=1,7 do
-            weight[i]=weight[i]*.5+P:random()
-            if weight[i]>weight[maxK] then
-                maxK=i
-            end
-        end
-        weight[maxK]=weight[maxK]/3.5
-        coroutine.yield(maxK)
-    end
-end
-
-function sequence.random(P)
-    local r,prev
-    while true do
+        -- Gradually increase the shuffle range until full shuffle
+        local rndRange=3
         repeat
-            r=P:random(7)
-        until r~=prev
-        prev=r
-        coroutine.yield(r)
+            local mixer={}
+            for _=1,7 do ins(mixer,rem(mixture,P:random(min(#mixture,rndRange)))) end
+            TABLE.connect(d.start,mixer)
+            mixture=mixer
+            rndRange=rndRange+1
+        until rndRange==7
+
+        -- Reverse to make first piece can be popped directly
+        TABLE.reverse(d.start)
+        return
+    end
+
+    if d.start then
+        local r=rem(d.start)
+        if not d.start[1] then d.start=nil end
+        return r
+    else
+        -- Completely random from fifth Bag
+        if not d.bag[1] then d.bag=TABLE.shift(Tetros) end
+        return rem(d.bag,P:random(#d.bag))
     end
 end
 
-function sequence.mess(P)
-    while true do
-        coroutine.yield(P:random(7))
+function sequence.bag7_steal1(P,d,init)
+    if init then
+        d.bag={}
+        d.victim=TABLE.shift(Tetros)
+        rem(d.victim,P:random(7))
+        return
     end
+    if not d.bag[1] then
+        d.bag,d.victim=d.victim,d.bag
+        d.victim=TABLE.shift(Tetros)
+        ins(d.bag,rem(d.victim,P:random(#d.victim)))
+    end
+    return rem(d.bag,P:random(#d.bag))
 end
 
-function sequence.pento_bag18(P)
-    local l={}
-    while true do
-        if not l[1] then l=shift(Pentos) end
-        coroutine.yield(rem(l,P:random(#l)))
+function sequence.bag12_drought(P,d,init) -- bag14 without I piece
+    if init then
+        d.bag={}
     end
-end
-
-function sequence.pento_bag_EZ8plusHD4fromBag10(P)
-    local l,ex={},{}
-    while true do
-        if not l[1] then
-            l=shift(easyPentos)
-            for _=1,4 do
-                if not ex[1] then ex=shift(hardPentos) end
-                ins(l,rem(ex,P:random(#ex)))
-            end
+    if not d.bag[1] then
+        for i=1,6 do
+            ins(d.bag,i)
+            ins(d.bag,i)
         end
-        coroutine.yield(rem(l,P:random(#l)))
     end
+    return rem(d.bag,P:random(#d.bag))
 end
 
-local distWeight_data={
+function sequence.bag7_flood(P,d,init) -- bag7 with extra 3 S pieces and 3 Z pieces
+    if init then
+        d.bag={}
+        return
+    end
+    if not d.bag[1] then
+        d.bag=TABLE.shift(Tetros)
+        d.bag[8],d.bag[9],d.bag[10]=1,1,1
+        d.bag[11],d.bag[12],d.bag[13]=2,2,2
+    end
+    return rem(d.bag,P:random(#d.bag))
+end
+
+function sequence.his4_roll4(P,d,init)
+    if init then
+        d.his=TABLE.new(0,4)
+        return
+    end
+    local r=P:random(7)
+    for _=1,4 do
+        if TABLE.find(d.his,r) then
+            r=P:random(7)
+        else
+            break
+        end
+    end
+    rem(d.his,1)
+    ins(d.his,r)
+    return r
+end
+
+function sequence.c2(P,d,init)
+    if init then
+        d.weight=TABLE.new(0,7)
+        return
+    end
+    local maxK=1
+    for i=1,7 do
+        d.weight[i]=d.weight[i]*.5+P:random()
+        if d.weight[i]>d.weight[maxK] then
+            maxK=i
+        end
+    end
+    d.weight[maxK]=d.weight[maxK]/3.5
+    return maxK
+end
+
+function sequence.random(P,d,init)
+    if init then return end
+    repeat
+        d.recent=P:random(7)
+    until d.recent~=d.prev
+    d.prev=d.recent
+    return d.recent
+end
+
+function sequence.mess(P,d,init)
+    if init then
+        d.flandre='cute'
+        return
+    end
+    return P:random(7)
+end
+
+function sequence.pento_bag18(P,d,init)
+    if init then
+        d.bag={}
+        return
+    end
+    if not d.bag[1] then d.bag=TABLE.shift(Pentos) end
+    return rem(d.bag,P:random(#d.bag))
+end
+
+function sequence.pento_bag_EZ8plusHD4fromBag10(P,d,init)
+    if init then
+        d.bag={}
+        d.extra={}
+        return
+    end
+    if not d.bag[1] then
+        d.bag=TABLE.shift(easyPentos)
+        for _=1,4 do
+            if not d.extra[1] then d.extra=TABLE.shift(hardPentos) end
+            ins(d.bag,rem(d.extra,P:random(#d.extra)))
+        end
+    end
+    return rem(d.bag,P:random(#d.bag))
+end
+
+sequence.distWeight={}
+for variant,data in next,{
     fake7bag={
         pieces=Tetros,
         weights={64606156304596,131327514360144,203786783816133,287098623729448,390038487466665,531106246225509,762542509117884,896123925124349,1108610016824348,1476868735064520,2236067394570951,4591633945951618,1e99}, -- Data from Farter
@@ -196,38 +217,36 @@ local distWeight_data={
         pieces=Tetros,
         weights={10,10,10,10,9,8,7,6,5},
     },
-}
-sequence.distWeight=TABLE.newPool(function(self,mode)
-    assert(distWeight_data[mode])
-    self[mode]=function(P)
-        local pieces=distWeight_data[mode].pieces
-        local weights=distWeight_data[mode].weights
-        local len=#pieces
+} do
+    sequence.distWeight[variant]=function(P,d,init)
+        if init then
+            d.pieces=data.pieces
+            d.weights=data.weights
+            d.len=#d.pieces
 
-        local distances={}
-        for i=1,len do distances[i]=i end
-        for i=len,2,-1 do ins(distances,rem(distances,P:random(1,i))) end
+            d.distances={}
+            for i=1,d.len do d.distances[i]=i end
+            for i=d.len,2,-1 do ins(d.distances,rem(d.distances,P:random(1,i))) end
 
-        local tempWei=TABLE.new(false,len)
-        while true do
-            local sum=0
-            for i=1,len do
-                distances[i]=distances[i]+1
-                tempWei[i]=weights[distances[i]] or weights[#weights]
-                sum=sum+tempWei[i]
-            end
-            local r=P:random()*sum
-            for i=1,len do
-                r=r-tempWei[i]
-                if r<=0 then
-                    coroutine.yield(pieces[i])
-                    distances[i]=0
-                    break
-                end
+            d.tempWei=TABLE.new(false,d.len)
+            return
+        end
+        local sum=0
+        for i=1,d.len do
+            d.distances[i]=d.distances[i]+1
+            d.tempWei[i]=d.weights[d.distances[i]] or d.weights[#d.weights]
+            sum=sum+d.tempWei[i]
+        end
+        local r=P:random()*sum
+        for i=1,d.len do
+            r=r-d.tempWei[i]
+            if r<=0 then
+                d.distances[i]=0
+                return d.pieces[i]
             end
         end
+        error("WTF")
     end
-    return self[mode]
-end)
+end
 
 return sequence

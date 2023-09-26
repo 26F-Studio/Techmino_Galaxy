@@ -39,7 +39,7 @@ local function freshWidgetPos()
     end
 end
 
-local function parseStroke(input)-- 横 竖 撇 捺 折
+local function parseStroke(input) -- 横 竖 撇 捺 折
     local w=input.weight
     local s=input.stroke
 
@@ -224,28 +224,28 @@ function scene.touchUp(_,_,id)
 end
 
 function scene.keyDown(k)
-    if k=='z' then-- Undo stroke
+    if k=='z' then -- Undo stroke
         rem(inputs)
         cheat=false
         for i=1,#inputs do if inputs[i].cheat then cheat=true break end end
         freshResult()
-    elseif k=='x' then-- Clear strokes
+    elseif k=='x' then -- Clear strokes
         inputs,cheat={},false
         freshResult()
-    elseif k=='backspace' then-- Delete a char
+    elseif k=='backspace' then -- Delete a char
         rem(charQueue)
-    elseif k=='delete' then-- Clear chars
+    elseif k=='delete' then -- Clear chars
         charQueue={}
-    elseif k=='return' then-- Confirm text
+    elseif k=='return' then -- Confirm text
         quiting=charQueue
-    elseif k=='space' then-- Select first char
+    elseif k=='space' then -- Select first char
         selChar(1)
-    elseif k=='escape' then-- Quit
+    elseif k=='escape' then -- Quit
         quiting=true
     elseif #k==1 then
-        if k:match("[0-9]") then-- Select char
+        if k:match("[0-9]") then -- Select char
             selChar((k-1)%10+1)
-        elseif strokeKeys[k] then-- Manual input stroke
+        elseif strokeKeys[k] then -- Manual input stroke
             local input={stroke={},weight={0,0,0,0,0},cheat=true}
             input.weight[strokeKeys[k]]=1
             ins(inputs,input)

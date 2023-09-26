@@ -23,12 +23,12 @@ local Z={
 }
 local S=minoRotSys._reflect(Z)
 
-ASC[1]=Z-- Z
-ASC[2]=S-- S
-ASC[3]=Z-- J
-ASC[4]=S-- L
-ASC[5]=Z-- T
-ASC[6]=Z-- O
+ASC[1]=Z -- Z
+ASC[2]=S -- S
+ASC[3]=Z -- J
+ASC[4]=S -- L
+ASC[5]=Z -- T
+ASC[6]=Z -- O
 ASC[7]={
     [0]={
         center={1.5,0.5},
@@ -46,27 +46,27 @@ ASC[7]={
         center={0.5,1.5},
         R={test=R},L={test=L},F={test=FR}
     },
-}-- I
-ASC[8]=Z-- Z5
-ASC[9]=S-- S5
-ASC[10]=Z-- P
-ASC[11]=S-- Q
-ASC[12]=Z-- F
-ASC[13]=S-- E
-ASC[14]=Z-- T5
-ASC[15]=Z-- U
-ASC[16]=Z-- V
-ASC[17]=Z-- W
-ASC[18]=Z-- X
-ASC[19]=Z-- J5
-ASC[20]=S-- L5
-ASC[21]=Z-- R
-ASC[22]=S-- Y
-ASC[23]=Z-- N
-ASC[24]=S-- H
-ASC[25]=Z-- I5
-ASC[26]=Z-- I3
-ASC[27]=Z-- C
-ASC[28]=Z-- I2
-ASC[29]=Z-- O1
+} -- I
+ASC[8]=Z -- Z5
+ASC[9]=S -- S5
+ASC[10]=Z -- P
+ASC[11]=S -- Q
+ASC[12]=Z -- F
+ASC[13]=S -- E
+ASC[14]=Z -- T5
+ASC[15]=Z -- U
+ASC[16]=Z -- V
+ASC[17]=Z -- W
+ASC[18]=Z -- X
+ASC[19]=Z -- J5
+ASC[20]=S -- L5
+ASC[21]=Z -- R
+ASC[22]=S -- Y
+ASC[23]=Z -- N
+ASC[24]=S -- H
+ASC[25]=Z -- I5
+ASC[26]=Z -- I3
+ASC[27]=Z -- C
+ASC[28]=Z -- I2
+ASC[29]=Z -- O1
 return ASC

@@ -1,7 +1,7 @@
 --- @type Techmino.Mech.mino
 local stat={}
 
-function stat.event_playerInit(P)-- Initially used in minoPlayer.lua
+function stat.event_playerInit(P) -- Initially used in minoPlayer.lua
     P.modeData.stat={
         key=0,
         spawn=0,

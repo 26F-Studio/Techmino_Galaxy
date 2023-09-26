@@ -137,7 +137,7 @@ function PROGRESS.applyCoolWaitTemplate()
             GC.setColor(1,1,1,a)
             GC.applyTransform(SCR.xOy_dr)
             GC.mDrawL(z,
-                math.min(math.floor(t*60)%62,52)%52+1,-- floor(t*60)%62 → 0~61; min(ans) → 0~52~52; ans%52+1 → 1~52,1~1
+                math.min(math.floor(t*60)%62,52)%52+1, -- floor(t*60)%62 → 0~61; min(ans) → 0~52~52; ans%52+1 → 1~52,1~1
                 -160,-150,nil,1.5*(1-(1-a)^2.6)
             )
             GC.setBlendMode('alpha')
@@ -217,7 +217,7 @@ function PROGRESS.transcendTo(n)
             end,
         }
     elseif n==3 then
-        PROGRESS.setBgmUnlocked('blank',2)-- Or it can be skiped if sub 60 in 40L at first play
+        PROGRESS.setBgmUnlocked('blank',2) -- Or it can be skiped if sub 60 in 40L at first play
         local sumT=0
         WAIT{
             coverAlpha=0,

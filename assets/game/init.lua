@@ -9,12 +9,13 @@ defaultMinoColor=setmetatable({
 },{__index=function() return math.random(64) end})
 defaultPuyoColor=setmetatable({2,12,42,22,52},{__index=function() return math.random(64) end})
 mechLib=require'assets.game.mechanicLib'
+regFuncLib(mechLib,"mechLib")
 require'assets.game.rotsys_mino'
 
 local gc=love.graphics
 
 local layoutFuncs={}
-do-- function layoutFuncs.default():
+do -- function layoutFuncs.default():
     local defaultPosList={
         alive={
             [1]={main={0,0}},
@@ -319,7 +320,7 @@ end
     fatal      (0~100, default to 30, percentage)
     speed      (0~100, default to 30, percentage)
 ]]
-function GAME.initAtk(atk)-- Normalize the attack object
+function GAME.initAtk(atk) -- Normalize the attack object
     if not atk then return end
     assert(type(atk)=='table',"data not table")
     assert(type(atk.power)=='number' and atk.power>0,"wrong power value")
@@ -426,7 +427,7 @@ function GAME.render()
         SHADER.warp:send('hitWaves',unpack(L))
         gc.setShader(SHADER.warp)
     else
-        gc.setShader(SHADER.none)-- Directly draw the content, don't consider color, for better performance(?)
+        gc.setShader(SHADER.none) -- Directly draw the content, don't consider color, for better performance(?)
     end
     gc.draw(Zenitha.getBigCanvas('player'))
     gc.setShader()
@@ -445,7 +446,7 @@ function GAME._addHitWave(x,y,power)
     end
     table.insert(GAME.hitWaves,{
         x,y,
-        nil,nil,-- power1 & power2, calculated before sending uniform
+        nil,nil, -- power1 & power2, calculated before sending uniform
         time=0,
         power=power*SETTINGS.system.hitWavePower,
     })

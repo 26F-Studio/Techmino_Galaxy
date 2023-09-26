@@ -58,9 +58,9 @@ function stack.switch(P)
         md.stack_enabled=true
         md.stack_lines=0
         md.stack_highestLine=0
-        md.stack_lineList={}-- For no-fall mode
+        md.stack_lineList={} -- For no-fall mode
         md.stackTextHeight=0
-        md._stackTextHeight=false-- For line number animation
+        md._stackTextHeight=false -- For line number animation
 
         md.stack_original_clearRule=P.settings.clearRule
         P.settings.clearRule='none'

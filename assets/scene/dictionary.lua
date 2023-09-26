@@ -135,7 +135,7 @@ local function search(str)
         end
     end
 end
-do-- Widgets
+do -- Widgets
     listBox={
         type='listBox',pos={.5,.5},x=mainX-listW,y=-listH/2,w=listW-10,h=listH,
         lineHeight=40,
@@ -316,7 +316,7 @@ function scene.enter()
             obj.contentSize=5*math.floor(obj.contentSize/5+.5)
             obj.titleFull=curObj.titleFull or obj.title or enObj.titleFull or enObj.title
             obj.link=curObj.link or false
-            obj.titleText=nil-- Generate when needed (__index at basedictionary.lua)
+            obj.titleText=nil -- Generate when needed (__index at basedictionary.lua)
 
             ins(dispDict,obj)
             dispDict[obj.id]=obj

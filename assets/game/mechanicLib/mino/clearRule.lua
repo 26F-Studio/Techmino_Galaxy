@@ -16,7 +16,7 @@ local function setBias(P,x,y,dx,dy,moveType,clearDelay)
     P:setCellBias(x,y,{x=dx,y=dy,[moveType]=v})
 end
 
-do-- none (no line clear)
+do -- none (no line clear)
     --- @type Techmino.mino.clearRule
     clearRule.none={}
     function clearRule.none.getDelay() return 0 end
@@ -24,7 +24,7 @@ do-- none (no line clear)
     clearRule.none.clear=NULL
 end
 
-do-- line (fill row to clear)
+do -- line (fill row to clear)
     --- @type Techmino.mino.clearRule
     clearRule.line={}
 
@@ -75,7 +75,7 @@ do-- line (fill row to clear)
     end
 end
 
-do-- triplets (filled lines which form arithmetic progression to clear, from tetr.js)
+do -- triplets (filled lines which form arithmetic progression to clear, from tetr.js)
     --- @type Techmino.mino.clearRule
     clearRule.triplets={}
 
@@ -118,7 +118,7 @@ do-- triplets (filled lines which form arithmetic progression to clear, from tet
     clearRule.triplets.clear=clearRule.line.clear
 end
 
-do-- cheese (90% fill to clear)
+do -- cheese (90% fill to clear)
     --- @type Techmino.mino.clearRule
     clearRule.cheese={}
 
@@ -150,7 +150,7 @@ do-- cheese (90% fill to clear)
     clearRule.cheese.clear=clearRule.line.clear
 end
 
-do-- line_float (fill row to clear, but not move above lines down)
+do -- line_float (fill row to clear, but not move above lines down)
     --- @type Techmino.mino.clearRule
     clearRule.line_float={}
 

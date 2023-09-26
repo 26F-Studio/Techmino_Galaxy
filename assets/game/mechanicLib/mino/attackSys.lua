@@ -32,7 +32,7 @@ atkSys.modern={
         local spin=P.hand.name=='T' and M.action=='rotate' and (M.corners or M.immobile)
         if M.clear then
             local lines,combo=#P.lastMovement.clear,P.lastMovement.combo
-            do-- Text & Sound
+            do -- Text & Sound
                 local t=""
 
                 -- Add B2B text & sound
@@ -84,7 +84,7 @@ atkSys.modern={
                 P:playSound('combo',combo)
             end
 
-            do-- Calculate attack
+            do -- Calculate attack
                 local pwr
                 local tm
 

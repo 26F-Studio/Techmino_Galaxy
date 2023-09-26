@@ -267,23 +267,23 @@ local _jmpOP={
     jeq=2,jne=2,jge=2,jle=2,jg=2,jl=2,
 }
 local baseScriptCmds={
-    setc=function(self,arg)-- Set constant
+    setc=function(self,arg) -- Set constant
         self.modeData[arg.v]=arg.c
     end,
-    setd=function(self,arg)-- Set data
+    setd=function(self,arg) -- Set data
         self.modeData[arg.v]=self.modeData[arg.d]
     end,
-    setm=function(self,arg)-- Set mode value
+    setm=function(self,arg) -- Set mode value
         self.modeData[arg.v]=self:getScriptValue(arg)
     end,
-    wait=function(self,arg)-- Wait until modeData value(s) all not 0 (by keep cursor to current line)
+    wait=function(self,arg) -- Wait until modeData value(s) all not 0 (by keep cursor to current line)
         for i=1,#arg do
             if self.modeData[arg[i]]==nil then
                 return self.scriptLine
             end
         end
     end,
-    say=function(self,arg)-- Show text
+    say=function(self,arg) -- Show text
         self:say(arg)
     end,
     sfx=function(_,arg)
@@ -293,11 +293,11 @@ local baseScriptCmds={
         self:finish(arg)
     end,
 }
-function P:runScript(cmd,arg)-- Run single lua-table assembly command
+function P:runScript(cmd,arg) -- Run single lua-table assembly command
     if type(cmd)=='string' then
         if baseScriptCmds[cmd] then
             return baseScriptCmds[cmd](self,arg)
-        elseif _jmpOP[cmd] then-- Sorry cannot move these jumps into `baseScriptCmds`
+        elseif _jmpOP[cmd] then -- Sorry cannot move these jumps into `baseScriptCmds`
             local v1=arg.v  if v1~=nil then v1=self.modeData[v1] end
             local v2=arg.v2 if v2==nil then v2=arg.c end
             if
@@ -350,7 +350,7 @@ function P:update(dt)
             local minLoopLineNum,maxLoopLineNum
             while true do
                 local l=self.script[self.scriptLine]
-                if not l then break end-- EOF
+                if not l then break end -- EOF
 
                 if self.scriptWait<=0 then
                     -- Execute command
@@ -428,7 +428,7 @@ function P:delSoundEvent(name)
     assert(self.soundEvent[name],"Wrong soundEvent key: '"..tostring(name).."'")
     self.soundEvent[name]=nil
 end
-function P:loadSettings(settings)-- Load data & events from mode settings
+function P:loadSettings(settings) -- Load data & events from mode settings
     for k,v in next,settings do
         if k=='event' then
             for name,F in next,v do
@@ -447,7 +447,7 @@ function P:loadSettings(settings)-- Load data & events from mode settings
         end
     end
 end
-local function decodeScript(str,errMsg)-- Translate some string commands to lua-table assembly command
+local function decodeScript(str,errMsg) -- Translate some string commands to lua-table assembly command
     str=str:trim()
     local line={}
     if str:find('[_0-9A-Za-z]*:')==1 then
@@ -515,7 +515,7 @@ local function decodeScript(str,errMsg)-- Translate some string commands to lua-
     end
     return line
 end
-function P:loadScript(script)-- Parse time stamps and labels, check syntax of lua-table assembly commands
+function P:loadScript(script) -- Parse time stamps and labels, check syntax of lua-table assembly commands
     if not script then return end
     assert(type(script)=='table',"script must be table")
     self.script=script
@@ -678,6 +678,63 @@ function P:initialize()
     for k in next,self.actions do
         self.keyState[k]=false
     end
+end
+local function dump(L,t)
+    local s='{'
+    local count=1
+    for k,v in next,L do
+        -- print(k,v)
+        local T=type(k)
+        if T=='number' then
+            if k==count then
+                k=''
+                count=count+1
+            else
+                k='['..k..']='
+            end
+        elseif T=='string' then
+            if string.find(k,'[^0-9a-zA-Z_]') then
+                k='[\"'..k:gsub('"','\\"')..'\"]='
+            else
+                k=k..'='
+            end
+        elseif T=='boolean' then
+            k='['..k..']='
+        elseif T=='function' then
+            k='[\"'..regFuncToStr(k)..'\"]='
+        else
+            k='[\"*'..tostring(k)..'\"]='
+            -- error("Wrong key type: "..T)
+        end
+
+        T=type(v)
+        if T=='number' or T=='boolean' then
+            v=tostring(v)
+        elseif T=='string' then
+            v='\"'..v:gsub('"','\\"')..'\"'
+        elseif T=='table' then
+            v=t<10 and dump(v,t+1) or "*table"
+        elseif T=='function' then
+            v=regFuncToStr(v)
+        elseif T=='userdata' then
+            T=v:type()
+            if T=='RandomGenerator' then
+                v=dump({__type=T,state=v:getState()})
+            else
+                print(T)
+            end
+        else
+            v='[\"*'..tostring(v)..'\"]='
+            -- error("Wrong value type: "..T)
+        end
+        s=s..k..v..','
+    end
+    return s..'}'
+end
+function P:dump()
+    local data=dump(self,0)
+    print(data)
+    return data
 end
 --------------------------------------------------------------
 

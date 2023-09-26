@@ -63,10 +63,13 @@
 --- @field color number 0~63
 --- @field conn table<Techmino.Cell,true>
 --- @field bias {expBack:number?, lineBack:number?, teleBack:number?, x:number, y:number}
+--- @field visTimer? number
+--- @field visStep? number
+--- @field visMax? number
 
 --- @class Techmino.RectField
 --- @field _width number
---- @field _matrix (Techmino.Cell|false|any)[][]
+--- @field _matrix (Techmino.Cell|false)[][]
 
 --- @class Techmino.Mode
 --- @field initialize function Called when initializing the mode

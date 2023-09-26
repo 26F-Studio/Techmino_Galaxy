@@ -1,7 +1,7 @@
 local controlCD
 local level,score
 local time,totalTime
-local protect-- Prevent punishment 90 when need 180 for one time
+local protect -- Prevent punishment 90 when need 180 for one time
 local handID,handMat,targetMat
 local texts
 

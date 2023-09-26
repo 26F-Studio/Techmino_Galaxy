@@ -110,7 +110,7 @@ function F:setCell(cell,x,y)
                 self._matrix[i]=TABLE.new(false,self._width)
             end
         else
-            return-- Too high, do nothing
+            return -- Too high, do nothing
         end
     end
     self._matrix[y][x]=cell
@@ -119,12 +119,8 @@ end
 -- Builder
 function F.new(width)
     assert(type(width)=='number','[Field].new(width): width must be number')
-    local f={
-        _width=width,
-        _matrix={},
-    }
-    f._matrix=f
-    setmetatable(f,{__index=F,__metatable=true})
+    local f=setmetatable({_width=width},{__index=F,__metatable=true})
+    f._matrix={}
 
     return f
 end

@@ -14,11 +14,11 @@ function love.conf(t)
         end
     end
 
-    t.identity='Techmino_Galaxy'-- Saving folder
+    t.identity='Techmino_Galaxy' -- Saving folder
     t.version="11.4"
     t.gammacorrect=false
-    t.appendidentity=true-- Search files in source then in save directory
-    t.accelerometerjoystick=false-- Accelerometer=joystick on ios/android
+    t.appendidentity=true -- Search files in source then in save directory
+    t.accelerometerjoystick=false -- Accelerometer=joystick on ios/android
     if t.audio then
         t.audio.mic=false
         t.audio.mixwithsystem=true
@@ -33,12 +33,12 @@ function love.conf(t)
     M.physics=false
 
     local W=t.window
-    W.vsync=0-- Unlimited FPS
-    W.msaa=msaa-- Multi-sampled antialiasing
-    W.depth=0-- Bits/samp of depth buffer
-    W.stencil=1-- Bits/samp of stencil buffer
-    W.display=1-- Monitor ID
-    W.highdpi=true-- High-dpi mode for the window on a Retina display
+    W.vsync=0 -- Unlimited FPS
+    W.msaa=msaa -- Multi-sampled antialiasing
+    W.depth=0 -- Bits/samp of depth buffer
+    W.stencil=1 -- Bits/samp of stencil buffer
+    W.display=1 -- Monitor ID
+    W.highdpi=true -- High-dpi mode for the window on a Retina display
     W.x,W.y=nil,nil
     W.borderless=mobile
     W.resizable=not mobile

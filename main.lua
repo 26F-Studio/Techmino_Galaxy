@@ -43,6 +43,7 @@ for _,v in next,{'conf','progress','replay','cache','lib'} do
 end
 --------------------------------------------------------------
 -- Misc modules
+require'assets.gamefunc'
 VERSION=require"version"
 GAME=require'assets.game'
 AI=require'assets.ai'
@@ -53,7 +54,6 @@ SKIN=require'assets.skin'
 CHAR=require'assets.char'
 SETTINGS=require'assets.settings'
 bgmList=require'assets.bgmlist'
-require'assets.gamefunc'
 DEBUG.checkLoadTime("Load game modules")
 --------------------------------------------------------------
 -- Config Zenitha

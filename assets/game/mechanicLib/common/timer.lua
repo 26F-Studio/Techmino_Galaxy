@@ -1,7 +1,7 @@
 local ins,rem=table.insert,table.remove
 local gc=love.graphics
 
-local floatMixList={.3,.7,.9,.7,.6,.5,.42,.36,.3}-- Alpha curve of 'float' timer text, right-to-left
+local floatMixList={.3,.7,.9,.7,.6,.5,.42,.36,.3} -- Alpha curve of 'float' timer text, right-to-left
 
 --- @alias mechLib.common.timer.style 'info'|'float'
 local timer_drawFunc={

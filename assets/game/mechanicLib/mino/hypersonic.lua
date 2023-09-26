@@ -67,7 +67,7 @@ function hypersonic.event_drawOnPlayer(P)
     GC.mStr(P.modeData.target,-300,-5)
 end
 
-do-- low
+do -- low
     local levels={
         {lock=1e3,spawn=320,das=200,arr=36},
         {lock=850,spawn=290,das=170,arr=33},
@@ -87,7 +87,7 @@ do-- low
 
     function hypersonic.low_event_afterClear(P,clear)
         local md=P.modeData
-        local dScore=math.floor((clear.line+1)^2/4)-- 1,2,4,6
+        local dScore=math.floor((clear.line+1)^2/4) -- 1,2,4,6
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then
@@ -113,7 +113,7 @@ do-- low
     end
 end
 
-do-- high
+do -- high
     local levels={
         {lock=450,fresh=4400,spawn=150,clear=380,das=130,arr=29,bumpInterval=false},
         {lock=400,fresh=4200,spawn=140,clear=340,das=120,arr=28,bumpInterval=false},
@@ -174,7 +174,7 @@ do-- high
 
     function hypersonic.high_event_afterClear(P,clear)
         local md=P.modeData
-        local dScore=math.floor((clear.line+1)^2/4)-- 1,2,4,6
+        local dScore=math.floor((clear.line+1)^2/4) -- 1,2,4,6
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then
@@ -207,7 +207,7 @@ do-- high
     end
 end
 
-do-- hidden
+do -- hidden
     local levels={
         {lock=510,fresh=6000,spawn=150,clear=400,das=130,arr=29,visTime=5000,fadeTime=2600},
         {lock=460,fresh=5800,spawn=140,clear=360,das=120,arr=28,visTime=4000,fadeTime=2600},
@@ -314,7 +314,7 @@ do-- hidden
             md.swipeStep=math.max(md.swipeStep+(3-c.line),1)
         end
 
-        local dScore=math.floor(clear.line^2/2)-- 0,2,4,8
+        local dScore=math.floor(clear.line^2/2) -- 0,2,4,8
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then
@@ -354,7 +354,7 @@ do-- hidden
     end
 end
 
-do--  titanium
+do --  titanium
     local levels={
         {lock=450,spawn=170,clear=380,das=96,arr=29},
         {lock=400,spawn=160,clear=340,das=92,arr=28},
@@ -377,7 +377,7 @@ do--  titanium
     end
     function hypersonic.titanium_event_afterClear(P,clear)
         local md=P.modeData
-        local dScore=math.floor(clear.line^2/3+2)-- 2,3,5,7
+        local dScore=math.floor(clear.line^2/3+2) -- 2,3,5,7
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then
