@@ -68,26 +68,30 @@ function bgmPack(name,...)
     return tracks
 end
 
-local interiorModeMeta={__call=function(self)
-    local success,errInfo=pcall(GAME.getMode,self.name)
-    if success then
-        SCN.go('game_in','none',self.name)
-    else
-        MSG.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+local interiorModeMeta={
+    __call=function(self)
+        local success,errInfo=pcall(GAME.getMode,self.name)
+        if success then
+            SCN.go('game_in','none',self.name)
+        else
+            MSG.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+        end
     end
-end}
+}
 function playInterior(name)
     return setmetatable({name=name},interiorModeMeta)
 end
 
-local exteriorModeMeta={__call=function(self)
-    local success,errInfo=pcall(GAME.getMode,self.name)
-    if success then
-        SCN.go('game_out','fade',self.name)
-    else
-        MSG.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+local exteriorModeMeta={
+    __call=function(self)
+        local success,errInfo=pcall(GAME.getMode,self.name)
+        if success then
+            SCN.go('game_out','fade',self.name)
+        else
+            MSG.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+        end
     end
-end}
+}
 function playExterior(name)
     return setmetatable({name=name},exteriorModeMeta)
 end
@@ -123,8 +127,8 @@ function saveKey()
     FILE.save({
         mino=KEYMAP.mino:export(),
         puyo=KEYMAP.puyo:export(),
-        gem= KEYMAP.gem:export(),
-        sys= KEYMAP.sys:export(),
+        gem=KEYMAP.gem:export(),
+        sys=KEYMAP.sys:export(),
     },'conf/keymap','-json')
 end
 function saveTouch()
@@ -223,8 +227,8 @@ function setSafeEnv(func)
     setfenv(func,TABLE.copy(sandBoxEnv))
 end
 
-local funcToStr={}
-local strToFunc={}
+regFuncToStr={}
+regStrToFunc={}
 --- Flatten a table of functions into string-to-function and function-to-string maps
 --- @param obj table|function
 --- @param path string
@@ -234,21 +238,7 @@ function regFuncLib(obj,path)
             regFuncLib(v,path.."."..k)
         end
     elseif type(obj)=='function' then
-        funcToStr[obj]=path
-        strToFunc[path]=obj
+        regFuncToStr[obj]=path
+        regStrToFunc[path]=obj
     end
-end
---- Get the flattened string of a function
---- @param func function
---- @return string
-function regFuncToStr(func)
-    print("Converting FuncToStr:"..tostring(func))
-    return funcToStr[func]
-end
---- Get the function of a flattened string
---- @param str string
---- @return function
-function regStrToFunc(str)
-    print("Converting StrToFunc:"..tostring(str))
-    return strToFunc[str]
 end

@@ -2066,7 +2066,7 @@ function MP:initialize()
 
     self:loadScript(self.settings.script)
 
-    -- self:dump()
+    -- self:serialize()
 end
 --------------------------------------------------------------
 

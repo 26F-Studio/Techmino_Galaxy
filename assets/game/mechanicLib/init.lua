@@ -3,6 +3,10 @@
 --- @alias Techmino.Mech.puyo table<string, table|fun(P:Techmino.Player.puyo|any):any>
 --- @alias Techmino.Mech.gem table<string, table|fun(P:Techmino.Player.gem|any):any>
 
+-- Fake require function, make both human and language server happy
+-- Those files will be loaded in another way, not require
+local function require(path) return path:gsub('%.','/')..'.lua' end
+
 return {
     common={
         timer=require'assets.game.mechanicLib.common.timer',

@@ -8,7 +8,7 @@ defaultMinoColor=setmetatable({
     36,52,4,24,
 },{__index=function() return math.random(64) end})
 defaultPuyoColor=setmetatable({2,12,42,22,52},{__index=function() return math.random(64) end})
-mechLib=require'assets.game.mechanicLib'
+mechLib=TABLE.newResourceTable(require'assets.game.mechanicLib',function(path) return FILE.load(path,'-lua') end)
 regFuncLib(mechLib,"mechLib")
 require'assets.game.rotsys_mino'
 
@@ -171,7 +171,12 @@ GAME.camera.moveSpeed=12
 
 --- @return Techmino.Mode
 function GAME.getMode(name)
-    if modeLib[name] and not love.keyboard.isDown('f5') then
+    if love.keyboard.isDown('f5') then
+        modeLib[name]=nil
+        mechLib=TABLE.newResourceTable(require'assets.game.mechanicLib',function(path) return FILE.load(path,'-lua') end)
+        regFuncLib(mechLib,"mechLib")
+    end
+    if modeLib[name] then
         return modeLib[name]
     else
         local path='assets/game/mode/'..name..'.lua'

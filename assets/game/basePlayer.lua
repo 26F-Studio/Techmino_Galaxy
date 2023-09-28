@@ -701,7 +701,7 @@ local function dump(L,t)
         elseif T=='boolean' then
             k='['..k..']='
         elseif T=='function' then
-            k='[\"'..regFuncToStr(k)..'\"]='
+            k='[\"'..regFuncToStr[k]..'\"]='
         else
             k='[\"*'..tostring(k)..'\"]='
             -- error("Wrong key type: "..T)
@@ -715,7 +715,7 @@ local function dump(L,t)
         elseif T=='table' then
             v=t<10 and dump(v,t+1) or "*table"
         elseif T=='function' then
-            v=regFuncToStr(v)
+            v='\"'..(regFuncToStr[v] or "*function:unknown")..'\"'
         elseif T=='userdata' then
             T=v:type()
             if T=='RandomGenerator' then
@@ -731,10 +731,13 @@ local function dump(L,t)
     end
     return s..'}'
 end
-function P:dump()
+function P:serialize()
     local data=dump(self,0)
     print(data)
     return data
+end
+function P:unserialize()
+    -- TODO
 end
 --------------------------------------------------------------
 
