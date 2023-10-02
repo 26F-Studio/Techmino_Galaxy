@@ -67,7 +67,7 @@ return {
     button_back="Back",
 
     simulation_title="Simulations",
-    graph_mino_title="M-Graph",-- Traslation warning: from "Knowledge Graph" (AI domain)
+    graph_mino_title="M-Graph", -- Traslation warning: from "Knowledge Graph" (AI domain)
     settings_title="Settings",
 
     setting_das="DAS",

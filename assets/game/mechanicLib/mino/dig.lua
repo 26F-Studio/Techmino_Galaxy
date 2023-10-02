@@ -77,9 +77,9 @@ dig.checker_event_afterClear=dig.practice_event_afterClear
 
 local function pushShaleGarbage(P)
     P:riseGarbage(P:calculateHolePos(
-        P:random(2,3),-- count
-        -.2,-- splitRate
-        -.1,-- copyRate
+        P:random(2,3), -- count
+        -.2, -- splitRate
+        -.1, -- copyRate
         -1 -- sandwichRate
     ))
 end
@@ -123,10 +123,10 @@ end)
 
 local function pushVolcanicsGarbage(P)
     P:riseGarbage(P:calculateHolePos(
-        P:random(3,4),-- count
-        .2,-- splitRate
+        P:random(3,4), -- count
+        .2,  -- splitRate
         -.1, -- copyRate
-        .1 -- sandwichRate
+        .1   -- sandwichRate
     ))
 end
 dig.volcanics_event_playerInit=TABLE.newPool(function(self,lineStay)

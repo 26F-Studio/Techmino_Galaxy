@@ -67,7 +67,7 @@ return {
     button_back="返回",
 
     simulation_title="模拟",
-    graph_mino_title="M-图谱",-- 翻译注意：取自“知识图谱”(人工智能领域)
+    graph_mino_title="M-图谱", -- 翻译注意：取自“知识图谱”(人工智能领域)
     settings_title="设置",
 
     setting_das="DAS",

@@ -8,11 +8,11 @@ local kbIsDown=love.keyboard.isDown
 local scene={}
 
 local categoryColor={
-    intro= {index=COLOR.F, content=COLOR.lF},-- Instruction for current scene
-    guide= {index=COLOR.Y, content=COLOR.lY},-- Practice methods
-    term=  {index=COLOR.lB,content=COLOR.LB},-- Concept in game
-    tech=  {index=COLOR.G, content=COLOR.lG},-- General technics
-    other= {index=COLOR.M, content=COLOR.lM},-- Other
+    intro= {index=COLOR.F, content=COLOR.lF}, -- Instruction for current scene
+    guide= {index=COLOR.Y, content=COLOR.lY}, -- Practice methods
+    term=  {index=COLOR.lB,content=COLOR.LB}, -- Concept in game
+    tech=  {index=COLOR.G, content=COLOR.lG}, -- General technics
+    other= {index=COLOR.M, content=COLOR.lM}, -- Other
 }
 local mainW,mainH=900,700
 local mainX=100-mainW/2

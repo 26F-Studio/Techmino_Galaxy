@@ -118,7 +118,7 @@ function survivor.spike_event_always(P)
                 time=
                     max(6000-50*wave,4000)+ -- Basic delay (from 6s to 4s on wave 40)
                     (i-1)*max(3000-wave*30,1500), -- Split time (from 3s to 1.5s on wave 50)
-                fatal=floor(min(30+wave/4,50)),-- Fatal (from 30 to 50 on wave 80)
+                fatal=floor(min(30+wave/4,50)), -- Fatal (from 30 to 50 on wave 80)
                 -- speed=?,
             })
         end

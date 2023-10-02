@@ -106,14 +106,14 @@ return {
             GC.polygon('fill',
                 800*t*lastX,0,
                 800*t*lastX,lastY*maxH,
-                800*t*clearData[i].x,lastY*maxH,-- FLIP --
-                -- 800*t*clearData[i].x,clearData[i].y*maxH,-- FLIP --
+                800*t*clearData[i].x,lastY*maxH, -- FLIP --
+                -- 800*t*clearData[i].x,clearData[i].y*maxH, -- FLIP --
                 800*t*clearData[i].x,0
             )
             GC.setColor(.2,.3,1)
             GC.line(
                 800*t*lastX,lastY*maxH,
-                800*t*clearData[i].x,lastY*maxH,-- FLIP --
+                800*t*clearData[i].x,lastY*maxH, -- FLIP --
                 800*t*clearData[i].x,clearData[i].y*maxH
             )
             lastX,lastY=clearData[i].x,clearData[i].y
@@ -132,7 +132,7 @@ return {
             GC.setLineWidth(2)
             GC.line(
                 800*t*lastX,lastY*maxH,
-                800*t*dropData[i].x,lastY*maxH,-- FLIP --
+                800*t*dropData[i].x,lastY*maxH, -- FLIP --
                 800*t*dropData[i].x,dropData[i].y*maxH
             )
             lastX,lastY=dropData[i].x,dropData[i].y

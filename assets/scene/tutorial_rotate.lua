@@ -18,33 +18,33 @@ local shapes do
     local O,_=true,false
     shapes={
         -- Tetromino
-        {matrix={{O,O,_},{_,O,O},{_,_,_}},no180=true},-- Z
-        {matrix={{_,O,O},{O,O,_},{_,_,_}},no180=true},-- S
-        {matrix={{O,_,_},{O,O,O},{_,_,_}}},-- J
-        {matrix={{_,_,O},{O,O,O},{_,_,_}}},-- L
-        {matrix={{_,O,_},{O,O,O},{_,_,_}}},-- T
-        {unuse=true,matrix={{O,O},{O,O}}},-- O
-        {matrix={{_,_,_,_},{O,O,O,O},{_,_,_,_},{_,_,_,_}},no180=true},-- I
+        {matrix={{O,O,_},{_,O,O},{_,_,_}},no180=true}, -- Z
+        {matrix={{_,O,O},{O,O,_},{_,_,_}},no180=true}, -- S
+        {matrix={{O,_,_},{O,O,O},{_,_,_}}}, -- J
+        {matrix={{_,_,O},{O,O,O},{_,_,_}}}, -- L
+        {matrix={{_,O,_},{O,O,O},{_,_,_}}}, -- T
+        {unuse=true,matrix={{O,O},{O,O}}}, -- O
+        {matrix={{_,_,_,_},{O,O,O,O},{_,_,_,_},{_,_,_,_}},no180=true}, -- I
 
         -- Pentomino
-        {unuse=true,matrix={{O,O,_},{_,O,_},{_,O,O}}},-- Z5
-        {unuse=true,matrix={{_,O,O},{_,O,_},{O,O,_}}},-- S5
-        {matrix={{O,O,_},{O,O,O},{_,_,_}}},-- P
-        {matrix={{_,O,O},{O,O,O},{_,_,_}}},-- Q
-        {matrix={{O,_,_},{O,O,O},{_,O,_}}},-- F
-        {matrix={{_,_,O},{O,O,O},{_,O,_}}},-- E
-        {matrix={{_,O,_},{_,O,_},{O,O,O}}},-- T5
-        {matrix={{O,_,O},{O,O,O},{_,_,_}}},-- U
-        {matrix={{_,_,O,_},{_,_,O,O},{O,O,O,_},{_,_,_,_}}},-- V
-        {matrix={{O,_,_},{O,O,_},{_,O,O}}},-- W
-        {unuse=true,matrix={{_,O,_},{O,O,O},{_,O,_}}},-- X
-        {matrix={{_,_,_,_},{O,_,_,_},{O,O,O,O},{_,_,_,_}}},-- J5
-        {matrix={{_,_,_,_},{_,_,_,O},{O,O,O,O},{_,_,_,_}}},-- L5
-        {matrix={{_,_,_,_},{_,O,_,_},{O,O,O,O},{_,_,_,_}}},-- R
-        {matrix={{_,_,_,_},{_,_,O,_},{O,O,O,O},{_,_,_,_}}},-- Y
-        {matrix={{_,_,_,_},{O,O,_,_},{_,O,O,O},{_,_,_,_}}},-- N
-        {matrix={{_,_,_,_},{_,_,O,O},{O,O,O,_},{_,_,_,_}}},-- H
-        {unuse=true,matrix={{_,_,_,_,_},{_,_,_,_,_},{O,O,O,O,O},{_,_,_,_,_},{_,_,_,_,_}}},-- I5
+        {unuse=true,matrix={{O,O,_},{_,O,_},{_,O,O}}}, -- Z5
+        {unuse=true,matrix={{_,O,O},{_,O,_},{O,O,_}}}, -- S5
+        {matrix={{O,O,_},{O,O,O},{_,_,_}}}, -- P
+        {matrix={{_,O,O},{O,O,O},{_,_,_}}}, -- Q
+        {matrix={{O,_,_},{O,O,O},{_,O,_}}}, -- F
+        {matrix={{_,_,O},{O,O,O},{_,O,_}}}, -- E
+        {matrix={{_,O,_},{_,O,_},{O,O,O}}}, -- T5
+        {matrix={{O,_,O},{O,O,O},{_,_,_}}}, -- U
+        {matrix={{_,_,O,_},{_,_,O,O},{O,O,O,_},{_,_,_,_}}}, -- V
+        {matrix={{O,_,_},{O,O,_},{_,O,O}}}, -- W
+        {unuse=true,matrix={{_,O,_},{O,O,O},{_,O,_}}}, -- X
+        {matrix={{_,_,_,_},{O,_,_,_},{O,O,O,O},{_,_,_,_}}}, -- J5
+        {matrix={{_,_,_,_},{_,_,_,O},{O,O,O,O},{_,_,_,_}}}, -- L5
+        {matrix={{_,_,_,_},{_,O,_,_},{O,O,O,O},{_,_,_,_}}}, -- R
+        {matrix={{_,_,_,_},{_,_,O,_},{O,O,O,O},{_,_,_,_}}}, -- Y
+        {matrix={{_,_,_,_},{O,O,_,_},{_,O,O,O},{_,_,_,_}}}, -- N
+        {matrix={{_,_,_,_},{_,_,O,O},{O,O,O,_},{_,_,_,_}}}, -- H
+        {unuse=true,matrix={{_,_,_,_,_},{_,_,_,_,_},{O,O,O,O,O},{_,_,_,_,_},{_,_,_,_,_}}}, -- I5
     }
 end
 

@@ -12,7 +12,7 @@
 
 --- @type Techmino.simulation[]
 local sims={
-    {-- Mino
+    { -- Mino
         trigger=function()
             DEBUG.yieldUntilNextScene()
             if SCN.cur=='simulation' then
@@ -35,7 +35,7 @@ local sims={
             )
         end,
     },
-    {-- Puyo
+    { -- Puyo
         trigger=function()
             DEBUG.yieldUntilNextScene()
             if SCN.cur=='simulation' then
@@ -49,7 +49,7 @@ local sims={
             GC.circle('line',35,60,70)
         end,
     },
-    {-- Gem
+    { -- Gem
         trigger=function()
             DEBUG.yieldUntilNextScene()
             if SCN.cur=='simulation' then

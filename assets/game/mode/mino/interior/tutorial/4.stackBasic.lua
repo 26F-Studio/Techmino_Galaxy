@@ -1,5 +1,5 @@
 local correctPositions={
-    {-- Quest 1
+    { -- Quest 1
         {x=1,y=1,dir={0},       msg="tutorial_stackBasic_m1"},
         {x=4,y=1,dir={0,2}},
         {x=7,y=1,dir={0,2}},
@@ -13,7 +13,7 @@ local correctPositions={
         {x=8,y=4,dir={1,3}},
         {x=10,y=1,dir={1,3},    msg="tutorial_stackBasic_m5"},
     },
-    {-- Quest 2
+    { -- Quest 2
         {x=3,y=1,dir={0}},
         {x=6,y=2,dir={0,1,2,3}},
         {x=3,y=2,dir={0,1,2,3}},

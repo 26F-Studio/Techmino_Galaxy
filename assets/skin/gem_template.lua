@@ -52,7 +52,7 @@ function S.drawFieldBorder()
 end
 
 local gemShapes={
-    {-- Red Square
+    { -- Red Square
         color={COLOR.hsv(.97,.9,1,.5)},
         coords={
             -16,-10,
@@ -65,7 +65,7 @@ local gemShapes={
             -16,10,
         },
     },
-    {-- Orange Hexagon
+    { -- Orange Hexagon
         color={COLOR.hsv(.1,.9,1,.5)},
         coords=(function()
             local l={}
@@ -76,7 +76,7 @@ local gemShapes={
             return l
         end)()
     },
-    {-- Yellow Rhombus
+    { -- Yellow Rhombus
         color={COLOR.hsv(.18,.9,1,.5)},
         coords=(function()
             local l={}
@@ -87,7 +87,7 @@ local gemShapes={
             return l
         end)()
     },
-    {-- Green Octagon
+    { -- Green Octagon
         color={COLOR.hsv(.33,.85,.9,.5)},
         coords=(function()
             local l={}
@@ -98,7 +98,7 @@ local gemShapes={
             return l
         end)()
     },
-    {-- Blue Diamond
+    { -- Blue Diamond
         color={COLOR.hsv(.58,1,1,.5)},
         coords={
             0,18,
@@ -108,7 +108,7 @@ local gemShapes={
             -17,-5,
         },
     },
-    {-- Magenta Triangle
+    { -- Magenta Triangle
         color={COLOR.hsv(.86,.9,1,.5)},
         coords={
             0,-15,
@@ -116,7 +116,7 @@ local gemShapes={
             -16,15,
         },
     },
-    {-- White Circle
+    { -- White Circle
         color={COLOR.hsv(0,0,1,.5)},
         coords=(function()
             local l={}

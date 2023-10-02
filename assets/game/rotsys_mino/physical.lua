@@ -3,7 +3,7 @@ Physical.centerTex=GC.load{10,10,
     {'setLW',2},
     {'dRect',0,0,10,10},
 }
-Physical[1]={-- Z
+Physical[1]={ -- Z
     [0]={
         R={target=1,base='+1+0',test={'+0+0','+0-1','-1+0','+0+1','-1+1'}},
         L={target=1,base='+0+0',test={'+0+0','+0-1','+0+1','+1+0','+1+1'}},
@@ -15,7 +15,7 @@ Physical[1]={-- Z
         F={target=1,base='-1+0',test={'+0+0','+0-1','+1+1','+1+0'}},
     },
 }
-Physical[2]={-- S
+Physical[2]={ -- S
     [0]={
         R={target=1,base='+1+0',test=minoRotSys._flipList(Physical[1][0].L.test)},
         L={target=1,base='+0+0',test=minoRotSys._flipList(Physical[1][0].R.test)},
@@ -27,7 +27,7 @@ Physical[2]={-- S
         F={target=1,base='+1+0',test=minoRotSys._flipList(Physical[1][1].F.test)},
     },
 }
-Physical[3]={-- J
+Physical[3]={ -- J
     [0]={
         R={base='+1-1',test={'+0+0','-1+0','+0+1','-1+1','+1+0','+1+1'}},
         L={base='+0-1',test={'+0+0','+1+0','+0+1','+1+1','-1+0','+0-1','+1-1'}},
@@ -49,7 +49,7 @@ Physical[3]={-- J
         F={base='+1+0',test={'+0+0','+1+0','+0-1','+1-1','+0+1','+0+2'}},
     },
 }
-Physical[4]={-- L
+Physical[4]={ -- L
     [0]={
         R={base=Physical[3][0].R.base,test=minoRotSys._flipList(Physical[3][0].L.test)},
         L={base=Physical[3][0].L.base,test=minoRotSys._flipList(Physical[3][0].R.test)},
@@ -71,7 +71,7 @@ Physical[4]={-- L
         F={base=Physical[3][3].F.base,test=minoRotSys._flipList(Physical[3][1].F.test)},
     },
 }
-Physical[5]={-- T
+Physical[5]={ -- T
     [0]={
         R={base=Physical[3][0].R.base,test={'+0+0','-1+0','+0+1','-1+1','+1+0'}},
         L={base=Physical[3][0].L.base,test={'+0+0','+1+0','+0+1','+1+1','-1+0'}},
@@ -93,14 +93,14 @@ Physical[5]={-- T
         F={base=Physical[3][3].F.base,test={'+0+0','-1+0','+0-1','-1-1','+0+1','-1+1','+0+2','-1+2'}},
     },
 }
-Physical[6]={-- O
+Physical[6]={ -- O
     [0]={
         R={target=0,base='+1+0',test={'+0+0','+0-1','+1-1','+0-2'}},
         L={target=0,base='-1+0',test={'+0+0','+0-1','-1-1','+0-2'}},
         F={target=0,base='+0-1',test={'+0+0','-1+0','+1+0'}},
     },
 }
-Physical[7]={-- I
+Physical[7]={ -- I
     [0]={
         R={target=1,base='+2-1',test={'+0+0','+1+0','-1-1','-2-1','+0-1','+1-1','-1+0','-2+0','+0-2','+1-2','-1+1','-2+1'}},
         L={target=1,base='+1-1',test={'+0+0','-1+0','+1-1','+2-1','+0-1','-1-1','+1+0','+2+0','+0-2','-1-2','+1+1','+2+1'}},

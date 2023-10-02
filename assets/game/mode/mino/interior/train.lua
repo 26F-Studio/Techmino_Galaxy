@@ -16,7 +16,7 @@ return {
         infHold=true,
         -- spawnDelay=26,
         soundEvent={countDown=mechLib.mino.misc.interior_soundEvent_countDown},
-        event={-- Display ghost at not-bad places to help new players learn stacking
+        event={ -- Display ghost at not-bad places to help new players learn stacking
             playerInit=function(P)
                 P.modeData.waitTime=0
                 P.modeData.hint=true

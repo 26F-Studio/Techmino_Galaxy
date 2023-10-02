@@ -62,26 +62,26 @@ local defaultSoundFunc={
         )
     end,
     chain=setmetatable({
-        function() inst('bass',.70,'A2') end,-- 1 chain
-        function() inst('bass',.75,'C3') end,-- 2 chain
-        function() inst('bass',.80,'D3') end,-- 3 chain
-        function() inst('bass',.85,'E3') end,-- 4 chain
-        function() inst('bass',.90,'G3') end,-- 5 chain
-        function() inst('bass',.90,'A3') inst('lead',.20,'A2') end,-- 6 chain
-        function() inst('bass',.75,'C4') inst('lead',.40,'C3') end,-- 7 chain
-        function() inst('bass',.60,'D4') inst('lead',.60,'D3') end,-- 8 chain
-        function() inst('bass',.40,'E4') inst('lead',.75,'E3') end,-- 9 chain
-        function() inst('bass',.20,'G4') inst('lead',.90,'G3') end,-- 10 chain
-        function() inst('bass',.20,'A4') inst('lead',.85,'A3') end,-- 11 chain
-        function() inst('bass',.40,'A4') inst('lead',.80,'C4') end,-- 12 chain
-        function() inst('bass',.60,'A4') inst('lead',.75,'D4') end,-- 13 chain
-        function() inst('bass',.75,'A4') inst('lead',.70,'E4') end,-- 14 chain
-        function() inst('bass',.90,'A4') inst('lead',.65,'G4') end,-- 15 chain
-        function() inst('bass',.90,'A4') inst('bass',.70,'E5') inst('lead','A4') end,-- 16 chain
-        function() inst('bass',.85,'A4') inst('bass',.75,'E5') inst('lead','C5') end,-- 17 chain
-        function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end,-- 18 chain
-        function() inst('bass',.75,'A4') inst('bass',.85,'E5') inst('lead','E5') end,-- 19 chain
-        function() inst('bass',.70,'A4') inst('bass',.90,'E5') inst('lead','G5') end,-- 20 chain
+        function() inst('bass',.70,'A2') end, -- 1 chain
+        function() inst('bass',.75,'C3') end, -- 2 chain
+        function() inst('bass',.80,'D3') end, -- 3 chain
+        function() inst('bass',.85,'E3') end, -- 4 chain
+        function() inst('bass',.90,'G3') end, -- 5 chain
+        function() inst('bass',.90,'A3') inst('lead',.20,'A2') end, -- 6 chain
+        function() inst('bass',.75,'C4') inst('lead',.40,'C3') end, -- 7 chain
+        function() inst('bass',.60,'D4') inst('lead',.60,'D3') end, -- 8 chain
+        function() inst('bass',.40,'E4') inst('lead',.75,'E3') end, -- 9 chain
+        function() inst('bass',.20,'G4') inst('lead',.90,'G3') end, -- 10 chain
+        function() inst('bass',.20,'A4') inst('lead',.85,'A3') end, -- 11 chain
+        function() inst('bass',.40,'A4') inst('lead',.80,'C4') end, -- 12 chain
+        function() inst('bass',.60,'A4') inst('lead',.75,'D4') end, -- 13 chain
+        function() inst('bass',.75,'A4') inst('lead',.70,'E4') end, -- 14 chain
+        function() inst('bass',.90,'A4') inst('lead',.65,'G4') end, -- 15 chain
+        function() inst('bass',.90,'A4') inst('bass',.70,'E5') inst('lead','A4') end, -- 16 chain
+        function() inst('bass',.85,'A4') inst('bass',.75,'E5') inst('lead','C5') end, -- 17 chain
+        function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end, -- 18 chain
+        function() inst('bass',.75,'A4') inst('bass',.85,'E5') inst('lead','E5') end, -- 19 chain
+        function() inst('bass',.70,'A4') inst('bass',.90,'E5') inst('lead','G5') end, -- 20 chain
     },{__call=function(self,chain)
         if self[chain] then
             self[chain]()
@@ -1116,12 +1116,12 @@ function PP:render()
             self:triggerEvent('drawBelowMarks') -- From frame's bottom-left, 40px a cell
 
             -- Height lines
-            skin.drawHeightLines(-- All unit are pixel
-                settings.fieldW*40,  -- Field Width
-                settings.spawnH*40,  -- Spawning height
-                settings.lockoutH*40,-- Lock-out height
-                settings.deathH*40,  -- Death height
-                settings.voidH*40    -- Void height
+            skin.drawHeightLines(     -- All unit are pixel
+                settings.fieldW*40,   -- Field Width
+                settings.spawnH*40,   -- Spawning height
+                settings.lockoutH*40, -- Lock-out height
+                settings.deathH*40,   -- Death height
+                settings.voidH*40     -- Void height
             )
 
             self:triggerEvent('drawInField') -- From frame's bottom-left, 40px a cell
@@ -1205,12 +1205,12 @@ end
 --- @class Techmino.Mode.Setting.Puyo
 local baseEnv={
     -- Size
-    fieldW=6,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
+    fieldW=6, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
     spawnH=11,
     lockoutH=1e99,
     deathH=1e99,
     voidH=620,
-    connH=12,-- Default to 12
+    connH=12, -- Default to 12
 
     -- Sequence
     seqType='double4color',

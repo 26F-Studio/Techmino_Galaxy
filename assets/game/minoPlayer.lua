@@ -1733,9 +1733,9 @@ function MP:render()
                 self:triggerEvent('drawBelowMarks') -- From field's bottom-left, 40px a cell
 
             -- Height lines
-            skin.drawHeightLines(-- All unit are pixel
+            skin.drawHeightLines(     -- All unit are pixel
                 settings.fieldW*40,   -- Field Width
-                (settings.spawnH+settings.extraSpawnH)*40,-- Max Spawning height
+                (settings.spawnH+settings.extraSpawnH)*40, -- Max Spawning height
                 settings.spawnH*40,   -- Spawning height
                 settings.lockoutH*40, -- Lock-out height
                 settings.deathH*40,   -- Death height
@@ -1870,7 +1870,7 @@ end
 --- @class Techmino.Mode.Setting.Mino
 local baseEnv={
     -- Size
-    fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
+    fieldW=10, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
     spawnH=20,
     extraSpawnH=1,
     lockoutH=1e99,
@@ -1986,7 +1986,7 @@ function MP.new()
         changeSpawnPos={},
 
         -- Special
-        extraSolidCheck={},-- Manually called
+        extraSolidCheck={}, -- Manually called
     }
     self.soundEvent=setmetatable({},soundEventMeta)
 
