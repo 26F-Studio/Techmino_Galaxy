@@ -11,6 +11,8 @@ local collectCount=0
 local noProgress=false
 local autoplay=false
 local fakeProgress=0
+local searchStr=""
+local searchTimer=0
 
 local bigTitle=setmetatable({},{
     __index=function(self,name)
@@ -107,6 +109,19 @@ function scene.enter()
     end
 end
 
+local function searchMusic(str)
+    local bestID,bestDist=-1,999
+    local list=musicListBox:getList()
+    for i=1,#list do
+        local dist=list[i]:find(str)
+        if dist and dist<bestDist then
+            bestID,bestDist=i,dist
+        end
+    end
+    if bestID>0 then
+        musicListBox:select(bestID)
+    end
+end
 function scene.keyDown(key,isRep)
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
@@ -116,14 +131,13 @@ function scene.keyDown(key,isRep)
             BGM.set('all','seek',key=='left' and max(BGM.tell()-5,0) or (BGM.tell()+5)%BGM.getDuration())
         end
     elseif #key==1 and key:find'[0-9a-z]' then
-        local list=musicListBox:getList()
-        local sel=musicListBox:getSelect()
-        for _=1,#list do
-            sel=(sel-1+(isShiftPressed() and -1 or 1))%#list+1
-            if list[sel]:sub(1,1)==key then
-                musicListBox:select(sel)
-                break
-            end
+        if searchTimer==0 then
+            searchStr=""
+        end
+        if #searchStr<26 then
+            searchStr=searchStr..key
+            searchTimer=1.26
+            searchMusic(searchStr)
         end
     elseif not isRep then
         if key=='space' then
@@ -154,6 +168,9 @@ function scene.keyDown(key,isRep)
 end
 
 function scene.update(dt)
+    if searchTimer>0 then
+        searchTimer=max(searchTimer-dt,0)
+    end
     if autoplay and BGM.isPlaying() then
         if autoplay>0 then
             autoplay=max(autoplay-dt,0)
@@ -209,6 +226,13 @@ function scene.draw()
         gc_setColor(COLOR.L)
         gc_printf(STRING.time_simp(BGM.tell()%BGM.getDuration()),-700,260,626,'left')
         gc_printf(STRING.time_simp(BGM.getDuration()),700-626,260,626,'right')
+    end
+
+    -- Searching
+    if searchTimer>0 then
+        gc_setColor(1,1,1,searchTimer*1.26)
+        setFont(30)
+        gc_print(searchStr,0,-360)
     end
 
     -- Collecting progress
