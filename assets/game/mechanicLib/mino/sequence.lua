@@ -25,7 +25,7 @@ function sequence.bag7(P,d,init)
     return rem(d.bag,P:random(#d.bag))
 end
 
-function sequence.bag7_bag1(P,d,init)
+function sequence.bag7_bag1(P,d,init) -- bag8, which the extra piece from another bag
     if init then
         d.bag={}
         d.extra={}
@@ -82,7 +82,7 @@ function sequence.bag7_sprint(P,d,init)
     end
 end
 
-function sequence.bag7_steal1(P,d,init)
+function sequence.bag7_steal1(P,d,init) -- bag7, but each bag steals a piece from the next bag
     if init then
         d.bag={}
         d.victim=TABLE.shift(Tetros)
@@ -123,6 +123,24 @@ function sequence.bag7_flood(P,d,init) -- bag7 with extra 3 S pieces and 3 Z pie
     return rem(d.bag,P:random(#d.bag))
 end
 
+function sequence.bag4_rect(P,d,init) -- bag4 of JLOI
+    if init then
+        d.bag={}
+        return
+    end
+    if not d.bag[1] then d.bag={3,4,6,7} end
+    return rem(d.bag,P:random(#d.bag))
+end
+
+function sequence.bag3_saw(P,d,init) -- bag3 of SZT
+    if init then
+        d.bag={}
+        return
+    end
+    if not d.bag[1] then d.bag={1,2,5} end
+    return rem(d.bag,P:random(#d.bag))
+end
+
 function sequence.his4_roll4(P,d,init)
     if init then
         d.his=TABLE.new(0,4)
@@ -157,7 +175,7 @@ function sequence.c2(P,d,init)
     return maxK
 end
 
-function sequence.random(P,d,init)
+function sequence.messy(P,d,init) -- no repeating random
     if init then return end
     repeat
         d.recent=P:random(7)
@@ -166,7 +184,7 @@ function sequence.random(P,d,init)
     return d.recent
 end
 
-function sequence.mess(P,d,init)
+function sequence.random(P,d,init) -- pure random
     if init then
         d.flandre='cute'
         return
