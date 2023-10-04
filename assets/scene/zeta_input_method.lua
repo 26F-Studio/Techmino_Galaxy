@@ -349,12 +349,12 @@ end
 scene.widgetList={}
 
 widgetList_ui={
-    {type='button',x=areaX+areaR+70,y=areaY+areaR-250,w=100, sound_trigger='move',fontSize=80,color='LY',text=CHAR.key.backspace,code=WIDGET.c_pressKey'backspace'},
-    {type='button',x=areaX+areaR+190,y=areaY+areaR-250,w=100,sound_trigger='move',fontSize=80,color='LY',text=CHAR.key.mac_clear,code=WIDGET.c_pressKey'delete'},
-    {type='button',x=areaX+areaR+340,y=areaY+areaR-250,w=100,sound_trigger='move',fontSize=80,color='LY',text=CHAR.icon.check_circ,code=WIDGET.c_pressKey'return'},
-    {type='button',x=areaX+areaR+70,y=areaY+areaR-50,w=100,  sound_trigger='move',fontSize=80,text=CHAR.icon.back,code=WIDGET.c_pressKey'z'},
-    {type='button',x=areaX+areaR+190,y=areaY+areaR-50,w=100, sound_trigger='move',fontSize=80,text=CHAR.icon.delete,code=WIDGET.c_pressKey'x'},
-    {type='button',x=areaX+areaR+340,y=areaY+areaR-50,w=100, sound_trigger='move',fontSize=80,text=CHAR.icon.cross_big,code=WIDGET.c_pressKey'escape'},
+    WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-250,w=100, sound_trigger='move',fontSize=80,color='LY',text=CHAR.key.backspace,code=WIDGET.c_pressKey'backspace'},
+    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-250,w=100,sound_trigger='move',fontSize=80,color='LY',text=CHAR.key.mac_clear,code=WIDGET.c_pressKey'delete'},
+    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-250,w=100,sound_trigger='move',fontSize=80,color='LY',text=CHAR.icon.check_circ,code=WIDGET.c_pressKey'return'},
+    WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-50,w=100,  sound_trigger='move',fontSize=80,text=CHAR.icon.back,code=WIDGET.c_pressKey'z'},
+    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-50,w=100, sound_trigger='move',fontSize=80,text=CHAR.icon.delete,code=WIDGET.c_pressKey'x'},
+    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-50,w=100, sound_trigger='move',fontSize=80,text=CHAR.icon.cross_big,code=WIDGET.c_pressKey'escape'},
 }
 local strokeSymbol={'一','丨','丿','丶','乚'}
 for i=1,#strokeSymbol do
