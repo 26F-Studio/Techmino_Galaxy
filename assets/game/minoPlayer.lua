@@ -1865,6 +1865,23 @@ function MP:checkScriptSyntax(cmd,arg,errMsg)
         end
     end
 end
+function MP:serialize_custom(k)
+    if k=='P.field' then
+        return "'[FIELD]'"
+    elseif k=='P.nextQueue' then
+        return "'[NEXT]'"
+    elseif k=='P.holdQueue' then
+        return "'[HOLD]'"
+    elseif k=='P.floatHolds' then
+        return "'[FLOAT_HOLD]'"
+    end
+end
+function MP:unserialize_custom()
+    -- P.field
+    -- P.nextQueue
+    -- P.holdQueue
+    -- P.floatHolds
+end
 --------------------------------------------------------------
 -- Builder
 --- @class Techmino.Mode.Setting.Mino
@@ -2065,8 +2082,6 @@ function MP:initialize()
     }
 
     self:loadScript(self.settings.script)
-
-    -- self:serialize()
 end
 --------------------------------------------------------------
 

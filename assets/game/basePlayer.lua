@@ -679,14 +679,18 @@ function P:initialize()
         self.keyState[k]=false
     end
 end
-local function dump(L,t)
+local function dump(self,L,t,path)
     local s='{'
     local count=1
     for k,v in next,L do
+        local nPath=path..'.'..tostring(k)
+        -- print(nPath)
         -- print(k,v)
+
         local T=type(k)
         if T=='number' then
             if k==count then
+                -- List part, no brackets needed
                 k=''
                 count=count+1
             else
@@ -694,50 +698,108 @@ local function dump(L,t)
             end
         elseif T=='string' then
             if string.find(k,'[^0-9a-zA-Z_]') then
-                k='[\"'..k:gsub('"','\\"')..'\"]='
+                k='["'..k:gsub('"','\\"')..'"]='
             else
                 k=k..'='
             end
         elseif T=='boolean' then
             k='['..k..']='
         elseif T=='function' then
-            k='[\"'..regFuncToStr[k]..'\"]='
+            k='["FUNC:'..regFuncToStr[k]..'"]='
         else
-            k='[\"*'..tostring(k)..'\"]='
-            -- error("Wrong key type: "..T)
+            k='["*'..tostring(k)..'"]='
+            LOG("Wrong key type: "..T..", "..nPath)
         end
 
-        T=type(v)
-        if T=='number' or T=='boolean' then
-            v=tostring(v)
-        elseif T=='string' then
-            v='\"'..v:gsub('"','\\"')..'\"'
-        elseif T=='table' then
-            v=t<10 and dump(v,t+1) or "*table"
-        elseif T=='function' then
-            v='\"'..(regFuncToStr[v] or "*function:unknown")..'\"'
-        elseif T=='userdata' then
-            T=v:type()
-            if T=='RandomGenerator' then
-                v=dump({__type=T,state=v:getState()})
-            else
-                print(T)
-            end
+        local customRes=self:serialize_custom(nPath)
+        if customRes then
+            v=customRes
         else
-            v='[\"*'..tostring(v)..'\"]='
-            -- error("Wrong value type: "..T)
+            T=type(v)
+            if T=='number' or T=='boolean' then
+                v=tostring(v)
+            elseif T=='string' then
+                v='"'..v:gsub('"','\\"')..'"'
+            elseif T=='table' then
+                v=t<10 and dump(self,v,t+1,nPath)
+            elseif T=='function' then
+                v='"FUNC:'..(regFuncToStr[v] or "unknown")..'"'
+            elseif T=='userdata' then
+                T=v:type()
+                if T=='RandomGenerator' then
+                    v=dump(self,{__type=T,state=v:getState()},t+1,nPath)
+                elseif T=='ParticleSystem' then
+                    v=nil -- Skip
+                else
+                    LOG("Un-handled type:"..T..", "..nPath)
+                end
+            else
+                v='["*'..tostring(v)..'"]='
+                LOG("Wrong value type: "..T..", "..nPath)
+            end
         end
-        s=s..k..v..','
+
+        if v~=nil then
+            s=s..k..v..','
+        end
     end
     return s..'}'
 end
 function P:serialize()
-    local data=dump(self,0)
-    print(data)
-    return data
+    return dump(self,self,0,"P")
 end
-function P:unserialize()
-    -- TODO
+local function undump(self,L,t)
+    for k,v in next,L do
+        local T=type(k)
+        if T=='number' or T=='boolean' then
+        elseif T=='string' then
+            if k:sub(1,5)=='FUNC:' then
+                k=regStrToFunc[k:sub(6)] or LOG("UNKNOWN_FNCTION: "..k)
+            end
+        end
+
+        T=type(v)
+        if T=='table' then
+            if v.__type then
+                if v.__type=='RandomGenerator' then
+                    self[k]=love.math.newRandomGenerator()
+                    self[k]:setState(v.state)
+                elseif T=='ParticleSystem' then
+                    -- Skip
+                else
+                    LOG("Un-handled type:"..v.__type)
+                end
+            elseif t<=10 then
+                self[k]={}
+                undump(self,v,t+1)
+            end
+        else
+            if T=='string' then
+                if v:sub(1,5)=='FUNC:' then
+                    v=regStrToFunc[v:sub(6)] or LOG("UNKNOWN_FNCTION: "..v)
+                end
+            end
+            self[k]=v
+        end
+    end
+end
+function P:unserialize(data)
+    local f='return'..data
+    f=loadstring(f)
+    if type(f)~='function' then
+        LOG("Cannot parse data as luaon")
+        return
+    end
+    setfenv(f,{})
+    local res=f()
+    undump(self,res,0)
+    P:unserialize_custom()
+end
+function P:serialize_custom()
+    -- Flandre kawaii
+end
+function P:unserialize_custom()
+    -- Flandre kawaii
 end
 --------------------------------------------------------------
 
