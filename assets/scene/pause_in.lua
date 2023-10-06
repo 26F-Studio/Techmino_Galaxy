@@ -54,6 +54,15 @@ scene.widgetList={
     {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
     {type='button',pos={.5,.5},x=300*-1,y=-160,w=260,h=100,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.play,    code=function() sysAction('back') end},
     {type='button',pos={.5,.5},x=300*0,y=-160,w=260,h=100,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.retry,    code=function() sysAction('restart') end},
-    {type='button',pos={.5,.5},x=300*1,y=-160,w=260,h=100,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.settings, code=function() sysAction('setting') end},
+    {type='button',pos={.5,.5},x=300*1,y=-160,w=260,h=100,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.settings,
+        code=function()
+            if PROGRESS.getMain()<=2 or isCtrlPressed() then
+                sysAction('setting')
+            else
+                SFX.play('move_failed')
+                SFX.play('suffocate',nil,nil,MATH.rand(-6,2))
+            end
+        end,
+    },
 }
 return scene
