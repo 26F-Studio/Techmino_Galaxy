@@ -209,7 +209,6 @@ function updateWidgetVisible(widgetList)
 end
 
 local sandBoxEnv={
-    mechLib=mechLib,
     math=math,
     string=string,
     table=table,
@@ -221,9 +220,10 @@ local sandBoxEnv={
     type=type,
     pcall=pcall,xpcall=xpcall,
     rawget=rawget,rawset=rawset,rawlen=rawlen,rawequal=rawequal,
-    setfenv=setfenv,setmetatable=setmetatable,
+    setmetatable=setmetatable,
 }
 function setSafeEnv(func)
+    sandBoxEnv.mechLib=mechLib
     setfenv(func,TABLE.copy(sandBoxEnv))
 end
 
