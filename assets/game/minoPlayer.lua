@@ -715,6 +715,17 @@ function MP:popNext(ifHold)
         self:minoDropped()
     end
 end
+--- @return Techmino.Cell
+function MP:newCell(color,id)
+    self.totalCellCount=self.totalCellCount+1
+    local c={
+        cid='_'..STRING.toHex(self.totalCellCount),
+        id=id,
+        color=color or 0,
+        conn={},
+    }
+    return c
+end
 function MP:getMino(shapeData)
     local shapeID,shapeName,shapeMat,shapeColor
     if type(shapeData)=='table' then
@@ -733,11 +744,7 @@ function MP:getMino(shapeData)
 
     -- Generate cell matrix from bool matrix
     for y=1,#shapeMat do for x=1,#shapeMat[1] do
-        shapeMat[y][x]=shapeMat[y][x] and {
-            id=self.pieceCount,
-            color=shapeColor,
-            conn={},
-        }
+        shapeMat[y][x]=shapeMat[y][x] and self:newCell(shapeColor,self.pieceCount)
     end end
 
     -- Connect cells
@@ -745,14 +752,14 @@ function MP:getMino(shapeData)
         if shapeMat[y][x] then
             local L=shapeMat[y][x].conn
             local b
-            b=shapeMat[y]   if b and b[x-1] then L[b[x-1]]=true end
-            b=shapeMat[y]   if b and b[x+1] then L[b[x+1]]=true end
-            b=shapeMat[y-1] if b and b[x]   then L[b[x]  ]=true end
-            b=shapeMat[y+1] if b and b[x]   then L[b[x]  ]=true end
-            b=shapeMat[y-1] if b and b[x-1] then L[b[x-1]]=true end
-            b=shapeMat[y-1] if b and b[x+1] then L[b[x+1]]=true end
-            b=shapeMat[y+1] if b and b[x-1] then L[b[x-1]]=true end
-            b=shapeMat[y+1] if b and b[x+1] then L[b[x+1]]=true end
+            b=shapeMat[y]   if b and b[x-1] then L[b[x-1].cid]=0 end
+            b=shapeMat[y]   if b and b[x+1] then L[b[x+1].cid]=0 end
+            b=shapeMat[y-1] if b and b[x]   then L[b[x]  .cid]=0 end
+            b=shapeMat[y+1] if b and b[x]   then L[b[x]  .cid]=0 end
+            b=shapeMat[y-1] if b and b[x-1] then L[b[x-1].cid]=0 end
+            b=shapeMat[y-1] if b and b[x+1] then L[b[x+1].cid]=0 end
+            b=shapeMat[y+1] if b and b[x-1] then L[b[x-1].cid]=0 end
+            b=shapeMat[y+1] if b and b[x+1] then L[b[x+1].cid]=0 end
         end
     end end
 
@@ -776,10 +783,10 @@ function MP:getConnectedCells(x0,y0)
             local x,y,c0=list[ptr][1],list[ptr][2],list[ptr][3]
             if c0.conn then
                 local c1
-                c1=F:getCell(x+1,y) if c1 and not list[c1] and c0.conn[c1] then ins(list,{x+1,y,c1}) list[c1]=true end
-                c1=F:getCell(x-1,y) if c1 and not list[c1] and c0.conn[c1] then ins(list,{x-1,y,c1}) list[c1]=true end
-                c1=F:getCell(x,y+1) if c1 and not list[c1] and c0.conn[c1] then ins(list,{x,y+1,c1}) list[c1]=true end
-                c1=F:getCell(x,y-1) if c1 and not list[c1] and c0.conn[c1] then ins(list,{x,y-1,c1}) list[c1]=true end
+                c1=F:getCell(x+1,y) if c1 and not list[c1] and c0.conn[c1.cid] then ins(list,{x+1,y,c1}) list[c1]=true end
+                c1=F:getCell(x-1,y) if c1 and not list[c1] and c0.conn[c1.cid] then ins(list,{x-1,y,c1}) list[c1]=true end
+                c1=F:getCell(x,y+1) if c1 and not list[c1] and c0.conn[c1.cid] then ins(list,{x,y+1,c1}) list[c1]=true end
+                c1=F:getCell(x,y-1) if c1 and not list[c1] and c0.conn[c1.cid] then ins(list,{x,y-1,c1}) list[c1]=true end
             end
             ptr=ptr+1
         end
@@ -819,8 +826,8 @@ function MP:cutConnection(y) -- y is cutting line height to ground
             end
             for i=1,#listLo do
                 for j=1,#listHi do
-                    listLo[i][3].conn[listHi[j][3]]=nil
-                    listHi[j][3].conn[listLo[i][3]]=nil
+                    listLo[i][3].conn[listHi[j][3].cid]=nil
+                    listHi[j][3].conn[listLo[i][3].cid]=nil
                 end
             end
         end
@@ -1271,10 +1278,7 @@ function MP:riseGarbage(holePos)
 
     -- Generate line
     for x=1,w do
-        L[x]={
-            color=0,
-            conn={},
-        }
+        L[x]=self:newCell(0)
     end
 
     -- Generate hole
@@ -1291,8 +1295,8 @@ function MP:riseGarbage(holePos)
     -- Add connection
     for x=1,w do
         if L[x] then
-            if L[x-1] then L[x].conn[L[x-1]]=true end
-            if L[x+1] then L[x].conn[L[x+1]]=true end
+            if L[x-1] then L[x].conn[L[x-1].cid]=0 end
+            if L[x+1] then L[x].conn[L[x+1].cid]=0 end
         end
     end
     ins(self.field._matrix,1,L)
@@ -1351,7 +1355,7 @@ function MP:setField(arg)
                     end
                 end
                 if c and c%1==0 and c>=0 and c<=64 then
-                    f[y][x]={color=c,conn={}}
+                    f[y][x]=self:newCell(c)
                 else
                     f[y][x]=false
                 end
@@ -1363,10 +1367,10 @@ function MP:setField(arg)
     for y=1,#arg do
         for x=1,w do
             if f[y][x] then
-                if f[y]   and f[y][x-1] then f[y][x].conn[f[y][x-1]]=true end
-                if f[y]   and f[y][x+1] then f[y][x].conn[f[y][x+1]]=true end
-                if f[y-1] and f[y-1][x] then f[y][x].conn[f[y-1][x]]=true end
-                if f[y+1] and f[y+1][x] then f[y][x].conn[f[y+1][x]]=true end
+                if f[y]   and f[y][x-1] then f[y][x].conn[f[y][x-1]]=0 end
+                if f[y]   and f[y][x+1] then f[y][x].conn[f[y][x+1]]=0 end
+                if f[y-1] and f[y-1][x] then f[y][x].conn[f[y-1][x]]=0 end
+                if f[y+1] and f[y+1][x] then f[y][x].conn[f[y+1][x]]=0 end
             end
         end
     end
@@ -1865,32 +1869,6 @@ function MP:checkScriptSyntax(cmd,arg,errMsg)
         end
     end
 end
-function MP:serialize_custom(k)
-    if k=='P.serializingData' then
-        return false
-    elseif k=='P.hand' then
-        return "'[HAND]'"
-    elseif k=='P.field' then
-        return "'[FIELD]'"
-    elseif k=='P.nextQueue' then
-        return "'[NEXT]'"
-    elseif k=='P.holdQueue' then
-        return "'[HOLD]'"
-    elseif k=='P.floatHolds' then
-        return "'[FLOAT_HOLD]'"
-    elseif k=='P.lastMovement' then
-        return "'[LAST_MOVEMENT]'"
-    end
-end
-function MP:unserialize_custom()
-    self.serializingData=nil
-    -- self.hand
-    -- self.field
-    -- self.nextQueue
-    -- self.holdQueue
-    -- self.floatHolds
-    -- self.lastMovement
-end
 --------------------------------------------------------------
 -- Builder
 --- @class Techmino.Mode.Setting.Mino
@@ -2035,6 +2013,7 @@ function MP:initialize()
     self.garbageBuffer={}
     self.garbageSum=0
 
+    self.totalCellCount=0
     self.nextQueue={}
     self.seqData={}
     self.seqGen=mechLib.mino.sequence[self.settings.seqType] or self.settings.seqType

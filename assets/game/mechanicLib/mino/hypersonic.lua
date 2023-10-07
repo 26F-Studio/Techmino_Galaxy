@@ -152,15 +152,15 @@ do -- high
             local firstLine=F._matrix[1]
             local newLine={}
             for i=1,#firstLine do
-                newLine[i]=firstLine[i] and {color=firstLine[i].color,conn={}} or false
+                newLine[i]=firstLine[i] and P:newCell(firstLine[i].color) or false
             end
             table.insert(F._matrix,1,newLine)
             for i=1,#firstLine do
                 local cells=P:getConnectedCells(i,2)
                 for j=1,#cells do
                     local c=F:getCell(cells[j][1],cells[j][2])
-                    c.conn[newLine[i]]=true
-                    newLine[i].conn[c]=true
+                    c.conn[newLine[i].cid]=0
+                    newLine[i].conn[c.cid]=0
                 end
             end
             if P.hand then

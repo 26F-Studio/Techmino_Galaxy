@@ -684,8 +684,7 @@ local function dump(self,L,t,path)
     local count=1
     for k,v in next,L do
         local nPath=path..'.'..tostring(k)
-        -- print(nPath)
-        -- print(k,v)
+        -- print(nPath,k,v)
 
         local T=type(k)
         if T=='number' then
@@ -697,10 +696,11 @@ local function dump(self,L,t,path)
                 k='['..k..']='
             end
         elseif T=='string' then
-            if string.find(k,'[^0-9a-zA-Z_]') then
-                k='["'..k:gsub('"','\\"')..'"]='
-            else
+            -- if k is legal variable name
+            if k:match('^[_a-zA-Z][_a-zA-Z0-9]*$') then
                 k=k..'='
+            else
+                k='["'..k:gsub('["\\]','\\%1')..'"]='
             end
         elseif T=='boolean' then
             k='['..k..']='
@@ -711,32 +711,27 @@ local function dump(self,L,t,path)
             LOG("Wrong key type: "..T..", "..nPath)
         end
 
-        local customRes=self:serialize_custom(nPath)
-        if customRes then
-            v=customRes
-        else
-            T=type(v)
-            if T=='number' or T=='boolean' then
-                v=tostring(v)
-            elseif T=='string' then
-                v='"'..v:gsub('"','\\"')..'"'
-            elseif T=='table' then
-                v=t<10 and dump(self,v,t+1,nPath)
-            elseif T=='function' then
-                v='"FUNC:'..(regFuncToStr[v] or "unknown")..'"'
-            elseif T=='userdata' then
-                T=v:type()
-                if T=='RandomGenerator' then
-                    v=dump(self,{__type=T,state=v:getState()},t+1,nPath)
-                elseif T=='ParticleSystem' then
-                    v=nil -- Skip
-                else
-                    LOG("Un-handled type:"..T..", "..nPath)
-                end
+        T=type(v)
+        if T=='number' or T=='boolean' then
+            v=tostring(v)
+        elseif T=='string' then
+            v='"'..v:gsub('"','\\"')..'"'
+        elseif T=='table' then
+            v=t<10 and dump(self,v,t+1,nPath)
+        elseif T=='function' then
+            v='"FUNC:'..(regFuncToStr[v] or LOG("UNKNOWN_FUNCTION: "..nPath) or "unknown")..'"'
+        elseif T=='userdata' then
+            T=v:type()
+            if T=='RandomGenerator' then
+                v=dump(self,{__type=T,state=v:getState()},t+1,nPath)
+            elseif T=='ParticleSystem' then
+                v=nil -- Skip
             else
-                v='["*'..tostring(v)..'"]='
-                LOG("Wrong value type: "..T..", "..nPath)
+                LOG("Un-handled type:"..T..", "..nPath)
             end
+        else
+            v='["*'..tostring(v)..'"]='
+            LOG("Wrong value type: "..T..", "..nPath)
         end
 
         if v~=nil then
@@ -754,7 +749,7 @@ local function undump(self,L,t)
         if T=='number' or T=='boolean' then
         elseif T=='string' then
             if k:sub(1,5)=='FUNC:' then
-                k=regStrToFunc[k:sub(6)] or LOG("UNKNOWN_FNCTION: "..k)
+                k=regStrToFunc[k:sub(6)] or LOG("UNKNOWN_FUNCTION: "..k)
             end
         end
 
@@ -776,30 +771,22 @@ local function undump(self,L,t)
         else
             if T=='string' then
                 if v:sub(1,5)=='FUNC:' then
-                    v=regStrToFunc[v:sub(6)] or LOG("UNKNOWN_FNCTION: "..v)
+                    v=regStrToFunc[v:sub(6)] or LOG("UNKNOWN_FUNCTION: "..v)
                 end
             end
             self[k]=v
         end
     end
 end
+
 function P:unserialize(data)
     local f='return'..data
     f=loadstring(f)
-    if type(f)~='function' then
-        LOG("Cannot parse data as luaon")
-        return
-    end
+    if type(f)~='function' then return LOG("Cannot parse data as luaon") end
     setfenv(f,{})
     local res=f()
+    if type(res)~='table' then return LOG("Cannot parse data as luaon") end
     undump(self,res,0)
-    P:unserialize_custom()
-end
-function P:serialize_custom()
-    -- Flandre kawaii
-end
-function P:unserialize_custom()
-    -- Flandre kawaii
 end
 --------------------------------------------------------------
 

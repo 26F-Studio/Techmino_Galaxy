@@ -59,9 +59,10 @@
 --- @field O1 Techmino.Mino
 
 --- @class Techmino.Cell
+--- @field cid string cell's mem pointer string
 --- @field id number ascending piece number
 --- @field color number 0~63
---- @field conn table<Techmino.Cell,true>
+--- @field conn table<string,true>
 --- @field bias {expBack:number?, lineBack:number?, teleBack:number?, x:number, y:number}
 --- @field visTimer? number
 --- @field visStep? number

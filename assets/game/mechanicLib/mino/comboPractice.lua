@@ -22,7 +22,7 @@ local function newMap(P)
         F._matrix[y]=TABLE.new(false,w)
         for x=1,w do
             if not (x>=wellL and x<=wellR) then
-                F._matrix[y][x]={color=0,conn={}}
+                F._matrix[y][x]=P:newCell(0)
             end
         end
         if wellR-wellL+1<4 then
@@ -42,7 +42,7 @@ local function newMap(P)
         if P:random()<.626 then -- 6-res
             for x=wellL,wellR do
                 for y=1,2 do
-                    F._matrix[y][x]={color=0,conn={}}
+                    F._matrix[y][x]=P:newCell(0)
                 end
             end
             F._matrix[1][P:random(wellL,wellR)]=false
@@ -50,12 +50,12 @@ local function newMap(P)
         else -- 3-res
             if P:random()<.626 then -- Hook pattern
                 local L=P:random()<.5
-                F._matrix[1][L and wellL   or wellR  ]={color=0,conn={}}
-                F._matrix[2][L and wellL   or wellR  ]={color=0,conn={}}
-                F._matrix[2][L and wellL+1 or wellR-1]={color=0,conn={}}
+                F._matrix[1][L and wellL   or wellR  ]=P:newCell(0)
+                F._matrix[2][L and wellL   or wellR  ]=P:newCell(0)
+                F._matrix[2][L and wellL+1 or wellR-1]=P:newCell(0)
             else -- Flat
                 for x=wellL,wellR do
-                    F._matrix[1][x]={color=0,conn={}}
+                    F._matrix[1][x]=P:newCell(0)
                 end
                 F._matrix[1][P:random(wellL,wellR)]=false
             end

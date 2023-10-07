@@ -38,7 +38,10 @@ local function drawCell(B,x,y,bx,by,r,g,b,a)
     if not (D or L or B[y-1] and B[y-1][x-1]) then gc_rectangle('fill',bx     ,by+40,X ,-X) end
 end
 
-
+local function getCID(F,y,x)
+    local line=F[y]
+    return line and line[x] and line[x].cid or false
+end
 function S.drawFieldCell(C,F,x,y)
     -- local bx,by=(x-1)*40,-y*40
     local r,g,b=unpack(ColorTable[C.color])
@@ -51,19 +54,19 @@ function S.drawFieldCell(C,F,x,y)
     if c then
         local U,D,L,R
         gc_setColor(r*.65,g*.65,b*.65,a)
-        if not (c[F[y+1] and F[y+1][x  ]]) then gc_rectangle('fill',0 ,-40,40, X ) U=true end
-        if not (c[F[y  ] and F[y  ][x+1]]) then gc_rectangle('fill',40,0  ,-X,-40) R=true end
+        if not c[getCID(F,y+1,x  )] then gc_rectangle('fill',0 ,-40,40, X ) U=true end
+        if not c[getCID(F,y  ,x+1)] then gc_rectangle('fill',40,0  ,-X,-40) R=true end
         gc_setColor(r*.4,g*.4,b*.4,a)
-        if not (c[F[y  ] and F[y  ][x-1]]) then gc_rectangle('fill',0 ,0  ,X ,-40) L=true end
-        if not (c[F[y-1] and F[y-1][x  ]]) then gc_rectangle('fill',0 ,0  ,40,-X ) D=true end
+        if not c[getCID(F,y  ,x-1)] then gc_rectangle('fill',0 ,0  ,X ,-40) L=true end
+        if not c[getCID(F,y-1,x  )] then gc_rectangle('fill',0 ,0  ,40,-X ) D=true end
 
         gc_setColor(r*.8,g*.8,b*.8,a)
-        if not (U or R or c[F[y+1] and F[y+1][x+1]]) then gc_rectangle('fill',40,-40,-X, X) end
+        if not (U or R or c[getCID(F,y+1,x+1)]) then gc_rectangle('fill',40,-40,-X, X) end
         gc_setColor(r*.5,g*.5,b*.5,a)
-        if not (U or L or c[F[y+1] and F[y+1][x-1]]) then gc_rectangle('fill',0 ,-40,X , X) end
-        if not (D or R or c[F[y-1] and F[y-1][x+1]]) then gc_rectangle('fill',40,0  ,-X,-X) end
+        if not (U or L or c[getCID(F,y+1,x-1)]) then gc_rectangle('fill',0 ,-40,X , X) end
+        if not (D or R or c[getCID(F,y-1,x+1)]) then gc_rectangle('fill',40,0  ,-X,-X) end
         gc_setColor(r*.3,g*.3,b*.3,a)
-        if not (D or L or c[F[y-1] and F[y-1][x-1]]) then gc_rectangle('fill',0 ,0  ,X ,-X) end
+        if not (D or L or c[getCID(F,y-1,x-1)]) then gc_rectangle('fill',0 ,0  ,X ,-X) end
     end
 end
 
