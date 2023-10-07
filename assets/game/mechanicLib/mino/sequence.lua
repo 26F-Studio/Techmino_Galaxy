@@ -97,6 +97,24 @@ function sequence.bag7_steal1(P,d,init) -- bag7, but each bag steals a piece fro
     return rem(d.bag,P:random(#d.bag))
 end
 
+function sequence.bag16(P,d,init) -- bag7+7+TI
+    if init then
+        d.bag={}
+        return
+    end
+    if not d.bag[1] then d.bag=TABLE.combine(Tetros,TABLE.combine(Tetros,{5,7})) end
+    return rem(d.bag,P:random(#d.bag))
+end
+
+function sequence.bag26(P,d,init) -- bag 7+7+7+TTOII
+    if init then
+        d.bag={}
+        return
+    end
+    if not d.bag[1] then d.bag=TABLE.combine(Tetros,TABLE.combine(Tetros,TABLE.combine(Tetros,{5,5,6,7,7}))) end
+    return rem(d.bag,P:random(#d.bag))
+end
+
 function sequence.bag12_drought(P,d,init) -- bag14 without I piece
     if init then
         d.bag={}
