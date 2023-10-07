@@ -2071,6 +2071,15 @@ function MP:initialize()
 
     self:loadScript(self.settings.script)
 end
+function MP:unserialize_custom()
+    -- Recover field object
+    local f=self.field
+    self.field=require'assets.game.rectField'.new(self.settings.fieldW)
+    self.field._width=f._width
+    self.field._matrix=f._matrix
+
+    self.soundEvent=setmetatable({},soundEventMeta)
+end
 --------------------------------------------------------------
 
 return MP

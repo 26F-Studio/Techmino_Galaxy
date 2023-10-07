@@ -679,63 +679,77 @@ function P:initialize()
         self.keyState[k]=false
     end
 end
+local dumpIgnore={
+    'P.soundTimeHistory',
+    'P.soundEvent',
+    'P.particles',
+    'P.texts',
+}
+for _,v in next,dumpIgnore do
+    dumpIgnore[v]=true
+end
+TABLE.cut(dumpIgnore)
 local function dump(self,L,t,path)
     local s='{'
     local count=1
     for k,v in next,L do
         local nPath=path..'.'..tostring(k)
-        -- print(nPath,k,v)
+        if not dumpIgnore[nPath] then
+            -- print(nPath,k,v)
 
-        local T=type(k)
-        if T=='number' then
-            if k==count then
-                -- List part, no brackets needed
-                k=''
-                count=count+1
-            else
+            local T=type(k)
+            if T=='number' then
+                if k==count then
+                    -- List part, no brackets needed
+                    k=''
+                    count=count+1
+                else
+                    k='['..k..']='
+                end
+            elseif T=='string' then
+                -- if k is legal variable name
+                if k:match('^[_a-zA-Z][_a-zA-Z0-9]*$') then
+                    k=k..'='
+                else
+                    k='["'..k:gsub('["\\]','\\%1')..'"]='
+                end
+            elseif T=='boolean' then
                 k='['..k..']='
-            end
-        elseif T=='string' then
-            -- if k is legal variable name
-            if k:match('^[_a-zA-Z][_a-zA-Z0-9]*$') then
-                k=k..'='
+            elseif T=='function' then
+                k='["FUNC:'..regFuncToStr[k]..'"]='
             else
-                k='["'..k:gsub('["\\]','\\%1')..'"]='
+                k='["*'..tostring(k)..'"]='
+                LOG("Wrong key type: "..T..", "..nPath)
             end
-        elseif T=='boolean' then
-            k='['..k..']='
-        elseif T=='function' then
-            k='["FUNC:'..regFuncToStr[k]..'"]='
-        else
-            k='["*'..tostring(k)..'"]='
-            LOG("Wrong key type: "..T..", "..nPath)
-        end
 
-        T=type(v)
-        if T=='number' or T=='boolean' then
-            v=tostring(v)
-        elseif T=='string' then
-            v='"'..v:gsub('"','\\"')..'"'
-        elseif T=='table' then
-            v=t<10 and dump(self,v,t+1,nPath)
-        elseif T=='function' then
-            v='"FUNC:'..(regFuncToStr[v] or LOG("UNKNOWN_FUNCTION: "..nPath) or "unknown")..'"'
-        elseif T=='userdata' then
-            T=v:type()
-            if T=='RandomGenerator' then
-                v=dump(self,{__type=T,state=v:getState()},t+1,nPath)
-            elseif T=='ParticleSystem' then
-                v=nil -- Skip
+            T=type(v)
+            if T=='number' or T=='boolean' then
+                v=tostring(v)
+            elseif T=='string' then
+                v='"'..v:gsub('"','\\"')..'"'
+            elseif T=='table' then
+                v=t<10 and dump(self,v,t+1,nPath)
+            elseif T=='function' then
+                v='"FUNC:'..(regFuncToStr[v] or LOG("UNKNOWN_FUNCTION: "..nPath) or "unknown")..'"'
+            elseif T=='userdata' then
+                T=v:type()
+                if T=='RandomGenerator' then
+                    v=dump(self,{__type=T,state=v:getState()},t+1,nPath)
+                elseif T=='ParticleSystem' then
+                    v=nil -- Skip
+                else
+                    LOG("Un-handled type:"..T..", "..nPath)
+                end
             else
-                LOG("Un-handled type:"..T..", "..nPath)
+                v='["*'..tostring(v)..'"]='
+                LOG("Wrong value type: "..T..", "..nPath)
+            end
+
+            if v~=nil then
+                s=s..(s=='{' and k or ','..k)..v
             end
         else
-            v='["*'..tostring(v)..'"]='
-            LOG("Wrong value type: "..T..", "..nPath)
-        end
-
-        if v~=nil then
-            s=s..k..v..','
+            LOG("Filtered: "..nPath)
         end
     end
     return s..'}'
@@ -751,6 +765,8 @@ local function undump(self,L,t)
             if k:sub(1,5)=='FUNC:' then
                 k=regStrToFunc[k:sub(6)] or LOG("UNKNOWN_FUNCTION: "..k)
             end
+        else
+            LOG("Abnormal key type: "..T)
         end
 
         T=type(v)
@@ -759,14 +775,14 @@ local function undump(self,L,t)
                 if v.__type=='RandomGenerator' then
                     self[k]=love.math.newRandomGenerator()
                     self[k]:setState(v.state)
-                elseif T=='ParticleSystem' then
-                    -- Skip
                 else
                     LOG("Un-handled type:"..v.__type)
                 end
             elseif t<=10 then
                 self[k]={}
-                undump(self,v,t+1)
+                undump(self[k],v,t+1)
+            else
+                LOG("WARNING: table depth over 10, skipped")
             end
         else
             if T=='string' then
@@ -778,7 +794,6 @@ local function undump(self,L,t)
         end
     end
 end
-
 function P:unserialize(data)
     local f='return'..data
     f=loadstring(f)
@@ -787,6 +802,13 @@ function P:unserialize(data)
     local res=f()
     if type(res)~='table' then return LOG("Cannot parse data as luaon") end
     undump(self,res,0)
+
+    self.soundTimeHistory=setmetatable({},soundTimeMeta)
+
+    self:unserialize_custom()
+end
+function P:unserialize_custom()
+    -- Flandre kawaii
 end
 --------------------------------------------------------------
 
