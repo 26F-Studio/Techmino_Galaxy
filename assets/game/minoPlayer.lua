@@ -1866,7 +1866,11 @@ function MP:checkScriptSyntax(cmd,arg,errMsg)
     end
 end
 function MP:serialize_custom(k)
-    if k=='P.field' then
+    if k=='P.serializingData' then
+        return false
+    elseif k=='P.hand' then
+        return "'[HAND]'"
+    elseif k=='P.field' then
         return "'[FIELD]'"
     elseif k=='P.nextQueue' then
         return "'[NEXT]'"
@@ -1874,13 +1878,18 @@ function MP:serialize_custom(k)
         return "'[HOLD]'"
     elseif k=='P.floatHolds' then
         return "'[FLOAT_HOLD]'"
+    elseif k=='P.lastMovement' then
+        return "'[LAST_MOVEMENT]'"
     end
 end
 function MP:unserialize_custom()
-    -- P.field
-    -- P.nextQueue
-    -- P.holdQueue
-    -- P.floatHolds
+    self.serializingData=nil
+    -- self.hand
+    -- self.field
+    -- self.nextQueue
+    -- self.holdQueue
+    -- self.floatHolds
+    -- self.lastMovement
 end
 --------------------------------------------------------------
 -- Builder
