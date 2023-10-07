@@ -114,6 +114,7 @@ return {
     keyset_mino_softDrop=   "软降",
     keyset_mino_hardDrop=   "硬降",
     keyset_mino_holdPiece=  "暂存",
+    keyset_mino_skip=       "跳过",
 
     keyset_puyo_moveLeft=   "左移",
     keyset_puyo_moveRight=  "右移",
@@ -122,6 +123,7 @@ return {
     keyset_puyo_rotate180=  "180°旋转",
     keyset_puyo_softDrop=   "软降",
     keyset_puyo_hardDrop=   "硬降",
+    keyset_puyo_skip=       "跳过",
 
     keyset_gem_swapLeft=    "向左换",
     keyset_gem_swapRight=   "向右换",
@@ -134,6 +136,7 @@ return {
     keyset_gem_moveRight=   "光标右移",
     keyset_gem_moveUp=      "光标上移",
     keyset_gem_moveDown=    "光标下移",
+    keyset_gem_skip=        "跳过",
 
     keyset_func1= "功能 1",
     keyset_func2= "功能 2",

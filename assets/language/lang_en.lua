@@ -114,6 +114,7 @@ return {
     keyset_mino_softDrop=   "Soft Drop",
     keyset_mino_hardDrop=   "Hard Drop",
     keyset_mino_holdPiece=  "Hold Piece",
+    keyset_mino_skip=       "Skip",
 
     keyset_puyo_moveLeft=   "Move Left",
     keyset_puyo_moveRight=  "Move Right",
@@ -122,6 +123,7 @@ return {
     keyset_puyo_rotate180=  "Rotate180",
     keyset_puyo_softDrop=   "Soft Drop",
     keyset_puyo_hardDrop=   "Hard Drop",
+    keyset_puyo_skip=       "Skip",
 
     keyset_gem_swapLeft=    "Swap Left",
     keyset_gem_swapRight=   "Swap Right",
@@ -134,6 +136,7 @@ return {
     keyset_gem_moveRight=   "Cursor Right",
     keyset_gem_moveUp=      "Cursor Up",
     keyset_gem_moveDown=    "Cursor Down",
+    keyset_gem_skip=        "Skip",
 
     keyset_func1= "Function 1",
     keyset_func2= "Function 2",

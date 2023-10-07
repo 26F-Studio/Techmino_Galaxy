@@ -246,11 +246,12 @@ KEYMAP.mino=KEYMAP.new{
     {act='softDrop', keys={'x'}},
     {act='hardDrop', keys={'z'}},
     {act='holdPiece',keys={'space'}},
+    {act='skip',     keys={'q'}},
     {act='func1',    keys={'a'}},
     {act='func2',    keys={'s'}},
     {act='func3',    keys={'d'}},
-    {act='func4',    keys={'q'}},
-    {act='func5',    keys={'w'}},
+    {act='func4',    keys={'w'}},
+    {act='func5',    keys={'e'}},
 }
 KEYMAP.puyo=KEYMAP.new{
     {act='moveLeft', keys={'left'}},
@@ -260,11 +261,12 @@ KEYMAP.puyo=KEYMAP.new{
     {act='rotate180',keys={'c'}},
     {act='softDrop', keys={'x'}},
     {act='hardDrop', keys={'z'}},
+    {act='skip',     keys={'q'}},
     {act='func1',    keys={'a'}},
     {act='func2',    keys={'s'}},
     {act='func3',    keys={'d'}},
-    {act='func4',    keys={'q'}},
-    {act='func5',    keys={'w'}},
+    {act='func4',    keys={'w'}},
+    {act='func5',    keys={'e'}},
 }
 KEYMAP.gem=KEYMAP.new{
     {act='swapLeft', keys={'left'}},
@@ -278,11 +280,12 @@ KEYMAP.gem=KEYMAP.new{
     {act='moveRight',keys={'d'}},
     {act='moveUp',   keys={'w'}},
     {act='moveDown', keys={'s'}},
-    {act='func1',    keys={'a'}},
-    {act='func2',    keys={'s'}},
-    {act='func3',    keys={'d'}},
-    {act='func4',    keys={'q'}},
-    {act='func5',    keys={'w'}},
+    {act='skip',     keys={'space'}},
+    {act='func1',    keys={'x'}},
+    {act='func2',    keys={'c'}},
+    {act='func3',    keys={'v'}},
+    {act='func4',    keys={'f'}},
+    {act='func5',    keys={'r'}},
 }
 KEYMAP.sys=KEYMAP.new{
     {act='view',   keys={'lshift'}},
