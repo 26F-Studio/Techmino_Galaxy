@@ -42,6 +42,11 @@ local function sysAction(action)
 end
 function scene.keyDown(key,isRep)
     if isRep then return end
+    if key=='i' then
+        love.system.setClipboardText(GAME.playerList[1]:serialize())
+    elseif key=='o' then
+        GAME.playerList[1]:unserialize(love.system.getClipboardText())
+    end
     local action
 
     local p=GAME.mainPlayer
