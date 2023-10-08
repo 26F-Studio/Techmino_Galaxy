@@ -1,8 +1,10 @@
 local consoleClickCount=0
+local settingHint
 
 local scene={}
 function scene.enter()
     consoleClickCount=0
+    settingHint=PROGRESS.get('main')<2 and PROGRESS.get('launchCount')<=3
     PROGRESS.setEnv('interior')
     local visibleButtonName=PROGRESS.get('main')==1 and '1' or '2'
     for _,v in next,scene.widgetList do
@@ -60,6 +62,15 @@ function scene.draw()
     GC.scale(2)
     GC.print("T",-215,-200)
     GC.print("echmino",-165,-200)
+
+    -- Notify new player about setting
+    if settingHint then
+        GC.replaceTransform(SCR.xOy)
+        GC.setLineWidth(6)
+        GC.setColor(.626,1,.626,.26+.1*math.sin(2.6*love.timer.getTime()))
+        local W=scene.widgetList.GameSet
+        GC.mRect('line',W._x,W._y,W.w+42,W.h+42)
+    end
 end
 
 scene.widgetList={

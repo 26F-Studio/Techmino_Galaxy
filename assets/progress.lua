@@ -6,7 +6,7 @@ local gc=love.graphics
         Single>=200 or Sum>=350 → III
 ]]
 local prgs=setmetatable({
-    firstLaunch=true,
+    launchCount=0,
     main=1,
     tutorial='000000',
     interiorScore={
@@ -24,6 +24,8 @@ local prgs=setmetatable({
             dig_practice=0,
         },
     },
+    puyo_wip=false,
+    gem_wip=false,
 },{
     __index=function(_,k)
         error("Attempt to read undefined progress data: "..tostring(k))
@@ -118,7 +120,7 @@ function PROGRESS.load()
             --     MSG.new('info',"Hash not match")
             -- end
         end
-        prgs.firstLaunch=false
+        prgs.launchCount=prgs.launchCount+1
     else
         MSG.new('info',"Load progress failed: "..res)
     end
