@@ -5,7 +5,8 @@ local gc=love.graphics
         Sum>=100 → II
         Single>=200 or Sum>=350 → III
 ]]
-local prgs={
+local prgs=setmetatable({
+    firstLaunch=true,
     main=1,
     tutorial='000000',
     interiorScore={
@@ -23,7 +24,11 @@ local prgs={
             dig_practice=0,
         },
     },
-}
+},{
+    __index=function(_,k)
+        error("Attempt to read undefined progress data: "..tostring(k))
+    end,
+})
 
 local function sysInfoFunc()
     if not SETTINGS.system.powerInfo then return end
@@ -113,6 +118,7 @@ function PROGRESS.load()
             --     MSG.new('info',"Hash not match")
             -- end
         end
+        prgs.firstLaunch=false
     else
         MSG.new('info',"Load progress failed: "..res)
     end
@@ -329,7 +335,7 @@ function PROGRESS.drawExteriorHeader(h)
 end
 
 -- Get
-function PROGRESS.getMain() return prgs.main end
+function PROGRESS.get(k) return prgs[k] end
 function PROGRESS.getBgmUnlocked(name) return prgs.bgmUnlocked[name] end
 function PROGRESS.getTutorialPassed(n)
     if n then

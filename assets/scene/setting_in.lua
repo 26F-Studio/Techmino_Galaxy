@@ -2,7 +2,7 @@ local scene={}
 
 function scene.enter()
     local L=scene.widgetList
-    if PROGRESS.getMain()==1 then
+    if PROGRESS.get('main')==1 then
         L.das.y=250
         L.arr.y=350
         L.sdarr:setVisible(false)

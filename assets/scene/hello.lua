@@ -7,7 +7,7 @@ function scene.enter()
     t=0
     Zenitha.setClickFX(false)
     Zenitha.setDrawCursor(NULL)
-    if PROGRESS.getMain()>=3 then PROGRESS.applyCoolWaitTemplate() end
+    if PROGRESS.get('main')>=3 then PROGRESS.applyCoolWaitTemplate() end
 end
 
 function scene.update(dt)
@@ -21,13 +21,13 @@ end
 
 function scene.draw()
     TASK.lock('drawBegin')
-    if PROGRESS.getMain()<=2 then
+    if PROGRESS.get('main')<=2 then
         GC.clear(0,0,0)
         if t<1 and t%.26>.13 then
             FONT.set(50)
             GC.print('_',40,20)
         end
-    elseif PROGRESS.getMain()<=4 then
+    elseif PROGRESS.get('main')<=4 then
         GC.replaceTransform(SCR.xOy_m)
         GC.scale(1.6,1)
         GC.setLineWidth(19.5)

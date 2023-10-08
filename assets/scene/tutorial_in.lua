@@ -48,7 +48,7 @@ function scene.keyDown(key)
 end
 
 function scene.draw()
-    if PROGRESS.getMain()>1 then
+    if PROGRESS.get('main')>1 then
         GC.replaceTransform(SCR.xOy_m)
         GC.setColor(1,1,1,.42)
         GC.rectangle('fill',-7,-250,4,540)

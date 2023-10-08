@@ -3,7 +3,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('race',PROGRESS.getMain()==1 and 'simp' or 'base')
+        playBgm('race',PROGRESS.get('main')==1 and 'simp' or 'base')
         BG.set('none')
     end,
     settings={mino={
@@ -17,7 +17,7 @@ return {
             afterClear={
                 mechLib.mino.sprint.event_afterClear[40],
                 function(P)
-                    if PROGRESS.getMain()>=2 and P.modeData.stat.line>10 and P.isMain then
+                    if PROGRESS.get('main')>=2 and P.modeData.stat.line>10 and P.isMain then
                         BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-10)/20,1),2.6)
                     end
                 end,

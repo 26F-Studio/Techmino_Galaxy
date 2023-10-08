@@ -4,24 +4,24 @@ local scene={}
 function scene.enter()
     consoleClickCount=0
     PROGRESS.setEnv('interior')
-    local visibleButtonName=PROGRESS.getMain()==1 and '1' or '2'
+    local visibleButtonName=PROGRESS.get('main')==1 and '1' or '2'
     for _,v in next,scene.widgetList do
         if v.name=='1' or v.name=='2' then
             v:setVisible(v.name==visibleButtonName)
         elseif v.name=='GameSet' then
-            v.color=PROGRESS.getMain()<=2 and COLOR.L or COLOR.lD
+            v.color=PROGRESS.get('main')<=2 and COLOR.L or COLOR.lD
         end
     end
-    if PROGRESS.getMain()<=2 and (PROGRESS.getInteriorScore('sprint')>=200 or PROGRESS.getTotalInteriorScore()>=350) then
+    if PROGRESS.get('main')<=2 and (PROGRESS.getInteriorScore('sprint')>=200 or PROGRESS.getTotalInteriorScore()>=350) then
         PROGRESS.transcendTo(3)
-    elseif PROGRESS.getMain()==1 and (PROGRESS.getTotalInteriorScore()>=150 or PROGRESS.getTutorialPassed()) then
+    elseif PROGRESS.get('main')==1 and (PROGRESS.getTotalInteriorScore()>=150 or PROGRESS.getTutorialPassed()) then
         PROGRESS.transcendTo(2)
     end
 end
 
 local function sysAction(action)
     if action=='back' then
-        if PROGRESS.getMain()<=2 then
+        if PROGRESS.get('main')<=2 then
             if sureCheck('quit') then PROGRESS.quit() end
         else
             SCN.back('none')
@@ -46,7 +46,7 @@ function scene.draw()
     GC.replaceTransform(SCR.xOy_m)
 
     -- Progress bar
-    if PROGRESS.getMain()>=2 then
+    if PROGRESS.get('main')>=2 then
         scoreColor(-520,PROGRESS.getInteriorScore('dig'))
         scoreColor(-160,PROGRESS.getInteriorScore('sprint'))
         scoreColor(200, PROGRESS.getInteriorScore('marathon'))
@@ -78,7 +78,7 @@ scene.widgetList={
 
     {name='LangSel',type='button', pos={.5,.5},x=-270,y=320,w=400,h=100,text=CHAR.icon.language,     fontSize=70,lineWidth=4,cornerR=0,code=WIDGET.c_goScn('lang_in','none')},
     {name='GameSet',type='button', pos={.5,.5},x=270, y=320,w=400,h=100,text=LANG'main_in_settings', fontSize=40,lineWidth=4,cornerR=0,sound_trigger=false,code=function()
-        if PROGRESS.getMain()<=2 or isCtrlPressed() then
+        if PROGRESS.get('main')<=2 or isCtrlPressed() then
             SFX.play('button_norm')
             SCN.go('setting_in','none')
         else
