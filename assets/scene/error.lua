@@ -62,7 +62,7 @@ function scene.draw()
     GC.setColor(.26,.26,.26)
     GC.circle('fill',0,0,326)
     GC.setColor(.1,.1,.11)
-    GC.rectangle('fill',-35,-240,70,270)
+    GC.mRect('fill',0,-105,70,270)
     GC.setLineWidth(70)
     GC.arc('line','open',0,0,210,-.926,3.1415927+.926)
 

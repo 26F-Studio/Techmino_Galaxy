@@ -192,11 +192,11 @@ function scene.draw()
             GC.translate(s.x+s.size/2,s.y+s.size/2)
             GC.scale(1+120/390*s.active)
             GC.setColor(.26,.26,.26,.26)
-            GC.rectangle('fill',-190,-190,380,380,26)
+            GC.mRect('fill',0,0,380,380,26)
             if s.trigTimer then
                 GC.setColor(1,1,1,(s.trigTimer%.12<.06 or s.trigTimer>.36) and math.max(1-s.trigTimer,.626) or .26)
                 GC.setLineWidth(20)
-                GC.rectangle('line',-190+10,-190+10,380-20,380-20,16)
+                GC.mRect('line',0,0,380-20,380-20,16)
                 end
             s.draw()
             GC.pop()
