@@ -28,7 +28,7 @@ local prgs=setmetatable({
     gem_wip=false,
 },{
     __index=function(_,k)
-        error("Attempt to read undefined progress data: "..tostring(k))
+        LOG("Attempt to read undefined progress data: "..tostring(k))
     end,
 })
 
