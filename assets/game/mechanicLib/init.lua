@@ -1,7 +1,7 @@
 --- @alias Techmino.Mech.base table<string, table|fun(P:Techmino.Player|any):any>
---- @alias Techmino.Mech.mino table<string, table|fun(P:Techmino.Player.mino|any):any>
---- @alias Techmino.Mech.puyo table<string, table|fun(P:Techmino.Player.puyo|any):any>
---- @alias Techmino.Mech.gem table<string, table|fun(P:Techmino.Player.gem|any):any>
+--- @alias Techmino.Mech.mino table<string, table|fun(P:Techmino.Player.mino|any):any,any>
+--- @alias Techmino.Mech.puyo table<string, table|fun(P:Techmino.Player.puyo|any):any,any>
+--- @alias Techmino.Mech.gem table<string, table|fun(P:Techmino.Player.gem|any):any,any>
 
 -- Fake require function, make both human and language server happy
 -- Those files will be loaded in another way, not require
