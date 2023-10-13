@@ -39,7 +39,7 @@ function paperArtist.calculateFieldScore(field,cb,cy)
         end
     end
 
-    -- Which boy can refuse PC?
+    -- Which boy can refuse AC?
     if #field==0 then
         return 1e99
     end

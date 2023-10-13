@@ -47,18 +47,18 @@ function techrash.easy_event_afterClear(P,clear)
     P:triggerEvent('afterLock') -- Force refresh
     if P.hand.name=='I' and clear.line>=4 then
         P.modeData.techrash=P.modeData.techrash+1
-        local semiPC=P.field:getHeight()==0
-        if not semiPC then
-            semiPC=true
+        local HC=P.field:getHeight()==0
+        if not HC then
+            HC=true
             for x=1,P.settings.fieldW do
                 if #P:getConnectedCells(x,1)%4~=0 then
-                    semiPC=false
+                    HC=false
                     break
                 end
             end
         end
-        if semiPC then P:playSound('frenzy') end
-        P.modeData.bagLoop=math.max(P.modeData.bagLoop-(P.lastMovement.combo-1)*2-(semiPC and 2 or 0),0)
+        if HC then P:playSound('frenzy') end
+        P.modeData.bagLoop=math.max(P.modeData.bagLoop-(P.lastMovement.combo-1)*2-(HC and 2 or 0),0)
     else
         P:finish('PE')
     end
