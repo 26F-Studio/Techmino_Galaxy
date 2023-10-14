@@ -58,11 +58,26 @@ do -- Clearing
         {'line',0,3.5,6.5,3.5},
         {'line',3.5,0,3.5,6.5},
         {'fRect',2,2,3,3},
-    },2600)
-    p:setSizes(.26,1,.8,.6,.4,.2,0)
+    },2260)
     p:setSpread(MATH.tau)
+    p:setSizes(.26,1,.8,.6,.4,.2,0)
     p:setSpeed(0,20)
     ps.star=p
+end
+
+do -- Fever State
+    local p=love.graphics.newParticleSystem(GC.load{1,1,
+        {'clear',1,1,1},
+    },2600)
+    p:setSpread(.26)
+    p:setPosition(200,-400)
+    p:setEmissionArea('borderrectangle',200,400,0,true)
+    p:setParticleLifetime(.42,1)
+    p:setSizes(8,5,3,2,0)
+    p:setSpeed(26,126)
+    p:setEmissionRate(620)
+    p:pause()
+    ps.boardSmoke=p
 end
 
 do -- Rotate

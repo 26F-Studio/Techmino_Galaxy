@@ -220,8 +220,8 @@ function MP:createHoldEffect(ifInit)
 end
 function MP:createFrenzyEffect(amount)
     local p=self.particles.star
-    p:setParticleLifetime(.626,1.6)
     p:setEmissionArea('uniform',200,400,0,true)
+    p:setParticleLifetime(.626,1.6)
     p:setPosition(200,-400)
     p:emit(amount)
 end
@@ -1760,6 +1760,7 @@ function MP:render()
         GC.stc_stop()
 
         gc_setColor(1,1,1)
+        gc_draw(self.particles.boardSmoke)
         gc_draw(self.particles.star)
         gc_draw(self.particles.line)
 

@@ -72,6 +72,7 @@ function stack.switch(P)
         md.stack_lockDelay=P.settings.lockDelay
         P.settings.dropDelay,P.settings.lockDelay=1e99,1e99
 
+        P.particles.boardSmoke:start()
         BGM.set('all','highgain',.626,.26)
     else
         if md.stack_lines>0 then
@@ -115,6 +116,7 @@ function stack.switch(P)
         P.settings.lockDelay=md.stack_lockDelay
         md.stack_dropDelay,md.stack_lockDelay=nil,nil
 
+        P.particles.boardSmoke:pause()
         BGM.set('all','highgain',1,.1)
     end
 end

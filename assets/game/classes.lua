@@ -15,6 +15,7 @@
 --- @field rectShade love.ParticleSystem
 --- @field spinArrow table
 --- @field star love.ParticleSystem
+--- @field boardSmoke love.ParticleSystem
 --- @field line love.ParticleSystem
 --- @field hitSparkle love.ParticleSystem
 --- @field cornerCheck love.ParticleSystem
