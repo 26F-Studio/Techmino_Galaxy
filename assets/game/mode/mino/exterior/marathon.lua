@@ -9,7 +9,10 @@ return {
         spawnDelay=130,
         clearDelay=300,
         event={
-            playerInit=mechLib.mino.marathon.event_playerInit_auto,
+            playerInit={
+                mechLib.mino.marathon.event_playerInit_auto,
+                "P:setAction('func1',mechLib.mino.stack.switch_auto)",
+            },
             afterClear=mechLib.mino.progress.marathon_afterClear,
             gameOver=mechLib.mino.progress.marathon_gameOver,
         },
