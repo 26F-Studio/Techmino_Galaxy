@@ -121,15 +121,15 @@ TRS[6]={
         local baseX,baseY=self.handX,self.handY
         self:freshDelay('rotate')
         local transformed
-        if
-            not self.deathTimer and
-            (baseY==self.ghostY and
-                self:ifoverlap(self.hand.matrix,baseX-1,self.handY) and
-                self:ifoverlap(self.hand.matrix,baseX+1,self.handY)
-            )
-        then
-            if not self.settings.noOspin then
-                -- [Warning] field 'spinSeq' is a dirty data, TRS put this var into the block.
+        if not self.deathTimer then
+            if
+                self.settings.allowTransform and
+                (baseY==self.ghostY and
+                    self:ifoverlap(self.hand.matrix,baseX-1,self.handY) and
+                    self:ifoverlap(self.hand.matrix,baseX+1,self.handY)
+                )
+            then -- Try do perform O-spin
+                -- [Warning] ['spinSeq'] is a dirty data, TRS put this var into the block.
                 C.spinSeq=((C.spinSeq or '')..dir):sub(-3)
                 if #C.spinSeq==3 then
                     for i=1,#OspinList do
@@ -184,16 +184,28 @@ TRS[6]={
                         end
                     end
                 end
+            else -- No shape-changing spin
+                C.spinSeq=nil
+                C.matrix=TABLE.rotate(C.matrix,dir)
+                if dir=='R' or dir=='L' then
+                    local dx=dir=='R' and 1 or -1
+                    local dy=0
+                    while dy<=1 do
+                        if not self:ifoverlap(C.matrix,baseX+dx,baseY+dy) then
+                            self:moveHand('rotate',baseX+dx,baseY+dy,dir,ifInit)
+                            break
+                        else
+                            dy=dy+1
+                        end
+                    end
+                end
+                C.direction=(C.direction+(dir=='R' and 1 or dir=='L' and 3 or dir=='F' and 2))%4
             end
-        else -- No shape-changing spin
-            C.spinSeq=nil
-            C.matrix=TABLE.rotate(C.matrix,dir)
-            C.direction=(C.direction+(dir=='R' and 1 or dir=='L' and 3 or dir=='F' and 2))%4
-        end
-        if not transformed then
-            self:playSound(ifInit and 'initrotate' or 'rotate')
-            if self.settings.particles then
-                self:createRotateEffect(dir,ifInit)
+            if not transformed then
+                self:playSound(ifInit and 'initrotate' or 'rotate')
+                if self.settings.particles then
+                    self:createRotateEffect(dir,ifInit)
+                end
             end
         end
         self:checkLanding()

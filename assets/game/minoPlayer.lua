@@ -1930,6 +1930,7 @@ local baseEnv={
     -- Other
     strictLockout=false,
     script=false,
+    allowTransform=true,
 
     -- May be overrode with user setting
     das=162,
