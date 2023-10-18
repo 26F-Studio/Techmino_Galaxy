@@ -11,6 +11,11 @@
 --- | 'PE'  Mission failed
 --- | 'UKE' Other reason
 
+--- @alias Techmino.Mech.basic table<string, table|fun(P:Techmino.Player|any):any>
+--- @alias Techmino.Mech.mino table<string, table|fun(P:Techmino.Player.mino|any):any,any>
+--- @alias Techmino.Mech.puyo table<string, table|fun(P:Techmino.Player.puyo|any):any,any>
+--- @alias Techmino.Mech.gem table<string, table|fun(P:Techmino.Player.gem|any):any,any>
+
 --- @class Techmino.ParticleSystems
 --- @field rectShade love.ParticleSystem
 --- @field spinArrow table

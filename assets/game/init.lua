@@ -8,6 +8,7 @@ defaultMinoColor=setmetatable({
     36,52,4,24,
 },{__index=function() return math.random(64) end})
 defaultPuyoColor=setmetatable({2,12,42,22,52},{__index=function() return math.random(64) end})
+--- @type Techmino.Mech
 mechLib=TABLE.newResourceTable(require'assets.game.mechanicLib',function(path) return FILE.load(path,'-lua') end)
 regFuncLib(mechLib,"mechLib")
 require'assets.game.rotsys_mino'

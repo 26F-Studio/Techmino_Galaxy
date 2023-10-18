@@ -1,13 +1,9 @@
---- @alias Techmino.Mech.base table<string, table|fun(P:Techmino.Player|any):any>
---- @alias Techmino.Mech.mino table<string, table|fun(P:Techmino.Player.mino|any):any,any>
---- @alias Techmino.Mech.puyo table<string, table|fun(P:Techmino.Player.puyo|any):any,any>
---- @alias Techmino.Mech.gem table<string, table|fun(P:Techmino.Player.gem|any):any,any>
-
 -- Fake require function, make both human and language server happy
 -- Those files will be loaded in another way, not require
 local function require(path) return path:gsub('%.','/')..'.lua' end
 
-return {
+--- @class Techmino.Mech
+local mechLib={
     common={
         timer=require'assets.game.mechanicLib.common.timer',
         finish=require'assets.game.mechanicLib.common.finish',
@@ -31,6 +27,7 @@ return {
         comboPractice=require'assets.game.mechanicLib.mino.comboPractice',
         tsdChallenge=require'assets.game.mechanicLib.mino.tsdChallenge',
         techrashChallenge=require'assets.game.mechanicLib.mino.techrashChallenge',
+        acGenerator=require'assets.game.mechanicLib.mino.acGenerator',
 
         -- Special
         stack=require'assets.game.mechanicLib.mino.stack',
@@ -50,3 +47,4 @@ return {
         actions=require'assets.game.mechanicLib.gem.actions',
     },
 }
+return mechLib
