@@ -650,23 +650,24 @@ end
 function MP:clearNext()
     TABLE.cut(self.nextQueue)
 end
-function MP:pushNext(arg)
-    if type(arg)=='number' then
+--- @param piece string|number|table
+function MP:pushNext(piece)
+    if type(piece)=='number' then
         ins(self.nextQueue,self:getMino(assert(
-            Minoes[arg],
-            "Invalid mino name '"..arg.."'"
-        ) and arg))
-    elseif type(arg)=='string' then
-        for i=1,#arg do
+            Minoes[piece],
+            "Invalid mino name '"..piece.."'"
+        ) and piece))
+    elseif type(piece)=='string' then
+        for i=1,#piece do
             ins(self.nextQueue,self:getMino(assert(
-                Minoes[arg:sub(i,i)],
-                "Invalid mino name '"..arg:sub(i,i).."'"
+                Minoes[piece:sub(i,i)],
+                "Invalid mino name '"..piece:sub(i,i).."'"
             ).id))
         end
-    elseif type(arg)=='table' then
-        for i=1,#arg do
-            assert(type(arg[i])=='number' or type(arg[i])=='string',"Must be simple table")
-            self:pushNext(arg[i])
+    elseif type(piece)=='table' then
+        for i=1,#piece do
+            assert(type(piece[i])=='number' or type(piece[i])=='string',"Must be simple table")
+            self:pushNext(piece[i])
         end
     else
         error("arg must be string or table")
@@ -1312,16 +1313,13 @@ function MP:riseGarbage(holePos)
     end
 end
 --[[ arg table={
-    string? color <'template'|'absolute'>,
-    boolean? resetHand
-    boolean? sudden
-
     -- map matrix (will display as you see, any height)
     {7,7,7,7,0,0,0,0,1,1},
     {4,6,6,3,0,0,0,1,1,5},
     {4,6,6,3,0,0,2,2,5,5},
     {4,4,3,3,0,0,0,2,2,5},
 }]]
+--- @param arg {color:'template'|'absolute'|nil, resetHand:boolean?, sudden:boolean?, number:table<number, number>}
 function MP:setField(arg)
     local F=self.field
     local w=self.settings.fieldW

@@ -1,6 +1,6 @@
 local ins,rem=table.insert,table.remove
 
---- @type table<string,Techmino.mino.clearRule>
+--- @type table<string, Techmino.mino.clearRule>
 local clearRule={}
 
 local function setBias(P,x,y,dx,dy,moveType,clearDelay)
