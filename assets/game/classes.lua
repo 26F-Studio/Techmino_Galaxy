@@ -11,6 +11,57 @@
 --- | 'PE'  Mission failed
 --- | 'UKE' Other reason
 
+--- @alias Techmino.mode.event.basic
+--- | 'always'
+--- | 'playerInit'
+--- | 'gameStart'
+--- | 'beforePress'
+--- | 'afterPress'
+--- | 'beforeRelease'
+--- | 'afterRelease'
+--- | 'gameOver'
+
+--- @alias Techmino.mode.event.mino
+--- | 'afterResetPos'
+--- | 'afterSpawn'
+--- | 'afterDrop'
+--- | 'afterLock'
+--- | 'afterClear'
+--- | 'beforeCancel'
+--- | 'beforeSend'
+--- | 'beforeDiscard'
+--- | 'whenSuffocate'
+--- | 'extraSolidCheck'
+--- | 'changeSpawnPos'
+---
+--- | 'drawBelowField'
+--- | 'drawBelowBlock'
+--- | 'drawBelowMarks'
+--- | 'drawInField'
+--- | 'drawOnPlayer'
+
+--- @alias Techmino.mode.event.puyo
+--- | 'afterSpawn'
+--- | 'afterResetPos'
+--- | 'afterDrop'
+--- | 'afterLock'
+--- | 'afterClear'
+--- | 'whenSuffocate'
+--- |
+--- | 'drawBelowField'
+--- | 'drawBelowBlock'
+--- | 'drawBelowMarks'
+--- | 'drawInField'
+--- | 'drawOnPlayer'
+
+--- @alias Techmino.mode.event.gem
+--- | 'illegalMove'
+--- | 'legalMove'
+---
+--- | 'drawBelowField'
+--- | 'drawInField'
+--- | 'drawOnPlayer'
+
 --- @alias Techmino.Mech.basic table<string, table|fun(P:Techmino.Player|any):any>
 --- @alias Techmino.Mech.mino table<string, table|fun(P:Techmino.Player.mino|any):any,any>
 --- @alias Techmino.Mech.puyo table<string, table|fun(P:Techmino.Player.puyo|any):any,any>
@@ -80,7 +131,7 @@
 
 --- @class Techmino.Mode
 --- @field initialize function Called when initializing the mode
---- @field settings table<Techmino.Player.Type, Techmino.Mode.Setting>
+--- @field settings {mino:Techmino.Mode.Setting.Mino?, puyo:Techmino.Mode.Setting.Puyo?, gem:Techmino.Mode.Setting.Gem?}
 --- @field layout 'default' Layout mode
 --- @field checkFinish function Return if the game should end when a player finishes
 --- @field result function Called when the game ends
@@ -88,8 +139,13 @@
 --- @field name string Mode name, for debug use
 
 --- @class Techmino.Mode.Setting.Mino
+--- @field event table<Techmino.mode.event.basic|Techmino.mode.event.mino,string|table|function|table<number,string|table|function>>
+
 --- @class Techmino.Mode.Setting.Puyo
+--- @field event table<Techmino.mode.event.basic|Techmino.mode.event.puyo,string|table|function|table<number,string|table|function>>
+
 --- @class Techmino.Mode.Setting.Gem
+--- @field event table<Techmino.mode.event.basic|Techmino.mode.event.gem,string|table|function|table<number,string|table|function>>
 
 --- @class Techmino.mino.clearRule
 --- @field getDelay fun(P:Techmino.Player.mino, lines:number[]): number?
