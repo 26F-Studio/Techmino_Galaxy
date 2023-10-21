@@ -60,7 +60,7 @@ DEBUG.checkLoadTime("Load game modules")
 STRING.install()
 Zenitha.setAppName('Techmino')
 Zenitha.setVersionText(VERSION.appVer)
-Zenitha.setFirstScene('hello')
+Zenitha.setFirstScene('network')
 Zenitha.setMaxFPS(260)
 Zenitha.setOnGlobalKey('f11',function()
     SETTINGS.system.fullscreen=not SETTINGS.system.fullscreen
