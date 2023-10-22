@@ -31,9 +31,16 @@ local pieceShapes do
         {id=7,{O},{O},{O},{O}},
     }
 end
-local function generateSolidGarbage(field,w)
-    for _=1, #field<=3 and math.floor(MATH.rand(1.9,2.6)) or math.random(0,2) do
-        table.insert(field,math.random(1,#field+1),TABLE.new(true,w))
+local function generateSolidGarbage(P,field,w,growRate,splitRate)
+    local count=math.floor(P:rand(#field<3 and 1 or 0,growRate+1)*2)
+    local pos=P:random(1,#field+1)
+    while count>0 do
+        table.insert(field,pos,TABLE.new(true,w))
+        if P:random()<splitRate then
+            pos=P:random()<.5 and pos-1 or pos+2
+        end
+        pos=MATH.clamp(pos,1,#field+1)
+        count=count-1
     end
 end
 local function getHeight(field,x)
@@ -79,7 +86,7 @@ local function carveField(field,shape,x,y)
         end
     end
 end
-local function clearFilledLines(field,someY)
+local function clearFilledLines(field,piece) -- Move piece down when needed
     for y=#field,1,-1 do
         local filled=true
         for x=1,#field[y] do
@@ -90,23 +97,22 @@ local function clearFilledLines(field,someY)
         end
         if filled then
             table.remove(field,y)
-            if y<someY then someY=someY-1 end
+            if y<piece.y then piece.y=piece.y-1 end
         end
     end
-    return someY
 end
 local function getExposedFour(field)
     local tar={}
     -- foreach shape
     for i=1,#pieceShapes do
         local piece=pieceShapes[i]
-        local widths={}
+        local heights={}
         for x=1,#field[1] do
-            widths[x]=getHeight(field,x)
+            heights[x]=getHeight(field,x)
         end
         -- foreach position
         for cx=1,#field[1]-#piece[1]+1 do
-            for cy=math.max(unpack(widths,cx,cx+#piece[1]-1)),1,-1 do
+            for cy=math.max(unpack(heights,cx,cx+#piece[1]-1)),1,-1 do
                 if existInField(field,piece,cx,cy) then
                     local f=TABLE.shift(field)
                     carveField(f,piece,cx,cy)
@@ -135,6 +141,29 @@ local function getExposedFour(field)
         end
     end
     return tar
+end
+local function filterTop(field,pieces)
+    local height=#field
+    local line=field[height]
+    local fieldTopCount=0
+    for x=1,#line do
+        if line[x] then
+            fieldTopCount=fieldTopCount+1
+        end
+    end
+    for i=#pieces,1,-1 do
+        local piece=pieces[i]
+        local shape=piece.shape
+        if piece.y+#shape-1>=#field then
+            local shapeTop=shape[#shape]
+            local pieceTopCount=0
+            for x=1,#shape[1] do
+                if shapeTop[x] then
+                    pieceTopCount=pieceTopCount+1
+                end
+            end
+        end
+    end
 end
 local function printField(f)
     print('--------------------------')
@@ -165,52 +194,72 @@ function ACGenerator._getQuestion(P,args)
     local seq={} -- minoes' names
     local failCount=0
 
-    local arg={
+    local args1={
         debugging=false,
         pieceCount=4,
         holdUsed=false,
+        emptyTop=false,
         mergeRate=.5,
         repRate=.5,
         growRate=.5,
-        jumpRate=.5,
+        splitRate=.26,
+        highRate=0,
     }
-    if type(args)=='table' then TABLE.cover(args,arg) end
+    if type(args)=='table' then TABLE.cover(args,args1) end
 
-    local debugging=  TABLE.getFirstValue(arg.debugging,false)
-    local pieceCount= TABLE.getFirstValue(arg.pieceCount,P and P.settings.nextSlot,4)
-    local holdUsed=   TABLE.getFirstValue(arg.holdUsed,P and P.settings.holdSlot,false)
-    local width=      TABLE.getFirstValue(arg.width,P and P.settings.fieldW,10)
-    local mergeRate=  TABLE.getFirstValue(arg.mergeRate,.5)
-    local repRate=    TABLE.getFirstValue(arg.repRate,.5)
-    local growRate=   TABLE.getFirstValue(arg.growRate,.5)
-    local jumpRate=   TABLE.getFirstValue(arg.jumpRate,.5)
+    local debugging=  args1.debugging
+    local width=      TABLE.getFirstValue(args1.width,P and P.settings.fieldW)
+    local pieceCount= TABLE.getFirstValue(args1.pieceCount,P and P.settings.nextSlot)
+    local holdUsed=   TABLE.getFirstValue(args1.holdUsed,P and P.settings.holdSlot)
+    local emptyTop=   args1.emptyTop
+    local mergeRate=  args1.mergeRate
+    local repRate=    args1.repRate
+    local growRate=   args1.growRate
+    local splitRate=  args1.splitRate
+    local highRate=   args1.highRate
 
     if holdUsed==true then holdUsed=1 end
 
     while #seq<pieceCount do
         local field_bak=TABLE.shift(field)
-        generateSolidGarbage(field,width)
-        local L=getExposedFour(field)
+        generateSolidGarbage(P,field,width,growRate,splitRate)
+        local pieces=getExposedFour(field)
 
-        if #L==0 then
+        if emptyTop then
+            filterTop(field,pieces)
+        end
+
+        if #pieces==0 then
             field=field_bak
             failCount=failCount+1
-            if failCount>100000 then
-                error("Generating failed")
-            end
+            assert(failCount<1000,"Generating failed")
         else
             if debugging then
                 printField(field)
-                print(#L.." solutions:")
-                for i=1,#L do
-                    local piece=L[i]
+                print(#pieces.." solutions:")
+                for i=1,#pieces do
+                    local piece=pieces[i]
                     print(piece.name.." "..piece.x.." "..piece.y)
                 end
             end
 
-            local piece=L[math.random(#L)]
+            local totalScore=0
+            for i=1,#pieces do
+                local piece=pieces[i]
+                piece.score=(1+highRate*.62)^piece.y
+                totalScore=totalScore+piece.score
+            end
+            local r=totalScore*P:random()
+            local piece
+            for i=1,#pieces do
+                r=r-pieces[i].score
+                if r<=0 then
+                    piece=pieces[i]
+                    break
+                end
+            end
             carveField(field,piece.shape,piece.x,piece.y)
-            piece.y=clearFilledLines(field,piece.y)
+            clearFilledLines(field,piece)
             table.insert(seq,piece.name)
         end
     end
