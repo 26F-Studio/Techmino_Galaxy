@@ -121,6 +121,9 @@ end
 function P:random(a,b)
     return self.RND:random(a,b)
 end
+function P:rand(a,b)
+    return a+self.RND:random()*(b-a)
+end
 function P:_getActionObj(a)
     if type(a)=='string' then
         return self._actions[a]
