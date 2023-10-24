@@ -58,7 +58,7 @@ function scene.update(dt)
             vx=math.random(-200,200),vy=math.random(926,1260),
             r=math.random(25,45),
             a=math.random()*MATH.tau,va=10*math.random()-5,
-            mino=CHAR.mino[Minoes[math.random(#Minoes)].name],
+            mino=MATH.randFrom(CHAR.mino),
             minoColor=math.random()*MATH.tau,
         }
         if MATH.roll(.026) then

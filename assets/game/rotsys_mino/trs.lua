@@ -80,42 +80,43 @@ TRS[5]={
 } -- T
 local Ocells={{1,1},{1,2},{2,1},{2,2}}
 local OspinList={
-    {seq='RRR',shape=5,direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, -- T(down)
-    {seq='RRR',shape=5,direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, -- T(squash)
-    {seq='LLL',shape=5,direcion=2,bias={-1,-1},free='FIX',target={1,3,4,2}}, -- T(down)
-    {seq='LLL',shape=5,direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, -- T(squash)
-    {seq='RRR',shape=5,direcion=0,bias={-1, 0},free='FIX',target={1,2,4,3}}, -- T(mini)
-    {seq='LLL',shape=5,direcion=0,bias={ 0, 0},free='FIX',target={3,1,2,4}}, -- T(mini)
-    {seq='LRL',shape=1,direcion=2,bias={ 0, 0},free='FIX',target={1,2,3,4}}, -- Z(downshift)
-    {seq='LRL',shape=1,direcion=2,bias={ 0,-1},free='FIX',target={1,2,3,4}}, -- Z(squash)
-    {seq='LRL',shape=1,direcion=2,bias={-1, 0},free='FIX',target={1,2,3,4}}, -- Z(upshift)
-    {seq='RLR',shape=2,direcion=2,bias={-1, 0},free='FIX',target={1,2,3,4}}, -- S(downshift)
-    {seq='RLR',shape=2,direcion=2,bias={-1,-1},free='FIX',target={1,2,3,4}}, -- S(squash)
-    {seq='RLR',shape=2,direcion=2,bias={ 0, 0},free='FIX',target={1,2,3,4}}, -- S(upshift)
-    {seq='LLR',shape=3,direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, -- J(farDown) -- 2,3,1,4?
-    {seq='RRL',shape=4,direcion=2,bias={-1,-1},free='FIX',target={1,3,4,2}}, -- L(farDown) -- 1,3,2,4?
-    {seq='RRL',shape=3,direcion=0,bias={ 0, 0},free='FIX',target={1,2,4,3}}, -- J(shoe)
-    {seq='RRL',shape=3,direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, -- J(gun)
-    {seq='LLR',shape=4,direcion=0,bias={-1, 0},free='FIX',target={3,1,2,4}}, -- L(shoe)
-    {seq='LLR',shape=4,direcion=2,bias={ 0,-1},free='FIX',target={1,3,4,2}}, -- L(gun)
-    {seq='FFF',shape=7,direcion=0,bias={ 0, 1},free='MOV',target={3,1,2,4}}, -- I(high-R)
-    {seq='FFF',shape=7,direcion=0,bias={-2, 1},free='MOV',target={3,1,2,4}}, -- I(high)
-    {seq='FFF',shape=7,direcion=0,bias={-1, 1},free='MOV',target={3,1,2,4}}, -- I(high-L)
-    {seq='FFF',shape=7,direcion=2,bias={ 0, 0},free='ANY',target={1,3,4,2}}, -- I(low-R)
-    {seq='FFF',shape=7,direcion=2,bias={-2, 0},free='ANY',target={1,3,4,2}}, -- I(low)
-    {seq='FFF',shape=7,direcion=2,bias={-1, 0},free='ANY',target={1,3,4,2}}, -- I(low-L)
-    {seq='RFR',shape=6,direcion=0,bias={ 1,-1},free='ANY',target={2,4,1,3}}, -- O(+1-1)
-    {seq='RRF',shape=6,direcion=0,bias={ 2,-1},free='ANY',target={2,4,1,3}}, -- O(+2-1)
-    {seq='RFF',shape=6,direcion=0,bias={ 1,-2},free='ANY',target={2,4,1,3}}, -- O(+1-2)
-    {seq='LFL',shape=6,direcion=0,bias={-1,-1},free='ANY',target={3,1,4,2}}, -- O(-1-1)
-    {seq='LLF',shape=6,direcion=0,bias={-2,-1},free='ANY',target={3,1,4,2}}, -- O(-2-1)
-    {seq='LFF',shape=6,direcion=0,bias={-1,-2},free='ANY',target={3,1,4,2}}, -- O(-1-2)
+    {seq='RRR',shape='T',direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, -- T(down)
+    {seq='RRR',shape='T',direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, -- T(squash)
+    {seq='LLL',shape='T',direcion=2,bias={-1,-1},free='FIX',target={1,3,4,2}}, -- T(down)
+    {seq='LLL',shape='T',direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, -- T(squash)
+    {seq='RRR',shape='T',direcion=0,bias={-1, 0},free='FIX',target={1,2,4,3}}, -- T(mini)
+    {seq='LLL',shape='T',direcion=0,bias={ 0, 0},free='FIX',target={3,1,2,4}}, -- T(mini)
+    {seq='LRL',shape='Z',direcion=2,bias={ 0, 0},free='FIX',target={1,2,3,4}}, -- Z(downshift)
+    {seq='LRL',shape='Z',direcion=2,bias={ 0,-1},free='FIX',target={1,2,3,4}}, -- Z(squash)
+    {seq='LRL',shape='Z',direcion=2,bias={-1, 0},free='FIX',target={1,2,3,4}}, -- Z(upshift)
+    {seq='RLR',shape='S',direcion=2,bias={-1, 0},free='FIX',target={1,2,3,4}}, -- S(downshift)
+    {seq='RLR',shape='S',direcion=2,bias={-1,-1},free='FIX',target={1,2,3,4}}, -- S(squash)
+    {seq='RLR',shape='S',direcion=2,bias={ 0, 0},free='FIX',target={1,2,3,4}}, -- S(upshift)
+    {seq='LLR',shape='J',direcion=2,bias={ 0,-1},free='FIX',target={2,1,3,4}}, -- J(switch) -- 2,3,1,4?
+    {seq='RRL',shape='L',direcion=2,bias={-1,-1},free='FIX',target={1,3,4,2}}, -- L(switch) -- 1,3,2,4?
+    {seq='RRL',shape='J',direcion=0,bias={ 0, 0},free='FIX',target={1,2,4,3}}, -- J(shoe)
+    {seq='RRL',shape='J',direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, -- J(gun)
+    {seq='LLR',shape='L',direcion=0,bias={-1, 0},free='FIX',target={3,1,2,4}}, -- L(shoe)
+    {seq='LLR',shape='L',direcion=2,bias={ 0,-1},free='FIX',target={1,3,4,2}}, -- L(gun)
+    {seq='FFF',shape='I',direcion=0,bias={ 0, 1},free='MOV',target={3,1,2,4}}, -- I(high-R)
+    {seq='FFF',shape='I',direcion=0,bias={-2, 1},free='MOV',target={3,1,2,4}}, -- I(high)
+    {seq='FFF',shape='I',direcion=0,bias={-1, 1},free='MOV',target={3,1,2,4}}, -- I(high-L)
+    {seq='FFF',shape='I',direcion=2,bias={ 0, 0},free='ANY',target={1,3,4,2}}, -- I(low-R)
+    {seq='FFF',shape='I',direcion=2,bias={-2, 0},free='ANY',target={1,3,4,2}}, -- I(low)
+    {seq='FFF',shape='I',direcion=2,bias={-1, 0},free='ANY',target={1,3,4,2}}, -- I(low-L)
+    {seq='RFR',shape='O',direcion=0,bias={ 1,-1},free='ANY',target={2,4,1,3}}, -- O(↘RD)
+    {seq='RRF',shape='O',direcion=0,bias={ 2,-1},free='ANY',target={2,4,1,3}}, -- O(→↘RRD)
+    {seq='RFF',shape='O',direcion=0,bias={ 1,-2},free='ANY',target={2,4,1,3}}, -- O(↓↘RDD)
+    {seq='LFL',shape='O',direcion=0,bias={-1,-1},free='ANY',target={3,1,4,2}}, -- O(↙LD)
+    {seq='LLF',shape='O',direcion=0,bias={-2,-1},free='ANY',target={3,1,4,2}}, -- O(↙←LLD)
+    {seq='LFF',shape='O',direcion=0,bias={-1,-2},free='ANY',target={3,1,4,2}}, -- O(↙↓LDD)
 }
 TRS[6]={
     [0]={center={1,1}},
     [1]={center={1,1}},
     [2]={center={1,1}},
     [3]={center={1,1}},
+    --- @param self Techmino.Player.mino
     rotate=function(self,dir,ifInit)
         local C=self.hand
         local baseX,baseY=self.handX,self.handY
@@ -135,7 +136,7 @@ TRS[6]={
                     for i=1,#OspinList do
                         local test=OspinList[i]
                         if C.spinSeq==test.seq then
-                            local newMatrix=TABLE.shift(Minoes[test.shape].shape)
+                            local newMatrix=TABLE.shift(Mino.getShape(test.shape))
                             if test.direcion==2 then newMatrix=TABLE.rotate(newMatrix,'F') end
                             local c=0
                             for y=1,#newMatrix do for x=1,#newMatrix[1] do
@@ -155,13 +156,13 @@ TRS[6]={
                                 )
                             then
                                 -- Apply transformation
-                                C.shape=test.shape
+                                C.shape=Mino.getID(test.shape)
                                 C.matrix=newMatrix
                                 C.direction=test.direcion
                                 C.spinSeq=''
 
                                 -- Overwrite origin state (keep shape when hold)
-                                C._origin.shape=test.shape
+                                C._origin.shape=Mino.getID(test.shape)
                                 C._origin.direction=0
                                 C._origin.matrix=test.direcion==0 and newMatrix or test.direcion==2 and TABLE.rotate(newMatrix,'F') or error("Oh I forgot this")
 

@@ -1,6 +1,6 @@
 local floor=math.floor
 
-Minoes=require'assets.game.minoes'
+Mino=require'assets.game.minoes'
 ColorTable=require'assets.game.colorTable'
 defaultMinoColor=setmetatable({
     2,22,42,6,52,12,32,

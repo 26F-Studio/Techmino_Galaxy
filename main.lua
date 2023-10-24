@@ -27,6 +27,7 @@ DEBUG.checkLoadTime("Load Zenitha")
 -- DEBUG.setCollectGarvageVisible()
 --------------------------------------------------------------
 -- System setting
+STRING.install()
 math.randomseed(os.time()*626)
 love.setDeprecationOutput(false)
 love.keyboard.setTextInput(false)
@@ -57,7 +58,6 @@ bgmList=require'assets.bgmlist'
 DEBUG.checkLoadTime("Load game modules")
 --------------------------------------------------------------
 -- Config Zenitha
-STRING.install()
 Zenitha.setAppName('Techmino')
 Zenitha.setVersionText(VERSION.appVer)
 Zenitha.setFirstScene('hello')

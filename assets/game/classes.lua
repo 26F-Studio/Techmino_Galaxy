@@ -79,41 +79,12 @@
 --- @field trail love.ParticleSystem
 --- @field minoMapBack love.ParticleSystem
 
+--- @alias Techmino.Mino.Shape table<number,table<number,boolean>>
+
 --- @class Techmino.Mino
 --- @field name string
 --- @field id number
---- @field shape boolean[][]
-
---- @class Techmino.Minos
---- @field Z  Techmino.Mino
---- @field S  Techmino.Mino
---- @field J  Techmino.Mino
---- @field L  Techmino.Mino
---- @field T  Techmino.Mino
---- @field O  Techmino.Mino
---- @field I  Techmino.Mino
---- @field Z5 Techmino.Mino
---- @field S5 Techmino.Mino
---- @field P  Techmino.Mino
---- @field Q  Techmino.Mino
---- @field F  Techmino.Mino
---- @field E  Techmino.Mino
---- @field T5 Techmino.Mino
---- @field U  Techmino.Mino
---- @field V  Techmino.Mino
---- @field W  Techmino.Mino
---- @field X  Techmino.Mino
---- @field J5 Techmino.Mino
---- @field L5 Techmino.Mino
---- @field R  Techmino.Mino
---- @field Y  Techmino.Mino
---- @field N  Techmino.Mino
---- @field H  Techmino.Mino
---- @field I5 Techmino.Mino
---- @field I3 Techmino.Mino
---- @field C  Techmino.Mino
---- @field I2 Techmino.Mino
---- @field O1 Techmino.Mino
+--- @field shape Techmino.Mino.Shape
 
 --- @class Techmino.Cell
 --- @field cid string cell's mem pointer string

@@ -193,13 +193,13 @@ function MP:createHandEffect(r,g,b,a)
         end
     end end
 end
+local _oneCell={{true}}
 function MP:createTouchEffect()
     local p=self.particles.hitSparkle
     local mat=self.hand.matrix
-    local cell=Minoes.O1.shape
     local cx,cy=self.handX,self.handY
     for x=1,#mat[1] do for y=1,#mat do
-        if mat[y][x] and self:ifoverlap(cell,cx+x-1,cy+y-2) then
+        if mat[y][x] and self:ifoverlap(_oneCell,cx+x-1,cy+y-2) then
             for _=1,rnd(3,4) do
                 p:setPosition(
                     (cx+x-2+rnd())*40,
@@ -653,16 +653,10 @@ end
 --- @param piece string|number|table
 function MP:pushNext(piece)
     if type(piece)=='number' then
-        ins(self.nextQueue,self:getMino(assert(
-            Minoes[piece],
-            "Invalid mino name '"..piece.."'"
-        ) and piece))
+        ins(self.nextQueue,self:getMino(Mino.get(piece)))
     elseif type(piece)=='string' then
         for i=1,#piece do
-            ins(self.nextQueue,self:getMino(assert(
-                Minoes[piece:sub(i,i)],
-                "Invalid mino name '"..piece:sub(i,i).."'"
-            ).id))
+            ins(self.nextQueue,self:getMino(Mino.get(piece:sub(i,i))))
         end
     elseif type(piece)=='table' then
         for i=1,#piece do
@@ -733,12 +727,12 @@ function MP:getMino(shapeData)
         shapeID=shapeData.id
         shapeName=shapeData.name or "?"
         shapeMat=TABLE.shift(shapeData.shape)
-        shapeColor=shapeData.color or self:random(64)
+        shapeColor=shapeData.color or defaultMinoColor[shapeID] or self:random(64)
     else
         shapeID=shapeData
         assert(type(shapeID)=='number',"shapeID must be number")
-        shapeName=Minoes[shapeID].name
-        shapeMat=TABLE.shift(Minoes[shapeID].shape)
+        shapeName=Mino.getName(shapeID)
+        shapeMat=TABLE.shift(Mino.getShape(shapeID))
         shapeColor=defaultMinoColor[shapeID]
     end
     self.pieceCount=self.pieceCount+1
@@ -1863,7 +1857,7 @@ function MP:checkScriptSyntax(cmd,arg,errMsg)
             -- TODO
         elseif type(arg)=='table' then
             for i=1,#arg do
-                assert(Minoes[arg[i]],errMsg.."Invalid mino id '"..arg[i].."'")
+                assert(Mino.get(arg[i]),errMsg.."Invalid mino id '"..arg[i].."'")
             end
         end
     end

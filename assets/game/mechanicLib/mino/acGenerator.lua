@@ -129,7 +129,7 @@ local function getExposedFour(field)
                         until ty>#field
                         if exposed then
                             table.insert(tar,{
-                                name=Minoes[piece.id].name,
+                                name=Mino.getName(piece.id),
                                 shape=TABLE.shift(piece),
                                 x=cx,y=cy,
                             })

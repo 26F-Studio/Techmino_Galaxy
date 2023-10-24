@@ -65,8 +65,7 @@ local function newQuestion()
 
     choices={c1,c2}
     for i=1,#choices do
-        local name=choices[i]
-        local piece=Minoes[name]
+        local piece=Mino.get(choices[i])
         choices[i]={
             shape=TABLE.shift(piece.shape),
             color=ColorTable[defaultMinoColor[piece.id]],
