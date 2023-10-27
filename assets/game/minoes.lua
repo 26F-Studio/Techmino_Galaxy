@@ -55,7 +55,7 @@ do
     reg('O1', 29, {{O}})
 end
 
---- @param id number|string
+--- @param id Techmino.Mino.ID|Techmino.Mino.Name
 --- @return Techmino.Mino
 function Mino.get(id) return assert(minoes[id],("Mino '$1' not found"):repD(id)) end
 --- @param id number|string

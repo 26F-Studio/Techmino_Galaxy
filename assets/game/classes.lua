@@ -80,10 +80,12 @@
 --- @field minoMapBack love.ParticleSystem
 
 --- @alias Techmino.Mino.Shape table<number,table<number,boolean>>
+--- @alias Techmino.Mino.Name 'Z'|'S'|'J'|'L'|'T'|'O'|'I'|'Z5'|'S5'|'P'|'Q'|'F'|'E'|'T5'|'U'|'V'|'W'|'X'|'J5'|'L5'|'R'|'Y'|'N'|'H'|'I5'|'I3'|'C'|'I2'|'O1'|string
+--- @alias Techmino.Mino.ID 1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|integer
 
 --- @class Techmino.Mino
---- @field name string
---- @field id number
+--- @field name Techmino.Mino.Name
+--- @field id Techmino.Mino.ID
 --- @field shape Techmino.Mino.Shape
 
 --- @class Techmino.Cell
@@ -91,7 +93,7 @@
 --- @field id number ascending piece number
 --- @field color number 0~63
 --- @field conn table<string, true>
---- @field bias {expBack:number?, lineBack:number?, teleBack:number?, x:number, y:number}
+--- @field bias {expBack?:number, lineBack?:number, teleBack?:number, x:number, y:number}
 --- @field visTimer? number
 --- @field visStep? number
 --- @field visMax? number
