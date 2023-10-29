@@ -1313,7 +1313,7 @@ end
     {4,6,6,3,0,0,2,2,5,5},
     {4,4,3,3,0,0,0,2,2,5},
 }]]
---- @param arg {color:'template'|'absolute'|nil, resetHand:boolean?, sudden:boolean?, number:table<number, number>}
+--- @param arg {color:'template'|'absolute'|nil, resetHand?:boolean, sudden?:boolean, number:table<number, number>}
 function MP:setField(arg)
     local F=self.field
     local w=self.settings.fieldW
