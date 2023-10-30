@@ -141,44 +141,49 @@ IMG.init{
         texture='assets/image/action_icon.png',
         mino=(function()
             local t={}
+            local w=180
             for i,name in next,{
                 'moveLeft','moveRight','','softDrop','hardDrop',
                 'rotateCW','rotateCCW','rotate180','holdPiece','skip',
                 '','','','','',
                 'func1','func2','func3','func4','func5',
-            } do if name~='' then t[name]=love.graphics.newQuad((i-1)%5*90,math.floor((i-1)/5)*90,90,90,450,450) end end
+            } do if #name>0 then t[name]=GC.newQuad((i-1)%5*w,math.floor((i-1)/5)*w,w,w,5*w,7*w) end end
             return t
         end)(),
         puyo=(function()
             local t={}
+            local w=180
             for i,name in next,{
                 'moveLeft','moveRight','','softDrop','hardDrop',
                 'rotateCW','rotateCCW','rotate180','holdPiece','skip',
                 '','','','','',
                 'func1','func2','func3','func4','func5',
-            } do if name~='' then t[name]=love.graphics.newQuad((i-1)%5*90,math.floor((i-1)/5)*90,90,90,450,450) end end
+            } do if #name>0 then t[name]=GC.newQuad((i-1)%5*w,math.floor((i-1)/5)*w,w,w,5*w,7*w) end end
             return t
         end)(),
         gem=(function()
             local t={}
+            local w=180
             for i,name in next,{
                 'swapLeft','swapRight','swapUp','swapDown','',
                 'twistCW','twistCCW','twist180','','skip',
-                'moveLeft','moveRight','','softDrop','hardDrop',
+                'moveLeft','moveRight','moveUp','moveDown','',
                 'func1','func2','func3','func4','func5',
-            } do if name~='' then t[name]=love.graphics.newQuad((i-1)%5*90,math.floor((i-1)/5)*90,90,90,450,450) end end
+            } do if #name>0 then t[name]=GC.newQuad((i-1)%5*w,math.floor((i-1)/5)*w,w,w,5*w,7*w) end end
             return t
         end)(),
         sys=(function()
             local t={}
+            local w=180
             for i,name in next,{
+                '','','','','',
                 '','','','','',
                 '','','','','',
                 '','','','','',
                 'view','restart','back','quit','',
                 'setting','help','chat','','',
                 'left','right','up','down','select',
-            } do if name~='' then t[name]=love.graphics.newQuad((i-1)%5*90,math.floor((i-1)/5)*90,90,90,450,450) end end
+            } do if #name>0 then t[name]=GC.newQuad((i-1)%5*w,math.floor((i-1)/5)*w,w,w,5*w,7*w) end end
             return t
         end)(),
     },
