@@ -303,7 +303,7 @@ function stick4way:draw(setting)
         for i=1,4 do if quad[i] then
             local d=(bigR+ballR)*.5
             local angle=i*tau/4
-            local _,_,w,h=quad:getViewport()
+            local _,_,w,h=quad[i]:getViewport()
             mDrawQ(IMG.actionIcons.texture,quad[i],self.x+d*cos(angle),self.y+d*sin(angle),0,self.iconSize/100*min((bigR-ballR)/w,(bigR-ballR)/h))
         end end
     end
