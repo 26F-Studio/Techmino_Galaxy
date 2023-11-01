@@ -1,9 +1,9 @@
 local gc=love.graphics
 
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local hypersonic={}
 
---- @param mode 'low'|'high'|'hidden'|'titanium'
+---@param mode 'low'|'high'|'hidden'|'titanium'
 function hypersonic.event_playerInit_auto(P,mode)
     hypersonic.event_playerInit(P)
     if mode=='low' then

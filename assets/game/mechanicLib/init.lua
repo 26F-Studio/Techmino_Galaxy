@@ -2,7 +2,7 @@
 -- Those files will be loaded in another way, not require
 local function require(path) return path:gsub('%.','/')..'.lua' end
 
---- @class Techmino.Mech
+---@class Techmino.Mech
 local mechLib={
     common={
         timer=require'assets.game.mechanicLib.common.timer',

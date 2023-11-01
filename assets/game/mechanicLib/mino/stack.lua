@@ -22,11 +22,11 @@ local function outStackState(P)
     return not P.modeData.stack_enabled
 end
 
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local stack={}
 
---- @param fall? boolean
---- @param timeLimit? number Automatically quit when time up (if given)
+---@param fall? boolean
+---@param timeLimit? number Automatically quit when time up (if given)
 function stack.turnOn_auto(P,fall,timeLimit)
     if not P.modeData.stack_enabled then
         stack.switch_auto(P,fall,timeLimit)
@@ -40,8 +40,8 @@ function stack.turnOff_auto(P)
 end
 
 
---- @param fall? boolean
---- @param timeLimit? number Automatically quit when time up (if given)
+---@param fall? boolean
+---@param timeLimit? number Automatically quit when time up (if given)
 function stack.switch_auto(P,fall,timeLimit)
     if fall==nil then fall=true end
     stack.switch(P)

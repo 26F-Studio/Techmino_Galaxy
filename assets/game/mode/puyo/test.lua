@@ -1,4 +1,4 @@
---- @type Techmino.Mode
+---@type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'puyo')

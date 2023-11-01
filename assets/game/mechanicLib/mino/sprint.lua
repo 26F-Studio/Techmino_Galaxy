@@ -1,6 +1,6 @@
 local gc=love.graphics
 
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local sprint={}
 
 sprint.event_afterClear=TABLE.newPool(function(self,lineCount)

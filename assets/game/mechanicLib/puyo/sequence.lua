@@ -1,6 +1,6 @@
 local ins,rem=table.insert,table.remove
 
---- @type Techmino.Mech.puyo
+---@type Techmino.Mech.puyo
 local sequence={}
 
 function sequence.none()

@@ -1,6 +1,6 @@
 local gc=love.graphics
 
---- @class Techmino.RectField
+---@class Techmino.RectField
 local F={}
 
 --------------------------------------------------------------
@@ -90,13 +90,13 @@ function F:drawThumbnail_color(step,size)
     end
 end
 
---- @return number
+---@return number
 function F:getHeight()
     return #self._matrix
 end
 
 local wallCell=setmetatable({},{__newIndex=NULL,__metatable=true})
---- @return Techmino.Cell|false
+---@return Techmino.Cell|false
 function F:getCell(x,y)
     if x<=0 or x>self._width or y<=0 then return wallCell end
     if y>#self._matrix then return false end

@@ -1,6 +1,6 @@
 local gc=love.graphics
 
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local techrash={}
 
 function techrash.easy_seqType(P)

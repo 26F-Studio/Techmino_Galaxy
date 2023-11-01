@@ -116,7 +116,7 @@ TRS[6]={
     [1]={center={1,1}},
     [2]={center={1,1}},
     [3]={center={1,1}},
-    --- @param self Techmino.Player.mino
+    ---@param self Techmino.Player.mino
     rotate=function(self,dir,ifInit)
         local C=self.hand
         local baseX,baseY=self.handX,self.handY

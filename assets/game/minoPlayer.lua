@@ -11,8 +11,8 @@ local ins,rem=table.insert,table.remove
 local clamp,expApproach=MATH.clamp,MATH.expApproach
 local inst=SFX.playSample
 
---- @class Techmino.Player.mino: Techmino.Player
---- @field field Techmino.RectField
+---@class Techmino.Player.mino: Techmino.Player
+---@field field Techmino.RectField
 local MP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
 
 --------------------------------------------------------------
@@ -650,7 +650,7 @@ end
 function MP:clearNext()
     TABLE.cut(self.nextQueue)
 end
---- @param piece string|number|table
+---@param piece string|number|table
 function MP:pushNext(piece)
     if type(piece)=='number' then
         ins(self.nextQueue,self:getMino(Mino.get(piece)))
@@ -710,7 +710,7 @@ function MP:popNext(ifHold)
         self:minoDropped()
     end
 end
---- @return Techmino.Cell
+---@return Techmino.Cell
 function MP:newCell(color,id)
     self.totalCellCount=self.totalCellCount+1
     local c={
@@ -1313,7 +1313,7 @@ end
     {4,6,6,3,0,0,2,2,5,5},
     {4,4,3,3,0,0,0,2,2,5},
 }]]
---- @param arg {color:'template'|'absolute'|nil, resetHand?:boolean, sudden?:boolean, number:table<number, number>}
+---@param arg {color:'template'|'absolute'|nil, resetHand?:boolean, sudden?:boolean, number:table<number, number>}
 function MP:setField(arg)
     local F=self.field
     local w=self.settings.fieldW
@@ -1864,7 +1864,7 @@ function MP:checkScriptSyntax(cmd,arg,errMsg)
 end
 --------------------------------------------------------------
 -- Builder
---- @class Techmino.Mode.Setting.Mino
+---@class Techmino.Mode.Setting.Mino
 local baseEnv={
     -- Size
     fieldW=10, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'

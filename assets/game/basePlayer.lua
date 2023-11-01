@@ -5,7 +5,7 @@ local ins,rem=table.insert,table.remove
 
 local sign,expApproach=MATH.sign,MATH.expApproach
 
---- @class Techmino.Player
+---@class Techmino.Player
 local P={}
 
 --------------------------------------------------------------
@@ -209,7 +209,7 @@ function P:delEvent(name,F)
     local pos=TABLE.find(self.event[name],F)
     if pos then self.event[name][pos]=_scrap end
 end
---- @param reason Techmino.EndReason
+---@param reason Techmino.EndReason
 function P:finish(reason)
     if self.finished then return end
     self.timing=false
@@ -641,7 +641,7 @@ local soundTimeMeta={
     __index=function(self,k) rawset(self,k,0) return -1e99 end,
     __metatable=true,
 }
---- @return Techmino.Player
+---@return Techmino.Player
 function P.new()
     local self={}
     self.isMain=false

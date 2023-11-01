@@ -1,4 +1,4 @@
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local backfire={}
 
 function backfire.storePower_event_beforeCancel(P,atk)

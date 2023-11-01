@@ -7,8 +7,8 @@ function sureCheck(event)
 end
 
 local _bgmPlaying,_bgmMode
---- @param mode 'full'|'simp'|'base'|''|nil
---- @param args? string
+---@param mode 'full'|'simp'|'base'|''|nil
+---@param args? string
 function playBgm(name,mode,args)
     if not args then args='' end
 
@@ -57,9 +57,9 @@ local trackNick={
     p='drum',
     s='sfx',
 }
---- @param name string
---- @param ... string m/a/d/b/p/s(N)
---- @return string[]
+---@param name string
+---@param ... string m/a/d/b/p/s(N)
+---@return string[]
 function bgmPack(name,...)
     local tracks={...}
     for i=1,#tracks do
@@ -229,9 +229,9 @@ end
 
 regFuncToStr={}
 regStrToFunc={}
---- Flatten a table of functions into string-to-function and function-to-string maps
---- @param obj table|function
---- @param path string
+---Flatten a table of functions into string-to-function and function-to-string maps
+---@param obj table|function
+---@param path string
 function regFuncLib(obj,path)
     if type(obj)=='table' then
         for k,v in next,obj do

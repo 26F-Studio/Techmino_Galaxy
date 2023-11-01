@@ -1,7 +1,7 @@
 local gc=love.graphics
 local min=math.min
 
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local marathon={}
 
 local levels={

@@ -1,4 +1,4 @@
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local ACGenerator={}
 
 local pieceShapes do

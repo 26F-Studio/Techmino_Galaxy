@@ -1,7 +1,7 @@
 -- Music Progress: set volume of music tracks
 -- Game Progress: unlock new game mode
 
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local progress={}
 
 do -- sprint_40

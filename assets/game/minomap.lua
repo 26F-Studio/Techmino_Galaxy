@@ -169,13 +169,13 @@ cam.swing=.00626
 cam.maxDist=2600--[[4000]]
 cam.minK,cam.maxK=.4--[[.2]],1.26
 
---- @type table|false
+---@type table|false
 local focused=false
 
---- @type table|false
+---@type table|false
 local selected=false
 
---- @type boolean
+---@type boolean
 local full=false
 
 local map={}

@@ -1,4 +1,4 @@
---- @type Techmino.ParticleSystems
+---@type Techmino.ParticleSystems
 local ps={}
 
 do -- Moving

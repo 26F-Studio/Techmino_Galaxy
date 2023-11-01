@@ -12,8 +12,8 @@ local ins,rem=table.insert,table.remove
 
 local inst=SFX.playSample
 
---- @class Techmino.Player.puyo: Techmino.Player
---- @field field Techmino.RectField
+---@class Techmino.Player.puyo: Techmino.Player
+---@field field Techmino.RectField
 local PP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
 
 --------------------------------------------------------------
@@ -1202,7 +1202,7 @@ function PP:checkScriptSyntax(cmd,arg,errMsg)
 end
 --------------------------------------------------------------
 -- Builder
---- @class Techmino.Mode.Setting.Puyo
+---@class Techmino.Mode.Setting.Puyo
 local baseEnv={
     -- Size
     fieldW=6, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'

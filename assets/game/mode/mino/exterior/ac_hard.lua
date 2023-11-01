@@ -1,3 +1,3 @@
---- @type Techmino.Mode
+---@type Techmino.Mode
 return {
 }

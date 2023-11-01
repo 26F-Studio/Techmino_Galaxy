@@ -8,7 +8,7 @@ defaultMinoColor=setmetatable({
     36,52,4,24,
 },{__index=function() return math.random(64) end})
 defaultPuyoColor=setmetatable({2,12,42,22,52},{__index=function() return math.random(64) end})
---- @type Techmino.Mech
+---@type Techmino.Mech
 mechLib=TABLE.newResourceTable(require'assets.game.mechanicLib',function(path) return FILE.load(path,'-lua') end)
 regFuncLib(mechLib,"mechLib")
 require'assets.game.rotsys_mino'
@@ -151,7 +151,7 @@ local function task_switchToResult()
     end
 end
 
---- @class Techmino.Game
+---@class Techmino.Game
 local GAME={
     playing=false,
 
@@ -170,7 +170,7 @@ local GAME={
 
 GAME.camera.moveSpeed=12
 
---- @return Techmino.Mode
+---@return Techmino.Mode
 function GAME.getMode(name)
     if love.keyboard.isDown('f5') then
         modeLib[name]=nil

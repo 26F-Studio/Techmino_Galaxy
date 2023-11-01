@@ -1,4 +1,4 @@
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local stat={}
 
 function stat.event_playerInit(P) -- Initially used in minoPlayer.lua

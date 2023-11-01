@@ -1,7 +1,7 @@
 local Mino={}
 
 
---- @type table<any,Techmino.Mino>
+---@type table<any,Techmino.Mino>
 local minoes={}
 
 function Mino.registerMino(name,id,shape)
@@ -55,24 +55,24 @@ do
     reg('O1', 29, {{O}})
 end
 
---- @param id Techmino.Mino.ID|Techmino.Mino.Name
---- @return Techmino.Mino
+---@param id Techmino.Mino.ID|Techmino.Mino.Name
+---@return Techmino.Mino
 function Mino.get(id) return assert(minoes[id],("Mino '$1' not found"):repD(id)) end
---- @param id number|string
+---@param id number|string
 function Mino.getName(id) return Mino.get(id).name end
---- @param id number|string
+---@param id number|string
 function Mino.getID(id) return Mino.get(id).id end
---- @param id number|string
+---@param id number|string
 function Mino.getShape(id) return Mino.get(id).shape end
 
---- @param shape Techmino.Mino.Shape
---- @return number
+---@param shape Techmino.Mino.Shape
+---@return number
 function Mino._size(shape)
     return #shape+#shape[1]
 end
 
---- @param shape Techmino.Mino.Shape
---- @return number,string
+---@param shape Techmino.Mino.Shape
+---@return number,string
 function Mino._binarize(shape)
     local pNum,pStr=0,""
 
@@ -116,8 +116,8 @@ local function pieceComp(a,b)
     end
 end
 
---- @param piece Techmino.Mino.Shape
---- @return number,string
+---@param piece Techmino.Mino.Shape
+---@return number,string
 function Mino.shapeToID(piece)
     local minNum,minStr=Mino._binarize(piece)
     for _=1,3 do
@@ -128,9 +128,9 @@ function Mino.shapeToID(piece)
     return minNum,minStr
 end
 
---- @param a Techmino.Mino.Shape
---- @param b Techmino.Mino.Shape
---- @return boolean
+---@param a Techmino.Mino.Shape
+---@param b Techmino.Mino.Shape
+---@return boolean
 function Mino.samePiece(a,b)
     return Mino.shapeToID(a)==Mino.shapeToID(b)
 end

@@ -3,7 +3,7 @@ local gc=love.graphics
 
 local floatMixList={.3,.7,.9,.7,.6,.5,.42,.36,.3} -- Alpha curve of 'float' timer text, right-to-left
 
---- @alias mechLib.common.timer.style 'info'|'float'
+---@alias mechLib.common.timer.style 'info'|'float'
 local timer_drawFunc={
     info=function(P,time,time0)
         P:drawInfoPanel(-380,-60,160,120)
@@ -27,11 +27,11 @@ local timer_drawFunc={
     end,
 }
 
---- @type Techmino.Mech.basic
+---@type Techmino.Mech.basic
 local timer={}
 
---- @param time number milliseconds
---- @param prop {timeUp:function, draw?:mechLib.common.timer.style|function, cancel?:(fun():boolean), alwaysTiming:boolean}
+---@param time number milliseconds
+---@param prop {timeUp:function, draw?:mechLib.common.timer.style|function, cancel?:(fun():boolean), alwaysTiming:boolean}
 function timer.new(P,time,prop)
     if not P.modeData.timerList then
         P.modeData.timerList={}

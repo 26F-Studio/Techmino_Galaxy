@@ -1,7 +1,7 @@
 local ins,rem=table.insert,table.remove
 local gc=love.graphics
 
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local misc={}
 
 function misc.interior_soundEvent_countDown(num)
