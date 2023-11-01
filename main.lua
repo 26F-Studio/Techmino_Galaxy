@@ -11,13 +11,16 @@
 --        *  .        +    .   * `  t                 *  ,        .    .          ^           `                   ^    `        --
 --  .      _    `                -       ,     ^     *          `              `     +    *         -       .       +      .    --
 
--- Techmino: Galaxy is an improved version of Techmino.
+-- Techmino: Galaxy is an super-improved version of Techmino.
 -- Creating issues on GitHub is welcomed if you also love tetromino stacking game
 
--- Some coding styles:
+-- Developer's note
 -- 1. I made a framework called Zenitha, *most* codes in Zenitha are not directly relevant to the game;
--- 2. "xxx" are texts for reading by the player, 'xxx' are string values just used in the program;
--- 3. Except "gcinfo" function of Lua itself, other "gc"s are short for "graphics";
+-- 2. This project use Emmylua for better IDE support, recommend to use it if you can;
+-- 3. Check file ".editorconfig" for detailed formatting rule (but not exactly, don't change large amount of code with it);
+-- 4. "xxx" are texts for reading by the player, 'xxx' are string values used only in code;
+-- 5. Most codes are focusing on efficiency, then maintainability and readability, excuse me for some mess;
+-- 6. 26
 
 -------------------------------------------------------------
 -- Load Zenitha
