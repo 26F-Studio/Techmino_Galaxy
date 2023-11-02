@@ -130,6 +130,7 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return end
     -- if key=='z' then minoMap:_printModePos() return end
+    if key=='`' and isAltPressed() then minoMap:_unlockall() end
     sysAction(KEYMAP.sys:getAction(key))
 end
 

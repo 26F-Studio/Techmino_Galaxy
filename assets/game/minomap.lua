@@ -109,10 +109,10 @@ local bridges={}
 local function _newBridge(m1,m2)
     local x1,y1=m1.x,m1.y
     local x2,y2=m2.x,m2.y
-    local dist=dist(x1,y1,x2,y2)
+    local d=dist(x1,y1,x2,y2)
 
     -- Cut in-mode parts
-    local p1,p2=(m1.r*1.2)/dist,1-(m2.r*1.2)/dist
+    local p1,p2=(m1.r*1.2)/d,1-(m2.r*1.2)/d
     x1,y1,x2,y2=
         x1*(1-p1)+x2*p1,
         y1*(1-p1)+y2*p1,
@@ -216,6 +216,15 @@ function map:freshUnlocked(modeList,init)
                     sound='map_unlock',
                 }
             end
+        end
+    end
+end
+
+function map:_unlockall()
+    for i=1,#modes do
+        if not modes[i].enable then
+            modes[i].enable=true
+            modes[i].state=0
         end
     end
 end
