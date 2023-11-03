@@ -6,13 +6,17 @@ local sequence={}
 
 local Tetros={1,2,3,4,5,6,7}
 local Pentos={8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}
-local easyPentos={10,11,14,19,20,23,24,25}     -- P Q T5 J5 L5 N H I5
+local easyPentos={10,11,14,19,20,23,24,25} -- P Q T5 J5 L5 N H I5
 local hardPentos={8,9,12,13,15,16,17,18,21,22} -- Z5 S5 F E U V W X R Y
+
+local function supply(list,src)
+    if not list[1] then TABLE.connect(list,src) end
+end
 
 ---@param P Techmino.Player.mino
 ---@param d table cached data of generator
 ---@param init boolean true if this is the first initializating call
----@diagnostic disable-next-line: unused-local
+---@diagnostic disable-next-line
 function sequence.none(P,d,init)
 end
 
@@ -21,11 +25,11 @@ function sequence.bag7(P,d,init)
         d.bag={}
         return
     end
-    if not d.bag[1] then d.bag=TABLE.shift(Tetros) end
+    supply(d.bag,Tetros)
     return rem(d.bag,P:random(#d.bag))
 end
 
-function sequence.bag7_bag1(P,d,init) -- bag8, which the extra piece from another bag
+function sequence.bag7_p1fromBag7(P,d,init) -- bag8, which the extra piece from another bag
     if init then
         d.bag={}
         d.extra={}
@@ -33,10 +37,20 @@ function sequence.bag7_bag1(P,d,init) -- bag8, which the extra piece from anothe
     end
     if not d.bag[1] then
         d.bag=TABLE.shift(Tetros)
-        if not d.extra[1] then d.extra=TABLE.shift(Tetros) end
+        supply(d.extra,Tetros)
         d.bag[8]=rem(d.extra,P:random(#d.extra))
     end
     return rem(d.bag,P:random(#d.bag))
+end
+
+function sequence.bag7_twin(P,d,init) -- bag7, but two bags work in turn
+    if init then
+        d.bag1,d.bag2={},{}
+        return
+    end
+    d.bag1,d.bag2=d.bag2,d.bag1
+    supply(d.bag1,Tetros)
+    return rem(d.bag1,P:random(#d.bag1))
 end
 
 function sequence.bag7_sprint(P,d,init)
@@ -76,8 +90,8 @@ function sequence.bag7_sprint(P,d,init)
         if not d.start[1] then d.start=nil end
         return r
     else
-        -- Completely random from fifth Bag
-        if not d.bag[1] then d.bag=TABLE.shift(Tetros) end
+        -- Completely random from fifth bag
+        supply(d.bag,Tetros)
         return rem(d.bag,P:random(#d.bag))
     end
 end
@@ -86,7 +100,6 @@ function sequence.bag7_steal1(P,d,init) -- bag7, but each bag steals a piece fro
     if init then
         d.bag={}
         d.victim=TABLE.shift(Tetros)
-        rem(d.victim,P:random(7))
         return
     end
     if not d.bag[1] then
@@ -97,38 +110,43 @@ function sequence.bag7_steal1(P,d,init) -- bag7, but each bag steals a piece fro
     return rem(d.bag,P:random(#d.bag))
 end
 
-function sequence.bag16(P,d,init) -- bag7+7+TI
+function sequence.bag7p7p2_power(P,d,init) -- bag7+7+TI
     if init then
         d.bag={}
         return
     end
-    if not d.bag[1] then d.bag=TABLE.combine(Tetros,TABLE.combine(Tetros,{5,7})) end
+    if not d.bag[1] then
+        for _=1,2 do TABLE.connect(d.bag,Tetros) end
+        TABLE.connect(d.bag,{5,7})
+    end
     return rem(d.bag,P:random(#d.bag))
 end
 
-function sequence.bag26(P,d,init) -- bag 7+7+7+TTOII
+function sequence.bag7p7p7p5_power(P,d,init) -- bag 7+7+7+TTOII
     if init then
         d.bag={}
         return
     end
-    if not d.bag[1] then d.bag=TABLE.combine(Tetros,TABLE.combine(Tetros,TABLE.combine(Tetros,{5,5,6,7,7}))) end
+    if not d.bag[1] then
+        for _=1,3 do TABLE.connect(d.bag,Tetros) end
+        TABLE.connect(d.bag,{5,5,6,7,7})
+    end
     return rem(d.bag,P:random(#d.bag))
 end
 
-function sequence.bag12_drought(P,d,init) -- bag14 without I piece
+function sequence.bag6p6_drought(P,d,init) -- bag14 without I piece
     if init then
         d.bag={}
     end
     if not d.bag[1] then
-        for i=1,6 do
-            ins(d.bag,i)
-            ins(d.bag,i)
+        for i=1,12 do
+            ins(d.bag,(i-1)%6+1)
         end
     end
     return rem(d.bag,P:random(#d.bag))
 end
 
-function sequence.bag7_flood(P,d,init) -- bag7 with extra 3 S pieces and 3 Z pieces
+function sequence.bag7p6_flood(P,d,init) -- bag7 with extra 3 S pieces and 3 Z pieces
     if init then
         d.bag={}
         return
@@ -177,6 +195,17 @@ function sequence.his4_roll4(P,d,init)
     return r
 end
 
+function sequence.pool7_bag7(P,d,init)
+    if init then
+        d.pool=TABLE.shift(Tetros)
+        d.bag={}
+        return
+    end
+    supply(d.bag,Tetros)
+    d.pool[8]=rem(d.bag,P:random(#d.bag))
+    return rem(d.pool,P:random(7))
+end
+
 function sequence.c2(P,d,init)
     if init then
         d.weight=TABLE.new(0,7)
@@ -210,16 +239,16 @@ function sequence.random(P,d,init) -- pure random
     return P:random(7)
 end
 
-function sequence.pento_bag18(P,d,init)
+function sequence.bag18_pento(P,d,init)
     if init then
         d.bag={}
         return
     end
-    if not d.bag[1] then d.bag=TABLE.shift(Pentos) end
+    supply(d.bag,Pentos)
     return rem(d.bag,P:random(#d.bag))
 end
 
-function sequence.pento_bag_EZ8plusHD4fromBag10(P,d,init)
+function sequence.bag8_pentoEZ_p4fromBag10_pentoHD(P,d,init)
     if init then
         d.bag={}
         d.extra={}
@@ -228,7 +257,7 @@ function sequence.pento_bag_EZ8plusHD4fromBag10(P,d,init)
     if not d.bag[1] then
         d.bag=TABLE.shift(easyPentos)
         for _=1,4 do
-            if not d.extra[1] then d.extra=TABLE.shift(hardPentos) end
+            supply(d.extra,hardPentos)
             ins(d.bag,rem(d.extra,P:random(#d.extra)))
         end
     end

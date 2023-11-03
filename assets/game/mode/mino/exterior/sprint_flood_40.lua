@@ -6,7 +6,7 @@ return {
         playBgm('race','base')
     end,
     settings={mino={
-        seqType='bag7_flood',
+        seqType='bag7p6_flood',
         event={
             afterClear={
                 mechLib.mino.sprint.event_afterClear[40],
