@@ -110,6 +110,7 @@ function techrash.hard_event_afterClear(P,clear)
     if P.hand.name=='I' and clear.line==4 then
         local list=P.modeData.techrashInfo
         local x=P.handX
+        P.modeData.techrash=P.modeData.techrash+1
         if list[x].charge>=maxCharge then
             list[x].dead=true
             P:finish('PE')
@@ -119,7 +120,6 @@ function techrash.hard_event_afterClear(P,clear)
                     v.charge=math.max(v.charge-1,0)
                 end
             end
-            P.modeData.techrash=P.modeData.techrash+1
         end
         list[x].charge=list[x].charge+P.modeData.chargePower
         list[x-1].charge=list[x-1].charge+math.floor(P.modeData.sidePower/2)
