@@ -9,6 +9,7 @@ function stat.event_playerInit(P) -- Initially used in minoPlayer.lua
         line=0,
         clearTime=0,
         clears={0,0,0,0},
+        allclear=0,
         atk=0,
         sent=0,
     }
@@ -42,6 +43,9 @@ function stat.event_afterClear(P,clear)
     S.line=S.line+line
     if line%1==0 and line>0 then
         S.clears[line]=(S.clears[line] or 0)+1
+    end
+    if P.field:getHeight()==0 then
+        S.allclear=S.allclear+1
     end
 end
 

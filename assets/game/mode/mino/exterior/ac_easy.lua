@@ -12,13 +12,14 @@ return {
         end,
         event={
             playerInit=function(P)
+                P.modeData.ac=0
                 P.settings.das=math.max(P.settings.das,100)
                 P.settings.arr=math.max(P.settings.arr,20)
-                mechLib.mino.acGenerator.newQuestion(P,{debugging=false,pieceCount=6,holdUsed=true})
+                mechLib.mino.acGenerator.newQuestion(P,{debugging=false,pieceCount=3,holdUsed=true})
             end,
             afterClear=function(P)
                 if P.field:getHeight()==0 then
-                    mechLib.mino.acGenerator.newQuestion(P,{debugging=false,pieceCount=6,holdUsed=true})
+                    mechLib.mino.acGenerator.newQuestion(P,{debugging=false,pieceCount=3+math.floor(P.modeData.stat.allclear^.626),holdUsed=true})
                 end
             end,
         },
