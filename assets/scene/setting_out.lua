@@ -7,8 +7,6 @@ local page
     4 = Gameplay
 ]]
 
-local mobile=SYSTEM=='Android' or SYSTEM=='iOS'
-
 function scene.enter()
     page=tostring(SCN.args[1] or 1)
     for _,v in next,scene.widgetList do
@@ -21,8 +19,8 @@ function scene.enter()
         end
     end
     if page=="3" then
-        scene.widgetList["3f"]:setVisible(not mobile)
-        scene.widgetList["3p"]:setVisible(mobile)
+        scene.widgetList["3f"]:setVisible(not MOBILE)
+        scene.widgetList["3p"]:setVisible(MOBILE)
     end
     scene.widgetList.test:setVisible(not GAME.mode)
     WIDGET._reset()

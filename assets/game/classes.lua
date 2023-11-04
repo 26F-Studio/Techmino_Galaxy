@@ -112,13 +112,13 @@
 ---@field name string Mode name, for debug use
 
 ---@class Techmino.Mode.Setting.Mino
----@field event table<Techmino.mode.event.basic|Techmino.mode.event.mino,string|table|function|table<number,string|table|function>>
+---@field event table<Techmino.mode.event.basic|Techmino.mode.event.mino, string|table|function|table<number, string|table|function>>
 
 ---@class Techmino.Mode.Setting.Puyo
----@field event table<Techmino.mode.event.basic|Techmino.mode.event.puyo,string|table|function|table<number,string|table|function>>
+---@field event table<Techmino.mode.event.basic|Techmino.mode.event.puyo, string|table|function|table<number, string|table|function>>
 
 ---@class Techmino.Mode.Setting.Gem
----@field event table<Techmino.mode.event.basic|Techmino.mode.event.gem,string|table|function|table<number,string|table|function>>
+---@field event table<Techmino.mode.event.basic|Techmino.mode.event.gem, string|table|function|table<number, string|table|function>>
 
 ---@class Techmino.mino.clearRule
 ---@field getDelay fun(P:Techmino.Player.mino, lines:number[]): number?
