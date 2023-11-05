@@ -668,17 +668,19 @@ function MP:pushNext(piece)
     end
 end
 function MP:popNext(ifHold)
-    if self.nextQueue[1] then -- Most cases there is pieces in next queue
+    if self.nextQueue[1] then -- Normally there area pieces in next queue
         self.hand=rem(self.nextQueue,1)
         self:freshNextQueue()
         if not ifHold then
             self.holdTime=0
         end
-    elseif self.holdQueue[1] then -- If no nexts, force using hold
-        ins(self.nextQueue,rem(self.holdQueue,1))
-        self:popNext()
-    else -- If no piece to use, both Next and Hold queue are empty, game over
-        self:finish('ILE')
+    else -- Next queue is empty
+        if self.holdQueue[1] then -- Force using hold
+            ins(self.nextQueue,rem(self.holdQueue,1))
+            self:popNext()
+        else -- No piece to use, game over
+            self:finish('ILE')
+        end
         return
     end
 
