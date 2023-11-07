@@ -12,6 +12,7 @@ local min=math.min
 
 local COLOR=COLOR
 
+---@type Techmino.skin.mino
 local S={}
 S.base='mino_template'
 

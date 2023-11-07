@@ -10,6 +10,7 @@ local max,min=math.max,math.min
 
 local COLOR=COLOR
 
+---@type Techmino.skin.gem
 local S={}
 
 local crossR,crossL=1,6
@@ -156,31 +157,26 @@ local function drawGem(g)
         gc_rectangle('line',-12,-12,24,24)
     end
 end
-function S.drawFieldCell(F)
+function S.drawFieldCell(G,_,x,y)
     gc_setLineWidth(2)
-    for y=1,#F do for x=1,#F[1] do
-        local G=F[y][x]
-        if G then
-            gc_push('transform')
-            if G.moveTimer then
-                local d=G.moveTimer/G.moveDelay
-                if G.fall then
-                    d=-d*(d-2)
-                else
-                    d=-math.cos(d*math.pi)/2+.5
-                end
-                gc_translate(45*(x+d*G.dx)-22.5,-45*(y+d*G.dy)+22.5)
-            else
-                gc_translate(45*x-22.5,-45*y+22.5)
-            end
-            if G.clearTimer and not G.generate then
-                local i=G.clearTimer/G.clearDelay
-                gc_scale(-2*i^2+3*i)
-            end
-            drawGem(G)
-            gc_pop()
+    gc_push('transform')
+    if G.moveTimer then
+        local d=G.moveTimer/G.moveDelay
+        if G.fall then
+            d=-d*(d-2)
+        else
+            d=-math.cos(d*math.pi)/2+.5
         end
-    end end
+        gc_translate(45*(x+d*G.dx)-22.5,-45*(y+d*G.dy)+22.5)
+    else
+        gc_translate(45*x-22.5,-45*y+22.5)
+    end
+    if G.clearTimer and not G.generate then
+        local t=G.clearTimer/G.clearDelay
+        gc_scale(-2*t^2+3*t)
+    end
+    drawGem(G)
+    gc_pop()
 end
 
 function S.drawGarbageBuffer(garbageBuffer)

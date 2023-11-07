@@ -10,6 +10,7 @@ local gc_printf=gc.printf
 
 local COLOR=COLOR
 
+---@type Techmino.skin.mino
 local S={}
 S.base='mino_simp'
 

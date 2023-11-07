@@ -6,10 +6,11 @@
 ]]
 local gc=love.graphics
 local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
-local gc_line,gc_rectangle=gc.line,gc.rectangle
+local gc_line=gc.line
 
 local COLOR=COLOR
 
+---@type Techmino.skin.mino
 local S={}
 S.base='mino_template'
 
