@@ -200,7 +200,7 @@ local bgmList={
     },
     ['truth']={
         author="MrZ",
-        message="Inspired from Veritasium channel",
+        message="Firefly in a Fairytale Remix",
         base={'melody2','bass','drum'},
         full={'melody1','melody2','accompany','bass','drum','sfx1','sfx2'},
     },
