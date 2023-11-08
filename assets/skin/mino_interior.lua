@@ -1,18 +1,30 @@
 --[[
-    Base on mino_simp:
+    Base on mino_template:
+    Remove HeightLines
+    Remove DelayIndicator
+    Simple open ceiling
     Simple grid
     Low precision timer
+    Static starting counter
 ]]
 local gc=love.graphics
 local gc_setColor=gc.setColor
 local gc_draw,gc_rectangle=gc.draw,gc.rectangle
 local gc_printf=gc.printf
+local gc_setLineWidth=gc.setLineWidth
+local gc_line=gc.line
 
 local COLOR=COLOR
 
 ---@type Techmino.skin.mino
 local S={}
-S.base='mino_simp'
+S.base='mino_template'
+
+function S.drawFieldBorder()
+    gc_setLineWidth(2)
+    gc_setColor(1,1,1)
+    gc_line(-201,-401,-201,401,201,401,201,-401)
+end
 
 local gridMark=GC.load{40,40,
     {'setCL',1,1,1,.26},
@@ -30,10 +42,21 @@ function S.drawFieldBackground(fieldW)
     end end
 end
 
+S.drawHeightLines=NULL
+S.drawDasIndicator=NULL
+S.drawDelayIndicator=NULL
+S.drawLockDelayIndicator=NULL
+
 function S.drawTime(time)
     gc_setColor(COLOR.dL)
     FONT.set(30,'number')
     gc_printf(("%.1f"):format(time/1000),-210-260,380,260,'right')
+end
+
+function S.drawStartingCounter(readyDelay)
+    FONT.set(100)
+    gc_setColor(COLOR.L)
+    GC.mStr(math.floor((readyDelay-S.getTime())/1000)+1,0,-70)
 end
 
 return S

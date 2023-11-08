@@ -341,7 +341,6 @@ end
 for _,v in next,{
     'mino_template', -- Shouldn't be used
     'mino_plastic',
-    'mino_simp',
     'mino_interior',
 
     'puyo_template', -- Shouldn't be used
