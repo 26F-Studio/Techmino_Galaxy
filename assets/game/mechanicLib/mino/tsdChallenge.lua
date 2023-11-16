@@ -10,6 +10,21 @@ function tsd.easy_event_afterClear(P,clear)
     local movement=P.lastMovement
     if P.hand.name=='T' and clear.line==2 and movement.action=='rotate' and (movement.corners or movement.immobile) then
         P.modeData.tsd=P.modeData.tsd+1
+        if P.modeData.tsd>1 then
+            local n=P.modeData.tsd
+            P:playSound('b2b',
+                n<=4 and 1 or
+                n<=7 and 2 or
+                n<=9 and 3 or
+                n<=11 and 4 or
+                n<=13 and 5 or
+                n<=15 and 6 or
+                n<=17 and 7 or
+                n<=19 and 8 or
+                n<=21 and 9 or
+                10
+            )
+        end
     else
         P:finish('PE')
     end
@@ -66,6 +81,21 @@ function tsd.hard_event_afterClear(P,clear)
                     end
                 end
                 P.modeData.tsd=P.modeData.tsd+1
+                if P.modeData.tsd>1 then
+                    local n=P.modeData.tsd
+                    P:playSound('b2b',
+                        n<=3 and 1 or
+                        n<=5 and 2 or
+                        n<=7 and 3 or
+                        n<=9 and 4 or
+                        n<=11 and 5 or
+                        n<=13 and 6 or
+                        n<=15 and 7 or
+                        n<=17 and 8 or
+                        n<=19 and 9 or
+                        10
+                    )
+                end
             end
             list[x].charge=list[x].charge+tsdCharge
         end
