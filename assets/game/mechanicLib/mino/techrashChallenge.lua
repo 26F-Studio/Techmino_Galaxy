@@ -48,6 +48,9 @@ function techrash.easy_event_afterClear(P,clear)
     P:triggerEvent('afterLock') -- Force refresh
     if P.hand.name=='I' and clear.line>=4 then
         P.modeData.techrash=P.modeData.techrash+1
+        if P.modeData.techrash>1 then
+            P:playSound('b2b',math.min(math.floor((P.modeData.techrash+2.6)^1.2/5.4),10))
+        end
         local HC=P.field:getHeight()==0
         if not HC then
             HC=true
@@ -112,6 +115,9 @@ function techrash.hard_event_afterClear(P,clear)
         local list=P.modeData.techrashInfo
         local x=P.handX
         P.modeData.techrash=P.modeData.techrash+1
+        if P.modeData.techrash>1 then
+            P:playSound('b2b',math.min(math.floor((P.modeData.techrash+2.6)^1.2/5.4),10))
+        end
         if list[x].charge>=maxCharge then
             list[x].dead=true
             P:finish('PE')
