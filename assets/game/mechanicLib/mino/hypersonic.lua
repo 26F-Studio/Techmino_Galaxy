@@ -1,30 +1,33 @@
 local gc=love.graphics
 
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local hypersonic={}
 
---- @param mode 'low'|'high'|'hidden'
+---@param mode 'low'|'high'|'hidden'|'titanium'
 function hypersonic.event_playerInit_auto(P,mode)
+    hypersonic.event_playerInit(P)
     if mode=='low' then
-        hypersonic.event_playerInit(P)
         hypersonic.low_event_playerInit(P)
         P:addEvent('afterSpawn',hypersonic.event_afterSpawn)
         P:addEvent('afterClear',hypersonic.low_event_afterClear)
         P:addEvent('drawOnPlayer',hypersonic.event_drawOnPlayer)
     elseif mode=='high' then
-        hypersonic.event_playerInit(P)
         hypersonic.high_event_playerInit(P)
         P:addEvent('always',hypersonic.high_event_always)
         P:addEvent('afterSpawn',hypersonic.event_afterSpawn)
         P:addEvent('afterClear',hypersonic.high_event_afterClear)
         P:addEvent('drawOnPlayer',hypersonic.event_drawOnPlayer)
     elseif mode=='hidden' then
-        hypersonic.event_playerInit(P)
         hypersonic.hidden_event_playerInit(P)
         P:addEvent('always',hypersonic.hidden_event_always)
         P:addEvent('afterSpawn',hypersonic.event_afterSpawn)
-        P:addEvent('afterClear',mechLib.mino.hypersonic.hidden_event_afterClear)
-        P:addEvent('drawOnPlayer',mechLib.mino.hypersonic.hidden_event_drawOnPlayer)
+        P:addEvent('afterClear',hypersonic.hidden_event_afterClear)
+        P:addEvent('drawOnPlayer',hypersonic.hidden_event_drawOnPlayer)
+    elseif mode=='titanium' then
+        hypersonic.titanium_event_playerInit(P)
+        P:addEvent('afterSpawn',hypersonic.event_afterSpawn)
+        P:addEvent('afterClear',hypersonic.titanium_event_afterClear)
+        P:addEvent('drawOnPlayer',hypersonic.titanium_event_drawOnPlayer)
     else
         error('No hypersonic mode '..tostring(mode))
     end
@@ -34,16 +37,24 @@ function hypersonic.event_playerInit(P)
     P.modeData.point=0
     P.modeData.level=1
     P.modeData.target=100
+    P.modeData.maxHold=0
     P.modeData.storedDas=P.settings.das
     P.modeData.storedArr=P.settings.arr
+    P.settings.initMove='hold'
+    P.settings.initRotate='hold'
+    P.settings.initHold='hold'
 end
 
 function hypersonic.event_afterSpawn(P)
     local md=P.modeData
-    if md.point<md.target-1 then
-        md.point=md.point+1
-        if md.point==md.target-1 then
-            P:playSound('notice')
+    if md.maxHold<#P.holdQueue then
+        md.maxHold=#P.holdQueue
+    else
+        if md.point<md.target-1 then
+            md.point=md.point+1
+            if md.point==md.target-1 then
+                P:playSound('notice')
+            end
         end
     end
 end
@@ -56,13 +67,13 @@ function hypersonic.event_drawOnPlayer(P)
     GC.mStr(P.modeData.target,-300,-5)
 end
 
-do-- low
+do -- low
     local levels={
         {lock=1e3,spawn=320,das=200,arr=36},
-        {lock=850,spawn=290,das=170,arr=32},
-        {lock=700,spawn=260,das=140,arr=28},
-        {lock=550,spawn=230,das=120,arr=24},
-        {lock=400,spawn=200,das=100,arr=20},
+        {lock=850,spawn=290,das=170,arr=33},
+        {lock=700,spawn=260,das=140,arr=30},
+        {lock=550,spawn=230,das=120,arr=28},
+        {lock=400,spawn=200,das=100,arr=26},
     }
 
     function hypersonic.low_event_playerInit(P)
@@ -74,9 +85,9 @@ do-- low
         P.settings.clearDelay=300
     end
 
-    function hypersonic.low_event_afterClear(P)
+    function hypersonic.low_event_afterClear(P,clear)
         local md=P.modeData
-        local dScore=math.floor((P.clearHistory[#P.clearHistory].line+1)^2/4)
+        local dScore=math.floor((clear.line+1)^2/4) -- 1,2,4,6
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then
@@ -102,18 +113,18 @@ do-- low
     end
 end
 
-do-- high
+do -- high
     local levels={
         {lock=450,fresh=4400,spawn=150,clear=380,das=130,arr=29,bumpInterval=false},
         {lock=400,fresh=4200,spawn=140,clear=340,das=120,arr=28,bumpInterval=false},
         {lock=360,fresh=4000,spawn=130,clear=300,das=110,arr=27,bumpInterval=false},
         {lock=330,fresh=3800,spawn=120,clear=260,das=105,arr=26,bumpInterval=false},
         {lock=300,fresh=3600,spawn=110,clear=220,das=100,arr=25,bumpInterval=false},
-        {lock=300,fresh=3400,spawn=100,clear=180,das=96, arr=24,bumpInterval=10000},
-        {lock=300,fresh=3200,spawn=95, clear=160,das=92, arr=23,bumpInterval=8000},
-        {lock=300,fresh=3000,spawn=90, clear=140,das=88, arr=22,bumpInterval=6000},
-        {lock=300,fresh=2800,spawn=85, clear=120,das=84, arr=21,bumpInterval=4000},
-        {lock=300,fresh=2600,spawn=80, clear=100,das=80, arr=20,bumpInterval=3000},
+        {lock=300,fresh=3400,spawn=100,clear=180,das=96, arr=24,bumpInterval=10e3},
+        {lock=290,fresh=3200,spawn=95, clear=160,das=92, arr=23,bumpInterval=8e3},
+        {lock=280,fresh=3000,spawn=90, clear=140,das=88, arr=22,bumpInterval=6e3},
+        {lock=270,fresh=2800,spawn=85, clear=120,das=84, arr=21,bumpInterval=5e3},
+        {lock=260,fresh=2600,spawn=80, clear=100,das=80, arr=20,bumpInterval=4e3},
     }
 
     function hypersonic.high_event_playerInit(P)
@@ -141,15 +152,15 @@ do-- high
             local firstLine=F._matrix[1]
             local newLine={}
             for i=1,#firstLine do
-                newLine[i]=firstLine[i] and {color=firstLine[i].color,conn={}} or false
+                newLine[i]=firstLine[i] and P:newCell(firstLine[i].color) or false
             end
             table.insert(F._matrix,1,newLine)
             for i=1,#firstLine do
                 local cells=P:getConnectedCells(i,2)
                 for j=1,#cells do
                     local c=F:getCell(cells[j][1],cells[j][2])
-                    c.conn[newLine[i]]=true
-                    newLine[i].conn[c]=true
+                    c.conn[newLine[i].cid]=0
+                    newLine[i].conn[c.cid]=0
                 end
             end
             if P.hand then
@@ -161,9 +172,9 @@ do-- high
         end
     end
 
-    function hypersonic.high_event_afterClear(P)
+    function hypersonic.high_event_afterClear(P,clear)
         local md=P.modeData
-        local dScore=math.floor((P.clearHistory[#P.clearHistory].line+1)^2/4)
+        local dScore=math.floor((clear.line+1)^2/4) -- 1,2,4,6
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then
@@ -196,7 +207,7 @@ do-- high
     end
 end
 
-do-- hidden
+do -- hidden
     local levels={
         {lock=510,fresh=6000,spawn=150,clear=400,das=130,arr=29,visTime=5000,fadeTime=2600},
         {lock=460,fresh=5800,spawn=140,clear=360,das=120,arr=28,visTime=4000,fadeTime=2600},
@@ -215,12 +226,13 @@ do-- hidden
     local showVisTime=1000
     local showFadeTime=1000
 
+    local bpm=130
     local flashProbability=.1626
-    local flashInterval=math.floor(4*60*1000/130/2^(-1/12)+.5)
+    local flashInterval=math.floor(4*60*1000/bpm/2^(-1/12)+.5)
     local flashVisTime1,flashVisTime2=120,460
     local flashFadeTime=620
 
-    local endAllInterval=math.floor(60*1000/130/2^(-1/12)+.5)
+    local endAllInterval=math.floor(60*1000/bpm/2^(-1/12)+.5)
     local endVisTime1,endVisTime2=620,723
     local endFadeTime=1260
 
@@ -291,7 +303,7 @@ do-- hidden
         end
     end
 
-    function hypersonic.hidden_event_afterClear(P)
+    function hypersonic.hidden_event_afterClear(P,clear)
         local md=P.modeData
 
         -- Update showInvis speed
@@ -302,7 +314,7 @@ do-- hidden
             md.swipeStep=math.max(md.swipeStep+(3-c.line),1)
         end
 
-        local dScore=math.floor((P.clearHistory[#P.clearHistory].line)^2/2)
+        local dScore=math.floor(clear.line^2/2) -- 0,2,4,8
         if dScore==0 then return end
         md.point=md.point+dScore
         if md.point==md.target-1 then
@@ -339,6 +351,66 @@ do-- hidden
         GC.mStr(P.modeData.target,-300,-5)
         GC.setAlpha(.7023)
         GC.mStr(P.modeData.point,-300+10*math.sin(P.time),-90)
+    end
+end
+
+do --  titanium
+    local levels={
+        {lock=450,spawn=170,clear=380,das=96,arr=29},
+        {lock=400,spawn=160,clear=340,das=92,arr=28},
+        {lock=360,spawn=150,clear=300,das=88,arr=27},
+        {lock=330,spawn=140,clear=260,das=84,arr=26},
+        {lock=300,spawn=130,clear=220,das=80,arr=25},
+        {lock=300,spawn=120,clear=180,das=76,arr=24},
+        {lock=300,spawn=115,clear=160,das=72,arr=23},
+        {lock=300,spawn=110,clear=140,das=68,arr=22},
+        {lock=300,spawn=105,clear=120,das=64,arr=21},
+        {lock=300,spawn=100,clear=100,das=60,arr=20},
+    }
+    function hypersonic.titanium_event_playerInit(P)
+        P.settings.dropDelay=0
+        P.settings.das=math.max(P.modeData.storedDas,levels[1].das)
+        P.settings.arr=math.max(P.modeData.storedArr,levels[1].arr)
+        P.settings.lockDelay=levels[1].lock
+        P.settings.spawnDelay=levels[1].spawn
+        P.settings.clearDelay=levels[1].clear
+    end
+    function hypersonic.titanium_event_afterClear(P,clear)
+        local md=P.modeData
+        local dScore=math.floor(clear.line^2/3+2) -- 2,3,5,7
+        if dScore==0 then return end
+        md.point=md.point+dScore
+        if md.point==md.target-1 then
+            P:playSound('notice')
+        else
+            while md.point>=md.target do
+                if md.level<10 then
+                    P:playSound('reach')
+                    md.level=md.level+1
+                    md.target=100*md.level
+
+                    P.settings.das=math.max(md.storedDas,levels[md.level].das)
+                    P.settings.arr=math.max(md.storedArr,levels[md.level].arr)
+                    P.settings.lockDelay=levels[md.level].lock
+                    P.settings.spawnDelay=levels[md.level].spawn
+                    P.settings.clearDelay=levels[md.level].clear
+                else
+                    md.point=md.target
+                    P:finish('AC')
+                    return
+                end
+            end
+        end
+    end
+    function hypersonic.titanium_event_drawOnPlayer(P)
+        P:drawInfoPanel(-380,-80,160,160)
+        FONT.set(70)
+        GC.mStr(P.modeData.point,-300,-90)
+        gc.rectangle('fill',-375,-2,150,4)
+        GC.mStr(P.modeData.target,-300,-5)
+        FONT.set(85)
+        GC.setAlpha(.42+.162*math.sin(P.time/126))
+        GC.mStr(P.modeData.point,-300,-100)
     end
 end
 

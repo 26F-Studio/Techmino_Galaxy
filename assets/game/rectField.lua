@@ -1,8 +1,6 @@
 local gc=love.graphics
 
---- @class Techmino.RectField
---- @field _width number
---- @field _matrix any[][]
+---@class Techmino.RectField
 local F={}
 
 --------------------------------------------------------------
@@ -91,10 +89,14 @@ function F:drawThumbnail_color(step,size)
         end
     end
 end
+
+---@return number
 function F:getHeight()
     return #self._matrix
 end
+
 local wallCell=setmetatable({},{__newIndex=NULL,__metatable=true})
+---@return Techmino.Cell|false
 function F:getCell(x,y)
     if x<=0 or x>self._width or y<=0 then return wallCell end
     if y>#self._matrix then return false end
@@ -108,7 +110,7 @@ function F:setCell(cell,x,y)
                 self._matrix[i]=TABLE.new(false,self._width)
             end
         else
-            return-- Too high, do nothing
+            return -- Too high, do nothing
         end
     end
     self._matrix[y][x]=cell
@@ -117,12 +119,8 @@ end
 -- Builder
 function F.new(width)
     assert(type(width)=='number','[Field].new(width): width must be number')
-    local f={
-        _width=width,
-        _matrix={},
-    }
-    f._matrix=f
-    setmetatable(f,{__index=F,__metatable=true})
+    local f=setmetatable({_width=width},{__index=F,__metatable=true})
+    f._matrix={}
 
     return f
 end

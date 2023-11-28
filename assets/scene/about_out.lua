@@ -58,7 +58,7 @@ function scene.update(dt)
             vx=math.random(-200,200),vy=math.random(926,1260),
             r=math.random(25,45),
             a=math.random()*MATH.tau,va=10*math.random()-5,
-            mino=CHAR.mino[Minoes[math.random(#Minoes)].name],
+            mino=MATH.randFrom(CHAR.mino),
             minoColor=math.random()*MATH.tau,
         }
         if MATH.roll(.026) then
@@ -131,7 +131,7 @@ function scene.draw()
         GC.setColor(COLOR.lS) GC.arc('fill','closed',0,0,30,0,3.141593)
         GC.translate(-2,2)
         GC.setColor(COLOR.L)
-        GC.rectangle('fill',-10,-10,20,20)
+        GC.mRect('fill',0,0,20,20)
         GC.circle('fill',0,-10,10)
         GC.circle('fill',10,0,10)
     GC.pop()
@@ -148,7 +148,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
-    WIDGET.new{type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'about_title'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'about_title'},
 }
 return scene

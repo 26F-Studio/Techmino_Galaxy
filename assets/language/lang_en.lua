@@ -36,6 +36,7 @@ return {
         "Ultracrash",
         "Impossicrash",
     },
+    clearLines="$1 Lines",
 
     combo_small="$1 Combo",
     combo_large="$1 Combo!",
@@ -48,14 +49,25 @@ return {
     allClear="ALL CLEAR",
     halfClear="Half Clear",
 
+    target_piece="Piece",
+    target_line="Line",
+    target_time="Time",
+    target_ac="AC",
+    target_hc="HC",
+    target_tsd="TSD",
+    target_techrash="Techrash",
+    target_wave="Wave",
+
     -- About-Game
     pause="Pause",
+
+    new_level_unlocked="Assessment passed",
 
     -- Widget texts
     button_back="Back",
 
     simulation_title="Simulations",
-    graph_mino_title="M-Graph",-- Traslation warning: from "Knowledge Graph" (AI domain)
+    graph_mino_title="M-Graph", -- Traslation warning: from "Knowledge Graph" (AI domain)
     settings_title="Settings",
 
     setting_das="DAS",
@@ -96,12 +108,13 @@ return {
     keyset_title="Keybinds",
     keyset_mino_moveLeft=   "Move Left",
     keyset_mino_moveRight=  "Move Right",
-    keyset_mino_rotateCW=   "Twist CW",
-    keyset_mino_rotateCCW=  "Twist CCW",
-    keyset_mino_rotate180=  "Twist 180",
+    keyset_mino_rotateCW=   "Rotate CW",
+    keyset_mino_rotateCCW=  "Rotate CCW",
+    keyset_mino_rotate180=  "Rotate 180",
     keyset_mino_softDrop=   "Soft Drop",
     keyset_mino_hardDrop=   "Hard Drop",
     keyset_mino_holdPiece=  "Hold Piece",
+    keyset_mino_skip=       "Skip",
 
     keyset_puyo_moveLeft=   "Move Left",
     keyset_puyo_moveRight=  "Move Right",
@@ -110,6 +123,7 @@ return {
     keyset_puyo_rotate180=  "Rotate180",
     keyset_puyo_softDrop=   "Soft Drop",
     keyset_puyo_hardDrop=   "Hard Drop",
+    keyset_puyo_skip=       "Skip",
 
     keyset_gem_swapLeft=    "Swap Left",
     keyset_gem_swapRight=   "Swap Right",
@@ -122,21 +136,21 @@ return {
     keyset_gem_moveRight=   "Cursor Right",
     keyset_gem_moveUp=      "Cursor Up",
     keyset_gem_moveDown=    "Cursor Down",
+    keyset_gem_skip=        "Skip",
 
     keyset_func1= "Function 1",
     keyset_func2= "Function 2",
     keyset_func3= "Function 3",
     keyset_func4= "Function 4",
     keyset_func5= "Function 5",
-    keyset_func6= "Function 6",
 
     keyset_sys_view=    "View",
     keyset_sys_restart= "Restart",
+    keyset_sys_chat=    "Chat",
     keyset_sys_back=    "Menu back",
     keyset_sys_quit=    "End game",
     keyset_sys_setting= "Setting",
     keyset_sys_help=    "Quick Help",
-    keyset_sys_chat=    "Chat",
     keyset_sys_up=      "Up",
     keyset_sys_down=    "Down",
     keyset_sys_left=    "Left",
@@ -194,9 +208,9 @@ return {
         tsd_practice=          {"TSD Practice","Clear more TSD puzzles"},
         tsd_easy=              {"TSD Easy","Clear more TSDs in a row"},
         tsd_hard=              {"TSD Hard","Clear more TSDs in a row, but not in the same column"},
-        pc_easy=               {"PC Easy","Make PCs with templates"},
-        pc_hard=               {"PC Hard","Make PCs with more complicated templates"},
-        pc_challenge=          {"PC Challenge","Make as many PCs as you can"},
+        ac_easy=               {"AC Easy","Make ACs with templates"},
+        ac_hard=               {"AC Hard","Make ACs with more complicated templates"},
+        ac_challenge=          {"AC Challenge","Make as many ACs as you can"},
         dig_practice=          {"Dig Practice","Clear the garbage lines"},
         dig_40=                {"Dig 40","Clear 40 random garbage lines"},
         dig_100=               {"Dig 100","Clear 100 random garbage lines"},
@@ -205,7 +219,7 @@ return {
         dig_volcanics=         {"Dig Volcanics","Clear some compilicated garbage lines"},
         dig_checker=           {"Dig Checker","Clear 10 checkerboard garbage lines"},
         survivor_cheese=       {"Survivor Cheese","Survive under scattered attacks"},
-        survivor_b2b=          {"Survivor B2b","Survive under heavy attacks"},
+        survivor_b2b=          {"Survivor B2B","Survive under heavy attacks"},
         survivor_spike=        {"Survivor Spike","Survive under huge spike attacks"},
         backfire_100=          {"Backfire 100","Clear 100 lines, but with backfire"},
         backfire_amplify_100=  {"Backfire Amplify 100","Clear 100 lines, but with increased backfire"},
@@ -213,8 +227,8 @@ return {
         sprint_40=             {"Sprint 40","Clear 40 lines"},
         sprint_10=             {"Sprint 10","Clear 10 lines"},
         sprint_obstacle_20=    {"Sprint 20 Obstacle","Score 20 points, with random starting fields"},
-        sprint_200=            {"Sprint 200","Clear 200 lines"},
-        sprint_1000=           {"Sprint 1000","Clear 1000 lines"},
+        sprint_200=            {"Sprint? 200","Clear 200 lines"},
+        sprint_1000=           {"Sprint? 1000","Clear 1000 lines"},
         sprint_drought_40=     {"Sprint 40 Drought","Clear 40 lines without I pieces"},
         sprint_flood_40=       {"Sprint 40 Flood","Clear 40 lines with too many S & Z pieces"},
         sprint_pento_40=       {"Sprint 40 Pento","Clear 40 lines with pentominoes"},
@@ -233,7 +247,7 @@ return {
         sprint_flip_40=        {"Sprint 40 Flip","Clear 40 lines with a flipping field\nYou spin me right round, baby right round like a record, baby right round right round"},
         sprint_dizzy_40=       {"Sprint 40 Dizzy","Clear 40 lines with strange directions\nSomething's fishy with the directions here."},
         sprint_float_40=       {"Sprint 40 Float","Clear 40 lines without gravity"},
-        sprint_randctrl_40=    {"Sprint 40 Random","Clear 40 lines with a broken input device"},
+        sprint_randctrl_40=    {"Sprint 40 Clumsy","Clear 40 lines with a broken input device"},
     },
 
     -- Level

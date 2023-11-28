@@ -11,8 +11,8 @@ local ins,rem=table.insert,table.remove
 
 local inst=SFX.playSample
 
---- @class Techmino.Player.gem: Techmino.Player
---- @field field any[][]
+---@class Techmino.Player.gem: Techmino.Player
+---@field field any[][]
 local GP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
 
 --[[ Gem tags:
@@ -49,22 +49,22 @@ local GP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=tr
 -- Function tables
 local defaultSoundFunc={
     countDown=function(num)
-        if num==0 then-- 6, 3+6+6
+        if num==0 then -- 6, 3+6+6
             inst('bass',.8,'A3')
             inst('lead',.9,'A4','E5','A5')
-        elseif num==1 then-- 5, 3+7
+        elseif num==1 then -- 5, 3+7
             inst('bass',.9,'G3')
             inst('lead',.9,'B4','E5')
-        elseif num==2 then-- 4, 6+2
+        elseif num==2 then -- 4, 6+2
             inst('bass','F3')
             inst('lead',.8,'A4','D5')
-        elseif num==3 then-- 6+6
+        elseif num==3 then -- 6+6
             inst('bass',.9,'A3','E4')
             inst('lead',.8,'A4')
-        elseif num==4 then-- 5+7, 5
+        elseif num==4 then -- 5+7, 5
             inst('bass',.9,'G3','B3')
             inst('lead',.6,'G4')
-        elseif num==5 then-- 4+6, 4
+        elseif num==5 then -- 4+6, 4
             inst('bass',.8,'F3','A3')
             inst('lead',.3,'F4')
         elseif num<=10 then
@@ -77,7 +77,7 @@ local defaultSoundFunc={
     swap_failed=    function() SFX.play('tuck')          end,
     twist=          function() SFX.play('rotate')        end,
     twist_failed=   function() SFX.play('tuck')          end,
-    move_back=      function() SFX.play('rotate_failed') end,
+    move_back=      function() SFX.play('rotate_failed')  end,
     touch=          function() SFX.play('lock')          end,
     clear=function(lines)
         SFX.play(
@@ -102,127 +102,12 @@ GP.scriptCmd={
 --------------------------------------------------------------
 -- Actions
 GP._actions={}
-function GP._actions.swapLeft(P)
-    if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
-        P:swap('action',P.swapX,P.swapY,-1,0)
-    end
-end
-function GP._actions.swapRight(P)
-    if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
-        P:swap('action',P.swapX,P.swapY,1,0)
-    end
-end
-function GP._actions.swapUp(P)
-    if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
-        P:swap('action',P.swapX,P.swapY,0,1)
-    end
-end
-function GP._actions.swapDown(P)
-    if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
-        P:swap('action',P.swapX,P.swapY,0,-1)
-    end
-end
-function GP._actions.twistCW(P)
-    if (P.settings.multiMove or #P.movingGroups==0) and P.settings.twistR then
-        P:twist('action',P.twistX,P.twistY,'R')
-    end
-end
-function GP._actions.twistCCW(P)
-    if (P.settings.multiMove or #P.movingGroups==0) and P.settings.twistL then
-        P:twist('action',P.twistX,P.twistY,'L')
-    end
-end
-function GP._actions.twist180(P)
-    if (P.settings.multiMove or #P.movingGroups==0) and P.settings.twistF then
-        P:twist('action',P.twistX,P.twistY,'F')
-    end
-end
-function GP._actions.moveLeft(P)
-    P.mouseX,P.mouseY=false,false
-    P.moveDirH=-1
-    P.moveChargeH=0
-
-    if P.swapX>1 then
-        P.swapX=P.swapX-1
-        if P.twistX>1 then
-            P.twistX=P.twistX-1
-        end
-        P:playSound('move')
-    elseif P.twistX>1 then
-        P.twistX=P.twistX-1
-        P:playSound('move')
-    else
-        P:playSound('move_failed')
-    end
-end
-function GP._actions.moveRight(P)
-    P.mouseX,P.mouseY=false,false
-    P.moveDirH=1
-    P.moveChargeH=0
-
-    if P.swapX<P.settings.fieldSize then
-        P.swapX=P.swapX+1
-        if P.twistX<P.settings.fieldSize-1 then
-            P.twistX=P.twistX+1
-        end
-        P:playSound('move')
-    elseif P.twistX<P.settings.fieldSize-1 then
-        P.twistX=P.twistX+1
-        P:playSound('move')
-    else
-        P:playSound('move_failed')
-    end
-end
-function GP._actions.moveUp(P)
-    P.mouseX,P.mouseY=false,false
-    P.moveDirV=1
-    P.moveChargeV=0
-
-    if P.swapY<P.settings.fieldSize then
-        P.swapY=P.swapY+1
-        if P.twistY<P.settings.fieldSize-1 then
-            P.twistY=P.twistY+1
-        end
-        P:playSound('move')
-    elseif P.twistY<P.settings.fieldSize-1 then
-        P.twistY=P.twistY+1
-        P:playSound('move')
-    else
-        P:playSound('move_failed')
-    end
-end
-function GP._actions.moveDown(P)
-    P.mouseX,P.mouseY=false,false
-    P.moveDirV=-1
-    P.moveChargeV=0
-
-    if P.swapY>1 then
-        P.swapY=P.swapY-1
-        if P.twistY>1 then
-            P.twistY=P.twistY-1
-        end
-        P:playSound('move')
-    elseif P.twistY>1 then
-        P.twistY=P.twistY-1
-        P:playSound('move')
-    else
-        P:playSound('move_failed')
-    end
-end
-
-GP._actions.func1=NULL
-GP._actions.func2=NULL
-GP._actions.func3=NULL
-GP._actions.func4=NULL
-GP._actions.func5=NULL
-GP._actions.func6=NULL
-
-for k,v in next,GP._actions do GP._actions[k]=GP:_getActionObj(v) end
+for k,v in next,mechLib.mino.actions do GP._actions[k]=GP:_getActionObj(v) end
 --------------------------------------------------------------
 -- Effects
 --------------------------------------------------------------
 -- Game methods
-function GP:printField()-- For debugging
+function GP:printField() -- For debugging
     local F=self.field
     print('----------')
     for y=self.settings.fieldSize,1,-1 do
@@ -920,13 +805,20 @@ function GP:render()
         GC.stc_rect(0,0,720,-720)
         gc_scale(16/settings.fieldSize)
 
-            self:triggerEvent('drawBelowField')-- From frame's bottom-left, 40px a cell
+            self:triggerEvent('drawBelowField') -- From frame's bottom-left, 40px a cell
 
             -- Grid & Cells
             skin.drawFieldBackground(settings.fieldSize)
+            local F=self.field
+            for y=1,#F do for x=1,#F[1] do
+                local C=F[y][x]
+                if C then
+                    skin.drawFieldCell(C,F,(x-1)*40+2,-y*40+2)
+                end
+            end end
             skin.drawFieldCell(self.field)
 
-            self:triggerEvent('drawInField')-- From frame's bottom-left, 40px a cell
+            self:triggerEvent('drawInField') -- From frame's bottom-left, 40px a cell
 
         -- Stop field stencil
         GC.stc_stop()
@@ -958,7 +850,7 @@ function GP:render()
     -- Texts
     self.texts:draw()
 
-    self:triggerEvent('drawOnPlayer')-- From player's center
+    self:triggerEvent('drawOnPlayer') -- From player's center
 
     -- Starting counter
     if self.time<settings.readyDelay then
@@ -978,6 +870,7 @@ function GP:checkScriptSyntax(cmd,arg,errMsg)
 end
 --------------------------------------------------------------
 -- Builder
+---@class Techmino.Mode.Setting.Gem
 local baseEnv={
     -- Size
     fieldSize=8,

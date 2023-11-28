@@ -10,6 +10,7 @@ local function startGame(modeName)
     GAME.load(modeName)
 end
 function scene.enter()
+    PROGRESS.setExteriorBG()
     if SCN.args[1] then
         startGame(SCN.args[1])
     end
@@ -41,6 +42,11 @@ local function sysAction(action)
 end
 function scene.keyDown(key,isRep)
     if isRep then return end
+    if key=='i' then
+        love.system.setClipboardText(GAME.playerList[1]:serialize())
+    elseif key=='o' then
+        GAME.playerList[1]:unserialize(love.system.getClipboardText())
+    end
     local action
 
     local p=GAME.mainPlayer
@@ -127,6 +133,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{name='pause',type='button',pos={0,0},x=120,y=80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
+    {name='pause',type='button',pos={0,0},x=120,y=80,w=160,h=80,sound_trigger=false,fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
 }
 return scene

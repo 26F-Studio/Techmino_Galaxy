@@ -1,5 +1,5 @@
 local settings={
-    _system={-- We just save values here, do not change them directly.
+    _system={ -- We just save values here, do not change them directly.
         -- Audio
         autoMute=false,
         mainVol=1,
@@ -60,7 +60,7 @@ local settings={
         shakeness=.6,
     },
 }
-local settingTriggers={-- Changing values in SETTINGS.system will trigger these functions (if exist).
+local settingTriggers={ -- Changing values in SETTINGS.system will trigger these functions (if exist).
     -- Audio
     mainVol=        function(v) love.audio.setVolume(v) end,
     bgmVol=         function(v) BGM.setVol(v) end,

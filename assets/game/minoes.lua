@@ -1,78 +1,138 @@
-local O,_=true,false
+local Mino={}
 
---- @class Techmino.mino
---- @field name string
---- @field id number
---- @field shape boolean[][]
 
---- @class Techmino.minos
---- @field Z Techmino.mino
---- @field S Techmino.mino
---- @field J Techmino.mino
---- @field L Techmino.mino
---- @field T Techmino.mino
---- @field O Techmino.mino
---- @field I Techmino.mino
---- @field Z5 Techmino.mino
---- @field S5 Techmino.mino
---- @field P Techmino.mino
---- @field Q Techmino.mino
---- @field F Techmino.mino
---- @field E Techmino.mino
---- @field T5 Techmino.mino
---- @field U Techmino.mino
---- @field V Techmino.mino
---- @field W Techmino.mino
---- @field X Techmino.mino
---- @field J5 Techmino.mino
---- @field L5 Techmino.mino
---- @field R Techmino.mino
---- @field Y Techmino.mino
---- @field N Techmino.mino
---- @field H Techmino.mino
---- @field I5 Techmino.mino
---- @field I3 Techmino.mino
---- @field C Techmino.mino
---- @field I2 Techmino.mino
---- @field O1 Techmino.mino
-local minoes={
+---@type table<any, Techmino.Mino>
+local minoes={}
+
+function Mino.registerMino(name,id,shape)
+    local mino={name=name,id=id,shape=shape}
+    assert(not minoes[name],("Mino name '$1' duplicated"):repD(name))
+    assert(not minoes[id],("Mino '$1' duplicated"):repD(id))
+    minoes[name]=mino
+    minoes[id]=mino
+end
+do
+    local reg=Mino.registerMino
+    local O,_=true,false
+
     -- Tetromino
-    {name='Z', id=01,shape={{_,O,O},{O,O,_}}},
-    {name='S', id=02,shape={{O,O,_},{_,O,O}}},
-    {name='J', id=03,shape={{O,O,O},{O,_,_}}},
-    {name='L', id=04,shape={{O,O,O},{_,_,O}}},
-    {name='T', id=05,shape={{O,O,O},{_,O,_}}},
-    {name='O', id=06,shape={{O,O},{O,O}}},
-    {name='I', id=07,shape={{O,O,O,O}}},
+    reg('Z',  1,  {{_,O,O},{O,O,_}})
+    reg('S',  2,  {{O,O,_},{_,O,O}})
+    reg('J',  3,  {{O,O,O},{O,_,_}})
+    reg('L',  4,  {{O,O,O},{_,_,O}})
+    reg('T',  5,  {{O,O,O},{_,O,_}})
+    reg('O',  6,  {{O,O},{O,O}})
+    reg('I',  7,  {{O,O,O,O}})
 
     -- Pentomino
-    {name='Z5',id=08,shape={{_,O,O},{_,O,_},{O,O,_}}},
-    {name='S5',id=09,shape={{O,O,_},{_,O,_},{_,O,O}}},
-    {name='P', id=10,shape={{O,O,O},{O,O,_}}},
-    {name='Q', id=11,shape={{O,O,O},{_,O,O}}},
-    {name='F', id=12,shape={{_,O,_},{O,O,O},{O,_,_}}},
-    {name='E', id=13,shape={{_,O,_},{O,O,O},{_,_,O}}},
-    {name='T5',id=14,shape={{O,O,O},{_,O,_},{_,O,_}}},
-    {name='U', id=15,shape={{O,O,O},{O,_,O}}},
-    {name='V', id=16,shape={{O,O,O},{_,_,O},{_,_,O}}},
-    {name='W', id=17,shape={{_,O,O},{O,O,_},{O,_,_}}},
-    {name='X', id=18,shape={{_,O,_},{O,O,O},{_,O,_}}},
-    {name='J5',id=19,shape={{O,O,O,O},{O,_,_,_}}},
-    {name='L5',id=20,shape={{O,O,O,O},{_,_,_,O}}},
-    {name='R', id=21,shape={{O,O,O,O},{_,O,_,_}}},
-    {name='Y', id=22,shape={{O,O,O,O},{_,_,O,_}}},
-    {name='N', id=23,shape={{_,O,O,O},{O,O,_,_}}},
-    {name='H', id=24,shape={{O,O,O,_},{_,_,O,O}}},
-    {name='I5',id=25,shape={{O,O,O,O,O}}},
+    reg('Z5', 8,  {{_,O,O},{_,O,_},{O,O,_}})
+    reg('S5', 9,  {{O,O,_},{_,O,_},{_,O,O}})
+    reg('P',  10, {{O,O,O},{O,O,_}})
+    reg('Q',  11, {{O,O,O},{_,O,O}})
+    reg('F',  12, {{_,O,_},{O,O,O},{O,_,_}})
+    reg('E',  13, {{_,O,_},{O,O,O},{_,_,O}})
+    reg('T5', 14, {{O,O,O},{_,O,_},{_,O,_}})
+    reg('U',  15, {{O,O,O},{O,_,O}})
+    reg('V',  16, {{O,O,O},{_,_,O},{_,_,O}})
+    reg('W',  17, {{_,O,O},{O,O,_},{O,_,_}})
+    reg('X',  18, {{_,O,_},{O,O,O},{_,O,_}})
+    reg('J5', 19, {{O,O,O,O},{O,_,_,_}})
+    reg('L5', 20, {{O,O,O,O},{_,_,_,O}})
+    reg('R',  21, {{O,O,O,O},{_,O,_,_}})
+    reg('Y',  22, {{O,O,O,O},{_,_,O,_}})
+    reg('N',  23, {{_,O,O,O},{O,O,_,_}})
+    reg('H',  24, {{O,O,O,_},{_,_,O,O}})
+    reg('I5', 25, {{O,O,O,O,O}})
 
     -- Trimino
-    {name='I3',id=26,shape={{O,O,O}}},
-    {name='C', id=27,shape={{O,O},{_,O}}},
+    reg('I3', 26, {{O,O,O}})
+    reg('C',  27, {{O,O},{_,O}})
 
     -- Domino
-    {name='I2',id=28,shape={{O,O}}},
+    reg('I2', 28, {{O,O}})
 
     -- Dot
-    {name='O1',id=29,shape={{O}}},
-} for i=1,#minoes do minoes[minoes[i].name]=minoes[i] end
-return minoes
+    reg('O1', 29, {{O}})
+end
+
+---@param id Techmino.Mino.ID|Techmino.Mino.Name
+---@return Techmino.Mino
+function Mino.get(id) return assert(minoes[id],("Mino '$1' not found"):repD(id)) end
+---@param id number|string
+function Mino.getName(id) return Mino.get(id).name end
+---@param id number|string
+function Mino.getID(id) return Mino.get(id).id end
+---@param id number|string
+function Mino.getShape(id) return Mino.get(id).shape end
+
+---@param shape Techmino.Mino.Shape
+---@return number
+function Mino._size(shape)
+    return #shape+#shape[1]
+end
+
+---@param shape Techmino.Mino.Shape
+---@return number,string
+function Mino._binarize(shape)
+    local pNum,pStr=0,""
+
+    local byte=0
+    local n1,n2=1,1
+    local x,y=1,0
+    local h,w=#shape,#shape[1]
+    while true do
+        x,y=x-1,y+1
+        if x<1 or y>h then
+            if x+y==w+h then break end
+            x,y=x+y,1
+        end
+        if x<=w and y<=h then
+            if shape[y][x] then
+                -- print(x,y,n)
+                byte=byte+n1
+                pNum=pNum+n2
+            end
+        end
+        n1=n1*2
+        n2=n2*2
+        if n1>128 then
+            pStr=string.char(byte)..pStr
+            byte=0
+            n1=1
+        end
+    end
+    if byte>0 then
+        pStr=string.char(byte)..pStr
+        print(pStr:byte())
+    end
+    return pNum,pStr
+end
+
+local function pieceComp(a,b)
+    if #a==#b then
+        return a<b
+    else
+        return #a<#b
+    end
+end
+
+---@param piece Techmino.Mino.Shape
+---@return number,string
+function Mino.shapeToID(piece)
+    local minNum,minStr=Mino._binarize(piece)
+    for _=1,3 do
+        piece=TABLE.rotate(piece,'R')
+        local num,str=Mino._binarize(piece)
+        if pieceComp(str,minStr) then minNum,minStr=num,str end
+    end
+    return minNum,minStr
+end
+
+---@param a Techmino.Mino.Shape
+---@param b Techmino.Mino.Shape
+---@return boolean
+function Mino.samePiece(a,b)
+    return Mino.shapeToID(a)==Mino.shapeToID(b)
+end
+
+return Mino

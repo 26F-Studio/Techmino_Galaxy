@@ -1,6 +1,7 @@
 local gc=love.graphics
+local min=math.min
 
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local marathon={}
 
 local levels={
@@ -28,12 +29,12 @@ local levels={
     {drop=0,   lock=580 ,spawn=75,  par=227},
     {drop=0,   lock=570 ,spawn=75,  par=217},
     {drop=0,   lock=560 ,spawn=75,  par=200},
-    {drop=0,   lock=550 ,spawn=75,  par=185},
-    {drop=0,   lock=540 ,spawn=70,  par=172},
-    {drop=0,   lock=530 ,spawn=70,  par=161},
-    {drop=0,   lock=520 ,spawn=70,  par=147},
-    {drop=0,   lock=510 ,spawn=70,  par=142},
-    {drop=0,   lock=500 ,spawn=70,  par=133},
+    {drop=0,   lock=550 ,spawn=75,  par=189},
+    {drop=0,   lock=540 ,spawn=70,  par=179},
+    {drop=0,   lock=530 ,spawn=70,  par=169},
+    {drop=0,   lock=520 ,spawn=70,  par=161},
+    {drop=0,   lock=510 ,spawn=70,  par=154},
+    {drop=0,   lock=500 ,spawn=70,  par=143},
 }
 
 function marathon.event_playerInit_auto(P)
@@ -53,8 +54,7 @@ function marathon.event_playerInit(P)
 
     P.modeData.transition1=1e99
     P.modeData.transition2=1e99
-    P.modeData.line=0
-    P.modeData.target=10
+    P.modeData.lineTarget=10
 
     P.modeData.level=1
     P.modeData.levelStartTime=0
@@ -65,10 +65,10 @@ function marathon.event_afterLock(P)
 end
 function marathon.event_afterClear(P)
     local md=P.modeData
-    md.line=math.min(md.line+P.clearHistory[#P.clearHistory].line,200)
-    while md.line>=md.target do
-        if md.target<200 then
+    while md.stat.line>=md.lineTarget do
+        if md.lineTarget<200 then
             local autoLevel=md.level
+            -- Ignore spawn delay, Assume clear 3 times
             local averageDropTime=(P.gameTime-md.levelStartTime-P.settings.clearDelay*3)/md.levelPieces-P.settings.spawnDelay
             while averageDropTime<levels[autoLevel].par and autoLevel<30 do
                 autoLevel=autoLevel+1
@@ -85,7 +85,7 @@ function marathon.event_afterClear(P)
             P.settings.lockDelay=levels[md.level].lock
             P.settings.spawnDelay=levels[md.level].spawn
 
-            md.target=md.target+10
+            md.lineTarget=md.lineTarget+10
             md.levelPieces=0
             md.levelStartTime=P.gameTime
 
@@ -100,9 +100,9 @@ function marathon.event_drawOnPlayer(P)
     P:drawInfoPanel(-380,-85,160,200)
 
     FONT.set(70)
-    GC.mStr(P.modeData.line,-300,-90)
+    GC.mStr(min(P.modeData.stat.line,200),-300,-90)
     gc.rectangle('fill',-375,-2,150,4)
-    GC.mStr(P.modeData.target,-300,-5)
+    GC.mStr(P.modeData.lineTarget,-300,-5)
     FONT.set(30,'bold')
     gc.setColor(P.modeData.level<=10 and COLOR.G or P.modeData.level<=20 and COLOR.Y or COLOR.R)
     GC.mStr(P.modeData.level,-300,70)

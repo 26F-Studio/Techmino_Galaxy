@@ -1,5 +1,4 @@
-local bgmTransBegin,bgmTransFinish=100,300
-
+---@type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -9,11 +8,9 @@ return {
     settings={mino={
         event={
             playerInit="mechLib.mino.hypersonic.event_playerInit_auto(P,'low')",
-            afterSpawn=function(P)
-                if P.modeData.point>bgmTransBegin and P.modeData.point<bgmTransFinish+10 and P.isMain then
-                    BGM.set(bgmList['secret7th'].add,'volume',math.min((P.modeData.point-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),1)
-                end
-            end,
+            afterSpawn=mechLib.mino.progress.hypersonic_lo_afterSpawn,
+            afterClear=mechLib.mino.progress.hypersonic_lo_afterClear,
+            gameOver=mechLib.mino.progress.hypersonic_lo_gameOver,
         },
     }},
 }

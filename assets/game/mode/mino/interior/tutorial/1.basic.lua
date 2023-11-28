@@ -1,3 +1,4 @@
+---@type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -13,14 +14,13 @@ return {
         spawnDelay=260,
         dropDelay=1e99,
         lockDelay=1e99,
+        deathDelay=0,
         nextSlot=0,
         holdSlot=0,
-        deathDelay=0,
         seqType='none',
         soundEvent={countDown=NULL},
         event={
             playerInit=function(P)
-                P.modeData.line=0
                 P:switchAction('rotateCW',false)
                 P:switchAction('rotateCCW',false)
                 P:switchAction('rotate180',false)

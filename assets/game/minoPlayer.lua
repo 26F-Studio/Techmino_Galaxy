@@ -11,37 +11,38 @@ local ins,rem=table.insert,table.remove
 local clamp,expApproach=MATH.clamp,MATH.expApproach
 local inst=SFX.playSample
 
---- @class Techmino.Player.mino: Techmino.Player
---- @field field Techmino.RectField
+---@class Techmino.Player.mino: Techmino.Player
+---@field field Techmino.RectField
 local MP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
 
 --------------------------------------------------------------
 -- Function tables
 local defaultSoundFunc={
     countDown=function(num)
-        if num==0 then-- 6, 3+6+6
+        if num==0 then -- 6, 3+6+6
             inst('bass',.8,'A3')
             inst('lead',.9,'A4','E5','A5')
-        elseif num==1 then-- 5, 3+7
+        elseif num==1 then -- 5, 3+7
             inst('bass',.9,'G3')
             inst('lead',.9,'B4','E5')
-        elseif num==2 then-- 4, 6+2
+        elseif num==2 then -- 4, 6+2
             inst('bass','F3')
             inst('lead',.8,'A4','D5')
-        elseif num==3 then-- 6+6
+        elseif num==3 then -- 6+6
             inst('bass',.9,'A3','E4')
             inst('lead',.8,'A4')
-        elseif num==4 then-- 5+7, 5
+        elseif num==4 then -- 5+7, 5
             inst('bass',.9,'G3','B3')
             inst('lead',.6,'G4')
-        elseif num==5 then-- 4+6, 4
+        elseif num==5 then -- 4+6, 4
             inst('bass',.8,'F3','A3')
             inst('lead',.3,'F4')
         elseif num<=10 then
             inst('bass',2.2-num/5,'A2','E3')
         end
     end,
-    move=           function() SFX.play('move')             end,
+    move=           function() SFX.play('move',.6)          end,
+    move_down=      function() SFX.play('move_down',.6)     end,
     move_failed=    function() SFX.play('move_failed')      end,
     tuck=           function() SFX.play('tuck')             end,
     rotate=         function() SFX.play('rotate')           end,
@@ -52,7 +53,7 @@ local defaultSoundFunc={
     rotate_special= function() SFX.play('rotate_special')   end,
     hold=           function() SFX.play('hold')             end,
     inithold=       function() SFX.play('inithold')         end,
-    touch=          function() SFX.play('touch',.5)         end,
+    touch=          function() SFX.play('touch')            end,
     drop=           function() SFX.play('drop')             end,
     lock=           function() SFX.play('lock')             end,
     b2b=            function(lv) SFX.play('b2b_'..min(lv,10)) end,
@@ -80,36 +81,36 @@ local defaultSoundFunc={
         end
     end,
     combo=setmetatable({
-        function() inst('bass',.70,'A2') end,-- 1 combo
-        function() inst('bass',.75,'C3') end,-- 2 combo
-        function() inst('bass',.80,'D3') end,-- 3 combo
-        function() inst('bass',.85,'E3') end,-- 4 combo
-        function() inst('bass',.90,'G3') end,-- 5 combo
-        function() inst('bass',.90,'A3') inst('lead',.20,'A2') end,-- 6 combo
-        function() inst('bass',.75,'C4') inst('lead',.40,'C3') end,-- 7 combo
-        function() inst('bass',.60,'D4') inst('lead',.60,'D3') end,-- 8 combo
-        function() inst('bass',.40,'E4') inst('lead',.75,'E3') end,-- 9 combo
-        function() inst('bass',.20,'G4') inst('lead',.90,'G3') end,-- 10 combo
-        function() inst('bass',.20,'A4') inst('lead',.85,'A3') end,-- 11 combo
-        function() inst('bass',.40,'A4') inst('lead',.80,'C4') end,-- 12 combo
-        function() inst('bass',.60,'A4') inst('lead',.75,'D4') end,-- 13 combo
-        function() inst('bass',.75,'A4') inst('lead',.70,'E4') end,-- 14 combo
-        function() inst('bass',.90,'A4') inst('lead',.65,'G4') end,-- 15 combo
-        function() inst('bass',.90,'A4') inst('bass',.70,'E5') inst('lead','A4') end,-- 16 combo
-        function() inst('bass',.85,'A4') inst('bass',.75,'E5') inst('lead','C5') end,-- 17 combo
-        function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end,-- 18 combo
-        function() inst('bass',.75,'A4') inst('bass',.85,'E5') inst('lead','E5') end,-- 19 combo
-        function() inst('bass',.70,'A4') inst('bass',.90,'E5') inst('lead','G5') end,-- 20 combo
+        function() inst('bass',.70,'A2') end, -- 1
+        function() inst('bass',.75,'C3') end, -- 2
+        function() inst('bass',.80,'D3') end, -- 3
+        function() inst('bass',.85,'E3') end, -- 4
+        function() inst('bass',.90,'G3') end, -- 5
+        function() inst('bass',.90,'A3') inst('lead',.20,'A2') end, -- 6
+        function() inst('bass',.75,'C4') inst('lead',.40,'C3') end, -- 7
+        function() inst('bass',.60,'D4') inst('lead',.60,'D3') end, -- 8
+        function() inst('bass',.40,'E4') inst('lead',.75,'E3') end, -- 9
+        function() inst('bass',.20,'G4') inst('lead',.90,'G3') end, -- 10
+        function() inst('bass',.20,'A4') inst('lead',.85,'A3') end, -- 11
+        function() inst('bass',.40,'A4') inst('lead',.80,'C4') end, -- 12
+        function() inst('bass',.60,'A4') inst('lead',.75,'D4') end, -- 13
+        function() inst('bass',.75,'A4') inst('lead',.70,'E4') end, -- 14
+        function() inst('bass',.90,'A4') inst('lead',.65,'G4') end, -- 15
+        function() inst('bass',.90,'A4') inst('bass',.70,'E5') inst('lead','A4') end, -- 16
+        function() inst('bass',.85,'A4') inst('bass',.75,'E5') inst('lead','C5') end, -- 17
+        function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end, -- 18
+        function() inst('bass',.75,'A4') inst('bass',.85,'E5') inst('lead','E5') end, -- 19
+        function() inst('bass',.70,'A4') inst('bass',.90,'E5') inst('lead','G5') end, -- 20
     },{__call=function(self,combo)
         if self[combo] then
             self[combo]()
         else
             inst('bass',.626,'A4')
             local phase=(combo-21)%12
-            inst('lead',1-((11-phase)/12)^2,41+phase)-- E4+
-            inst('lead',1-((11-phase)/12)^2,46+phase)-- A4+
-            inst('lead',1-(phase/12)^2,     53+phase)-- E5+
-            inst('lead',1-(phase/12)^2,     58+phase)-- A5+
+            inst('lead',1-((11-phase)/12)^2,41+phase) -- E4+
+            inst('lead',1-((11-phase)/12)^2,46+phase) -- A4+
+            inst('lead',1-(phase/12)^2,     53+phase) -- E5+
+            inst('lead',1-(phase/12)^2,     58+phase) -- A5+
         end
     end,__metatable=true}),
     frenzy=      function() SFX.play('frenzy')      end,
@@ -132,148 +133,37 @@ MP.scriptCmd={
 --------------------------------------------------------------
 -- Actions
 MP._actions={}
-MP._actions.moveLeft={
-    press=function(P)
-        P.moveDir=-1
-        P.moveCharge=0
-        if P.hand then
-            if P:moveLeft() then
-                P:playSound('move')
-            else
-                P:freshDelay('move')
-                P:playSound('move_failed')
-            end
-        else
-            P.keyBuffer.move='L'
-        end
-    end,
-    release=function(P)
-        if P.keyBuffer.move=='L' then P.keyBuffer.move=false end
-        if P.deathTimer then P:moveRight() end
-    end
-}
-MP._actions.moveRight={
-    press=function(P)
-        P.moveDir=1
-        P.moveCharge=0
-        if P.hand then
-            if P:moveRight() then
-                P:playSound('move')
-            else
-                P:freshDelay('move')
-                P:playSound('move_failed')
-            end
-        else
-            P.keyBuffer.move='R'
-        end
-    end,
-    release=function(P)
-        if P.keyBuffer.move=='R' then P.keyBuffer.move=false end
-        if P.deathTimer then P:moveLeft() end
-    end
-}
-MP._actions.rotateCW={
-    press=function(P)
-        if P.hand then
-            P:rotate('R')
-        else
-            P.keyBuffer.rotate='R'
-        end
-    end,
-    release=function(P)
-        if P.keyBuffer.rotate=='R' then P.keyBuffer.rotate=false end
-    end
-}
-MP._actions.rotateCCW={
-    press=function(P)
-        if P.hand then
-            P:rotate('L')
-        else
-            P.keyBuffer.rotate='L'
-        end
-    end,
-    release=function(P)
-        if P.keyBuffer.rotate=='L' then P.keyBuffer.rotate=false end
-    end
-}
-MP._actions.rotate180={
-    press=function(P)
-        if P.hand then
-            P:rotate('F')
-        else
-            P.keyBuffer.rotate='F'
-        end
-    end,
-    release=function(P)
-        if P.keyBuffer.rotate=='F' then P.keyBuffer.rotate=false end
-    end
-}
-MP._actions.softDrop={
-    press=function(P)
-        P.downCharge=0
-        if P.hand and (P.handY>P.ghostY or P.deathTimer) and P:moveDown() then
-            P:playSound('move')
-        end
-    end,
-    release=function(P)
-        if P.deathTimer then P:moveUp() end
-    end
-}
-MP._actions.hardDrop={
-    press=function(P)
-        if P.hdLockMTimer~=0 or P.hdLockATimer~=0 then
-            P:playSound('rotate_failed')
-        elseif P.hand then
-            if not P.deathTimer then
-                P.hdLockMTimer=P.settings.hdLockM
-                P:minoDropped()
-            else
-                P.deathTimer=ceil(P.deathTimer/2.6)
-            end
-        else
-            P.keyBuffer.hardDrop=true
-        end
-    end,
-    release=function(P)
-        P.keyBuffer.hardDrop=false
-    end
-}
-MP._actions.holdPiece={
-    press=function(P)
-        if P.hand then
-            P:hold()
-        else
-            P.keyBuffer.hold=true
-        end
-    end,
-    release=function(P)
-        P.keyBuffer.hold=false
-    end
-}
-
-MP._actions.func1=NULL
-MP._actions.func2=NULL
-MP._actions.func3=NULL
-MP._actions.func4=NULL
-MP._actions.func5=NULL
-MP._actions.func6=NULL
-
-for k,v in next,MP._actions do MP._actions[k]=MP:_getActionObj(v) end
+for k,v in next,mechLib.mino.actions do MP._actions[k]=MP:_getActionObj(v) end
 --------------------------------------------------------------
 -- Effects
 function MP:createMoveEffect(x1,y1,x2,y2)
-    local p=self.particles.star
-    p:setParticleLifetime(.26,.5)
-    p:setEmissionArea('none')
+    local p=self.particles.rectShade
+    local dx,dy=self:getSmoothPos()
     for x=x1,x2,x2>x1 and 1 or -1 do for y=y1,y2,y2>y1 and 1 or -1 do
-        p:setPosition(
-            (x+rnd()*#self.hand.matrix[1]-1)*40,
-            -(y+rnd()*#self.hand.matrix-1)*40
-        )
+        p:setPosition((x-.5)*40+dx,-(y-.5)*40+dy)
         p:emit(1)
     end end
 end
-function MP:createRotateEffect()
+function MP:createRotateEffect(dir,ifInit)
+    local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
+    local state=minoData[self.hand.direction]
+    local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
+    local cx,cy
+    if centerPos then
+        cx,cy=self.handX+centerPos[1]-.5,self.handY+centerPos[2]-.5
+    else
+        cx,cy=self.handX+#self.hand.matrix[1]/2-.5,self.handY+#self.hand.matrix/2-.5
+    end
+    local p=self.particles.line
+    p:setParticleLifetime(.26,.42)
+    if ifInit then
+        p:setSpeed(260,620)
+    else
+        p:setSpeed(80,120)
+    end
+    p:setTangentialAcceleration(dir=='L' and -2600 or 0,dir=='R' and 2600 or 0)
+    p:setPosition((cx-.5)*40,-(cy-.5)*40)
+    p:emit(12)
 end
 function MP:createRotateCornerEffect(cx,cy)
     local p=self.particles.cornerCheck
@@ -287,29 +177,30 @@ function MP:createRotateCornerEffect(cx,cy)
         end
     end
 end
-function MP:createRotateFailedEffect(CB,bx,by)
-    local p=self.particles.rotateFail
+function MP:createHandEffect(r,g,b,a)
+    local CB,bx,by=self.hand.matrix,self.handX,self.handY
+    local dx,dy=self:getSmoothPos()
+    local p=self.particles.tiltRect
+    p:setColors(r,g,b,a or 1,r,g,b,0)
     for y=1,#CB do for x=1,#CB[1] do
         local c=CB[y][x]
         if c then
             p:setPosition(
-                (bx+x-1.5)*40,
-                -(by+y-1.5)*40
+                (bx+x-1.5)*40+dx,
+                -(by+y-1.5)*40+dy
             )
             p:emit(1)
         end
     end end
 end
-function MP:createRotateLockedEffect()
-end
+local _oneCell={{true}}
 function MP:createTouchEffect()
-    local p=self.particles.sparkle
+    local p=self.particles.hitSparkle
     local mat=self.hand.matrix
-    local cell=Minoes.O1.shape
     local cx,cy=self.handX,self.handY
     for x=1,#mat[1] do for y=1,#mat do
-        if mat[y][x] and self:ifoverlap(cell,cx+x-1,cy+y-2) then
-            for _=1,4 do
+        if mat[y][x] and self:ifoverlap(_oneCell,cx+x-1,cy+y-2) then
+            for _=1,rnd(3,4) do
                 p:setPosition(
                     (cx+x-2+rnd())*40,
                     -(cy+y-2)*40
@@ -321,20 +212,24 @@ function MP:createTouchEffect()
 end
 function MP:createTuckEffect()
 end
-function MP:createHoldEffect()
+function MP:createHoldEffect(ifInit)
+    if not self.handX then return end
+    local cx,cy=self.handX+#self.hand.matrix[1]/2-.5,self.handY+#self.hand.matrix/2-.5
+    local p=self.particles.spinArrow
+    p:new((cx-.5)*40,-(cy-.5)*40,ifInit)
 end
 function MP:createFrenzyEffect(amount)
     local p=self.particles.star
-    p:setParticleLifetime(.626,1.6)
     p:setEmissionArea('uniform',200,400,0,true)
+    p:setParticleLifetime(.626,1.6)
     p:setPosition(200,-400)
     p:emit(amount)
 end
-function MP:createLockEffect(x,y)
+function MP:createLockEffect()
     local p=self.particles.trail
     p:setPosition(
-        (x+#self.hand.matrix[1]/2-1)*40,
-        -(y+#self.hand.matrix/2-1)*40
+        (self.handX+#self.hand.matrix[1]/2-1)*40,
+        -(self.handY+#self.hand.matrix/2-1)*40
     )
     p:emit(1)
 end
@@ -366,20 +261,74 @@ function MP:showInvis(visStep,visMax)
         end
     end
 end
+function MP:getSmoothPos()
+    if self.deathTimer then
+        return 0,0
+    else
+        return
+            self.moveDir and self.moveCharge<self.settings.das and 15*self.moveDir*(max(self.moveCharge,0)/self.settings.das-.5) or 0,
+            self.ghostY and self.handY>self.ghostY and 40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6 or 0
+    end
+end
 --------------------------------------------------------------
 -- Game methods
 function MP:moveHand(action,a,b,c,d)
+    --[[
+        moveX:  dx
+        moveY:  dy
+        drop:   dy
+        rotate: x,y,dir,ifInit
+        reset:  x,y
+    ]]
     if action=='moveX' then
         self.handX=self.handX+a
         self:checkLanding()
-    elseif action=='moveY' then
+        if self.settings.particles then
+            local hx,hy=self.handX,self.handY
+            local mat=self.hand.matrix
+            local w,h=#mat[1],#mat
+            if a<0 then
+                for y=1,h do for x=w,1,-1 do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1+1,hy+y-1,hx+x-1+1-a-1,hy+y-1)
+                        break
+                    end end
+                end
+            elseif a>0 then
+                for y=1,h do for x=1,w do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1-1,hy+y-1,hx+x-1-1-a+1,hy+y-1)
+                        break
+                    end end
+                end
+            end
+        end
+    elseif action=='moveY' or action=='drop' then
         self.handY=self.handY+a
-        self:checkLanding()
-    elseif action=='drop' then
-        self.handY=self.handY+a
-        self:checkLanding(true)
+        self:checkLanding(true,true)
+        if self.settings.particles then
+            local hx,hy=self.handX,self.handY
+            local mat=self.hand.matrix
+            local w,h=#mat[1],#mat
+            if a<0 then
+                for x=1,w do for y=h,1,-1 do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1,hy+y-1+1,hx+x-1,hy+y-1+1-a-1)
+                        break
+                    end end
+                end
+            elseif a>0 then
+                for x=1,w do for y=1,h do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1,hy+y-1-1,hx+x-1,hy+y-1-1-a+1)
+                        break
+                    end end
+                end
+            end
+        end
     elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
+        self:checkLanding()
     else
         error("WTF why action is "..tostring(action))
     end
@@ -394,18 +343,20 @@ function MP:moveHand(action,a,b,c,d)
 
     if action=='moveX' then
         if
-            not self.deathTimer and
+            not self.ghostState and
             self.settings.tuck and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY+1)
         then
             movement.tuck=true
             self:playSound('tuck')
-            self:createTuckEffect()
+            if self.settings.particles then
+                self:createTuckEffect()
+            end
         end
     elseif action=='moveY' then
     elseif action=='rotate' then
-        if not self.deathTimer then
+        if not self.ghostState then
             if
                 self.settings.spin_immobile and
                 self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
@@ -416,7 +367,9 @@ function MP:moveHand(action,a,b,c,d)
                 movement.immobile=true
                 self:shakeBoard(c=='L' and '-ccw' or c=='R' and '-cw' or '-180')
                 self:playSound('rotate_locked')
-                self:createRotateLockedEffect()
+                if self.settings.particles then
+                    self:createHandEffect(.942,1,1)
+                end
             end
             if self.settings.spin_corners then
                 local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
@@ -433,29 +386,24 @@ function MP:moveHand(action,a,b,c,d)
                         if corners>=self.settings.spin_corners then
                             movement.corners=true
                             self:playSound('rotate_corners')
-                            self:createRotateCornerEffect(cx,cy)
+                            if self.settings.particles then
+                                self:createRotateCornerEffect(cx,cy)
+                            end
                         end
                     end
                 end
             end
         end
         self:playSound(d and 'initrotate' or 'rotate')
-        self:createRotateEffect()
+        if self.settings.particles then
+            self:createRotateEffect(c,d)
+        end
     end
     self.lastMovement=movement
 
-    if self.deathTimer then
-        local t=self.deathTimer
-        self.deathTimer=false-- Cancel deathTimer temporarily, prevent ifoverlap method treat anything as air
-        if self:isSuffocate() then
-            self.deathTimer=t
-        else
-            self:playSound('desuffocate')
-            self:createDesuffocateEffect()
-        end
-    end
+    self:tryCancelSuffocate()
 end
-function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside, like shape, name, direction)
+function MP:restoreMinoState(mino) -- Restore a mino object's state (only inside, like shape, name, direction)
     if mino._origin then
         for k,v in next,mino._origin do
             mino[k]=v
@@ -463,26 +411,28 @@ function MP:restoreMinoState(mino)-- Restore a mino object's state (only inside,
     end
     return mino
 end
-function MP:resetPos()-- Move hand piece to the normal spawn position
+function MP:resetPos() -- Move hand piece to the normal spawn position
     self:moveHand('reset',floor(self.settings.fieldW/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1+ceil(self.fieldDived/40))
 
     self:triggerEvent('changeSpawnPos')
 
     self.deathTimer=false
+    self.ghostState=false
+
     while self:isSuffocate() and self.handY<self.settings.spawnH+self.settings.extraSpawnH+1 do self.handY=self.handY+1 end
     self.minY=self.handY
-    self.ghostY=self.handY
+    self.ghostY=false
     self:resetPosCheck()
 
     self:triggerEvent('afterResetPos')
+
 end
 function MP:resetPosCheck()
     local suffocated
     if self.deathTimer then
-        local bufferedDeathTimer=self.deathTimer
-        self.deathTimer=false-- Cancel deathTimer temporarily, or we cannot apply IMS when hold in suffcating
+        self.ghostState=false
         suffocated=self:isSuffocate()
-        self.deathTimer=bufferedDeathTimer
+        self.ghostState=true
     else
         suffocated=self:isSuffocate()
     end
@@ -490,8 +440,7 @@ function MP:resetPosCheck()
     if suffocated then
         if self.settings.deathDelay>0 then
             self.deathTimer=self.settings.deathDelay
-            self:playSound('suffocate')
-            self:createSuffocateEffect()
+            self.ghostState=true
 
             -- Suffocate IMS, always trigger when held
             if self.keyState.softDrop then self:moveDown() end
@@ -500,17 +449,33 @@ function MP:resetPosCheck()
             end
 
             -- Suffocate IRS
-            if self.settings.easyInitCtrl then
-                if self.keyState.rotate180 then
-                    self:rotate('F',true)
-                elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
-                    self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
+            if self.settings.initRotate then
+                if self.settings.initRotate=='hold' then
+                    if self.keyState.rotate180 then
+                        self:rotate('F',true)
+                    elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
+                        self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
+                    end
+                elseif self.settings.initRotate=='buffer' then
+                    if self.keyBuffer.rotate then
+                        self:rotate(self.keyBuffer.rotate,true)
+                        if not self.keyBuffer.hold then
+                            self.keyBuffer.rotate=false
+                        end
+                    end
                 end
-            elseif self.keyBuffer.rotate then
-                self:rotate(self.keyBuffer.rotate,true)
-                self.keyBuffer.rotate=false
+            end
+            self:tryCancelSuffocate()
+            self:freshGhost()
+
+            if self.deathTimer then
+                self:playSound('suffocate')
+                if self.settings.particles then
+                    self:createSuffocateEffect()
+                end
             end
         else
+
             self:triggerEvent('whenSuffocate')
             self:freshGhost()
 
@@ -521,31 +486,40 @@ function MP:resetPosCheck()
             return
         end
     else
-        -- IMS & IRS
-        if self.settings.easyInitCtrl then
-            if self.keyState.softDrop then self:moveDown() end
-            if self.keyState.moveRight~=self.keyState.moveLeft then
-                if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
-            end
-
-            if self.keyState.rotate180 then
-                self:rotate('F',true)
-            elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
-                self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
-            end
-        else
-            if self.keyBuffer.move then
-                if self.keyBuffer.move=='L' then
-                    self:moveLeft()
-                elseif self.keyBuffer.move=='R' then
-                    self:moveRight()
+        -- IMS
+        if self.settings.initMove then
+            if self.settings.initMove=='hold' then
+                if self.keyState.softDrop then self:moveDown() end
+                if self.keyState.moveRight~=self.keyState.moveLeft then
+                    if self.keyState.moveRight then self:moveRight(true) else self:moveLeft(true) end
                 end
-                self.keyBuffer.move=false
+            elseif self.settings.initMove=='buffer' then
+                if self.keyBuffer.move then
+                    if self.keyBuffer.move=='L' then
+                        self:moveLeft(true)
+                    elseif self.keyBuffer.move=='R' then
+                        self:moveRight(true)
+                    end
+                    self.keyBuffer.move=false
+                end
             end
+        end
 
-            if self.keyBuffer.rotate then
-                self:rotate(self.keyBuffer.rotate,true)
-                self.keyBuffer.rotate=false
+        -- IRS
+        if self.settings.initRotate then
+            if self.settings.initRotate=='hold' then
+                if self.keyState.rotate180 then
+                    self:rotate('F',true)
+                elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
+                    self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
+                end
+            elseif self.settings.initRotate=='buffer' then
+                if self.keyBuffer.rotate then
+                    self:rotate(self.keyBuffer.rotate,true)
+                    if not self.keyBuffer.hold then
+                        self.keyBuffer.rotate=false
+                    end
+                end
             end
         end
 
@@ -553,14 +527,14 @@ function MP:resetPosCheck()
         self:freshDelay('spawn')
     end
 
-    if self.settings.dasHalt>0 then-- DAS halt
+    if self.settings.dasHalt>0 then -- DAS halt
         self.moveCharge=min(self.moveCharge,self.settings.das-self.settings.dasHalt)
     end
 end
 function MP:freshGhost()
     if self.hand then
-        if self.deathTimer then
-            self.ghostY=self.handY
+        if self.ghostState then
+            self.ghostY=false
         else
             self.ghostY=min(self.field:getHeight()+1,self.handY)
 
@@ -581,7 +555,21 @@ function MP:freshGhost()
         end
     end
 end
-function MP:freshDelay(reason)-- reason can be 'move' or 'drop' or 'spawn'
+function MP:tryCancelSuffocate()
+    if self.deathTimer then
+        self.ghostState=false
+        if self:isSuffocate() then
+            self.ghostState=true
+        else
+            self.deathTimer=false
+            self:playSound('desuffocate')
+            if self.settings.particles then
+                self:createDesuffocateEffect()
+            end
+        end
+    end
+end
+function MP:freshDelay(reason) -- reason can be 'move' or 'drop' or 'spawn'
     local fell
     if self.handY<self.minY then
         self.minY=self.handY
@@ -640,7 +628,7 @@ function MP:freshDelay(reason)-- reason can be 'move' or 'drop' or 'spawn'
 end
 function MP:freshNextQueue()
     while #self.nextQueue<max(self.settings.nextSlot,1) do
-        local shape=self:seqGen()
+        local shape=self:seqGen(self.seqData)
         if type(shape)=='number' then
             self:pushNext(shape)
         elseif type(shape)=='string' then
@@ -662,62 +650,78 @@ end
 function MP:clearNext()
     TABLE.cut(self.nextQueue)
 end
-function MP:pushNext(arg)
-    if type(arg)=='number' then
-        ins(self.nextQueue,self:getMino(assert(
-            Minoes[arg],
-            "Invalid mino name '"..arg.."'"
-        ) and arg))
-    elseif type(arg)=='string' then
-        for i=1,#arg do
-            ins(self.nextQueue,self:getMino(assert(
-                Minoes[arg:sub(i,i)],
-                "Invalid mino name '"..arg:sub(i,i).."'"
-            ).id))
+---@param piece string|number|table
+function MP:pushNext(piece)
+    if type(piece)=='number' then
+        ins(self.nextQueue,self:getMino(Mino.get(piece)))
+    elseif type(piece)=='string' then
+        for i=1,#piece do
+            ins(self.nextQueue,self:getMino(Mino.get(piece:sub(i,i))))
         end
-    elseif type(arg)=='table' then
-        for i=1,#arg do
-            assert(type(arg[i])=='number' or type(arg[i])=='string',"Must be simple table")
-            self:pushNext(arg[i])
+    elseif type(piece)=='table' then
+        for i=1,#piece do
+            assert(type(piece[i])=='number' or type(piece[i])=='string',"Must be simple table")
+            self:pushNext(piece[i])
         end
     else
         error("arg must be string or table")
     end
 end
 function MP:popNext(ifHold)
-    if self.nextQueue[1] then-- Most cases there is pieces in next queue
+    if self.nextQueue[1] then -- Normally there area pieces in next queue
         self.hand=rem(self.nextQueue,1)
         self:freshNextQueue()
         if not ifHold then
             self.holdTime=0
         end
-    elseif self.holdQueue[1] then-- If no nexts, force using hold
-        ins(self.nextQueue,rem(self.holdQueue,1))
-        self:popNext()
-    else-- If no piece to use, both Next and Hold queue are empty, game over
-        self:finish('ILE')
+    else -- Next queue is empty
+        if self.holdQueue[1] then -- Force using hold
+            ins(self.nextQueue,rem(self.holdQueue,1))
+            self:popNext()
+        else -- No piece to use, game over
+            self:finish('ILE')
+        end
         return
     end
-    self:resetPos()
 
     -- IHS
-    if not ifHold then
-        if self.settings.easyInitCtrl then
+    local IHStriggered
+    if not ifHold and self.settings.initHold then
+        if self.settings.initHold=='hold' then
             if self.keyState.holdPiece then
                 self:hold(true)
+                IHStriggered=true
             end
-        elseif self.keyBuffer.hold then
-            self.keyBuffer.hold=false
-            self:hold(true)
+        elseif self.settings.initHold=='buffer' then
+            if self.keyBuffer.hold then
+                self.keyBuffer.hold=false
+                self:hold(true)
+                IHStriggered=true
+            end
         end
+    end
+
+    if not IHStriggered then
+        self:resetPos()
     end
 
     self:triggerEvent('afterSpawn')
 
-    if self.keyBuffer.hardDrop then-- IHdS
+    if self.keyBuffer.hardDrop then -- IHdS
         self.keyBuffer.hardDrop=false
         self:minoDropped()
     end
+end
+---@return Techmino.Cell
+function MP:newCell(color,id)
+    self.totalCellCount=self.totalCellCount+1
+    local c={
+        cid='_'..STRING.toHex(self.totalCellCount),
+        id=id,
+        color=color or 0,
+        conn={},
+    }
+    return c
 end
 function MP:getMino(shapeData)
     local shapeID,shapeName,shapeMat,shapeColor
@@ -725,23 +729,19 @@ function MP:getMino(shapeData)
         shapeID=shapeData.id
         shapeName=shapeData.name or "?"
         shapeMat=TABLE.shift(shapeData.shape)
-        shapeColor=shapeData.color or self:random(64)
+        shapeColor=shapeData.color or defaultMinoColor[shapeID] or self:random(64)
     else
         shapeID=shapeData
         assert(type(shapeID)=='number',"shapeID must be number")
-        shapeName=Minoes[shapeID].name
-        shapeMat=TABLE.shift(Minoes[shapeID].shape)
+        shapeName=Mino.getName(shapeID)
+        shapeMat=TABLE.shift(Mino.getShape(shapeID))
         shapeColor=defaultMinoColor[shapeID]
     end
     self.pieceCount=self.pieceCount+1
 
     -- Generate cell matrix from bool matrix
     for y=1,#shapeMat do for x=1,#shapeMat[1] do
-        shapeMat[y][x]=shapeMat[y][x] and {
-            id=self.pieceCount,
-            color=shapeColor,
-            conn={},
-        }
+        shapeMat[y][x]=shapeMat[y][x] and self:newCell(shapeColor,self.pieceCount)
     end end
 
     -- Connect cells
@@ -749,14 +749,14 @@ function MP:getMino(shapeData)
         if shapeMat[y][x] then
             local L=shapeMat[y][x].conn
             local b
-            b=shapeMat[y]   if b and b[x-1] then L[b[x-1]]=true end
-            b=shapeMat[y]   if b and b[x+1] then L[b[x+1]]=true end
-            b=shapeMat[y-1] if b and b[x]   then L[b[x]  ]=true end
-            b=shapeMat[y+1] if b and b[x]   then L[b[x]  ]=true end
-            b=shapeMat[y-1] if b and b[x-1] then L[b[x-1]]=true end
-            b=shapeMat[y-1] if b and b[x+1] then L[b[x+1]]=true end
-            b=shapeMat[y+1] if b and b[x-1] then L[b[x-1]]=true end
-            b=shapeMat[y+1] if b and b[x+1] then L[b[x+1]]=true end
+            b=shapeMat[y]   if b and b[x-1] then L[b[x-1].cid]=0 end
+            b=shapeMat[y]   if b and b[x+1] then L[b[x+1].cid]=0 end
+            b=shapeMat[y-1] if b and b[x]   then L[b[x]  .cid]=0 end
+            b=shapeMat[y+1] if b and b[x]   then L[b[x]  .cid]=0 end
+            b=shapeMat[y-1] if b and b[x-1] then L[b[x-1].cid]=0 end
+            b=shapeMat[y-1] if b and b[x+1] then L[b[x+1].cid]=0 end
+            b=shapeMat[y+1] if b and b[x-1] then L[b[x-1].cid]=0 end
+            b=shapeMat[y+1] if b and b[x+1] then L[b[x+1].cid]=0 end
         end
     end end
 
@@ -780,10 +780,10 @@ function MP:getConnectedCells(x0,y0)
             local x,y,c0=list[ptr][1],list[ptr][2],list[ptr][3]
             if c0.conn then
                 local c1
-                c1=F:getCell(x+1,y) if c1 and not list[c1] and c0.conn[c1] then ins(list,{x+1,y,c1}) list[c1]=true end
-                c1=F:getCell(x-1,y) if c1 and not list[c1] and c0.conn[c1] then ins(list,{x-1,y,c1}) list[c1]=true end
-                c1=F:getCell(x,y+1) if c1 and not list[c1] and c0.conn[c1] then ins(list,{x,y+1,c1}) list[c1]=true end
-                c1=F:getCell(x,y-1) if c1 and not list[c1] and c0.conn[c1] then ins(list,{x,y-1,c1}) list[c1]=true end
+                c1=F:getCell(x+1,y) if c1 and not list[c1] and c0.conn[c1.cid] then ins(list,{x+1,y,c1}) list[c1]=true end
+                c1=F:getCell(x-1,y) if c1 and not list[c1] and c0.conn[c1.cid] then ins(list,{x-1,y,c1}) list[c1]=true end
+                c1=F:getCell(x,y+1) if c1 and not list[c1] and c0.conn[c1.cid] then ins(list,{x,y+1,c1}) list[c1]=true end
+                c1=F:getCell(x,y-1) if c1 and not list[c1] and c0.conn[c1.cid] then ins(list,{x,y-1,c1}) list[c1]=true end
             end
             ptr=ptr+1
         end
@@ -792,7 +792,23 @@ function MP:getConnectedCells(x0,y0)
         return {}
     end
 end
-function MP:cutConnection(y)-- y is cutting line height to ground
+function MP:compareMatrix(S1,S2)
+    if not S2 then
+        if not self.hand then return false end
+        S2=self.hand.matrix
+    end
+    if #S1~=#S2 then return false end
+    for y=1,#S1 do
+        if #S1[y]~=#S2[y] then return false end
+        for x=1,#S1[1] do
+            if not not S1[y][x]~=not not S2[y][x] then
+                return false
+            end
+        end
+    end
+    return true
+end
+function MP:cutConnection(y) -- y is cutting line height to ground
     local F=self.field
     if y<1 or y>F:getHeight() then return end
     for x=1,self.settings.fieldW do
@@ -807,8 +823,8 @@ function MP:cutConnection(y)-- y is cutting line height to ground
             end
             for i=1,#listLo do
                 for j=1,#listHi do
-                    listLo[i][3].conn[listHi[j][3]]=nil
-                    listHi[j][3].conn[listLo[i][3]]=nil
+                    listLo[i][3].conn[listHi[j][3].cid]=nil
+                    listHi[j][3].conn[listLo[i][3].cid]=nil
                 end
             end
         end
@@ -829,7 +845,7 @@ function MP:ifoverlap(CB,cx,cy)
     -- Must in air
     if cy>F:getHeight() then return false end
 
-    if not self.deathTimer then
+    if not self.ghostState then
         -- Check field
         for y=1,#CB do for x=1,#CB[1] do
             if CB[y][x] and self.field:getCell(cx+x-1,cy+y-1) then
@@ -841,9 +857,11 @@ function MP:ifoverlap(CB,cx,cy)
     -- No collision
     return false
 end
-function MP:checkLanding(sparkles)
+function MP:checkLanding(sparkles,drop)
     if self.handY==self.ghostY then
-        self:playSound('touch')
+        if drop then
+            self:playSound('touch')
+        end
         if sparkles and self.settings.particles then
             self:createTouchEffect()
         end
@@ -928,17 +946,17 @@ function MP:calculateHolePos(count,splitRate,copyRate,sandwichRate)
     end
     return holePos
 end
-function MP:moveLeft()
+function MP:moveLeft(ifInit)
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
         self:moveHand('moveX',-1)
-        self:freshGhost()
+        if not ifInit then self:freshGhost() end
         return true
     end
 end
-function MP:moveRight()
+function MP:moveRight(ifInit)
     if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
         self:moveHand('moveX',1)
-        self:freshGhost()
+        if not ifInit then self:freshGhost() end
         return true
     end
 end
@@ -961,14 +979,17 @@ function MP:rotate(dir,ifInit)
     local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
     if not minoData then return end
 
-    if minoData.rotate then-- Custom rotate function
+    local origY=self.handY -- For IRS pushing up
+    if minoData.rotate then -- Custom rotate function
         minoData.rotate(self,dir,ifInit)
-    else-- Normal rotate procedure
+        if self.ghostState and self.settings.IRSpushUp then self:moveHand('moveY',origY-self.handY) end
+        self:freshGhost()
+    else -- Normal rotate procedure
         local preState=minoData[self.hand.direction]
         if preState then
             -- Rotate matrix
             local kick=preState[dir]
-            if not kick then return end-- This RS doesn't define this rotation
+            if not kick then return end -- This RS doesn't define this rotation
 
             local cb=self.hand.matrix
             local icb=TABLE.rotate(cb,dir)
@@ -991,14 +1012,16 @@ function MP:rotate(dir,ifInit)
                     self.hand.matrix=icb
                     self.hand.direction=kick.target
                     self:moveHand('rotate',ix,iy,dir,ifInit)
+                    if self.ghostState and self.settings.IRSpushUp then self:moveHand('moveY',origY-self.handY) end
                     self:freshGhost()
-                    self:checkLanding()
                     return
                 end
             end
-            self:freshDelay('rotate')
+            if not ifInit then self:freshDelay('rotate') end
             self:playSound('rotate_failed')
-            self:createRotateFailedEffect(self.hand.matrix,self.handX,self.handY)
+            if self.settings.particles then
+                self:createHandEffect(1,.26,.26)
+            end
         else
             error("WTF why no state in minoData")
         end
@@ -1006,6 +1029,9 @@ function MP:rotate(dir,ifInit)
 end
 function MP:hold(ifInit)
     if self.holdTime>=self.settings.holdSlot and not self.settings.infHold then return end
+    if self.settings.particles then
+        self:createHoldEffect(ifInit)
+    end
 
     local mode=self.settings.holdMode
     if     mode=='hold'  then self:hold_hold()
@@ -1015,7 +1041,6 @@ function MP:hold(ifInit)
     end
 
     self.holdTime=self.holdTime+1
-    self:createHoldEffect()
     self:playSound(ifInit and 'inithold' or 'hold')
 end
 function MP:hold_hold()
@@ -1085,16 +1110,17 @@ function MP:doClear(fullLines)
     end
 
     self:triggerEvent('afterClear',his)
+
 end
 
-function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
-    if not self.hand or self.deathTimer then return end
+function MP:minoDropped() -- Drop & lock mino, and trigger a lot of things
+    if not self.hand or self.ghostState then return end
 
     local SET=self.settings
 
     -- Move down
-    if self.handY>self.ghostY then
-        self.soundTimeHistory.touch=self.time-- Cancel touching sound
+    if self.ghostY and self.handY>self.ghostY then
+        self.soundTimeHistory.touch=self.time -- Cancel touching sound
         self:moveHand('drop',self.ghostY-self.handY)
         self:shakeBoard('-drop',1)
         self:playSound('drop')
@@ -1104,7 +1130,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
     if not self.hand or self.finished then return end
 
     if SET.particles then
-        self:createLockEffect(self.handX,self.handY)
+        self:createLockEffect()
     end
 
     -- Lock to field
@@ -1204,7 +1230,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
 
                 rem(self.garbageBuffer,iBuffer)
                 self.garbageSum=self.garbageSum-g.power
-                iBuffer=iBuffer-1-- Avoid index error
+                iBuffer=iBuffer-1 -- Avoid index error
             elseif g.mode==1 then
                 g._time=g._time+1
             end
@@ -1219,7 +1245,7 @@ function MP:minoDropped()-- Drop & lock mino, and trigger a lot of things
         self:popNext()
     end
 end
-function MP:lock()-- Put mino into field
+function MP:lock() -- Put mino into field
     local CB=self.hand.matrix
     local F=self.field
     for y=1,#CB do for x=1,#CB[1] do
@@ -1249,10 +1275,7 @@ function MP:riseGarbage(holePos)
 
     -- Generate line
     for x=1,w do
-        L[x]={
-            color=0,
-            conn={},
-        }
+        L[x]=self:newCell(0)
     end
 
     -- Generate hole
@@ -1269,8 +1292,8 @@ function MP:riseGarbage(holePos)
     -- Add connection
     for x=1,w do
         if L[x] then
-            if L[x-1] then L[x].conn[L[x-1]]=true end
-            if L[x+1] then L[x].conn[L[x+1]]=true end
+            if L[x-1] then L[x].conn[L[x-1].cid]=0 end
+            if L[x+1] then L[x].conn[L[x+1].cid]=0 end
         end
     end
     ins(self.field._matrix,1,L)
@@ -1286,16 +1309,13 @@ function MP:riseGarbage(holePos)
     end
 end
 --[[ arg table={
-    string? color <'template'|'absolute'>,
-    boolean? resetHand
-    boolean? sudden
-
     -- map matrix (will display as you see, any height)
     {7,7,7,7,0,0,0,0,1,1},
     {4,6,6,3,0,0,0,1,1,5},
     {4,6,6,3,0,0,2,2,5,5},
     {4,4,3,3,0,0,0,2,2,5},
 }]]
+---@param arg {color:'template'|'absolute'|nil, resetHand?:boolean, sudden?:boolean, number:table<number, number>}
 function MP:setField(arg)
     local F=self.field
     local w=self.settings.fieldW
@@ -1329,7 +1349,7 @@ function MP:setField(arg)
                     end
                 end
                 if c and c%1==0 and c>=0 and c<=64 then
-                    f[y][x]={color=c,conn={}}
+                    f[y][x]=self:newCell(c)
                 else
                     f[y][x]=false
                 end
@@ -1341,10 +1361,10 @@ function MP:setField(arg)
     for y=1,#arg do
         for x=1,w do
             if f[y][x] then
-                if f[y]   and f[y][x-1] then f[y][x].conn[f[y][x-1]]=true end
-                if f[y]   and f[y][x+1] then f[y][x].conn[f[y][x+1]]=true end
-                if f[y-1] and f[y-1][x] then f[y][x].conn[f[y-1][x]]=true end
-                if f[y+1] and f[y+1][x] then f[y][x].conn[f[y+1][x]]=true end
+                if f[y]   and f[y][x-1] then f[y][x].conn[f[y][x-1]]=0 end
+                if f[y]   and f[y][x+1] then f[y][x].conn[f[y][x+1]]=0 end
+                if f[y-1] and f[y-1][x] then f[y][x].conn[f[y-1][x]]=0 end
+                if f[y+1] and f[y+1][x] then f[y][x].conn[f[y+1][x]]=0 end
             end
         end
     end
@@ -1474,7 +1494,7 @@ function MP:updateFrame()
                     end
                     if oy~=self.handY then
                         self:freshDelay('drop')
-                        self:playSound('move')
+                        self:playSound('move_down')
                         if self.handY==self.ghostY then
                             self:shakeBoard('-down')
                         end
@@ -1521,7 +1541,7 @@ function MP:updateFrame()
                         self.dropTimer=SET.dropDelay
                         self:moveHand('drop',-1)
                     end
-                elseif self.handY~=self.ghostY then-- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
+                elseif self.handY~=self.ghostY then -- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
                     self:freshDelay('drop')
                 end
             end
@@ -1530,6 +1550,7 @@ function MP:updateFrame()
         self.deathTimer=self.deathTimer-1
         if self.deathTimer<=0 then
             self.deathTimer=false
+            self.ghostState=false
 
             self:triggerEvent('whenSuffocate')
             self:freshGhost()
@@ -1563,18 +1584,18 @@ function MP:updateFrame()
                     C.visTimer=nil
                 end
             end
-            if C.bias then
-                local b=C.bias
+            local b=C.bias
+            if b then
                 if b.expBack then
                     b.x=expApproach(b.x,0,b.expBack)
                     b.y=expApproach(b.y,0,b.expBack)
                     if b.x^2+b.y^2<=.26^2 then
-                        b=false
+                        C.bias=nil
                     end
                 elseif b.lineBack then
                     local dist=(b.x^2+b.y^2)^.5
                     if b.lineBack>=dist then
-                        b=false
+                        C.bias=nil
                     else
                         local k=1-b.lineBack/dist
                         b.x,b.y=b.x*k,b.y*k
@@ -1582,11 +1603,8 @@ function MP:updateFrame()
                 elseif b.teleBack then
                     b.teleBack=b.teleBack-1
                     if b.teleBack<=0 then
-                        b=false
+                        C.bias=nil
                     end
-                end
-                if not b then
-                    C.bias=nil
                 end
             end
         end
@@ -1634,14 +1652,14 @@ function MP:render()
         GC.stc_rect(0,0,400,-1600)
         gc_scale(10/settings.fieldW)
 
-            self:triggerEvent('drawBelowField')-- From frame's bottom-left, 40px a cell
+            self:triggerEvent('drawBelowField') -- From frame's bottom-left, 40px a cell
 
             -- Grid & Cells
             skin.drawFieldBackground(settings.fieldW)
 
             gc_translate(0,self.fieldDived)
 
-                do-- Field
+                do -- Field
                     local matrix=self.field._matrix
                     gc_push('transform')
 
@@ -1660,35 +1678,30 @@ function MP:render()
                             end
                             gc_translate(40,0)
                         end
-                        gc_translate(-40*width,-40)-- \r\n (Return + Newline)
+                        gc_translate(-40*width,-40) -- \r\n (Return + Newline)
                     end
                     gc_pop()
                 end
 
-                self:triggerEvent('drawBelowBlock')-- From field's bottom-left, 40px a cell
+                self:triggerEvent('drawBelowBlock') -- From field's bottom-left, 40px a cell
 
                 gc_setColor(1,1,1)
-                gc_draw(self.particles.rotateFail)
+                gc_draw(self.particles.rectShade)
+                gc_draw(self.particles.tiltRect)
 
                 if self.hand then
                     local CB=self.hand.matrix
 
                     -- Ghost
-                    if not self.deathTimer then
+                    if not self.deathTimer and self.ghostY then
                         skin.drawGhost(CB,self.handX,self.ghostY)
                     end
 
                     -- Hand
                     if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
                         -- Smooth
-                        local movingX,droppingY=0,0
-                        if not self.deathTimer and self.moveDir and self.moveCharge<settings.das then
-                            movingX=15*self.moveDir*(max(self.moveCharge,0)/settings.das-.5)
-                        end
-                        if self.handY>self.ghostY then
-                            droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
-                        end
-                        gc_translate(movingX,droppingY)
+                        local dx,dy=self:getSmoothPos()
+                        gc_translate(dx,dy)
 
                         skin.drawHand(CB,self.handX,self.handY)
 
@@ -1702,7 +1715,8 @@ function MP:render()
                                 GC.mDraw(RS.centerTex,(self.handX+centerPos[1]-1)*40,-(self.handY+centerPos[2]-1)*40,nil,1.26)
                             end
                         end
-                        gc_translate(-movingX,-droppingY)
+
+                        gc_translate(-dx,-dy)
                     end
                 end
 
@@ -1714,24 +1728,25 @@ function MP:render()
                     end
                 end
 
-                self:triggerEvent('drawBelowMarks')-- From field's bottom-left, 40px a cell
+                self:triggerEvent('drawBelowMarks') -- From field's bottom-left, 40px a cell
 
             -- Height lines
-            skin.drawHeightLines(-- All unit are pixel
+            skin.drawHeightLines(     -- All unit are pixel
                 settings.fieldW*40,   -- Field Width
-                (settings.spawnH+settings.extraSpawnH)*40,-- Max Spawning height
+                (settings.spawnH+settings.extraSpawnH)*40, -- Max Spawning height
                 settings.spawnH*40,   -- Spawning height
                 settings.lockoutH*40, -- Lock-out height
                 settings.deathH*40,   -- Death height
                 settings.voidH*40     -- Void height
             )
 
-            self:triggerEvent('drawInField')-- From frame's bottom-left, 40px a cell
+            self:triggerEvent('drawInField') -- From frame's bottom-left, 40px a cell
 
             gc_setColor(1,1,1)
             gc_draw(self.particles.cornerCheck)
+            self.particles.spinArrow:draw()
             gc_draw(self.particles.trail)
-            gc_draw(self.particles.sparkle)
+            gc_draw(self.particles.hitSparkle)
 
             gc_translate(0,-self.fieldDived)
 
@@ -1739,7 +1754,9 @@ function MP:render()
         GC.stc_stop()
 
         gc_setColor(1,1,1)
+        gc_draw(self.particles.boardSmoke)
         gc_draw(self.particles.star)
+        gc_draw(self.particles.line)
 
     gc_pop()
 
@@ -1750,11 +1767,11 @@ function MP:render()
     skin.drawDasIndicator(self.moveDir,self.moveCharge,settings.das,settings.arr,settings.dasHalt)
 
     -- Delay indicator
-    if not self.hand then-- Spawn
+    if not self.hand then -- Spawn
         skin.drawDelayIndicator(COLOR.lB,self.spawnTimer/settings.spawnDelay)
-    elseif self.deathTimer then-- Death
+    elseif self.deathTimer then -- Death
         skin.drawDelayIndicator(COLOR.R,self.deathTimer/settings.deathDelay)
-    else-- Lock
+    else -- Lock
         skin.drawDelayIndicator(COLOR.lY,self.lockTimer/settings.lockDelay)
     end
 
@@ -1790,7 +1807,7 @@ function MP:render()
     -- Texts
     self.texts:draw()
 
-    self:triggerEvent('drawOnPlayer')-- From player's center
+    self:triggerEvent('drawOnPlayer') -- From player's center
 
     -- Starting counter
     if self.time<settings.readyDelay then
@@ -1842,16 +1859,17 @@ function MP:checkScriptSyntax(cmd,arg,errMsg)
             -- TODO
         elseif type(arg)=='table' then
             for i=1,#arg do
-                assert(Minoes[arg[i]],errMsg.."Invalid mino id '"..arg[i].."'")
+                assert(Mino.get(arg[i]),errMsg.."Invalid mino id '"..arg[i].."'")
             end
         end
     end
 end
 --------------------------------------------------------------
 -- Builder
+---@class Techmino.Mode.Setting.Mino
 local baseEnv={
     -- Size
-    fieldW=10,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
+    fieldW=10, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
     spawnH=20,
     extraSpawnH=1,
     lockoutH=1e99,
@@ -1906,6 +1924,7 @@ local baseEnv={
     -- Other
     strictLockout=false,
     script=false,
+    allowTransform=true,
 
     -- May be overrode with user setting
     das=162,
@@ -1914,7 +1933,10 @@ local baseEnv={
     dasHalt=0,
     hdLockA=1000,
     hdLockM=100,
-    easyInitCtrl=false,
+    initMove='buffer',
+    initRotate='buffer',
+    initHold='buffer',
+    IRSpushUp=true,
     skin='mino_plastic',
     particles=true,
     shakeness=.26,
@@ -1964,9 +1986,11 @@ function MP.new()
         changeSpawnPos={},
 
         -- Special
-        extraSolidCheck={},-- Manually called
+        extraSolidCheck={}, -- Manually called
     }
     self.soundEvent=setmetatable({},soundEventMeta)
+
+    mechLib.mino.statistics.event_playerInit(self)
 
     return self
 end
@@ -1985,8 +2009,11 @@ function MP:initialize()
     self.garbageBuffer={}
     self.garbageSum=0
 
+    self.totalCellCount=0
     self.nextQueue={}
-    self.seqGen=coroutine.wrap(mechLib.mino.sequence[self.settings.seqType] or self.settings.seqType)
+    self.seqData={}
+    self.seqGen=mechLib.mino.sequence[self.settings.seqType] or self.settings.seqType
+    self:seqGen(self.seqData,true)
     self:freshNextQueue()
 
     self.holdQueue={}
@@ -1997,14 +2024,15 @@ function MP:initialize()
     self.lockTimer=0
     self.spawnTimer=self.settings.readyDelay
     self.deathTimer=false
+    self.ghostState=false
 
     self.freshChance=self.settings.freshCount
     self.freshTimeRemain=0
 
-    self.hand=false-- Controlling mino object
+    self.hand=false -- Controlling mino object
     self.handX=false
     self.handY=false
-    self.lastMovement=false-- Table contain last movement info of mino, for spin/tuck/... checking
+    self.lastMovement=false -- Table contain last movement info of mino, for spin/tuck/... checking
     self.ghostY=false
     self.minY=false
 
@@ -2038,6 +2066,15 @@ function MP:initialize()
     }
 
     self:loadScript(self.settings.script)
+end
+function MP:unserialize_custom()
+    -- Recover field object
+    local f=self.field
+    self.field=require'assets.game.rectField'.new(self.settings.fieldW)
+    self.field._width=f._width
+    self.field._matrix=f._matrix
+
+    self.soundEvent=setmetatable({},soundEventMeta)
 end
 --------------------------------------------------------------
 

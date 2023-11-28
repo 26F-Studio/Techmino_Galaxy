@@ -65,8 +65,7 @@ local function newQuestion()
 
     choices={c1,c2}
     for i=1,#choices do
-        local name=choices[i]
-        local piece=Minoes[name]
+        local piece=Mino.get(choices[i])
         choices[i]={
             shape=TABLE.shift(piece.shape),
             color=ColorTable[defaultMinoColor[piece.id]],
@@ -272,8 +271,8 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={.5,.5},x=-300,y=0,w=260,h=260,sound_trigger=false,code=function() answer(1) end},
-    WIDGET.new{type='button',pos={.5,.5},x=300,y=0,w=260,h=260,sound_trigger=false,code=function() answer(2) end},
-    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
+    {type='button',pos={.5,.5},x=-300,y=0,w=260,h=260,sound_trigger=false,code=function() answer(1) end},
+    {type='button',pos={.5,.5},x=300,y=0,w=260,h=260,sound_trigger=false,code=function() answer(2) end},
+    {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
 }
 return scene

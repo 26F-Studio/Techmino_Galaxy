@@ -8,18 +8,18 @@ local kbIsDown=love.keyboard.isDown
 local scene={}
 
 local categoryColor={
-    intro= {index=COLOR.F, content=COLOR.lF},-- Instruction for current scene
-    guide= {index=COLOR.Y, content=COLOR.lY},-- Practice methods
-    term=  {index=COLOR.lB,content=COLOR.LB},-- Concept in game
-    tech=  {index=COLOR.G, content=COLOR.lG},-- General technics
-    other= {index=COLOR.M, content=COLOR.lM},-- Other
+    intro= {index=COLOR.F, content=COLOR.lF}, -- Instruction for current scene
+    guide= {index=COLOR.Y, content=COLOR.lY}, -- Practice methods
+    term=  {index=COLOR.lB,content=COLOR.LB}, -- Concept in game
+    tech=  {index=COLOR.G, content=COLOR.lG}, -- General technics
+    other= {index=COLOR.M, content=COLOR.lM}, -- Other
 }
 local mainW,mainH=900,700
 local mainX=100-mainW/2
 local listW,listH=300,600
 local searchH=80
 
-local prevScene
+local aboveScene
 local searchTimer,lastSearchText
 local time,quiting
 local selected
@@ -121,9 +121,9 @@ local function search(str)
         for i=1,#dispDict do
             local obj=dispDict[i]
             obj._priority=
-                (obj.title:lower():find(str) and 26 or 0)+
-                (obj.titleFull and obj.titleFull:lower():find(str) and 16 or 0)+
-                (#str>=3 and obj.content:lower():find(str) and 3*math.min(#str,5) or 0)
+                (obj.title:lower():find(str,nil,true) and 26 or 0)+
+                (obj.titleFull and obj.titleFull:lower():find(str,nil,true) and 16 or 0)+
+                (#str>=3 and obj.content:lower():find(str,nil,true) and 3*math.min(#str,5) or 0)
             if obj._priority>0 then
                 ins(filteredDict,obj)
             end
@@ -135,10 +135,10 @@ local function search(str)
         end
     end
 end
-do-- Widgets
+do -- Widgets
     listBox={
         type='listBox',pos={.5,.5},x=mainX-listW,y=-listH/2,w=listW-10,h=listH,
-        lineHeight=40,cornerR=5,
+        lineHeight=40,
         scrollBarWidth=5,
         scrollBarDist=12,
         scrollBarColor=COLOR.lY,
@@ -167,18 +167,17 @@ do-- Widgets
 
     inputBox=WIDGET.new{
         type='inputBox',pos={.5,.5},x=mainX,y=280,w=mainW,h=searchH-10,
-        cornerR=5,
         frameColor={0,0,0,0},
     }
     copyButton=WIDGET.new{
         type='button',pos={.5,.5},x=mainX+mainW-50,y=210,w=80,h=80,
-        sound_trigger=false,lineWidth=4,cornerR=0,
+        sound_trigger=false,lineWidth=4,
         fontSize=60,text=CHAR.icon.copy,
         code=copyText,
     }
     linkButton=WIDGET.new{
         type='button',pos={.5,.5},x=mainX+mainW-150,y=210,w=80,h=80,
-        sound_trigger=false,lineWidth=4,cornerR=0,
+        sound_trigger=false,lineWidth=4,
         fontSize=60,text=CHAR.icon.earth,
         code=openLink,
     }
@@ -193,50 +192,52 @@ local function parseDict(data)
     local buffer
     for lineNum,line in next,data do
         local commentPos=line:find('%-%-')
-        if commentPos then
-            if line:sub(commentPos-1,commentPos-1)~='\\' then
-                line=line:gsub('%-%-.*',''):trim()
-                if #line==0 then goto CONTINUE end
+        while 1 do
+            if commentPos then
+                if line:sub(commentPos-1,commentPos-1)~='\\' then
+                    line=line:gsub('%-%-.*',''):trim()
+                    if #line==0 then break end
+                end
+                line=line:gsub('\\(%-%-+)','%1')
             end
-            line=line:gsub('\\(%-%-+)','%1')
+            local head=line:sub(1,1)
+            if head=='#' then
+                if buffer then
+                    assertObj(not result[buffer._id],'Duplicate ID',buffer)
+                    result[buffer._id]=buffer
+                    buffer.content=buffer.content:trim()
+                end
+                buffer={
+                    _id=line:sub(2):trim(),
+                    _line=lineNum,
+                }
+                assertObj(#buffer._id>0,'Empty ID',buffer)
+            elseif head=='@' then
+                local key,value=line:match('@%s*(%w+)%s*(.+)')
+                if key=='title' then
+                    value=value:gsub('%%n','\n')
+                    buffer.title=not buffer.title and value or buffer.title..'\n'..value
+                    assertObj(#buffer.title>0,'Empty title',buffer)
+                elseif key=='titleFull' then
+                    value=value:gsub('%%n','\n')
+                    buffer.titleFull=not buffer.titleFull and value or buffer.titleFull..'\n'..value
+                elseif key=='titleSize' then
+                    assertObj(not buffer.titleSize,'Duplicate @titleSize',buffer)
+                    buffer.titleSize=tonumber(value)
+                    assertObj(buffer.titleSize and buffer.titleSize>0,'Invalid titleSize',buffer)
+                elseif key=='contentSize' then
+                    assertObj(not buffer.contentSize,'Duplicate @contentSize',buffer)
+                    buffer.contentSize=tonumber(value)
+                    assertObj(buffer.contentSize and buffer.contentSize>0,'Invalid contentSize',buffer)
+                elseif key=='link' then
+                    assertObj(not buffer.link,'Duplicate @link',buffer)
+                    buffer.link=value
+                end
+            else
+                buffer.content=not buffer.content and line or buffer.content..'\n'..line
+            end
+            break
         end
-        local head=line:sub(1,1)
-        if head=='#' then
-            if buffer then
-                assertObj(not result[buffer._id],'Duplicate ID',buffer)
-                result[buffer._id]=buffer
-                buffer.content=buffer.content:trim()
-            end
-            buffer={
-                _id=line:sub(2):trim(),
-                _line=lineNum,
-            }
-            assertObj(#buffer._id>0,'Empty ID',buffer)
-        elseif head=='@' then
-            local key,value=line:match('@%s*(%w+)%s*(.+)')
-            if key=='title' then
-                value=value:gsub('%%n','\n')
-                buffer.title=not buffer.title and value or buffer.title..'\n'..value
-                assertObj(#buffer.title>0,'Empty title',buffer)
-            elseif key=='titleFull' then
-                value=value:gsub('%%n','\n')
-                buffer.titleFull=not buffer.titleFull and value or buffer.titleFull..'\n'..value
-            elseif key=='titleSize' then
-                assertObj(not buffer.titleSize,'Duplicate @titleSize',buffer)
-                buffer.titleSize=tonumber(value)
-                assertObj(buffer.titleSize and buffer.titleSize>0,'Invalid titleSize',buffer)
-            elseif key=='contentSize' then
-                assertObj(not buffer.contentSize,'Duplicate @contentSize',buffer)
-                buffer.contentSize=tonumber(value)
-                assertObj(buffer.contentSize and buffer.contentSize>0,'Invalid contentSize',buffer)
-            elseif key=='link' then
-                assertObj(not buffer.link,'Duplicate @link',buffer)
-                buffer.link=value
-            end
-        else
-            buffer.content=not buffer.content and line or buffer.content..'\n'..line
-        end
-        ::CONTINUE::
     end
     if buffer then
         result[buffer._id]=buffer
@@ -245,14 +246,21 @@ local function parseDict(data)
 end
 
 function scene.enter()
+    listBox._scrollPos1=listBox._scrollPos
+    if SCN.prev=='zeta_input_method' and SCN.args[1] then
+        inputBox:addText(SCN.args[1])
+        return
+    end
     local target=SCN.args[1] or 'aboutDict'
 
+    quiting=false
     time=0
+    aboveScene=SCN.scenes[SCN.stack[#SCN.stack-1]] or NONE
     searchTimer,lastSearchText=0,''
+    inputBox._value=''
+    SFX.play('dict_open')
     freshWidgetPos()
 
-    quiting=false
-    prevScene=SCN.scenes[SCN.stack[#SCN.stack-1]] or NONE
     selectItem(false)
 
     -- Initialize dictionary for current language (if need)
@@ -308,7 +316,7 @@ function scene.enter()
             obj.contentSize=5*math.floor(obj.contentSize/5+.5)
             obj.titleFull=curObj.titleFull or obj.title or enObj.titleFull or enObj.title
             obj.link=curObj.link or false
-            obj.titleText=nil-- Generate when needed (__index at basedictionary.lua)
+            obj.titleText=nil -- Generate when needed (__index at basedictionary.lua)
 
             ins(dispDict,obj)
             dispDict[obj.id]=obj
@@ -322,12 +330,11 @@ function scene.enter()
     if not selected then selectItem(dispDict[1]) end
     listBox:setList(dispDict)
     if selectedNum then listBox:select(selectedNum or 1)end
-    listBox._scrollPos1=listBox._scrollPos
-    SFX.play('dict_open')
     collectgarbage()
 end
 
 function scene.keyDown(key,isRep)
+    if WIDGET.isFocus(inputBox) and #key==1 then return end
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
         if not (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
@@ -392,12 +399,16 @@ function scene.touchMove(x,y,_,dy)
 end
 
 function scene.wheelMoved(_,y)
-    scroll(y*62)
+    if not WIDGET.isFocus(listBox)then
+        scroll(y*62)
+    else
+        return true
+    end
 end
 
 function scene.update(dt)
-    if prevScene.update then
-        prevScene.update(dt)
+    if aboveScene.update then
+        aboveScene.update(dt)
     end
     if quiting then
         time=math.max(time-12.6*dt,0)
@@ -425,12 +436,12 @@ end
 
 function scene.draw()
     -- Previous scene's things
-    if prevScene.draw then
-        prevScene.draw()
+    if aboveScene.draw then
+        aboveScene.draw()
     end
-    if prevScene.widgetList then
+    if aboveScene.widgetList then
         gc_replaceTransform(SCR.xOy)
-        WIDGET.draw(prevScene.widgetList)
+        WIDGET.draw(aboveScene.widgetList)
     end
 
     -- Dark background
@@ -497,6 +508,11 @@ scene.widgetList={
     inputBox,
     copyButton,
     linkButton,
-    WIDGET.new{type='button',pos={.5,.5},x=mainX+mainW+70,y=-310,w=80,h=80,sound_trigger=false,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.cross_big,code=close},
+    {type='button',pos={.5,.5},x=mainX+mainW+70,y=-310,w=80,h=80,sound_trigger=false,lineWidth=4,fontSize=60,text=CHAR.icon.cross_big,code=close},
+    {
+        type='button',pos={.5,.5},x=mainX+mainW+70,y=320,w=80,h=80,sound_trigger='move',lineWidth=4,fontSize=50,text="写",
+        code=WIDGET.c_goScn('zeta_input_method','none'),
+        visibleFunc=function() return SETTINGS._system.locale=='zh' end,
+    },
 }
 return scene

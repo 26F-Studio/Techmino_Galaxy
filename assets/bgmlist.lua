@@ -200,7 +200,7 @@ local bgmList={
     },
     ['truth']={
         author="MrZ",
-        message="Inspired from Veritasium channel",
+        message="Firefly in a Fairytale Remix",
         base={'melody2','bass','drum'},
         full={'melody1','melody2','accompany','bass','drum','sfx1','sfx2'},
     },
@@ -330,8 +330,14 @@ local bgmList={
     ['subzero']={
         author="TetraCepra",
         message="A cool blank remix",
-        base={'accompany1','accompany3','bass1','bass3','drum','melody1','melody2','sfx'},
-        full={'accompany1','accompany2','accompany3','accompany4','bass1','bass2','bass3','drum','melody1','melody2','sfx'},
+        base={'melody1','melody2','accompany1','accompany3','bass1','bass3','drum','sfx'},
+        full={'melody1','melody2','accompany1','accompany2','accompany3','accompany4','bass1','bass2','bass3','drum','sfx'},
+    },
+    ['infinitesimal']={
+        author="TetraCepra",
+        message="A cool blank remix",
+        base={'melody1','melody2','accompany1','accompany3','bass1','sfx'},
+        full={'melody1','melody2','accompany1','accompany2','accompany3','bass1','bass2','drum','sfx'},
     },
 }
 

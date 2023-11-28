@@ -1,6 +1,6 @@
 local gc=love.graphics
 
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local tsd={}
 
 function tsd.easy_event_playerInit(P)
@@ -10,6 +10,21 @@ function tsd.easy_event_afterClear(P,clear)
     local movement=P.lastMovement
     if P.hand.name=='T' and clear.line==2 and movement.action=='rotate' and (movement.corners or movement.immobile) then
         P.modeData.tsd=P.modeData.tsd+1
+        if P.modeData.tsd>1 then
+            local n=P.modeData.tsd
+            P:playSound('b2b',
+                n<=4 and 1 or
+                n<=7 and 2 or
+                n<=9 and 3 or
+                n<=11 and 4 or
+                n<=13 and 5 or
+                n<=15 and 6 or
+                n<=17 and 7 or
+                n<=19 and 8 or
+                n<=21 and 9 or
+                10
+            )
+        end
     else
         P:finish('PE')
     end
@@ -17,7 +32,7 @@ end
 function tsd.easy_event_drawOnPlayer(P)
     P:drawInfoPanel(-380,-60,160,120)
     FONT.set(80) GC.mStr(P.modeData.tsd,-300,-70)
-    FONT.set(30) GC.mStr("TSD",-300,15)
+    FONT.set(30) GC.mStr(Text.target_tsd,-300,15)
 end
 
 local tsdCharge=3
@@ -66,6 +81,21 @@ function tsd.hard_event_afterClear(P,clear)
                     end
                 end
                 P.modeData.tsd=P.modeData.tsd+1
+                if P.modeData.tsd>1 then
+                    local n=P.modeData.tsd
+                    P:playSound('b2b',
+                        n<=3 and 1 or
+                        n<=5 and 2 or
+                        n<=7 and 3 or
+                        n<=9 and 4 or
+                        n<=11 and 5 or
+                        n<=13 and 6 or
+                        n<=15 and 7 or
+                        n<=17 and 8 or
+                        n<=19 and 9 or
+                        10
+                    )
+                end
             end
             list[x].charge=list[x].charge+tsdCharge
         end

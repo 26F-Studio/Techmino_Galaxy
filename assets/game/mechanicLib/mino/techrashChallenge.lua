@@ -1,31 +1,32 @@
 local gc=love.graphics
 
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local techrash={}
 
-function techrash.easy_seqType(P)
-    P.modeData.bagLoop=0
-    local l1={}
-    local l2={}
-    while true do
-        -- Fill list1 (bag7 + 0~4)
-        if not l1[1] then
-            P.modeData.bagLoop=P.modeData.bagLoop+1
-            for i=1,7 do table.insert(l1,i) end
-            for _=1,
-                P.modeData.bagLoop<=10 and 0 or
-                P.modeData.bagLoop<=20 and 1 or
-                P.modeData.bagLoop<=30 and 2 or
-                P.modeData.bagLoop<=40 and 3 or
-                4
-            do
-                -- Fill list2 (bag6)
-                if not l2[1] then for i=1,6 do table.insert(l2,i) end end
-                table.insert(l1,table.remove(l2,P:random(#l2)))
-            end
-        end
-        coroutine.yield(table.remove(l1,P:random(#l1)))
+function techrash.easy_seqType(P,d,init)
+    if init then
+        P.modeData.bagLoop=0
+        d.l1={}
+        d.l2={}
+        return
     end
+    -- Fill list1 (bag7_p0to4_by_bagLoop_fromBag6_noI)
+    if not d.l1[1] then
+        P.modeData.bagLoop=P.modeData.bagLoop+1
+        for i=1,7 do table.insert(d.l1,i) end
+        for _=1,
+            P.modeData.bagLoop<=10 and 0 or
+            P.modeData.bagLoop<=20 and 1 or
+            P.modeData.bagLoop<=30 and 2 or
+            P.modeData.bagLoop<=40 and 3 or
+            4
+        do
+            -- Fill list2 (bag6_noI)
+            if not d.l2[1] then for i=1,6 do table.insert(d.l2,i) end end
+            table.insert(d.l1,table.remove(d.l2,P:random(#d.l2)))
+        end
+    end
+    return table.remove(d.l1,P:random(#d.l1))
 end
 function techrash.easy_event_playerInit(P)
     P.modeData.techrash=0
@@ -44,23 +45,24 @@ function techrash.easy_event_afterLock(P)
     P.modeData.minH=minH
 end
 function techrash.easy_event_afterClear(P,clear)
-    P:triggerEvent('afterLock')-- Force refresh
-    if P.hand.name=='I' and clear.line==4 then
+    P:triggerEvent('afterLock') -- Force refresh
+    if P.hand.name=='I' and clear.line>=4 then
         P.modeData.techrash=P.modeData.techrash+1
-        local semiPC=P.field:getHeight()==0
-        if not semiPC then
-            semiPC=true
+        if P.modeData.techrash>1 then
+            P:playSound('b2b',math.min(math.floor((P.modeData.techrash+2.6)^1.2/5.4),10))
+        end
+        local HC=P.field:getHeight()==0
+        if not HC then
+            HC=true
             for x=1,P.settings.fieldW do
                 if #P:getConnectedCells(x,1)%4~=0 then
-                    semiPC=false
+                    HC=false
                     break
                 end
             end
         end
-        if semiPC then
-            P:playSound('frenzy')
-            P.modeData.bagLoop=math.max(P.modeData.bagLoop-3,0)
-        end
+        if HC then P:playSound('frenzy') end
+        P.modeData.bagLoop=math.max(P.modeData.bagLoop-(P.lastMovement.combo-1)*2-(HC and 2 or 0),0)
     else
         P:finish('PE')
     end
@@ -74,7 +76,7 @@ end
 function techrash.easy_event_drawOnPlayer(P)
     P:drawInfoPanel(-380,-60,160,120)
     FONT.set(80) GC.mStr(P.modeData.techrash,-300,-70)
-    FONT.set(30) GC.mStr("Techrash",-300,15)
+    FONT.set(30) GC.mStr(Text.target_techrash,-300,15)
 end
 
 local initPower=3
@@ -112,6 +114,10 @@ function techrash.hard_event_afterClear(P,clear)
     if P.hand.name=='I' and clear.line==4 then
         local list=P.modeData.techrashInfo
         local x=P.handX
+        P.modeData.techrash=P.modeData.techrash+1
+        if P.modeData.techrash>1 then
+            P:playSound('b2b',math.min(math.floor((P.modeData.techrash+2.6)^1.2/5.4),10))
+        end
         if list[x].charge>=maxCharge then
             list[x].dead=true
             P:finish('PE')
@@ -121,7 +127,6 @@ function techrash.hard_event_afterClear(P,clear)
                     v.charge=math.max(v.charge-1,0)
                 end
             end
-            P.modeData.techrash=P.modeData.techrash+1
         end
         list[x].charge=list[x].charge+P.modeData.chargePower
         list[x-1].charge=list[x-1].charge+math.floor(P.modeData.sidePower/2)

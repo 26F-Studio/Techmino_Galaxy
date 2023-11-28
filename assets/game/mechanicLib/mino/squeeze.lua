@@ -1,12 +1,12 @@
 local floor,clamp=math.floor,MATH.clamp
 
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local squeeze={}
 
---- @param width? number
---- @param wait? number
---- @param depth? number
---- @param speed? number
+---@param width? number
+---@param wait? number
+---@param depth? number
+---@param speed? number
 function squeeze.turnOn_auto(P,width,wait,depth,speed)
     if not P.modeData.squeeze_enabled then
         squeeze.switch_auto(P,width,wait,depth,speed)
@@ -18,10 +18,10 @@ function squeeze.turnOff_auto(P)
     end
 end
 
---- @param width? number
---- @param wait? number
---- @param depth? number
---- @param speed? number
+---@param width? number
+---@param wait? number
+---@param depth? number
+---@param speed? number
 function squeeze.switch_auto(P,width,wait,depth,speed)
     squeeze.switch(P,width,wait,depth,speed)
     local setEvent=P.modeData.squeeze_enabled and P.addEvent or P.delEvent
@@ -31,10 +31,10 @@ function squeeze.switch_auto(P,width,wait,depth,speed)
     setEvent(P,'drawInField',squeeze.event_drawInField)
 end
 
---- @param width? number
---- @param wait? number
---- @param depth? number
---- @param speed? number
+---@param width? number
+---@param wait? number
+---@param depth? number
+---@param speed? number
 function squeeze.switch(P,width,wait,depth,speed)
     local md=P.modeData
     if not md.squeeze_enabled then

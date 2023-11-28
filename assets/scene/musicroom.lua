@@ -11,6 +11,8 @@ local collectCount=0
 local noProgress=false
 local autoplay=false
 local fakeProgress=0
+local searchStr=""
+local searchTimer=0
 
 local bigTitle=setmetatable({},{
     __index=function(self,name)
@@ -72,12 +74,11 @@ local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1
     disp=function() return fakeProgress end,
     code=function(v,mode)
         fakeProgress=v
-        print(mode)
         if mode=='release' then
             BGM.set('all','seek',v*BGM.getDuration())
         end
     end,
-    visibleFunc=function() return BGM.isPlaying() end,
+    visibleTick=function() return BGM.isPlaying() end,
 }
 
 
@@ -108,6 +109,19 @@ function scene.enter()
     end
 end
 
+local function searchMusic(str)
+    local bestID,bestDist=-1,999
+    local list=musicListBox:getList()
+    for i=1,#list do
+        local dist=list[i]:find(str)
+        if dist and dist<bestDist then
+            bestID,bestDist=i,dist
+        end
+    end
+    if bestID>0 then
+        musicListBox:select(bestID)
+    end
+end
 function scene.keyDown(key,isRep)
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
@@ -117,14 +131,13 @@ function scene.keyDown(key,isRep)
             BGM.set('all','seek',key=='left' and max(BGM.tell()-5,0) or (BGM.tell()+5)%BGM.getDuration())
         end
     elseif #key==1 and key:find'[0-9a-z]' then
-        local list=musicListBox:getList()
-        local sel=musicListBox:getSelect()
-        for _=1,#list do
-            sel=(sel-1+(isShiftPressed() and -1 or 1))%#list+1
-            if list[sel]:sub(1,1)==key then
-                musicListBox:select(sel)
-                break
-            end
+        if searchTimer==0 then
+            searchStr=""
+        end
+        if #searchStr<26 then
+            searchStr=searchStr..key
+            searchTimer=1.26
+            searchMusic(searchStr)
         end
     elseif not isRep then
         if key=='space' then
@@ -155,6 +168,9 @@ function scene.keyDown(key,isRep)
 end
 
 function scene.update(dt)
+    if searchTimer>0 then
+        searchTimer=max(searchTimer-dt,0)
+    end
     if autoplay and BGM.isPlaying() then
         if autoplay>0 then
             autoplay=max(autoplay-dt,0)
@@ -212,6 +228,13 @@ function scene.draw()
         gc_printf(STRING.time_simp(BGM.getDuration()),700-626,260,626,'right')
     end
 
+    -- Searching
+    if searchTimer>0 then
+        gc_setColor(1,1,1,searchTimer*1.26)
+        setFont(30)
+        gc_print(searchStr,0,-360)
+    end
+
     -- Collecting progress
     gc_setColor(COLOR.L)
     gc.setLineWidth(2)
@@ -230,18 +253,18 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
-    WIDGET.new{type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'musicroom_title'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'musicroom_title'},
 
     musicListBox,
     progressBar,
 
     -- Play/Stop
-    WIDGET.new{type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=WIDGET.c_pressKey'space',visibleFunc=function() return not BGM.isPlaying() end},
-    WIDGET.new{type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleFunc=function() return BGM.isPlaying() end},
+    {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return not BGM.isPlaying() end},
+    {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return BGM.isPlaying() end},
 
     -- Fullband Switch
-    WIDGET.new{type='switch',pos={.5,.5},x=-650,y=360,h=50,widthLimit=260,labelPos='right',disp=function() return fullband end,
+    {type='switch',pos={.5,.5},x=-650,y=360,h=50,widthLimit=260,labelPos='right',disp=function() return fullband end,
         name='fullband',text=LANG'musicroom_fullband',
         sound_on=false,sound_off=false,
         code=function()
@@ -253,12 +276,12 @@ scene.widgetList={
                 scene.enter()
             end
         end,
-        visibleFunc=function()
+        visibleTick=function()
             return fullband~=nil and bgmList[selected].base
         end,
     },
     -- Auto Switching Switch
-    WIDGET.new{type='switch',pos={.5,.5},x=-650,y=150,h=50,widthLimit=260,labelPos='right',disp=function() return autoplay end,
+    {type='switch',pos={.5,.5},x=-650,y=150,h=50,widthLimit=260,labelPos='right',disp=function() return autoplay end,
         name='autoplay',text=LANG'musicroom_autoplay',
         sound_on=false,sound_off=false,
         code=function()
@@ -271,7 +294,7 @@ scene.widgetList={
     },
 
     -- Volume slider
-    WIDGET.new{type='slider_progress',pos={.5,.5},x=450,y=360,w=250,text=CHAR.icon.volUp,fontSize=60,disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
+    {type='slider_progress',pos={.5,.5},x=450,y=360,w=250,text=CHAR.icon.volUp,fontSize=60,disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
 }
 
 return scene

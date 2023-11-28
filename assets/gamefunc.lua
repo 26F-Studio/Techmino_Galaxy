@@ -7,8 +7,8 @@ function sureCheck(event)
 end
 
 local _bgmPlaying,_bgmMode
---- @param mode 'full'|'simp'|'base'|''|nil
---- @param args? string
+---@param mode 'full'|'simp'|'base'|''|nil
+---@param args? string
 function playBgm(name,mode,args)
     if not args then args='' end
 
@@ -34,7 +34,7 @@ function playBgm(name,mode,args)
             else
                 BGM.set(bgmList[name].add,'volume',0,1)
             end
-        else-- if mode=='full' then
+        else -- if mode=='full' then
             BGM.play(bgmList[name].full,args)
         end
     end
@@ -49,26 +49,49 @@ function getBgm()
     return _bgmPlaying,_bgmMode
 end
 
-local interiorModeMeta={__call=function(self)
-    local success,errInfo=pcall(GAME.getMode,self.name)
-    if success then
-        SCN.go('game_in','none',self.name)
-    else
-        MSG.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+local trackNick={
+    m='melody',
+    a='accompany',
+    d='decoration',
+    b='bass',
+    p='drum',
+    s='sfx',
+}
+---@param name string
+---@param ... string m/a/d/b/p/s(N)
+---@return string[]
+function bgmPack(name,...)
+    local tracks={...}
+    for i=1,#tracks do
+        tracks[i]=name..'/'..trackNick[tracks[i]:sub(1,1)]..tracks[i]:sub(2)
     end
-end}
+    return tracks
+end
+
+local interiorModeMeta={
+    __call=function(self)
+        local success,errInfo=pcall(GAME.getMode,self.name)
+        if success then
+            SCN.go('game_in','none',self.name)
+        else
+            MSG.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+        end
+    end
+}
 function playInterior(name)
     return setmetatable({name=name},interiorModeMeta)
 end
 
-local exteriorModeMeta={__call=function(self)
-    local success,errInfo=pcall(GAME.getMode,self.name)
-    if success then
-        SCN.go('game_out','fade',self.name)
-    else
-        MSG.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+local exteriorModeMeta={
+    __call=function(self)
+        local success,errInfo=pcall(GAME.getMode,self.name)
+        if success then
+            SCN.go('game_out','fade',self.name)
+        else
+            MSG.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+        end
     end
-end}
+}
 function playExterior(name)
     return setmetatable({name=name},exteriorModeMeta)
 end
@@ -104,8 +127,8 @@ function saveKey()
     FILE.save({
         mino=KEYMAP.mino:export(),
         puyo=KEYMAP.puyo:export(),
-        gem= KEYMAP.gem:export(),
-        sys= KEYMAP.sys:export(),
+        gem=KEYMAP.gem:export(),
+        sys=KEYMAP.sys:export(),
     },'conf/keymap','-json')
 end
 function saveTouch()
@@ -132,6 +155,14 @@ function isCtrlPressed() return isKeyDown('lctrl','rctrl') end
 function isShiftPressed() return isKeyDown('lshift','rshift') end
 function isAltPressed() return isKeyDown('lalt','ralt') end
 
+local function _getActMode(mode,key)
+    local act=KEYMAP[mode]:getAction(key)
+    if act then
+        return mode,act
+    else
+        return 'sys',KEYMAP.sys:getAction(key)
+    end
+end
 local function _getActImg(mode,act)
     return IMG.actionIcons[mode][act]
 end
@@ -142,20 +173,17 @@ function resetVirtualKeyMode(mode)
     for i=1,#VCTRL do
         local obj=VCTRL[i]
         if obj.type=='button' then
-            local act=KEYMAP[mode]:getAction(obj.key)
-            local res,texture=pcall(_getActImg,mode,act)
-            obj:setTexture(res and texture or act and GC.newText(FONT.get(30),act))
+            local res,texture=pcall(_getActImg,_getActMode(mode,(obj.key)))
+            obj:setTexture(res and texture)
         elseif obj.type=='stick2way' then
             for j,suffix in next,{'left','right'} do
-                local act=KEYMAP[mode]:getAction('vj2'..suffix)
-                local res,texture=pcall(_getActImg,mode,act)
-                obj:setTexture(j,res and texture or act and GC.newText(FONT.get(30),act))
+                local res,texture=pcall(_getActImg,_getActMode(mode,'vj2'..suffix))
+                obj:setTexture(j,res and texture)
             end
         elseif obj.type=='stick4way' then
             for j,suffix in next,{'down','left','up','right'} do
-                local act=KEYMAP[mode]:getAction('vj4'..suffix)
-                local res,texture=pcall(_getActImg,mode,act)
-                obj:setTexture(j,res and texture or act and GC.newText(FONT.get(30),act))
+                local res,texture=pcall(_getActImg,_getActMode(mode,'vj4'..suffix))
+                obj:setTexture(j,res and texture)
             end
         end
     end
@@ -181,7 +209,6 @@ function updateWidgetVisible(widgetList)
 end
 
 local sandBoxEnv={
-    mechLib=mechLib,
     math=math,
     string=string,
     table=table,
@@ -193,8 +220,25 @@ local sandBoxEnv={
     type=type,
     pcall=pcall,xpcall=xpcall,
     rawget=rawget,rawset=rawset,rawlen=rawlen,rawequal=rawequal,
-    setfenv=setfenv,setmetatable=setmetatable,
+    setmetatable=setmetatable,
 }
 function setSafeEnv(func)
+    sandBoxEnv.mechLib=mechLib
     setfenv(func,TABLE.copy(sandBoxEnv))
+end
+
+regFuncToStr={}
+regStrToFunc={}
+---Flatten a table of functions into string-to-function and function-to-string maps
+---@param obj table|function
+---@param path string
+function regFuncLib(obj,path)
+    if type(obj)=='table' then
+        for k,v in next,obj do
+            regFuncLib(v,path.."."..k)
+        end
+    elseif type(obj)=='function' then
+        regFuncToStr[obj]=path
+        regStrToFunc[path]=obj
+    end
 end

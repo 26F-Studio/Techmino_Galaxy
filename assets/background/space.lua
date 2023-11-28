@@ -8,18 +8,18 @@ local stars
 local W,H
 function back.init()
     stars={}
-    BG.resize(SCR.w,SCR.h)
+    back.resize(SCR.w,SCR.h)
 end
 function back.resize(w,h)
     W,H=w+20,h+20
     local S=stars
     for i=1,1260,5 do
         local s=rnd(26,40)*.1
-        S[i]=s*SCR.k           -- Size
-        S[i+1]=rnd(W)-10       -- X
-        S[i+2]=rnd(H)-10       -- Y
-        S[i+3]=(rnd()-.5)*.01*s-- Vx
-        S[i+4]=(rnd()-.5)*.01*s-- Vy
+        S[i]=s*SCR.k            -- Size
+        S[i+1]=rnd(W)-10        -- X
+        S[i+2]=rnd(H)-10        -- Y
+        S[i+3]=(rnd()-.5)*.01*s -- Vx
+        S[i+4]=(rnd()-.5)*.01*s -- Vy
     end
 end
 function back.update(dt)

@@ -1,5 +1,4 @@
-local bgmTransBegin,bgmTransFinish=10,30
-
+---@type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -8,21 +7,14 @@ return {
     end,
     settings={mino={
         event={
-            playerInit={
-                mechLib.mino.statistics.event_playerInit,
-            },
             afterLock=mechLib.mino.misc.symmetery_event_afterLock,
             afterClear={
-                mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
-                function(P)
-                    if P.modeData.line>bgmTransBegin and P.modeData.line<bgmTransFinish+4 and P.isMain then
-                        BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
-                    end
-                end,
+                mechLib.mino.progress.sprint_sym_40_afterClear,
             },
             drawInField=mechLib.mino.sprint.event_drawInField[40],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],
+            gameOver=mechLib.mino.progress.sprint_sym_40_gameOver,
         },
     }},
 }

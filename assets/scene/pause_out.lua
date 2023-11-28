@@ -1,10 +1,12 @@
 local sin=math.sin
+local floor=math.floor
 
 local scene={}
 
 local pauseText
 
 function scene.enter()
+    PROGRESS.setExteriorBG()
     pauseText=GC.newText(FONT.get(80,'bold'),Text.pause)
 end
 function scene.leave()
@@ -55,18 +57,18 @@ function scene.draw()
 
     local t=love.timer.getTime()
     GC.setColorMask(true,false,false,true)
-    GC.mDraw(pauseText,sin(3*t),sin(5*t))
+    GC.mDraw(pauseText,floor(sin(3*t)*2)/1.2,floor(sin(5*t)*2)/1.2)
     GC.setColorMask(false,true,false,true)
-    GC.mDraw(pauseText,sin(6.5*t),sin(2*t))
+    GC.mDraw(pauseText,floor(sin(6.5*t)*2)/1.2,floor(sin(2*t)*2)/1.2)
     GC.setColorMask(false,false,true,true)
-    GC.mDraw(pauseText,sin(3.5*t),sin(5.5*t))
+    GC.mDraw(pauseText,floor(sin(3.5*t)*2)/1.2,floor(sin(5.5*t)*2)/1.2)
     GC.setColorMask()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,0},  x= 120,y= 80, w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
-    WIDGET.new{type='button',pos={.5,.5},x= 0,  y=-160,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.retry,    code=function() sysAction('restart') end},
-    WIDGET.new{type='button',pos={.5,.5},x=-110,y= 170,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.play,     code=function() sysAction('back') end},
-    WIDGET.new{type='button',pos={.5,.5},x= 110,y= 170,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.settings, code=function() sysAction('setting') end},
+    {type='button',pos={0,0},  x= 120,y= 80, w=160,h=80,fontSize=60,sound_trigger=false,text=CHAR.icon.back,     code=function() sysAction('quit') end},
+    {type='button',pos={.5,.5},x= 0,  y=-160,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.retry,    code=function() sysAction('restart') end},
+    {type='button',pos={.5,.5},x=-110,y= 170,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.play,     code=function() sysAction('back') end},
+    {type='button',pos={.5,.5},x= 110,y= 170,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.settings, code=function() sysAction('setting') end},
 }
 return scene

@@ -36,6 +36,7 @@ return {
         "Ultracrash",
         "Impossicrash",
     },
+    clearLines="$1 Lines",
 
     combo_small="$1 Combo",
     combo_large="$1 Combo!",
@@ -48,14 +49,25 @@ return {
     allClear='ALL CLEAR',
     halfClear='Half Clear',
 
+    target_piece="块数",
+    target_line="行数",
+    target_time="时间",
+    target_ac="全消",
+    target_hc="半全消",
+    target_tsd="TSD",
+    target_techrash="消四",
+    target_wave="波数",
+
     -- About-Game
     pause="暂停",
+
+    new_level_unlocked="评估通过",
 
     -- Widget texts
     button_back="返回",
 
     simulation_title="模拟",
-    graph_mino_title="M-图谱",-- 翻译注意：取自“知识图谱”(人工智能领域)
+    graph_mino_title="M-图谱", -- 翻译注意：取自“知识图谱”(人工智能领域)
     settings_title="设置",
 
     setting_das="DAS",
@@ -102,6 +114,7 @@ return {
     keyset_mino_softDrop=   "软降",
     keyset_mino_hardDrop=   "硬降",
     keyset_mino_holdPiece=  "暂存",
+    keyset_mino_skip=       "跳过",
 
     keyset_puyo_moveLeft=   "左移",
     keyset_puyo_moveRight=  "右移",
@@ -110,6 +123,7 @@ return {
     keyset_puyo_rotate180=  "180°旋转",
     keyset_puyo_softDrop=   "软降",
     keyset_puyo_hardDrop=   "硬降",
+    keyset_puyo_skip=       "跳过",
 
     keyset_gem_swapLeft=    "向左换",
     keyset_gem_swapRight=   "向右换",
@@ -122,21 +136,21 @@ return {
     keyset_gem_moveRight=   "光标右移",
     keyset_gem_moveUp=      "光标上移",
     keyset_gem_moveDown=    "光标下移",
+    keyset_gem_skip=        "跳过",
 
     keyset_func1= "功能 1",
     keyset_func2= "功能 2",
     keyset_func3= "功能 3",
     keyset_func4= "功能 4",
     keyset_func5= "功能 5",
-    keyset_func6= "功能 6",
 
     keyset_sys_view=    "视野调整",
     keyset_sys_restart= "重新开始",
+    keyset_sys_chat=    "开启聊天框",
     keyset_sys_back=    "菜单返回",
     keyset_sys_quit=    "结束游戏",
     keyset_sys_setting= "菜单设置",
     keyset_sys_help=    "快速帮助",
-    keyset_sys_chat=    "开启聊天框",
     keyset_sys_up=      "菜单上",
     keyset_sys_down=    "菜单下",
     keyset_sys_left=    "菜单左",
@@ -194,9 +208,9 @@ return {
         tsd_practice=          {"TSD练习","完成更多的TSD练习题目"},
         tsd_easy=              {"TSD-易","连续消除更多的TSD"},
         tsd_hard=              {"TSD-难","连续消除更多的TSD，但不能在同一列"},
-        pc_easy=               {"PC-易","使用模板完成PC"},
-        pc_hard=               {"PC-难","使用更复杂的模板完成PC"},
-        pc_challenge=          {"PC挑战","尽可能完成更多PC"},
+        ac_easy=               {"全消-易","使用模板完成全消"},
+        ac_hard=               {"全消-难","使用更复杂的模板完成全消"},
+        ac_challenge=          {"全消挑战","尽可能完成更多全消"},
         dig_practice=          {"挖掘练习","消除垃圾行"},
         dig_40=                {"挖掘40","消除40行随机的垃圾行"},
         dig_100=               {"挖掘100","消除100行随机的垃圾行"},
@@ -213,8 +227,8 @@ return {
         sprint_40=             {"速跑40","消除40行"},
         sprint_10=             {"速跑10","消除10行"},
         sprint_obstacle_20=    {"速跑20-障碍","在随机初始场地下得20分"},
-        sprint_200=            {"速跑200","消除200行"},
-        sprint_1000=           {"速跑1000","消除1000行"},
+        sprint_200=            {"速跑?200","消除200行"},
+        sprint_1000=           {"速跑?1000","消除1000行"},
         sprint_drought_40=     {"速跑40-干旱","在没有I的情况下消除40行"},
         sprint_flood_40=       {"速跑40-洪水","在SZ超量的情况下消除40行"},
         sprint_pento_40=       {"速跑40-五连","消除40行，但方块的形状不同了"},

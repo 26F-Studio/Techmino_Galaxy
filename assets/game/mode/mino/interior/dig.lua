@@ -1,3 +1,4 @@
+---@type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -10,6 +11,7 @@ return {
         clearMovement='teleBack',
         particles=false,
         shakeness=0,
+        deathDelay=0,
         soundEvent={countDown=mechLib.mino.misc.interior_soundEvent_countDown},
         event={
             playerInit=mechLib.mino.dig.practice_event_playerInit[12],
@@ -21,9 +23,9 @@ return {
         if P and P.finished=='AC' then
             PROGRESS.setInteriorScore('dig',
                 P.gameTime<=30e3  and 160 or
-                P.gameTime<=60e3  and MATH.interpolate(P.gameTime,60e3,120,30e3,160) or
-                P.gameTime<=120e3 and MATH.interpolate(P.gameTime,120e3,90,60e3,120) or
-                math.max(MATH.interpolate(P.gameTime,200e3,40,120e3,90),0)
+                P.gameTime<=60e3  and MATH.interpolate(60e3,120,30e3,160,P.gameTime) or
+                P.gameTime<=120e3 and MATH.interpolate(120e3,90,60e3,120,P.gameTime) or
+                math.max(MATH.interpolate(200e3,40,120e3,90,P.gameTime),0)
             )
         end
     end,

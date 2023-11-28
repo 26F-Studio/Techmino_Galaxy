@@ -1,10 +1,9 @@
-local bgmTransBegin,bgmTransFinish=4,10
-
+---@type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('way','simp')
+        playBgm('way','base')
     end,
     settings={mino={
         seqType=mechLib.mino.techrashChallenge.easy_seqType,
@@ -13,11 +12,7 @@ return {
             afterLock=mechLib.mino.techrashChallenge.easy_event_afterLock,
             afterClear={
                 mechLib.mino.techrashChallenge.easy_event_afterClear,
-                function(P)
-                    if P.modeData.techrash>bgmTransBegin and P.modeData.techrash<=bgmTransFinish and P.isMain then
-                        BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.techrash-bgmTransBegin)/(bgmTransFinish-bgmTransBegin),1),2.6)
-                    end
-                end,
+                mechLib.mino.progress.techrash_easy_afterClear,
             },
             drawInField=mechLib.mino.techrashChallenge.easy_event_drawInField,
             drawOnPlayer=mechLib.mino.techrashChallenge.easy_event_drawOnPlayer,

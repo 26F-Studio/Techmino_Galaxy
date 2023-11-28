@@ -1,7 +1,11 @@
 local gc_setLineWidth,gc_setColor=GC.setLineWidth,GC.setColor
 local gc_line=GC.line
 local gc_rectangle,gc_circle=GC.rectangle,GC.circle
+local mDrawQ=GC.mDrawQ
+local max,min=math.max,math.min
+local floor,abs=math.floor,math.abs
 local sin,cos=math.sin,math.cos
+local tau=MATH.tau
 
 
 local touches={}
@@ -21,7 +25,7 @@ function button:new(data)
         iconSize=data.iconSize or 80,
 
         lastPressTime=-1e99,
-        drawable=false,
+        quad=false,
     },self)
 end
 function button:reset()
@@ -33,7 +37,7 @@ function button:getDistance(x,y)
     if self.shape=='circle' then
         return MATH.distance(x,y,self.x,self.y)/self.r
     elseif self.shape=='square' then
-        return math.max(math.abs(x-self.x),math.abs(y-self.y))/self.r
+        return max(abs(x-self.x),abs(y-self.y))/self.r
     end
 end
 function button:press(_,_,id)
@@ -68,23 +72,25 @@ function button:draw(setting)
         gc_setColor(1,1,1)
         gc_rectangle('line',self.x-self.r-2,self.y-self.r-2,self.r*2+4,self.r*2+4)
     end
-    if self.iconSize>0 and self.drawable then
+    if self.iconSize>0 and self.quad then
         gc_setColor(1,1,1,setting and 1 or .4)
-        GC.mDraw(
-            self.drawable,
+        local _,_,w,h=self.quad:getViewport()
+        mDrawQ(
+            IMG.actionIcons.texture,
+            self.quad,
             self.x,self.y,0,
-            self.iconSize/100*math.min(self.r*2/self.drawable:getWidth(),self.r*2/self.drawable:getHeight())
+            self.iconSize/100*min(self.r*2/w,self.r*2/h)
         )
     end
 end
-function button:setTexture(img)
-    self.drawable=img
+function button:setTexture(quad)
+    self.quad=quad
 end
 function button:export()
     return {
         type=self.type,
-        x=math.floor(self.x),
-        y=math.floor(self.y),
+        x=floor(self.x),
+        y=floor(self.y),
         r=self.r,
         shape=self.shape,
         key=self.key,
@@ -102,19 +108,19 @@ function stick2way:new(data)
         available=data.available or data.available==nil,
         x=data.x or 300,
         y=data.y or 800,
-        len=data.len or 320,-- Not include semicircle
+        len=data.len or 320, -- Not include semicircle
         h=data.h or 160,
         iconSize=data.iconSize or 80,
 
         touchID=false,
         state='wait',
         stickX=0,
-        drawable={false,false},
+        quad={false,false},
     },self)
 end
 function stick2way:getDistance(x,y)
     return (
-        (math.abs(x-self.x)<self.len/2 and math.abs(y-self.y)<self.h/2) or
+        (abs(x-self.x)<self.len/2 and abs(y-self.y)<self.h/2) or
         MATH.distance(x,y,self.x-self.len/2,self.y)<self.h/2 or
         MATH.distance(x,y,self.x+self.len/2,self.y)<self.h/2
     ) and 0 or 1e99
@@ -152,8 +158,8 @@ function stick2way:reset()
     self.state='wait'
     self.stickX=0
 end
-function stick2way:setTexture(i,img)
-    self.drawable[i]=img
+function stick2way:setTexture(i,quad)
+    self.quad[i]=quad
 end
 function stick2way:draw(setting)
     gc_setLineWidth(4)
@@ -170,12 +176,14 @@ function stick2way:draw(setting)
     end
     if self.iconSize>0 then
         gc_setColor(1,1,1,setting and 1 or .4)
-        local drawable=self.drawable
-        if drawable[1] then
-            GC.mDraw(drawable[1],self.x-self.len/2,self.y,0,self.iconSize/100*math.min(self.h/drawable[1]:getWidth(),self.h/drawable[1]:getHeight()))
+        local quad=self.quad
+        if quad[1] then
+            local _,_,w,h=quad[1]:getViewport()
+            mDrawQ(IMG.actionIcons.texture,quad[1],self.x-self.len/2,self.y,0,self.iconSize/100*min(self.h/w,self.h/h))
         end
-        if drawable[2] then
-            GC.mDraw(drawable[2],self.x+self.len/2,self.y,0,self.iconSize/100*math.min(self.h/drawable[2]:getWidth(),self.h/drawable[2]:getHeight()))
+        if quad[2] then
+            local _,_,w,h=quad[2]:getViewport()
+            mDrawQ(IMG.actionIcons.texture,quad[2],self.x+self.len/2,self.y,0,self.iconSize/100*min(self.h/w,self.h/h))
         end
     end
 end
@@ -183,8 +191,8 @@ function stick2way:export()
     return {
         type=self.type,
         available=self.available,
-        x=math.floor(self.x),
-        y=math.floor(self.y),
+        x=floor(self.x),
+        y=floor(self.y),
         len=self.len,
         h=self.h,
         iconSize=self.iconSize,
@@ -203,13 +211,14 @@ function stick4way:new(data)
         y=data.y or 700,
         r=data.r or 160,
         ball=data.ball or .3,
-        threshold=data.threshold or .26,
+        distThreshold=data.distThreshold or .26,
+        angleThreshold=data.angleThreshold or .26,
         iconSize=data.iconSize or 80,
 
         stickD=0,stickA=0,
         touchID=false,
         state='wait',
-        drawable={false,false,false,false},
+        quad={false,false,false,false},
     },self)
 end
 function stick4way:getDistance(x,y)
@@ -219,15 +228,16 @@ function stick4way:updatePos(x,y)
     if not x then
         self.stickD,self.stickA=0,0
     else
-        self.stickD=math.min(MATH.distance(x,y,self.x,self.y)/self.r,1)
+        self.stickD=min(MATH.distance(x,y,self.x,self.y)/self.r,1)
         self.stickA=math.atan2(y-self.y,x-self.x)
     end
     local newState
-    if self.stickD<=self.threshold then
+    if self.stickD<=self.distThreshold then
         newState='wait'
     else
-        local a=self.stickA%MATH.tau/MATH.tau
+        local a=self.stickA/tau%1
         newState=
+            abs(a%.25-.125)/.125<self.angleThreshold and 'wait' or
             a<1/8 and 'right' or
             a<3/8 and 'down' or
             a<5/8 and 'left' or
@@ -263,13 +273,13 @@ function stick4way:reset()
     self.state='wait'
     self.stickX=0
 end
-function stick4way:setTexture(i,img)
-    self.drawable[i]=img
+function stick4way:setTexture(i,quad)
+    self.quad[i]=quad
 end
 function stick4way:draw(setting)
     gc_setLineWidth(4)
     gc_setColor(1,1,1,.2)
-    local bigR=self.r*(1+self.ball)+5-- Real radius (with ball and extra +5)
+    local bigR=self.r*(1+self.ball)+5 -- Real radius (with ball and extra +5)
     local ballR=self.r*self.ball
     gc_line(self.x-bigR/2^.5,self.y-bigR/2^.5,self.x+bigR/2^.5,self.y+bigR/2^.5)
     gc_line(self.x-bigR/2^.5,self.y+bigR/2^.5,self.x+bigR/2^.5,self.y-bigR/2^.5)
@@ -289,11 +299,12 @@ function stick4way:draw(setting)
     end
     if self.iconSize>0 then
         gc_setColor(1,1,1,setting and 1 or .4)
-        local drawable=self.drawable
-        for i=1,4 do if drawable[i] then
+        local quad=self.quad
+        for i=1,4 do if quad[i] then
             local d=(bigR+ballR)*.5
-            local angle=i*math.pi/2
-            GC.mDraw(drawable[i],self.x+d*cos(angle),self.y+d*sin(angle),0,self.iconSize/100*math.min((bigR-ballR)/drawable[i]:getWidth(),(bigR-ballR)/drawable[i]:getHeight()))
+            local angle=i*tau/4
+            local _,_,w,h=quad[i]:getViewport()
+            mDrawQ(IMG.actionIcons.texture,quad[i],self.x+d*cos(angle),self.y+d*sin(angle),0,self.iconSize/100*min((bigR-ballR)/w,(bigR-ballR)/h))
         end end
     end
 end
@@ -301,11 +312,12 @@ function stick4way:export()
     return {
         type=self.type,
         available=self.available,
-        x=math.floor(self.x),
-        y=math.floor(self.y),
+        x=floor(self.x),
+        y=floor(self.y),
         r=self.r,
         ball=self.ball,
-        threshold=self.threshold,
+        distThreshold=self.distThreshold,
+        angleThreshold=self.angleThreshold,
         iconSize=self.iconSize or 80,
     }
 end

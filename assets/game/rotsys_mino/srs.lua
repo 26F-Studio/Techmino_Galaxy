@@ -8,8 +8,8 @@ SRS.centerTex=GC.load{10,10,
     {'setCL',1,1,1},
     {'fCirc',5,5,2},
 }
-SRS[1]={-- This is a MINODATA for S piece
-    [0]={-- This is a STATE
+SRS[1]={ -- This is a MINODATA for S piece
+    [0]={ -- This is a STATE
         -- If field 'center' exist(center={x,y}, (x=right Y=up) ), will draw spin center and be used for calculate base X/Y bias
         -- You can see ".centerPreset='common'" up there, so no need to set center here
 
@@ -38,15 +38,15 @@ SRS[1]={-- This is a MINODATA for S piece
     },
 }
 for i=2,5 do
-    SRS[i]=SRS[1]-- Don't worry about duplicating object, I will deep copy all of them later
+    SRS[i]=SRS[1] -- Don't worry about duplicating object, I will deep copy all of them later
 end
-SRS[6]={-- O
+SRS[6]={ -- O
     [0]={R={},L={},F={}},
     [1]={R={},L={},F={}},
     [2]={R={},L={},F={}},
     [3]={R={},L={},F={}},
 }
-SRS[7]={-- I
+SRS[7]={ -- I
     [0]={
         R={test={'+0+0','-2+0','+1+0','-2-1','+1+2'}},
         L={test={'+0+0','-1+0','+2+0','-1+2','+2-1'}},
@@ -68,6 +68,6 @@ SRS[7]={-- I
         F={test={'+0+0','+0-3','+0+3'}},
     },
 }
-for i=8,29 do SRS[i]=minoRotSys.TRS[i] end-- Add non-tetrominos' rotations
+for i=8,29 do SRS[i]=minoRotSys.TRS[i] end -- Add non-tetrominos' rotations
 
 return SRS

@@ -53,6 +53,7 @@ local correctPositions={
     {x=10, y=1, dir={1,3}},
 }
 
+---@type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -68,6 +69,7 @@ return {
         spawnDelay=62,
         dropDelay=1e99,
         lockDelay=1e99,
+        deathDelay=0,
         nextSlot=3,
         holdSlot=0,
         seqType='none',
@@ -100,7 +102,7 @@ return {
                         P.modeData.rotCount=1e99
                     end
                     if P.modeData.rotCount>2 then
-                        table.insert(P.nextQueue,1,P:getMino(Minoes[P.hand.name].id))
+                        table.insert(P.nextQueue,1,P:getMino(Mino.getID(P.hand.name)))
                         P.hand=false
                         P.spawnTimer=1000
                         P:playSound('fail')
@@ -120,7 +122,7 @@ return {
                 P.modeData.rotDir=false
                 P.modeData.rotCount=0
                 local ans=correctPositions[#P.dropHistory+1]
-                local shape=TABLE.shift(Minoes[P.hand.name].shape,1)
+                local shape=TABLE.shift(Mino.getShape(P.hand.name),1)
                 if ans then
                     if ans.dir[1]~=0 then
                         shape=TABLE.rotate(shape,ans.dir[1]==1 and 'R' or ans.dir[1]==2 and ans.dir[1] and 'F' or 'L')
@@ -137,7 +139,7 @@ return {
             end,
             afterDrop=function(P)
                 if P.modeData.shape and not (P.handX==P.modeData.x and P.handY==P.modeData.y and TABLE.find(P.modeData.dir,P.hand.direction)) then
-                    table.insert(P.nextQueue,1,P:getMino(Minoes[P.hand.name].id))
+                    table.insert(P.nextQueue,1,P:getMino(Mino.getID(P.hand.name)))
                     P.hand=false
                 else
                     P.modeData.shape=false

@@ -1,3 +1,4 @@
+---@type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -8,6 +9,7 @@ return {
         event={
             playerInit=mechLib.mino.dig.practice_event_playerInit[12],
             afterClear=mechLib.mino.dig.practice_event_afterClear,
+            gameOver=mechLib.mino.progress.dig_practice_gameOver,
         },
     }},
 }

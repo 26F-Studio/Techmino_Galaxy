@@ -4,6 +4,7 @@ local gc_translate=gc.translate
 local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 
+---@type Techmino.skin.puyo
 local S={}
 S.base='puyo_template'
 
@@ -16,17 +17,13 @@ local function drawSide(B,x,y,bx,by)
     if B[y+1] then t=B[y+1][x  ] if t and t.connClear and t.color==c then gc_rectangle('fill',bx+8,  by,    24, 5) end end
 end
 
-function S.drawFieldCell(F)
-    F=F._matrix
+function S.drawFieldCell(C,F,x,y)
     local flashing=S.getTime()%100<=50
-    for y=1,#F do for x=1,#F[1] do
-        local C=F[y][x]
-        if C and (not C.clearing or flashing) then
-            gc_setColor(ColorTable[C.color])
-            gc_rectangle('fill',(x-1)*40+2,-y*40+2,36,36,15)
-            drawSide(F,x,y,(x-1)*40,-y*40)
-        end
-    end end
+    if C and (not C.clearing or flashing) then
+        gc_setColor(ColorTable[C.color])
+        gc_rectangle('fill',(x-1)*40+2,-y*40+2,36,36,15)
+        drawSide(F,x,y,(x-1)*40,-y*40)
+    end
 end
 
 function S.drawHand(B,handX,handY)

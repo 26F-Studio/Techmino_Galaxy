@@ -7,6 +7,7 @@ local function startGame(modeName)
     GAME.load(modeName)
 end
 function scene.enter()
+    PROGRESS.setInteriorBG()
     if SCN.args[1] then
         startGame(SCN.args[1])
     end
@@ -23,7 +24,6 @@ local function sysAction(action)
         startGame(GAME.mode.name)
     elseif action=='back' then
         if canPause() then
-            SFX.play('pause')
             SCN.swapTo('pause_in','none')
         else
             SCN.back('none')
@@ -105,6 +105,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{name='pause',type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
+    {name='pause',type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
 }
 return scene

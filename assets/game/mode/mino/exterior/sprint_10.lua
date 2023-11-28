@@ -1,3 +1,4 @@
+---@type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -7,13 +8,10 @@ return {
     settings={mino={
         seqType='bag7_sprint',
         event={
-            playerInit=mechLib.mino.statistics.event_playerInit,
-            afterClear={
-                mechLib.mino.statistics.event_afterClear,
-                mechLib.mino.sprint.event_afterClear[10],
-            },
+            afterClear=mechLib.mino.sprint.event_afterClear[10],
             drawInField=mechLib.mino.sprint.event_drawInField[10],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[10],
+            gameOver=mechLib.mino.progress.sprint_10_gameOver,
         },
     }},
 }

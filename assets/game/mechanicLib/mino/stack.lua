@@ -9,24 +9,24 @@ local scale={
     'E7','G7','A7','C8',
 }
 local lineFont={
-    30,35,40,45,-- 1~4
-    50,50,55,55,55,-- 5~9
-    60,60,60,60,60,-- 10~14
-    75,75,75,80,80,-- 15~19
-    85,85,-- 20,21
-    90,90,-- 22,23
-    95,95,-- 24,25
-    100,-- 26+
+    30,35,40,45, -- 1~4
+    50,50,55,55,55, -- 5~9
+    60,60,60,60,60, -- 10~14
+    75,75,75,80,80, -- 15~19
+    85,85, -- 20,21
+    90,90, -- 22,23
+    95,95, -- 24,25
+    100, -- 26+
 }
 local function outStackState(P)
     return not P.modeData.stack_enabled
 end
 
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local stack={}
 
---- @param fall? boolean
---- @param timeLimit? number @Automatically quit when time up (if given)
+---@param fall? boolean
+---@param timeLimit? number Automatically quit when time up (if given)
 function stack.turnOn_auto(P,fall,timeLimit)
     if not P.modeData.stack_enabled then
         stack.switch_auto(P,fall,timeLimit)
@@ -40,8 +40,8 @@ function stack.turnOff_auto(P)
 end
 
 
---- @param fall? boolean
---- @param timeLimit? number @Automatically quit when time up (if given)
+---@param fall? boolean
+---@param timeLimit? number Automatically quit when time up (if given)
 function stack.switch_auto(P,fall,timeLimit)
     if fall==nil then fall=true end
     stack.switch(P)
@@ -58,9 +58,9 @@ function stack.switch(P)
         md.stack_enabled=true
         md.stack_lines=0
         md.stack_highestLine=0
-        md.stack_lineList={}-- For no-fall mode
+        md.stack_lineList={} -- For no-fall mode
         md.stackTextHeight=0
-        md._stackTextHeight=false-- For line number animation
+        md._stackTextHeight=false -- For line number animation
 
         md.stack_original_clearRule=P.settings.clearRule
         P.settings.clearRule='none'
@@ -72,18 +72,27 @@ function stack.switch(P)
         md.stack_lockDelay=P.settings.lockDelay
         P.settings.dropDelay,P.settings.lockDelay=1e99,1e99
 
+        P.particles.boardSmoke:start()
         BGM.set('all','highgain',.626,.26)
     else
         if md.stack_lines>0 then
             P:say{
-                text=tostring(md.stack_lines),
-                y=md._stackTextHeight or md.stackTextHeight,
+                text=Text.clearName[min(md.stack_lines,21)],
                 size=min(lineFont[min(md.stack_lines,26)]*2,100),
                 duration=min(md.stack_lines^.5*.626,3),
                 type='bold',
                 style='zoomout',
                 styleArg=.626,
             }
+            if md.stack_lines>=8 then
+                P:say{
+                    text=Text.clearLines:repD(md.stack_lines),
+                    y=100,
+                    size=min(lineFont[min(md.stack_lines,26)]*2,100)/2,
+                    duration=min(md.stack_lines^.5*.626,3),
+                    styleArg=.626,
+                }
+            end
         end
 
         P.settings.clearRule=md.stack_original_clearRule
@@ -107,6 +116,7 @@ function stack.switch(P)
         P.settings.lockDelay=md.stack_lockDelay
         md.stack_dropDelay,md.stack_lockDelay=nil,nil
 
+        P.particles.boardSmoke:pause()
         BGM.set('all','highgain',1,.1)
     end
 end

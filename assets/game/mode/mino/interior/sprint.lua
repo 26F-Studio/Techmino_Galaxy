@@ -1,8 +1,9 @@
+---@type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('race',PROGRESS.getMain()==1 and 'simp' or 'base')
+        playBgm('race',PROGRESS.get('main')==1 and 'simp' or 'base')
         BG.set('none')
     end,
     settings={mino={
@@ -10,15 +11,14 @@ return {
         clearMovement='teleBack',
         particles=false,
         shakeness=0,
+        deathDelay=0,
         soundEvent={countDown=mechLib.mino.misc.interior_soundEvent_countDown},
         event={
-            playerInit=mechLib.mino.statistics.event_playerInit,
             afterClear={
-                mechLib.mino.statistics.event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
                 function(P)
-                    if PROGRESS.getMain()>=2 and P.modeData.line>10 and P.isMain then
-                        BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.line-10)/20,1),2.6)
+                    if PROGRESS.get('main')>=2 and P.modeData.stat.line>10 and P.isMain then
+                        BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-10)/20,1),2.6)
                     end
                 end,
             },
@@ -32,21 +32,21 @@ return {
             PROGRESS.setInteriorScore('marathon',30)
             PROGRESS.setInteriorScore('sprint',
                 P.gameTime<60e3  and 200 or
-                P.gameTime<90e3  and MATH.interpolate(P.gameTime,90e3,140,60e3,200) or
-                P.gameTime<180e3 and MATH.interpolate(P.gameTime,180e3,90,90e3,140) or
-                P.gameTime<300e3 and MATH.interpolate(P.gameTime,300e3,40,180e3,90) or
+                P.gameTime<90e3  and MATH.interpolate(90e3,140,60e3,200,P.gameTime) or
+                P.gameTime<180e3 and MATH.interpolate(180e3,90,90e3,140,P.gameTime) or
+                P.gameTime<300e3 and MATH.interpolate(300e3,40,180e3,90,P.gameTime) or
                 40
             )
         else
-            PROGRESS.setInteriorScore('marathon',P.modeData.line*0.75)
-            PROGRESS.setInteriorScore('sprint',P.modeData.line)
+            PROGRESS.setInteriorScore('marathon',P.modeData.stat.line*0.75)
+            PROGRESS.setInteriorScore('sprint',P.modeData.stat.line)
         end
     end,
     resultPage=function(time)
         local P=GAME.mainPlayer
         if not P then return end
 
-        local line=math.min(P.modeData.line,math.floor(math.max(time-.26,0)*62))
+        local line=math.min(P.modeData.stat.line,math.floor(math.max(time-.26,0)*62))
 
         -- XX/40
         FONT.set(100)

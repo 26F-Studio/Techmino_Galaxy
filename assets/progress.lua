@@ -5,7 +5,8 @@ local gc=love.graphics
         Sum>=100 → II
         Single>=200 or Sum>=350 → III
 ]]
-local prgs={
+local prgs=setmetatable({
+    launchCount=0,
     main=1,
     tutorial='000000',
     interiorScore={
@@ -13,17 +14,23 @@ local prgs={
         sprint=0,
         marathon=0,
     },
-    minoUnlocked=true,
-    puyoUnlocked=false,
-    gemUnlocked=false,
     bgmUnlocked={},
-    minoModeUnlocked={
-        -- 0 = reached, 1~5 = rank reached
-        sprint_40=0,
-        marathon=0,
-        dig_practice=0,
+    mino_stdMap={
+        unlocked=true,
+        modeUnlocked={
+            -- 0 = unlocked, 1~5 = rank got
+            sprint_40=0,
+            marathon=0,
+            dig_practice=0,
+        },
     },
-}
+    puyo_wip=false,
+    gem_wip=false,
+},{
+    __index=function(_,k)
+        LOG("Attempt to read undefined progress data: "..tostring(k))
+    end,
+})
 
 local function sysInfoFunc()
     if not SETTINGS.system.powerInfo then return end
@@ -71,8 +78,8 @@ local function sysInfoFunc()
             gc.setColor(COLOR.lG)
             for i=1,math.ceil(pow/x) do
                 local a=6.2*math.sin(-love.timer.getTime()*5+i*.626)
-                gc.rectangle('fill',3*i-2,9-1.5+a,3,3)
-                gc.rectangle('fill',3*i-2,9-1.5-a,3,3)
+                GC.mRect('fill',3*i-.5,9+a,3,3)
+                GC.mRect('fill',3*i-.5,9-a,3,3)
             end
         end
     end
@@ -80,19 +87,22 @@ end
 
 local PROGRESS={}
 
-function PROGRESS.getHash(t)
+local function zDump(t)
     local list={}
     for k,v in next,t do
         if k~='hash' then
             if type(v)=='number' or type(v)=='string' or type(v)=='boolean' then
                 table.insert(list,k..tostring(v))
             elseif type(v)=='table' then
-                table.insert(list,k)
+                table.insert(list,k..zDump(v))
             end
         end
     end
     table.sort(list)
-    return love.data.encode('string','base64',STRING.digezt(table.concat(list)))
+    return table.concat(list)
+end
+function PROGRESS.getHash(t)
+    return love.data.encode('string','base64',STRING.digezt(zDump(t)))
 end
 function PROGRESS.save()
     prgs.rnd=math.random(26,2e6)
@@ -103,12 +113,14 @@ function PROGRESS.load()
     local success,res=pcall(FILE.load,'conf/progress','-json -canskip')
     if success then
         if res then
-            if res.hash==PROGRESS.getHash(res) then
-                TABLE.coverR(res,prgs)
-            else
-                MSG.new('info',"Hash not match")
-            end
+            TABLE.coverR(res,prgs)
+            -- if res.hash==PROGRESS.getHash(res) then
+            --     TABLE.coverR(res,prgs)
+            -- else
+            --     MSG.new('info',"Hash not match")
+            -- end
         end
+        prgs.launchCount=prgs.launchCount+1
     else
         MSG.new('info',"Load progress failed: "..res)
     end
@@ -133,7 +145,7 @@ function PROGRESS.applyCoolWaitTemplate()
             GC.setColor(1,1,1,a)
             GC.applyTransform(SCR.xOy_dr)
             GC.mDrawL(z,
-                math.min(math.floor(t*60)%62,52)%52+1,-- floor(t*60)%62 → 0~61; min(ans) → 0~52~52; ans%52+1 → 1~52,1~1
+                math.min(math.floor(t*60)%62,52)%52+1, -- floor(t*60)%62 → 0~61; min(ans) → 0~52~52; ans%52+1 → 1~52,1~1
                 -160,-150,nil,1.5*(1-(1-a)^2.6)
             )
             GC.setBlendMode('alpha')
@@ -154,8 +166,8 @@ function PROGRESS.setEnv(env)
                 gc.setColor(1,1,1)
                 gc.setLineWidth(2)
                 gc.translate(x,y)
-                if love.mouse.isDown(1) then gc.rectangle('fill',-5,-5,10,10) end
-                if love.mouse.isDown(2) then gc.rectangle('line',-8,-8,16,16) end
+                if love.mouse.isDown(1) then GC.mRect('fill',0,0,10,10) end
+                if love.mouse.isDown(2) then GC.mRect('line',0,0,16,16) end
                 gc.setColor(1,1,1,.626)
                 gc.setLineWidth(4)
                 gc.line(0,-15,0,15)
@@ -172,9 +184,9 @@ function PROGRESS.setEnv(env)
                 gc.setLineWidth(2)
                 gc.translate(x,y)
                 gc.rotate(love.timer.getTime()%MATH.tau)
-                gc.rectangle('line',-10,-10,20,20)
-                if love.mouse.isDown(1) then gc.rectangle('fill',-4,-4,8,8) end
-                if love.mouse.isDown(2) then gc.rectangle('line',-6,-6,12,12) end
+                GC.mRect('line',0,0,20,20)
+                if love.mouse.isDown(1) then GC.mRect('fill',0,0,8,8) end
+                if love.mouse.isDown(2) then GC.mRect('line',0,0,12,12) end
                 if love.mouse.isDown(3) then gc.line(-8,-8,8,8) gc.line(-8,8,8,-8) end
                 gc.setColor(1,1,1,.626)
                 gc.line(0,-20,0,20)
@@ -213,7 +225,7 @@ function PROGRESS.transcendTo(n)
             end,
         }
     elseif n==3 then
-        PROGRESS.setBgmUnlocked('blank',2)-- Or it can be skiped if sub 60 in 40L at first play
+        PROGRESS.setBgmUnlocked('blank',2) -- Or it can be skiped if sub 60 in 40L at first play
         local sumT=0
         WAIT{
             coverAlpha=0,
@@ -278,6 +290,7 @@ function PROGRESS.quit()
             end,
         }
     elseif prgs.main<=4 then
+        BGM.stop()
         local t=1
         WAIT.setDefaultDraw(NULL)
         WAIT{
@@ -324,7 +337,7 @@ function PROGRESS.drawExteriorHeader(h)
 end
 
 -- Get
-function PROGRESS.getMain() return prgs.main end
+function PROGRESS.get(k) return prgs[k] end
 function PROGRESS.getBgmUnlocked(name) return prgs.bgmUnlocked[name] end
 function PROGRESS.getTutorialPassed(n)
     if n then
@@ -335,12 +348,8 @@ function PROGRESS.getTutorialPassed(n)
 end
 function PROGRESS.getInteriorScore(mode) return prgs.interiorScore[mode] end
 function PROGRESS.getTotalInteriorScore() return prgs.interiorScore.dig+prgs.interiorScore.sprint+prgs.interiorScore.marathon end
-function PROGRESS.getPuyoUnlocked() return prgs.puyoUnlocked end
-function PROGRESS.getMinoUnlocked() return prgs.minoUnlocked end
-function PROGRESS.getGemUnlocked() return prgs.gemUnlocked end
--- function PROGRESS.getPuyoModeUnlocked(name) return name and prgs.puyoModeUnlocked[name] or prgs.puyoModeUnlocked end
-function PROGRESS.getMinoModeUnlocked(name) return name and prgs.minoModeUnlocked[name] or prgs.minoModeUnlocked end
--- function PROGRESS.getGemModeUnlocked(name) return name and prgs.gemModeUnlocked[name] or prgs.gemModeUnlocked end
+function PROGRESS.getModeUnlocked(mode) return prgs[mode] and prgs[mode].unlocked end
+function PROGRESS.getModeState(style,mode) return prgs[style] and (mode and prgs[style].modeUnlocked[mode] or prgs[style].modeUnlocked) end
 
 -- Set
 function PROGRESS.setMain(n)
@@ -376,11 +385,25 @@ function PROGRESS.setInteriorScore(mode,score)
         PROGRESS.save()
     end
 end
-function PROGRESS.setPuyoUnlocked(bool) prgs.puyoUnlocked=bool end
-function PROGRESS.setMinoUnlocked(bool) prgs.minoUnlocked=bool end
-function PROGRESS.setGemUnlocked(bool) prgs.gemUnlocked=bool end
--- function PROGRESS.setPuyoModeUnlocked(name,state) prgs.puyoModeUnlocked[name]=state or 0  end
-function PROGRESS.setMinoModeUnlocked(name,state) prgs.minoModeUnlocked[name]=state or 0  end
--- function PROGRESS.setGemModeUnlocked(name,state) prgs.gemModeUnlocked[name]=state or 0  end
+function PROGRESS.setModeUnlocked(style,bool)
+    if not prgs[style] then return end
+    prgs[style].unlocked=bool
+    PROGRESS.save()
+end
+function PROGRESS.setModeState(style,name,state,force)
+    if not prgs[style] then return end
+    if not state then state=0 end
+    local orgState=prgs[style].modeUnlocked[name] or -1
+    if state>orgState or force then
+        prgs[style].modeUnlocked[name]=state
+        PROGRESS.save()
+        if state==0 and state>orgState then
+            if TASK.lock('minomap_unlockSound_background',2.6) then
+                SFX.play('map_unlock_background')
+                MSG.new('check',Text.new_level_unlocked,2.6)
+            end
+        end
+    end
+end
 
 return PROGRESS

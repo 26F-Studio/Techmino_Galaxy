@@ -1,5 +1,5 @@
 -- More realistic space background
-local ins,rem=table.insert,table.remove
+local ins=table.insert
 local rnd=math.random
 local circle=GC.circle
 local stars={}
@@ -26,9 +26,9 @@ function back.draw()
     GC.setColor(1,1,1)
     for i=1,620 do
         local s=stars[i]
-        local x=(s.x-camX)*1/(1+s.z)
-        local y=(s.y-camY)*1/(1+s.z)
-        local r=s.r*1/(1+s.z)
+        local x=(s.x-camX)/(1+s.z)
+        local y=(s.y-camY)/(1+s.z)
+        local r=s.r/(1+s.z)
         circle('fill',x*w,y*h,r)
     end
 end

@@ -5,6 +5,7 @@ local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 local gc_setLineWidth=gc.setLineWidth
 
+---@type Techmino.skin.puyo
 local S={}
 S.base='mino_template'
 
@@ -13,16 +14,12 @@ function S.drawFieldBackground(fieldW)
     gc_rectangle('fill',0,0,40*fieldW,-80*fieldW)
 end
 
-function S.drawFieldCell(F)
-    F=F._matrix
+function S.drawFieldCell(C,_,x,y)
     local flashing=S.getTime()%100<=50
-    for y=1,#F do for x=1,#F[1] do
-        local C=F[y][x]
-        if C and (not C.clearing or flashing) then
-            gc_setColor(ColorTable[C.color])
-            gc_rectangle('fill',(x-1)*40+2,-y*40+2,36,36,15)
-        end
-    end end
+    if C and (not C.clearing or flashing) then
+        gc_setColor(ColorTable[C.color])
+        gc_rectangle('fill',x,y,36,36,15)
+    end
 end
 
 function S.drawGhost(B,handX,ghostY)

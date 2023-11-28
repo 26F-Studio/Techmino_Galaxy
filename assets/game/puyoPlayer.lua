@@ -8,48 +8,48 @@ local gc_draw,gc_rectangle=gc.draw,gc.rectangle
 
 local max,min=math.max,math.min
 local floor=math.floor
-local rnd=math.random
 local ins,rem=table.insert,table.remove
 
 local inst=SFX.playSample
 
---- @class Techmino.Player.puyo: Techmino.Player
---- @field field Techmino.RectField
+---@class Techmino.Player.puyo: Techmino.Player
+---@field field Techmino.RectField
 local PP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
 
 --------------------------------------------------------------
 -- Function tables
 local defaultSoundFunc={
     countDown=function(num)
-        if num==0 then-- 6, 3+6+6
+        if num==0 then -- 6, 3+6+6
             inst('bass',.8,'A3')
             inst('lead',.9,'A4','E5','A5')
-        elseif num==1 then-- 5, 3+7
+        elseif num==1 then -- 5, 3+7
             inst('bass',.9,'G3')
             inst('lead',.9,'B4','E5')
-        elseif num==2 then-- 4, 6+2
+        elseif num==2 then -- 4, 6+2
             inst('bass','F3')
             inst('lead',.8,'A4','D5')
-        elseif num==3 then-- 6+6
+        elseif num==3 then -- 6+6
             inst('bass',.9,'A3','E4')
             inst('lead',.8,'A4')
-        elseif num==4 then-- 5+7, 5
+        elseif num==4 then -- 5+7, 5
             inst('bass',.9,'G3','B3')
             inst('lead',.6,'G4')
-        elseif num==5 then-- 4+6, 4
+        elseif num==5 then -- 4+6, 4
             inst('bass',.8,'F3','A3')
             inst('lead',.3,'F4')
         elseif num<=10 then
             inst('bass',2.2-num/5,'A2','E3')
         end
     end,
-    move=           function() SFX.play('move')             end,
+    move=           function() SFX.play('move',.6)          end,
+    move_down=      function() SFX.play('move_down',.6)     end,
     move_failed=    function() SFX.play('move_failed')      end,
     rotate=         function() SFX.play('rotate')           end,
     initrotate=     function() SFX.play('initrotate')       end,
     rotate_failed=  function() SFX.play('rotate_failed')    end,
     rotate_special= function() SFX.play('rotate_special')   end,
-    touch=          function() SFX.play('touch',.5)         end,
+    touch=          function() SFX.play('touch')            end,
     drop=           function() SFX.play('drop')             end,
     lock=           function() SFX.play('lock')             end,
     clear=function(lines)
@@ -62,36 +62,36 @@ local defaultSoundFunc={
         )
     end,
     chain=setmetatable({
-        function() inst('bass',.70,'A2') end,-- 1 chain
-        function() inst('bass',.75,'C3') end,-- 2 chain
-        function() inst('bass',.80,'D3') end,-- 3 chain
-        function() inst('bass',.85,'E3') end,-- 4 chain
-        function() inst('bass',.90,'G3') end,-- 5 chain
-        function() inst('bass',.90,'A3') inst('lead',.20,'A2') end,-- 6 chain
-        function() inst('bass',.75,'C4') inst('lead',.40,'C3') end,-- 7 chain
-        function() inst('bass',.60,'D4') inst('lead',.60,'D3') end,-- 8 chain
-        function() inst('bass',.40,'E4') inst('lead',.75,'E3') end,-- 9 chain
-        function() inst('bass',.20,'G4') inst('lead',.90,'G3') end,-- 10 chain
-        function() inst('bass',.20,'A4') inst('lead',.85,'A3') end,-- 11 chain
-        function() inst('bass',.40,'A4') inst('lead',.80,'C4') end,-- 12 chain
-        function() inst('bass',.60,'A4') inst('lead',.75,'D4') end,-- 13 chain
-        function() inst('bass',.75,'A4') inst('lead',.70,'E4') end,-- 14 chain
-        function() inst('bass',.90,'A4') inst('lead',.65,'G4') end,-- 15 chain
-        function() inst('bass',.90,'A4') inst('bass',.70,'E5') inst('lead','A4') end,-- 16 chain
-        function() inst('bass',.85,'A4') inst('bass',.75,'E5') inst('lead','C5') end,-- 17 chain
-        function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end,-- 18 chain
-        function() inst('bass',.75,'A4') inst('bass',.85,'E5') inst('lead','E5') end,-- 19 chain
-        function() inst('bass',.70,'A4') inst('bass',.90,'E5') inst('lead','G5') end,-- 20 chain
+        function() inst('bass',.70,'A2') end, -- 1 chain
+        function() inst('bass',.75,'C3') end, -- 2 chain
+        function() inst('bass',.80,'D3') end, -- 3 chain
+        function() inst('bass',.85,'E3') end, -- 4 chain
+        function() inst('bass',.90,'G3') end, -- 5 chain
+        function() inst('bass',.90,'A3') inst('lead',.20,'A2') end, -- 6 chain
+        function() inst('bass',.75,'C4') inst('lead',.40,'C3') end, -- 7 chain
+        function() inst('bass',.60,'D4') inst('lead',.60,'D3') end, -- 8 chain
+        function() inst('bass',.40,'E4') inst('lead',.75,'E3') end, -- 9 chain
+        function() inst('bass',.20,'G4') inst('lead',.90,'G3') end, -- 10 chain
+        function() inst('bass',.20,'A4') inst('lead',.85,'A3') end, -- 11 chain
+        function() inst('bass',.40,'A4') inst('lead',.80,'C4') end, -- 12 chain
+        function() inst('bass',.60,'A4') inst('lead',.75,'D4') end, -- 13 chain
+        function() inst('bass',.75,'A4') inst('lead',.70,'E4') end, -- 14 chain
+        function() inst('bass',.90,'A4') inst('lead',.65,'G4') end, -- 15 chain
+        function() inst('bass',.90,'A4') inst('bass',.70,'E5') inst('lead','A4') end, -- 16 chain
+        function() inst('bass',.85,'A4') inst('bass',.75,'E5') inst('lead','C5') end, -- 17 chain
+        function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end, -- 18 chain
+        function() inst('bass',.75,'A4') inst('bass',.85,'E5') inst('lead','E5') end, -- 19 chain
+        function() inst('bass',.70,'A4') inst('bass',.90,'E5') inst('lead','G5') end, -- 20 chain
     },{__call=function(self,chain)
         if self[chain] then
             self[chain]()
         else
             inst('bass',.626,'A4')
             local phase=(chain-21)%12
-            inst('lead',1-((11-phase)/12)^2,41+phase)-- E4+
-            inst('lead',1-((11-phase)/12)^2,46+phase)-- A4+
-            inst('lead',1-(phase/12)^2,     53+phase)-- E5+
-            inst('lead',1-(phase/12)^2,     58+phase)-- A5+
+            inst('lead',1-((11-phase)/12)^2,41+phase) -- E4+
+            inst('lead',1-((11-phase)/12)^2,46+phase) -- A4+
+            inst('lead',1-(phase/12)^2,     53+phase) -- E5+
+            inst('lead',1-(phase/12)^2,     58+phase) -- A5+
         end
     end,__metatable=true}),
     frenzy=      function() SFX.play('frenzy')      end,
@@ -108,164 +108,136 @@ PP.scriptCmd={
 --------------------------------------------------------------
 -- Actions
 PP._actions={}
-PP._actions.moveLeft={
-    press=function(P)
-        P.moveDir=-1
-        P.moveCharge=0
-        if P.hand then
-            if P:moveLeft() then
-                P:playSound('move')
-                if P.handY==P.ghostY then
-                    P:playSound('touch')
-                end
-            else
-                P:playSound('move_failed')
-            end
-        else
-            P.keyBuffer.move='L'
-        end
-    end,
-    release=function(P)
-        if P.keyBuffer.move=='L' then P.keyBuffer.move=false end
-        if P.deathTimer then P:moveRight() end
-    end
-}
-PP._actions.moveRight={
-    press=function(P)
-        P.moveDir=1
-        P.moveCharge=0
-        if P.hand then
-            if P:moveRight() then
-                P:playSound('move')
-                if P.handY==P.ghostY then
-                    P:playSound('touch')
-                end
-            else
-                P:playSound('move_failed')
-            end
-        else
-            P.keyBuffer.move='R'
-        end
-    end,
-    release=function(P)
-        if P.keyBuffer.move=='R' then P.keyBuffer.move=false end
-        if P.deathTimer then P:moveLeft() end
-    end
-}
-PP._actions.rotateCW={
-    press=function(P)
-        if P.hand then
-            P:rotate('R')
-        else
-            P.keyBuffer.rotate='R'
-        end
-    end,
-    release=function(P)
-        if P.keyBuffer.rotate=='R' then P.keyBuffer.rotate=false end
-    end
-}
-PP._actions.rotateCCW={
-    press=function(P)
-        if P.hand then
-            P:rotate('L')
-        else
-            P.keyBuffer.rotate='L'
-        end
-    end,
-    release=function(P)
-        if P.keyBuffer.rotate=='L' then P.keyBuffer.rotate=false end
-    end
-}
-PP._actions.rotate180={
-    press=function(P)
-        if P.hand then
-            P:rotate('F')
-        else
-            P.keyBuffer.rotate='F'
-        end
-    end,
-    release=function(P)
-        if P.keyBuffer.rotate=='F' then P.keyBuffer.rotate=false end
-    end
-}
-PP._actions.softDrop={
-    press=function(P)
-        P.downCharge=0
-        if P.hand and (P.handY>P.ghostY or P.deathTimer) and P:moveDown() then
-            P:playSound('move')
-        end
-    end,
-    release=function(P)
-        if P.deathTimer then P:moveUp() end
-    end
-}
-PP._actions.hardDrop={
-    press=function(P)
-        if P.hdLockMTimer~=0 or P.hdLockATimer~=0 then
-            P:playSound('rotate_failed')
-        elseif P.hand and not P.deathTimer then
-            P.hdLockMTimer=P.settings.hdLockM
-            P:puyoDropped()
-        else
-            P.keyBuffer.hardDrop=true
-        end
-    end,
-    release=function(P)
-        P.keyBuffer.hardDrop=false
-    end
-}
-
-PP._actions.func1=NULL
-PP._actions.func2=NULL
-PP._actions.func3=NULL
-PP._actions.func4=NULL
-PP._actions.func5=NULL
-PP._actions.func6=NULL
-
-for k,v in next,PP._actions do PP._actions[k]=PP:_getActionObj(v) end
+for k,v in next,mechLib.mino.actions do PP._actions[k]=PP:_getActionObj(v) end
 --------------------------------------------------------------
 -- Effects
-function PP:createMoveParticle(x1,y1,x2,y2)
-    local p=self.particles.star
-    p:setParticleLifetime(.26,.5)
-    p:setEmissionArea('none')
+function PP:createMoveEffect(x1,y1,x2,y2)
+    local p=self.particles.rectShade
+    local dx,dy=self:getSmoothPos()
     for x=x1,x2,x2>x1 and 1 or -1 do for y=y1,y2,y2>y1 and 1 or -1 do
-        p:setPosition(
-            (x+rnd()*#self.hand.matrix[1]-1)*40,
-            -(y+rnd()*#self.hand.matrix-1)*40
-        )
+        p:setPosition((x-.5)*40+dx,-(y-.5)*40+dy)
         p:emit(1)
     end end
 end
-function PP:createClearParticle(x,y)
+function PP:createHandEffect(r,g,b,a)
+    local CB,bx,by=self.hand.matrix,self.handX,self.handY
+    local dx,dy=self:getSmoothPos()
+    local p=self.particles.tiltRect
+    p:setColors(r,g,b,a or 1,r,g,b,0)
+    for y=1,#CB do for x=1,#CB[1] do
+        local c=CB[y][x]
+        if c then
+            p:setPosition(
+                (bx+x-1.5)*40+dx,
+                -(by+y-1.5)*40+dy
+            )
+            p:emit(1)
+        end
+    end end
+end
+function PP:createTuckEffect()
+end
+function PP:createLockEffect()
+    local p=self.particles.trail
+    p:setPosition(
+        (self.handX+#self.hand.matrix[1]/2-1)*40,
+        -(self.handY+#self.hand.matrix/2-1)*40
+    )
+    p:emit(1)
+end
+function PP:createClearEffect(x,y)
     local p=self.particles.star
     p:setParticleLifetime(.26,.626)
     p:setEmissionArea('ellipse',30,30,0,true)
-    p:setPosition(40*x-20,-40*y+20)
+    p:setPosition(40*(x-.5),-40*(y-.5))
     p:emit(6)
 end
-function PP:createLockParticle(x,y)
-    local p=self.particles.trail
-    p:setPosition(
-        (x+#self.hand.matrix[1]/2-1)*40,
-        -(y+#self.hand.matrix/2-1)*40
-    )
-    p:emit(1)
+function PP:createSuffocateEffect()
+end
+function PP:createDesuffocateEffect()
+end
+function PP:setCellBias(x,y,bias)
+    local c=self.field:getCell(x,y)
+    if c then
+        bias.x=40*(bias.x or 0)
+        bias.y=-40*(bias.y or 0)
+        if c.bias then
+            bias.x=bias.x+c.bias.x
+            bias.y=bias.y+c.bias.y
+        end
+        c.bias=bias
+    end
+end
+function PP:showInvis(visStep,visMax)
+    for y=1,self.field:getHeight() do
+        for x=1,self.settings.fieldW do
+            local c=self.field:getCell(x,y)
+            if c then
+                c.visTimer=c.visTimer or 0
+                c.visStep=visStep or 1
+                c.visMax=visMax
+            end
+        end
+    end
+end
+function PP:getSmoothPos()
+    if self.deathTimer then
+        return 0,0
+    else
+        return
+            self.moveDir and self.moveCharge<self.settings.das and 15*self.moveDir*(max(self.moveCharge,0)/self.settings.das-.5) or 0,
+            self.ghostY and self.handY>self.ghostY and 40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6 or 0
+    end
 end
 --------------------------------------------------------------
 -- Game methods
 function PP:moveHand(action,a,b,c)
     if action=='moveX' then
-        if self.settings.particles then
-            self:createMoveParticle(self.handX,self.handY,self.handX+a,self.handY)
-        end
         self.handX=self.handX+a
-    elseif action=='drop' or action=='moveY' then
+        self:checkLanding()
         if self.settings.particles then
-            self:createMoveParticle(self.handX,self.handY,self.handX,self.handY+a)
+            local hx,hy=self.handX,self.handY
+            local mat=self.hand.matrix
+            local w,h=#mat[1],#mat
+            if a<0 then
+                for y=1,h do for x=w,1,-1 do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1+1,hy+y-1,hx+x-1+1-a-1,hy+y-1)
+                        break
+                    end end
+                end
+            elseif a>0 then
+                for y=1,h do for x=1,w do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1-1,hy+y-1,hx+x-1-1-a+1,hy+y-1)
+                        break
+                    end end
+                end
+            end
         end
+    elseif action=='drop' or action=='moveY' then
         self.handY=self.handY+a
-    elseif action=='rotate' or action=='reset' then
+        self:checkLanding(true)
+        if self.settings.particles then
+            local hx,hy=self.handX,self.handY
+            local mat=self.hand.matrix
+            local w,h=#mat[1],#mat
+            if a<0 then
+                for x=1,w do for y=h,1,-1 do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1,hy+y-1+1,hx+x-1,hy+y-1+1-a-1)
+                        break
+                    end end
+                end
+            elseif a>0 then
+                for x=1,w do for y=1,h do
+                    if mat[y][x] then
+                        self:createMoveEffect(hx+x-1,hy+y-1-1,hx+x-1,hy+y-1-1-a+1)
+                        break
+                    end end
+                end
+            end
+        end    elseif action=='rotate' or action=='reset' then
         self.handX,self.handY=a,b
     else
         error("WTF why action is "..tostring(action))
@@ -275,22 +247,12 @@ function PP:moveHand(action,a,b,c)
 
     if action=='rotate' then
         self:playSound(c and 'initrotate' or 'rotate')
-        if self.handY==self.ghostY then
-            self:playSound('touch')
-        end
+        self:checkLanding()
     end
 
-    if self.deathTimer then
-        local t=self.deathTimer
-        self.deathTimer=false
-        if self:isSuffocate() then
-            self.deathTimer=t
-        else
-            self:playSound('desuffocate')
-        end
-    end
+    self:tryCancelSuffocate()
 end
-function PP:restorePuyoState(puyo)-- Restore a puyo object's state (only inside, like shape, name, direction)
+function PP:restorePuyoState(puyo) -- Restore a puyo object's state (only inside, like shape, name, direction)
     if puyo._origin then
         for k,v in next,puyo._origin do
             puyo[k]=v
@@ -298,8 +260,12 @@ function PP:restorePuyoState(puyo)-- Restore a puyo object's state (only inside,
     end
     return puyo
 end
-function PP:resetPos()-- Move hand piece to the normal spawn position
+function PP:resetPos() -- Move hand piece to the normal spawn position
     self:moveHand('reset',floor(self.settings.fieldW/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1)
+
+    self.deathTimer=false
+    self.ghostState=false
+
     self.minY=self.handY
     self.ghostY=self.handY
     self:resetPosCheck()
@@ -308,12 +274,11 @@ function PP:resetPos()-- Move hand piece to the normal spawn position
 
 end
 function PP:resetPosCheck()
-    local suffocated-- Cancel deathTimer temporarily, or we cannot apply IMS when hold in suffcating
+    local suffocated -- Cancel deathTimer temporarily, or we cannot apply IMS when hold in suffcating
     if self.deathTimer then
-        local bufferedDeathTimer=self.deathTimer
-        self.deathTimer=false
+        self.ghostState=false
         suffocated=self:isSuffocate()
-        self.deathTimer=bufferedDeathTimer
+        self.ghostState=true
     else
         suffocated=self:isSuffocate()
     end
@@ -321,7 +286,7 @@ function PP:resetPosCheck()
     if suffocated then
         if self.settings.deathDelay>0 then
             self.deathTimer=self.settings.deathDelay
-            self:playSound('suffocate')
+            self.ghostState=true
 
             -- Suffocate IMS, always trigger when held
             if self.keyState.softDrop then self:moveDown() end
@@ -330,15 +295,28 @@ function PP:resetPosCheck()
             end
 
             -- Suffocate IRS
-            if self.settings.easyInitCtrl then
-                if self.keyState.rotate180 then
-                    self:rotate('F',true)
-                elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
-                    self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
+            if self.settings.initRotate then
+                if self.settings.initRotate=='hold' then
+                    if self.keyState.rotate180 then
+                        self:rotate('F',true)
+                    elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
+                        self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
+                    end
+                elseif self.settings.initRotate=='buffer' then
+                    if self.keyBuffer.rotate then
+                        self:rotate(self.keyBuffer.rotate,true)
+                        if not self.keyBuffer.hold then
+                            self.keyBuffer.rotate=false
+                        end
+                    end
                 end
-            elseif self.keyBuffer.rotate then
-                self:rotate(self.keyBuffer.rotate,true)
-                self.keyBuffer.rotate=false
+            end
+            self:tryCancelSuffocate()
+            self:freshGhost()
+
+            if self.deathTimer then
+                self:playSound('suffocate')
+                self:createSuffocateEffect()
             end
         else
 
@@ -352,42 +330,52 @@ function PP:resetPosCheck()
             return
         end
     else
-        -- IMS & IRS
-        if self.settings.easyInitCtrl then
-            if self.keyState.softDrop then self:moveDown() end
-            if self.keyState.moveRight~=self.keyState.moveLeft then
-                if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
-            end
-
-            if self.keyState.rotate180 then
-                self:rotate('F',true)
-            elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
-                self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
-            end
-        else
-            if self.keyBuffer.move then
-                if self.keyBuffer.move=='L' then
-                    self:moveLeft()
-                elseif self.keyBuffer.move=='R' then
-                    self:moveRight()
+        -- IMS
+        if self.settings.initMove then
+            if self.settings.initMove=='hold' then
+                if self.keyState.softDrop then self:moveDown() end
+                if self.keyState.moveRight~=self.keyState.moveLeft then
+                    local origY=self.handY -- For canceling 20G effect of IMS
+                    if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
+                    self.handY=origY
                 end
-                self.keyBuffer.move=false
+            elseif self.settings.initMove=='buffer' then
+                if self.keyBuffer.move then
+                    local origY=self.handY -- For canceling 20G effect of IMS
+                    if self.keyBuffer.move=='L' then
+                        self:moveLeft()
+                    elseif self.keyBuffer.move=='R' then
+                        self:moveRight()
+                    end
+                    self.keyBuffer.move=false
+                    self.handY=origY
+                end
             end
+        end
 
-            if self.keyBuffer.rotate then
-                self:rotate(self.keyBuffer.rotate,true)
-                self.keyBuffer.rotate=false
+        -- IRS
+        if self.settings.initRotate then
+            if self.settings.initRotate=='hold' then
+                if self.keyState.rotate180 then
+                    self:rotate('F',true)
+                elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
+                    self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
+                end
+            elseif self.settings.initRotate=='buffer' then
+                if self.keyBuffer.rotate then
+                    self:rotate(self.keyBuffer.rotate,true)
+                    if not self.keyBuffer.hold then
+                        self.keyBuffer.rotate=false
+                    end
+                end
             end
         end
 
         self:freshGhost()
         self:freshDelay('spawn')
-        if self.handY==self.ghostY then
-            self:playSound('touch')
-        end
     end
 
-    if self.settings.dasHalt>0 then-- DAS halt
+    if self.settings.dasHalt>0 then -- DAS halt
         self.moveCharge=min(self.moveCharge,self.settings.das-self.settings.dasHalt)
     end
 end
@@ -401,7 +389,7 @@ function PP:freshGhost()
         end
 
         -- 20G check
-        if (self.settings.dropDelay<=0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then-- if (temp) 20G on
+        if (self.settings.dropDelay<=0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then -- if (temp) 20G on
             local dY=self.ghostY-self.handY
             self:moveHand('drop',dY)
             self:freshDelay('drop')
@@ -411,7 +399,19 @@ function PP:freshGhost()
         end
     end
 end
-function PP:freshDelay(reason)-- reason can be 'move' or 'drop' or 'spawn'
+function PP:tryCancelSuffocate()
+    if self.deathTimer then
+        self.ghostState=false
+        if self:isSuffocate() then
+            self.ghostState=true
+        else
+            self.deathTimer=false
+            self:playSound('desuffocate')
+            self:createDesuffocateEffect()
+        end
+    end
+end
+function PP:freshDelay(reason) -- reason can be 'move' or 'drop' or 'spawn'
     local fell
     if self.handY<self.minY then
         self.minY=self.handY
@@ -475,10 +475,10 @@ function PP:freshNextQueue()
     end
 end
 function PP:popNext()
-    if self.nextQueue[1] then-- Most cases there is pieces in next queue
+    if self.nextQueue[1] then -- Most cases there is pieces in next queue
         self.hand=rem(self.nextQueue,1)
         self:freshNextQueue()
-    else-- If no piece to use, Next queue are empty, game over
+    else -- If no piece to use, Next queue are empty, game over
         self:finish('ILE')
         return
     end
@@ -487,7 +487,7 @@ function PP:popNext()
 
     self:triggerEvent('afterSpawn')
 
-    if self.keyBuffer.hardDrop then-- IHdS
+    if self.keyBuffer.hardDrop then -- IHdS
         self.keyBuffer.hardDrop=false
         self:puyoDropped()
     end
@@ -522,7 +522,7 @@ function PP:ifoverlap(CB,cx,cy)
     if cy>self.field:getHeight() then return false end
 
     -- Check field
-    if not self.deathTimer then
+    if not self.ghostState then
         for y=1,#CB do for x=1,#CB[1] do
             if CB[y][x] and self.field:getCell(cx+x-1,cy+y-1) then
                 return true
@@ -532,6 +532,11 @@ function PP:ifoverlap(CB,cx,cy)
 
     -- No collision
     return false
+end
+function PP:checkLanding()
+    if self.handY==self.ghostY then
+        self:playSound('touch')
+    end
 end
 function PP:isSuffocate()
     return self:ifoverlap(self.hand.matrix,self.handX,self.handY)
@@ -554,9 +559,6 @@ function PP:moveDown()
     if not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
         self:moveHand('moveY',-1)
         self:freshDelay('drop')
-        if self.handY==self.ghostY then
-            self:playSound('touch')
-        end
         return true
     end
 end
@@ -599,6 +601,7 @@ local PRS={
 function PP:rotate(dir,ifInit)
     if not self.hand then return end
     if dir~='R' and dir~='L' and dir~='F' then error("WTF why dir isn't R/L/F ("..tostring(dir)..")") end
+    local origY=self.handY -- For IRS pushing up
 
     -- Rotate matrix
     local cb=self.hand.matrix
@@ -612,13 +615,13 @@ function PP:rotate(dir,ifInit)
             self.hand.direction=kicks.target
             self:moveHand('rotate',ix,iy,ifInit)
             self:freshGhost()
-            return
+            if self.ghostState and self.settings.IRSpushUp then self:moveHand('moveY',origY-self.handY) end
         end
     end
     self:freshDelay('rotate')
     self:playSound('rotate_failed')
 end
-function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
+function PP:puyoDropped() -- Drop & lock puyo, and trigger a lot of things
     if not self.hand then return end
 
     -- Move down
@@ -628,7 +631,7 @@ function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
         self:playSound('drop')
     end
     if self.settings.particles then
-        self:createLockParticle(self.handX,self.handY)
+        self:createLockEffect()
     end
 
     self:triggerEvent('afterDrop')
@@ -653,7 +656,7 @@ function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
         if l._time==l.time then
             self:dropGarbage(l.power*2)
             rem(self.garbageBuffer,i)
-            i=i-1-- Avoid index error
+            i=i-1 -- Avoid index error
         elseif l.mode==1 then
             l._time=l._time+1
         end
@@ -683,7 +686,7 @@ function PP:puyoDropped()-- Drop & lock puyo, and trigger a lot of things
         self.spawnTimer=self.settings.spawnDelay
     end
 end
-function PP:lock()-- Put puyo into field
+function PP:lock() -- Put puyo into field
     local CB=self.hand.matrix
     local F=self.field
     for y=1,#CB do for x=1,#CB[1] do
@@ -837,7 +840,7 @@ function PP:clearField()
             end
             F:setCell(k,pos[1],pos[2])
             if self.settings.particles then
-                self:createClearParticle(pos[1],pos[2])
+                self:createClearEffect(pos[1],pos[2])
             end
         end
     end
@@ -933,9 +936,6 @@ function PP:updateFrame()
                     end
                     if self.handX~=ox then
                         self:playSound('move')
-                        if self.handY==self.ghostY then
-                            self:playSound('touch')
-                        end
                     end
                 end
             else
@@ -964,10 +964,9 @@ function PP:updateFrame()
                     end
                     if oy~=self.handY then
                         self:freshDelay('drop')
-                        self:playSound('move')
+                        self:playSound('move_down')
                         if self.handY==self.ghostY then
                             self:shakeBoard('-down')
-                            self:playSound('touch')
                         end
                     end
                 end
@@ -1033,11 +1032,8 @@ function PP:updateFrame()
                     if self.dropTimer<=0 then
                         self.dropTimer=SET.dropDelay
                         self:moveHand('drop',-1)
-                        if self.handY==self.ghostY then
-                            self:playSound('touch')
-                        end
                     end
-                elseif self.handY~=self.ghostY then-- If switch to 20G during game, puyo won't dropped to bottom instantly so we force fresh it
+                elseif self.handY~=self.ghostY then -- If switch to 20G during game, puyo won't dropped to bottom instantly so we force fresh it
                     self:freshDelay('drop')
                 end
             end
@@ -1046,6 +1042,7 @@ function PP:updateFrame()
         self.deathTimer=self.deathTimer-1
         if self.deathTimer<=0 then
             self.deathTimer=false
+            self.ghostState=false
 
             self:triggerEvent('whenSuffocate')
             self:freshGhost()
@@ -1090,50 +1087,51 @@ function PP:render()
         GC.stc_rect(0,0,400,-920)
         gc_scale(10/settings.fieldW)
 
-            self:triggerEvent('drawBelowField')-- From frame's bottom-left, 40px a cell
+            self:triggerEvent('drawBelowField') -- From frame's bottom-left, 40px a cell
 
             -- Grid & Cells
             skin.drawFieldBackground(settings.fieldW)
-            skin.drawFieldCell(self.field)
 
-            self:triggerEvent('drawBelowBlock')-- From frame's bottom-left, 40px a cell
+            local F=self.field
+            for y=1,#F do for x=1,#F[1] do
+                local C=F[y][x]
+                if C then
+                    skin.drawFieldCell(C,F,(x-1)*40+2,-y*40+2)
+                end
+            end end
+
+            self:triggerEvent('drawBelowBlock') -- From frame's bottom-left, 40px a cell
 
             if self.hand then
                 local CB=self.hand.matrix
 
                 -- Ghost
-                if not self.deathTimer then
+                if not self.deathTimer and self.ghostY then
                     skin.drawGhost(CB,self.handX,self.ghostY)
                 end
 
                 -- Hand
                 if not self.deathTimer or (2600/(self.deathTimer+260)-self.deathTimer/260)%1>.5 then
                     -- Smooth
-                    local movingX,droppingY=0,0
-                    if not self.deathTimer and self.moveDir and self.moveCharge<self.settings.das then
-                        movingX=15*self.moveDir*(self.moveCharge/self.settings.das-.5)
-                    end
-                    if self.handY>self.ghostY then
-                        droppingY=40*(max(1-self.dropTimer/settings.dropDelay*2.6,0))^2.6
-                    end
-                    gc_translate(movingX,droppingY)
+                    local dx,dy=self:getSmoothPos()
+                    gc_translate(dx,dy)
                     skin.drawHand(CB,self.handX,self.handY)
-                    gc_translate(-movingX,-droppingY)
+                    gc_translate(-dx,-dy)
                 end
             end
 
-            self:triggerEvent('drawBelowMarks')-- From frame's bottom-left, 40px a cell
+            self:triggerEvent('drawBelowMarks') -- From frame's bottom-left, 40px a cell
 
             -- Height lines
-            skin.drawHeightLines(-- All unit are pixel
-                settings.fieldW*40,  -- Field Width
-                settings.spawnH*40,  -- Spawning height
-                settings.lockoutH*40,-- Lock-out height
-                settings.deathH*40,  -- Death height
-                settings.voidH*40    -- Void height
+            skin.drawHeightLines(     -- All unit are pixel
+                settings.fieldW*40,   -- Field Width
+                settings.spawnH*40,   -- Spawning height
+                settings.lockoutH*40, -- Lock-out height
+                settings.deathH*40,   -- Death height
+                settings.voidH*40     -- Void height
             )
 
-            self:triggerEvent('drawInField')-- From frame's bottom-left, 40px a cell
+            self:triggerEvent('drawInField') -- From frame's bottom-left, 40px a cell
 
         -- Stop field stencil
         GC.stc_stop()
@@ -1152,11 +1150,11 @@ function PP:render()
     skin.drawDasIndicator(self.moveDir,self.moveCharge,self.settings.das,self.settings.arr,self.settings.dasHalt)
 
     -- Delay indicator
-    if not self.hand then-- Spawn
+    if not self.hand then -- Spawn
         skin.drawDelayIndicator(COLOR.lB,self.spawnTimer/settings.spawnDelay)
-    elseif self.deathTimer then-- Death
+    elseif self.deathTimer then -- Death
         skin.drawDelayIndicator(COLOR.R,self.deathTimer/settings.deathDelay)
-    else-- Lock
+    else -- Lock
         skin.drawDelayIndicator(COLOR.lY,self.lockTimer/settings.lockDelay)
     end
 
@@ -1181,7 +1179,7 @@ function PP:render()
     -- Texts
     self.texts:draw()
 
-    self:triggerEvent('drawOnPlayer')-- From player's center
+    self:triggerEvent('drawOnPlayer') -- From player's center
 
     -- Starting counter
     if self.time<settings.readyDelay then
@@ -1211,14 +1209,15 @@ function PP:checkScriptSyntax(cmd,arg,errMsg)
 end
 --------------------------------------------------------------
 -- Builder
+---@class Techmino.Mode.Setting.Puyo
 local baseEnv={
     -- Size
-    fieldW=6,-- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
+    fieldW=6, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
     spawnH=11,
     lockoutH=1e99,
     deathH=1e99,
     voidH=620,
-    connH=12,-- Default to 12
+    connH=12, -- Default to 12
 
     -- Sequence
     seqType='double4color',
@@ -1252,7 +1251,9 @@ local baseEnv={
     dasHalt=0,
     hdLockA=1000,
     hdLockM=100,
-    easyInitCtrl=false,
+    initMove='buffer',
+    initRotate='buffer',
+    IRSpushUp=true,
     skin='puyo_jelly',
     particles=true,
     shakeness=.26,
@@ -1299,6 +1300,8 @@ function PP.new()
     }
     self.soundEvent=setmetatable({},soundEventMeta)
 
+    mechLib.puyo.statistics.event_playerInit(self)
+
     return self
 end
 function PP:initialize()
@@ -1324,11 +1327,12 @@ function PP:initialize()
     self.fallTimer=0
     self.clearTimer=0
     self.deathTimer=false
+    self.ghostState=false
 
     self.freshChance=self.settings.freshCount
     self.freshTimeRemain=0
 
-    self.hand=false-- Controlling puyo object
+    self.hand=false -- Controlling puyo object
     self.handX=false
     self.handY=false
     self.ghostY=false

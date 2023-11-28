@@ -1,4 +1,4 @@
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local backfire={}
 
 function backfire.storePower_event_beforeCancel(P,atk)
@@ -9,16 +9,16 @@ function backfire.triplePower_event_beforeCancel(_,atk)
     atk.power=atk.power*3
 end
 
-function backfire.easy_event_beforeSend(P,atk)-- Send nerfed attack (when cancelling) to self
+function backfire.easy_event_beforeSend(P,atk) -- Send nerfed attack (when cancelling) to self
     P:receive(atk)
 end
 
-function backfire.normal_event_beforeSend(P,atk)-- Recover attack's original power if exist after cancelling, then send it to self
+function backfire.normal_event_beforeSend(P,atk) -- Recover attack's original power if exist after cancelling, then send it to self
     atk.power,P.modeData._currentPower=P.modeData._currentPower
     P:receive(atk)
 end
 
-function backfire.break_event_beforeSend(P,atk)-- Recover power Like "normal" one, but break it into small attacks
+function backfire.break_event_beforeSend(P,atk) -- Recover power Like "normal" one, but break it into small attacks
     local powerList={}
     local section=0
     for i=1,P.modeData._currentPower do

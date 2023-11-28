@@ -1,12 +1,6 @@
 local ins,rem=table.insert,table.remove
 
---- @class Techmino.mino.clearRule
---- @field getDelay fun(P:Techmino.Player.mino, lines:number[]): number?
---- @field isFill fun(P:Techmino.Player.mino, y:number): boolean
---- @field getFill fun(P:Techmino.Player.mino): number[]?
---- @field clear fun(P:Techmino.Player.mino, lines:number[])
-
---- @type Techmino.mino.clearRule[]
+---@type table<string, Techmino.mino.clearRule>
 local clearRule={}
 
 local function setBias(P,x,y,dx,dy,moveType,clearDelay)
@@ -22,16 +16,16 @@ local function setBias(P,x,y,dx,dy,moveType,clearDelay)
     P:setCellBias(x,y,{x=dx,y=dy,[moveType]=v})
 end
 
-do-- none (no line clear)
-    --- @type Techmino.mino.clearRule
+do -- none (no line clear)
+    ---@type Techmino.mino.clearRule
     clearRule.none={}
     function clearRule.none.getDelay() return 0 end
     clearRule.none.getFill=NULL
     clearRule.none.clear=NULL
 end
 
-do-- line (fill row to clear)
-    --- @type Techmino.mino.clearRule
+do -- line (fill row to clear)
+    ---@type Techmino.mino.clearRule
     clearRule.line={}
 
     function clearRule.line.getDelay(P,lines)
@@ -81,8 +75,8 @@ do-- line (fill row to clear)
     end
 end
 
-do-- triplets (filled lines which form arithmetic progression to clear, from tetr.js)
-    --- @type Techmino.mino.clearRule
+do -- triplets (filled lines which form arithmetic progression to clear, from tetr.js)
+    ---@type Techmino.mino.clearRule
     clearRule.triplets={}
 
     clearRule.triplets.getDelay=clearRule.line.getDelay
@@ -124,8 +118,8 @@ do-- triplets (filled lines which form arithmetic progression to clear, from tet
     clearRule.triplets.clear=clearRule.line.clear
 end
 
-do-- cheese (90% fill to clear)
-    --- @type Techmino.mino.clearRule
+do -- cheese (90% fill to clear)
+    ---@type Techmino.mino.clearRule
     clearRule.cheese={}
 
     clearRule.cheese.getDelay=clearRule.line.getDelay
@@ -156,8 +150,8 @@ do-- cheese (90% fill to clear)
     clearRule.cheese.clear=clearRule.line.clear
 end
 
-do-- line_float (fill row to clear, but not move above lines down)
-    --- @type Techmino.mino.clearRule
+do -- line_float (fill row to clear, but not move above lines down)
+    ---@type Techmino.mino.clearRule
     clearRule.line_float={}
 
     clearRule.line_float.getDelay=clearRule.line.getDelay

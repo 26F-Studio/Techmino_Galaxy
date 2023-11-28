@@ -1,5 +1,5 @@
 local correctPositions={
-    {-- Quest 1
+    { -- Quest 1
         {x=1,y=1,dir={0},       msg="tutorial_stackBasic_m1"},
         {x=4,y=1,dir={0,2}},
         {x=7,y=1,dir={0,2}},
@@ -13,7 +13,7 @@ local correctPositions={
         {x=8,y=4,dir={1,3}},
         {x=10,y=1,dir={1,3},    msg="tutorial_stackBasic_m5"},
     },
-    {-- Quest 2
+    { -- Quest 2
         {x=3,y=1,dir={0}},
         {x=6,y=2,dir={0,1,2,3}},
         {x=3,y=2,dir={0,1,2,3}},
@@ -22,6 +22,7 @@ local correctPositions={
     }
 }
 
+---@type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'mino')
@@ -37,6 +38,7 @@ return {
         spawnDelay=62,
         dropDelay=1e99,
         lockDelay=1e99,
+        deathDelay=0,
         nextSlot=3,
         holdSlot=0,
         seqType='none',
@@ -56,7 +58,7 @@ return {
             end,
             afterResetPos=function(P)
                 local ans=P.modeData.quest==1 and correctPositions[1][12-#P.nextQueue] or correctPositions[2][9-#P.nextQueue]
-                local shape=TABLE.shift(Minoes[P.hand.name].shape,1)
+                local shape=TABLE.shift(Mino.getShape(P.hand.name),1)
                 if ans then
                     if ans.dir[1]~=0 then
                         shape=TABLE.rotate(shape,ans.dir[1]==1 and 'R' or ans.dir[1]==2 and ans.dir[1] and 'F' or 'L')
@@ -73,7 +75,7 @@ return {
             end,
             afterDrop=function(P)
                 if P.modeData.shape and not (P.handX==P.modeData.x and P.handY==P.modeData.y and TABLE.find(P.modeData.dir,P.hand.direction)) then
-                    table.insert(P.nextQueue,1,P:getMino(Minoes[P.hand.name].id))
+                    table.insert(P.nextQueue,1,P:getMino(Mino.getID(P.hand.name)))
                     P.hand=false
                 else
                     P.modeData.shape=false

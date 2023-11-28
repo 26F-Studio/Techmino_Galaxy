@@ -1,7 +1,7 @@
 local ins,rem=table.insert,table.remove
 local gc=love.graphics
 
---- @type Techmino.Mech.mino
+---@type Techmino.Mech.mino
 local misc={}
 
 function misc.interior_soundEvent_countDown(num)
@@ -19,6 +19,17 @@ function misc.invincible_event_afterLock(P)
     end
 end
 
+function misc.suffocateLock_event_whenSuffocate(P)
+    local clearCount=#P.clearHistory
+    P.deathTimer=false
+    P.ghostState=false
+    P:createDesuffocateEffect()
+    P:minoDropped()
+    if clearCount==#P.clearHistory then
+        P:finish('WA')
+    end
+end
+
 function misc.slowHide_event_gameOver(P)
     P:showInvis(4,626)
 end
@@ -27,7 +38,7 @@ function misc.fastHide_event_gameOver(P)
     P:showInvis(1,100)
 end
 
-do-- coverField
+do -- coverField
     function misc.coverField_switch_auto(P)
         local md=P.modeData
         if not md._coverAlpha then
@@ -70,7 +81,7 @@ function misc.noMove_event_playerInit(P)
     P:switchAction('moveRight',false)
 end
 
-do-- swapDirection
+do -- swapDirection
     function misc.swapDirection_event_playerInit(P)
         P.modeData.flip=false
     end
@@ -132,7 +143,7 @@ function misc.spinBoard(P,dx)
     P:freshGhost()
 end
 
-do-- randomPress
+do -- randomPress
     local decreaseLimit,decreaseAmount=260,120
     local minInterval,maxInterval=1620,2600
     function misc.randomPress_event_playerInit(P)
@@ -164,7 +175,7 @@ do-- randomPress
     end
 end
 
-do-- symmetery
+do -- symmetery
     function misc.symmetery_event_afterLock(P)
         local currentPos={}
 
@@ -190,7 +201,7 @@ do-- symmetery
     end
 end
 
-do-- wind
+do -- wind
     function misc.wind_switch_auto(P)
         local md=P.modeData
         if md.wind_enabled then
@@ -221,11 +232,11 @@ do-- wind
         local md=P.modeData
         md._windStrength=md._windStrength+MATH.sign(md.windStrength-md._windStrength)
         md.windCounter=md.windCounter+math.abs(md._windStrength)
-        if md.windCounter>=62000 then
+        if md.windCounter>=62e3 then
             if P.hand then
                 P[md._windStrength<0 and 'moveLeft' or 'moveRight'](P)
             end
-            md.windCounter=md.windCounter-62000
+            md.windCounter=md.windCounter-62e3
         end
     end
     function misc.wind_event_afterClear(P)
@@ -247,7 +258,7 @@ do-- wind
     end
 end
 
-do-- obstacle
+do -- obstacle
     local minDist=3
     local maxHeight=3
     local extraCount=3
@@ -262,7 +273,7 @@ do-- obstacle
             repeat
                 r1=P:random(1,w)
             until math.abs(r1-r0)>=minDist;
-            F._matrix[y][r1]={color=0,conn={}}
+            F._matrix[y][r1]=P:newCell(0)
             r0=r1
         end
         for _=1,extraCount do
@@ -271,7 +282,7 @@ do-- obstacle
                 x=P:random(1,w)
                 y=math.floor(P:random()^2.6*(maxHeight-1))+1
             until not F._matrix[y][x]
-            F._matrix[y][x]={color=0,conn={}}
+            F._matrix[y][x]=P:newCell(0)
         end
         for y=1,maxHeight do
             if TABLE.count(F._matrix[y],false)==w then
@@ -280,10 +291,15 @@ do-- obstacle
         end
     end
 
+    function misc.obstacle_event_playerInit(P)
+        P.modeData.score=0
+        misc.obstacle_generateField(P)
+    end
+
     misc.obstacle_event_afterClear=TABLE.newPool(function(self,lineCount)
         self[lineCount]=function(P,clear)
             local score=math.ceil((clear.line+1)/2)
-            P.modeData.line=math.min(P.modeData.line+score,lineCount)
+            P.modeData.score=math.min(P.modeData.score+score,lineCount)
             P.texts:add{
                 text="+"..score,
                 fontSize=80,
@@ -292,7 +308,7 @@ do-- obstacle
                 inPoint=0,
                 outPoint=1,
             }
-            if P.modeData.line>=lineCount then
+            if P.modeData.score>=lineCount then
                 P:finish('AC')
             else
                 misc.obstacle_generateField(P)
@@ -300,9 +316,17 @@ do-- obstacle
         end
         return self[lineCount]
     end)
+    misc.obstacle_event_drawOnPlayer=TABLE.newPool(function(self,lineCount)
+        self[lineCount]=function(P)
+            P:drawInfoPanel(-380,-60,160,120)
+            FONT.set(80) GC.mStr(lineCount-P.modeData.score,-300,-70)
+            FONT.set(30) GC.mStr(Text.target_line,-300,15)
+        end
+        return self[lineCount]
+    end)
 end
 
-do-- Cascade
+do -- Cascade
     local function getSolidMat(P)
         local F=P.field
         local visitedMat={}
@@ -362,7 +386,7 @@ do-- Cascade
         end
         F:fresh()
     end
-    function misc.cascade_event_always(P)
+    function misc.cascade_autoEvent_always(P) -- Auto added, no need to manually add it
         if P.modeData.cascading then
             P.modeData.cascadeTimer=P.modeData.cascadeTimer-1
             if P.modeData.cascadeTimer<=0 then
@@ -375,7 +399,9 @@ do-- Cascade
                         P:doClear(fullLines)
                     else
                         P.settings.clearDelay=P.modeData.storedClearDelay
-                        P.spawnTimer=P.settings.spawnDelay
+                        if not P.finished then
+                            P.spawnTimer=P.settings.spawnDelay
+                        end
 
                         P.modeData.cascading=false
                         P.modeData.cascadeTimer=false
@@ -385,18 +411,43 @@ do-- Cascade
                 end
             end
         else
-            P:delEvent('always',misc.cascade_event_always)
+            P:delEvent('always',misc.cascade_autoEvent_always)
         end
     end
-    function misc.cascade_event_afterClear(P)
+    function misc.cascade_event_afterClear(P) -- Just addresses this to enabled cascade, and need clearRule='line_float'
         if misc.cascade_check(P) and not P.modeData.cascading then
             P.modeData.cascading=true
             P.modeData.cascadeDelay=math.max(math.floor(P.settings.clearDelay^.9),62)
             P.modeData.cascadeTimer=0
             P.modeData.storedClearDelay=P.settings.clearDelay
             P.settings.clearDelay=1e99
-            P:addEvent('always',misc.cascade_event_always)
+            P:addEvent('always',misc.cascade_autoEvent_always)
         end
+    end
+end
+
+do -- variabalNext
+    function misc.variabalNext_stackHigh_event_afterLock(P)
+        if not P.modeData.storedNextSlot then
+            P.modeData.storedNextSlot=P.settings.nextSlot
+        end
+        P.settings.nextSlot=math.floor(
+            P.modeData.storedNextSlot/6*(
+                math.min(P.field:getHeight()/P.settings.spawnH,1.5)
+                ^2*7+.62
+            )
+        )
+    end
+    function misc.variabalNext_stackLow_event_afterLock(P)
+        if not P.modeData.storedNextSlot then
+            P.modeData.storedNextSlot=P.settings.nextSlot
+        end
+        P.settings.nextSlot=math.floor(
+            P.modeData.storedNextSlot/6*(
+                math.max(1-P.field:getHeight()/P.settings.spawnH,0)
+                ^2*7+.62
+            )
+        )
     end
 end
 
