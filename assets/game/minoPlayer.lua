@@ -1662,6 +1662,7 @@ function MP:render()
                 do -- Field
                     local matrix=self.field._matrix
                     gc_push('transform')
+                    gc_translate(0,-40) -- Move to up-left corner of first cell
 
                     local width=settings.fieldW
                     for y=1,#matrix do

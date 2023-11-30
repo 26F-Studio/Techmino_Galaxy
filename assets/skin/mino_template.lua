@@ -52,7 +52,7 @@ function S.drawFieldCell(C)
     local r,g,b=unpack(ColorTable[C.color])
     local a=C.alpha or 1
     gc_setColor(r,g,b,a)
-    gc_rectangle('fill',0,0,40,-40)
+    gc_rectangle('fill',0,0,40,40)
 end
 
 function S.drawFloatHold(n,B,handX,handY,unavailable)
@@ -135,15 +135,16 @@ end
 
 function S.drawLockDelayIndicator(freshCondition,freshChance)
     if freshChance>0 then
+        freshChance=min(freshChance,15)
         gc_setColor(
             freshCondition=='any' and COLOR.dL or
             freshCondition=='fall' and COLOR.R or
             freshCondition=='none' and COLOR.D or
             COLOR.random(4)
         )
-        for i=1,min(freshChance,15) do gc_rectangle('fill',-218+26*i-1,420-1,20+2,5+2) end
+        for i=1,freshChance do gc_rectangle('fill',-218+26*i-1,420-1,20+2,5+2) end
         gc_setColor(COLOR.hsv(min((freshChance-1)/14,1)/2.6,.4,.9))
-        for i=1,min(freshChance,15) do gc_rectangle('fill',-218+26*i,420,20,5) end
+        for i=1,freshChance do gc_rectangle('fill',-218+26*i,420,20,5) end
     end
 end
 
