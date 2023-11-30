@@ -42,10 +42,14 @@ local function sysAction(action)
 end
 function scene.keyDown(key,isRep)
     if isRep then return end
-    if key=='i' then
-        love.system.setClipboardText(GAME.playerList[1]:serialize())
-    elseif key=='o' then
-        GAME.playerList[1]:unserialize(love.system.getClipboardText())
+    if isCtrlPressed() then
+        if     key=='i' then
+            love.system.setClipboardText(GAME.playerList[1]:serialize())
+            MSG.new('info',"Player data imported")
+        elseif key=='o' then
+            GAME.playerList[1]:unserialize(love.system.getClipboardText())
+            MSG.new('info',"Player data exported")
+        end
     end
     local action
 
