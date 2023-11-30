@@ -126,17 +126,33 @@ FONT.load{
 SCR.setSize(1600,1000)
 BGM.setMaxSources(16)
 VOC.setDiversion(.62)
-WIDGET._prototype.base.lineWidth=2
-WIDGET._prototype.button_fill.textColor='L'
-WIDGET._prototype.button.sound_trigger='button_norm'
-WIDGET._prototype.checkBox.sound_on='check_on'
-WIDGET._prototype.checkBox.sound_off='check_off'
-WIDGET._prototype.selector.sound_press='selector'
-WIDGET._prototype.listBox.sound_select='listBox_select'
-WIDGET._prototype.listBox.sound_click='listBox_click'
-WIDGET._prototype.inputBox.sound_input='inputBox_input'
-WIDGET._prototype.inputBox.sound_bksp='inputBox_bksp'
-WIDGET._prototype.inputBox.sound_clear='inputBox_clear'
+WIDGET.setDefaultOption{
+    base={
+        lineWidth=2,
+    },
+    button_fill={
+        textColor='L',
+    },
+    button={
+        sound_trigger='button_norm',
+    },
+    checkBox={
+        sound_on='check_on',
+        sound_off='check_off',
+    },
+    selector={
+        sound_press='selector',
+    },
+    listBox={
+        sound_select='listBox_select',
+        sound_click='listBox_click',
+    },
+    inputBox={
+        sound_input='inputBox_input',
+        sound_bksp='inputBox_bksp',
+        sound_clear='inputBox_clear',
+    },
+}
 
 --[Attention] Not loading IMG/SFX/BGM files here, just read file paths
 IMG.init{

@@ -76,7 +76,7 @@ local settingTriggers={ -- Changing values in SETTINGS.system will trigger these
     clean=          function(v) Zenitha.setCleanCanvas(v) end,
 
     -- Other
-    locale=         function(v) Text=LANG.get(v) LANG.setTextFuncSrc(Text) end,
+    locale=         function(v) Text=LANG.set(v) end,
 }
 settings.system=setmetatable({},{
     __index=settings._system,
