@@ -191,54 +191,66 @@ function PP:getSmoothPos()
 end
 --------------------------------------------------------------
 -- Game methods
-function PP:moveHand(action,a,b,c)
+function PP:moveHand(action,A,B,C)
+    --[[
+        moveX:  dx,noShade
+        moveY:  dy,noShade
+        drop:   dy,noShade
+        rotate: x,y,ifInit
+        reset:  x,y
+    ]]
     if action=='moveX' then
-        self.handX=self.handX+a
+        self.handX=self.handX+A
         self:checkLanding()
         if self.settings.particles then
             local hx,hy=self.handX,self.handY
             local mat=self.hand.matrix
             local w,h=#mat[1],#mat
-            if a<0 then
-                for y=1,h do for x=w,1,-1 do
-                    if mat[y][x] then
-                        self:createMoveEffect(hx+x-1+1,hy+y-1,hx+x-1+1-a-1,hy+y-1)
-                        break
-                    end end
-                end
-            elseif a>0 then
-                for y=1,h do for x=1,w do
-                    if mat[y][x] then
-                        self:createMoveEffect(hx+x-1-1,hy+y-1,hx+x-1-1-a+1,hy+y-1)
-                        break
-                    end end
+            if not B then
+                if A<0 then
+                    for y=1,h do for x=w,1,-1 do
+                        if mat[y][x] then
+                            self:createMoveEffect(hx+x-1+1,hy+y-1,hx+x-1+1-A-1,hy+y-1)
+                            break
+                        end end
+                    end
+                elseif A>0 then
+                    for y=1,h do for x=1,w do
+                        if mat[y][x] then
+                            self:createMoveEffect(hx+x-1-1,hy+y-1,hx+x-1-1-A+1,hy+y-1)
+                            break
+                        end end
+                    end
                 end
             end
         end
     elseif action=='drop' or action=='moveY' then
-        self.handY=self.handY+a
+        self.handY=self.handY+A
         self:checkLanding(true)
         if self.settings.particles then
             local hx,hy=self.handX,self.handY
             local mat=self.hand.matrix
             local w,h=#mat[1],#mat
-            if a<0 then
-                for x=1,w do for y=h,1,-1 do
-                    if mat[y][x] then
-                        self:createMoveEffect(hx+x-1,hy+y-1+1,hx+x-1,hy+y-1+1-a-1)
-                        break
-                    end end
-                end
-            elseif a>0 then
-                for x=1,w do for y=1,h do
-                    if mat[y][x] then
-                        self:createMoveEffect(hx+x-1,hy+y-1-1,hx+x-1,hy+y-1-1-a+1)
-                        break
-                    end end
+            if not B then
+                if A<0 then
+                    for x=1,w do for y=h,1,-1 do
+                        if mat[y][x] then
+                            self:createMoveEffect(hx+x-1,hy+y-1+1,hx+x-1,hy+y-1+1-A-1)
+                            break
+                        end end
+                    end
+                elseif A>0 then
+                    for x=1,w do for y=1,h do
+                        if mat[y][x] then
+                            self:createMoveEffect(hx+x-1,hy+y-1-1,hx+x-1,hy+y-1-1-A+1)
+                            break
+                        end end
+                    end
                 end
             end
-        end    elseif action=='rotate' or action=='reset' then
-        self.handX,self.handY=a,b
+        end
+    elseif action=='rotate' or action=='reset' then
+        self.handX,self.handY=A,B
     else
         error("WTF why action is "..tostring(action))
     end
@@ -246,7 +258,7 @@ function PP:moveHand(action,a,b,c)
     if self.handX%1~=0 or self.handY%1~=0 then error("EUREKA! Decimal position") end
 
     if action=='rotate' then
-        self:playSound(c and 'initrotate' or 'rotate')
+        self:playSound(C and 'initrotate' or 'rotate')
         self:checkLanding()
     end
 
@@ -543,28 +555,28 @@ function PP:isSuffocate()
 end
 function PP:moveLeft()
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
-        self:moveHand('moveX',-1)
+        self:moveHand('moveX',-1,true)
         self:freshGhost()
         return true
     end
 end
 function PP:moveRight()
     if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
-        self:moveHand('moveX',1)
+        self:moveHand('moveX',1,true)
         self:freshGhost()
         return true
     end
 end
 function PP:moveDown()
     if not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
-        self:moveHand('moveY',-1)
+        self:moveHand('moveY',-1,true)
         self:freshDelay('drop')
         return true
     end
 end
-function PP:moveUp()
+function PP:moveUp() -- ?
     if not self:ifoverlap(self.hand.matrix,self.handX,self.handY+1) then
-        self:moveHand('moveY',1)
+        self:moveHand('moveY',1,true)
         return true
     end
 end
@@ -1031,7 +1043,7 @@ function PP:updateFrame()
                     self.dropTimer=self.dropTimer-1
                     if self.dropTimer<=0 then
                         self.dropTimer=SET.dropDelay
-                        self:moveHand('drop',-1)
+                        self:moveHand('drop',-1,true)
                     end
                 elseif self.handY~=self.ghostY then -- If switch to 20G during game, puyo won't dropped to bottom instantly so we force fresh it
                     self:freshDelay('drop')

@@ -272,62 +272,66 @@ function MP:getSmoothPos()
 end
 --------------------------------------------------------------
 -- Game methods
-function MP:moveHand(action,a,b,c,d)
+function MP:moveHand(action,A,B,C,D)
     --[[
-        moveX:  dx
-        moveY:  dy
-        drop:   dy
+        moveX:  dx,noShade
+        moveY:  dy,noShade
+        drop:   dy,noShade
         rotate: x,y,dir,ifInit
         reset:  x,y
     ]]
     if action=='moveX' then
-        self.handX=self.handX+a
+        self.handX=self.handX+A
         self:checkLanding()
         if self.settings.particles then
             local hx,hy=self.handX,self.handY
             local mat=self.hand.matrix
             local w,h=#mat[1],#mat
-            if a<0 then
-                for y=1,h do for x=w,1,-1 do
-                    if mat[y][x] then
-                        self:createMoveEffect(hx+x-1+1,hy+y-1,hx+x-1+1-a-1,hy+y-1)
-                        break
-                    end end
-                end
-            elseif a>0 then
-                for y=1,h do for x=1,w do
-                    if mat[y][x] then
-                        self:createMoveEffect(hx+x-1-1,hy+y-1,hx+x-1-1-a+1,hy+y-1)
-                        break
-                    end end
+            if not B then
+                if A<0 then
+                    for y=1,h do for x=w,1,-1 do
+                        if mat[y][x] then
+                            self:createMoveEffect(hx+x-1+1,hy+y-1,hx+x-1+1-A-1,hy+y-1)
+                            break
+                        end end
+                    end
+                elseif A>0 then
+                    for y=1,h do for x=1,w do
+                        if mat[y][x] then
+                            self:createMoveEffect(hx+x-1-1,hy+y-1,hx+x-1-1-A+1,hy+y-1)
+                            break
+                        end end
+                    end
                 end
             end
         end
     elseif action=='moveY' or action=='drop' then
-        self.handY=self.handY+a
+        self.handY=self.handY+A
         self:checkLanding(true,true)
         if self.settings.particles then
             local hx,hy=self.handX,self.handY
             local mat=self.hand.matrix
             local w,h=#mat[1],#mat
-            if a<0 then
-                for x=1,w do for y=h,1,-1 do
-                    if mat[y][x] then
-                        self:createMoveEffect(hx+x-1,hy+y-1+1,hx+x-1,hy+y-1+1-a-1)
-                        break
-                    end end
-                end
-            elseif a>0 then
-                for x=1,w do for y=1,h do
-                    if mat[y][x] then
-                        self:createMoveEffect(hx+x-1,hy+y-1-1,hx+x-1,hy+y-1-1-a+1)
-                        break
-                    end end
+            if not B then
+                if A<0 then
+                    for x=1,w do for y=h,1,-1 do
+                        if mat[y][x] then
+                            self:createMoveEffect(hx+x-1,hy+y-1+1,hx+x-1,hy+y-1+1-A-1)
+                            break
+                        end end
+                    end
+                elseif A>0 then
+                    for x=1,w do for y=1,h do
+                        if mat[y][x] then
+                            self:createMoveEffect(hx+x-1,hy+y-1-1,hx+x-1,hy+y-1-1-A+1)
+                            break
+                        end end
+                    end
                 end
             end
         end
     elseif action=='rotate' or action=='reset' then
-        self.handX,self.handY=a,b
+        self.handX,self.handY=A,B
         self:checkLanding()
     else
         error("WTF why action is "..tostring(action))
@@ -365,7 +369,7 @@ function MP:moveHand(action,a,b,c,d)
                 self:ifoverlap(self.hand.matrix,self.handX+1,self.handY)
             then
                 movement.immobile=true
-                self:shakeBoard(c=='L' and '-ccw' or c=='R' and '-cw' or '-180')
+                self:shakeBoard(C=='L' and '-ccw' or C=='R' and '-cw' or '-180')
                 self:playSound('rotate_locked')
                 if self.settings.particles then
                     self:createHandEffect(.942,1,1)
@@ -394,9 +398,9 @@ function MP:moveHand(action,a,b,c,d)
                 end
             end
         end
-        self:playSound(d and 'initrotate' or 'rotate')
+        self:playSound(D and 'initrotate' or 'rotate')
         if self.settings.particles then
-            self:createRotateEffect(c,d)
+            self:createRotateEffect(C,D)
         end
     end
     self.lastMovement=movement
@@ -948,28 +952,28 @@ function MP:calculateHolePos(count,splitRate,copyRate,sandwichRate)
 end
 function MP:moveLeft(ifInit)
     if not self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) then
-        self:moveHand('moveX',-1)
+        self:moveHand('moveX',-1,true)
         if not ifInit then self:freshGhost() end
         return true
     end
 end
 function MP:moveRight(ifInit)
     if not self:ifoverlap(self.hand.matrix,self.handX+1,self.handY) then
-        self:moveHand('moveX',1)
+        self:moveHand('moveX',1,true)
         if not ifInit then self:freshGhost() end
         return true
     end
 end
 function MP:moveDown()
     if not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
-        self:moveHand('moveY',-1)
+        self:moveHand('moveY',-1,true)
         self:freshDelay('drop')
         return true
     end
 end
-function MP:moveUp()
+function MP:moveUp() -- ?
     if not self:ifoverlap(self.hand.matrix,self.handX,self.handY+1) then
-        self:moveHand('moveY',1)
+        self:moveHand('moveY',1,true)
         return true
     end
 end
@@ -1539,7 +1543,7 @@ function MP:updateFrame()
                     self.dropTimer=self.dropTimer-1
                     if self.dropTimer<=0 then
                         self.dropTimer=SET.dropDelay
-                        self:moveHand('drop',-1)
+                        self:moveHand('drop',-1,true)
                     end
                 elseif self.handY~=self.ghostY then -- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
                     self:freshDelay('drop')
