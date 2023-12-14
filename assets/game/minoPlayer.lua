@@ -38,7 +38,7 @@ local defaultSoundFunc={
             inst('bass',.8,'F3','A3')
             inst('lead',.3,'F4')
         elseif num<=10 then
-            inst('bass',2.2-num/5,'A2','E3')
+            inst('bass',2.1626-num/5,'A2','E3')
         end
     end,
     move=           function() SFX.play('move',.6)          end,
