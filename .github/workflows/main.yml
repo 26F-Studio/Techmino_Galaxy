@@ -556,9 +556,9 @@ jobs:
         auto-test,
         build-core,
         build-android,
-        build-ios,
+        # build-ios,
         build-linux,
-        build-macos-appstore,
+        # build-macos-appstore,
         build-macos-portable,
         build-windows,
       ]
