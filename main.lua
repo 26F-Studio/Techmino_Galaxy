@@ -83,6 +83,7 @@ Zenitha.setDebugInfo{
     {"Tasks", TASK.getCount},
     {"Voices",VOC.getQueueCount},
     {"Audios",love.audio.getSourceCount},
+    {"Mouse", function() local x,y=SCR.xOy:inverseTransformPoint(love.mouse.getPosition()) return math.floor(x+.5)..' '..math.floor(y+.5) end},
 }
 do -- Zenitha.setOnFocus
     local function task_autoSoundOff()
