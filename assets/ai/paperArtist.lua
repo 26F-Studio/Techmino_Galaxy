@@ -21,10 +21,9 @@ end
 
 function paperArtist.calculateFieldScore(field,cb,cx,cy)
     local clear=0
-    
+
     -- Place the piece into the field
     for y=1,#cb do
-        -- If this line doesn't exist, create an all-false line
         if not field[y+cy-1] then
             field[y+cy-1]=TABLE.new(false,10)
         end
@@ -32,7 +31,7 @@ function paperArtist.calculateFieldScore(field,cb,cx,cy)
             field[y+cy-1][x+cx-1]=field[y+cy-1][x+cx-1] or cb[y][x]
         end
     end
-    
+
     -- Clear filled lines
     for y=cy+#cb-1,cy,-1 do
         if field[y] then
@@ -92,10 +91,10 @@ function paperArtist.findPosition(field,shape)
         for cx=1,w-#shape[1]+1 do
             local F=TABLE.shift(field,1)
             local cy,colH=simulateDrop(F,shape,cx)
-            local score=0
             local clear,rowB,colB=paperArtist.calculateFieldScore(F,shape,cx,cy)
-            score=score+clear*2-rowB*3-colB*2
-            score=score-cy
+
+            local score=clear*2-rowB*3-colB*2-cy
+
             local minH=math.min(unpack(colH))
             for i=1,#colH do
                 score=score-(colH[i]-minH)*1.26
