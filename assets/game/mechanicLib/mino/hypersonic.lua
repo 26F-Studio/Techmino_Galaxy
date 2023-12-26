@@ -354,18 +354,18 @@ do -- hidden
     end
 end
 
-do --  titanium
+do -- titanium
     local levels={
-        {lock=450,spawn=170,clear=380,das=96,arr=29},
-        {lock=400,spawn=160,clear=340,das=92,arr=28},
-        {lock=360,spawn=150,clear=300,das=88,arr=27},
-        {lock=330,spawn=140,clear=260,das=84,arr=26},
-        {lock=300,spawn=130,clear=220,das=80,arr=25},
-        {lock=300,spawn=120,clear=180,das=76,arr=24},
-        {lock=300,spawn=115,clear=160,das=72,arr=23},
-        {lock=300,spawn=110,clear=140,das=68,arr=22},
-        {lock=300,spawn=105,clear=120,das=64,arr=21},
-        {lock=300,spawn=100,clear=100,das=60,arr=20},
+        {lock=350,spawn=170,clear=380,das=98,arr=29},
+        {lock=300,spawn=160,clear=340,das=96,arr=28},
+        {lock=270,spawn=150,clear=300,das=94,arr=27},
+        {lock=240,spawn=140,clear=260,das=92,arr=26},
+        {lock=220,spawn=130,clear=220,das=90,arr=25},
+        {lock=200,spawn=120,clear=180,das=88,arr=24},
+        {lock=180,spawn=115,clear=160,das=86,arr=23},
+        {lock=170,spawn=110,clear=140,das=84,arr=22},
+        {lock=160,spawn=105,clear=120,das=82,arr=21},
+        {lock=150,spawn=100,clear=100,das=80,arr=20},
     }
     function hypersonic.titanium_event_playerInit(P)
         P.settings.dropDelay=0
