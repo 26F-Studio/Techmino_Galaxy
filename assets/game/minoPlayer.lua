@@ -1442,24 +1442,14 @@ function MP:updateFrame()
         -- Auto shift
         if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then
             if self.hand and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) then
-                local c0=self.moveCharge
-                local c1=c0+1
-                self.moveCharge=c1
+                self.moveCharge=self.moveCharge+1
                 local dist=0
-                if c0>=SET.asd then
-                    c0=c0-SET.asd
-                    c1=c1-SET.asd
-                    if SET.asp==0 then
+                if SET.asp==0 then
+                    if self.moveCharge>SET.asd then
                         dist=1e99
-                    else
-                        dist=floor(c1/SET.asp)-floor(c0/SET.asp)
                     end
-                elseif c1>=SET.asd then
-                    if SET.asp==0 then
-                        dist=1e99
-                    else
-                        dist=1
-                    end
+                elseif (self.moveCharge-SET.asd)%SET.asp==0 then
+                    dist=1
                 end
                 if dist>0 then
                     local ox=self.handX
@@ -1483,15 +1473,13 @@ function MP:updateFrame()
         -- Auto drop
         if self.downCharge and self.keyState.softDrop then
             if self.hand and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
-                local c0=self.downCharge
-                local c1=c0+1
-                self.downCharge=c1
-                local dist=SET.adp==0 and 1e99 or floor(c1/SET.adp)-floor(c0/SET.adp)
-                local oy=self.handY
+                self.downCharge=self.downCharge+1
+                local dist=SET.adp==0 and 1e99 or self.downCharge%SET.adp==0 and 1 or 0
                 if dist>0 then
+                    local oy=self.handY
                     while dist>0 do
-                        dist=dist-1
                         if not self:moveDown() then break end
+                        dist=dist-1
                     end
                     if oy~=self.handY then
                         self:freshDelay('drop')

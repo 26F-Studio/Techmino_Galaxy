@@ -599,24 +599,14 @@ function GP:updateFrame()
     -- Auto shift
     if self.moveDirH and (self.moveDirH==-1 and self.keyState.moveLeft or self.moveDirH==1 and self.keyState.moveRight) then
         if self.swapX~=MATH.clamp(self.swapX+self.moveDirH,1,self.settings.fieldSize) then
-            local c0=self.moveChargeH
-            local c1=c0+1
-            self.moveChargeH=c1
+            self.moveChargeH=self.moveChargeH+1
             local dist=0
-            if c0>=SET.asd then
-                c0=c0-SET.asd
-                c1=c1-SET.asd
-                if SET.asp==0 then
+            if SET.asp==0 then
+                if self.moveChargeH>SET.asd then
                     dist=1e99
-                else
-                    dist=floor(c1/SET.asp)-floor(c0/SET.asp)
                 end
-            elseif c1>=SET.asd then
-                if SET.asp==0 then
-                    dist=1e99
-                else
-                    dist=1
-                end
+            elseif (self.moveChargeH-SET.asd)%SET.asp==0 then
+                dist=1
             end
             if dist>0 then
                 local moved
@@ -638,24 +628,14 @@ function GP:updateFrame()
     end
     if self.moveDirV and (self.moveDirV==-1 and self.keyState.moveDown or self.moveDirV==1 and self.keyState.moveUp) then
         if self.swapY~=MATH.clamp(self.swapY+self.moveDirV,1,self.settings.fieldSize) then
-            local c0=self.moveChargeV
-            local c1=c0+1
-            self.moveChargeV=c1
+            self.moveChargeV=self.moveChargeV+1
             local dist=0
-            if c0>=SET.asd then
-                c0=c0-SET.asd
-                c1=c1-SET.asd
-                if SET.asp==0 then
+            if SET.asp==0 then
+                if self.moveChargeV>SET.asd then
                     dist=1e99
-                else
-                    dist=floor(c1/SET.asp)-floor(c0/SET.asp)
                 end
-            elseif c1>=SET.asd then
-                if SET.asp==0 then
-                    dist=1e99
-                else
-                    dist=1
-                end
+            elseif (self.moveChargeV-SET.asd)%SET.asp==0 then
+                dist=1
             end
             if dist>0 then
                 local moved
