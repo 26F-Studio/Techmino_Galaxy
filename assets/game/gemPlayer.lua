@@ -603,16 +603,16 @@ function GP:updateFrame()
             local c1=c0+1
             self.moveChargeH=c1
             local dist=0
-            if c0>=SET.das then
-                c0=c0-SET.das
-                c1=c1-SET.das
-                if SET.arr==0 then
+            if c0>=SET.asd then
+                c0=c0-SET.asd
+                c1=c1-SET.asd
+                if SET.asp==0 then
                     dist=1e99
                 else
-                    dist=floor(c1/SET.arr)-floor(c0/SET.arr)
+                    dist=floor(c1/SET.asp)-floor(c0/SET.asp)
                 end
-            elseif c1>=SET.das then
-                if SET.arr==0 then
+            elseif c1>=SET.asd then
+                if SET.asp==0 then
                     dist=1e99
                 else
                     dist=1
@@ -629,7 +629,7 @@ function GP:updateFrame()
                 if moved then self:playSound('move') end
             end
         else
-            self.moveChargeH=SET.das
+            self.moveChargeH=SET.asd
             self:shakeBoard(self.moveDirH>0 and '-right' or '-left')
         end
     else
@@ -642,16 +642,16 @@ function GP:updateFrame()
             local c1=c0+1
             self.moveChargeV=c1
             local dist=0
-            if c0>=SET.das then
-                c0=c0-SET.das
-                c1=c1-SET.das
-                if SET.arr==0 then
+            if c0>=SET.asd then
+                c0=c0-SET.asd
+                c1=c1-SET.asd
+                if SET.asp==0 then
                     dist=1e99
                 else
-                    dist=floor(c1/SET.arr)-floor(c0/SET.arr)
+                    dist=floor(c1/SET.asp)-floor(c0/SET.asp)
                 end
-            elseif c1>=SET.das then
-                if SET.arr==0 then
+            elseif c1>=SET.asd then
+                if SET.asp==0 then
                     dist=1e99
                 else
                     dist=1
@@ -668,7 +668,7 @@ function GP:updateFrame()
                 if moved then self:playSound('move') end
             end
         else
-            self.moveChargeV=SET.das
+            self.moveChargeV=SET.asd
             self:shakeBoard(self.moveDirV>0 and '-up' or '-down')
         end
     else

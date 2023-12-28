@@ -195,14 +195,15 @@ KPM: Key per Minute，按键每分
 APM: Attack per Minute，攻击每分
 APL: Attack per Line，攻击每行（行的计算方式也可以分两种，详见LPM词条），也叫效率
 
-# das_arr
-@ title 移动延迟（DAS&ARR）
-DAS: Delay-Auto-Shift，延迟自动移动
-ARR: Auto-Repeat-Rate，自动重复速率
+# asd_asp
+@ title 移动延迟（ASD&ASP）
+@ contentSize 25
+ASD: Auto Shift Delay，自动移动延迟，旧称DAS（Delayed Auto Shift）
+ASP: Auto Shift Period，自动重复周期，旧称ARR（Auto Repeat Rate)
 ~~
-在使用键盘输入文本时按住一个键，会连续输入了一大串字符。注意字符出现的时机：第一个字按下后立刻出现，停了一小会后开始快速连续自动输入，其中“停了一小会”就是DAS长度，“连续自动输入”的间隔就是ARR长度。
+在使用键盘输入文本时按住一个键，会连续输入了一大串字符。注意字符出现的时机：第一个字按下后立刻出现，停了一小会后开始快速连续自动输入，其中“停了一小会”就是ASD长度，“连续自动输入”的间隔就是ASP长度。
 ~~
-最佳调节方法：DAS越小越好，但小到依然能准确区分单点和长按两种动作为止；ARR能多小就多小，尽可能接近0。
+最佳调节方法：ASD越小越好，但小到依然能准确区分单点和长按两种动作为止；ASP能多小就多小，尽可能接近0。
 
 # init_control
 @ title 预输入
@@ -292,7 +293,7 @@ Memoryless，Previewless，Holdless
 
 # hypertap
 @ title 超连点（Hypertap）
-在DAS很慢或者其他不适合长按自动移动的情况下，快速震动手指以实现比长按更快速+灵活的高速单点移动。
+在ASD很慢或者其他不适合长按自动移动的情况下，快速震动手指以实现比长按更快速+灵活的高速单点移动。
 
 # 26f_studio
 @ title 26F Studio

@@ -70,10 +70,10 @@ return {
     graph_mino_title="M-Graph", -- Traslation warning: from "Knowledge Graph" (AI domain)
     settings_title="Settings",
 
-    setting_das="DAS",
-    setting_arr="ARR",
-    setting_sdarr="SDARR",
-    setting_dasHalt="DAS halt",
+    setting_asd="ASD",
+    setting_asp="ASP",
+    setting_adp="ADP",
+    setting_asHalt="AS Halt",
     setting_hdLockA="Auto hard-drop lock",
     setting_hdLockM="Manual hard-drop lock",
     setting_shakeness="Shakiness",

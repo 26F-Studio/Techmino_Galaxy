@@ -18,9 +18,9 @@ return {
         soundEvent={countDown=mechLib.mino.misc.interior_soundEvent_countDown},
         event={
             playerInit=function(P)
-                P.settings.das=math.max(P.settings.das,100)
-                P.settings.arr=math.max(P.settings.arr,20)
-                P.settings.sdarr=math.max(P.settings.sdarr,20)
+                P.settings.asd=math.max(P.settings.asd,100)
+                P.settings.asp=math.max(P.settings.asp,20)
+                P.settings.adp=math.max(P.settings.adp,20)
 
                 P.settings.dropDelay=dropSpeed[1]
                 P.modeData.lineTarget=10

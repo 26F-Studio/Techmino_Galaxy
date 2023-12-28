@@ -38,8 +38,8 @@ function hypersonic.event_playerInit(P)
     P.modeData.level=1
     P.modeData.target=100
     P.modeData.maxHold=0
-    P.modeData.storedDas=P.settings.das
-    P.modeData.storedArr=P.settings.arr
+    P.modeData.storedAsd=P.settings.asd
+    P.modeData.storedAsp=P.settings.asp
     P.settings.initMove='hold'
     P.settings.initRotate='hold'
     P.settings.initHold='hold'
@@ -69,17 +69,17 @@ end
 
 do -- low
     local levels={
-        {lock=1e3,spawn=320,das=200,arr=36},
-        {lock=850,spawn=290,das=170,arr=33},
-        {lock=700,spawn=260,das=140,arr=30},
-        {lock=550,spawn=230,das=120,arr=28},
-        {lock=400,spawn=200,das=100,arr=26},
+        {lock=1e3,spawn=320,asd=200,asp=36},
+        {lock=850,spawn=290,asd=170,asp=33},
+        {lock=700,spawn=260,asd=140,asp=30},
+        {lock=550,spawn=230,asd=120,asp=28},
+        {lock=400,spawn=200,asd=100,asp=26},
     }
 
     function hypersonic.low_event_playerInit(P)
         P.settings.dropDelay=0
-        P.settings.das=math.max(P.modeData.storedDas,levels[1].das)
-        P.settings.arr=math.max(P.modeData.storedArr,levels[1].arr)
+        P.settings.asd=math.max(P.modeData.storedAsd,levels[1].asd)
+        P.settings.asp=math.max(P.modeData.storedAsp,levels[1].asp)
         P.settings.lockDelay=levels[1].lock
         P.settings.spawnDelay=levels[1].spawn
         P.settings.clearDelay=300
@@ -99,8 +99,8 @@ do -- low
                     md.level=md.level+1
                     md.target=100*md.level
 
-                    P.settings.das=math.max(md.storedDas,levels[md.level].das)
-                    P.settings.arr=math.max(md.storedArr,levels[md.level].arr)
+                    P.settings.asd=math.max(md.storedAsd,levels[md.level].asd)
+                    P.settings.asp=math.max(md.storedAsp,levels[md.level].asp)
                     P.settings.lockDelay=levels[md.level].lock
                     P.settings.spawnDelay=levels[md.level].spawn
                 else
@@ -115,16 +115,16 @@ end
 
 do -- high
     local levels={
-        {lock=450,fresh=4400,spawn=150,clear=380,das=130,arr=29,bumpInterval=false},
-        {lock=400,fresh=4200,spawn=140,clear=340,das=120,arr=28,bumpInterval=false},
-        {lock=360,fresh=4000,spawn=130,clear=300,das=110,arr=27,bumpInterval=false},
-        {lock=330,fresh=3800,spawn=120,clear=260,das=105,arr=26,bumpInterval=false},
-        {lock=300,fresh=3600,spawn=110,clear=220,das=100,arr=25,bumpInterval=false},
-        {lock=300,fresh=3400,spawn=100,clear=180,das=96, arr=24,bumpInterval=10e3},
-        {lock=290,fresh=3200,spawn=95, clear=160,das=92, arr=23,bumpInterval=8e3},
-        {lock=280,fresh=3000,spawn=90, clear=140,das=88, arr=22,bumpInterval=6e3},
-        {lock=270,fresh=2800,spawn=85, clear=120,das=84, arr=21,bumpInterval=5e3},
-        {lock=260,fresh=2600,spawn=80, clear=100,das=80, arr=20,bumpInterval=4e3},
+        {lock=450,fresh=4400,spawn=150,clear=380,asd=130,asp=29,bumpInterval=false},
+        {lock=400,fresh=4200,spawn=140,clear=340,asd=120,asp=28,bumpInterval=false},
+        {lock=360,fresh=4000,spawn=130,clear=300,asd=110,asp=27,bumpInterval=false},
+        {lock=330,fresh=3800,spawn=120,clear=260,asd=105,asp=26,bumpInterval=false},
+        {lock=300,fresh=3600,spawn=110,clear=220,asd=100,asp=25,bumpInterval=false},
+        {lock=300,fresh=3400,spawn=100,clear=180,asd=96, asp=24,bumpInterval=10e3},
+        {lock=290,fresh=3200,spawn=95, clear=160,asd=92, asp=23,bumpInterval=8e3},
+        {lock=280,fresh=3000,spawn=90, clear=140,asd=88, asp=22,bumpInterval=6e3},
+        {lock=270,fresh=2800,spawn=85, clear=120,asd=84, asp=21,bumpInterval=5e3},
+        {lock=260,fresh=2600,spawn=80, clear=100,asd=80, asp=20,bumpInterval=4e3},
     }
 
     function hypersonic.high_event_playerInit(P)
@@ -132,8 +132,8 @@ do -- high
         P.modeData.bumpTimer=false
 
         P.settings.dropDelay=0
-        P.settings.das=math.max(P.modeData.storedDas,levels[1].das)
-        P.settings.arr=math.max(P.modeData.storedArr,levels[1].arr)
+        P.settings.asd=math.max(P.modeData.storedAsd,levels[1].asd)
+        P.settings.asp=math.max(P.modeData.storedAsp,levels[1].asp)
         P.settings.lockDelay=levels[1].lock
         P.settings.spawnDelay=levels[1].spawn
         P.settings.clearDelay=levels[1].clear
@@ -186,8 +186,8 @@ do -- high
                     md.level=md.level+1
                     md.target=100*md.level
 
-                    P.settings.das=math.max(md.storedDas,levels[md.level].das)
-                    P.settings.arr=math.max(md.storedArr,levels[md.level].arr)
+                    P.settings.asd=math.max(md.storedAsd,levels[md.level].asd)
+                    P.settings.asp=math.max(md.storedAsp,levels[md.level].asp)
                     P.settings.lockDelay=levels[md.level].lock
                     P.settings.spawnDelay=levels[md.level].spawn
                     P.settings.clearDelay=levels[md.level].clear
@@ -209,16 +209,16 @@ end
 
 do -- hidden
     local levels={
-        {lock=510,fresh=6000,spawn=150,clear=400,das=130,arr=29,visTime=5000,fadeTime=2600},
-        {lock=460,fresh=5800,spawn=140,clear=360,das=120,arr=28,visTime=4000,fadeTime=2600},
-        {lock=420,fresh=5600,spawn=130,clear=320,das=110,arr=27,visTime=3500,fadeTime=2600},
-        {lock=380,fresh=5400,spawn=120,clear=280,das=105,arr=26,visTime=3000,fadeTime=2600},
-        {lock=350,fresh=5200,spawn=110,clear=240,das=100,arr=25,visTime=2500,fadeTime=2100},
-        {lock=320,fresh=5000,spawn=100,clear=200,das=96, arr=24,visTime=2000,fadeTime=1500},
-        {lock=300,fresh=4800,spawn=95, clear=180,das=92, arr=23,visTime=1600,fadeTime=1100},
-        {lock=280,fresh=4600,spawn=90, clear=160,das=88, arr=22,visTime=1200,fadeTime=900 },
-        {lock=270,fresh=4400,spawn=85, clear=140,das=84, arr=21,visTime=900, fadeTime=800 },
-        {lock=260,fresh=4200,spawn=80, clear=120,das=80, arr=20,visTime=600, fadeTime=600 },
+        {lock=510,fresh=6000,spawn=150,clear=400,asd=130,asp=29,visTime=5000,fadeTime=2600},
+        {lock=460,fresh=5800,spawn=140,clear=360,asd=120,asp=28,visTime=4000,fadeTime=2600},
+        {lock=420,fresh=5600,spawn=130,clear=320,asd=110,asp=27,visTime=3500,fadeTime=2600},
+        {lock=380,fresh=5400,spawn=120,clear=280,asd=105,asp=26,visTime=3000,fadeTime=2600},
+        {lock=350,fresh=5200,spawn=110,clear=240,asd=100,asp=25,visTime=2500,fadeTime=2100},
+        {lock=320,fresh=5000,spawn=100,clear=200,asd=96, asp=24,visTime=2000,fadeTime=1500},
+        {lock=300,fresh=4800,spawn=95, clear=180,asd=92, asp=23,visTime=1600,fadeTime=1100},
+        {lock=280,fresh=4600,spawn=90, clear=160,asd=88, asp=22,visTime=1200,fadeTime=900 },
+        {lock=270,fresh=4400,spawn=85, clear=140,asd=84, asp=21,visTime=900, fadeTime=800 },
+        {lock=260,fresh=4200,spawn=80, clear=120,asd=80, asp=20,visTime=600, fadeTime=600 },
     }
 
     local showInvisPeriod=26000*10
@@ -243,8 +243,8 @@ do -- hidden
         P.modeData.showAllTimer=endAllInterval
 
         P.settings.dropDelay=0
-        P.settings.das=math.max(P.modeData.storedDas,levels[1].das)
-        P.settings.arr=math.max(P.modeData.storedArr,levels[1].arr)
+        P.settings.asd=math.max(P.modeData.storedAsd,levels[1].asd)
+        P.settings.asp=math.max(P.modeData.storedAsp,levels[1].asp)
         P.settings.lockDelay=levels[1].lock
         P.settings.spawnDelay=levels[1].spawn
         P.settings.clearDelay=levels[1].clear
@@ -326,8 +326,8 @@ do -- hidden
                     md.level=md.level+1
                     md.target=100*md.level
 
-                    P.settings.das=math.max(md.storedDas,levels[md.level].das)
-                    P.settings.arr=math.max(md.storedArr,levels[md.level].arr)
+                    P.settings.asd=math.max(md.storedAsd,levels[md.level].asd)
+                    P.settings.asp=math.max(md.storedAsp,levels[md.level].asp)
                     P.settings.lockDelay=levels[md.level].lock
                     P.settings.spawnDelay=levels[md.level].spawn
                     P.settings.clearDelay=levels[md.level].clear
@@ -356,21 +356,21 @@ end
 
 do -- titanium
     local levels={
-        {lock=350,spawn=170,clear=380,das=98,arr=29},
-        {lock=300,spawn=160,clear=340,das=96,arr=28},
-        {lock=270,spawn=150,clear=300,das=94,arr=27},
-        {lock=240,spawn=140,clear=260,das=92,arr=26},
-        {lock=220,spawn=130,clear=220,das=90,arr=25},
-        {lock=200,spawn=120,clear=180,das=88,arr=24},
-        {lock=180,spawn=115,clear=160,das=86,arr=23},
-        {lock=170,spawn=110,clear=140,das=84,arr=22},
-        {lock=160,spawn=105,clear=120,das=82,arr=21},
-        {lock=150,spawn=100,clear=100,das=80,arr=20},
+        {lock=350,spawn=170,clear=380,asd=98,asp=29},
+        {lock=300,spawn=160,clear=340,asd=96,asp=28},
+        {lock=270,spawn=150,clear=300,asd=94,asp=27},
+        {lock=240,spawn=140,clear=260,asd=92,asp=26},
+        {lock=220,spawn=130,clear=220,asd=90,asp=25},
+        {lock=200,spawn=120,clear=180,asd=88,asp=24},
+        {lock=180,spawn=115,clear=160,asd=86,asp=23},
+        {lock=170,spawn=110,clear=140,asd=84,asp=22},
+        {lock=160,spawn=105,clear=120,asd=82,asp=21},
+        {lock=150,spawn=100,clear=100,asd=80,asp=20},
     }
     function hypersonic.titanium_event_playerInit(P)
         P.settings.dropDelay=0
-        P.settings.das=math.max(P.modeData.storedDas,levels[1].das)
-        P.settings.arr=math.max(P.modeData.storedArr,levels[1].arr)
+        P.settings.asd=math.max(P.modeData.storedAsd,levels[1].asd)
+        P.settings.asp=math.max(P.modeData.storedAsp,levels[1].asp)
         P.settings.lockDelay=levels[1].lock
         P.settings.spawnDelay=levels[1].spawn
         P.settings.clearDelay=levels[1].clear
@@ -389,8 +389,8 @@ do -- titanium
                     md.level=md.level+1
                     md.target=100*md.level
 
-                    P.settings.das=math.max(md.storedDas,levels[md.level].das)
-                    P.settings.arr=math.max(md.storedArr,levels[md.level].arr)
+                    P.settings.asd=math.max(md.storedAsd,levels[md.level].asd)
+                    P.settings.asp=math.max(md.storedAsp,levels[md.level].asp)
                     P.settings.lockDelay=levels[md.level].lock
                     P.settings.spawnDelay=levels[md.level].spawn
                     P.settings.clearDelay=levels[md.level].clear

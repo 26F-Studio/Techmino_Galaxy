@@ -7,14 +7,14 @@ function scene.enter()
 
     local L=scene.widgetList
     if PROGRESS.get('main')==1 then
-        L.das.y=250
-        L.arr.y=350
-        L.sdarr:setVisible(false)
+        L.asd.y=250
+        L.asp.y=350
+        L.adp:setVisible(false)
     else
-        L.das.y=150
-        L.arr.y=250
-        L.sdarr.y=350
-        L.sdarr:setVisible(true)
+        L.asd.y=150
+        L.asp.y=250
+        L.adp.y=350
+        L.adp:setVisible(true)
     end
     WIDGET._reset()
 end
@@ -57,8 +57,8 @@ scene.widgetList={
     {type='slider',   pos={1,.5},x=-550, y=-210,w=400,fontSize=40,text=LANG'setting_sfx',    widthLimit=260,disp=TABLE.func_getVal(SETTINGS.system,'sfxVol'), code=TABLE.func_setVal(SETTINGS.system,'sfxVol')},
     {type='slider',   pos={1,.5},x=-550, y=-130,w=400,fontSize=40,text=LANG'setting_vib',    widthLimit=260,disp=TABLE.func_getVal(SETTINGS.system,'vibVol'), code=TABLE.func_setVal(SETTINGS.system,'vibVol')},
 
-    {type='slider',   name='das',  pos={1,.5},x=-800,y=50, w=650,text=LANG'setting_das',  widthLimit=260,axis={100,260,10},disp=TABLE.func_getVal(SETTINGS.game_mino,'das'),  valueShow=sliderShow_time, code=function(v) SETTINGS.game_mino.das=v; SETTINGS.game_mino.arr=math.min(SETTINGS.game_mino.arr,SETTINGS.game_mino.das) end},
-    {type='slider',   name='arr',  pos={1,.5},x=-800,y=150,w=650,text=LANG'setting_arr',  widthLimit=260,axis={20,120,10}, disp=TABLE.func_getVal(SETTINGS.game_mino,'arr'),  valueShow=sliderShow_time, code=function(v) SETTINGS.game_mino.arr=v; SETTINGS.game_mino.das=math.max(SETTINGS.game_mino.das,SETTINGS.game_mino.arr) end},
-    {type='slider',   name='sdarr',pos={1,.5},x=-800,y=250,w=650,text=LANG'setting_sdarr',widthLimit=260,axis={20,100,10}, disp=TABLE.func_getVal(SETTINGS.game_mino,'sdarr'),valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'sdarr')},
+    {type='slider',   name='asd',  pos={1,.5},x=-800,y=50, w=650,text=LANG'setting_asd',  widthLimit=260,axis={100,260,10},disp=TABLE.func_getVal(SETTINGS.game_mino,'asd'),  valueShow=sliderShow_time, code=function(v) SETTINGS.game_mino.asd=v; SETTINGS.game_mino.asp=math.min(SETTINGS.game_mino.asp,SETTINGS.game_mino.asd) end},
+    {type='slider',   name='asp',  pos={1,.5},x=-800,y=150,w=650,text=LANG'setting_asp',  widthLimit=260,axis={20,120,10}, disp=TABLE.func_getVal(SETTINGS.game_mino,'asp'),  valueShow=sliderShow_time, code=function(v) SETTINGS.game_mino.asp=v; SETTINGS.game_mino.asd=math.max(SETTINGS.game_mino.asd,SETTINGS.game_mino.asp) end},
+    {type='slider',   name='adp',pos={1,.5},x=-800,y=250,w=650,text=LANG'setting_adp',widthLimit=260,axis={20,100,10}, disp=TABLE.func_getVal(SETTINGS.game_mino,'adp'),valueShow=sliderShow_time, code=TABLE.func_setVal(SETTINGS.game_mino,'adp')},
 }
 return scene

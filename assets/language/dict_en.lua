@@ -22,7 +22,7 @@ return {
     },
     hypertap={
         title="Hypertap",
-        content="Refers to the technique of vibrating your finger on the controller to achieve faster sideways movement speed than holding it.\nIt is most commonly used on classic stacker where DAS is relatively slow. In most cases, you do not need to hypertap in modern stacker games because their DAS is usually fast enough.",
+        content="Refers to the technique of vibrating your finger on the controller to achieve faster sideways movement speed than holding it.\nIt is most commonly used on classic stacker where ASD is relatively slow. In most cases, you do not need to hypertap in modern stacker games because their ASD is usually fast enough.",
     },
     ['26f_studio']={
         title="26F Studio",

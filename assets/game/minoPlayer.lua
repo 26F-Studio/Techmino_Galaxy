@@ -266,7 +266,7 @@ function MP:getSmoothPos()
         return 0,0
     else
         return
-            self.moveDir and self.moveCharge<self.settings.das and 15*self.moveDir*(max(self.moveCharge,0)/self.settings.das-.5) or 0,
+            self.moveDir and self.moveCharge<self.settings.asd and 15*self.moveDir*(max(self.moveCharge,0)/self.settings.asd-.5) or 0,
             self.ghostY and self.handY>self.ghostY and 40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6 or 0
     end
 end
@@ -531,8 +531,8 @@ function MP:resetPosCheck()
         self:freshDelay('spawn')
     end
 
-    if self.settings.dasHalt>0 then -- DAS halt
-        self.moveCharge=min(self.moveCharge,self.settings.das-self.settings.dasHalt)
+    if self.settings.asHalt>0 then
+        self.moveCharge=min(self.moveCharge,self.settings.asd-self.settings.asHalt)
     end
 end
 function MP:freshGhost()
@@ -548,7 +548,7 @@ function MP:freshGhost()
             end
 
             -- 20G check
-            if (self.settings.dropDelay<=0 or self.downCharge and self.settings.sdarr==0) and self.ghostY<self.handY then
+            if (self.settings.dropDelay<=0 or self.downCharge and self.settings.adp==0) and self.ghostY<self.handY then
                 local dY=self.ghostY-self.handY
                 self:moveHand('drop',dY)
                 self:freshDelay('drop')
@@ -1446,16 +1446,16 @@ function MP:updateFrame()
                 local c1=c0+1
                 self.moveCharge=c1
                 local dist=0
-                if c0>=SET.das then
-                    c0=c0-SET.das
-                    c1=c1-SET.das
-                    if SET.arr==0 then
+                if c0>=SET.asd then
+                    c0=c0-SET.asd
+                    c1=c1-SET.asd
+                    if SET.asp==0 then
                         dist=1e99
                     else
-                        dist=floor(c1/SET.arr)-floor(c0/SET.arr)
+                        dist=floor(c1/SET.asp)-floor(c0/SET.asp)
                     end
-                elseif c1>=SET.das then
-                    if SET.arr==0 then
+                elseif c1>=SET.asd then
+                    if SET.asp==0 then
                         dist=1e99
                     else
                         dist=1
@@ -1473,14 +1473,11 @@ function MP:updateFrame()
                     end
                 end
             else
-                self.moveCharge=SET.das
+                self.moveCharge=SET.asd
                 if self.hand then
                     self:shakeBoard(self.moveDir>0 and '-right' or '-left')
                 end
             end
-        else
-            self.moveDir=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
-            self.moveCharge=0
         end
 
         -- Auto drop
@@ -1489,7 +1486,7 @@ function MP:updateFrame()
                 local c0=self.downCharge
                 local c1=c0+1
                 self.downCharge=c1
-                local dist=SET.sdarr==0 and 1e99 or floor(c1/SET.sdarr)-floor(c0/SET.sdarr)
+                local dist=SET.adp==0 and 1e99 or floor(c1/SET.adp)-floor(c0/SET.adp)
                 local oy=self.handY
                 if dist>0 then
                     while dist>0 do
@@ -1508,7 +1505,7 @@ function MP:updateFrame()
                     end
                 end
             else
-                self.downCharge=SET.sdarr
+                self.downCharge=SET.adp
                 if self.hand then
                     self:shakeBoard('-down')
                 end
@@ -1768,8 +1765,8 @@ function MP:render()
     -- Field border
     skin.drawFieldBorder()
 
-    -- Das indicator
-    skin.drawDasIndicator(self.moveDir,self.moveCharge,settings.das,settings.arr,settings.dasHalt)
+    -- Asd indicator
+    skin.drawAsdIndicator(self.moveDir,self.moveCharge,settings.asd,settings.asp,settings.asHalt)
 
     -- Delay indicator
     if not self.hand then -- Spawn
@@ -1932,16 +1929,23 @@ local baseEnv={
     allowTransform=true,
 
     -- May be overrode with user setting
-    das=162,
-    arr=26,
-    sdarr=12,
-    dasHalt=0,
-    hdLockA=1000,
-    hdLockM=100,
+    asd=162,
+    asp=26,
+    adp=12,
+    asHalt=0, -- Discharge some asd when piece spawn
+    hdLockA=1000, -- Harddrop lock (auto)
+    hdLockM=100, -- Harddrop lock (manual)
     initMove='buffer',
     initRotate='buffer',
     initHold='buffer',
     IRSpushUp=true,
+    dblMoveCover=true, -- Use second dir (Press two)
+    dblMoveChrg='reset', -- reset/floor/keep charge (Press two)
+    dblMoveStep=true, -- Move (Press 2)
+    dblMoveRelChrg='keep', -- reset/floor/keep charge (Release 1)
+    dblMoveRelStep=false, -- Move (Release 1)
+    dblMoveRelInvChrg='reset', -- reset/floor/keep charge (Release 2)
+    dblMoveRelInvStep=true, -- Move (Release 2)
     skin='mino_plastic',
     particles=true,
     shakeness=.26,

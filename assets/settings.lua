@@ -29,10 +29,10 @@ local settings={
     },
     game_mino={
         -- Handling
-        das=120,
-        arr=20,
-        sdarr=20,
-        dasHalt=26,
+        asd=120,
+        asp=20,
+        adp=20,
+        asHalt=26,
         hdLockA=200,
         hdLockM=62,
 
@@ -41,10 +41,10 @@ local settings={
     },
     game_puyo={
         -- Handling
-        das=120,
-        arr=20,
-        sdarr=20,
-        dasHalt=26,
+        asd=120,
+        asp=20,
+        adp=20,
+        asHalt=26,
         hdLockA=200,
         hdLockM=62,
 
@@ -53,8 +53,8 @@ local settings={
     },
     game_gem={
         -- Handling
-        das=150,
-        arr=40,
+        asd=150,
+        asp=40,
 
         -- Video
         shakeness=.6,

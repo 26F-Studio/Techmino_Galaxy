@@ -43,7 +43,7 @@ function S.drawFieldBackground(fieldW)
 end
 
 S.drawHeightLines=NULL
-S.drawDasIndicator=NULL
+S.drawAsdIndicator=NULL
 S.drawDelayIndicator=NULL
 S.drawLockDelayIndicator=NULL
 

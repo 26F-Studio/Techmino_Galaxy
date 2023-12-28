@@ -44,9 +44,9 @@ function marathon.event_playerInit_auto(P)
     P:addEvent('drawOnPlayer',marathon.event_drawOnPlayer)
 end
 function marathon.event_playerInit(P)
-    P.settings.das=math.max(P.settings.das,100)
-    P.settings.arr=math.max(P.settings.arr,20)
-    P.settings.sdarr=math.max(P.settings.sdarr,20)
+    P.settings.asd=math.max(P.settings.asd,100)
+    P.settings.asp=math.max(P.settings.asp,20)
+    P.settings.adp=math.max(P.settings.adp,20)
 
     P.settings.dropDelay=levels[1].drop
     P.settings.lockDelay=levels[1].lock

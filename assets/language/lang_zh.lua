@@ -70,10 +70,10 @@ return {
     graph_mino_title="M-图谱", -- 翻译注意：取自“知识图谱”(人工智能领域)
     settings_title="设置",
 
-    setting_das="DAS",
-    setting_arr="ARR",
-    setting_sdarr="SDARR",
-    setting_dasHalt="DAS停顿",
+    setting_asd="ASD",
+    setting_asp="ASP",
+    setting_adp="ADP",
+    setting_asHalt="AS Halt",
     setting_hdLockA="自动硬降锁",
     setting_hdLockM="手动硬降锁",
     setting_shakeness="场地晃动",

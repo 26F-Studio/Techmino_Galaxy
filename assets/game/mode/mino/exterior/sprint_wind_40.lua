@@ -8,8 +8,8 @@ return {
     settings={mino={
         dropDelay=20,
         lockDelay=2600,
-        das=126,
-        arr=26,
+        asd=126,
+        asp=26,
         freshCount=1e99,
         event={
             playerInit=mechLib.mino.misc.wind_switch_auto,
