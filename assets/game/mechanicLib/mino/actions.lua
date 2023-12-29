@@ -22,13 +22,21 @@ local function move(P,dir,canBuffer)
             P:playSound('move')
         else
             P:freshDelay('move')
+            if P.settings.wallChrg=='on' or P.settings.wallChrg=='full' then
+                P.moveCharge=P.settings.asd
+            end
             P:playSound('move_failed')
             if P.settings.particles then
                 P:createHandEffect(1,.26,0)
             end
         end
-    elseif canBuffer then
-        P.keyBuffer.move=dir
+    else
+        if P.settings.entryChrg=='on' or P.settings.entryChrg=='full' then
+            P.moveCharge=P.settings.asd
+        end
+        if canBuffer then
+            P.keyBuffer.move=dir
+        end
     end
 end
 local function pressMove(P,dir)
@@ -63,6 +71,8 @@ local function releaseMove(P,dir)
             if SET.dblMoveRelInvStep then move(P,invD,true) end
         end
     else
+        P.moveDir=false
+        P.moveCharge=0
         if P.keyBuffer.move==dir then P.keyBuffer.move=false end
         if P.hand and P.deathTimer then P[dir=='L' and 'moveLeft' or 'moveRight'](P) end
     end

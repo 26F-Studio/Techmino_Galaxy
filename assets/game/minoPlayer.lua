@@ -1456,7 +1456,6 @@ function MP:updateFrame()
         -- Auto shift
         if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then
             if self.hand and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) then
-                self.moveCharge=self.moveCharge+1
                 local dist=0
                 if SET.asp==0 then
                     if self.moveCharge>=SET.asd then
@@ -1476,10 +1475,28 @@ function MP:updateFrame()
                         self:playSound('move')
                     end
                 end
+                self.moveCharge=self.moveCharge+1 -- NOTICE: this may have problem
             else
-                self.moveCharge=SET.asd
-                if self.hand then
-                    self:shakeBoard(self.moveDir>0 and '-right' or '-left')
+                if not self.hand then
+                    if SET.entryChrg=='full' then
+                        self.moveCharge=SET.asd
+                    elseif SET.entryChrg=='on' then
+                        self.moveCharge=min(self.moveCharge+1,SET.asd)
+                    elseif SET.entryChrg=='break' then
+                        self.moveDir=false
+                        self.moveCharge=0
+                    end
+                else
+                    if SET.wallChrg=='full' then
+                        self.moveCharge=SET.asd
+                        self:shakeBoard(self.moveDir>0 and '-right' or '-left')
+                    elseif SET.wallChrg=='on' then
+                        self.moveCharge=min(self.moveCharge+1,SET.asd)
+                        self:shakeBoard(self.moveDir>0 and '-right' or '-left')
+                    elseif SET.wallChrg=='break' then
+                        self.moveDir=false
+                        self.moveCharge=0
+                    end
                 end
             end
         end
@@ -1935,6 +1952,8 @@ local baseEnv={
     asp=26, -- Auto shift period
     adp=26, -- Auto drop period
     ash=26, -- Auto Shift Halt, discharge asd when piece spawn
+    entryChrg='on', -- on/off/full/cancel charge when move before spawn
+    wallChrg='on', -- on/off/full/cancel charge when move towards wall
     stopMoveWhenSpawn=false, -- Stop moving when piece spawn
     stopMoveWhenRotate=false, -- Stop moving when rotate
     stopMoveWhenHold=false, -- Stop moving when hold
