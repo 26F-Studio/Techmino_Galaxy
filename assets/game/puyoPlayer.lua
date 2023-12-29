@@ -923,10 +923,10 @@ function PP:updateFrame()
                 self.moveCharge=self.moveCharge+1
                 local dist=0
                 if SET.asp==0 then
-                    if self.moveCharge>SET.asd then
+                    if self.moveCharge>=SET.asd then
                         dist=1e99
                     end
-                elseif (self.moveCharge-SET.asd)%SET.asp==0 then
+                elseif self.moveCharge>=SET.asd and (self.moveCharge-SET.asd)%SET.asp==0 then
                     dist=1
                 end
                 if dist>0 then

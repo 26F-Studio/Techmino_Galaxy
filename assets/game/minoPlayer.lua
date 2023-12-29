@@ -1445,10 +1445,10 @@ function MP:updateFrame()
                 self.moveCharge=self.moveCharge+1
                 local dist=0
                 if SET.asp==0 then
-                    if self.moveCharge>SET.asd then
+                    if self.moveCharge>=SET.asd then
                         dist=1e99
                     end
-                elseif (self.moveCharge-SET.asd)%SET.asp==0 then
+                elseif self.moveCharge>=SET.asd and (self.moveCharge-SET.asd)%SET.asp==0 then
                     dist=1
                 end
                 if dist>0 then
@@ -1927,13 +1927,14 @@ local baseEnv={
     initRotate='buffer',
     initHold='buffer',
     IRSpushUp=true,
-    dblMoveCover=true, -- Use second dir (Press two)
-    dblMoveChrg='reset', -- reset/floor/keep charge (Press two)
+    dblMoveCover=false, -- Use second dir (Press 2)
+    dblMoveChrg='reset', -- reset/keep/raw/full charge (Press 2)
     dblMoveStep=true, -- Move (Press 2)
-    dblMoveRelChrg='keep', -- reset/floor/keep charge (Release 1)
+    dblMoveRelChrg='raw', -- reset/keep/raw/full charge (Release 1)
     dblMoveRelStep=false, -- Move (Release 1)
-    dblMoveRelInvChrg='reset', -- reset/floor/keep charge (Release 2)
+    dblMoveRelInvChrg='reset', -- reset/keep/raw/full charge (Release 2)
     dblMoveRelInvStep=true, -- Move (Release 2)
+    dblMoveRelInvRedir=true, -- Change direction (Release 2)
     skin='mino_plastic',
     particles=true,
     shakeness=.26,

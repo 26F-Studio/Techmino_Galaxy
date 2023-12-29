@@ -602,10 +602,10 @@ function GP:updateFrame()
             self.moveChargeH=self.moveChargeH+1
             local dist=0
             if SET.asp==0 then
-                if self.moveChargeH>SET.asd then
+                if self.moveChargeH>=SET.asd then
                     dist=1e99
                 end
-            elseif (self.moveChargeH-SET.asd)%SET.asp==0 then
+            elseif self.moveChargeH>=SET.asd and (self.moveChargeH-SET.asd)%SET.asp==0 then
                 dist=1
             end
             if dist>0 then
@@ -631,10 +631,10 @@ function GP:updateFrame()
             self.moveChargeV=self.moveChargeV+1
             local dist=0
             if SET.asp==0 then
-                if self.moveChargeV>SET.asd then
+                if self.moveChargeV>=SET.asd then
                     dist=1e99
                 end
-            elseif (self.moveChargeV-SET.asd)%SET.asp==0 then
+            elseif self.moveChargeV>=SET.asd and (self.moveChargeV-SET.asd)%SET.asp==0 then
                 dist=1
             end
             if dist>0 then

@@ -1,51 +1,81 @@
 local ceil=math.ceil
 
+local function getCharge(charge,mode,SET)
+    if mode=='reset' then
+        return 0
+    elseif mode=='keep' then
+        local base=SET.asd-SET.asp
+        if charge>base then
+            return charge-(charge-base)%SET.asp
+        end
+    elseif mode=='raw' then
+        return charge
+    elseif mode=='full' then
+        return SET.asd
+    else
+        error("WTF why dblMoveChrg is "..mode)
+    end
+end
+local function move(P,dir,canBuffer)
+    if P.hand then
+        if P[dir=='L' and 'moveLeft' or 'moveRight'](P) then
+            P:playSound('move')
+        else
+            P:freshDelay('move')
+            P:playSound('move_failed')
+            if P.settings.particles then
+                P:createHandEffect(1,.26,0)
+            end
+        end
+    elseif canBuffer then
+        P.keyBuffer.move=dir
+    end
+end
+local function pressMove(P,dir)
+    -- WARNING: Has early return
+    local d=dir=='L' and -1 or 1
+
+    local SET=P.settings
+    if P.keyState[dir=='L' and 'moveRight' or 'moveLeft'] then
+        if SET.dblMoveCover then
+            P.moveDir=d
+        end
+        P.moveCharge=getCharge(P.moveCharge,SET.dblMoveChrg,SET)
+        if not SET.dblMoveStep then return end -- [Early return]
+    else
+        P.moveDir=d
+        P.moveCharge=0
+    end
+    move(P,dir,true)
+end
+local function releaseMove(P,dir)
+    local invD=dir=='L' and 'R' or 'L'
+    local invDN=dir=='L' and -1 or 1
+
+    local SET=P.settings
+    if P.keyState[dir=='L' and 'moveRight' or 'moveLeft'] then
+        if P.moveDir==-invDN then -- Normal Release
+            P.moveCharge=getCharge(P.moveCharge,SET.dblMoveRelChrg,SET)
+            if SET.dblMoveRelStep then move(P,invD,false) end
+        else -- Inversed Release
+            if SET.dblMoveRelInvRedir then P.moveDir=-invDN end
+            P.moveCharge=getCharge(P.moveCharge,SET.dblMoveRelInvChrg,SET)
+            if SET.dblMoveRelInvStep then move(P,invD,true) end
+        end
+    else
+        if P.keyBuffer.move==dir then P.keyBuffer.move=false end
+        if P.hand and P.deathTimer then P[dir=='L' and 'moveLeft' or 'moveRight'](P) end
+    end
+end
+
 local actions={}
 actions.moveLeft={
-    press=function(P)
-        P.moveDir=-1
-        P.moveCharge=0
-        if P.hand then
-            if P:moveLeft() then
-                P:playSound('move')
-            else
-                P:freshDelay('move')
-                P:playSound('move_failed')
-                if P.settings.particles then
-                    P:createHandEffect(1,.26,0)
-                end
-            end
-        else
-            P.keyBuffer.move='L'
-        end
-    end,
-    release=function(P)
-        if P.keyBuffer.move=='L' then P.keyBuffer.move=false end
-        if P.hand and P.deathTimer then P:moveRight() end
-    end
+    press=function(P) pressMove(P,'L') end,
+    release=function(P) releaseMove(P,'L') end
 }
 actions.moveRight={
-    press=function(P)
-        P.moveDir=1
-        P.moveCharge=0
-        if P.hand then
-            if P:moveRight() then
-                P:playSound('move')
-            else
-                P:freshDelay('move')
-                P:playSound('move_failed')
-                if P.settings.particles then
-                    P:createHandEffect(1,.26,0)
-                end
-            end
-        else
-            P.keyBuffer.move='R'
-        end
-    end,
-    release=function(P)
-        if P.keyBuffer.move=='R' then P.keyBuffer.move=false end
-        if P.hand and P.deathTimer then P:moveLeft() end
-    end
+    press=function(P) pressMove(P,'R') end,
+    release=function(P) releaseMove(P,'R') end
 }
 actions.rotateCW={
     press=function(P)
