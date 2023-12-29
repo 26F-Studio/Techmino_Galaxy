@@ -32,7 +32,7 @@ local settings={
         asd=120,
         asp=20,
         adp=20,
-        asHalt=26,
+        ash=26,
         hdLockA=200,
         hdLockM=62,
 
@@ -44,7 +44,7 @@ local settings={
         asd=120,
         asp=20,
         adp=20,
-        asHalt=26,
+        ash=26,
         hdLockA=200,
         hdLockM=62,
 

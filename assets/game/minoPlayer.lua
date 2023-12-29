@@ -531,8 +531,8 @@ function MP:resetPosCheck()
         self:freshDelay('spawn')
     end
 
-    if self.settings.asHalt>0 then
-        self.moveCharge=min(self.moveCharge,self.settings.asd-self.settings.asHalt)
+    if self.settings.ash>0 then
+        self.moveCharge=min(self.moveCharge,self.settings.asd-self.settings.ash)
     end
 end
 function MP:freshGhost()
@@ -1754,7 +1754,7 @@ function MP:render()
     skin.drawFieldBorder()
 
     -- Asd indicator
-    skin.drawAsdIndicator(self.moveDir,self.moveCharge,settings.asd,settings.asp,settings.asHalt)
+    skin.drawAsdIndicator(self.moveDir,self.moveCharge,settings.asd,settings.asp,settings.ash)
 
     -- Delay indicator
     if not self.hand then -- Spawn
@@ -1920,7 +1920,7 @@ local baseEnv={
     asd=162,
     asp=26,
     adp=12,
-    asHalt=0, -- Discharge some asd when piece spawn
+    ash=0, -- Discharge some asd when piece spawn
     hdLockA=1000, -- Harddrop lock (auto)
     hdLockM=100, -- Harddrop lock (manual)
     initMove='buffer',

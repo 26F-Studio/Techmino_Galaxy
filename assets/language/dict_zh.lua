@@ -195,15 +195,21 @@ KPM: Key per Minute，按键每分
 APM: Attack per Minute，攻击每分
 APL: Attack per Line，攻击每行（行的计算方式也可以分两种，详见LPM词条），也叫效率
 
-# asd_asp
-@ title 移动延迟（ASD&ASP）
+# asd_asp_adp
+@ title 移动延迟（ASD & ASP & ADP）
 @ contentSize 25
 ASD: Auto Shift Delay，自动移动延迟，旧称DAS（Delayed Auto Shift）
 ASP: Auto Shift Period，自动重复周期，旧称ARR（Auto Repeat Rate)
+ADP: Auto Drop Period，软降重复周期
 ~~
 在使用键盘输入文本时按住一个键，会连续输入了一大串字符。注意字符出现的时机：第一个字按下后立刻出现，停了一小会后开始快速连续自动输入，其中“停了一小会”就是ASD长度，“连续自动输入”的间隔就是ASP长度。
+ADP类似ASP，区别是用于软降。
 ~~
-最佳调节方法：ASD越小越好，但小到依然能准确区分单点和长按两种动作为止；ASP能多小就多小，尽可能接近0。
+最佳调节方法：ASD越小越好，但小到依然能准确区分单点和长按两种动作为止；ASP能多小就多小，尽可能接近0；ADP通常都为0。
+
+# ash
+@ title 自动移动阻止（ASH）
+ASH: Auto Shift Halt，新的方块出现后即使ASD已充满，方块也会等ASH的时长后再开始移动，优化手感。
 
 # init_control
 @ title 预输入
@@ -224,7 +230,7 @@ ASP: Auto Shift Period，自动重复周期，旧称ARR（Auto Repeat Rate)
 20G下方块永远瞬间到底，看不到中间的下落过程，落入深坑的方块无法再移出。
 
 # lock_delay
-@ title 锁定延迟
+@ title 锁定延迟（LD）
 指在不操作的情况下，“方块自然下落至触地”到“方块锁定不能再移动”之间的时间。
 一般规则下该延迟可以被操作刷新，故在高重力规则下即使方块瞬间落地，依然有很多操作的机会。
 

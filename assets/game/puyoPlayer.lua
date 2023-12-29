@@ -387,8 +387,8 @@ function PP:resetPosCheck()
         self:freshDelay('spawn')
     end
 
-    if self.settings.asHalt>0 then
-        self.moveCharge=min(self.moveCharge,self.settings.asd-self.settings.asHalt)
+    if self.settings.ash>0 then
+        self.moveCharge=min(self.moveCharge,self.settings.asd-self.settings.ash)
     end
 end
 function PP:freshGhost()
@@ -1147,7 +1147,7 @@ function PP:render()
     skin.drawFieldBorder()
 
     -- ASD indicator
-    skin.drawAsdIndicator(self.moveDir,self.moveCharge,self.settings.asd,self.settings.asp,self.settings.asHalt)
+    skin.drawAsdIndicator(self.moveDir,self.moveCharge,self.settings.asd,self.settings.asp,self.settings.ash)
 
     -- Delay indicator
     if not self.hand then -- Spawn
@@ -1248,7 +1248,7 @@ local baseEnv={
     asd=162,
     asp=26,
     adp=12,
-    asHalt=0,
+    ash=0,
     hdLockA=1000,
     hdLockM=100,
     initMove='buffer',

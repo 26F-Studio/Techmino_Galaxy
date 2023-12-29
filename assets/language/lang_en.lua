@@ -73,7 +73,7 @@ return {
     setting_asd="ASD",
     setting_asp="ASP",
     setting_adp="ADP",
-    setting_asHalt="AS Halt",
+    setting_ash="AS Halt",
     setting_hdLockA="Auto hard-drop lock",
     setting_hdLockM="Manual hard-drop lock",
     setting_shakeness="Shakiness",

@@ -85,7 +85,7 @@ function S.drawHeightLines(fieldW,maxSpawnH,spawnH,lockoutH,deathH,voidH)
     gc_setColor(.0,.0,.0,.6) gc_rectangle('fill',0,-voidH    -40,fieldW,40)
 end
 
-function S.drawAsdIndicator(dir,charge,asdMax,aspMax,asHalt)
+function S.drawAsdIndicator(dir,charge,asdMax,aspMax,ash)
     if not dir then return end
 
     if charge>0 then
@@ -97,7 +97,7 @@ function S.drawAsdIndicator(dir,charge,asdMax,aspMax,asHalt)
         end
     else
         gc_setColor(1,0,.62,.5)
-        gc_rectangle('fill',202*dir,401,5*dir,-800*charge/(asdMax-asHalt))
+        gc_rectangle('fill',202*dir,401,5*dir,-800*charge/(asdMax-ash))
     end
 end
 

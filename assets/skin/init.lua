@@ -13,7 +13,7 @@ local function _getTime() return SKIN.time end
 ---@field drawFieldCell fun(C:Techmino.Cell, F:Techmino.RectField, x:number, y:number)
 ---@field drawFloatHold fun(n:number|string, B:table, handX:number, handY:number, unavailable:boolean)
 ---@field drawHeightLines fun(fieldW:number, maxSpawnH:number, spawnH,lockoutH:number, deathH:number, voidH:number)
----@field drawAsdIndicator fun(dir:number , charge:number, asdMax:number, aspMax:number, asHalt:number)
+---@field drawAsdIndicator fun(dir:number , charge:number, asdMax:number, aspMax:number, ash:number)
 ---@field drawDelayIndicator fun(color:Zenitha.Color, value:number)
 ---@field drawGarbageBuffer fun(garbageBuffer:table)
 ---@field drawLockDelayIndicator fun(freshCondition:string, freshChance:number)

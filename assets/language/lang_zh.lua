@@ -70,10 +70,10 @@ return {
     graph_mino_title="M-图谱", -- 翻译注意：取自“知识图谱”(人工智能领域)
     settings_title="设置",
 
-    setting_asd="ASD",
-    setting_asp="ASP",
-    setting_adp="ADP",
-    setting_asHalt="AS Halt",
+    setting_asd="自动移动延迟",
+    setting_asp="自动重复周期",
+    setting_adp="软降重复周期",
+    setting_ash="自动移动阻止",
     setting_hdLockA="自动硬降锁",
     setting_hdLockM="手动硬降锁",
     setting_shakeness="场地晃动",
