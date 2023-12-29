@@ -531,7 +531,10 @@ function MP:resetPosCheck()
         self:freshDelay('spawn')
     end
 
-    if self.settings.ash>0 then
+    if self.settings.stopMoveWhenSpawn then
+        self.moveDir=false
+        self.moveCharge=0
+    elseif self.settings.ash>0 then
         self.moveCharge=min(self.moveCharge,self.settings.asd-self.settings.ash)
     end
 end
@@ -978,8 +981,14 @@ function MP:moveUp() -- ?
     end
 end
 function MP:rotate(dir,ifInit)
+    if self.settings.stopMoveWhenRotate then
+        self.moveDir=false
+        self.moveCharge=0
+    end
+
     if not self.hand then return end
     if dir~='R' and dir~='L' and dir~='F' then error("WTF why dir isn't R/L/F ("..tostring(dir)..")") end
+
     local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
     if not minoData then return end
 
@@ -1033,8 +1042,13 @@ function MP:rotate(dir,ifInit)
 end
 function MP:hold(ifInit)
     if self.holdTime>=self.settings.holdSlot and not self.settings.infHold then return end
+
     if self.settings.particles then
         self:createHoldEffect(ifInit)
+    end
+    if self.settings.stopMoveWhenHold then
+        self.moveDir=false
+        self.moveCharge=0
     end
 
     local mode=self.settings.holdMode
@@ -1924,7 +1938,7 @@ local baseEnv={
     stopMoveWhenSpawn=false, -- Stop moving when piece spawn
     stopMoveWhenRotate=false, -- Stop moving when rotate
     stopMoveWhenHold=false, -- Stop moving when hold
-    dblMoveCover=false, -- Use second dir (Press 2)
+    dblMoveCover=true, -- Use second dir (Press 2)
     dblMoveChrg='reset', -- reset/keep/raw/full charge (Press 2)
     dblMoveStep=true, -- Move (Press 2)
     dblMoveRelChrg='raw', -- reset/keep/raw/full charge (Release 1)

@@ -387,7 +387,10 @@ function PP:resetPosCheck()
         self:freshDelay('spawn')
     end
 
-    if self.settings.ash>0 then
+    if self.settings.stopMoveWhenSpawn then
+        self.moveDir=false
+        self.moveCharge=0
+    elseif self.settings.ash>0 then
         self.moveCharge=min(self.moveCharge,self.settings.asd-self.settings.ash)
     end
 end
@@ -611,6 +614,11 @@ local PRS={
     },
 }
 function PP:rotate(dir,ifInit)
+    if self.settings.stopMoveWhenRotate then
+        self.moveDir=false
+        self.moveCharge=0
+    end
+
     if not self.hand then return end
     if dir~='R' and dir~='L' and dir~='F' then error("WTF why dir isn't R/L/F ("..tostring(dir)..")") end
     local origY=self.handY -- For IRS pushing up
@@ -1251,7 +1259,7 @@ local baseEnv={
     ash=26,
     stopMoveWhenSpawn=false,
     stopMoveWhenRotate=false,
-    dblMoveCover=false,
+    dblMoveCover=true,
     dblMoveChrg='reset',
     dblMoveStep=true,
     dblMoveRelChrg='raw',
