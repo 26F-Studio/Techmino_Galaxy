@@ -74,8 +74,8 @@ return {
     setting_asp="ASP",
     setting_adp="ADP",
     setting_ash="AS Halt",
-    setting_hdLockA="Auto hard-drop lock",
-    setting_hdLockM="Manual hard-drop lock",
+    setting_ahdl="Auto harddrop lock",
+    setting_mhdl="Manual harddrop lock",
     setting_shakeness="Shakiness",
     setting_hitWavePower="Hitwave Power",
 

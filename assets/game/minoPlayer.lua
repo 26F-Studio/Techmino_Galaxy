@@ -1448,8 +1448,8 @@ function MP:updateFrame()
     local SET=self.settings
 
     -- Hard-drop lock
-    if self.hdLockATimer>0 then self.hdLockATimer=self.hdLockATimer-1 end
-    if self.hdLockMTimer>0 then self.hdLockMTimer=self.hdLockMTimer-1 end
+    if self.ahdlTimer>0 then self.ahdlTimer=self.ahdlTimer-1 end
+    if self.mhdlTimer>0 then self.mhdlTimer=self.mhdlTimer-1 end
 
     -- Current controlling piece
     if not self.deathTimer then
@@ -1550,7 +1550,7 @@ function MP:updateFrame()
             if self.handY==self.ghostY then
                 self.lockTimer=self.lockTimer-1
                 if self.lockTimer<=0 then
-                    self.hdLockATimer=self.settings.hdLockA
+                    self.ahdlTimer=self.settings.ahdl
                     self:minoDropped()
                 end
                 break
@@ -1947,11 +1947,11 @@ local baseEnv={
     script=false,
     allowTransform=true,
 
-    -- May be overrode with user setting
-    asd=122, -- Auto shift delay
-    asp=26, -- Auto shift period
-    adp=26, -- Auto drop period
-    ash=26, -- Auto Shift Halt, discharge asd when piece spawn
+    -- Control
+    asd=122, -- *Auto shift delay
+    asp=26, -- *Auto shift period
+    adp=26, -- *Auto drop period
+    ash=26, -- *Auto Shift Halt, discharge asd when piece spawn
     entryChrg='on', -- on/off/full/cancel charge when move before spawn
     wallChrg='on', -- on/off/full/cancel charge when move towards wall
     stopMoveWhenSpawn=false, -- Stop moving when piece spawn
@@ -1968,12 +1968,14 @@ local baseEnv={
     initMove='buffer', -- buffer/hold to do initial move
     initRotate='buffer', -- buffer/hold to do initial rotate
     initHold='buffer', -- buffer/hold to do initial hold
-    hdLockA=1000, -- Harddrop lock (auto)
-    hdLockM=100, -- Harddrop lock (manual)
+    ahdl=1000, -- *Auto harddrop lock
+    mhdl=100, -- *Manual harddrop lock
+
+    -- Other
     IRSpushUp=true, -- Use bottom-align when IRS or suffocate
     skin='mino_plastic',
     particles=true,
-    shakeness=.26,
+    shakeness=.26, -- *
     inputDelay=0,
 }
 local soundEventMeta={
@@ -2074,8 +2076,8 @@ function MP:initialize()
     self.moveCharge=0
     self.downCharge=false
 
-    self.hdLockATimer=0
-    self.hdLockMTimer=0
+    self.ahdlTimer=0
+    self.mhdlTimer=0
 
     self.keyBuffer={
         move=false,

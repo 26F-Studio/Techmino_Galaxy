@@ -33,8 +33,8 @@ local settings={
         asp=20,
         adp=20,
         ash=26,
-        hdLockA=200,
-        hdLockM=62,
+        ahdl=200,
+        mhdl=62,
 
         -- Video
         shakeness=.6,
@@ -45,8 +45,8 @@ local settings={
         asp=20,
         adp=20,
         ash=26,
-        hdLockA=200,
-        hdLockM=62,
+        ahdl=200,
+        mhdl=62,
 
         -- Video
         shakeness=.6,

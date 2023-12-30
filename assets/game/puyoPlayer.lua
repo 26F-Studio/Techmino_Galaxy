@@ -920,8 +920,8 @@ function PP:updateFrame()
     local SET=self.settings
 
     -- Hard-drop lock
-    if self.hdLockATimer>0 then self.hdLockATimer=self.hdLockATimer-1 end
-    if self.hdLockMTimer>0 then self.hdLockMTimer=self.hdLockMTimer-1 end
+    if self.ahdlTimer>0 then self.ahdlTimer=self.ahdlTimer-1 end
+    if self.mhdlTimer>0 then self.mhdlTimer=self.mhdlTimer-1 end
 
     -- Controlling piece
     if not self.deathTimer then
@@ -1047,7 +1047,7 @@ function PP:updateFrame()
             if self.handY==self.ghostY then
                 self.lockTimer=self.lockTimer-1
                 if self.lockTimer<=0 then
-                    self.hdLockATimer=self.settings.hdLockA
+                    self.ahdlTimer=self.settings.ahdl
                     self:puyoDropped()
                 end
                 break
@@ -1288,8 +1288,8 @@ local baseEnv={
     dblMoveRelInvRedir=true,
     initMove='buffer',
     initRotate='buffer',
-    hdLockA=1000,
-    hdLockM=100,
+    ahdl=1000,
+    mhdl=100,
     IRSpushUp=true,
     skin='puyo_jelly',
     particles=true,
@@ -1379,8 +1379,8 @@ function PP:initialize()
     self.moveCharge=0
     self.downCharge=false
 
-    self.hdLockATimer=0
-    self.hdLockMTimer=0
+    self.ahdlTimer=0
+    self.mhdlTimer=0
 
     self.keyBuffer={
         move=false,

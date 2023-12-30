@@ -38,7 +38,6 @@ local function move(P,dir,canBuffer)
     end
 end
 local function pressMove(P,dir)
-    -- WARNING: Has early return
     local d=dir=='L' and -1 or 1
 
     local SET=P.settings
@@ -47,12 +46,12 @@ local function pressMove(P,dir)
             P.moveDir=d
         end
         P.moveCharge=getCharge(P.moveCharge,SET.dblMoveChrg,SET)
-        if not SET.dblMoveStep then return end -- [Early return]
+        if SET.dblMoveStep then move(P,dir,true) end
     else
         P.moveDir=d
         P.moveCharge=0
+        move(P,dir,true)
     end
-    move(P,dir,true)
 end
 local function releaseMove(P,dir)
     local invD=dir=='L' and 'R' or 'L'
@@ -134,10 +133,10 @@ actions.softDrop={
 }
 actions.hardDrop={
     press=function(P)
-        if P.hdLockMTimer~=0 or P.hdLockATimer~=0 then
+        if P.mhdlTimer~=0 or P.ahdlTimer~=0 then
             P:playSound('rotate_failed')
         elseif P.hand and not P.deathTimer then
-            P.hdLockMTimer=P.settings.hdLockM
+            P.mhdlTimer=P.settings.mhdl
             P:puyoDropped()
         else
             P.keyBuffer.hardDrop=true
