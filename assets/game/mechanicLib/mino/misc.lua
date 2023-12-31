@@ -241,8 +241,8 @@ do -- wind
     end
     function misc.wind_event_afterClear(P)
         local md=P.modeData
-        if #md.invertPoints>0 and md.line>md.invertPoints[1] then
-            while #md.invertPoints>0 and md.line>md.invertPoints[1] do
+        if #md.invertPoints>0 and md.stat.line>md.invertPoints[1] then
+            while #md.invertPoints>0 and md.stat.line>md.invertPoints[1] do
                 rem(md.invertPoints,1)
             end
             md.windStrength=-MATH.sign(md.windStrength)*P:random(1260,1600)
