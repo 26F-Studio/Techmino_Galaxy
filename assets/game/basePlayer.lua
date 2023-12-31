@@ -218,6 +218,8 @@ function P:finish(reason)
     self.spawnTimer=1e99
 
     self:triggerEvent('gameOver',reason)
+    if not self.finished then return end
+
     GAME.checkFinish()
 
     -- TODO: Just for temporary use
