@@ -74,8 +74,8 @@ return {
     setting_asp="自动重复周期",
     setting_adp="软降重复周期",
     setting_ash="自动移动阻止",
-    setting_ahdl="自动硬降锁",
-    setting_mhdl="手动硬降锁",
+    setting_aHdLock="自动硬降锁",
+    setting_mHdLock="手动硬降锁",
     setting_shakeness="场地晃动",
     setting_hitWavePower="冲击波强度",
 

@@ -135,11 +135,11 @@ actions.softDrop={
 }
 actions.hardDrop={
     press=function(P)
-        if P.mhdlTimer~=0 or P.ahdlTimer~=0 then
+        if P.mHdLockTimer~=0 or P.aHdLockTimer~=0 then
             P:playSound('rotate_failed')
         elseif P.hand then
             if not P.deathTimer then
-                P.mhdlTimer=P.settings.mhdl
+                P.mHdLockTimer=P.settings.mHdLock
                 P:puyoDropped()
             else
                 P.deathTimer=ceil(P.deathTimer/2.6)

@@ -1448,8 +1448,8 @@ function MP:updateFrame()
     local SET=self.settings
 
     -- Hard-drop lock
-    if self.ahdlTimer>0 then self.ahdlTimer=self.ahdlTimer-1 end
-    if self.mhdlTimer>0 then self.mhdlTimer=self.mhdlTimer-1 end
+    if self.aHdLockTimer>0 then self.aHdLockTimer=self.aHdLockTimer-1 end
+    if self.mHdLockTimer>0 then self.mHdLockTimer=self.mHdLockTimer-1 end
 
     -- Current controlling piece
     if not self.deathTimer then
@@ -1550,7 +1550,7 @@ function MP:updateFrame()
             if self.handY==self.ghostY then
                 self.lockTimer=self.lockTimer-1
                 if self.lockTimer<=0 then
-                    self.ahdlTimer=self.settings.ahdl
+                    self.aHdLockTimer=self.settings.aHdLock
                     self:minoDropped()
                 end
                 break
@@ -1963,8 +1963,8 @@ local baseEnv={
     initMove='buffer', -- buffer/hold to do initial move
     initRotate='buffer', -- buffer/hold to do initial rotate
     initHold='buffer', -- buffer/hold to do initial hold
-    ahdl=1000, -- *Auto harddrop lock
-    mhdl=100, -- *Manual harddrop lock
+    aHdLock=1000, -- *Auto harddrop lock
+    mHdLock=100, -- *Manual harddrop lock
 
     -- Other
     IRSpushUp=true, -- Use bottom-align when IRS or suffocate
@@ -2074,8 +2074,8 @@ function MP:initialize()
     self.moveCharge=0
     self.downCharge=false
 
-    self.ahdlTimer=0
-    self.mhdlTimer=0
+    self.aHdLockTimer=0
+    self.mHdLockTimer=0
 
     self.keyBuffer={
         move=false,
