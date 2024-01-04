@@ -1942,11 +1942,6 @@ local baseEnv={
     allowCancel=true,
     clearStuck=true,
 
-    -- Other
-    strictLockout=false,
-    script=false,
-    allowTransform=true,
-
     -- Control
     asd=122, -- *Auto shift delay
     asp=26, -- *Auto shift period
@@ -1973,6 +1968,9 @@ local baseEnv={
 
     -- Other
     IRSpushUp=true, -- Use bottom-align when IRS or suffocate
+    strictLockout=false,
+    script=false,
+    allowTransform=true,
     skin='mino_plastic',
     particles=true,
     shakeness=.26, -- *
