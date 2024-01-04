@@ -1,3 +1,5 @@
+local ceil=math.ceil
+
 local function getCharge(charge,mode,SET)
     if mode=='reset' then
         return 0
@@ -123,7 +125,7 @@ actions.rotate180={
 actions.softDrop={
     press=function(P)
         P.downCharge=0
-        if P.hand and (P.handY>P.ghostY or P.deathTimer) and P:moveDown() then
+        if P.hand and (P.handY>(P.ghostY or 1) or P.deathTimer) and P:moveDown() then
             P:playSound('move_down')
         end
     end,
@@ -135,9 +137,13 @@ actions.hardDrop={
     press=function(P)
         if P.mhdlTimer~=0 or P.ahdlTimer~=0 then
             P:playSound('rotate_failed')
-        elseif P.hand and not P.deathTimer then
-            P.mhdlTimer=P.settings.mhdl
-            P:puyoDropped()
+        elseif P.hand then
+            if not P.deathTimer then
+                P.mhdlTimer=P.settings.mhdl
+                P:puyoDropped()
+            else
+                P.deathTimer=ceil(P.deathTimer/2.6)
+            end
         else
             P.keyBuffer.hardDrop=true
         end
