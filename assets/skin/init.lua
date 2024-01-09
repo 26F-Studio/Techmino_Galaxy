@@ -18,6 +18,7 @@ local function _getTime() return SKIN.time end
 ---@field drawGarbageBuffer fun(garbageBuffer:table)
 ---@field drawLockDelayIndicator fun(freshCondition:string, freshChance:number)
 ---@field drawGhost fun(B:table, handX:number, ghostY:number)
+---@field drawHandStroke fun(B:table, handX:number, handY:number)
 ---@field drawHand fun(B:table, handX:number, handY:number)
 ---@field drawNextBorder fun(slot:number)
 ---@field drawNext fun(n:number, B:table, unavailable:boolean)

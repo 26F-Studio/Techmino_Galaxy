@@ -157,6 +157,16 @@ function S.drawGhost(B,handX,ghostY)
     end end
 end
 
+local strokeR=4
+function S.drawHandStroke(B,handX,handY)
+    gc_setColor(1,1,1)
+    for y=1,#B do for x=1,#B[1] do
+        if B[y][x] then
+            gc_rectangle('fill',(handX+x-2)*40-strokeR,-(handY+y-1)*40-strokeR,40+2*strokeR,40+2*strokeR)
+        end
+    end end
+end
+
 function S.drawHand(B,handX,handY)
     for y=1,#B do for x=1,#B[1] do
         if B[y][x] then
