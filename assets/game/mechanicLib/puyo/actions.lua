@@ -73,7 +73,7 @@ local function releaseMove(P,dir)
         P.moveDir=false
         P.moveCharge=0
         if P.keyBuffer.move==dir then P.keyBuffer.move=false end
-        if P.hand and P.deathTimer then P[dir=='L' and 'moveLeft' or 'moveRight'](P) end
+        if P.hand and P.deathTimer then P[dir=='L' and 'moveRight' or 'moveLeft'](P) end
     end
 end
 
