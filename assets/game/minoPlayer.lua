@@ -1724,6 +1724,7 @@ function MP:render()
                         local dx,dy=self:getSmoothPos()
                         gc_translate(dx,dy)
 
+                        skin.drawHandStroke(CB,self.handX,self.handY)
                         skin.drawHand(CB,self.handX,self.handY)
 
                         local RS=minoRotSys[settings.rotSys]

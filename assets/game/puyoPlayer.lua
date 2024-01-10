@@ -1140,6 +1140,7 @@ function PP:render()
                     -- Smooth
                     local dx,dy=self:getSmoothPos()
                     gc_translate(dx,dy)
+                    skin.drawHandStroke(CB,self.handX,self.handY)
                     skin.drawHand(CB,self.handX,self.handY)
                     gc_translate(-dx,-dy)
                 end
