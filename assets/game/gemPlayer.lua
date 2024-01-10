@@ -762,8 +762,8 @@ function GP:updateFrame()
     end
 end
 function GP:render()
-    local settings=self.settings
-    local skin=SKIN.get(settings.skin)
+    local SET=self.settings
+    local skin=SKIN.get(SET.skin)
     SKIN.time=self.time
 
     gc_push('transform')
@@ -783,12 +783,12 @@ function GP:render()
         -- Start field stencil
         GC.stc_setComp()
         GC.stc_rect(0,0,720,-720)
-        gc_scale(16/settings.fieldSize)
+        gc_scale(16/SET.fieldSize)
 
             self:triggerEvent('drawBelowField') -- From frame's bottom-left, 40px a cell
 
             -- Grid & Cells
-            skin.drawFieldBackground(settings.fieldSize)
+            skin.drawFieldBackground(SET.fieldSize)
             local F=self.field
             for y=1,#F do for x=1,#F[1] do
                 local C=F[y][x]
@@ -833,8 +833,8 @@ function GP:render()
     self:triggerEvent('drawOnPlayer') -- From player's center
 
     -- Starting counter
-    if self.time<settings.readyDelay then
-        skin.drawStartingCounter(settings.readyDelay)
+    if self.time<SET.readyDelay then
+        skin.drawStartingCounter(SET.readyDelay)
     end
 
     gc_pop()

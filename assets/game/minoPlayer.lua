@@ -1649,8 +1649,8 @@ function MP:updateFrame()
     end
 end
 function MP:render()
-    local settings=self.settings
-    local skin=SKIN.get(settings.skin)
+    local SET=self.settings
+    local skin=SKIN.get(SET.skin)
     SKIN.time=self.time
 
     gc_push('transform')
@@ -1670,12 +1670,12 @@ function MP:render()
         -- Start field stencil
         GC.stc_setComp('equal',1)
         GC.stc_rect(0,0,400,-1600)
-        gc_scale(10/settings.fieldW)
+        gc_scale(10/SET.fieldW)
 
             self:triggerEvent('drawBelowField') -- From frame's bottom-left, 40px a cell
 
             -- Grid & Cells
-            skin.drawFieldBackground(settings.fieldW)
+            skin.drawFieldBackground(SET.fieldW)
 
             gc_translate(0,self.fieldDived)
 
@@ -1684,7 +1684,7 @@ function MP:render()
                     gc_push('transform')
                     gc_translate(0,-40) -- Move to up-left corner of first cell
 
-                    local width=settings.fieldW
+                    local width=SET.fieldW
                     for y=1,#matrix do
                         for x=1,width do
                             local C=matrix[y][x]
@@ -1727,7 +1727,7 @@ function MP:render()
                         skin.drawHandStroke(CB,self.handX,self.handY)
                         skin.drawHand(CB,self.handX,self.handY)
 
-                        local RS=minoRotSys[settings.rotSys]
+                        local RS=minoRotSys[SET.rotSys]
                         local minoData=RS[self.hand.shape]
                         if minoData then
                             local state=minoData[self.hand.direction]
@@ -1746,7 +1746,7 @@ function MP:render()
                 if #self.floatHolds>0 then
                     for n=1,#self.floatHolds do
                         local H=self.floatHolds[n]
-                        skin.drawFloatHold(n,H.hand.matrix,H.handX,H.handY,settings.holdMode=='float' and not settings.infHold and n<=self.holdTime)
+                        skin.drawFloatHold(n,H.hand.matrix,H.handX,H.handY,SET.holdMode=='float' and not SET.infHold and n<=self.holdTime)
                     end
                 end
 
@@ -1754,12 +1754,12 @@ function MP:render()
 
             -- Height lines
             skin.drawHeightLines(     -- All unit are pixel
-                settings.fieldW*40,   -- Field Width
-                (settings.spawnH+settings.extraSpawnH)*40, -- Max Spawning height
-                settings.spawnH*40,   -- Spawning height
-                settings.lockoutH*40, -- Lock-out height
-                settings.deathH*40,   -- Death height
-                settings.voidH*40     -- Void height
+                SET.fieldW*40,   -- Field Width
+                (SET.spawnH+SET.extraSpawnH)*40, -- Max Spawning height
+                SET.spawnH*40,   -- Spawning height
+                SET.lockoutH*40, -- Lock-out height
+                SET.deathH*40,   -- Death height
+                SET.voidH*40     -- Void height
             )
 
             self:triggerEvent('drawInField') -- From frame's bottom-left, 40px a cell
@@ -1786,39 +1786,39 @@ function MP:render()
     skin.drawFieldBorder()
 
     -- Asd indicator
-    skin.drawAsdIndicator(self.moveDir,self.moveCharge,settings.asd,settings.asp,settings.ash)
+    skin.drawAsdIndicator(self.moveDir,self.moveCharge,SET.asd,SET.asp,SET.ash)
 
     -- Delay indicator
     if not self.hand then -- Spawn
-        skin.drawDelayIndicator(COLOR.lB,self.spawnTimer/settings.spawnDelay)
+        skin.drawDelayIndicator(COLOR.lB,self.spawnTimer/SET.spawnDelay)
     elseif self.deathTimer then -- Death
-        skin.drawDelayIndicator(COLOR.R,self.deathTimer/settings.deathDelay)
+        skin.drawDelayIndicator(COLOR.R,self.deathTimer/SET.deathDelay)
     else -- Lock
-        skin.drawDelayIndicator(COLOR.lY,self.lockTimer/settings.lockDelay)
+        skin.drawDelayIndicator(COLOR.lY,self.lockTimer/SET.lockDelay)
     end
 
     -- Garbage buffer
     skin.drawGarbageBuffer(self.garbageBuffer)
 
     -- Lock delay indicator
-    skin.drawLockDelayIndicator(settings.freshCondition,self.freshChance)
+    skin.drawLockDelayIndicator(SET.freshCondition,self.freshChance)
 
     -- Next (Almost same as drawing hold(s), don't forget to change both)
     gc_push('transform')
     gc_translate(200,-400)
-    skin.drawNextBorder(settings.nextSlot)
-    for n=1,min(#self.nextQueue,settings.nextSlot) do
-        skin.drawNext(n,self.nextQueue[n].matrix,settings.holdMode=='swap' and not settings.infHold and n<=self.holdTime)
+    skin.drawNextBorder(SET.nextSlot)
+    for n=1,min(#self.nextQueue,SET.nextSlot) do
+        skin.drawNext(n,self.nextQueue[n].matrix,SET.holdMode=='swap' and not SET.infHold and n<=self.holdTime)
     end
     gc_pop()
 
     -- Hold (Almost same as drawing next(s), don't forget to change both)
     gc_push('transform')
     gc_translate(-200,-400)
-    skin.drawHoldBorder(settings.holdMode,settings.holdSlot)
+    skin.drawHoldBorder(SET.holdMode,SET.holdSlot)
     if #self.holdQueue>0 then
         for n=1,#self.holdQueue do
-            skin.drawHold(n,self.holdQueue[n].matrix,settings.holdMode=='hold' and not settings.infHold and n<=self.holdTime)
+            skin.drawHold(n,self.holdQueue[n].matrix,SET.holdMode=='hold' and not SET.infHold and n<=self.holdTime)
         end
     end
     gc_pop()
@@ -1832,8 +1832,8 @@ function MP:render()
     self:triggerEvent('drawOnPlayer') -- From player's center
 
     -- Starting counter
-    if self.time<settings.readyDelay then
-        skin.drawStartingCounter(settings.readyDelay)
+    if self.time<SET.readyDelay then
+        skin.drawStartingCounter(SET.readyDelay)
     end
 
     -- Fade out at top

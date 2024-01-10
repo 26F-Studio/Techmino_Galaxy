@@ -1089,8 +1089,8 @@ function PP:updateFrame()
     end
 end
 function PP:render()
-    local settings=self.settings
-    local skin=SKIN.get(settings.skin)
+    local SET=self.settings
+    local skin=SKIN.get(SET.skin)
     SKIN.time=self.time
 
     gc_push('transform')
@@ -1110,12 +1110,12 @@ function PP:render()
         -- Start field stencil
         GC.stc_setComp()
         GC.stc_rect(0,0,400,-920)
-        gc_scale(10/settings.fieldW)
+        gc_scale(10/SET.fieldW)
 
             self:triggerEvent('drawBelowField') -- From frame's bottom-left, 40px a cell
 
             -- Grid & Cells
-            skin.drawFieldBackground(settings.fieldW)
+            skin.drawFieldBackground(SET.fieldW)
 
             local F=self.field
             for y=1,#F do for x=1,#F[1] do
@@ -1150,11 +1150,11 @@ function PP:render()
 
             -- Height lines
             skin.drawHeightLines(     -- All unit are pixel
-                settings.fieldW*40,   -- Field Width
-                settings.spawnH*40,   -- Spawning height
-                settings.lockoutH*40, -- Lock-out height
-                settings.deathH*40,   -- Death height
-                settings.voidH*40     -- Void height
+                SET.fieldW*40,   -- Field Width
+                SET.spawnH*40,   -- Spawning height
+                SET.lockoutH*40, -- Lock-out height
+                SET.deathH*40,   -- Death height
+                SET.voidH*40     -- Void height
             )
 
             self:triggerEvent('drawInField') -- From frame's bottom-left, 40px a cell
@@ -1177,24 +1177,24 @@ function PP:render()
 
     -- Delay indicator
     if not self.hand then -- Spawn
-        skin.drawDelayIndicator(COLOR.lB,self.spawnTimer/settings.spawnDelay)
+        skin.drawDelayIndicator(COLOR.lB,self.spawnTimer/SET.spawnDelay)
     elseif self.deathTimer then -- Death
-        skin.drawDelayIndicator(COLOR.R,self.deathTimer/settings.deathDelay)
+        skin.drawDelayIndicator(COLOR.R,self.deathTimer/SET.deathDelay)
     else -- Lock
-        skin.drawDelayIndicator(COLOR.lY,self.lockTimer/settings.lockDelay)
+        skin.drawDelayIndicator(COLOR.lY,self.lockTimer/SET.lockDelay)
     end
 
     -- Garbage buffer
     skin.drawGarbageBuffer(self.garbageBuffer)
 
     -- Lock delay indicator
-    skin.drawLockDelayIndicator(settings.freshCondition,self.freshChance)
+    skin.drawLockDelayIndicator(SET.freshCondition,self.freshChance)
 
     -- Next
     gc_push('transform')
     gc_translate(200,-400)
-    skin.drawNextBorder(settings.nextSlot)
-    for n=1,min(#self.nextQueue,settings.nextSlot) do
+    skin.drawNextBorder(SET.nextSlot)
+    for n=1,min(#self.nextQueue,SET.nextSlot) do
         skin.drawNext(n,self.nextQueue[n].matrix)
     end
     gc_pop()
@@ -1208,8 +1208,8 @@ function PP:render()
     self:triggerEvent('drawOnPlayer') -- From player's center
 
     -- Starting counter
-    if self.time<settings.readyDelay then
-        skin.drawStartingCounter(settings.readyDelay)
+    if self.time<SET.readyDelay then
+        skin.drawStartingCounter(SET.readyDelay)
     end
 
     -- Upside fade out
