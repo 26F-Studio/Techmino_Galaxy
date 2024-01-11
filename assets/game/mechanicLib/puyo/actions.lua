@@ -13,7 +13,7 @@ local function getCharge(charge,mode,SET)
     elseif mode=='full' then
         return SET.asd
     else
-        error("WTF why dblMoveChrg is "..mode)
+        error("WTF why dblMoveChrg is "..tostring(mode))
     end
 end
 local function move(P,dir,canBuffer)
