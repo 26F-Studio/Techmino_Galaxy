@@ -1801,7 +1801,7 @@ function MP:render()
     skin.drawGarbageBuffer(self.garbageBuffer)
 
     -- Lock delay indicator
-    skin.drawLockDelayIndicator(SET.freshCondition,self.freshChance)
+    skin.drawLockDelayIndicator(SET.freshCondition,self.freshChance,SET.maxFreshTime,self.freshTime)
 
     -- Next (Almost same as drawing hold(s), don't forget to change both)
     gc_push('transform')

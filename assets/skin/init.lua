@@ -16,7 +16,7 @@ local function _getTime() return SKIN.time end
 ---@field drawAsdIndicator fun(dir:number , charge:number, asdMax:number, aspMax:number, ash:number)
 ---@field drawDelayIndicator fun(color:Zenitha.Color, value:number)
 ---@field drawGarbageBuffer fun(garbageBuffer:table)
----@field drawLockDelayIndicator fun(freshCondition:string, freshChance:number)
+---@field drawLockDelayIndicator fun(freshCondition:string, freshChance:number, maxFreshTime:number, freshTime:number)
 ---@field drawGhost fun(B:table, handX:number, ghostY:number)
 ---@field drawHandStroke fun(B:table, handX:number, handY:number)
 ---@field drawHand fun(B:table, handX:number, handY:number)

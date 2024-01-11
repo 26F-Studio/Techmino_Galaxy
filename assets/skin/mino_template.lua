@@ -133,7 +133,12 @@ function S.drawGarbageBuffer(garbageBuffer)
     end
 end
 
-function S.drawLockDelayIndicator(freshCondition,freshChance)
+function S.drawLockDelayIndicator(freshCondition,freshChance,maxFreshTime,freshTime)
+    local timeRem=freshTime/maxFreshTime
+    if freshTime>0 then
+        gc_setColor(COLOR.hsv(timeRem/2.6,.4,.9,.62))
+        gc_rectangle('fill',-200,415,400*timeRem,14)
+    end
     if freshChance>0 then
         freshChance=min(freshChance,15)
         gc_setColor(
@@ -142,8 +147,13 @@ function S.drawLockDelayIndicator(freshCondition,freshChance)
             freshCondition=='none' and COLOR.D or
             COLOR.random(4)
         )
+        GC.stc_reset()
+        GC.stc_rect(-200,415,400*timeRem,14)
         for i=1,freshChance do gc_rectangle('fill',-218+26*i-1,420-1,20+2,5+2) end
-        gc_setColor(COLOR.hsv(min((freshChance-1)/14,1)/2.6,.4,.9))
+        gc_setColor(COLOR.hsv(freshChance/(14*2.6),.4,.9))
+        for i=1,freshChance do gc_rectangle('fill',-218+26*i,420,20,5) end
+        GC.stc_stop()
+        gc_setColor(COLOR.hsv(freshChance/(14*2.6),.4,.9,.62))
         for i=1,freshChance do gc_rectangle('fill',-218+26*i,420,20,5) end
     end
 end
