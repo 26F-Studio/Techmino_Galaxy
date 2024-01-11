@@ -115,16 +115,16 @@ end
 
 do -- high
     local levels={
-        {lock=450,fresh=4400,spawn=150,clear=380,asd=130,asp=29,bumpInterval=false},
-        {lock=400,fresh=4200,spawn=140,clear=340,asd=120,asp=28,bumpInterval=false},
-        {lock=360,fresh=4000,spawn=130,clear=300,asd=110,asp=27,bumpInterval=false},
-        {lock=330,fresh=3800,spawn=120,clear=260,asd=105,asp=26,bumpInterval=false},
-        {lock=300,fresh=3600,spawn=110,clear=220,asd=100,asp=25,bumpInterval=false},
-        {lock=300,fresh=3400,spawn=100,clear=180,asd=96, asp=24,bumpInterval=10e3},
-        {lock=290,fresh=3200,spawn=95, clear=160,asd=92, asp=23,bumpInterval=8e3},
-        {lock=280,fresh=3000,spawn=90, clear=140,asd=88, asp=22,bumpInterval=6e3},
-        {lock=270,fresh=2800,spawn=85, clear=120,asd=84, asp=21,bumpInterval=5e3},
-        {lock=260,fresh=2600,spawn=80, clear=100,asd=80, asp=20,bumpInterval=4e3},
+        {lock=450,freshT=4400,spawn=150,clear=380,asd=130,asp=29,bumpInterval=false},
+        {lock=400,freshT=4200,spawn=140,clear=340,asd=120,asp=28,bumpInterval=false},
+        {lock=360,freshT=4000,spawn=130,clear=300,asd=110,asp=27,bumpInterval=false},
+        {lock=330,freshT=3800,spawn=120,clear=260,asd=105,asp=26,bumpInterval=false},
+        {lock=300,freshT=3600,spawn=110,clear=220,asd=100,asp=25,bumpInterval=false},
+        {lock=300,freshT=3400,spawn=100,clear=180,asd=96, asp=24,bumpInterval=10e3},
+        {lock=290,freshT=3200,spawn=95, clear=160,asd=92, asp=23,bumpInterval=8e3},
+        {lock=280,freshT=3000,spawn=90, clear=140,asd=88, asp=22,bumpInterval=6e3},
+        {lock=270,freshT=2800,spawn=85, clear=120,asd=84, asp=21,bumpInterval=5e3},
+        {lock=260,freshT=2600,spawn=80, clear=100,asd=80, asp=20,bumpInterval=4e3},
     }
 
     function hypersonic.high_event_playerInit(P)
@@ -137,7 +137,7 @@ do -- high
         P.settings.lockDelay=levels[1].lock
         P.settings.spawnDelay=levels[1].spawn
         P.settings.clearDelay=levels[1].clear
-        P.settings.maxFresh=levels[1].fresh
+        P.settings.maxFreshTime=levels[1].freshT
     end
 
     function hypersonic.high_event_always(P)
@@ -191,7 +191,7 @@ do -- high
                     P.settings.lockDelay=levels[md.level].lock
                     P.settings.spawnDelay=levels[md.level].spawn
                     P.settings.clearDelay=levels[md.level].clear
-                    P.settings.maxFresh=levels[md.level].fresh
+                    P.settings.maxFreshTime=levels[md.level].freshT
 
                     md.bumpDelay=levels[md.level].bumpInterval
                     if md.bumpDelay then
@@ -209,16 +209,16 @@ end
 
 do -- hidden
     local levels={
-        {lock=510,fresh=6000,spawn=150,clear=400,asd=130,asp=29,visTime=5000,fadeTime=2600},
-        {lock=460,fresh=5800,spawn=140,clear=360,asd=120,asp=28,visTime=4000,fadeTime=2600},
-        {lock=420,fresh=5600,spawn=130,clear=320,asd=110,asp=27,visTime=3500,fadeTime=2600},
-        {lock=380,fresh=5400,spawn=120,clear=280,asd=105,asp=26,visTime=3000,fadeTime=2600},
-        {lock=350,fresh=5200,spawn=110,clear=240,asd=100,asp=25,visTime=2500,fadeTime=2100},
-        {lock=320,fresh=5000,spawn=100,clear=200,asd=96, asp=24,visTime=2000,fadeTime=1500},
-        {lock=300,fresh=4800,spawn=95, clear=180,asd=92, asp=23,visTime=1600,fadeTime=1100},
-        {lock=280,fresh=4600,spawn=90, clear=160,asd=88, asp=22,visTime=1200,fadeTime=900 },
-        {lock=270,fresh=4400,spawn=85, clear=140,asd=84, asp=21,visTime=900, fadeTime=800 },
-        {lock=260,fresh=4200,spawn=80, clear=120,asd=80, asp=20,visTime=600, fadeTime=600 },
+        {lock=510,freshT=6000,spawn=150,clear=400,asd=130,asp=29,visTime=5000,fadeTime=2600},
+        {lock=460,freshT=5800,spawn=140,clear=360,asd=120,asp=28,visTime=4000,fadeTime=2600},
+        {lock=420,freshT=5600,spawn=130,clear=320,asd=110,asp=27,visTime=3500,fadeTime=2600},
+        {lock=380,freshT=5400,spawn=120,clear=280,asd=105,asp=26,visTime=3000,fadeTime=2600},
+        {lock=350,freshT=5200,spawn=110,clear=240,asd=100,asp=25,visTime=2500,fadeTime=2100},
+        {lock=320,freshT=5000,spawn=100,clear=200,asd=96, asp=24,visTime=2000,fadeTime=1500},
+        {lock=300,freshT=4800,spawn=95, clear=180,asd=92, asp=23,visTime=1600,fadeTime=1100},
+        {lock=280,freshT=4600,spawn=90, clear=160,asd=88, asp=22,visTime=1200,fadeTime=900 },
+        {lock=270,freshT=4400,spawn=85, clear=140,asd=84, asp=21,visTime=900, fadeTime=800 },
+        {lock=260,freshT=4200,spawn=80, clear=120,asd=80, asp=20,visTime=600, fadeTime=600 },
     }
 
     local showInvisPeriod=26000*10
@@ -248,7 +248,7 @@ do -- hidden
         P.settings.lockDelay=levels[1].lock
         P.settings.spawnDelay=levels[1].spawn
         P.settings.clearDelay=levels[1].clear
-        P.settings.maxFresh=levels[1].fresh
+        P.settings.maxFreshTime=levels[1].freshT
         P.settings.pieceVisTime=levels[1].visTime
         P.settings.pieceFadeTime=levels[1].fadeTime
     end
@@ -331,7 +331,7 @@ do -- hidden
                     P.settings.lockDelay=levels[md.level].lock
                     P.settings.spawnDelay=levels[md.level].spawn
                     P.settings.clearDelay=levels[md.level].clear
-                    P.settings.maxFresh=levels[md.level].fresh
+                    P.settings.maxFreshTime=levels[md.level].freshT
                     P.settings.pieceVisTime=levels[md.level].visTime
                     P.settings.pieceFadeTime=levels[md.level].fadeTime
                 else
@@ -356,16 +356,16 @@ end
 
 do -- titanium
     local levels={
-        {lock=350,spawn=170,clear=380,asd=98,asp=29},
-        {lock=300,spawn=160,clear=340,asd=96,asp=28},
-        {lock=270,spawn=150,clear=300,asd=94,asp=27},
-        {lock=240,spawn=140,clear=260,asd=92,asp=26},
-        {lock=220,spawn=130,clear=220,asd=90,asp=25},
-        {lock=200,spawn=120,clear=180,asd=88,asp=24},
-        {lock=180,spawn=115,clear=160,asd=86,asp=23},
-        {lock=170,spawn=110,clear=140,asd=84,asp=22},
-        {lock=160,spawn=105,clear=120,asd=82,asp=21},
-        {lock=150,spawn=100,clear=100,asd=80,asp=20},
+        {lock=350,freshT=900,freshC=5,spawn=170,clear=380,asd=98,asp=29},
+        {lock=300,freshT=850,freshC=5,spawn=160,clear=340,asd=96,asp=28},
+        {lock=270,freshT=800,freshC=5,spawn=150,clear=300,asd=94,asp=27},
+        {lock=240,freshT=750,freshC=5,spawn=140,clear=260,asd=92,asp=26},
+        {lock=220,freshT=700,freshC=4,spawn=130,clear=220,asd=90,asp=25},
+        {lock=200,freshT=650,freshC=4,spawn=120,clear=180,asd=88,asp=24},
+        {lock=180,freshT=600,freshC=4,spawn=115,clear=160,asd=86,asp=23},
+        {lock=170,freshT=550,freshC=4,spawn=110,clear=140,asd=84,asp=22},
+        {lock=160,freshT=460,freshC=3,spawn=105,clear=120,asd=82,asp=21},
+        {lock=150,freshT=420,freshC=3,spawn=100,clear=100,asd=80,asp=20},
     }
     function hypersonic.titanium_event_playerInit(P)
         P.settings.dropDelay=0
@@ -374,6 +374,9 @@ do -- titanium
         P.settings.lockDelay=levels[1].lock
         P.settings.spawnDelay=levels[1].spawn
         P.settings.clearDelay=levels[1].clear
+        P.settings.maxFreshTime=levels[1].freshT
+        P.settings.maxFreshChance=levels[1].freshC
+        P.freshChance=levels[1].freshC
     end
     function hypersonic.titanium_event_afterClear(P,clear)
         local md=P.modeData
@@ -394,6 +397,8 @@ do -- titanium
                     P.settings.lockDelay=levels[md.level].lock
                     P.settings.spawnDelay=levels[md.level].spawn
                     P.settings.clearDelay=levels[md.level].clear
+                    P.settings.maxFreshTime=levels[md.level].freshT
+                    P.settings.maxFreshChance=levels[md.level].freshC
                 else
                     md.point=md.target
                     P:finish('AC')
