@@ -6,7 +6,7 @@ return {
         playBgm('race','base')
     end,
     settings={mino={
-        freshCount=30,
+        maxFreshChance=30,
         event={
             playerInit=mechLib.mino.misc.noMove_event_playerInit,
             afterClear={

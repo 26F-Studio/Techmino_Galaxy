@@ -10,7 +10,7 @@ return {
         lockDelay=2600,
         asd=126,
         asp=26,
-        freshCount=1e99,
+        maxFreshChance=1e99,
         event={
             playerInit=mechLib.mino.misc.wind_switch_auto,
             afterClear={

@@ -137,7 +137,7 @@ do -- high
         P.settings.lockDelay=levels[1].lock
         P.settings.spawnDelay=levels[1].spawn
         P.settings.clearDelay=levels[1].clear
-        P.settings.maxFreshTime=levels[1].fresh
+        P.settings.maxFresh=levels[1].fresh
     end
 
     function hypersonic.high_event_always(P)
@@ -191,7 +191,7 @@ do -- high
                     P.settings.lockDelay=levels[md.level].lock
                     P.settings.spawnDelay=levels[md.level].spawn
                     P.settings.clearDelay=levels[md.level].clear
-                    P.settings.maxFreshTime=levels[md.level].fresh
+                    P.settings.maxFresh=levels[md.level].fresh
 
                     md.bumpDelay=levels[md.level].bumpInterval
                     if md.bumpDelay then
@@ -248,7 +248,7 @@ do -- hidden
         P.settings.lockDelay=levels[1].lock
         P.settings.spawnDelay=levels[1].spawn
         P.settings.clearDelay=levels[1].clear
-        P.settings.maxFreshTime=levels[1].fresh
+        P.settings.maxFresh=levels[1].fresh
         P.settings.pieceVisTime=levels[1].visTime
         P.settings.pieceFadeTime=levels[1].fadeTime
     end
@@ -331,7 +331,7 @@ do -- hidden
                     P.settings.lockDelay=levels[md.level].lock
                     P.settings.spawnDelay=levels[md.level].spawn
                     P.settings.clearDelay=levels[md.level].clear
-                    P.settings.maxFreshTime=levels[md.level].fresh
+                    P.settings.maxFresh=levels[md.level].fresh
                     P.settings.pieceVisTime=levels[md.level].visTime
                     P.settings.pieceFadeTime=levels[md.level].fadeTime
                 else

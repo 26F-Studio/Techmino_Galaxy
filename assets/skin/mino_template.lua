@@ -133,9 +133,8 @@ function S.drawGarbageBuffer(garbageBuffer)
     end
 end
 
-function S.drawLockDelayIndicator(freshCondition,freshChance,maxFreshTime,freshTime)
-    local timeRem=freshTime/maxFreshTime
-    if freshTime>0 then
+function S.drawLockDelayIndicator(freshCondition,freshChance,timeRem)
+    if timeRem>0 then
         gc_setColor(COLOR.hsv(timeRem/2.6,.4,.9,.62))
         gc_rectangle('fill',-200,415,400*timeRem,14)
     end

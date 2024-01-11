@@ -6,7 +6,7 @@ return {
         playBgm('distortion','base')
     end,
     settings={mino={
-        freshCondition='fall',
+        maxFreshChance=5,
         event={
             playerInit="mechLib.mino.hypersonic.event_playerInit_auto(P,'titanium')",
             afterSpawn=mechLib.mino.progress.hypersonic_ti_afterSpawn,

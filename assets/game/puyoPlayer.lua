@@ -426,60 +426,35 @@ function PP:tryCancelSuffocate()
         end
     end
 end
-function PP:freshDelay(reason) -- reason can be 'move' or 'drop' or 'spawn'
-    local fell
-    if self.handY<self.minY then
-        self.minY=self.handY
-        fell=true
-    end
-    local maxLockDelayAdded=min(self.settings.lockDelay-self.lockTimer,self.freshTimeRemain)
-    if self.settings.freshCondition=='any' then
-        if reason=='move' or reason=='rotate' then
-            if self.lockTimer<self.settings.lockDelay and self.freshChance>0 then
-                self.lockTimer=self.lockTimer+maxLockDelayAdded
-                self.freshTimeRemain=self.freshTimeRemain-maxLockDelayAdded
-                self.freshChance=self.freshChance-1
-            end
-        elseif reason=='drop' then
-            self.dropTimer=self.settings.dropDelay
-            self.lockTimer=self.lockTimer+maxLockDelayAdded
-            self.freshTimeRemain=self.freshTimeRemain-maxLockDelayAdded
-        elseif reason=='spawn' then
-            self.dropTimer=self.settings.dropDelay
-            self.lockTimer=self.settings.lockDelay
-            self.freshChance=self.settings.freshCount
-            self.freshTimeRemain=self.settings.maxFreshTime
+local freshRuleMap={
+    move=  {any='N',fall='S',never='_'},
+    rotate={any='N',fall='S',never='_'},
+    moving={any='N',fall='S',never='_'},
+    drop=  {any='F',fall='S',never='_'},
+    spawn= {any='R',fall='R',never='R'},
+}
+---@param reason 'move'|'rotate'|'moving'|'drop'|'spawn'
+function PP:freshDelay(reason)
+    local fell=self.handY<self.minY
+    if fell then self.minY=self.handY end
+
+    local mode=freshRuleMap[reason][self.settings.freshCondition]
+
+    if mode=='S' then mode=fell and 'N' or '_' end
+
+    if mode=='N' or mode=='F' then
+        local add=min(self.settings.lockDelay-self.lockTimer,self.freshTime)
+        if self.freshChance>0 and self.lockTimer<self.settings.lockDelay and add>0 then
+            self.lockTimer=self.lockTimer+add
+            self.freshTime=self.freshTime-add
+            self.freshChance=self.freshChance-(mode=='N' and 1 or 0)
         end
-    elseif self.settings.freshCondition=='fall' then
-        if reason=='move' or reason=='rotate' then
-            if fell and self.lockTimer<self.settings.lockDelay and self.freshChance>0 then
-                self.lockTimer=self.lockTimer+maxLockDelayAdded
-                self.freshTimeRemain=self.freshTimeRemain-maxLockDelayAdded
-                self.freshChance=self.freshChance-1
-            end
-        elseif reason=='drop' then
-            self.dropTimer=self.settings.dropDelay
-            if self.lockTimer<self.settings.lockDelay and self.freshChance>0 then
-                self.lockTimer=self.lockTimer+maxLockDelayAdded
-                self.freshTimeRemain=self.freshTimeRemain-maxLockDelayAdded
-                self.freshChance=self.freshChance-1
-            end
-        elseif reason=='spawn' then
-            self.dropTimer=self.settings.dropDelay
-            self.lockTimer=self.settings.lockDelay
-            self.freshChance=self.settings.freshCount
-            self.freshTimeRemain=self.settings.maxFreshTime
-        end
-    elseif self.settings.freshCondition=='never' then
-        if reason=='move' or reason=='rotate' or reason=='drop' then
-            -- Do nothing
-        elseif reason=='spawn' then
-            self.dropTimer=self.settings.dropDelay
-            self.lockTimer=self.settings.lockDelay
-            self.freshChance=self.settings.freshCount
-            self.freshTimeRemain=self.settings.maxFreshTime
-        end
-    else
+    elseif mode=='R' then
+        self.dropTimer=self.settings.dropDelay
+        self.lockTimer=self.settings.lockDelay
+        self.freshChance=self.settings.maxFreshChance
+        self.freshTime=self.settings.maxFreshTime
+    elseif not mode then
         error("WTF why settings.freshCondition is "..tostring(self.settings.freshCondition))
     end
 end
@@ -1047,6 +1022,13 @@ function PP:updateFrame()
             if self.handY==self.ghostY then
                 self.lockTimer=self.lockTimer-1
                 if self.lockTimer<=0 then
+                    -- Yield LockDelay for moving
+                    if self.moveDir and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) then
+                        local inASD=self.moveCharge<SET.asd-SET.asp
+                        if inASD and SET.freshLockInASD or not inASD and SET.freshLockInASP then
+                            if self:freshDelay('move') then break end
+                        end
+                    end
                     self.aHdLockTimer=self.settings.aHdLock
                     self:puyoDropped()
                 end
@@ -1188,7 +1170,7 @@ function PP:render()
     skin.drawGarbageBuffer(self.garbageBuffer)
 
     -- Lock delay indicator
-    skin.drawLockDelayIndicator(SET.freshCondition,self.freshChance)
+    skin.drawLockDelayIndicator(SET.freshCondition,self.freshChance,self.time<SET.readyDelay and (self.time/SET.readyDelay)^2.6 or self.freshTime/SET.maxFreshTime)
 
     -- Next
     gc_push('transform')
@@ -1245,6 +1227,9 @@ local baseEnv={
     voidH=620,
     connH=12, -- Default to 12
 
+    -- Clear
+    clearGroupSize=4,
+
     -- Sequence
     seqType='double4color',
     nextSlot=6,
@@ -1260,17 +1245,13 @@ local baseEnv={
 
     -- Fresh
     freshCondition='fall',
-    freshCount=15,
+    maxFreshChance=15,
     maxFreshTime=6200,
 
     -- Attack
     atkSys='none',
 
-    -- Other
-    clearGroupSize=4,
-    script=false,
-
-    -- May be overrode with user setting
+    -- Control
     asd=122,
     asp=26,
     adp=26,
@@ -1289,8 +1270,13 @@ local baseEnv={
     dblMoveRelInvRedir=true,
     initMove='buffer',
     initRotate='buffer',
-    aHdLock=1000,
-    mHdLock=100,
+    aHdLock=260,
+    mHdLock=60,
+    freshLockInASD=true,
+    freshLockInASP=true,
+
+    -- Other
+    script=false,
     IRSpushUp=true,
     skin='puyo_jelly',
     particles=true,
@@ -1367,8 +1353,8 @@ function PP:initialize()
     self.deathTimer=false
     self.ghostState=false
 
-    self.freshChance=self.settings.freshCount
-    self.freshTimeRemain=0
+    self.freshChance=self.settings.maxFreshChance
+    self.freshTime=0
 
     self.hand=false -- Controlling puyo object
     self.handX=false
