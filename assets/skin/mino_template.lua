@@ -11,6 +11,8 @@ local gc_draw,gc_line=gc.draw,gc.line
 local gc_rectangle=gc.rectangle
 local gc_printf=gc.printf
 
+local stc_reset,stc_rect,stc_stop=GC.stc_reset,GC.stc_rect,GC.stc_stop
+
 local max,min=math.max,math.min
 
 local COLOR=COLOR
@@ -146,12 +148,12 @@ function S.drawLockDelayIndicator(freshCondition,freshChance,timeRem)
             freshCondition=='none' and COLOR.D or
             COLOR.random(4)
         )
-        GC.stc_reset()
-        GC.stc_rect(-200,415,400*timeRem,14)
+        stc_reset()
+        stc_rect(-200,415,400*timeRem,14)
         for i=1,freshChance do gc_rectangle('fill',-218+26*i-1,420-1,20+2,5+2) end
         gc_setColor(COLOR.hsv(freshChance/(14*2.6),.4,.9))
         for i=1,freshChance do gc_rectangle('fill',-218+26*i,420,20,5) end
-        GC.stc_stop()
+        stc_stop()
         gc_setColor(COLOR.hsv(freshChance/(14*2.6),.4,.9,.62))
         for i=1,freshChance do gc_rectangle('fill',-218+26*i,420,20,5) end
     end
