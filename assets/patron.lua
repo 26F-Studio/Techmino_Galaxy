@@ -150,4 +150,5 @@ return {
     {score=25,name="V我50吃肉讨饭人"},
     {score=25,name="电蜥蜴"},
     {score=25,name="浮芙fufu"},
+    {score=25,name="NOname_awa"},
 }
