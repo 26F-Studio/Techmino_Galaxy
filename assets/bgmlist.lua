@@ -339,6 +339,12 @@ local bgmList={
         base={'melody1','melody2','accompany1','accompany3','bass1','sfx'},
         full={'melody1','melody2','accompany1','accompany2','accompany3','bass1','bass2','drum','sfx'},
     },
+    ['vanifish']={
+        author="Trebor & MrZ",
+        message="A cool blank remix",
+        base={'melody','accompany1','accompany2','bass'},
+        full={'melody','accompany1','accompany2','accompany3','bass','drum','sfx'},
+    },
 }
 
 bgmCount=0
