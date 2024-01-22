@@ -11,8 +11,7 @@ local collectCount=0
 local noProgress=false
 local autoplay=false
 local fakeProgress=0
-local searchStr=""
-local searchTimer=0
+local searchStr,searchTimer
 
 local bigTitle=setmetatable({},{
     __index=function(self,name)
@@ -87,6 +86,7 @@ local scene={}
 function scene.enter()
     selected,fullband=getBgm()
     fakeProgress=0
+    searchStr,searchTimer="",0
     if not selected then selected='blank' end
     if PROGRESS.getBgmUnlocked(selected)==2 then
         fullband=fullband=='full'
