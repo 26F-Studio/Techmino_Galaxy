@@ -393,90 +393,90 @@ jobs:
   #         body: ${{ github.event.head_commit.message }}
   #         prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
 
-  build-macos-portable:
-    runs-on: macos-latest
-    needs: [get-info, build-core, auto-test]
-    if: github.event_name != 'pull_request'
-    env:
-      OUTPUT_FOLDER: ./build
-      RELEASE_FOLDER: ./release
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-      - name: Process app name
-        id: process-app-name
-        shell: python3 {0}
-        run: |
-          import os
-          import re
-          with open(os.getenv('GITHUB_OUTPUT'), 'a') as f:
-            f.write('bundle-id=org.26f-studio.' + re.sub(r"[^A-Za-z0-9]+", "-", "${{ needs.get-info.outputs.app-name }}") + '\n')
-            f.write('product-name=' + re.sub(r'[^A-Za-z0-9]+', '_', '${{ needs.get-info.outputs.app-name }}') + '\n')
-      - name: Download core love package
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
-      - name: Build macOS packages
-        id: build-packages
-        uses: 26F-Studio/love-actions-macos-portable@v1
-        with:
-          app-name: ${{ needs.get-info.outputs.app-name }}
-          bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
-          copyright: "Copyright © 2019-2023 26F-Studio. Some Rights Reserved."
-          icon-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/icon.icns
-          love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
-          product-name: ${{ steps.process-app-name.outputs.product-name }}
-          version-string: ${{ needs.get-info.outputs.version-string }}
-          output-folder: ${{ env.OUTPUT_FOLDER }}
-          account-username: ${{ secrets.APPLE_ACCOUNT_USERNAME }}
-          account-password: ${{ secrets.APPLE_ACCOUNT_PASSWORD }}
-          developer-id-application-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_APPLICATION }}
-          developer-id-application-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_APPLICATION_PWD }}
-          team-id: "${{ secrets.APPLE_DEVELOPER_TEAM_ID }}"
-          developer-id-installer-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER }}
-          developer-id-installer-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER_PWD }}
-          dmg-background-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/dmg.png
-          dmg-icon-position: "287 313"
-          dmg-icon-size: "128"
-          dmg-link-position: "734 313"
-          dmg-text-size: "12"
-          dmg-volume-icon-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/dmg.icns
-          dmg-volume-name: ${{ steps.process-app-name.outputs.product-name }}
-          dmg-window-position: "200 120"
-          dmg-window-size: "1024 604"
-      - name: Upload pkg artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_pkg
-          path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.pkg
-      - name: Upload dmg artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_dmg
-          path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.dmg
-      - name: Upload bare artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_bare
-          path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.zip
-      - name: Prepare for release
-        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
-        shell: bash
-        run: |
-          mkdir -p ${{ env.RELEASE_FOLDER }}
-          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.pkg ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_macOS_portable.pkg
-          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.dmg ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_macOS_portable.dmg
-      - name: Upload release
-        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          artifacts: |
-            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_macOS_portable.pkg
-            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_macOS_portable.dmg
-          body: ${{ github.event.head_commit.message }}
-          prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
+  # build-macos-portable:
+  #   runs-on: macos-latest
+  #   needs: [get-info, build-core, auto-test]
+  #   if: github.event_name != 'pull_request'
+  #   env:
+  #     OUTPUT_FOLDER: ./build
+  #     RELEASE_FOLDER: ./release
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         submodules: recursive
+  #     - name: Process app name
+  #       id: process-app-name
+  #       shell: python3 {0}
+  #       run: |
+  #         import os
+  #         import re
+  #         with open(os.getenv('GITHUB_OUTPUT'), 'a') as f:
+  #           f.write('bundle-id=org.26f-studio.' + re.sub(r"[^A-Za-z0-9]+", "-", "${{ needs.get-info.outputs.app-name }}") + '\n')
+  #           f.write('product-name=' + re.sub(r'[^A-Za-z0-9]+', '_', '${{ needs.get-info.outputs.app-name }}') + '\n')
+  #     - name: Download core love package
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
+  #     - name: Build macOS packages
+  #       id: build-packages
+  #       uses: 26F-Studio/love-actions-macos-portable@v1
+  #       with:
+  #         app-name: ${{ needs.get-info.outputs.app-name }}
+  #         bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
+  #         copyright: "Copyright © 2019-2023 26F-Studio. Some Rights Reserved."
+  #         icon-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/icon.icns
+  #         love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
+  #         product-name: ${{ steps.process-app-name.outputs.product-name }}
+  #         version-string: ${{ needs.get-info.outputs.version-string }}
+  #         output-folder: ${{ env.OUTPUT_FOLDER }}
+  #         account-username: ${{ secrets.APPLE_ACCOUNT_USERNAME }}
+  #         account-password: ${{ secrets.APPLE_ACCOUNT_PASSWORD }}
+  #         developer-id-application-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_APPLICATION }}
+  #         developer-id-application-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_APPLICATION_PWD }}
+  #         team-id: "${{ secrets.APPLE_DEVELOPER_TEAM_ID }}"
+  #         developer-id-installer-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER }}
+  #         developer-id-installer-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER_PWD }}
+  #         dmg-background-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/dmg.png
+  #         dmg-icon-position: "287 313"
+  #         dmg-icon-size: "128"
+  #         dmg-link-position: "734 313"
+  #         dmg-text-size: "12"
+  #         dmg-volume-icon-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/dmg.icns
+  #         dmg-volume-name: ${{ steps.process-app-name.outputs.product-name }}
+  #         dmg-window-position: "200 120"
+  #         dmg-window-size: "1024 604"
+  #     - name: Upload pkg artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_pkg
+  #         path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.pkg
+  #     - name: Upload dmg artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_dmg
+  #         path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.dmg
+  #     - name: Upload bare artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_bare
+  #         path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.zip
+  #     - name: Prepare for release
+  #       if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
+  #       shell: bash
+  #       run: |
+  #         mkdir -p ${{ env.RELEASE_FOLDER }}
+  #         cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.pkg ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_macOS_portable.pkg
+  #         cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.dmg ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_macOS_portable.dmg
+  #     - name: Upload release
+  #       if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
+  #       uses: ncipollo/release-action@v1
+  #       with:
+  #         allowUpdates: true
+  #         artifacts: |
+  #           ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_macOS_portable.pkg
+  #           ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_macOS_portable.dmg
+  #         body: ${{ github.event.head_commit.message }}
+  #         prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
 
   build-windows:
     runs-on: windows-latest
@@ -559,7 +559,7 @@ jobs:
         # build-ios,
         build-linux,
         # build-macos-appstore,
-        build-macos-portable,
+        # build-macos-portable,
         build-windows,
       ]
     env:
