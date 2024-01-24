@@ -238,7 +238,7 @@ local bgmList={
     },
     ['empty']={
         author="ERM",
-        message="First remix from community",
+        message="First blank remix from community",
     },
     ['none']={
         author="MrZ",
