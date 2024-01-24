@@ -138,8 +138,9 @@ do -- sprint_pento_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_pento_40_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
-            BGM.set(bgmList['beat5th'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.stat.line
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['beat5th'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.sprint_pento_40_gameOver(P,reason)
@@ -154,8 +155,9 @@ do -- sprint_sym_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_sym_40_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
-            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.stat.line
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.sprint_sym_40_gameOver(P,reason)
@@ -188,8 +190,9 @@ do -- sprint_lock_20
     local bgmTransP1,bgmTransP2=5,15
     function progress.sprint_lock_20_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
-            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.stat.line
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.sprint_lock_20_gameOver(P,reason)
@@ -205,8 +208,9 @@ do -- sprint_fix_20
     local bgmTransP1,bgmTransP2=5,15
     function progress.sprint_fix_20_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
-            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.stat.line
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.sprint_fix_20_gameOver(P,reason)
@@ -221,8 +225,9 @@ do -- sprint_wind_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_wind_40_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
-            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.stat.line
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.sprint_wind_40_gameOver(P,reason)
@@ -237,8 +242,9 @@ do -- sprint_delay_20
     local bgmTransP1,bgmTransP2=5,15
     function progress.sprint_delay_20_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
-            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.stat.line
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.sprint_delay_20_gameOver(P,reason)
@@ -329,8 +335,9 @@ do -- sprint_small_20
     local bgmTransP1,bgmTransP2=5,15
     function progress.sprint_small_20_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
-            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.stat.line
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.sprint_small_20_gameOver(P,reason)
@@ -380,8 +387,9 @@ do -- sprint_randctrl_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_randctrl_40_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
-            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.stat.line
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.sprint_randctrl_40_gameOver(P,reason)
@@ -396,8 +404,9 @@ do -- sprint_flip_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_flip_40_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
-            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.stat.line
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.sprint_flip_40_gameOver(P,reason)
@@ -415,8 +424,9 @@ do -- sprint_dizzy_40
     local bgmTransP1,bgmTransP2=10,30
     function progress.sprint_dizzy_40_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
-            BGM.set(bgmList['race'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.stat.line
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['race'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.sprint_dizzy_40_gameOver(P,reason)
@@ -444,6 +454,28 @@ do -- marathon
                 BGM.set(bgmPack('propel','a1','a3'),'volume',0,26)
             end
             md.marathon_lastLevel=md.level
+        else
+            if not md.marathon_lastAscend then md.marathon_lastAscend=0 end
+            if md.ascend>md.marathon_lastAscend then
+                if md.ascend==1 then
+                    BGM.set('all','volume',0,.26)
+                    BGM.set(bgmPack('propel','m','b2','b3','d'),'volume',1,.26)
+                elseif md.ascend==2 then
+                    BGM.set('all','volume',0,.26)
+                    BGM.set(bgmPack('propel','b1','b2','d'),'volume',1,.26)
+                elseif md.ascend==3 then
+                    BGM.set('all','volume',0,.26)
+                    BGM.set(bgmPack('propel','a1','a2','a3'),'volume',1,.26)
+                    BGM.set(bgmPack('propel','d'),'volume',.5,.26)
+                elseif md.ascend==4 then
+                    BGM.set('all','volume',0,.26)
+                    BGM.set('all','pitch',1.5,.26)
+                    BGM.set(bgmPack('propel','d'),'volume',.626,.26)
+                else
+                    BGM.set('all','volume',1,.26)
+                    BGM.set('all','pitch',math.min(md.ascend-3,32),.26)
+                end
+            end
         end
         if md.stat.clears[4]==16 then
             PROGRESS.setModeState('mino_stdMap','techrash_easy')
@@ -461,8 +493,9 @@ do -- techrash_easy
     local bgmTransP1,bgmTransP2=4,10
     function progress.techrash_easy_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.techrash>bgmTransP1 and P.modeData.techrash<=bgmTransP2 then
-            BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.techrash-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.techrash
+        if pt>bgmTransP1 and pt<=bgmTransP2 then
+            BGM.set(bgmList['way'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
         if P.modeData.stat.clears[4]>=20 then
             PROGRESS.setModeState('mino_stdMap','techrash_easy',1)
@@ -498,8 +531,9 @@ do -- techrash_hard
     local bgmTransP1,bgmTransP2=4,10
     function progress.techrash_hard_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.techrash>bgmTransP1 and P.modeData.techrash<=bgmTransP2 then
-            BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.techrash-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.techrash
+        if pt>bgmTransP1 and pt<=bgmTransP2 then
+            BGM.set(bgmList['way'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
         if P.modeData.stat.clears[4]>=20 then
             PROGRESS.setModeState('mino_stdMap','techrash_easy',1)
@@ -535,8 +569,9 @@ do -- hypersonic_hd
     local bgmTransP1,bgmTransP2=100,500
     function progress.hypersonic_hd_afterSpawn(P)
         if not P.isMain then return end
-        if P.modeData.point>bgmTransP1 and P.modeData.point<bgmTransP2+10 then
-            BGM.set(bgmList['secret7th'].add,'volume',math.min((P.modeData.point-bgmTransP1)/(bgmTransP2-bgmTransP1),1),1)
+        local pt=P.modeData.point
+        if pt>bgmTransP1 and pt<bgmTransP2+10 then
+            BGM.set(bgmList['secret7th'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),1)
         end
         if not P.modeData.hypersonic_bgmTransition1 then
             if P.modeData.level>=2 then
@@ -562,12 +597,13 @@ do -- hypersonic_ti
     local bgmTransP1,bgmTransP2=200,600
     function progress.hypersonic_ti_afterSpawn(P)
         if not P.isMain then return end
-        if P.modeData.point>bgmTransP1 and P.modeData.point<bgmTransP2+10 then
-            BGM.set(bgmList['distortion'].add,'volume',math.min((P.modeData.point-bgmTransP1)/(bgmTransP2-bgmTransP1),1),1)
+        local pt=P.modeData.point
+        if pt>bgmTransP1 and pt<bgmTransP2+10 then
+            BGM.set(bgmList['distortion'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),1)
         end
     end
     function progress.hypersonic_ti_gameOver(P)
-        if P.modeData.point>=1000 then
+        if pt>=1000 then
             PROGRESS.setModeState('mino_stdMap','hypersonic_ti',1)
         end
     end
@@ -583,8 +619,9 @@ do -- combo_practice
     end
     function progress.combo_practice_beforeDiscard(P)
         if not P.isMain then return true end
-        if P.modeData.comboCount>bgmTransP1 and P.modeData.comboCount<=bgmTransP2 then
-            BGM.set(bgmList['oxygen'].add,'volume',math.min((P.modeData.comboCount-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.comboCount
+        if pt>bgmTransP1 and pt<=bgmTransP2 then
+            BGM.set(bgmList['oxygen'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.combo_practice_gameOver(P,reason)
@@ -615,8 +652,9 @@ do -- dig_shale
     local bgmTransP1,bgmTransP2=10,30
     function progress.dig_shale_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.lineDig>bgmTransP1 and P.modeData.lineDig<bgmTransP2+4 then
-            BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.lineDig-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.lineDig
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['way'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.dig_shale_gameOver(P,reason)
@@ -632,8 +670,9 @@ do -- dig_volcanics
     local bgmTransP1,bgmTransP2=0,10
     function progress.dig_volcanics_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.lineDig>bgmTransP1 and P.modeData.lineDig<bgmTransP2+4 then
-            BGM.set(bgmList['way'].add,'volume',math.min((P.modeData.lineDig-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.lineDig
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['way'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.dig_volcanics_gameOver(P,reason)
@@ -708,10 +747,11 @@ do -- survivor_b2b
     local bgmTransP1,bgmTransP2=20,50
     function progress.survivor_b2b_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.wave>bgmTransP1 and P.modeData.wave<=bgmTransP2 then
-            BGM.set(bgmList['here'].add,'volume',math.min((P.modeData.wave-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.wave
+        if pt>bgmTransP1 and pt<=bgmTransP2 then
+            BGM.set(bgmList['here'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.modeData.wave==42 then
+        if pt==42 then
             PROGRESS.setModeState('mino_stdMap','backfire_100')
             PROGRESS.setModeState('mino_stdMap','survivor_cheese')
             PROGRESS.setModeState('mino_stdMap','survivor_b2b',1)
@@ -723,10 +763,11 @@ do -- survivor_cheese
     local bgmTransP1,bgmTransP2=30,80
     function progress.survivor_cheese_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.wave>bgmTransP1 and P.modeData.wave<=bgmTransP2 then
-            BGM.set(bgmList['here'].add,'volume',math.min((P.modeData.wave-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.wave
+        if pt>bgmTransP1 and pt<=bgmTransP2 then
+            BGM.set(bgmList['here'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.modeData.wave==62 then
+        if pt==62 then
             PROGRESS.setModeState('mino_stdMap','survivor_spike')
             PROGRESS.setModeState('mino_stdMap','sprint_randctrl_40',1)
         end
@@ -737,10 +778,11 @@ do -- survivor_spike
     local bgmTransP1,bgmTransP2=10,30
     function progress.survivor_spike_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.wave>bgmTransP1 and P.modeData.wave<=bgmTransP2 then
-            BGM.set(bgmList['here'].add,'volume',math.min((P.modeData.wave-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.wave
+        if pt>bgmTransP1 and pt<=bgmTransP2 then
+            BGM.set(bgmList['here'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
-        if P.modeData.wave==20 then
+        if pt==20 then
             PROGRESS.setModeState('mino_stdMap','survivor_spike',1)
         end
     end
@@ -750,8 +792,9 @@ do -- backfire_100
     local bgmTransP1,bgmTransP2=40,75
     function progress.backfire_100_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
-            BGM.set(bgmList['echo'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.stat.line
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['echo'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.backfire_100_gameOver(P,reason)
@@ -767,8 +810,9 @@ do -- backfire_amplify_100
     local bgmTransP1,bgmTransP2=40,75
     function progress.backfire_amplify_100_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
-            BGM.set(bgmList['echo'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.stat.line
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['echo'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.backfire_amplify_100_gameOver(P,reason)
@@ -784,8 +828,9 @@ do -- backfire_cheese_100
     local bgmTransP1,bgmTransP2=40,75
     function progress.backfire_cheese_100_afterClear(P)
         if not P.isMain then return true end
-        if P.modeData.stat.line>bgmTransP1 and P.modeData.stat.line<bgmTransP2+4 then
-            BGM.set(bgmList['echo'].add,'volume',math.min((P.modeData.stat.line-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
+        local pt=P.modeData.stat.line
+        if pt>bgmTransP1 and pt<bgmTransP2+4 then
+            BGM.set(bgmList['echo'].add,'volume',math.min((pt-bgmTransP1)/(bgmTransP2-bgmTransP1),1),2.6)
         end
     end
     function progress.backfire_cheese_100_gameOver(P,reason)

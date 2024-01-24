@@ -1,10 +1,10 @@
 local gc=love.graphics
-local min=math.min
+local min,max=math.min,math.max
 
 ---@type Techmino.Mech.mino
 local marathon={}
 
-local levels={
+local levels={-- par: drop interval
     {drop=1000,lock=1000,spawn=150, par=999},
     {drop=730, lock=1000,spawn=150, par=909},
     {drop=533, lock=1000,spawn=150, par=833},
@@ -44,9 +44,9 @@ function marathon.event_playerInit_auto(P)
     P:addEvent('drawOnPlayer',marathon.event_drawOnPlayer)
 end
 function marathon.event_playerInit(P)
-    P.settings.asd=math.max(P.settings.asd,100)
-    P.settings.asp=math.max(P.settings.asp,20)
-    P.settings.adp=math.max(P.settings.adp,20)
+    P.settings.asd=max(P.settings.asd,100)
+    P.settings.asp=max(P.settings.asp,20)
+    P.settings.adp=max(P.settings.adp,20)
 
     P.settings.dropDelay=levels[1].drop
     P.settings.lockDelay=levels[1].lock
@@ -57,6 +57,7 @@ function marathon.event_playerInit(P)
     P.modeData.lineTarget=10
 
     P.modeData.level=1
+    P.modeData.ascend=0
     P.modeData.levelStartTime=0
     P.modeData.levelPieces=0
 end
@@ -67,28 +68,30 @@ function marathon.event_afterClear(P)
     local md=P.modeData
     while md.stat.line>=md.lineTarget do
         if md.lineTarget<200 then
-            local autoLevel=md.level
-            -- Ignore spawn delay, Assume clear 3 times
-            local averageDropTime=(P.gameTime-md.levelStartTime-P.settings.clearDelay*3)/md.levelPieces-P.settings.spawnDelay
-            while averageDropTime<levels[autoLevel].par and autoLevel<30 do
-                autoLevel=autoLevel+1
-            end
-            local _level=md.level
-            md.level=math.min(math.max(md.level+1,math.min(md.level+3,autoLevel)),30)
-            if _level<=10 and md.level>10 then
-                md.transition1=#P.dropHistory
-            elseif _level<=20 and md.level>20 then
-                md.transition2=#P.dropHistory
-            end
+            if md.level<30 then
+                local autoLevel=md.level
+                -- Ignore spawn delay, Assume clear 3 times
+                local averageDropTime=(P.gameTime-md.levelStartTime-P.settings.clearDelay*3)/md.levelPieces-P.settings.spawnDelay
+                while averageDropTime<levels[autoLevel].par and autoLevel<30 do
+                    autoLevel=autoLevel+1
+                end
+                local _level=md.level
+                md.level=min(max(md.level+1,min(md.level+3,autoLevel)),30)
+                if _level<=10 and md.level>10 then
+                    md.transition1=#P.dropHistory
+                elseif _level<=20 and md.level>20 then
+                    md.transition2=#P.dropHistory
+                end
 
-            P.settings.dropDelay=levels[md.level].drop
-            P.settings.lockDelay=levels[md.level].lock
-            P.settings.spawnDelay=levels[md.level].spawn
-
+                P.settings.dropDelay=levels[md.level].drop
+                P.settings.lockDelay=levels[md.level].lock
+                P.settings.spawnDelay=levels[md.level].spawn
+            else
+                md.ascend=md.ascend+1
+            end
             md.lineTarget=md.lineTarget+10
             md.levelPieces=0
             md.levelStartTime=P.gameTime
-
             P:playSound('reach')
         else
             P:finish('AC')
