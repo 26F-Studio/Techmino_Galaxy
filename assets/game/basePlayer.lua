@@ -168,46 +168,58 @@ function P:setAction(act,data)
 end
 function P:triggerEvent(name,...)
     -- if name~='always' and name:sub(1,4)~='draw' then print(name) end
-    local L=self.event[name]
-    if L then
-        local i=1
-        while L[i] do
-            if L[i](self,...) then
-                rem(L,i)
-            else
-                i=i+1
-            end
+    local L,i=self.event[name],1
+    while L[i] do
+        if L[i][2](self,...) then
+            rem(L,i)
+        else
+            i=i+1
         end
     end
 end
-function P:addEvent(name,F,pos)
-    assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
-    if not pos then pos=#self.event[name]+1 end
-    if type(F)=='table' then
-        for i=1,#F do
-            self:addEvent(name,F[i],pos+i-1)
+---@param E Techmino.Event|function|string|table<number, Techmino.Event>|any
+function P:addEvent(name,E)
+    local L=self.event[name]
+    assert(L,"Wrong event key: '"..tostring(name).."'")
+    if type(E)=='table' then
+        if type(E[1])=='number' and type(E[2])=='function' then
+            local i=1
+            while i<=#L and L[i][1]<=E[1] do i=i+1 end
+            ins(L,i,E)
+        else
+            for i=1,#E do
+                self:addEvent(name,E[i])
+            end
         end
-    elseif type(F)=='string' then
+    elseif type(E)=='string' then
         local errMsg
-        F,errMsg=loadstring('local P=...\n'..F)
-        if F then
-            setSafeEnv(F)
-            self:addEvent(name,F,pos)
+        E,errMsg=loadstring('local P=...;'..E)
+        if E then
+            setSafeEnv(E)
+            self:addEvent(name,E)
         else
             error('Error in code string: '..errMsg)
         end
-    elseif type(F)=='function' then
-        ins(self.event[name],pos,F)
+    elseif type(E)=='function' then
+        self:addEvent(name,{0,E})
     else
-        error('event must be function or table of functions')
+        error('Wrong Event format')
     end
 end
 local function _scrap() return true end
-function P:delEvent(name,F)
-    assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
-    assert(type(F)=='function','event must be function')
-    local pos=TABLE.find(self.event[name],F)
-    if pos then self.event[name][pos]=_scrap end
+---@param E number|function|Techmino.Event
+function P:delEvent(name,E)
+    local L=self.event[name]
+    assert(L,"Wrong event key: '"..tostring(name).."'")
+    local pos
+    if type(E)=='number' then
+        for i=1,#L do if L[i][1]==E then pos=i break end end
+    elseif type(E)=='function' then
+        for i=1,#L do if L[i][2]==E then pos=i break end end
+    else
+        for i=1,#L do if L[i]==E then pos=i break end end
+    end
+    if pos then L[pos][2]=_scrap end
 end
 ---@param reason Techmino.EndReason
 function P:finish(reason)

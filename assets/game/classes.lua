@@ -63,9 +63,9 @@
 ---|'drawOnPlayer'
 
 ---@alias Techmino.Mech.basic table<string, table|fun(P:Techmino.Player|any):any>
----@alias Techmino.Mech.mino table<string, table|fun(P:Techmino.Player.mino|any):any,any>
----@alias Techmino.Mech.puyo table<string, table|fun(P:Techmino.Player.puyo|any):any,any>
----@alias Techmino.Mech.gem table<string, table|fun(P:Techmino.Player.gem|any):any,any>
+---@alias Techmino.Mech.mino table<string, table|fun(P:Techmino.Player.mino|any):any, any>
+---@alias Techmino.Mech.puyo table<string, table|fun(P:Techmino.Player.puyo|any):any, any>
+---@alias Techmino.Mech.gem table<string, table|fun(P:Techmino.Player.gem|any):any, any>
 
 ---@class Techmino.ParticleSystems
 ---@field rectShade love.ParticleSystem
@@ -79,9 +79,10 @@
 ---@field trail love.ParticleSystem
 ---@field minoMapBack love.ParticleSystem
 
----@alias Techmino.Mino.Shape table<number,table<number,boolean>>
+---@alias Techmino.Mino.Shape table<number, table<number, boolean>>
 ---@alias Techmino.Mino.Name 'Z'|'S'|'J'|'L'|'T'|'O'|'I'|'Z5'|'S5'|'P'|'Q'|'F'|'E'|'T5'|'U'|'V'|'W'|'X'|'J5'|'L5'|'R'|'Y'|'N'|'H'|'I5'|'I3'|'C'|'I2'|'O1'|string
 ---@alias Techmino.Mino.ID 1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|integer
+---@alias Techmino.Event {[1]:number, [2]:function}
 
 ---@class Techmino.Mino
 ---@field name Techmino.Mino.Name
@@ -166,7 +167,7 @@
 ---@field hand table|false Piece object
 ---@field handX number
 ---@field handY number
----@field event table
+---@field event table<string, table<number, Techmino.Event>>
 ---@field soundEvent table
 ---@field _actions table<string, {press:fun(P:Techmino.Player), release:fun(P:Techmino.Player)}>
 ---
