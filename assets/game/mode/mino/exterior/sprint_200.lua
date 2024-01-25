@@ -9,7 +9,7 @@ return {
         event={
             afterClear={
                 mechLib.mino.sprint.event_afterClear[200],
-                mechLib.mino.progress.sprint_200_afterClear,
+                mechLib.mino.music.sprint_200_afterClear,
             },
             drawInField=mechLib.mino.sprint.event_drawInField[200],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[200],

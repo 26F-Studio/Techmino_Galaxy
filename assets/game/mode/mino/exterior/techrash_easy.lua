@@ -12,6 +12,7 @@ return {
             afterLock=mechLib.mino.techrashChallenge.easy_event_afterLock,
             afterClear={
                 mechLib.mino.techrashChallenge.easy_event_afterClear,
+                mechLib.mino.music.techrash_easy_afterClear,
                 mechLib.mino.progress.techrash_easy_afterClear,
             },
             drawInField=mechLib.mino.techrashChallenge.easy_event_drawInField,

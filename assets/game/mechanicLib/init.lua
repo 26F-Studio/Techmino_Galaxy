@@ -33,6 +33,7 @@ local mechLib={
         stack=require'assets.game.mechanicLib.mino.stack',
         squeeze=require'assets.game.mechanicLib.mino.squeeze',
         progress=require'assets.game.mechanicLib.mino.progress',
+        music=require'assets.game.mechanicLib.mino.music',
     },
     puyo={
         -- Basic

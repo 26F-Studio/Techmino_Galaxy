@@ -16,7 +16,10 @@ return {
         event={
             playerInit=mechLib.mino.survivor.event_playerInit,
             always=mechLib.mino.survivor.spike_event_always,
-            afterClear=mechLib.mino.progress.survivor_spike_afterClear,
+            afterClear={
+                mechLib.mino.music.survivor_spike_afterClear,
+                mechLib.mino.progress.survivor_spike_afterClear,
+            },
             drawOnPlayer=mechLib.mino.survivor.event_drawOnPlayer,
         },
     }},

@@ -21,20 +21,20 @@ local levels={-- par: drop interval
     {drop=17,  lock=700 ,spawn=110, par=357},
     {drop=12,  lock=700 ,spawn=110, par=333},
     {drop=9,   lock=600 ,spawn=90,  par=312},
-    {drop=7,   lock=600 ,spawn=90,  par=294},
-    {drop=5,   lock=600 ,spawn=90,  par=277},
-    {drop=3,   lock=600 ,spawn=90,  par=263},
-    {drop=2,   lock=600 ,spawn=90,  par=250},
-    {drop=0,   lock=590 ,spawn=75,  par=238},
-    {drop=0,   lock=580 ,spawn=75,  par=227},
-    {drop=0,   lock=570 ,spawn=75,  par=217},
-    {drop=0,   lock=560 ,spawn=75,  par=200},
-    {drop=0,   lock=550 ,spawn=75,  par=189},
-    {drop=0,   lock=540 ,spawn=70,  par=179},
-    {drop=0,   lock=530 ,spawn=70,  par=169},
-    {drop=0,   lock=520 ,spawn=70,  par=161},
-    {drop=0,   lock=510 ,spawn=70,  par=154},
-    {drop=0,   lock=500 ,spawn=70,  par=143},
+    {drop=7,   lock=580 ,spawn=90,  par=294},
+    {drop=5,   lock=560 ,spawn=90,  par=277},
+    {drop=3,   lock=540 ,spawn=90,  par=263},
+    {drop=2,   lock=520 ,spawn=90,  par=250},
+    {drop=0,   lock=500 ,spawn=75,  par=238},
+    {drop=0,   lock=480 ,spawn=75,  par=227},
+    {drop=0,   lock=460 ,spawn=75,  par=217},
+    {drop=0,   lock=440 ,spawn=75,  par=200},
+    {drop=0,   lock=420 ,spawn=75,  par=189},
+    {drop=0,   lock=400 ,spawn=70,  par=179},
+    {drop=0,   lock=380 ,spawn=70,  par=169},
+    {drop=0,   lock=360 ,spawn=70,  par=161},
+    {drop=0,   lock=340 ,spawn=70,  par=154},
+    {drop=0,   lock=320 ,spawn=70,  par=143},
 }
 
 function marathon.event_playerInit_auto(P)
@@ -88,6 +88,10 @@ function marathon.event_afterClear(P)
                 P.settings.spawnDelay=levels[md.level].spawn
             else
                 md.ascend=md.ascend+1
+                if md.ascend>=4 then
+                    P.settings.lockDelay=max(P.settings.lockDelay-40,200)
+                    P.settings.spawnDelay=max(P.settings.spawnDelay-25,0)
+                end
             end
             md.lineTarget=md.lineTarget+10
             md.levelPieces=0

@@ -11,7 +11,7 @@ return {
             playerInit=mechLib.mino.misc.noRotate_event_playerInit,
             afterClear={
                 mechLib.mino.sprint.event_afterClear[20],
-                mechLib.mino.progress.sprint_lock_20_afterClear,
+                mechLib.mino.music.sprint_lock_20_afterClear,
             },
             drawInField=mechLib.mino.sprint.event_drawInField[20],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[20],

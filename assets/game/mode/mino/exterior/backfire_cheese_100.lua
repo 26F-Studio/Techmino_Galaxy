@@ -14,7 +14,7 @@ return {
             beforeSend=mechLib.mino.backfire.break_event_beforeSend,
             afterClear={
                 mechLib.mino.sprint.event_afterClear[100],
-                mechLib.mino.progress.backfire_cheese_100_afterClear,
+                mechLib.mino.music.backfire_cheese_100_afterClear,
             },
             drawInField=mechLib.mino.sprint.event_drawInField[100],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[100],

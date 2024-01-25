@@ -59,4 +59,7 @@ function stat.event_beforeSend(P,atk)
     S.sent=S.sent+atk.power
 end
 
+-- Highest priority for all statistics events
+for k,v in next,stat do stat[k]={-1,v} end
+
 return stat

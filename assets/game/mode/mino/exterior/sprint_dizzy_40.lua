@@ -15,7 +15,7 @@ return {
             afterRelease= mechLib.mino.misc.swapDirection_event_key,
             afterClear={
                 mechLib.mino.sprint.event_afterClear[40],
-                mechLib.mino.progress.sprint_dizzy_40_afterClear,
+                mechLib.mino.music.sprint_dizzy_40_afterClear,
             },
             drawInField=mechLib.mino.sprint.event_drawInField[40],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],

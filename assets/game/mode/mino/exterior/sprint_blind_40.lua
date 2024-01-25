@@ -12,7 +12,7 @@ return {
             playerInit=mechLib.mino.misc.coverField_switch_auto,
             afterClear={
                 mechLib.mino.sprint.event_afterClear[40],
-                mechLib.mino.progress.sprint_blind_40_afterClear,
+                mechLib.mino.music.sprint_blind_40_afterClear,
             },
             drawInField=mechLib.mino.sprint.event_drawInField[40],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],

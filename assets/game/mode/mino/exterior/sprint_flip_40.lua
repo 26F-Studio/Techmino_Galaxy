@@ -9,7 +9,7 @@ return {
         event={
             afterClear={
                 mechLib.mino.sprint.event_afterClear[40],
-                mechLib.mino.progress.sprint_flip_40_afterClear,
+                mechLib.mino.music.sprint_flip_40_afterClear,
             },
             beforeDiscard=mechLib.mino.misc.flipBoardLR,
             drawInField=mechLib.mino.sprint.event_drawInField[40],

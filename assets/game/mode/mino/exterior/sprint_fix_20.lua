@@ -11,7 +11,7 @@ return {
             playerInit=mechLib.mino.misc.noMove_event_playerInit,
             afterClear={
                 mechLib.mino.sprint.event_afterClear[20],
-                mechLib.mino.progress.sprint_fix_20_afterClear,
+                mechLib.mino.music.sprint_fix_20_afterClear,
             },
             drawInField=mechLib.mino.sprint.event_drawInField[20],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[20],

@@ -13,7 +13,10 @@ return {
                 mechLib.mino.marathon.event_playerInit_auto,
                 "P:setAction('func1',mechLib.mino.stack.switch_auto)",
             },
-            afterClear=mechLib.mino.progress.marathon_afterClear,
+            afterClear={
+                mechLib.mino.music.marathon_afterClear,
+                mechLib.mino.progress.marathon_afterClear,
+            },
             gameOver=mechLib.mino.progress.marathon_gameOver,
         },
     }},

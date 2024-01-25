@@ -15,12 +15,10 @@ return {
             afterLock=mechLib.mino.comboPractice.event_afterLock,
             afterClear={
                 mechLib.mino.comboPractice.event_afterClear,
+                mechLib.mino.music.combo_practice_afterClear,
                 mechLib.mino.progress.combo_practice_afterClear,
             },
-            beforeDiscard={
-                mechLib.mino.comboPractice.event_beforeDiscard[200],
-                mechLib.mino.progress.combo_practice_beforeDiscard,
-            },
+            beforeDiscard=mechLib.mino.comboPractice.event_beforeDiscard[200],
             drawOnPlayer=mechLib.mino.comboPractice.event_drawOnPlayer[200],
             gameOver=mechLib.mino.progress.combo_practice_gameOver,
         },

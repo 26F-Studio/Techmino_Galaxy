@@ -10,7 +10,7 @@ return {
             playerInit=mechLib.mino.misc.obstacle_event_playerInit,
             afterClear={
                 mechLib.mino.misc.obstacle_event_afterClear[20],
-                mechLib.mino.progress.sprint_obstacle_20_afterClear,
+                mechLib.mino.music.sprint_obstacle_20_afterClear,
             },
             drawOnPlayer=mechLib.mino.misc.obstacle_event_drawOnPlayer[20],
             gameOver=mechLib.mino.progress.sprint_obstacle_20_gameOver,

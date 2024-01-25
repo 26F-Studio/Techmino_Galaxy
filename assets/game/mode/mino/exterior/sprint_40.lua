@@ -6,7 +6,7 @@ return {
         playBgm('race','base')
     end,
     settings={mino={
-        -- skin='touhou.mino_reimu',
+        skin='touhou.mino_reimu',
         -- seqType=mechLib.mino.sequence.distWeight.fake7bag,
         seqType='bag7_sprint',
         -- clearRule='line_float',
@@ -29,6 +29,7 @@ return {
                 -- mechLib.mino.misc.cascade_event_afterClear,
                 mechLib.mino.sprint.event_afterClear[40],
                 mechLib.mino.progress.sprint_40_afterClear,
+                mechLib.mino.music.sprint_40_afterClear,
             },
             drawInField=mechLib.mino.sprint.event_drawInField[40],
             drawOnPlayer=mechLib.mino.sprint.event_drawOnPlayer[40],

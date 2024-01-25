@@ -17,7 +17,10 @@ return {
         event={
             playerInit=mechLib.mino.survivor.event_playerInit,
             always=mechLib.mino.survivor.cheese_event_always,
-            afterClear=mechLib.mino.progress.survivor_cheese_afterClear,
+            afterClear={
+                mechLib.mino.music.survivor_cheese_afterClear,
+                mechLib.mino.progress.survivor_cheese_afterClear,
+            },
             drawOnPlayer=mechLib.mino.survivor.event_drawOnPlayer,
         },
     }},

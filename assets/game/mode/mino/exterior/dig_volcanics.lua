@@ -10,7 +10,7 @@ return {
             playerInit=mechLib.mino.dig.volcanics_event_playerInit[6],
             afterClear={
                 mechLib.mino.dig.volcanics_event_afterClear['20,6'],
-                mechLib.mino.progress.dig_volcanics_afterClear,
+                mechLib.mino.music.dig_volcanics_afterClear,
             },
             drawOnPlayer=mechLib.mino.dig.event_drawOnPlayer[20],
             gameOver=mechLib.mino.progress.dig_volcanics_gameOver,

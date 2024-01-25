@@ -11,6 +11,7 @@ return {
             always=mechLib.mino.techrashChallenge.hard_event_always,
             afterClear={
                 mechLib.mino.techrashChallenge.hard_event_afterClear,
+                mechLib.mino.music.techrash_hard_afterClear,
                 mechLib.mino.progress.techrash_hard_afterClear,
             },
             drawBelowMarks=mechLib.mino.techrashChallenge.hard_event_drawBelowMarks,

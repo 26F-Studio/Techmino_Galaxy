@@ -11,7 +11,7 @@ return {
     settings={mino={
         event={
             playerInit="mechLib.mino.hypersonic.event_playerInit_auto(P,'hidden')",
-            afterSpawn=mechLib.mino.progress.hypersonic_hd_afterSpawn,
+            afterSpawn=mechLib.mino.music.hypersonic_hd_afterSpawn,
             gameOver=mechLib.mino.progress.hypersonic_hd_gameOver,
         },
     }},

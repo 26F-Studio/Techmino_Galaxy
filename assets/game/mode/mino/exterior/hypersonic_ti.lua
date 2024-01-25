@@ -8,7 +8,7 @@ return {
     settings={mino={
         event={
             playerInit="mechLib.mino.hypersonic.event_playerInit_auto(P,'titanium')",
-            afterSpawn=mechLib.mino.progress.hypersonic_ti_afterSpawn,
+            afterSpawn=mechLib.mino.music.hypersonic_ti_afterSpawn,
             afterClear=mechLib.mino.progress.hypersonic_ti_afterClear,
         },
     }},

@@ -11,7 +11,7 @@ return {
             playerInit=mechLib.mino.dig.sprint_event_playerInit[10],
             afterClear={
                 mechLib.mino.dig.sprint_event_afterClear['400,10'],
-                mechLib.mino.progress.dig_400_afterClear,
+                mechLib.mino.music.dig_400_afterClear,
             },
             drawOnPlayer=mechLib.mino.dig.event_drawOnPlayer[400],
             gameOver=mechLib.mino.progress.dig_400_gameOver,
