@@ -25,7 +25,7 @@ local baseDict={
     {'term: drop_speed'},
     {'term: key_speed'},
     {'term: attack_power'},
-    {'term: asd_asp_adp'},
+    {'term: asd_asp'},
     {'term: ash'},
     {'term: init_control'},
     {'term: misaction'},

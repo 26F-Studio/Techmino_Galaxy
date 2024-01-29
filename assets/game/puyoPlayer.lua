@@ -404,7 +404,7 @@ function PP:freshGhost()
         end
 
         -- 20G check
-        if (self.settings.dropDelay<=0 or self.downCharge and self.settings.adp==0) and self.ghostY<self.handY then -- if (temp) 20G on
+        if (self.settings.dropDelay<=0 or self.downCharge and self.settings.asp==0) and self.ghostY<self.handY then -- if (temp) 20G on
             local dY=self.ghostY-self.handY
             self:moveHand('drop',dY)
             self:freshDelay('drop')
@@ -954,8 +954,14 @@ function PP:updateFrame()
         -- Auto drop
         if self.downCharge and self.keyState.softDrop then
             if self.hand and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
-                self.downCharge=self.downCharge+1
-                local dist=SET.adp==0 and 1e99 or self.downCharge%SET.adp==0 and 1 or 0
+                local dist=0
+                if SET.asp==0 then
+                    if self.downCharge>=SET.asd then
+                        dist=1e99
+                    end
+                elseif self.downCharge>=SET.asd and (self.downCharge-SET.asd)%SET.asp==0 then
+                    dist=1
+                end
                 if dist>0 then
                     local oy=self.handY
                     while dist>0 do
@@ -970,8 +976,9 @@ function PP:updateFrame()
                         end
                     end
                 end
+                self.downCharge=self.downCharge+1
             else
-                self.downCharge=SET.adp
+                self.downCharge=SET.asd
                 if self.hand then
                     self:shakeBoard('-down')
                 end
@@ -1254,7 +1261,6 @@ local baseEnv={
     -- Control
     asd=122,
     asp=26,
-    adp=26,
     ash=26,
     entryChrg='on',
     wallChrg='on',

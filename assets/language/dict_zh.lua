@@ -195,12 +195,11 @@ KPM: Key per Minute，按键每分
 APM: Attack per Minute，攻击每分
 APL: Attack per Line，攻击每行（行的计算方式也可以分两种，详见LPM词条），也叫效率
 
-# asd_asp_adp
+# asd_asp
 @ title 移动延迟（ASD & ASP & ADP）
 @ contentSize 25
 ASD: Auto Shift Delay，自动移动延迟，旧称DAS（Delayed Auto Shift）
 ASP: Auto Shift Period，自动重复周期，旧称ARR（Auto Repeat Rate)
-ADP: Auto Drop Period，软降重复周期
 ~~
 在使用键盘输入文本时按住一个键，会连续输入了一大串字符。注意字符出现的时机：第一个字按下后立刻出现，停了一小会后开始快速连续自动输入，其中“停了一小会”就是ASD长度，“连续自动输入”的间隔就是ASP长度。
 ADP类似ASP，区别是用于软降。

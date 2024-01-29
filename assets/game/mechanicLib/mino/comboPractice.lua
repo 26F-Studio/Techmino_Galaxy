@@ -70,7 +70,6 @@ end
 function comboPractice.event_playerInit(P)
     P.settings.asd=math.max(P.settings.asd,120)
     P.settings.asp=math.max(P.settings.asp,12)
-    P.settings.adp=math.max(P.settings.adp,6)
 
     P.modeData.comboCount=0
     P.modeData.levelRemain=0

@@ -20,7 +20,6 @@ return {
             playerInit=function(P)
                 P.settings.asd=math.max(P.settings.asd,100)
                 P.settings.asp=math.max(P.settings.asp,20)
-                P.settings.adp=math.max(P.settings.adp,20)
 
                 P.settings.dropDelay=dropSpeed[1]
                 P.modeData.lineTarget=10

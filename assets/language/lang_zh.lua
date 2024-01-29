@@ -72,7 +72,6 @@ return {
 
     setting_asd="自动移动延迟",
     setting_asp="自动重复周期",
-    setting_adp="软降重复周期",
     setting_ash="自动移动阻止",
     setting_aHdLock="自动硬降锁",
     setting_mHdLock="手动硬降锁",

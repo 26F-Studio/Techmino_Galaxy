@@ -46,7 +46,6 @@ end
 function marathon.event_playerInit(P)
     P.settings.asd=max(P.settings.asd,100)
     P.settings.asp=max(P.settings.asp,20)
-    P.settings.adp=max(P.settings.adp,20)
 
     P.settings.dropDelay=levels[1].drop
     P.settings.lockDelay=levels[1].lock
