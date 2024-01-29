@@ -191,6 +191,7 @@ function PP:getSmoothPos()
 end
 --------------------------------------------------------------
 -- Game methods
+---@param action 'moveX'|'moveY'|'drop'|'rotate'|'reset'
 function PP:moveHand(action,A,B,C)
     --[[
         moveX:  dx,noShade
@@ -224,8 +225,9 @@ function PP:moveHand(action,A,B,C)
                 end
             end
         end
-    elseif action=='drop' or action=='moveY' then
+    elseif action=='moveY' or action=='drop' then
         self.handY=self.handY+A
+        self.dropTimer=self.settings.dropDelay
         self:checkLanding(true)
         if self.settings.particles then
             local hx,hy=self.handX,self.handY
@@ -1044,7 +1046,6 @@ function PP:updateFrame()
                 if self.dropTimer>0 then
                     self.dropTimer=self.dropTimer-1
                     if self.dropTimer<=0 then
-                        self.dropTimer=SET.dropDelay
                         self:moveHand('drop',-1,true)
                     end
                 elseif self.handY~=self.ghostY then -- If switch to 20G during game, puyo won't dropped to bottom instantly so we force fresh it

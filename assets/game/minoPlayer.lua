@@ -272,6 +272,7 @@ function MP:getSmoothPos()
 end
 --------------------------------------------------------------
 -- Game methods
+---@param action 'moveX'|'moveY'|'drop'|'rotate'|'reset'
 function MP:moveHand(action,A,B,C,D)
     --[[
         moveX:  dx,noShade
@@ -280,10 +281,11 @@ function MP:moveHand(action,A,B,C,D)
         rotate: x,y,dir,ifInit
         reset:  x,y
     ]]
+    local SET=self.settings
     if action=='moveX' then
         self.handX=self.handX+A
         self:checkLanding()
-        if self.settings.particles then
+        if SET.particles then
             local hx,hy=self.handX,self.handY
             local mat=self.hand.matrix
             local w,h=#mat[1],#mat
@@ -307,8 +309,9 @@ function MP:moveHand(action,A,B,C,D)
         end
     elseif action=='moveY' or action=='drop' then
         self.handY=self.handY+A
+        self.dropTimer=SET.dropDelay
         self:checkLanding(true,true)
-        if self.settings.particles then
+        if SET.particles then
             local hx,hy=self.handX,self.handY
             local mat=self.hand.matrix
             local w,h=#mat[1],#mat
@@ -348,13 +351,13 @@ function MP:moveHand(action,A,B,C,D)
     if action=='moveX' then
         if
             not self.ghostState and
-            self.settings.tuck and
+            SET.tuck and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY+1)
         then
             movement.tuck=true
             self:playSound('tuck')
-            if self.settings.particles then
+            if SET.particles then
                 self:createTuckEffect()
             end
         end
@@ -362,7 +365,7 @@ function MP:moveHand(action,A,B,C,D)
     elseif action=='rotate' then
         if not self.ghostState then
             if
-                self.settings.spin_immobile and
+                SET.spin_immobile and
                 self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
                 self:ifoverlap(self.hand.matrix,self.handX,self.handY+1) and
                 self:ifoverlap(self.hand.matrix,self.handX-1,self.handY) and
@@ -371,12 +374,12 @@ function MP:moveHand(action,A,B,C,D)
                 movement.immobile=true
                 self:shakeBoard(C=='L' and '-ccw' or C=='R' and '-cw' or '-180')
                 self:playSound('rotate_locked')
-                if self.settings.particles then
+                if SET.particles then
                     self:createHandEffect(.942,1,1)
                 end
             end
-            if self.settings.spin_corners then
-                local minoData=minoRotSys[self.settings.rotSys][self.hand.shape]
+            if SET.spin_corners then
+                local minoData=minoRotSys[SET.rotSys][self.hand.shape]
                 local state=minoData[self.hand.direction]
                 local centerPos=state and state.center or type(minoData.center)=='function' and minoData.center(self)
                 if centerPos then
@@ -387,10 +390,10 @@ function MP:moveHand(action,A,B,C,D)
                         if self.field:getCell(cx+1,cy-1) then corners=corners+1 end
                         if self.field:getCell(cx-1,cy+1) then corners=corners+1 end
                         if self.field:getCell(cx+1,cy+1) then corners=corners+1 end
-                        if corners>=self.settings.spin_corners then
+                        if corners>=SET.spin_corners then
                             movement.corners=true
                             self:playSound('rotate_corners')
-                            if self.settings.particles then
+                            if SET.particles then
                                 self:createRotateCornerEffect(cx,cy)
                             end
                         end
@@ -399,7 +402,7 @@ function MP:moveHand(action,A,B,C,D)
             end
         end
         self:playSound(D and 'initrotate' or 'rotate')
-        if self.settings.particles then
+        if SET.particles then
             self:createRotateEffect(C,D)
         end
     end
@@ -1548,7 +1551,6 @@ function MP:updateFrame()
                 if self.dropTimer>0 then
                     self.dropTimer=self.dropTimer-1
                     if self.dropTimer<=0 then
-                        self.dropTimer=SET.dropDelay
                         self:moveHand('drop',-1,true)
                     end
                 elseif self.handY~=self.ghostY then -- If switch to 20G during game, mino won't dropped to bottom instantly so we force fresh it
