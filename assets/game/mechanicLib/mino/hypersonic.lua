@@ -29,7 +29,7 @@ function hypersonic.event_playerInit_auto(P,mode)
         P:addEvent('afterClear',hypersonic.titanium_event_afterClear)
         P:addEvent('drawOnPlayer',hypersonic.titanium_event_drawOnPlayer)
     else
-        error('No hypersonic mode '..tostring(mode))
+        errorf("No hypersonic mode %s",mode)
     end
 end
 

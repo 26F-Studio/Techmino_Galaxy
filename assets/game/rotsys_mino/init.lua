@@ -66,11 +66,11 @@ function minoRotSys._normalizeKick(data,dir,fdir)
         end
 
         assert(data[move.target],"Target state ["..move.target.."] not exist")
-        assert(type(move.test)=='table','[KICK].test must be a table')
+        assert(type(move.test)=='table',"[KICK].test must be a table")
 
         for i=1,#move.test do
             if type(move.test[i])~='table' then
-                assert(type(move.test[i])=='string','test[n] must be vecStr')
+                assert(type(move.test[i])=='string',"test[n] must be vecStr")
                 move.test[i]=minoRotSys._strToVec(move.test[i])
             end
         end
@@ -155,7 +155,7 @@ for name,rs in next,minoRotSys do
         -- Make all string vec to the same table vec
         for shapeID,minoData in next,rs do
             if type(shapeID)=='number' then
-                assert(type(minoData)=='table','minoData must be table')
+                assert(type(minoData)=='table',"minoData must be table")
                 if minoData.rotate then
                     assert(type(minoData.rotate)=='function',"minoData.rotate must be function if exist")
                     assert(minoData.center==nil or type(minoData.center)=='function',"minoData.center must be function if exist")

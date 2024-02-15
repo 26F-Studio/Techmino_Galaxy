@@ -184,7 +184,7 @@ do -- Widgets
 end
 
 local function assertObj(cond,message,obj)
-    assert(cond,('Dict parse error: %s\nLine %d: %s'):format(message,obj._line,obj._id))
+    assertf(cond,"Dict parse error: %s\nLine %d: %s",message,obj._line,obj._id)
 end
 local function parseDict(data)
     data=data:split('\n')

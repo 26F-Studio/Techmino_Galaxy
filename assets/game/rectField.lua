@@ -118,7 +118,7 @@ end
 --------------------------------------------------------------
 -- Builder
 function F.new(width)
-    assert(type(width)=='number','[Field].new(width): width must be number')
+    assert(type(width)=='number',"[Field].new(width): width must be number")
     local f=setmetatable({_width=width},{__index=F,__metatable=true})
     f._matrix={}
 

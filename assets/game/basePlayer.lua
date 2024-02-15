@@ -198,12 +198,12 @@ function P:addEvent(name,E)
             setSafeEnv(E)
             self:addEvent(name,E)
         else
-            error('Error in code string: '..errMsg)
+            error("Error in code string: "..errMsg)
         end
     elseif type(E)=='function' then
         self:addEvent(name,{0,E})
     else
-        error('Wrong Event format')
+        error("Wrong Event format")
     end
 end
 local function _scrap() return true end
