@@ -32,8 +32,7 @@ local settings={
         asd=120,
         asp=20,
         ash=26,
-        aHdLock=200,
-        mHdLock=62,
+        softdropSkipAsd=true,
 
         -- Video
         shakeness=.6,

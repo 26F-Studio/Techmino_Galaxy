@@ -1436,12 +1436,12 @@ function MP:updateFrame()
         if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then
             if self.hand and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) then
                 local dist=0
-                if SET.asp==0 then
-                    if self.moveCharge>=SET.asd then
+                if self.moveCharge>=SET.asd then
+                    if SET.asp==0 then
                         dist=1e99
+                    elseif (self.moveCharge-SET.asd)%SET.asp==0 then
+                        dist=1
                     end
-                elseif self.moveCharge>=SET.asd and (self.moveCharge-SET.asd)%SET.asp==0 then
-                    dist=1
                 end
                 if dist>0 then
                     local ox=self.handX
@@ -1482,14 +1482,15 @@ function MP:updateFrame()
 
         -- Auto drop
         if self.downCharge and self.keyState.softDrop then
+            local dropASD=SET.softdropSkipAsd and SET.asp or SET.asd
             if self.hand and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
                 local dist=0
-                if SET.asp==0 then
-                    if self.downCharge>=SET.asd then
+                if self.downCharge>=dropASD then
+                    if SET.asp==0 then
                         dist=1e99
+                    elseif (self.downCharge-dropASD)%SET.asp==0 then
+                        dist=1
                     end
-                elseif self.downCharge>=SET.asd and (self.downCharge-SET.asd)%SET.asp==0 then
-                    dist=1
                 end
                 if dist>0 then
                     local oy=self.handY
@@ -1510,7 +1511,7 @@ function MP:updateFrame()
                 end
                 self.downCharge=self.downCharge+1
             else
-                self.downCharge=SET.asd
+                self.downCharge=dropASD
                 if self.hand then
                     self:shakeBoard('-down')
                 end
@@ -1939,6 +1940,7 @@ local baseEnv={
     asd=122, -- *Auto shift delay
     asp=26, -- *Auto shift period
     ash=26, -- *Auto Shift Halt, discharge asd when piece spawn
+    softdropSkipAsd=true, -- *Skip asd when softdrop
     entryChrg='on', -- on/off/full/cancel charge when move before spawn
     wallChrg='on', -- on/off/full/cancel charge when move towards wall
     stopMoveWhenSpawn=false, -- Stop moving when piece spawn
@@ -1955,8 +1957,8 @@ local baseEnv={
     initMove='buffer', -- buffer/hold to do initial move
     initRotate='buffer', -- buffer/hold to do initial rotate
     initHold='buffer', -- buffer/hold to do initial hold
-    aHdLock=1000, -- *Auto harddrop lock
-    mHdLock=100, -- *Manual harddrop lock
+    aHdLock=60, -- Auto harddrop lock
+    mHdLock=40, -- Manual harddrop lock
     freshLockInASD=true, -- Fresh lockDelay in auto shift delay
     freshLockInASP=true, -- Fresh lockDelay in auto shift period
 

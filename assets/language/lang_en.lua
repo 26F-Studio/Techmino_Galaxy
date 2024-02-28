@@ -73,8 +73,7 @@ return {
     setting_asd="ASD",
     setting_asp="ASP",
     setting_ash="AS Halt",
-    setting_aHdLock="Auto harddrop lock",
-    setting_mHdLock="Manual harddrop lock",
+    setting_softdropSkipAsd="Skip Drop Delay",
     setting_shakeness="Shakiness",
     setting_hitWavePower="Hitwave Power",
 

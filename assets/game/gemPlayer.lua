@@ -601,12 +601,12 @@ function GP:updateFrame()
         if self.swapX~=MATH.clamp(self.swapX+self.moveDirH,1,self.settings.fieldSize) then
             self.moveChargeH=self.moveChargeH+1
             local dist=0
-            if SET.asp==0 then
-                if self.moveChargeH>=SET.asd then
+            if self.moveChargeH>=SET.asd then
+                if SET.asp==0 then
                     dist=1e99
+                elseif (self.moveChargeH-SET.asd)%SET.asp==0 then
+                    dist=1
                 end
-            elseif self.moveChargeH>=SET.asd and (self.moveChargeH-SET.asd)%SET.asp==0 then
-                dist=1
             end
             if dist>0 then
                 local moved
@@ -630,12 +630,12 @@ function GP:updateFrame()
         if self.swapY~=MATH.clamp(self.swapY+self.moveDirV,1,self.settings.fieldSize) then
             self.moveChargeV=self.moveChargeV+1
             local dist=0
-            if SET.asp==0 then
-                if self.moveChargeV>=SET.asd then
+            if self.moveChargeV>=SET.asd then
+                if SET.asp==0 then
                     dist=1e99
+                elseif (self.moveChargeV-SET.asd)%SET.asp==0 then
+                    dist=1
                 end
-            elseif self.moveChargeV>=SET.asd and (self.moveChargeV-SET.asd)%SET.asp==0 then
-                dist=1
             end
             if dist>0 then
                 local moved

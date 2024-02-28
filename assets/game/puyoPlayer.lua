@@ -906,12 +906,12 @@ function PP:updateFrame()
         if self.moveDir and (self.moveDir==-1 and self.keyState.moveLeft or self.moveDir==1 and self.keyState.moveRight) then
             if self.hand and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) then
                 local dist=0
-                if SET.asp==0 then
-                    if self.moveCharge>=SET.asd then
+                if self.moveCharge>=SET.asd then
+                    if SET.asp==0 then
                         dist=1e99
+                    elseif (self.moveCharge-SET.asd)%SET.asp==0 then
+                        dist=1
                     end
-                elseif self.moveCharge>=SET.asd and (self.moveCharge-SET.asd)%SET.asp==0 then
-                    dist=1
                 end
                 if dist>0 then
                     local ox=self.handX
@@ -955,14 +955,15 @@ function PP:updateFrame()
 
         -- Auto drop
         if self.downCharge and self.keyState.softDrop then
+            local dropASD=SET.softdropSkipAsd and SET.asp or SET.asd
             if self.hand and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
                 local dist=0
-                if SET.asp==0 then
-                    if self.downCharge>=SET.asd then
+                if self.downCharge>=dropASD then
+                    if SET.asp==0 then
                         dist=1e99
+                    elseif (self.downCharge-dropASD)%SET.asp==0 then
+                        dist=1
                     end
-                elseif self.downCharge>=SET.asd and (self.downCharge-SET.asd)%SET.asp==0 then
-                    dist=1
                 end
                 if dist>0 then
                     local oy=self.handY
@@ -980,7 +981,7 @@ function PP:updateFrame()
                 end
                 self.downCharge=self.downCharge+1
             else
-                self.downCharge=SET.asd
+                self.downCharge=dropASD
                 if self.hand then
                     self:shakeBoard('-down')
                 end
@@ -1263,6 +1264,7 @@ local baseEnv={
     asd=122,
     asp=26,
     ash=26,
+    softdropSkipAsd=true, -- *Skip asd when softdrop
     entryChrg='on',
     wallChrg='on',
     stopMoveWhenSpawn=false,
@@ -1277,8 +1279,8 @@ local baseEnv={
     dblMoveRelInvRedir=true,
     initMove='buffer',
     initRotate='buffer',
-    aHdLock=260,
-    mHdLock=60,
+    aHdLock=60,
+    mHdLock=40,
     freshLockInASD=true,
     freshLockInASP=true,
 

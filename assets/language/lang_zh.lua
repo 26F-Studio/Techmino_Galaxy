@@ -73,8 +73,7 @@ return {
     setting_asd="自动移动延迟",
     setting_asp="自动重复周期",
     setting_ash="自动移动阻止",
-    setting_aHdLock="自动硬降锁",
-    setting_mHdLock="手动硬降锁",
+    setting_softdropSkipAsd="跳过软降延迟",
     setting_shakeness="场地晃动",
     setting_hitWavePower="冲击波强度",
 
