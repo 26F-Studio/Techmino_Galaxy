@@ -93,7 +93,7 @@ local bgmList={
     },
     ['overzero']={
         author="MrZ",
-        message="Blank remix",
+        message="Blank VMX",
         base={'melody','bass','drum','sfx'},
         full={'melody','accompany','decoration','bass','drum','sfx'},
     },
@@ -165,7 +165,7 @@ local bgmList={
     },
     ['space']={
         author="MrZ",
-        message="Blank remix",
+        message="Blank VMX",
         base={'melody1','melody2','bass'},
         full={'melody1','melody2','accompany','decoration','bass'},
     },
@@ -189,7 +189,7 @@ local bgmList={
     },
     ['subspace']={
         author="MrZ",
-        message="Blank remix",
+        message="Blank VMX",
         base={'melody1','melody2','bass'},
         full={'melody1','melody2','bass','drum1','drum2'},
     },
@@ -242,25 +242,25 @@ local bgmList={
     },
     ['none']={
         author="MrZ",
-        message="Blank remix",
+        message="Blank VMX",
         base={'melody1','melody2','accompany','drum','sfx'},
         full={'melody1','melody2','melody3','accompany','decoration','bass','drum','sfx'},
     },
     ['nil']={
         author="MrZ",
-        message="Blank remix",
+        message="Blank VMX",
         base={'melody1','melody2','accompany1','decoration1','bass1','sfx'},
         full={'melody1','melody2','accompany1','accompany2','accompany3','decoration1','decoration2','decoration3','bass1','bass2','sfx'},
     },
     ['null']={
         author="MrZ",
-        message="Blank remix",
+        message="Blank VMX",
         base={'melody1','accompany1','accompany3'},
         full={'melody1','melody2','accompany1','accompany2','accompany3','bass'},
     },
     ['vacuum']={
         author="MrZ",
-        message="Blank remix",
+        message="Blank VMX",
         base={'melody1','melody2','accompany','bass'},
         full={'melody1','melody2','melody3','accompany','bass','drum','sfx'},
     },
