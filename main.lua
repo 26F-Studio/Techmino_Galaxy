@@ -137,6 +137,16 @@ WIDGET.setDefaultOption{
     button={
         sound_trigger='button_norm',
     },
+    slider={
+        sound_drag='slider_drag',
+        soundInterval=.042,
+        soundPitchRange=7.02,
+    },
+    slider_fill={
+        sound_drag='slider_fill_drag',
+        soundInterval=.042,
+        soundPitchRange=7.02,
+    },
     checkBox={
         sound_on='check_on',
         sound_off='check_off',
