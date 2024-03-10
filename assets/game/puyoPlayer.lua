@@ -88,10 +88,10 @@ local defaultSoundFunc={
         else
             inst('bass',.626,'A4')
             local phase=(chain-21)%12
-            inst('lead',1-((11-phase)/12)^2,41+phase) -- E4+
-            inst('lead',1-((11-phase)/12)^2,46+phase) -- A4+
-            inst('lead',1-(phase/12)^2,     53+phase) -- E5+
-            inst('lead',1-(phase/12)^2,     58+phase) -- A5+
+            inst('lead',1-((11-phase)/12)^2,40+phase) -- E4+
+            inst('lead',1-((11-phase)/12)^2,45+phase) -- A4+
+            inst('lead',1-(phase/12)^2,     52+phase) -- E5+
+            inst('lead',1-(phase/12)^2,     57+phase) -- A5+
         end
     end,__metatable=true}),
     frenzy=      function() SFX.play('frenzy')      end,
