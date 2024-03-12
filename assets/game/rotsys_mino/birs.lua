@@ -10,8 +10,8 @@ BiRS.centerTex=GC.load{10,10,
     {'fRect',3,3,4,4},
 }
 
-local R={'+0+0','-1+0','-1-1','+0-1','-1+1','+1-1','+1+0','+0+1','+1+1','+0+2','-1+2','+1+2','-2+0','+2+0'}
 local L={'+0+0','+1+0','+1-1','+0-1','+1+1','-1-1','-1+0','+0+1','-1+1','+0+2','+1+2','-1+2','+2+0','-2+0'}
+local R=minoRotSys._flipList(L)
 local F={'+0+0','+0-1','+0+1','+0+2'}
 for i=1,#R do R[i]=minoRotSys._strToVec(R[i]) end
 for i=1,#L do L[i]=minoRotSys._strToVec(L[i]) end

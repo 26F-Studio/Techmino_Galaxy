@@ -7,7 +7,7 @@ DRS_weak.centerTex=GC.load{10,10,
 }
 
 local L={'+0+0','-1+0','+1+0','+0-1','-1-1','+1-1'}
-local R={'+0+0','+1+0','-1+0','+0-1','+1-1','-1-1'}
+local R=minoRotSys._flipList(L)
 local Z={
     [0]={R={test=R},L={test=L},F={test=R}},
     [1]={R={test=R},L={test=L},F={test=L}},

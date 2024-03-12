@@ -5,7 +5,7 @@ C2_plus.centerTex=GC.load{10,10,
     {'dRect',2,2,6,6},
 }
 local L={'+0+0','-1+0','+1+0','+0-1','-1-1','+1-1','-2+0','+2+0'}
-local R={'+0+0','+1+0','-1+0','+0-1','+1-1','-1-1','+2+0','-2+0'}
+local R=minoRotSys._flipList(L)
 local Z={
     [0]={R={test=R},L={test=L},F={test=R}},
     [1]={R={test=R},L={test=L},F={test=L}},
