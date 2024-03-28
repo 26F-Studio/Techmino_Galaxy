@@ -346,11 +346,13 @@ end
 DEBUG.checkLoadTime("Load settings & data")
 --------------------------------------------------------------
 -- Load SOURCE ONLY resources
+---@type table<string, love.Shader>
 SHADER={}
 for _,v in next,love.filesystem.getDirectoryItems('assets/shader') do
     if FILE.isSafe('assets/shader/'..v) then
         local name=v:sub(1,-6)
-        SHADER[name]=love.graphics.newShader('assets/shader/'..name..'.glsl')
+        local suc,res=pcall(love.graphics.newShader,'assets/shader/'..name..'.glsl')
+        SHADER[name]=suc and res or error("Error in Shader '"..name.."': "..res)
     end
 end
 for _,v in next,love.filesystem.getDirectoryItems('assets/background') do

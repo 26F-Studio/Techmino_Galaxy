@@ -1,5 +1,3 @@
-local floor=math.floor
-
 Mino=require'assets.game.minoes'
 ColorTable=require'assets.game.colorTable'
 defaultMinoColor=setmetatable({
@@ -256,7 +254,7 @@ function GAME.unload()
 end
 
 function GAME.newPlayer(id,pType)
-    if not (type(id)=='number' and floor(id)==id and id>=1 and id<=1000) then
+    if not (type(id)=='number' and math.floor(id)==id and id>=1 and id<=1000) then
         MSG.new('error',"player id must be 1~1000 integer")
         return
     end
@@ -342,15 +340,15 @@ function GAME.initAtk(atk) -- Normalize the attack object
     assert(atk.mode==0 or atk.mode==1,"mode not 0 or 1")
     if atk.time==nil then atk.time=0 else
         assert(type(atk.time)=='number' and atk.time>=0,"time not non-negative number")
-        if atk.mode==1 then atk.time=floor(atk.time+.5) end
+        if atk.mode==1 then atk.time=math.floor(atk.time+.5) end
     end
     if atk.fatal==nil then atk.fatal=30 else
         assert(type(atk.fatal)=='number',"fatal not number")
-        atk.fatal=MATH.clamp(floor(atk.fatal+.5),0,100)
+        atk.fatal=MATH.clamp(math.floor(atk.fatal+.5),0,100)
     end
     if atk.speed==nil then atk.speed=30 else
         assert(type(atk.speed)=='number',"speed not number")
-        atk.speed=MATH.clamp(floor(atk.speed+.5),0,100)
+        atk.speed=MATH.clamp(math.floor(atk.speed+.5),0,100)
     end
     return atk
 end

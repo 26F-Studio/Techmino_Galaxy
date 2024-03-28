@@ -223,7 +223,7 @@ local sandBoxEnv={
     setmetatable=setmetatable,
 }
 function setSafeEnv(func)
-    sandBoxEnv.mechLib=mechLib
+    sandBoxEnv.mechLib=mechLib -- Update in case it changes during game
     setfenv(func,TABLE.copy(sandBoxEnv))
 end
 
