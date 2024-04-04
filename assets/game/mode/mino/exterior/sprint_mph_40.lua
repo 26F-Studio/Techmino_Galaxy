@@ -8,7 +8,7 @@ return {
     settings={mino={
         nextSlot=0,
         holdSlot=0,
-        seqType='mess',
+        seqType='messy',
         event={
             afterClear={
                 mechLib.mino.sprint.event_afterClear[40],
