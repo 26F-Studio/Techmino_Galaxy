@@ -3,9 +3,9 @@ local kb=love.keyboard
 
 local scene={}
 
-local reg-- register
-local val-- result value
-local sym-- symbol
+local reg -- register
+local val -- result value
+local sym -- symbol
 
 local function _autoReturn()
     if reg and sym then

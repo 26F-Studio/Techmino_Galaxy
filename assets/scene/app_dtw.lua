@@ -20,7 +20,7 @@ local keyTime
 local speed,maxSpeed
 local arcade,rollSpeed
 
-local reset=error-- function, defined later
+local reset=error -- function, defined later
 
 local tileColor="black"
 local mode="Normal"

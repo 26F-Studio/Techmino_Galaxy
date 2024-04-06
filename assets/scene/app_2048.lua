@@ -144,10 +144,10 @@ local function squash(L)
                 p1=p1+1
             end
         else
-            if not L[p1] then-- air←2
+            if not L[p1] then -- air←2
                 L[p1],L[p2]=L[p2],false
                 moved=true
-            elseif L[p1]==L[p2] then-- 2←2
+            elseif L[p1]==L[p2] then -- 2←2
                 L[p1],L[p2]=L[p1]+1,false
                 if L[p1]>maxTile then
                     freshMaxTile()
@@ -155,11 +155,11 @@ local function squash(L)
                 L[p2]=false
                 p1=p1+1
                 moved=true
-            elseif p1+1~=p2 then-- 2←4
+            elseif p1+1~=p2 then -- 2←4
                 L[p1+1],L[p2]=L[p2],false
                 p1=p1+1
                 moved=true
-            else-- 2,4
+            else -- 2,4
                 p1=p1+1
             end
         end

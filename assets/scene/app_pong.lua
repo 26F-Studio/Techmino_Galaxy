@@ -115,7 +115,7 @@ function scene.update()
             vy=vy+.1
         end
     end
-    if state==1 then-- Playing
+    if state==1 then -- Playing
         if bx<160 or bx>1120 then
             P=bx<160 and p1 or p2
             local d=by-P.y
@@ -133,7 +133,7 @@ function scene.update()
             vy,ry=-vy,-ry
             SFX.play('collect')
         end
-    elseif state==2 then-- Game over
+    elseif state==2 then -- Game over
         if bx<-120 or bx>1400 or by<-40 or by>760 then
             P=bx>640 and p1 or p2
             P.score=P.score+1

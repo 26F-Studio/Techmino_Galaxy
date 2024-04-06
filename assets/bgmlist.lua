@@ -324,8 +324,8 @@ local bgmList={
     ['gallery']={
         author="MrZ",
         message="A venus remix",
-        base={'melody1','accompany2','decorate','bass'},
-        full={'melody1','melody2','accompany1','accompany2','decorate','bass','drum'},
+        base={'melody1','accompany2','decoration','bass'},
+        full={'melody1','melody2','accompany1','accompany2','decoration','bass','drum'},
     },
     ['subzero']={
         author="TetraCepra",
