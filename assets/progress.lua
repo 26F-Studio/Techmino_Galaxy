@@ -128,7 +128,7 @@ end
 
 function PROGRESS.swapMainScene()
     if prgs.main<=2 then
-        SCN.swapTo('main_in','fastFade')
+        SCN.swapTo('main_in','none')
     elseif prgs.main<=4 then
         SCN.swapTo('main_out')
     else
