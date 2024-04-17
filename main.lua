@@ -216,6 +216,7 @@ IMG.init{
         end)(),
     },
     title_techmino='assets/image/title_techmino.png',
+    logo_fmod='assets/image/logo_fmod.png',
 }
 
 LANG.add{
