@@ -265,7 +265,7 @@ end
 
 function S.drawStartingCounter(readyDelay)
     gc_push('transform')
-    local num=math.floor((readyDelay-S.getTime())/1000)+1
+    local num=math.ceil((readyDelay-S.getTime())/1000)
     local r,g,b
     local d=1-S.getTime()%1000/1000 -- from .999 to 0
 
@@ -282,9 +282,9 @@ function S.drawStartingCounter(readyDelay)
     -- Warping number
     gc_push('transform')
         gc_scale((1.5-d*.6)^1.5)
-        gc_setColor(r,g,b,d)
+        gc_setColor(r,g,b,d/(.5+num/3))
         GC.mStr(num,0,-70)
-        gc_setColor(1,1,1,1.5*d-0.5)
+        gc_setColor(1,1,1,(1.5*d-0.5)/(.5+num/3))
         GC.mStr(num,0,-70)
     gc_pop()
 

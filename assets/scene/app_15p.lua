@@ -120,10 +120,10 @@ local function tapBoard(x,y,key)
             if checkBoard(b) then
                 state=2
                 time=love.timer.getTime()-startTime
-                SFX.play('win')
+                FMOD.playEffect('win')
                 return
             end
-            SFX.play('touch')
+            FMOD.playEffect('touch')
         end
     end
 end

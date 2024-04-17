@@ -3,11 +3,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        BGM.play{
-            'race/accompany1',
-            'race/decoration',
-            'race/drum',
-        }
+        playBgm('race_delay')
     end,
     settings={mino={
         inputDelay=620,

@@ -134,24 +134,24 @@ local function answer(option)
                 if time>parTime[1] then
                     -- Just pass
                     endGame(1)
-                    SFX.play('win')
+                    FMOD.playEffect('win')
                 else
                     level=2
                     time=parTime[2]
-                    SFX.play('beep_notice')
+                    FMOD.playEffect('beep_notice')
                 end
                 PROGRESS.setTutorialPassed(3)
             elseif level==2 then
                 -- Cleared
                 endGame(2)
-                SFX.play('win')
+                FMOD.playEffect('win')
             end
         else
             -- Correct
-            SFX.play('beep_rise')
+            FMOD.playEffect('beep_rise')
         end
     else
-        SFX.play('fail')
+        FMOD.playEffect('fail')
     end
     newQuestion()
 end
@@ -159,7 +159,7 @@ end
 function scene.enter()
     texts=TEXT.new()
     reset()
-    playBgm('space','simp')
+    playBgm('space')
 end
 function scene.leave()
     texts=nil
@@ -188,10 +188,10 @@ function scene.update(dt)
         if time==0 then
             if level==1 then
                 endGame(0)
-                SFX.play('fail')
+                FMOD.playEffect('fail')
             else
                 endGame(1)
-                SFX.play('win')
+                FMOD.playEffect('win')
             end
         end
     end

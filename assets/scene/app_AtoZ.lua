@@ -57,18 +57,18 @@ function scene.keyDown(key,isRep)
                     style='score',
                     duration=.4,
                 }
-                SFX.play('touch')
+                FMOD.playEffect('touch')
                 if progress==2 then
                     state=1
                     startTime=love.timer.getTime()
                 elseif progress>#targetString then
                     time=love.timer.getTime()-startTime
                     state=2
-                    SFX.play('reach')
+                    FMOD.playEffect('reach')
                 end
             elseif progress>1 then
                 mistake=mistake+1
-                SFX.play('finesseError')
+                FMOD.playEffect('finesseError')
             end
         end
     elseif key=='left' or key=='right' then

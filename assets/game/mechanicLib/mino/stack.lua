@@ -73,7 +73,7 @@ function stack.switch(P)
         P.settings.dropDelay,P.settings.lockDelay=1e99,1e99
 
         P.particles.boardSmoke:start()
-        BGM.set('all','highgain',.626,.26)
+        FMOD.playEffect('music_highcut')
     else
         if md.stack_lines>0 then
             P:say{
@@ -117,7 +117,7 @@ function stack.switch(P)
         md.stack_dropDelay,md.stack_lockDelay=nil,nil
 
         P.particles.boardSmoke:pause()
-        BGM.set('all','highgain',1,.1)
+        FMOD.stopEffect('music_highcut')
     end
 end
 
@@ -166,8 +166,8 @@ function stack.event_afterLock(P)
             md.stack_highestLine=md.stack_highestLine+1
             md.stackTextHeight=400-(md.stack_highestLine+.5)*(400/P.settings.fieldW)/2
             if not md._stackTextHeight then md._stackTextHeight=md.stackTextHeight end
-            SFX.playSample('bass',min((20-md.stack_lines)/10,1),scale[md.stack_lines])
-            SFX.playSample('lead',min(md.stack_lines/10,1),scale[md.stack_lines])
+            playSample('triangle',{scale[md.stack_lines],min((20-md.stack_lines)/10,1)})
+            playSample('square',{scale[md.stack_lines],min(md.stack_lines/10,1)})
             -- or 9.5-tone scale
         end
     end
@@ -196,8 +196,8 @@ function stack.event_afterLock_noFall(P)
                 end
             end
             md.stack_lines=md.stack_lines+1
-            SFX.playSample('bass',(20-md.stack_lines)/10,scale[md.stack_lines])
-            SFX.playSample('lead',min(md.stack_lines/10,1),scale[md.stack_lines])
+            playSample('sine',{scale[md.stack_lines],(20-md.stack_lines)/10})
+            playSample('square',{scale[md.stack_lines],min(md.stack_lines/10,1)})
         end
     end
 end

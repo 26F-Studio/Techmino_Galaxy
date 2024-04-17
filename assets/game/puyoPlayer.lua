@@ -10,8 +10,6 @@ local max,min=math.max,math.min
 local floor=math.floor
 local ins,rem=table.insert,table.remove
 
-local inst=SFX.playSample
-
 ---@class Techmino.Player.puyo: Techmino.Player
 ---@field field Techmino.RectField
 local PP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
@@ -21,39 +19,39 @@ local PP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=tr
 local defaultSoundFunc={
     countDown=function(num)
         if num==0 then -- 6, 3+6+6
-            inst('bass',.8,'A3')
-            inst('lead',.9,'A4','E5','A5')
+            playSample('sine',{'A3',.8})
+            playSample('square',{'A4',.9},{'E5',.9},{'A5',.9})
         elseif num==1 then -- 5, 3+7
-            inst('bass',.9,'G3')
-            inst('lead',.9,'B4','E5')
+            playSample('sine',{'G3',.9})
+            playSample('square',{'B4',.9},{'E5',.9})
         elseif num==2 then -- 4, 6+2
-            inst('bass','F3')
-            inst('lead',.8,'A4','D5')
+            playSample('sine',{'F3'})
+            playSample('square',{'A4',.8},{'D5',.8})
         elseif num==3 then -- 6+6
-            inst('bass',.9,'A3','E4')
-            inst('lead',.8,'A4')
+            playSample('sine',{'A3',.9},{'E4',.9})
+            playSample('square',{'A4',.8})
         elseif num==4 then -- 5+7, 5
-            inst('bass',.9,'G3','B3')
-            inst('lead',.6,'G4')
+            playSample('sine',{'G3',.9},{'B3',.9})
+            playSample('square',{'G4',.6})
         elseif num==5 then -- 4+6, 4
-            inst('bass',.8,'F3','A3')
-            inst('lead',.3,'F4')
+            playSample('sine',{'F3',.8},{'A3',.8})
+            playSample('square',{'F4',.3})
         elseif num<=10 then
-            inst('bass',2.2-num/5,'A2','E3')
+            playSample('sine',{'A2',2.2-num/5},{'E3',2.2-num/5})
         end
     end,
-    move=           function() SFX.play('move',.6)          end,
-    move_down=      function() SFX.play('move_down',.6)     end,
-    move_failed=    function() SFX.play('move_failed')      end,
-    rotate=         function() SFX.play('rotate')           end,
-    initrotate=     function() SFX.play('initrotate')       end,
-    rotate_failed=  function() SFX.play('rotate_failed')    end,
-    rotate_special= function() SFX.play('rotate_special')   end,
-    touch=          function() SFX.play('touch')            end,
-    drop=           function() SFX.play('drop')             end,
-    lock=           function() SFX.play('lock')             end,
+    move=           function() FMOD.playEffect('move')           end,
+    move_down=      function() FMOD.playEffect('move_down')      end,
+    move_failed=    function() FMOD.playEffect('move_failed')    end,
+    rotate=         function() FMOD.playEffect('rotate')         end,
+    rotate_init=    function() FMOD.playEffect('rotate_init')    end,
+    rotate_failed=  function() FMOD.playEffect('rotate_failed')  end,
+    rotate_special= function() FMOD.playEffect('rotate_special') end,
+    touch=          function() FMOD.playEffect('touch')          end,
+    drop=           function() FMOD.playEffect('drop')           end,
+    lock=           function() FMOD.playEffect('lock')           end,
     clear=function(lines)
-        SFX.play(
+        FMOD.playEffect(
             lines==1 and 'clear_1' or
             lines==2 and 'clear_2' or
             lines==3 and 'clear_3' or
@@ -62,46 +60,46 @@ local defaultSoundFunc={
         )
     end,
     chain=setmetatable({
-        function() inst('bass',.70,'A2') end, -- 1 chain
-        function() inst('bass',.75,'C3') end, -- 2 chain
-        function() inst('bass',.80,'D3') end, -- 3 chain
-        function() inst('bass',.85,'E3') end, -- 4 chain
-        function() inst('bass',.90,'G3') end, -- 5 chain
-        function() inst('bass',.90,'A3') inst('lead',.20,'A2') end, -- 6 chain
-        function() inst('bass',.75,'C4') inst('lead',.40,'C3') end, -- 7 chain
-        function() inst('bass',.60,'D4') inst('lead',.60,'D3') end, -- 8 chain
-        function() inst('bass',.40,'E4') inst('lead',.75,'E3') end, -- 9 chain
-        function() inst('bass',.20,'G4') inst('lead',.90,'G3') end, -- 10 chain
-        function() inst('bass',.20,'A4') inst('lead',.85,'A3') end, -- 11 chain
-        function() inst('bass',.40,'A4') inst('lead',.80,'C4') end, -- 12 chain
-        function() inst('bass',.60,'A4') inst('lead',.75,'D4') end, -- 13 chain
-        function() inst('bass',.75,'A4') inst('lead',.70,'E4') end, -- 14 chain
-        function() inst('bass',.90,'A4') inst('lead',.65,'G4') end, -- 15 chain
-        function() inst('bass',.90,'A4') inst('bass',.70,'E5') inst('lead','A4') end, -- 16 chain
-        function() inst('bass',.85,'A4') inst('bass',.75,'E5') inst('lead','C5') end, -- 17 chain
-        function() inst('bass',.80,'A4') inst('bass',.80,'E5') inst('lead','D5') end, -- 18 chain
-        function() inst('bass',.75,'A4') inst('bass',.85,'E5') inst('lead','E5') end, -- 19 chain
-        function() inst('bass',.70,'A4') inst('bass',.90,'E5') inst('lead','G5') end, -- 20 chain
+        function() playSample('sine',{'A2',.70,420}) end, -- 1
+        function() playSample('sine',{'C3',.75,410}) end, -- 2
+        function() playSample('sine',{'D3',.80,400}) end, -- 3
+        function() playSample('sine',{'E3',.85,390}) end, -- 4
+        function() playSample('sine',{'G3',.90,380}) end, -- 5
+        function() playSample('sine',{'A3',.90,370},'square',{'A2',.20,420,620}) end, -- 6
+        function() playSample('sine',{'C4',.75,360},'square',{'C3',.40,400,620}) end, -- 7
+        function() playSample('sine',{'D4',.60,350},'square',{'D3',.60,380,620}) end, -- 8
+        function() playSample('sine',{'E4',.40,340},'square',{'E3',.75,360,620}) end, -- 9
+        function() playSample('sine',{'G4',.20,330},'square',{'G3',.90,340,620}) end, -- 10
+        function() playSample('sine',{'A4',.20,320},'square',{'A3',.85,320,620}) end, -- 11
+        function() playSample('sine',{'A4',.40,310},'square',{'C4',.80,300,620}) end, -- 12
+        function() playSample('sine',{'A4',.60,300},'square',{'D4',.75,280,620}) end, -- 13
+        function() playSample('sine',{'A4',.75,290},'square',{'E4',.70,270,620}) end, -- 14
+        function() playSample('sine',{'A4',.90,280},'square',{'G4',.65,260,640}) end, -- 15
+        function() playSample('sine',{'A4',.90,270},{'E5',.70},'square',{'A4',1,250,660}) end, -- 16
+        function() playSample('sine',{'A4',.85,260},{'E5',.75},'square',{'C5',1,240,680}) end, -- 17
+        function() playSample('sine',{'A4',.80,250},{'E5',.80},'square',{'D5',1,230,700}) end, -- 18
+        function() playSample('sine',{'A4',.75,240},{'E5',.85},'square',{'E5',1,220,720}) end, -- 19
+        function() playSample('sine',{'A4',.70,230},{'E5',.90},'square',{'G5',1,210,740}) end, -- 20
     },{__call=function(self,chain)
         if self[chain] then
             self[chain]()
         else
-            inst('bass',.626,'A4')
+            playSample('sine',{'A4',.626-.01*chain,430-10*chain})
             local phase=(chain-21)%12
-            inst('lead',1-((11-phase)/12)^2,40+phase) -- E4+
-            inst('lead',1-((11-phase)/12)^2,45+phase) -- A4+
-            inst('lead',1-(phase/12)^2,     52+phase) -- E5+
-            inst('lead',1-(phase/12)^2,     57+phase) -- A5+
+            playSample('square',{40+phase,1-((11-phase)/12)^2,400-10*chain,700+20*chain}) -- E4+
+            playSample('square',{45+phase,1-((11-phase)/12)^2,400-10*chain,700+20*chain}) -- A4+
+            playSample('square',{52+phase,1-(phase/12)^2,400-10*chain,700+20*chain}) -- E5+
+            playSample('square',{57+phase,1-(phase/12)^2,400-10*chain,700+20*chain}) -- A5+
         end
     end,__metatable=true}),
-    frenzy=      function() SFX.play('frenzy')      end,
-    allClear=    function() SFX.play('clear_all')   end,
-    suffocate=   function() SFX.play('suffocate')   end,
-    desuffocate= function() SFX.play('desuffocate') end,
-    reach=       function() SFX.play('beep_rise')   end,
-    notice=      function() SFX.play('beep_notice') end,
-    win=         function() SFX.play('win')         end,
-    fail=        function() SFX.play('fail')        end,
+    frenzy=      function() FMOD.playEffect('frenzy')      end,
+    allClear=    function() FMOD.playEffect('clear_all')   end,
+    suffocate=   function() FMOD.playEffect('suffocate')   end,
+    desuffocate= function() FMOD.playEffect('desuffocate') end,
+    reach=       function() FMOD.playEffect('beep_rise')   end,
+    notice=      function() FMOD.playEffect('beep_notice') end,
+    win=         function() FMOD.playEffect('win')         end,
+    fail=        function() FMOD.playEffect('fail')        end,
 }
 PP.scriptCmd={
 }
@@ -260,7 +258,7 @@ function PP:moveHand(action,A,B,C)
     if self.handX%1~=0 or self.handY%1~=0 then error("EUREKA! Decimal position") end
 
     if action=='rotate' then
-        self:playSound(C and 'initrotate' or 'rotate')
+        self:playSound(C and 'rotate_init' or 'rotate')
         self:checkLanding()
     end
 

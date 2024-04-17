@@ -55,19 +55,19 @@ function scene.keyDown(key,isRep)
             if hit[c]==0 then
                 hit[c]=1
                 count=count+1
-                SFX.play(side<26 and 'ren_'..rnd(5) or 'ren_'..rnd(6,11))
+                FMOD.playEffect(side<26 and 'ren_'..rnd(5) or 'ren_'..rnd(6,11))
                 if count>=12 then
-                    SFX.play('ren_mega',(count-11)/15)
+                    FMOD.playEffect('ren_mega',{volume=(count-11)/15})
                 end
                 if count==side then
                     state=1
-                    SFX.play('spin_0')
+                    FMOD.playEffect('spin_0')
                 else
-                    SFX.play('lock')
+                    FMOD.playEffect('lock')
                 end
             else
                 hit[c]=2
-                SFX.play('emit')
+                FMOD.playEffect('emit')
                 needReset=true
                 state=1
             end

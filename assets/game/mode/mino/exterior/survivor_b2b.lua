@@ -3,7 +3,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('here','base')
+        playBgm('here')
     end,
     settings={mino={
         atkSys='modern',

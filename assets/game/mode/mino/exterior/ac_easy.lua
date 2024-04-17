@@ -3,7 +3,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('truth','full')
+        playBgm('truth',true)
     end,
     settings={mino={
         nextSlot=8,

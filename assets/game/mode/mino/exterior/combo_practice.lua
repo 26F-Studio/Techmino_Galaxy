@@ -3,7 +3,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('oxygen','base')
+        playBgm('oxygen')
     end,
     settings={mino={
         spawnDelay=60,

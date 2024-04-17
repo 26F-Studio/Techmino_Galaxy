@@ -203,7 +203,7 @@ TRS[6]={
                 C.direction=(C.direction+(dir=='R' and 1 or dir=='L' and 3 or dir=='F' and 2))%4
             end
             if not transformed then
-                self:playSound(ifInit and 'initrotate' or 'rotate')
+                self:playSound(ifInit and 'rotate_init' or 'rotate')
                 if self.settings.particles then
                     self:createRotateEffect(dir,ifInit)
                 end

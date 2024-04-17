@@ -90,7 +90,7 @@ local function merge()
         score=score+getScore
         TEXT:add(getScore,cx*128+256,cy*128-40,40,'score')
         SYSFX.newRectRipple(2,320+cx*128-128,40+cy*128-128,128,128)
-        SFX.play('lock')
+        FMOD.playEffect('lock')
         if chosen==maxTile then
             maxTile=chosen+1
             if maxTile>=6 then
@@ -101,10 +101,10 @@ local function merge()
                 maxTile<=8 and 3 or
                 maxTile<=11 and 4 or
                 5
-            SFX.play('reach')
+            FMOD.playEffect('reach')
         end
         if chosen>=5 then
-            SFX.play(
+            FMOD.playEffect(
                 chosen>=9 and 'ren_mega' or
                 chosen>=8 and 'spin_3' or
                 chosen>=7 and 'spin_2' or
@@ -202,10 +202,10 @@ function scene.update()
                     for i=1,4 do for j=1,5 do if board[i][j]==board[i+1][j] then return end end end
                     for i=1,5 do for j=1,4 do if board[i][j]==board[i][j+1] then return end end end
                     state=2
-                    SFX.play('fail')
+                    FMOD.playEffect('fail')
                 else
                     fallingTimer=fast and 4 or 5
-                    SFX.play('touch')
+                    FMOD.playEffect('touch')
                 end
             end
         elseif fast and (

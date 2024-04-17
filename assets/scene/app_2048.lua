@@ -119,14 +119,14 @@ local function newTile()
 
     -- Die.
     state=2
-    SFX.play(maxTile>=10 and 'win' or 'fail')
+    FMOD.playEffect(maxTile>=10 and 'win' or 'fail')
 end
 local function freshMaxTile()
     maxTile=maxTile+1
     if maxTile==12 then
         skipper.cd=0
     end
-    SFX.play('reach')
+    FMOD.playEffect('reach')
     table.insert(progress,("%s - %.3fs"):format(tileName[maxTile],love.timer.getTime()-startTime))
 end
 local function squash(L)
@@ -221,9 +221,9 @@ local function skip()
             skipper.cd=1024
             skipper.used=true
             newTile()
-            SFX.play('hold')
+            FMOD.playEffect('hold')
         else
-            SFX.play('finesseError')
+            FMOD.playEffect('finesseError')
         end
     end
 end
@@ -309,7 +309,7 @@ function scene.keyDown(key,isRep)
                 if skipper.cd and skipper.cd>0 then
                     skipper.cd=skipper.cd-1
                     if skipper.cd==0 then
-                        SFX.play('spin_0')
+                        FMOD.playEffect('spin_0')
                     end
                 end
                 newTile()
@@ -322,7 +322,7 @@ function scene.keyDown(key,isRep)
                 }
                 move=move+1
                 if not autoPressing then
-                    SFX.play('touch')
+                    FMOD.playEffect('touch')
                 end
             end
         end

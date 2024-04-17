@@ -26,7 +26,7 @@ function scene.keyDown(key,isRep)
         else
             ins(keyTime,1,love.timer.getTime())
             keyTime[41]=nil
-            SFX.play('lock')
+            FMOD.playEffect('lock')
         end
     end
 end

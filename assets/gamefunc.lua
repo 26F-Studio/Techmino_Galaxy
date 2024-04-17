@@ -6,66 +6,41 @@ function sureCheck(event)
     end
 end
 
-local _bgmPlaying,_bgmMode
----@param mode 'full'|'simp'|'base'|''|nil
----@param args? string
-function playBgm(name,mode,args)
-    if not args then args='' end
-
-    if bgmList[name][1] then
-        if not STRING.sArg(args,'-noProgress') then
-            PROGRESS.setBgmUnlocked(name,1)
-        end
-        BGM.play(bgmList[name],args)
-    else
-        if mode=='simp' and PROGRESS.getBgmUnlocked(name)==2 then
-            mode='base'
-        else
-            if not STRING.sArg(args,'-noProgress') then
-                PROGRESS.setBgmUnlocked(name,mode=='simp' and 1 or 2)
-            end
-        end
-        if mode=='simp' then
-            BGM.play(bgmList[name].base,args)
-        elseif mode=='base' then
-            if not TABLE.compare(BGM.getPlaying(),bgmList[name].full) then
-                BGM.play(bgmList[name].full,args)
-                BGM.set(bgmList[name].add,'volume',0,0)
-            else
-                BGM.set(bgmList[name].add,'volume',0,1)
-            end
-        else -- if mode=='full' then
-            BGM.play(bgmList[name].full,args)
-        end
-    end
-    _bgmPlaying,_bgmMode=name,mode
-    if not STRING.sArg(args,'-keepEffects') then
-        BGM.set('all','highgain',1,.1)
-        BGM.set('all','lowgain',1,.1)
-        BGM.set('all','pitch',1,.1)
-    end
+local _bgmPlaying ---@type string
+---@param full? boolean
+---@param noProgress? boolean
+function playBgm(name,full,noProgress)
+    if name==_bgmPlaying then return end
+    if not noProgress then PROGRESS.setBgmUnlocked(name,1) end
+    FMOD.playMusic(name,not full and {param={"intensity",0,true}} or nil)
+    _bgmPlaying=name
 end
 function getBgm()
-    return _bgmPlaying,_bgmMode
+    return _bgmPlaying
 end
-
-local trackNick={
-    m='melody',
-    a='accompany',
-    d='decoration',
-    b='bass',
-    p='drum',
-    s='sfx',
-}
----@param name string
----@param ... string m/a/d/b/p/s(N)
----@return string[]
-function bgmPack(name,...)
-    local tracks={...}
-    for i=1,#tracks do
-        tracks[i]=name..'/'..trackNick[tracks[i]:sub(1,1)]..tracks[i]:sub(2)
+function playSample(...)
+    local l={...}
+    local inst
+    for i=1,#l do
+        if type(l[i])=='string' then
+            inst=l[i]..'_wave'
+        elseif type(l[i])=='table' then
+            local note=l[i][1]
+            if type(note)=='string' then note=SFX.getTuneHeight(l[i][1]) end
+            local vol=l[i][2] or 1
+            local len=l[i][3] or 420
+            local rel=l[i][4] or 620
+            local event=FMOD.playEffect(inst,{
+                tune=note-33,
+                volume=vol,
+                param={'release',rel*1.0594630943592953^(note-33)},
+            })
+            TASK.new(function ()
+                DEBUG.yieldT(len/1000)
+                event:stop(FMOD.FMOD_STUDIO_STOP_ALLOWFADEOUT)
+            end)
+        end
     end
-    return tracks
 end
 
 local interiorModeMeta={

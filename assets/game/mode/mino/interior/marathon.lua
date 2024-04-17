@@ -6,7 +6,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('push',PROGRESS.get('main')==1 and 'simp' or 'base')
+        playBgm('push')
     end,
     settings={mino={
         skin='mino_interior',
@@ -29,7 +29,7 @@ return {
                 while md.stat.line>=md.lineTarget do
                     if md.lineTarget<200 then
                         if PROGRESS.get('main')>=2 and md.lineTarget<=150 and P.isMain then
-                            BGM.set(bgmList['push'].add,'volume',(md.lineTarget/150)^2,2.6)
+                            FMOD.setMusicParam('intensity',(md.lineTarget/150)^2)
                         end
                         P.settings.dropDelay=dropSpeed[md.lineTarget/10+1]
                         md.lineTarget=md.lineTarget+10

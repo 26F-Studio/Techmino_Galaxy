@@ -9,8 +9,6 @@ local max,min=math.max,math.min
 local floor=math.floor
 local ins,rem=table.insert,table.remove
 
-local inst=SFX.playSample
-
 ---@class Techmino.Player.gem: Techmino.Player
 ---@field field any[][]
 local GP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
@@ -50,52 +48,48 @@ local GP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=tr
 local defaultSoundFunc={
     countDown=function(num)
         if num==0 then -- 6, 3+6+6
-            inst('bass',.8,'A3')
-            inst('lead',.9,'A4','E5','A5')
+            playSample('sine',{'A3',.8})
+            playSample('square',{'A4',.9},{'E5',.9},{'A5',.9})
         elseif num==1 then -- 5, 3+7
-            inst('bass',.9,'G3')
-            inst('lead',.9,'B4','E5')
+            playSample('sine',{'G3',.9})
+            playSample('square',{'B4',.9},{'E5',.9})
         elseif num==2 then -- 4, 6+2
-            inst('bass','F3')
-            inst('lead',.8,'A4','D5')
+            playSample('sine',{'F3'})
+            playSample('square',{'A4',.8},{'D5',.8})
         elseif num==3 then -- 6+6
-            inst('bass',.9,'A3','E4')
-            inst('lead',.8,'A4')
+            playSample('sine',{'A3',.9},{'E4',.9})
+            playSample('square',{'A4',.8})
         elseif num==4 then -- 5+7, 5
-            inst('bass',.9,'G3','B3')
-            inst('lead',.6,'G4')
+            playSample('sine',{'G3',.9},{'B3',.9})
+            playSample('square',{'G4',.6})
         elseif num==5 then -- 4+6, 4
-            inst('bass',.8,'F3','A3')
-            inst('lead',.3,'F4')
+            playSample('sine',{'F3',.8},{'A3',.8})
+            playSample('square',{'F4',.3})
         elseif num<=10 then
-            inst('bass',2.2-num/5,'A2','E3')
+            playSample('sine',{'A2',2.2-num/5},{'E3',2.2-num/5})
         end
     end,
-    move=           function() SFX.play('move')          end,
-    move_failed=    function() SFX.play('move_failed')   end,
-    swap=           function() SFX.play('rotate')        end,
-    swap_failed=    function() SFX.play('tuck')          end,
-    twist=          function() SFX.play('rotate')        end,
-    twist_failed=   function() SFX.play('tuck')          end,
-    move_back=      function() SFX.play('rotate_failed')  end,
-    touch=          function() SFX.play('lock')          end,
+    move=           function() FMOD.playEffect('move')          end,
+    move_failed=    function() FMOD.playEffect('move_failed')   end,
+    swap=           function() FMOD.playEffect('rotate')        end,
+    swap_failed=    function() FMOD.playEffect('tuck')          end,
+    twist=          function() FMOD.playEffect('rotate')        end,
+    twist_failed=   function() FMOD.playEffect('tuck')          end,
+    move_back=      function() FMOD.playEffect('rotate_failed') end,
+    touch=          function() FMOD.playEffect('lock')          end,
     clear=function(lines)
-        SFX.play(
+        FMOD.playEffect(
             lines==1 and 'clear_1' or
             lines==2 and 'clear_2' or
             lines==3 and 'clear_3' or
             lines==4 and 'clear_4' or
             'clear_5'
         )
-        if lines>=3 then
-            BGM.set('all','highgain',.26+1/lines,0)
-            BGM.set('all','highgain',1,min((lines)^1.5/5,2.6))
-        end
     end,
     combo=       function() end,
     chain=       function() end,
-    win=         function() SFX.play('win')         end,
-    fail=        function() SFX.play('fail')        end,
+    win=         function() FMOD.playEffect('win')         end,
+    fail=        function() FMOD.playEffect('fail')        end,
 }
 GP.scriptCmd={
 }

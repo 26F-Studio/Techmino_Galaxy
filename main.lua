@@ -36,11 +36,11 @@ love.setDeprecationOutput(false)
 love.keyboard.setTextInput(false)
 --------------------------------------------------------------
 -- Create directories
-for _,v in next,{'conf','progress','replay','cache','lib'} do
+for _,v in next,{'conf','progress','replay','cache','lib','soundbank'} do
     local info=love.filesystem.getInfo(v)
     if not info then
         love.filesystem.createDirectory(v)
-    elseif info.type~='directory' then
+    elseif info.type~='directory' and info.type~='symlink' then
         love.filesystem.remove(v)
         love.filesystem.createDirectory(v)
     end
@@ -58,6 +58,7 @@ SKIN=require'assets.skin'
 CHAR=require'assets.char'
 SETTINGS=require'assets.settings'
 bgmList=require'assets.bgmlist'
+FMOD=require("assets.fmod20221")
 DEBUG.checkLoadTime("Load game modules")
 --------------------------------------------------------------
 -- Config Zenitha
@@ -125,7 +126,6 @@ FONT.load{
     galaxy_thin="assets/fonts/26FGalaxySans-Thin.otf",
 }
 SCR.setSize(1600,1000)
-BGM.setMaxSources(16)
 VOC.setDiversion(.62)
 WIDGET.setDefaultOption{
     base={
@@ -165,7 +165,6 @@ WIDGET.setDefaultOption{
     },
 }
 
---[Attention] Not loading IMG/SFX/BGM files here, just read file paths
 IMG.init{
     actionIcons={
         texture='assets/image/action_icon.png',
@@ -219,40 +218,7 @@ IMG.init{
     },
     title_techmino='assets/image/title_techmino.png',
 }
-SFX.load((function()
-    local path='assets/sfx/'
-    local L={}
-    for _,v in next,love.filesystem.getDirectoryItems(path) do
-        if FILE.isSafe(path..v) then
-            L[v:sub(1,-5)]=path..v
-        end
-    end
-    return L
-end)())
-SFX.loadSample{name='bass',path='assets/sample/bass',base='A2'} -- A2~C5
-SFX.loadSample{name='lead',path='assets/sample/lead',base='A3'} -- A3~C6
 
-BGM.load((function()
-    local path='assets/music/'
-    local L={}
-    for _,dir in next,love.filesystem.getDirectoryItems(path) do
-        if love.filesystem.getInfo(path..dir).type=='directory' then
-            for _,file in next,love.filesystem.getDirectoryItems(path..dir) do
-                local fullPath=path..dir..'/'..file
-                if FILE.isSafe(fullPath) then
-                    L[dir..'/'..file:sub(1,-5)]=fullPath
-                end
-            end
-        elseif love.filesystem.getInfo(path..dir).type=='file' then
-            local fullPath=path..dir
-            if FILE.isSafe(fullPath) then
-                L[dir:sub(1,-5)]=fullPath
-            end
-        end
-    end
-    return L
-end)())
-VOC.init{}
 LANG.add{
     en='assets/language/lang_en.lua',
     zh='assets/language/lang_zh.lua',
@@ -410,5 +376,45 @@ SCN.addSwap('fastFadeHeader',{
     end,
 })
 DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins")
+--------------------------------------------------------------
+FMOD.init{
+    maxChannel=64,
+    DSPBufferLength=8,
+    DSPBufferCount=8,
+    studioFlag=FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,
+    coreFlag=FMOD.FMOD_INIT_NORMAL,
+}
+FMOD.registerMusic((function()
+    local bankMusic=FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Master.bank")
+    assert(bankMusic,"bank load failed")
+    local L={}
+    local l,c=bankMusic:getEventList(bankMusic:getEventCount())
+    for i=1,c do
+        local path=assert(l[i-1]:getPath())
+        local name=path:match("/([^/]+)$"):lower()
+        L[name]=path
+    end
+    return L
+end)())
+FMOD.registerEffect((function()
+    local bankEffect=FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Effect.bank")
+    assert(bankEffect,"bank load failed")
+    local L={}
+    local l,c=bankEffect:getEventList(bankEffect:getEventCount())
+    for i=1,c do
+        local path=assert(l[i-1]:getPath())
+        local name=path:match("/([^/]+)$"):lower()
+        L[name]=path
+    end
+    return L
+end)())
+-- Hijack the original SFX module, use FMOD instead
+SFX[('play')]=function(name,vol,pos,tune)
+    FMOD.playEffect(name,{
+        volume=vol,
+        tune=tune,
+    })
+end
+DEBUG.checkLoadTime("Load FMod and Bank")
 --------------------------------------------------------------
 DEBUG.logLoadTime()

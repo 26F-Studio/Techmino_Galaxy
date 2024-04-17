@@ -90,12 +90,12 @@ scene.widgetList={
     {name='LangSel',type='button', pos={.5,.5},x=-270,y=320,w=400,h=100,text=CHAR.icon.language,     fontSize=70,lineWidth=4,cornerR=0,code=WIDGET.c_goScn('lang_in','none')},
     {name='GameSet',type='button', pos={.5,.5},x=270, y=320,w=400,h=100,text=LANG'main_in_settings', fontSize=40,lineWidth=4,cornerR=0,sound_trigger=false,code=function()
         if PROGRESS.get('main')<=2 or isCtrlPressed() then
-            SFX.play('button_norm')
+            FMOD.playEffect('button_norm')
             SCN.go('setting_in','none')
         else
             consoleClickCount=consoleClickCount+1
-            SFX.play('move_failed')
-            SFX.play('suffocate',nil,nil,consoleClickCount-5.626)
+            FMOD.playEffect('move_failed')
+            FMOD.playEffect('suffocate',{tune=consoleClickCount-5.626})
             if consoleClickCount==6 then
                 consoleClickCount=0
                 SCN.go('_console')

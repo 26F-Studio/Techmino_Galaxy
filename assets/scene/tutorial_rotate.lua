@@ -108,14 +108,14 @@ local function endGame(passLevel)
         inPoint=.1,
         outPoint=0,
     }
-    if passLevel>0 then SFX.play('win') end
+    if passLevel>0 then FMOD.playEffect('win') end
     autoQuitInterior()
 end
 
 function scene.enter()
     texts=TEXT.new()
     reset()
-    playBgm('space','simp')
+    playBgm('space')
 end
 
 function scene.leave()
@@ -129,7 +129,7 @@ function scene.keyDown(key,isRep)
     if not controlCD then
         action=KEYMAP.mino:getAction(key)
         if action and action:find('rotate')==1 then
-            SFX.play('rotate')
+            FMOD.playEffect('rotate')
 
             if action=='rotateCW' then
                 handMat=TABLE.rotate(handMat,'L')
@@ -165,11 +165,11 @@ function scene.keyDown(key,isRep)
                         end
                         level=level+1
                         time=parTime[level]
-                        SFX.play('beep_notice')
+                        FMOD.playEffect('beep_notice')
                     end
                 else
                     -- Correct
-                    SFX.play('beep_rise')
+                    FMOD.playEffect('beep_rise')
                 end
             else
                 -- Punishment
@@ -217,7 +217,7 @@ function scene.update(dt)
                 PROGRESS.setTutorialPassed(6)
             end
         elseif totalTime>passTime then
-            SFX.play('fail')
+            FMOD.playEffect('fail')
             endGame(0)
         end
     end

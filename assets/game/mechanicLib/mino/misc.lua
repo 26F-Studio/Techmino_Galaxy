@@ -5,7 +5,7 @@ local gc=love.graphics
 local misc={}
 
 function misc.interior_soundEvent_countDown(num)
-    SFX.playSample('lead',num>0 and 'E4' or 'E5')
+    playSample('square',{num>0 and 'E4' or 'E5'})
 end
 
 function misc.invincible_event_afterLock(P)

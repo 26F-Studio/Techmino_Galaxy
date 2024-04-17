@@ -210,7 +210,7 @@ end
 
 function S.drawStartingCounter(readyDelay)
     gc_push('transform')
-    local num=math.floor((readyDelay-S.getTime())/1000)+1
+    local num=math.ceil((readyDelay-S.getTime())/1000)
     local r,g,b
     local d=1-S.getTime()%1000/1000 -- from .999 to 0
 

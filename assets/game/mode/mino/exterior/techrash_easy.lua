@@ -3,7 +3,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('way','base')
+        playBgm('way')
     end,
     settings={mino={
         seqType=mechLib.mino.techrashChallenge.easy_seqType,

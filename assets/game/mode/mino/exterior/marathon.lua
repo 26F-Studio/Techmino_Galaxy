@@ -3,7 +3,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('propel','base')
+        playBgm('propel_marathon')
     end,
     settings={mino={
         spawnDelay=130,

@@ -17,11 +17,8 @@ end
 
 function scene.enter()
     BG.set('none')
-    BGM.stop()
+    FMOD.stopMusic()
     reg,val,sym=false,"0",false
-end
-function scene.leave()
-    BGM.play()
 end
 
 scene.mouseDown=NULL

@@ -58,7 +58,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('space','full')
+        playBgm('space',true)
     end,
     settings={mino={
         skin='mino_interior',

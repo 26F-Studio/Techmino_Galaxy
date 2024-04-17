@@ -15,16 +15,16 @@ end
 
 local function sysAction(action)
     if action=='quit' then
-        SFX.play('pause_quit')
+        FMOD.playEffect('pause_quit')
         SCN.back()
     elseif action=='back' then
-        SFX.play('unpause')
+        FMOD.playEffect('unpause')
         SCN.swapTo('game_out','none')
     elseif action=='restart' then
-        SFX.play('pause_restart')
+        FMOD.playEffect('pause_restart')
         SCN.swapTo('game_out',nil,GAME.mode.name)
     elseif action=='setting' then
-        SFX.play('pause_setting')
+        FMOD.playEffect('pause_setting')
         SCN.go('setting_out')
     end
 end

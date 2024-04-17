@@ -3,7 +3,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('race','full')
+        playBgm('race',true)
     end,
     settings={mino={
         seqType='bag7_sprint',

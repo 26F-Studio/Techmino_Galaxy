@@ -95,8 +95,8 @@ local function _throwCard()
     if hand[selected] and #pool<40 then
         ins(pool,rem(hand,selected))
         table.sort(hand)
-        SFX.play('hold')
-        SFX.play('lock')
+        FMOD.playEffect('hold')
+        FMOD.playEffect('lock')
         if #pool<40 then
             ins(hand,(TABLE.popRandom(deck)))
         end
