@@ -217,3 +217,19 @@ function regFuncLib(obj,path)
         regStrToFunc[path]=obj
     end
 end
+
+love_logo=GC.load{128,128,
+    {'clear',0,0,0,0},
+    {'move',64,64},
+    {'setCL',COLOR.D},
+    {'fCirc',0,0,64},
+    {'setCL',.9,.3,.6},
+    {'fCirc',0,0,60},
+    {'setCL',.16,.66,.88},
+    {'fBow',0,0,60,0,3.141593},
+    {'move',-4,4},
+    {'setCL',COLOR.L},
+    {'fRect',-20,-20,40,40},
+    {'fCirc',0,-20,20},
+    {'fCirc',20,0,20},
+}

@@ -11,9 +11,9 @@ function scene.enter()
 end
 
 function scene.update(dt)
-    if TASK.getLock('drawBegin') then
-        t=t+math.min(dt,.026)
-        if t>=1 then
+    if TASK.getLock('drawBegin') and t<1 then
+        t=math.min(t+math.min(dt,.026),1)
+        if t==1 then
             PROGRESS.swapMainScene()
         end
     end
@@ -37,12 +37,17 @@ function scene.draw()
         end
         GC.setColor(1,1,1,math.min(t/.26,1)*.026)
         GC.circle('fill',0,0,10)
+
         local x=t<.26 and 0 or math.min((t-.26)/.26,1)
         GC.scale(1.25,2*(2-x)*x)
         GC.shear(-.26,0)
         FONT.set(100)
         GC.setColor(1,1,1)
         GC.mStr("Welcome",0,-70)
+
+        GC.replaceTransform(SCR.xOy_dr)
+        GC.setColor(1,1,1,math.min(-t*(t-2.6),.626))
+        GC.draw(IMG.logo_fmod,-15,-20,nil,.26,nil,IMG.logo_fmod:getWidth(),IMG.logo_fmod:getHeight())
     end
 end
 

@@ -1,17 +1,21 @@
 local scene={}
 
 local modules={
+    {"LÖVE","LÖVE Team"},
     {"Zenitha framework","MrZ"},
     {"json.lua","rxi"},
     {"profile.lua","itraykov"},
     {"sha2.lua","Egor Skriptunoff"},
+    {"FMOD Studio","Firelight Technologies Pty Ltd"},
 }
 local toolchain={
     "VS Code",
     "BeepBox",
+    "GFIE",
+    "FL Studio",
     "FL Mobile",
     "GoldWave",
-    "GFIE",
+    "FMOD Studio",
 }
 
 local timer,score
@@ -61,7 +65,7 @@ function scene.update(dt)
             mino=MATH.randFrom(CHAR.mino),
             minoColor=math.random()*MATH.tau,
         }
-        if MATH.roll(.026) then
+        if o.x*o.vx<0 and MATH.roll(.062) then
             setName(o)
         end
         table.insert(obj,o)
@@ -117,34 +121,20 @@ function scene.draw()
     PROGRESS.drawExteriorHeader()
     GC.replaceTransform(SCR.xOy)
 
-    -- Powered by Love2D
-    GC.push('transform')
-        GC.translate(330,220)
-        GC.setColor(COLOR.L)
-        FONT.set(60)
-        GC.shadedPrint(Text.about_love,45,-35,nil,2,4)
-
-        GC.rotate(-.785398+t*4.2-math.sin(t*4.2))
-        GC.setLineWidth(4)
-        GC.setColor(COLOR.D) GC.circle('fill',0,0,32)
-        GC.setColor(COLOR.lW) GC.circle('fill',0,0,30)
-        GC.setColor(COLOR.lS) GC.arc('fill','closed',0,0,30,0,3.141593)
-        GC.translate(-2,2)
-        GC.setColor(COLOR.L)
-        GC.mRect('fill',0,0,20,20)
-        GC.circle('fill',0,-10,10)
-        GC.circle('fill',10,0,10)
-    GC.pop()
+    GC.mDraw(love_logo,160,300,-.785398+t*4.2-math.sin(t*4.2),.7033)
 
     FONT.set(35)
-    GC.shadedPrint(Text.about_module,200,350,nil,2,4)
-    GC.shadedPrint(Text.about_toolchain,1000,350,nil,2,4)
-    FONT.set(50)
+    GC.shadedPrint(Text.about_module,300,230,'left',2,4)
     local m=modules[math.floor(t)%#modules+1]
-    GC.shadedPrint(m[1],200,390,nil,2,4)
-    GC.shadedPrint(toolchain[math.floor(t)%#toolchain+1],1000,390,nil,2,4)
+    FONT.set(50)
+    GC.shadedPrint(m[1],300,270,'left',2,4)
     FONT.set(30)
-    GC.shadedPrint(m[2],200,450,nil,2,4)
+    GC.shadedPrint(m[2],300,330,'left',2,4)
+
+    FONT.set(35)
+    GC.shadedPrint(Text.about_toolchain,942,230,'left',2,4)
+    FONT.set(50)
+    GC.shadedPrint(toolchain[math.floor(t)%#toolchain+1],942,270,'left',2,4)
 end
 
 scene.widgetList={

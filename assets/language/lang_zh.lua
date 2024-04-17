@@ -188,7 +188,6 @@ return {
     musicroom_autoplay="自动切换",
 
     about_title="关于",
-    about_love="Z-UI使用LÖVE引擎",
     about_module="模块:",
     about_toolchain="工具链:",
     about_peopleLost="你弄丢了 $1 !",

@@ -188,7 +188,6 @@ return {
     musicroom_autoplay="Auto Change",
 
     about_title="About",
-    about_love="Z-UI powered by LÖVE",
     about_module="Modules:",
     about_toolchain="Toolchain:",
     about_peopleLost="You lost $1 !",
