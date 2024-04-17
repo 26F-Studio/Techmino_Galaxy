@@ -83,20 +83,19 @@ Zenitha.setDebugInfo{
     {"Cache", gcinfo},
     {"Tasks", TASK.getCount},
     {"Voices",VOC.getQueueCount},
-    {"Audios",love.audio.getSourceCount},
     {"Mouse", function() local x,y=SCR.xOy:inverseTransformPoint(love.mouse.getPosition()) return math.floor(x+.5)..' '..math.floor(y+.5) end},
 }
 do -- Zenitha.setOnFocus
     local function task_autoSoundOff()
         repeat
-            local v=math.max(love.audio.getVolume()/SETTINGS.system.mainVol-coroutine.yield()/.26,0)
-            love.audio.setVolume(v*SETTINGS.system.mainVol)
+            local v=math.max(FMOD.mainVolume/SETTINGS.system.mainVol-coroutine.yield()/.26,0)
+            FMOD.setMainVolume(v*SETTINGS.system.mainVol)
         until v==0
     end
     local function task_autoSoundOn()
         repeat
-            local v=math.min(love.audio.getVolume()/SETTINGS.system.mainVol+coroutine.yield()/.626,1)
-            love.audio.setVolume(v*SETTINGS.system.mainVol)
+            local v=math.min(FMOD.mainVolume/SETTINGS.system.mainVol+coroutine.yield()/.626,1)
+            FMOD.setMainVolume(v*SETTINGS.system.mainVol)
         until v==1
     end
     Zenitha.setOnFocus(function(f)
@@ -385,26 +384,44 @@ FMOD.init{
     coreFlag=FMOD.FMOD_INIT_NORMAL,
 }
 FMOD.registerMusic((function()
+    if not love.filesystem.getInfo("soundbank/Master.bank") then
+        MSG.new('warn',"Music bank not found")
+        return {}
+    end
     local bankMusic=FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Master.bank")
-    assert(bankMusic,"bank load failed")
+    if not bankMusic then
+        MSG.new('warn',"Music bank file load failed")
+        return {}
+    end
     local L={}
     local l,c=bankMusic:getEventList(bankMusic:getEventCount())
     for i=1,c do
-        local path=assert(l[i-1]:getPath())
+        local path=l[i-1]:getPath()
+        if path then
         local name=path:match("/([^/]+)$"):lower()
         L[name]=path
+        end
     end
     return L
 end)())
 FMOD.registerEffect((function()
+    if not love.filesystem.getInfo("soundbank/Effect.bank") then
+        MSG.new('warn',"Effect bank not found")
+        return {}
+    end
     local bankEffect=FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Effect.bank")
-    assert(bankEffect,"bank load failed")
+    if not bankEffect then
+        MSG.new('warn',"Effect bank file load failed")
+        return {}
+    end
     local L={}
     local l,c=bankEffect:getEventList(bankEffect:getEventCount())
     for i=1,c do
-        local path=assert(l[i-1]:getPath())
+        local path=l[i-1]:getPath()
+        if path then
         local name=path:match("/([^/]+)$"):lower()
         L[name]=path
+        end
     end
     return L
 end)())

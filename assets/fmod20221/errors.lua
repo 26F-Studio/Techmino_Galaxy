@@ -4,7 +4,7 @@ local r=require; local function require(m) return r(path..m) end
 ---@class FMOD.master
 local M=require("master")
 
-M.errorString={
+M.errorString=setmetatable({
     [M.FMOD_OK]="No errors.",
     [M.FMOD_ERR_BADCOMMAND]="Tried to call a function on a data type that does not allow this type of functionality (ie calling Sound::lock on a streaming sound).",
     [M.FMOD_ERR_CHANNEL_ALLOC]="Error trying to allocate a channel.",
@@ -87,4 +87,8 @@ M.errorString={
     [M.FMOD_ERR_NOT_LOCKED]="The specified resource is not locked, so it can't be unlocked.",
     [M.FMOD_ERR_RECORD_DISCONNECTED]="The specified recording driver has been disconnected.",
     [M.FMOD_ERR_TOOMANYSAMPLES]="The length provided exceeds the allowable limit.",
-}
+},{
+    __index=function(self,k)
+        return rawget(self,tonumber(k))
+    end,
+})
