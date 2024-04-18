@@ -384,6 +384,9 @@ FMOD.init{
     studioFlag=FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,
     coreFlag=FMOD.FMOD_INIT_NORMAL,
 }
+if not FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Master.strings.bank") then
+    MSG.new('warn',"Strings bank file load failed")
+end
 FMOD.registerMusic((function()
     if not love.filesystem.getInfo("soundbank/Master.bank") then
         MSG.new('warn',"Music bank not found")

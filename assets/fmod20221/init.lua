@@ -48,10 +48,6 @@ function M.loadBank(bankPath,flag)
     if not studio then return end
     flag=flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL
     local bank=studio:loadBankFile(bankPath,flag)
-    if bankPath:sub(-5)=='.bank' then
-        bankPath=bankPath:sub(1,-5)..'strings.bank'
-        studio:loadBankFile(bankPath,flag)
-    end
     return bank
 end
 
@@ -118,7 +114,7 @@ function M.playMusic(name,args)
     assert(res==M.FMOD_OK,M.errorString[res])
     playingEvent=event
 
-    if not(type(args)=='table' and args.instant==true) then
+    if not (type(args)=='table' and args.instant==true) then
         event:setParameterByName("fade",0,true)
         event:setParameterByName("fade",1,false)
     end
