@@ -12,7 +12,7 @@ end
 
 local function sysAction(action)
     if action=='quit' then
-        SCN.back()
+        SCN.back('none')
     elseif action=='back' then
         SCN.swapTo('game_in','none')
     elseif action=='restart' then
