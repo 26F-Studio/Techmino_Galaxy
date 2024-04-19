@@ -2952,11 +2952,11 @@ function studio.System:getUserData()
     return o1[0],result
 end
 
----@return any,FMOD.Result
+---@return number,number,number,FMOD.Result
 function studio.System:getMemoryUsage()
     local o1=ffi.new("FMOD_STUDIO_MEMORY_USAGE[1]")
     local result=C2.FMOD_Studio_System_GetMemoryUsage(self,o1)
-    return o1[0],result
+    return o1[0].exclusive,o1[0].inclusive,o1[0].sampledata,result
 end
 
 ---@return FMOD.Result
@@ -3434,11 +3434,11 @@ function studio.EventInstance:getCPUUsage()
     return o1[0],o2[0],result
 end
 
----@return any,FMOD.Result
+---@return number,number,number,FMOD.Result
 function studio.EventInstance:getMemoryUsage()
     local o1=ffi.new("FMOD_STUDIO_MEMORY_USAGE[1]")
     local result=C2.FMOD_Studio_EventInstance_GetMemoryUsage(self,o1)
-    return o1[0],result
+    return o1[0].exclusive,o1[0].inclusive,o1[0].sampledata,result
 end
 
 ---@return FMOD.Result
@@ -3551,11 +3551,11 @@ function studio.Bus:getCPUUsage()
     return o1[0],o2[0],result
 end
 
----@return any,FMOD.Result
+---@return number,number,number,FMOD.Result
 function studio.Bus:getMemoryUsage()
     local o1=ffi.new("FMOD_STUDIO_MEMORY_USAGE[1]")
     local result=C2.FMOD_Studio_Bus_GetMemoryUsage(self,o1)
-    return o1[0],result
+    return o1[0].exclusive,o1[0].inclusive,o1[0].sampledata,result
 end
 
 ---@return FMOD.Result

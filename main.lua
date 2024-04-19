@@ -82,8 +82,8 @@ Zenitha.setOnFnKeys({
 Zenitha.setDebugInfo{
     {"Cache", gcinfo},
     {"Tasks", TASK.getCount},
-    {"Voices",VOC.getQueueCount},
     {"Mouse", function() local x,y=SCR.xOy:inverseTransformPoint(love.mouse.getPosition()) return math.floor(x+.5)..' '..math.floor(y+.5) end},
+    -- {"FMOD", function() local a,b,c=FMOD.studio:getMemoryUsage() return a..","..b..","..c end}, -- Only available in logging builds Fmod
 }
     Zenitha.setOnFocus(function(f)
         if SETTINGS.system.autoMute then
@@ -109,7 +109,6 @@ FONT.load{
     galaxy_thin="assets/fonts/26FGalaxySans-Thin.otf",
 }
 SCR.setSize(1600,1000)
-VOC.setDiversion(.62)
 WIDGET.setDefaultOption{
     base={
         lineWidth=2,
@@ -362,9 +361,9 @@ SCN.addSwap('fastFadeHeader',{
 DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins")
 --------------------------------------------------------------
 FMOD.init{
-    maxChannel=64,
-    DSPBufferLength=8,
-    DSPBufferCount=8,
+    maxChannel=SETTINGS.system.fmod_maxChannel,
+    DSPBufferLength=SETTINGS.system.fmod_DSPBufferLength,
+    DSPBufferCount=SETTINGS.system.fmod_DSPBufferCount,
     studioFlag=FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,
     coreFlag=FMOD.FMOD_INIT_NORMAL,
 }

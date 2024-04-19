@@ -32,7 +32,7 @@ local studio,core=M.studio,M.core
 
 ---@param args {maxChannel:number, DSPBufferLength:number, DSPBufferCount:number, studioFlag:FMOD.Const, coreFlag:FMOD.Const}
 function M.init(args)
-    core:setDSPBufferSize(8,8)
+    core:setDSPBufferSize(args.DSPBufferLength or 128,args.DSPBufferCount or 4)
     studio:initialize(args.maxChannel,args.studioFlag,args.coreFlag)
     TASK.new(function()
         while true do

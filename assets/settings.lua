@@ -7,6 +7,9 @@ local settings={
         sfxVol=1,
         vocVol=0,
         vibVol=1,
+        fmod_maxChannel=64,
+        fmod_DSPBufferLength=128,
+        fmod_DSPBufferCount=4,
 
         -- Video
         hitWavePower=.6,
