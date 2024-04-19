@@ -7,7 +7,6 @@ local mechLib={
     common={
         timer=require'assets.game.mechanicLib.common.timer',
         finish=require'assets.game.mechanicLib.common.finish',
-        characterAnim=require'assets.game.mechanicLib.common.characterAnim',
     },
     mino={
         -- Basic
