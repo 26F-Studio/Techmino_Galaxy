@@ -73,7 +73,7 @@ function stack.switch(P)
         P.settings.dropDelay,P.settings.lockDelay=1e99,1e99
 
         P.particles.boardSmoke:start()
-        FMOD.playEffect('music_highcut')
+        FMOD.effect.play('music_highcut')
     else
         if md.stack_lines>0 then
             P:say{
@@ -117,7 +117,7 @@ function stack.switch(P)
         md.stack_dropDelay,md.stack_lockDelay=nil,nil
 
         P.particles.boardSmoke:pause()
-        FMOD.stopEffect('music_highcut')
+        FMOD.effect.stop('music_highcut')
     end
 end
 

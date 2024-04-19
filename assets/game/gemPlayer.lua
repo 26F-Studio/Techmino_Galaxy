@@ -69,16 +69,16 @@ local defaultSoundFunc={
             playSample('sine',{'A2',2.2-num/5},{'E3',2.2-num/5})
         end
     end,
-    move=           function() FMOD.playEffect('move')          end,
-    move_failed=    function() FMOD.playEffect('move_failed')   end,
-    swap=           function() FMOD.playEffect('rotate')        end,
-    swap_failed=    function() FMOD.playEffect('tuck')          end,
-    twist=          function() FMOD.playEffect('rotate')        end,
-    twist_failed=   function() FMOD.playEffect('tuck')          end,
-    move_back=      function() FMOD.playEffect('rotate_failed') end,
-    touch=          function() FMOD.playEffect('lock')          end,
+    move=           function() FMOD.effect.play('move')          end,
+    move_failed=    function() FMOD.effect.play('move_failed')   end,
+    swap=           function() FMOD.effect.play('rotate')        end,
+    swap_failed=    function() FMOD.effect.play('tuck')          end,
+    twist=          function() FMOD.effect.play('rotate')        end,
+    twist_failed=   function() FMOD.effect.play('tuck')          end,
+    move_back=      function() FMOD.effect.play('rotate_failed') end,
+    touch=          function() FMOD.effect.play('lock')          end,
     clear=function(lines)
-        FMOD.playEffect(
+        FMOD.effect.play(
             lines==1 and 'clear_1' or
             lines==2 and 'clear_2' or
             lines==3 and 'clear_3' or
@@ -88,8 +88,8 @@ local defaultSoundFunc={
     end,
     combo=       function() end,
     chain=       function() end,
-    win=         function() FMOD.playEffect('win')         end,
-    fail=        function() FMOD.playEffect('fail')        end,
+    win=         function() FMOD.effect.play('win')         end,
+    fail=        function() FMOD.effect.play('fail')        end,
 }
 GP.scriptCmd={
 }

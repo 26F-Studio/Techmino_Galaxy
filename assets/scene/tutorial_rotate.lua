@@ -108,7 +108,7 @@ local function endGame(passLevel)
         inPoint=.1,
         outPoint=0,
     }
-    if passLevel>0 then FMOD.playEffect('win') end
+    if passLevel>0 then FMOD.effect.play('win') end
     autoQuitInterior()
 end
 
@@ -129,7 +129,7 @@ function scene.keyDown(key,isRep)
     if not controlCD then
         action=KEYMAP.mino:getAction(key)
         if action and action:find('rotate')==1 then
-            FMOD.playEffect('rotate')
+            FMOD.effect.play('rotate')
 
             if action=='rotateCW' then
                 handMat=TABLE.rotate(handMat,'L')
@@ -165,11 +165,11 @@ function scene.keyDown(key,isRep)
                         end
                         level=level+1
                         time=parTime[level]
-                        FMOD.playEffect('beep_notice')
+                        FMOD.effect.play('beep_notice')
                     end
                 else
                     -- Correct
-                    FMOD.playEffect('beep_rise')
+                    FMOD.effect.play('beep_rise')
                 end
             else
                 -- Punishment
@@ -217,7 +217,7 @@ function scene.update(dt)
                 PROGRESS.setTutorialPassed(6)
             end
         elseif totalTime>passTime then
-            FMOD.playEffect('fail')
+            FMOD.effect.play('fail')
             endGame(0)
         end
     end

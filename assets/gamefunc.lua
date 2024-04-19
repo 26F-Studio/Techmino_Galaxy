@@ -11,8 +11,12 @@ local _bgmPlaying ---@type string
 ---@param noProgress? boolean
 function playBgm(name,full,noProgress)
     if name==_bgmPlaying then return end
-    if not noProgress then PROGRESS.setBgmUnlocked(name,1) end
-    FMOD.playMusic(name,not full and {param={"intensity",0,true}} or nil)
+    if not noProgress then PROGRESS.setBgmUnlocked(name,full and 2 or 1) end
+    if full then
+        FMOD.music.play(name)
+    else
+        FMOD.music.play(name,{param={"intensity",0,true}})
+    end
     _bgmPlaying=name
 end
 function getBgm()
@@ -30,7 +34,7 @@ function playSample(...)
             local vol=l[i][2] or 1
             local len=l[i][3] or 420
             local rel=l[i][4] or 620
-            local event=FMOD.playEffect(inst,{
+            local event=FMOD.effect.play(inst,{
                 tune=note-33,
                 volume=vol,
                 param={'release',rel*1.0594630943592953^(note-33)},

@@ -59,10 +59,10 @@ local settings={
 }
 local settingTriggers={ -- Changing values in SETTINGS.system will trigger these functions (if exist).
     -- Audio
-    mainVol=        function(v) FMOD.setMainVolume(v) end,
-    bgmVol=         function(v) FMOD.setMusicVolume(v) end,
-    sfxVol=         function(v) FMOD.setEffectVolume(v) end,
-    vocVol=         function(v) FMOD.setVocalVolume(v) end,
+    mainVol=        function(v) FMOD.setMainVolume(v,true) end,
+    bgmVol=         function(v) FMOD.music.setVolume(v,true) end,
+    sfxVol=         function(v) FMOD.effect.setVolume(v,true) end,
+    vocVol=         function(v) FMOD.vocal.setVolume(v,true) end,
 
     -- Video
     fullscreen=     function(v) love.window.setFullscreen(v); love.resize(love.graphics.getWidth(),love.graphics.getHeight()) end,

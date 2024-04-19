@@ -53,7 +53,7 @@ function scene.keyDown(key,isRep)
         vx,vy=0,0
         ry=0
         p1.score,p2.score=0,0
-        FMOD.playEffect('hold')
+        FMOD.effect.play('hold')
     elseif key=='w' or key=='s' then
         p1.y0=false
     elseif key=='up' or key=='down' then
@@ -123,7 +123,7 @@ function scene.update()
                 vx=-vx-(vx>0 and .05 or -.5)
                 vy=vy+d*.08+P.vy*.5
                 ry=P.vy
-                FMOD.playEffect('collect')
+                FMOD.effect.play('collect')
             else
                 state=2
             end
@@ -131,14 +131,14 @@ function scene.update()
         if by<30 or by>690 then
             by=by<30 and 30 or 690
             vy,ry=-vy,-ry
-            FMOD.playEffect('collect')
+            FMOD.effect.play('collect')
         end
     elseif state==2 then -- Game over
         if bx<-120 or bx>1400 or by<-40 or by>760 then
             P=bx>640 and p1 or p2
             P.score=P.score+1
             TEXT:add("+1",P==p1 and 470 or 810,226,50,'score')
-            FMOD.playEffect('reach')
+            FMOD.effect.play('reach')
 
             state=0
             bx,by=640,360

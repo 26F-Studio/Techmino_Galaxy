@@ -40,25 +40,25 @@ local defaultSoundFunc={
             playSample('sine',{'A2',2.2-num/5},{'E3',2.2-num/5})
         end
     end,
-    move=           function() FMOD.playEffect('move')               end,
-    move_down=      function() FMOD.playEffect('move_down')          end,
-    move_failed=    function() FMOD.playEffect('move_failed')        end,
-    tuck=           function() FMOD.playEffect('tuck')               end,
-    rotate=         function() FMOD.playEffect('rotate')             end,
-    rotate_init=    function() FMOD.playEffect('rotate_init')        end,
-    rotate_locked=  function() FMOD.playEffect('rotate_locked')      end,
-    rotate_corners= function() FMOD.playEffect('rotate_corners')     end,
-    rotate_failed=  function() FMOD.playEffect('rotate_failed')      end,
-    rotate_special= function() FMOD.playEffect('rotate_special')     end,
-    hold=           function() FMOD.playEffect('hold')               end,
-    hold_init=      function() FMOD.playEffect('hold_init')          end,
-    touch=          function() FMOD.playEffect('touch')              end,
-    drop=           function() FMOD.playEffect('drop')               end,
-    lock=           function() FMOD.playEffect('lock')               end,
-    b2b=            function(lv) FMOD.playEffect('b2b_'..min(lv,10)) end,
-    b2b_break=      function() FMOD.playEffect('b2b_break')          end,
+    move=           function() FMOD.effect.play('move')               end,
+    move_down=      function() FMOD.effect.play('move_down')          end,
+    move_failed=    function() FMOD.effect.play('move_failed')        end,
+    tuck=           function() FMOD.effect.play('tuck')               end,
+    rotate=         function() FMOD.effect.play('rotate')             end,
+    rotate_init=    function() FMOD.effect.play('rotate_init')        end,
+    rotate_locked=  function() FMOD.effect.play('rotate_locked')      end,
+    rotate_corners= function() FMOD.effect.play('rotate_corners')     end,
+    rotate_failed=  function() FMOD.effect.play('rotate_failed')      end,
+    rotate_special= function() FMOD.effect.play('rotate_special')     end,
+    hold=           function() FMOD.effect.play('hold')               end,
+    hold_init=      function() FMOD.effect.play('hold_init')          end,
+    touch=          function() FMOD.effect.play('touch')              end,
+    drop=           function() FMOD.effect.play('drop')               end,
+    lock=           function() FMOD.effect.play('lock')               end,
+    b2b=            function(lv) FMOD.effect.play('b2b_'..min(lv,10)) end,
+    b2b_break=      function() FMOD.effect.play('b2b_break')          end,
     clear=function(lines)
-        FMOD.playEffect(
+        FMOD.effect.play(
             lines<=6 and 'clear_'..lines or
             lines<=18 and 'clear_'..(lines-lines%2) or
             lines<=22 and 'clear_'..lines or
@@ -67,12 +67,12 @@ local defaultSoundFunc={
         )
     end,
     spin=function(lines)
-        if lines==0 then     FMOD.playEffect('spin_0')
-        elseif lines==1 then FMOD.playEffect('spin_1')
-        elseif lines==2 then FMOD.playEffect('spin_2')
-        elseif lines==3 then FMOD.playEffect('spin_3')
-        elseif lines==4 then FMOD.playEffect('spin_4')
-        else                 FMOD.playEffect('spin_mega')
+        if lines==0 then     FMOD.effect.play('spin_0')
+        elseif lines==1 then FMOD.effect.play('spin_1')
+        elseif lines==2 then FMOD.effect.play('spin_2')
+        elseif lines==3 then FMOD.effect.play('spin_3')
+        elseif lines==4 then FMOD.effect.play('spin_4')
+        else                 FMOD.effect.play('spin_mega')
         end
     end,
     combo=setmetatable({
@@ -108,15 +108,15 @@ local defaultSoundFunc={
             playSample('square',{57+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- A5+
         end
     end,__metatable=true}),
-    frenzy=      function() FMOD.playEffect('frenzy')      end,
-    allClear=    function() FMOD.playEffect('clear_all')   end,
-    halfClear=   function() FMOD.playEffect('clear_half')  end,
-    suffocate=   function() FMOD.playEffect('suffocate')   end,
-    desuffocate= function() FMOD.playEffect('desuffocate') end,
-    reach=       function() FMOD.playEffect('beep_rise')   end,
-    notice=      function() FMOD.playEffect('beep_notice') end,
-    win=         function() FMOD.playEffect('win')         end,
-    fail=        function() FMOD.playEffect('fail')        end,
+    frenzy=      function() FMOD.effect.play('frenzy')      end,
+    allClear=    function() FMOD.effect.play('clear_all')   end,
+    halfClear=   function() FMOD.effect.play('clear_half')  end,
+    suffocate=   function() FMOD.effect.play('suffocate')   end,
+    desuffocate= function() FMOD.effect.play('desuffocate') end,
+    reach=       function() FMOD.effect.play('beep_rise')   end,
+    notice=      function() FMOD.effect.play('beep_notice') end,
+    win=         function() FMOD.effect.play('win')         end,
+    fail=        function() FMOD.effect.play('fail')        end,
 }
 MP.scriptCmd={
     clearHold=function(P) P:clearHold() end,

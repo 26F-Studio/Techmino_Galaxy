@@ -6,10 +6,12 @@ local setFont=FONT.set
 local max,min=math.max,math.min
 local sin=math.sin
 
+local totalBgmCount
+
 local selected,fullband
 local collectCount=0
 local noProgress=false
-local autoplay=false
+local autoplay=false ---@type number|false
 local fakeProgress=0
 local searchStr,searchTimer
 
@@ -74,22 +76,22 @@ local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1
     code=function(v,mode)
         fakeProgress=v
         if mode=='release' then
-            BGM.set('all','seek',v*BGM.getDuration())
+            FMOD.music.seek(v*FMOD.music.getDuration())
         end
     end,
-    visibleTick=function() return BGM.isPlaying() end,
+    visibleTick=function() return FMOD.music.getPlaying() end,
 }
 
 
 local scene={}
 
 function scene.enter()
-    selected,fullband=getBgm()
+    selected=getBgm()
     fakeProgress=0
     searchStr,searchTimer="",0
     if not selected then selected='blank' end
     if PROGRESS.getBgmUnlocked(selected)==2 then
-        fullband=fullband=='full'
+        fullband=fullband==true
     else
         fullband=nil
     end
@@ -101,6 +103,7 @@ function scene.enter()
     end
     table.sort(l)
     collectCount=#l
+    totalBgmCount=totalBgmCount or TABLE.getSize(bgmList)
     musicListBox:setList(l)
     musicListBox:select(TABLE.find(musicListBox:getList(),selected))
 
@@ -127,8 +130,10 @@ function scene.keyDown(key,isRep)
     if act=='up' or act=='down' then
         musicListBox:arrowKey(key)
     elseif act=='left' or act=='right' then
-        if BGM.isPlaying() then
-            BGM.set('all','seek',key=='left' and max(BGM.tell()-5,0) or (BGM.tell()+5)%BGM.getDuration())
+        if FMOD.music.getPlaying() then
+            local now=FMOD.music.tell()
+            local dur=FMOD.music.getDuration()
+            FMOD.music.seek(key=='left' and max(now-5,0) or (now+5)%dur)
         end
     elseif #key==1 and key:find'[0-9a-z]' then
         if searchTimer==0 then
@@ -141,26 +146,27 @@ function scene.keyDown(key,isRep)
         end
     elseif not isRep then
         if key=='space' then
-            if BGM.isPlaying() then
-                BGM.stop(.26)
+            if FMOD.music.getPlaying() then
+                FMOD.music.stop(.26)
             else
                 playBgm(selected,fullband,noProgress)
             end
             progressBar:reset()
         elseif key=='tab' then
-            local w=scene.widgetList[isCtrlPressed() and 'autoplay' or 'fullband']
-            if w._visible then
-                w.code()
+            if isCtrlPressed() then
+                scene.widgetList.autoplay.code()
+            else
+                scene.widgetList.fullband.code()
             end
+        elseif key=='`' and isAltPressed() then
+            noProgress=true
+            scene.enter()
         elseif key=='return' then
             if selected~=musicListBox:getItem() then
                 musicListBox.code()
             end
         elseif key=='home' then
-            BGM.set('all','seek',0)
-        elseif key=='`' and isAltPressed() then
-            noProgress=true
-            scene.enter()
+            FMOD.music.seek(0)
         elseif act=='back' then
             SCN.back('fadeHeader')
         end
@@ -171,11 +177,11 @@ function scene.update(dt)
     if searchTimer>0 then
         searchTimer=max(searchTimer-dt,0)
     end
-    if autoplay and BGM.isPlaying() then
+    if autoplay and FMOD.music.getPlaying() then
         if autoplay>0 then
             autoplay=max(autoplay-dt,0)
         else
-            if BGM.getDuration()-BGM.tell()<.26 then
+            if FMOD.music.getDuration()-FMOD.music.tell()<.26 then
                 autoplay=math.random(42,120)
                 fullband=MATH.roll(.42)
 
@@ -190,8 +196,8 @@ function scene.update(dt)
             end
         end
     end
-    if not love.mouse.isDown(1,2,3) and BGM.isPlaying() then
-        fakeProgress=BGM.tell()/BGM.getDuration()%1
+    if not love.mouse.isDown(1,2,3) and FMOD.music.getPlaying() then
+        fakeProgress=FMOD.music.tell()/FMOD.music.getDuration()%1
     end
 end
 
@@ -221,11 +227,11 @@ function scene.draw()
     end
 
     -- Time
-    if BGM.tell() then
+    if FMOD.music.getPlaying() then
         setFont(30)
         gc_setColor(COLOR.L)
-        gc_printf(STRING.time_simp(BGM.tell()%BGM.getDuration()),-700,260,626,'left')
-        gc_printf(STRING.time_simp(BGM.getDuration()),700-626,260,626,'right')
+        gc_printf(STRING.time_simp(FMOD.music.tell()%FMOD.music.getDuration()),-700,260,626,'left')
+        gc_printf(STRING.time_simp(FMOD.music.getDuration()),700-626,260,626,'right')
     end
 
     -- Searching
@@ -240,7 +246,7 @@ function scene.draw()
     gc.setLineWidth(2)
     gc.line(701,-320,701,-365,565,-365,545,-320)
     setFont(30)
-    gc_printf(collectCount.."/"..bgmCount,695-626,-362,626,'right')
+    gc_printf(collectCount.."/"..totalBgmCount,695-626,-362,626,'right')
 
     -- Autoswitch timer
     if autoplay then
@@ -260,8 +266,21 @@ scene.widgetList={
     progressBar,
 
     -- Play/Stop
-    {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return not BGM.isPlaying() end},
-    {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return BGM.isPlaying() end},
+    {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return not FMOD.music.getPlaying() end},
+    {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return FMOD.music.getPlaying() end},
+
+    -- Auto Switching Switch
+    {type='switch',pos={.5,.5},x=-650,y=150,h=50,widthLimit=260,labelPos='right',disp=function() return autoplay end,
+        name='autoplay',text=LANG'musicroom_autoplay',
+        sound_on=false,sound_off=false,
+        code=function()
+            if autoplay then
+                autoplay=false
+            else
+                autoplay=math.random(42,120)
+            end
+        end,
+    },
 
     -- Fullband Switch
     {type='switch',pos={.5,.5},x=-650,y=360,h=50,widthLimit=260,labelPos='right',disp=function() return fullband end,
@@ -269,15 +288,15 @@ scene.widgetList={
         sound_on=false,sound_off=false,
         code=function()
             fullband=not fullband
-            if BGM.isPlaying() then
-                BGM.set(bgmList[selected].add,'volume',fullband and 1 or 0,.26)
+            if FMOD.music.getPlaying() then
+                FMOD.music.setParam('intensity',fullband and 1 or 0)
             elseif SETTINGS.system.bgmVol==0 and MATH.roll(0.1) then
                 noProgress=true
                 scene.enter()
             end
         end,
         visibleTick=function()
-            return fullband~=nil and bgmList[selected].base
+            return fullband~=nil
         end,
     },
     -- Auto Switching Switch

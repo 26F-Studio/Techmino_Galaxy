@@ -205,7 +205,7 @@ function PROGRESS.transcendTo(n)
             coverAlpha=0,
             noDefaultDraw=true,
             init=function()
-                FMOD.stopMusic()
+                FMOD.music.stop()
             end,
             update=function(_,t)
                 if WAIT.state=='wait' and t>=2.6 then
@@ -237,11 +237,11 @@ function PROGRESS.transcendTo(n)
                 if t<1.626 then
                     sumT=sumT+dt
                     if sumT>=.1 then
-                        FMOD.seekMusic(FMOD.tellMusic()-.1)
+                        FMOD.music.seek(FMOD.music.tell()-.1)
                         sumT=sumT-.1
                     end
-                elseif t<2 and FMOD.getPlaying() then
-                    FMOD.stopMusic(0)
+                elseif t<2 and FMOD.music.getPlaying() then
+                    FMOD.music.stop(0)
                 end
                 if WAIT.state=='wait' and t>=2.6 then
                     PROGRESS.setMain(3)
@@ -290,7 +290,7 @@ function PROGRESS.quit()
             end,
         }
     elseif prgs.main<=4 then
-        FMOD.stopMusic()
+        FMOD.music.stop()
         local t=1
         WAIT.setDefaultDraw(NULL)
         WAIT{
@@ -399,7 +399,7 @@ function PROGRESS.setModeState(style,name,state,force)
         PROGRESS.save()
         if state==0 and state>orgState then
             if TASK.lock('minomap_unlockSound_background',2.6) then
-                FMOD.playEffect('map_unlock_background')
+                FMOD.effect.play('map_unlock_background')
                 MSG.new('check',Text.new_level_unlocked,2.6)
             end
         end

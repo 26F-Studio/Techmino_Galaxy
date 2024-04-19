@@ -18,7 +18,7 @@ return {
                 mechLib.mino.sprint.event_afterClear[40],
                 function(P)
                     if PROGRESS.get('main')>=2 and P.modeData.stat.line>10 and P.isMain then
-                        FMOD.setMusicParam('intensity',math.min((P.modeData.stat.line-10)/20,1))
+                        FMOD.music.setParam('intensity',math.min((P.modeData.stat.line-10)/20,1))
                     end
                 end,
             },

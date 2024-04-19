@@ -58,7 +58,7 @@ local function full(L)
 end
 local function place(X,x)
     board[X][x]=round
-    FMOD.playEffect('touch')
+    FMOD.effect.play('touch')
     lastX,lastx=X,x
     curX,curx=nil
     placeTime=love.timer.getTime()
@@ -66,7 +66,7 @@ local function place(X,x)
         score[X]=round
         if checkBoard(score,round) then
             gameover=round
-            FMOD.playEffect('win')
+            FMOD.effect.play('win')
             return
         else
             if full(score) then
@@ -74,10 +74,10 @@ local function place(X,x)
                 return
             end
         end
-        FMOD.playEffect('reach')
+        FMOD.effect.play('reach')
     else
         if full(board[X]) then
-            FMOD.playEffect('emit')
+            FMOD.effect.play('emit')
             score[X]=true
             if full(score) then
                 gameover=true

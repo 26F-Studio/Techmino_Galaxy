@@ -29,7 +29,7 @@ function scene.keyDown(key,isRep)
         local note=keys[key]+offset
         if kb.isDown('lshift','rshift') then note=note+1 end
         if kb.isDown('lctrl','rctrl') then note=note-1 end
-        activeEventMap[key]=FMOD.playEffect(inst,{
+        activeEventMap[key]=FMOD.effect.play(inst,{
             tune=note-21,
             volume=1,
             param={'release',1000*1.0594630943592953^(note-21)},

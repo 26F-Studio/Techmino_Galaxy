@@ -29,7 +29,7 @@ return {
                 while md.stat.line>=md.lineTarget do
                     if md.lineTarget<200 then
                         if PROGRESS.get('main')>=2 and md.lineTarget<=150 and P.isMain then
-                            FMOD.setMusicParam('intensity',(md.lineTarget/150)^2)
+                            FMOD.music.setParam('intensity',(md.lineTarget/150)^2)
                         end
                         P.settings.dropDelay=dropSpeed[md.lineTarget/10+1]
                         md.lineTarget=md.lineTarget+10

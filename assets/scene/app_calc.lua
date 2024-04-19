@@ -17,7 +17,7 @@ end
 
 function scene.enter()
     BG.set('none')
-    FMOD.stopMusic()
+    FMOD.music.stop()
     reg,val,sym=false,"0",false
 end
 

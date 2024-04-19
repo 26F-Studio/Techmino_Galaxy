@@ -85,31 +85,15 @@ Zenitha.setDebugInfo{
     {"Voices",VOC.getQueueCount},
     {"Mouse", function() local x,y=SCR.xOy:inverseTransformPoint(love.mouse.getPosition()) return math.floor(x+.5)..' '..math.floor(y+.5) end},
 }
-do -- Zenitha.setOnFocus
-    local function task_autoSoundOff()
-        repeat
-            local v=math.max(FMOD.mainVolume/SETTINGS.system.mainVol-coroutine.yield()/.26,0)
-            FMOD.setMainVolume(v*SETTINGS.system.mainVol)
-        until v==0
-    end
-    local function task_autoSoundOn()
-        repeat
-            local v=math.min(FMOD.mainVolume/SETTINGS.system.mainVol+coroutine.yield()/.626,1)
-            FMOD.setMainVolume(v*SETTINGS.system.mainVol)
-        until v==1
-    end
     Zenitha.setOnFocus(function(f)
         if SETTINGS.system.autoMute then
             if f then
-                TASK.removeTask_code(task_autoSoundOff)
-                TASK.new(task_autoSoundOn)
+            FMOD.setMainVolume(SETTINGS.system.mainVol)
             elseif SCN.cur~='musicroom' then
-                TASK.removeTask_code(task_autoSoundOn)
-                TASK.new(task_autoSoundOff)
+            FMOD.setMainVolume(0)
             end
         end
     end)
-end
 
 FONT.setDefaultFallback('symbols')
 FONT.setDefaultFont('norm')
@@ -154,13 +138,13 @@ WIDGET.setDefaultOption{
         sound_press='selector',
     },
     listBox={
-        sound_select='listBox_select',
-        sound_click='listBox_click',
+        sound_select='listbox_select',
+        sound_click='listbox_click',
     },
     inputBox={
-        sound_input='inputBox_input',
-        sound_bksp='inputBox_bksp',
-        sound_clear='inputBox_clear',
+        sound_input='inputbox_input',
+        sound_bksp='inputbox_bksp',
+        sound_clear='inputbox_clear',
     },
 }
 
@@ -431,7 +415,7 @@ FMOD.registerEffect((function()
 end)())
 -- Hijack the original SFX module, use FMOD instead
 SFX[('play')]=function(name,vol,pos,tune)
-    FMOD.playEffect(name,{
+    FMOD.effect.play(name,{
         volume=vol,
         tune=tune,
     })

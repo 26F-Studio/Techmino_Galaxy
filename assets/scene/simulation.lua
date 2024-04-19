@@ -145,7 +145,7 @@ function scene.keyDown(key,isRep)
         if subjectFocused then
             if not sims[subjectFocused].trigTimer then
                 sims[subjectFocused].trigTimer=0
-                FMOD.playEffect('simulation_select')
+                FMOD.effect.play('simulation_select')
             end
         end
     elseif KEYMAP.sys:getAction(key)=='back' then

@@ -134,24 +134,24 @@ local function answer(option)
                 if time>parTime[1] then
                     -- Just pass
                     endGame(1)
-                    FMOD.playEffect('win')
+                    FMOD.effect.play('win')
                 else
                     level=2
                     time=parTime[2]
-                    FMOD.playEffect('beep_notice')
+                    FMOD.effect.play('beep_notice')
                 end
                 PROGRESS.setTutorialPassed(3)
             elseif level==2 then
                 -- Cleared
                 endGame(2)
-                FMOD.playEffect('win')
+                FMOD.effect.play('win')
             end
         else
             -- Correct
-            FMOD.playEffect('beep_rise')
+            FMOD.effect.play('beep_rise')
         end
     else
-        FMOD.playEffect('fail')
+        FMOD.effect.play('fail')
     end
     newQuestion()
 end
@@ -188,10 +188,10 @@ function scene.update(dt)
         if time==0 then
             if level==1 then
                 endGame(0)
-                FMOD.playEffect('fail')
+                FMOD.effect.play('fail')
             else
                 endGame(1)
-                FMOD.playEffect('win')
+                FMOD.effect.play('win')
             end
         end
     end

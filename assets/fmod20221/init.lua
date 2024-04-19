@@ -23,7 +23,7 @@ require("constants")
 require("wrap")
 require("errors")
 
---------------------------
+--------------------------------------------------------------
 
 M.studio=M.newStudio()
 M.core=M.studio:getCoreSystem()
@@ -75,44 +75,53 @@ local vocalLib={}
 function M.registerVocal(map)
 end
 
--- Volume things below need three parameters in your fmod project (mainVolume not included)
+-- Volume things need three parameters in your fmod project (mainVolume not included)
 M.mainVolume=1
 M.musicVolume=1
 M.effectVolume=1
 M.vocalVolume=1
-function M.setMainVolume(v)
+---@param v number
+---@param instant? boolean only `true` take effect
+function M.setMainVolume(v,instant)
     M.mainVolume=v
-    studio:setParameterByName("MusicVolume",M.mainVolume*M.musicVolume,true)
-    studio:setParameterByName("EffectVolume",M.mainVolume*M.effectVolume,true)
-    studio:setParameterByName("VocalVolume",M.mainVolume*M.vocalVolume,true)
-end
-function M.setMusicVolume(v)
-    M.musicVolume=v
-    studio:setParameterByName("MusicVolume",M.mainVolume*M.musicVolume,true)
-end
-function M.setEffectVolume(v)
-    M.effectVolume=v
-    studio:setParameterByName("EffectVolume",M.mainVolume*M.effectVolume,true)
-end
-function M.setVocalVolume(v)
-    M.vocalVolume=v
-    studio:setParameterByName("VocalVolume",M.mainVolume*M.vocalVolume,true)
+    studio:setParameterByName("MusicVolume",M.mainVolume*M.musicVolume,instant==true)
+    studio:setParameterByName("EffectVolume",M.mainVolume*M.effectVolume,instant==true)
+    studio:setParameterByName("VocalVolume",M.mainVolume*M.vocalVolume,instant==true)
 end
 
-local playingEvent ---@type FMOD.Studio.EventInstance?
+--------------------------
+
+M.music={}
+
+---@param v number
+---@param instant? boolean only `true` take effect
+function M.music.setVolume(v,instant)
+    M.musicVolume=v
+    studio:setParameterByName("MusicVolume",M.mainVolume*M.musicVolume,instant==true)
+end
+
+---@type {desc:FMOD.Studio.EventDescription?, event:FMOD.Studio.EventInstance?}?
+local playing=nil
+
 ---@param name string
 ---@param args? {instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:table<number,number>, param?:table}
 ---@return FMOD.Studio.EventInstance?
-function M.playMusic(name,args)
-    FMOD.stopMusic()
+function M.music.play(name,args)
+    FMOD.music.stop()
     local desc=musicLib[name]
     if not desc then
         MSG.new('warn',"No BGM named "..name)
         return
     end
     local event,res=desc:createInstance()
-    assert(res==M.FMOD_OK,M.errorString[res])
-    playingEvent=event
+    if res~=M.FMOD_OK then
+        MSG.new('warn',"Event named "..name.." created failed: "..M.errorString[res])
+        return
+    end
+    playing={
+        desc=desc,
+        event=event,
+    }
 
     if not (type(args)=='table' and args.instant==true) then
         event:setParameterByName("fade",0,true)
@@ -143,11 +152,11 @@ function M.playMusic(name,args)
 end
 
 ---@param time? number
-function M.stopMusic(time)
-    if not playingEvent then return end
+function M.music.stop(time)
+    if not playing then return end
     time=time or 0.626
-    local e=playingEvent
-    playingEvent=nil
+    local e=playing.event
+    playing=nil
     if time<=0 then
         e:stop(M.FMOD_STUDIO_STOP_IMMEDIATE)
     else
@@ -167,26 +176,44 @@ end
 ---@param name string
 ---@param value number
 ---@param instant? boolean only `true` take effect
-function M.setMusicParam(name,value,instant)
-    if not playingEvent then return end
-    playingEvent:setParameterByName(name,value,instant==true)
+function M.music.setParam(name,value,instant)
+    if not playing then return end
+    playing.event:setParameterByName(name,value,instant==true)
 end
 
 ---@param time number seconds
-function M.seekMusic(time)
-    if not playingEvent then return end
-    playingEvent:setTimelinePosition(time*1000)
+function M.music.seek(time)
+    if not playing then return end
+    playing.event:setTimelinePosition(time*1000)
 end
 
 ---@return number?
-function M.tellMusic()
-    if not playingEvent then return end
-    return (playingEvent:getTimelinePosition())
+function M.music.tell()
+    if not playing then return end
+    return (playing.event:getTimelinePosition()/1000)
+end
+
+---@return number?
+function M.music.getDuration()
+    if not playing then return end
+    return (playing.desc:getLength()/1000)
 end
 
 ---@return FMOD.Studio.EventInstance?
-function M.getPlaying()
-    return playingEvent
+function M.music.getPlaying()
+    if not playing then return end
+    return playing.event
+end
+
+--------------------------
+
+M.effect={}
+
+---@param v number
+---@param instant? boolean only `true` take effect
+function M.effect.setVolume(v,instant)
+    M.effectVolume=v
+    studio:setParameterByName("EffectVolume",M.mainVolume*M.effectVolume,instant==true)
 end
 
 ---priority: pitch>tune>fine
@@ -197,7 +224,7 @@ end
 ---@param name string
 ---@param args? {volume?:number, pitch?:number, tune?:number, fine?:number, pos?:table<number,number>, param?:table}
 ---@return FMOD.Studio.EventInstance?
-function M.playEffect(name,args)
+function M.effect.play(name,args)
     local desc=effectLib[name]
     if not desc then
         MSG.new('warn',"No SE named "..name)
@@ -247,7 +274,7 @@ end
 ---@param name string
 ---@param value number
 ---@param instant? boolean only `true` take effect
-function M.setEffectParam(event,name,value,instant)
+function M.effect.setParam(event,name,value,instant)
     local desc=effectLib[event]
     if not desc then return end
     local l,c=desc:getInstanceList(desc:getInstanceCount())
@@ -257,7 +284,7 @@ function M.setEffectParam(event,name,value,instant)
 end
 
 ---@param name string
-function M.keyOffEffect(name)
+function M.effect.keyOff(name)
     local desc=effectLib[name]
     if not desc then return end
     local l,c=desc:getInstanceList(desc:getInstanceCount())
@@ -268,7 +295,7 @@ end
 
 ---@param name string
 ---@param instant? boolean only `true` take effect
-function M.stopEffect(name,instant)
+function M.effect.stop(name,instant)
     local desc=effectLib[name]
     if not desc then return end
     local l,c=desc:getInstanceList(desc:getInstanceCount())
@@ -278,5 +305,16 @@ function M.stopEffect(name,instant)
 end
 
 --------------------------
+
+M.vocal={}
+
+---@param v number
+---@param instant? boolean only `true` take effect
+function M.vocal.setVolume(v,instant)
+    M.vocalVolume=v
+    studio:setParameterByName("VocalVolume",M.mainVolume*M.vocalVolume,instant==true)
+end
+
+--------------------------------------------------------------
 
 return M

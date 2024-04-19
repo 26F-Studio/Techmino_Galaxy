@@ -4,7 +4,7 @@ return {
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
         playBgm('sakura')
-        FMOD.seekMusic(0)
+        FMOD.music.seek(0)
     end,
     settings={mino={
         event={

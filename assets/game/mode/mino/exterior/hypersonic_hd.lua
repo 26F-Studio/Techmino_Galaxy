@@ -4,7 +4,7 @@ return {
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
         playBgm('secret7th_hidden')
-        FMOD.seekMusic(MATH.roundUnit(FMOD.tellMusic(),60/130))
+        FMOD.music.seek(MATH.roundUnit(FMOD.music.tell(),60/130))
     end,
     settings={mino={
         event={
