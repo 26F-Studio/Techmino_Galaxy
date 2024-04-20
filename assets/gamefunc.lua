@@ -15,7 +15,7 @@ function playBgm(name,full,noProgress)
     if full then
         FMOD.music(name)
     else
-        FMOD.music(name,{param={"intensity",0,true}})
+        FMOD.music(name,{param={'intensity',0,true}})
     end
     _bgmPlaying=name
 end

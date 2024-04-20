@@ -63,6 +63,7 @@ end
 ---@type table<any,FMOD.Studio.EventDescription>
 local musicLib={}
 function M.registerMusic(map)
+    if not studio then return end
     for k,v in next,map do
         local desc,res=studio:getEvent(v)
         assert(res==M.FMOD_OK,M.errorString[res])
@@ -73,6 +74,7 @@ end
 ---@type table<any,FMOD.Studio.EventDescription>
 local effectLib={}
 function M.registerEffect(map)
+    if not studio then return end
     for k,v in next,map do
         local desc,res=studio:getEvent(v)
         assert(res==M.FMOD_OK,M.errorString[res])
@@ -85,17 +87,18 @@ function M.registerVocal(map)
 end
 
 -- Volume things need three parameters in your fmod project (mainVolume not included)
-M.mainVolume=1
-M.musicVolume=1
-M.effectVolume=1
-M.vocalVolume=1
+M.mainVolume=-1
+M.musicVolume=-1
+M.effectVolume=-1
+M.vocalVolume=-1
 ---@param v number
 ---@param instant? boolean only `true` take effect
 function M.setMainVolume(v,instant)
     M.mainVolume=v
-    studio:setParameterByName("MusicVolume",M.mainVolume*M.musicVolume,instant==true)
-    studio:setParameterByName("EffectVolume",M.mainVolume*M.effectVolume,instant==true)
-    studio:setParameterByName("VocalVolume",M.mainVolume*M.vocalVolume,instant==true)
+    if not studio then return end
+    studio:setParameterByName('MusicVolume',M.mainVolume*M.musicVolume,instant==true)
+    studio:setParameterByName('EffectVolume',M.mainVolume*M.effectVolume,instant==true)
+    studio:setParameterByName('VocalVolume',M.mainVolume*M.vocalVolume,instant==true)
 end
 
 --------------------------
@@ -107,7 +110,8 @@ M.music={}
 ---@param instant? boolean only `true` take effect
 function M.music.setVolume(v,instant)
     M.musicVolume=v
-    studio:setParameterByName("MusicVolume",M.mainVolume*M.musicVolume,instant==true)
+    if not studio then return end
+    studio:setParameterByName('MusicVolume',M.mainVolume*M.musicVolume,instant==true)
 end
 
 ---@type {desc:FMOD.Studio.EventDescription?, event:FMOD.Studio.EventInstance?}?
@@ -134,8 +138,8 @@ function M.music.play(name,args)
     }
 
     if not (type(args)=='table' and args.instant==true) then
-        event:setParameterByName("fade",0,true)
-        event:setParameterByName("fade",1,false)
+        event:setParameterByName('fade',0,true)
+        event:setParameterByName('fade',1,false)
     end
 
     if args then
@@ -169,10 +173,10 @@ function M.music.stop(instant)
         e:stop(M.FMOD_STUDIO_STOP_IMMEDIATE)
     else
         TASK.new(function()
-            e:setParameterByName("fade",0,true)
+            e:setParameterByName('fade',0,true)
             repeat
                 coroutine.yield()
-            until e:getParameterByName("fade")==0
+            until e:getParameterByName('fade')==0
             e:stop(M.FMOD_STUDIO_STOP_IMMEDIATE)
         end)
     end
@@ -212,7 +216,7 @@ function M.music.getPlaying()
 end
 
 local playMusic=M.music.play
-setmetatable(M.music,{__call=function(_,...) playMusic(...) end})
+setmetatable(M.music,{__call=function(_,...) return playMusic(...) end})
 
 --------------------------
 
@@ -223,14 +227,15 @@ M.effect={}
 ---@param instant? boolean only `true` take effect
 function M.effect.setVolume(v,instant)
     M.effectVolume=v
-    studio:setParameterByName("EffectVolume",M.mainVolume*M.effectVolume,instant==true)
+    if not studio then return end
+    studio:setParameterByName('EffectVolume',M.mainVolume*M.effectVolume,instant==true)
 end
 
 ---priority: pitch>tune>fine
 ---
 ---pos:{x,y,z}
 ---
----param:{"paramName", 0, true?}
+---param:{'paramName', 0, true?}
 ---@param name string
 ---@param args? {volume?:number, pitch?:number, tune?:number, fine?:number, pos?:table<number,number>, param?:table}
 ---@return FMOD.Studio.EventInstance?
@@ -315,7 +320,7 @@ function M.effect.stop(name,instant)
 end
 
 local playEffect=M.effect.play
-setmetatable(M.effect,{__call=function(_,...) playEffect(...) end})
+setmetatable(M.effect,{__call=function(_,...) return playEffect(...) end})
 
 --------------------------
 
@@ -325,7 +330,8 @@ M.vocal={}
 ---@param instant? boolean only `true` take effect
 function M.vocal.setVolume(v,instant)
     M.vocalVolume=v
-    studio:setParameterByName("VocalVolume",M.mainVolume*M.vocalVolume,instant==true)
+    if not studio then return end
+    studio:setParameterByName('VocalVolume',M.mainVolume*M.vocalVolume,instant==true)
 end
 
 --------------------------------------------------------------

@@ -364,9 +364,9 @@ function PROGRESS.setMain(n)
     end
 end
 function PROGRESS.setBgmUnlocked(name,state)
-    local l=math.max(prgs.bgmUnlocked[name] or 0,state)
-    if l>(prgs.bgmUnlocked[name] or 0) then
-        prgs.bgmUnlocked[name]=l
+    local newState=math.max(prgs.bgmUnlocked[name] or 0,state)
+    if newState>(prgs.bgmUnlocked[name] or 0) then
+        prgs.bgmUnlocked[name]=newState
         PROGRESS.save()
     end
 end

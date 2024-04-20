@@ -61,7 +61,7 @@ bgmList=require'assets.bgmlist'
 FMOD=require("assets.fmod20221")
 DEBUG.checkLoadTime("Load game modules")
 --------------------------------------------------------------
--- Config Zenitha
+-- Config Zenitha and Fmod
 Zenitha.setAppName('Techmino')
 Zenitha.setVersionText(VERSION.appVer)
 Zenitha.setFirstScene('hello')
@@ -85,15 +85,15 @@ Zenitha.setDebugInfo{
     {"Mouse", function() local x,y=SCR.xOy:inverseTransformPoint(love.mouse.getPosition()) return math.floor(x+.5)..' '..math.floor(y+.5) end},
     -- {"FMOD", function() local a,b,c=FMOD.studio:getMemoryUsage() return a..","..b..","..c end}, -- Only available in logging builds Fmod
 }
-    Zenitha.setOnFocus(function(f)
-        if SETTINGS.system.autoMute then
-            if f then
+Zenitha.setOnFocus(function(f)
+    if SETTINGS.system.autoMute then
+        if f then
             FMOD.setMainVolume(SETTINGS.system.mainVol)
-            elseif SCN.cur~='musicroom' then
+        elseif SCN.cur~='musicroom' then
             FMOD.setMainVolume(0)
-            end
         end
-    end)
+    end
+end)
 
 FONT.setDefaultFallback('symbols')
 FONT.setDefaultFont('norm')
@@ -207,14 +207,13 @@ LANG.add{
     zh='assets/language/lang_zh.lua',
 }
 LANG.setDefault('en')
-DEBUG.checkLoadTime("Load Zenitha resources")
---------------------------------------------------------------
-function FMODLoadFunc() -- will be called again for restarting when applying advanced options
+
+function FMODLoadFunc() -- Will be called again when applying advanced options
     FMOD.init{
         maxChannel=math.min(SETTINGS.system.fmod_maxChannel,256),
         DSPBufferCount=math.min(SETTINGS.system.fmod_DSPBufferCount,16),
         DSPBufferLength=math.min(SETTINGS.system.fmod_DSPBufferLength,65536),
-        studioFlag=FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,
+        studioFlag=bit.bxor(FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,FMOD.FMOD_INIT_STREAM_FROM_UPDATE,FMOD.FMOD_INIT_MIX_FROM_UPDATE),
         coreFlag=FMOD.FMOD_INIT_NORMAL,
     }
     if not FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Master.strings.bank") then
@@ -263,15 +262,20 @@ function FMODLoadFunc() -- will be called again for restarting when applying adv
         return L
     end)())
 end
-FMODLoadFunc()
+TASK.new(function() -- Don't initialize studio at first frame, may cause some weird problem
+    DEBUG.yieldN(6)
+    DEBUG.yieldT(0.26)
+    FMODLoadFunc()
+    FMOD.setMainVolume(SETTINGS.system.mainVol,true)
+end)
 -- Hijack the original SFX module, use FMOD instead
 SFX[('play')]=function(name,vol,pos,tune)
-    FMOD.effect.play(name,{
+    FMOD.effect(name,{
         volume=vol,
         tune=tune,
     })
 end
-DEBUG.checkLoadTime("Load FMod and Bank")
+DEBUG.checkLoadTime("Load Zenitha resources and things relevant to Fmod")
 --------------------------------------------------------------
 -- Load saving data
 TABLE.coverR(FILE.load('conf/settings','-json -canskip') or {},SETTINGS)
