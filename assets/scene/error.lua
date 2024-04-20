@@ -14,7 +14,7 @@ local texts={
 local scene={}
 
 function scene.enter()
-    FMOD.music.stop(true)
+    FMOD.destroy()
     time=0
     err=Zenitha.getErr('#') or {
         scene="NULL",

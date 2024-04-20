@@ -42,7 +42,7 @@ function M.init(args)
     studio:initialize(args.maxChannel,args.studioFlag,args.coreFlag)
     if firstTime then
         TASK.new(function()
-            while true do
+            while studio do
                 studio:update()
                 coroutine.yield()
             end
@@ -50,6 +50,11 @@ function M.init(args)
     end
 end
 
+---Release studio object (call this when game running into critical error)
+function M.destroy()
+    studio:release()
+    studio=nil
+end
 
 ---@param bankPath string
 ---@param flag? FMOD.Const
