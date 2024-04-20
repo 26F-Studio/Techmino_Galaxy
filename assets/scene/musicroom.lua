@@ -147,7 +147,7 @@ function scene.keyDown(key,isRep)
     elseif not isRep then
         if key=='space' then
             if FMOD.music.getPlaying() then
-                FMOD.music.stop(.26)
+                stopBgm()
             else
                 playBgm(selected,fullband,noProgress)
             end

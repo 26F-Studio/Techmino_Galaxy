@@ -6,7 +6,6 @@ return {
         playBgm('race')
     end,
     settings={mino={
-        skin='touhou.mino_reimu',
         -- seqType=mechLib.mino.sequence.distWeight.fake7bag,
         seqType='bag7_sprint',
         -- clearRule='line_float',
@@ -17,11 +16,6 @@ return {
                 P.modeData.curKeyCount=0
                 -- mechLib.mino.squeeze.turnOn_auto(P,4)
                 -- P:setAction('func1',function(P) mechLib.mino.stack.turnOn_auto(P,true,60e3) end)
-                P.modeData.character={
-                    image=IMG.touhou.reimu,
-                    effect=NULL,
-                }
-                P:setAction('func1',mechLib.common.characterAnim.start)
             end,
             beforePress=function(P)
                 P.modeData.curKeyCount=P.modeData.curKeyCount+1

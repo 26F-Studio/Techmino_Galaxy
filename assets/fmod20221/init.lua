@@ -25,22 +25,31 @@ require("errors")
 
 --------------------------------------------------------------
 
-M.studio=M.newStudio()
-M.core=M.studio:getCoreSystem()
-
-local studio,core=M.studio,M.core
+local studio ---@type FMOD.Studio.System
+local core ---@type FMOD.Core.System
 
 ---@param args {maxChannel:number, DSPBufferLength:number, DSPBufferCount:number, studioFlag:FMOD.Const, coreFlag:FMOD.Const}
 function M.init(args)
+    local firstTime=true
+    if M.studio then
+        M.studio:release()
+        firstTime=false
+    end
+    M.studio=M.newStudio()
+    M.core=M.studio:getCoreSystem()
+    studio,core=M.studio,M.core
     core:setDSPBufferSize(args.DSPBufferLength or 128,args.DSPBufferCount or 4)
     studio:initialize(args.maxChannel,args.studioFlag,args.coreFlag)
-    TASK.new(function()
-        while true do
-            studio:update()
-            coroutine.yield()
-        end
-    end)
+    if firstTime then
+        TASK.new(function()
+            while true do
+                studio:update()
+                coroutine.yield()
+            end
+        end)
+    end
 end
+
 
 ---@param bankPath string
 ---@param flag? FMOD.Const
@@ -151,26 +160,22 @@ function M.music.play(name,args)
     return event
 end
 
----@param time? number
-function M.music.stop(time)
+---@param instant? boolean only `true` take effect
+function M.music.stop(instant)
     if not playing then return end
-    time=time or 0.626
-    local e=playing.event
-    playing=nil
-    if time<=0 then
+    local e=playing.event ---@type FMOD.Studio.EventInstance
+    if instant then
         e:stop(M.FMOD_STUDIO_STOP_IMMEDIATE)
     else
         TASK.new(function()
-            local startTime=love.timer.getTime()
-            while true do
+            e:setParameterByName("fade",0,true)
+            repeat
                 coroutine.yield()
-                local v=1-(love.timer.getTime()-startTime)/time
-                if v<=0 then break end
-                e:setParameterByName("fade",v,true)
-            end
+            until e:getParameterByName("fade")==0
             e:stop(M.FMOD_STUDIO_STOP_IMMEDIATE)
         end)
     end
+    playing=nil
 end
 
 ---@param name string

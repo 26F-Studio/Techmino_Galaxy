@@ -154,8 +154,8 @@ function PROGRESS.applyCoolWaitTemplate()
 end
 function PROGRESS.setInteriorBG() BG.set('none') end
 function PROGRESS.setExteriorBG() BG.set(prgs.main==3 and 'space' or 'galaxy') end
-function PROGRESS.playInteriorBGM() playBgm('blank',prgs.main==1 and 'simp' or 'full') end
-function PROGRESS.playExteriorBGM() playBgm('vacuum',prgs.main==3 and 'simp' or 'full') end
+function PROGRESS.playInteriorBGM() playBgm('blank',prgs.main~=1) end
+function PROGRESS.playExteriorBGM() playBgm('vacuum',prgs.main~=3) end
 function PROGRESS.setEnv(env)
     if env=='interior' then
         PROGRESS.setInteriorBG()
@@ -204,9 +204,7 @@ function PROGRESS.transcendTo(n)
         WAIT{
             coverAlpha=0,
             noDefaultDraw=true,
-            init=function()
-                FMOD.music.stop()
-            end,
+            init=stopBgm,
             update=function(_,t)
                 if WAIT.state=='wait' and t>=2.6 then
                     PROGRESS.setMain(2)
@@ -240,8 +238,8 @@ function PROGRESS.transcendTo(n)
                         FMOD.music.seek(FMOD.music.tell()-.1)
                         sumT=sumT-.1
                     end
-                elseif t<2 and FMOD.music.getPlaying() then
-                    FMOD.music.stop(0)
+                elseif t<2 and getBgm() then
+                    stopBgm(true)
                 end
                 if WAIT.state=='wait' and t>=2.6 then
                     PROGRESS.setMain(3)
@@ -290,7 +288,7 @@ function PROGRESS.quit()
             end,
         }
     elseif prgs.main<=4 then
-        FMOD.music.stop()
+        stopBgm()
         local t=1
         WAIT.setDefaultDraw(NULL)
         WAIT{

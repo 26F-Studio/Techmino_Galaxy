@@ -100,6 +100,10 @@ return {
     setting_updRate="更新比率",
     setting_drawRate="绘制比率",
     setting_msaa="抗锯齿",
+    setting_fmod_maxChannel="最大音频数",
+    setting_fmod_DSPBufferCount="DSP缓冲区数量",
+    setting_fmod_DSPBufferLength="DSP缓冲区长度",
+    setting_apply="应用",
 
     lang_note="中文是本游戏的原始语言\n翻译由志愿者贡献，不保证100%准确\n部分术语可能没有翻译，请查阅词典获取更多信息",
 

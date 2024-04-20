@@ -100,6 +100,10 @@ return {
     setting_updRate="Update rate",
     setting_drawRate="Draw rate",
     setting_msaa="MSAA",
+    setting_fmod_maxChannel="Max Channel",
+    setting_fmod_DSPBufferCount="DSPBufferCount",
+    setting_fmod_DSPBufferLength="DSPBufferLength",
+    setting_apply="Apply",
 
     lang_note="Chinese is the original game language.\nAll translations are contributed by volunteers and it may not be 100% accurate\nThere are some terms not translated directly, please check Zictionary for more information.",
 

@@ -209,6 +209,70 @@ LANG.add{
 LANG.setDefault('en')
 DEBUG.checkLoadTime("Load Zenitha resources")
 --------------------------------------------------------------
+function FMODLoadFunc() -- will be called again for restarting when applying advanced options
+    FMOD.init{
+        maxChannel=math.min(SETTINGS.system.fmod_maxChannel,256),
+        DSPBufferCount=math.min(SETTINGS.system.fmod_DSPBufferCount,16),
+        DSPBufferLength=math.min(SETTINGS.system.fmod_DSPBufferLength,65536),
+        studioFlag=FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,
+        coreFlag=FMOD.FMOD_INIT_NORMAL,
+    }
+    if not FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Master.strings.bank") then
+        MSG.new('warn',"Strings bank file load failed")
+    end
+    FMOD.registerMusic((function()
+        if not love.filesystem.getInfo("soundbank/Master.bank") then
+            MSG.new('warn',"Music bank not found")
+            return {}
+        end
+        local bankMusic=FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Master.bank")
+        if not bankMusic then
+            MSG.new('warn',"Music bank file load failed")
+            return {}
+        end
+        local L={}
+        local l,c=bankMusic:getEventList(bankMusic:getEventCount())
+        for i=1,c do
+            local path=l[i-1]:getPath()
+            if path then
+                local name=path:match("/([^/]+)$"):lower()
+                L[name]=path
+            end
+        end
+        return L
+    end)())
+    FMOD.registerEffect((function()
+        if not love.filesystem.getInfo("soundbank/Effect.bank") then
+            MSG.new('warn',"Effect bank not found")
+            return {}
+        end
+        local bankEffect=FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Effect.bank")
+        if not bankEffect then
+            MSG.new('warn',"Effect bank file load failed")
+            return {}
+        end
+        local L={}
+        local l,c=bankEffect:getEventList(bankEffect:getEventCount())
+        for i=1,c do
+            local path=l[i-1]:getPath()
+            if path then
+                local name=path:match("/([^/]+)$"):lower()
+                L[name]=path
+            end
+        end
+        return L
+    end)())
+end
+FMODLoadFunc()
+-- Hijack the original SFX module, use FMOD instead
+SFX[('play')]=function(name,vol,pos,tune)
+    FMOD.effect.play(name,{
+        volume=vol,
+        tune=tune,
+    })
+end
+DEBUG.checkLoadTime("Load FMod and Bank")
+--------------------------------------------------------------
 -- Load saving data
 TABLE.coverR(FILE.load('conf/settings','-json -canskip') or {},SETTINGS)
 for k,v in next,SETTINGS._system do
@@ -359,66 +423,5 @@ SCN.addSwap('fastFadeHeader',{
     end,
 })
 DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins")
---------------------------------------------------------------
-FMOD.init{
-    maxChannel=SETTINGS.system.fmod_maxChannel,
-    DSPBufferLength=SETTINGS.system.fmod_DSPBufferLength,
-    DSPBufferCount=SETTINGS.system.fmod_DSPBufferCount,
-    studioFlag=FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,
-    coreFlag=FMOD.FMOD_INIT_NORMAL,
-}
-if not FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Master.strings.bank") then
-    MSG.new('warn',"Strings bank file load failed")
-end
-FMOD.registerMusic((function()
-    if not love.filesystem.getInfo("soundbank/Master.bank") then
-        MSG.new('warn',"Music bank not found")
-        return {}
-    end
-    local bankMusic=FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Master.bank")
-    if not bankMusic then
-        MSG.new('warn',"Music bank file load failed")
-        return {}
-    end
-    local L={}
-    local l,c=bankMusic:getEventList(bankMusic:getEventCount())
-    for i=1,c do
-        local path=l[i-1]:getPath()
-        if path then
-        local name=path:match("/([^/]+)$"):lower()
-        L[name]=path
-        end
-    end
-    return L
-end)())
-FMOD.registerEffect((function()
-    if not love.filesystem.getInfo("soundbank/Effect.bank") then
-        MSG.new('warn',"Effect bank not found")
-        return {}
-    end
-    local bankEffect=FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Effect.bank")
-    if not bankEffect then
-        MSG.new('warn',"Effect bank file load failed")
-        return {}
-    end
-    local L={}
-    local l,c=bankEffect:getEventList(bankEffect:getEventCount())
-    for i=1,c do
-        local path=l[i-1]:getPath()
-        if path then
-        local name=path:match("/([^/]+)$"):lower()
-        L[name]=path
-        end
-    end
-    return L
-end)())
--- Hijack the original SFX module, use FMOD instead
-SFX[('play')]=function(name,vol,pos,tune)
-    FMOD.effect.play(name,{
-        volume=vol,
-        tune=tune,
-    })
-end
-DEBUG.checkLoadTime("Load FMod and Bank")
 --------------------------------------------------------------
 DEBUG.logLoadTime()

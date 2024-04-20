@@ -6,7 +6,7 @@ function sureCheck(event)
     end
 end
 
-local _bgmPlaying ---@type string
+local _bgmPlaying ---@type string?
 ---@param full? boolean
 ---@param noProgress? boolean
 function playBgm(name,full,noProgress)
@@ -21,6 +21,10 @@ function playBgm(name,full,noProgress)
 end
 function getBgm()
     return _bgmPlaying
+end
+function stopBgm(instant)
+    FMOD.music.stop(instant)
+    _bgmPlaying=nil
 end
 function playSample(...)
     local l={...}

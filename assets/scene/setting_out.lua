@@ -74,6 +74,14 @@ scene.widgetList={
     {name='2',type='slider_fill',pos={0,0},x=340, y=380,w=650, fontSize=40,text=LANG'setting_sfx',     widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'sfxVol'),  code=TABLE.func_setVal(SETTINGS.system,'sfxVol')},
     {name='2',type='slider_fill',pos={0,0},x=340, y=460,w=650, fontSize=40,text=LANG'setting_vib',     widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'vibVol'),  code=TABLE.func_setVal(SETTINGS.system,'vibVol')},
     {name='2',type='switch',     pos={0,0},x=390, y=540,h=45,  fontSize=40,text=LANG'setting_autoMute',widthLimit=550,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'autoMute'), code=TABLE.func_revVal(SETTINGS.system,'autoMute')},
+    {name='2',type='slider',     pos={0,0},x=340, y=660,w=260, fontSize=30,text=LANG'setting_fmod_maxChannel',      widthLimit=260, axis={4,8,1}, valueShow=function(S) return 2^S.disp() end, disp=function() return MATH.roundLog(SETTINGS.system.fmod_maxChannel,2)      end, code=function(v) SETTINGS.system.fmod_maxChannel=2^v      end},
+    {name='2',type='slider',     pos={0,0},x=340, y=730,w=390, fontSize=30,text=LANG'setting_fmod_DSPBufferCount',  widthLimit=260, axis={2,8,1},                                              disp=TABLE.func_getVal(SETTINGS.system,'fmod_DSPBufferCount'),                    code=TABLE.func_setVal(SETTINGS.system,'fmod_DSPBufferCount')},
+    {name='2',type='slider',     pos={0,0},x=340, y=800,w=650, fontSize=30,text=LANG'setting_fmod_DSPBufferLength', widthLimit=260, axis={3,16,1},valueShow=function(S) return 2^S.disp() end, disp=function() return MATH.roundLog(SETTINGS.system.fmod_DSPBufferLength,2) end, code=function(v) SETTINGS.system.fmod_DSPBufferLength=2^v end},
+    {name='2',type='button',     pos={0,0},x=400, y=870,w=140, h=60,fontSize=30,text=LANG'setting_apply', code=function()
+        FMODLoadFunc()
+        debug.setupvalue(getBgm,1,nil)
+        PROGRESS.playExteriorBGM()
+    end},
 
     -- Video
     {name='3',type='slider_fill',pos={0,0},x=340, y=220,w=500,h=30,text=LANG'setting_hitWavePower',widthLimit=260,axis={0,1},                   disp=TABLE.func_getVal(SETTINGS.system,'hitWavePower'),                       code=TABLE.func_setVal(SETTINGS.system,'hitWavePower')},
