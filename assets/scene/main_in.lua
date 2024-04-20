@@ -1,4 +1,4 @@
-local consoleClickCount=0
+local consoleClickCount
 local settingHint
 
 local scene={}
@@ -95,7 +95,7 @@ scene.widgetList={
         else
             consoleClickCount=consoleClickCount+1
             FMOD.effect('move_failed')
-            FMOD.effect('suffocate',{tune=consoleClickCount-5.626})
+            FMOD.effect('suffocate',{tune=consoleClickCount-6.26})
             if consoleClickCount==6 then
                 consoleClickCount=0
                 SCN.go('_console')
