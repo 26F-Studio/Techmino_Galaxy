@@ -100,6 +100,7 @@ end
 
 --------------------------
 
+---@type table|fun(name:string, args:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:table<number,number>, param?:table}):FMOD.Studio.EventInstance?
 M.music={}
 
 ---@param v number
@@ -210,8 +211,12 @@ function M.music.getPlaying()
     return playing.event
 end
 
+local playMusic=M.music.play
+setmetatable(M.music,{__call=function(_,...) playMusic(...) end})
+
 --------------------------
 
+---@type table|fun(name:string, args:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:table<number,number>, param?:table}):FMOD.Studio.EventInstance?
 M.effect={}
 
 ---@param v number
@@ -308,6 +313,9 @@ function M.effect.stop(name,instant)
         l[i-1]:stop(instant and M.FMOD_STUDIO_STOP_IMMEDIATE or M.FMOD_STUDIO_STOP_ALLOWFADEOUT)
     end
 end
+
+local playEffect=M.effect.play
+setmetatable(M.effect,{__call=function(_,...) playEffect(...) end})
 
 --------------------------
 

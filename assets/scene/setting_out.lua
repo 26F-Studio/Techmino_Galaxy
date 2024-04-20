@@ -79,8 +79,10 @@ scene.widgetList={
     {name='2',type='slider',     pos={0,0},x=340, y=800,w=650, fontSize=30,text=LANG'setting_fmod_DSPBufferLength', widthLimit=260, axis={3,16,1},valueShow=function(S) return 2^S.disp() end, disp=function() return MATH.roundLog(SETTINGS.system.fmod_DSPBufferLength,2) end, code=function(v) SETTINGS.system.fmod_DSPBufferLength=2^v end},
     {name='2',type='button',     pos={0,0},x=400, y=870,w=140, h=60,fontSize=30,text=LANG'setting_apply', code=function()
         FMODLoadFunc()
-        debug.setupvalue(getBgm,1,nil)
+        FMOD.setMainVolume(SETTINGS.system.mainVol,true)
+        stopBgm()
         PROGRESS.playExteriorBGM()
+        FMOD.effect.play('beep_notice')
     end},
 
     -- Video
