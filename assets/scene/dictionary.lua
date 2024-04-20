@@ -510,7 +510,7 @@ scene.widgetList={
     linkButton,
     {type='button',pos={.5,.5},x=mainX+mainW+70,y=-310,w=80,h=80,sound_trigger=false,lineWidth=4,fontSize=60,text=CHAR.icon.cross_big,code=close},
     {
-        type='button',pos={.5,.5},x=mainX+mainW+70,y=320,w=80,h=80,sound_trigger='move',lineWidth=4,fontSize=50,text="写",
+        type='button',pos={.5,.5},x=mainX+mainW+70,y=320,w=80,h=80,sound_trigger='button_soft',lineWidth=4,fontSize=50,text="写",
         code=WIDGET.c_goScn('zeta_input_method','none'),
         visibleFunc=function() return SETTINGS._system.locale=='zh' end,
     },
