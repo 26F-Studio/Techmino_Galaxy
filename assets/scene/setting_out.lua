@@ -22,7 +22,6 @@ function scene.enter()
         scene.widgetList["3f"]:setVisible(not MOBILE)
         scene.widgetList["3p"]:setVisible(MOBILE)
     end
-    scene.widgetList.test:setVisible(not GAME.mode)
     WIDGET._reset()
     BG.set('none')
 end
@@ -78,6 +77,7 @@ scene.widgetList={
     {name='2',type='slider',     pos={0,0},x=340, y=730,w=390, fontSize=30,text=LANG'setting_fmod_DSPBufferCount',  widthLimit=260, axis={2,8,1},                                              disp=TABLE.func_getVal(SETTINGS.system,'fmod_DSPBufferCount'),                    code=TABLE.func_setVal(SETTINGS.system,'fmod_DSPBufferCount')},
     {name='2',type='slider',     pos={0,0},x=340, y=800,w=650, fontSize=30,text=LANG'setting_fmod_DSPBufferLength', widthLimit=260, axis={3,16,1},valueShow=function(S) return 2^S.disp() end, disp=function() return MATH.roundLog(SETTINGS.system.fmod_DSPBufferLength,2) end, code=function(v) SETTINGS.system.fmod_DSPBufferLength=2^v end},
     {name='2',type='button',     pos={0,0},x=400, y=870,w=140, h=60,fontSize=30,text=LANG'setting_apply', code=function()
+        if GAME.mode then return MSG.new('warn',Text.setting_tryApplyAudioInGame) end
         FMODLoadFunc()
         FMOD.setMainVolume(SETTINGS.system.mainVol,true)
         stopBgm()
@@ -101,6 +101,11 @@ scene.widgetList={
     -- Gameplay
     -- ?
 
-    {name='test',type='button', pos={1,1},x=-300,y=-80,w=160, h=80,cornerR=10, fontSize=40,text=LANG'setting_test',code=playExterior'mino/exterior/test',visibleFunc=function() return not GAME.mode end},
+    {name='test',type='button', pos={1,1},x=-300,y=-80,w=160, h=80,cornerR=10, fontSize=40,text=LANG'setting_test',
+        code=function()
+            if GAME.mode then return MSG.new('warn',Text.setting_tryTestInGame) end
+            playExterior('mino/exterior/test')()
+        end,
+    },
 }
 return scene

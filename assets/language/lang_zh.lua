@@ -86,6 +86,8 @@ return {
     setting_enableTouching="启用触屏控制",
     setting_touching="触屏控制...",
     setting_test="测试",
+    setting_tryTestInGame="不能在游戏中途测试",
+    setting_tryApplyAudioInGame="不能在游戏中途应用",
 
     setting_sysCursor="使用外部光标",
     setting_clickFX="点击动画",

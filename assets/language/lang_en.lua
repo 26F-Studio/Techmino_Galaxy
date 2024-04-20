@@ -86,6 +86,8 @@ return {
     setting_enableTouching="Enable touch control",
     setting_touching="Touch controls…",
     setting_test="Test",
+    setting_tryTestInGame="Cannot test during game",
+    setting_tryApplyAudioInGame="Cannot apply during game",
 
     setting_sysCursor="External cursor",
     setting_clickFX="Click FX",
