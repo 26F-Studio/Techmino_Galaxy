@@ -100,7 +100,7 @@ end
 
 --------------------------
 
----@type table|fun(name:string, args:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:table<number,number>, param?:table}):FMOD.Studio.EventInstance?
+---@type table|fun(name:string, args?:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:table<number,number>, param?:table}):FMOD.Studio.EventInstance?
 M.music={}
 
 ---@param v number
@@ -216,7 +216,7 @@ setmetatable(M.music,{__call=function(_,...) playMusic(...) end})
 
 --------------------------
 
----@type table|fun(name:string, args:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:table<number,number>, param?:table}):FMOD.Studio.EventInstance?
+---@type table|fun(name:string, args?:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:table<number,number>, param?:table}):FMOD.Studio.EventInstance?
 M.effect={}
 
 ---@param v number

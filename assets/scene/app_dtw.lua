@@ -212,7 +212,7 @@ local function touch(n)
         t=t:sub(1,p-1)..t:sub(p+1)
         if #t>0 then
             pos[1]=tonumber(t)
-            FMOD.effect.play('lock')
+            FMOD.effect('lock')
         else
             rem(pos,1)
             while #pos<7 do generator[mode]() end
@@ -227,19 +227,19 @@ local function touch(n)
                     end
                     time=love.timer.getTime()-startTime
                     state=2
-                    FMOD.effect.play('win')
+                    FMOD.effect('win')
                 else
-                    FMOD.effect.play('reach',{volume=.5})
+                    FMOD.effect('reach',{volume=.5})
                 end
             end
             height=height+120
-            FMOD.effect.play('lock')
+            FMOD.effect('lock')
         end
     else
         time=love.timer.getTime()-startTime
         state=2
         diePos=n
-        FMOD.effect.play('clear_2')
+        FMOD.effect('clear_2')
     end
 end
 function scene.keyDown(key,isRep)
@@ -289,7 +289,7 @@ function scene.update(dt)
             rollSpeed=rollSpeed+.00355
             if height<-120 then
                 state=2
-                FMOD.effect.play('clear_2')
+                FMOD.effect('clear_2')
             end
         else
             height=height*.6

@@ -50,11 +50,11 @@ local function tapBoard(x,y)
             if board[x]==progress+1 then
                 progress=progress+1
                 if progress<R^2 then
-                    FMOD.effect.play('lock')
+                    FMOD.effect('lock')
                 else
                     time=love.timer.getTime()-startTime+mistake
                     state=2
-                    FMOD.effect.play('reach')
+                    FMOD.effect('reach')
                 end
                 if tapFX then
                     SYSFX.newShade(3,320+640/R*X,40+640/R*Y,640/R,640/R,.6,.8,1)
@@ -64,7 +64,7 @@ local function tapBoard(x,y)
                 if tapFX then
                     SYSFX.newShade(2,320+640/R*X,40+640/R*Y,640/R,640/R,1,.4,.5)
                 end
-                FMOD.effect.play('finesseError')
+                FMOD.effect('finesseError')
             end
         end
     end

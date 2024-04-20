@@ -73,7 +73,7 @@ function stack.switch(P)
         P.settings.dropDelay,P.settings.lockDelay=1e99,1e99
 
         P.particles.boardSmoke:start()
-        FMOD.effect.play('music_highcut')
+        FMOD.effect('music_highcut')
     else
         if md.stack_lines>0 then
             P:say{

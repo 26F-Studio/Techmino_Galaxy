@@ -82,7 +82,7 @@ scene.widgetList={
         FMOD.setMainVolume(SETTINGS.system.mainVol,true)
         stopBgm()
         PROGRESS.playExteriorBGM()
-        FMOD.effect.play('beep_notice')
+        FMOD.effect('beep_notice')
     end},
 
     -- Video

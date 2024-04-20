@@ -40,18 +40,18 @@ local defaultSoundFunc={
             playSample('sine',{'A2',2.2-num/5},{'E3',2.2-num/5})
         end
     end,
-    move=           function() FMOD.effect.play('move')           end,
-    move_down=      function() FMOD.effect.play('move_down')      end,
-    move_failed=    function() FMOD.effect.play('move_failed')    end,
-    rotate=         function() FMOD.effect.play('rotate')         end,
-    rotate_init=    function() FMOD.effect.play('rotate_init')    end,
-    rotate_failed=  function() FMOD.effect.play('rotate_failed')  end,
-    rotate_special= function() FMOD.effect.play('rotate_special') end,
-    touch=          function() FMOD.effect.play('touch')          end,
-    drop=           function() FMOD.effect.play('drop')           end,
-    lock=           function() FMOD.effect.play('lock')           end,
+    move=           function() FMOD.effect('move')           end,
+    move_down=      function() FMOD.effect('move_down')      end,
+    move_failed=    function() FMOD.effect('move_failed')    end,
+    rotate=         function() FMOD.effect('rotate')         end,
+    rotate_init=    function() FMOD.effect('rotate_init')    end,
+    rotate_failed=  function() FMOD.effect('rotate_failed')  end,
+    rotate_special= function() FMOD.effect('rotate_special') end,
+    touch=          function() FMOD.effect('touch')          end,
+    drop=           function() FMOD.effect('drop')           end,
+    lock=           function() FMOD.effect('lock')           end,
     clear=function(lines)
-        FMOD.effect.play(
+        FMOD.effect(
             lines==1 and 'clear_1' or
             lines==2 and 'clear_2' or
             lines==3 and 'clear_3' or
@@ -92,14 +92,14 @@ local defaultSoundFunc={
             playSample('square',{57+phase,1-(phase/12)^2,400-10*chain,700+20*chain}) -- A5+
         end
     end,__metatable=true}),
-    frenzy=      function() FMOD.effect.play('frenzy')      end,
-    allClear=    function() FMOD.effect.play('clear_all')   end,
-    suffocate=   function() FMOD.effect.play('suffocate')   end,
-    desuffocate= function() FMOD.effect.play('desuffocate') end,
-    reach=       function() FMOD.effect.play('beep_rise')   end,
-    notice=      function() FMOD.effect.play('beep_notice') end,
-    win=         function() FMOD.effect.play('win')         end,
-    fail=        function() FMOD.effect.play('fail')        end,
+    frenzy=      function() FMOD.effect('frenzy')      end,
+    allClear=    function() FMOD.effect('clear_all')   end,
+    suffocate=   function() FMOD.effect('suffocate')   end,
+    desuffocate= function() FMOD.effect('desuffocate') end,
+    reach=       function() FMOD.effect('beep_rise')   end,
+    notice=      function() FMOD.effect('beep_notice') end,
+    win=         function() FMOD.effect('win')         end,
+    fail=        function() FMOD.effect('fail')        end,
 }
 PP.scriptCmd={
 }

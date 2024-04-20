@@ -200,8 +200,8 @@ local function tap(x,y)
                 -- Check win
                 if field.remain==0 then
                     if noComboBreak then
-                        FMOD.effect.play('emit')
-                        FMOD.effect.play('clear_4')
+                        FMOD.effect('emit')
+                        FMOD.effect('clear_4')
                         TEXT:add("FULL COMBO",640,360,100,'beat',.626)
                         comboTime=comboTime+3
                         score=floor(score*1.1)
@@ -214,13 +214,13 @@ local function tap(x,y)
                     level=level+1
                     if levels[level] then
                         resetBoard()
-                        FMOD.effect.play('reach')
+                        FMOD.effect('reach')
                     else
                         state=2
-                        FMOD.effect.play('win')
+                        FMOD.effect('win')
                     end
                 else
-                    FMOD.effect.play(
+                    FMOD.effect(
                         combo<50 and 'clear_1' or
                         combo<100 and 'clear_2' or
                         'clear_3',.8
@@ -229,12 +229,12 @@ local function tap(x,y)
                 selX,selY=false,false
             else
                 selX,selY=x,y
-                FMOD.effect.play('lock',{volume=.9})
+                FMOD.effect('lock',{volume=.9})
             end
         else
             if field[y][x] and (x~=selX or y~=selY) then
                 selX,selY=x,y
-                FMOD.effect.play('lock',{volume=.8})
+                FMOD.effect('lock',{volume=.8})
             end
         end
     end

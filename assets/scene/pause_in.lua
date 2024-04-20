@@ -59,8 +59,8 @@ scene.widgetList={
             if PROGRESS.get('main')<=2 or isCtrlPressed() then
                 sysAction('setting')
             else
-                FMOD.effect.play('move_failed')
-                FMOD.effect.play('suffocate',{tune=MATH.rand(-6,2)})
+                FMOD.effect('move_failed')
+                FMOD.effect('suffocate',{tune=MATH.rand(-6,2)})
             end
         end,
     },

@@ -37,9 +37,9 @@ local function hurt(i)
         speed=speed*.5
         moveDir=0
         score=floor(score)
-        FMOD.effect.play('clear_4')
+        FMOD.effect('clear_4')
     else
-        FMOD.effect.play('clear_2')
+        FMOD.effect('clear_2')
     end
 end
 
@@ -185,7 +185,7 @@ function scene.update(dt)
                 speed=speed+.2
             end
             level=level+1
-            FMOD.effect.play('warn_1')
+            FMOD.effect('warn_1')
         end
         sunH=sunH+.01
     elseif menu==1 then

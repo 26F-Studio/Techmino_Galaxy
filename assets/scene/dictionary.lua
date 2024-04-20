@@ -57,7 +57,7 @@ local enDict=FILE.load('assets/language/dict_en.lua','-lua -canskip')
 local listBox,inputBox,linkButton,copyButton
 local function close()
     quiting=true
-    FMOD.effect.play('dict_close')
+    FMOD.effect('dict_close')
 end
 local function selectItem(item)
     selected=item
@@ -95,12 +95,12 @@ end
 local function openLink()
     if selected.link then
         love.system.openURL(selected.link)
-        FMOD.effect.play('dict_link')
+        FMOD.effect('dict_link')
     end
 end
 local function copyText()
     love.system.setClipboardText(("%s:\n%s\n==Techmino Dict==\n"):format(selected.titleFull,selected.content))
-    FMOD.effect.play('dict_copy')
+    FMOD.effect('dict_copy')
     copyButton:setVisible(false)
 end
 local function freshWidgetPos()
@@ -258,7 +258,7 @@ function scene.enter()
     aboveScene=SCN.scenes[SCN.stack[#SCN.stack-1]] or NONE
     searchTimer,lastSearchText=0,''
     inputBox._value=''
-    FMOD.effect.play('dict_open')
+    FMOD.effect('dict_open')
     freshWidgetPos()
 
     selectItem(false)
@@ -341,7 +341,7 @@ function scene.keyDown(key,isRep)
             local sel=listBox:getItem()
             listBox:arrowKey(key)
             if listBox:getItem()~=sel then
-                FMOD.effect.play(listBox.sound_select)
+                FMOD.effect(listBox.sound_select)
             end
         end
     elseif act=='help' or act=='back' then
@@ -364,7 +364,7 @@ function scene.keyDown(key,isRep)
         if act=='select' then
             if selected~=listBox:getItem() and listBox:getItem() then
                 listBox.code()
-                FMOD.effect.play(listBox.sound_click)
+                FMOD.effect(listBox.sound_click)
             end
         elseif key=='home' then
             listBox:scroll(-1e99)

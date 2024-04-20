@@ -124,7 +124,7 @@ end
 function player:click(y,x)
     if y==1 and x==1 then
         self.nexts[1],self.hold=self.hold,self.nexts[1]
-        FMOD.effect.play('hold')
+        FMOD.effect('hold')
         if not self.nexts[1] then
             rem(self.nexts,1)
             ins(self.nexts,self:newTile())
@@ -144,13 +144,13 @@ function player:click(y,x)
 
         if self.nexts[1]==-2 then
             self.board[y][x]=0
-            FMOD.effect.play('clear_2')
+            FMOD.effect('clear_2')
             rem(self.nexts,1)
             ins(self.nexts,self:newTile())
             newMergeFX(y,x,-2)
         else
             self.board[y][x]=rem(self.nexts,1)
-            FMOD.effect.play('touch')
+            FMOD.effect('touch')
 
             local cur,merged
             repeat
@@ -168,7 +168,7 @@ function player:click(y,x)
                         if self.maxTile>=6 then
                             ins(self.progress,("%s - %.3fs"):format(self.maxTile,love.timer.getTime()-player.startTime))
                         end
-                        FMOD.effect.play('reach')
+                        FMOD.effect('reach')
                     end
 
                     local getScore=4^cur*count
@@ -185,9 +185,9 @@ function player:click(y,x)
             self.selectX,self.selectY=false,false
 
             if merged then
-                FMOD.effect.play('lock')
+                FMOD.effect('lock')
                 if cur>=4 then
-                    FMOD.effect.play(
+                    FMOD.effect(
                         cur>=8 and 'ren_mega' or
                         cur>=7 and 'spin_3' or
                         cur>=6 and 'spin_2' or
@@ -202,7 +202,7 @@ function player:click(y,x)
                     end
                 end
                 self.state=2
-                FMOD.effect.play('fail')
+                FMOD.effect('fail')
             end
         end
     else

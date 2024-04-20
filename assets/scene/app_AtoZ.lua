@@ -57,18 +57,18 @@ function scene.keyDown(key,isRep)
                     style='score',
                     duration=.4,
                 }
-                FMOD.effect.play('touch')
+                FMOD.effect('touch')
                 if progress==2 then
                     state=1
                     startTime=love.timer.getTime()
                 elseif progress>#targetString then
                     time=love.timer.getTime()-startTime
                     state=2
-                    FMOD.effect.play('reach')
+                    FMOD.effect('reach')
                 end
             elseif progress>1 then
                 mistake=mistake+1
-                FMOD.effect.play('finesseError')
+                FMOD.effect('finesseError')
             end
         end
     elseif key=='left' or key=='right' then

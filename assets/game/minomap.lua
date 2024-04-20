@@ -260,7 +260,7 @@ end
 local function _selectMode(m)
     selected=m
     if m then
-        FMOD.effect.play('map_select')
+        FMOD.effect('map_select')
     end
 end
 local function _enterMode(m)
@@ -268,7 +268,7 @@ local function _enterMode(m)
         if love.filesystem.getInfo('assets/game/mode/mino/exterior/'..m.name..'.lua') then
             enterFX.timer=0
             enterFX.x,enterFX.y,enterFX.r=m.x,m.y,m.r
-            FMOD.effect.play('map_enter')
+            FMOD.effect('map_enter')
             SCN.go('game_out','fade','mino/exterior/'..m.name)
         else
             MSG.new('warn',"Mode file not exist")
@@ -343,7 +343,7 @@ function map:update(dt)
                 cam.x0,cam.y0=-a.x,-a.y
                 cam.k0,cam.a0=1,0
                 if TASK.lock('minomap_unlockSound',.26) then
-                    FMOD.effect.play(a.sound)
+                    FMOD.effect(a.sound)
                 end
             end
         else

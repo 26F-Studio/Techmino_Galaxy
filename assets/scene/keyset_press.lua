@@ -25,13 +25,13 @@ function scene.keyDown(key,isRep)
         local L=KEYMAP[mode]:getKeys(act)
         if L then TABLE.cut(L) end
         result=Text.keyset_deleted
-        FMOD.effect.play('beep_down')
+        FMOD.effect('beep_down')
     else
         escTimerWTF=false
         result=key
         KEYMAP[mode]:remKey(key)
         KEYMAP[mode]:addKey(act,key)
-        FMOD.effect.play('beep_rise')
+        FMOD.effect('beep_rise')
     end
 end
 

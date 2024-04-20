@@ -51,7 +51,7 @@ function scene.keyDown(key,isRep)
             if input==showNum then
                 level=level+1
                 freshLevel()
-                FMOD.effect.play('reach')
+                FMOD.effect('reach')
             end
         elseif key=='space' or key=='backspace' then
             input=""
@@ -68,7 +68,7 @@ function scene.update(dt)
             if inputTime<=0 then
                 inputTime=0
                 state=1
-                FMOD.effect.play('finesseError_long',{volume=.6})
+                FMOD.effect('finesseError_long',{volume=.6})
             end
         end
     end

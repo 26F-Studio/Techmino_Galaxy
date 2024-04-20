@@ -397,7 +397,7 @@ function PROGRESS.setModeState(style,name,state,force)
         PROGRESS.save()
         if state==0 and state>orgState then
             if TASK.lock('minomap_unlockSound_background',2.6) then
-                FMOD.effect.play('map_unlock_background')
+                FMOD.effect('map_unlock_background')
                 MSG.new('check',Text.new_level_unlocked,2.6)
             end
         end

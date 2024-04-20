@@ -50,7 +50,7 @@ function scene.keyDown(key,isRep)
                     move.x=move.x-10
                 end
             end
-            FMOD.effect.play('hold')
+            FMOD.effect('hold')
             state='drop'
         elseif state=='dead' then
             move.x,move.y,move.l=1e99,0,0
@@ -77,7 +77,7 @@ function scene.update()
     if state=='move' then
         move.x=move.x+speed
         if speed<0 and move.x<=0 or speed>0 and move.x+move.l>=1280 then
-            FMOD.effect.play('lock')
+            FMOD.effect('lock')
             speed=-speed
         end
     elseif state=='drop' then
@@ -88,9 +88,9 @@ function scene.update()
                 state='die'
             else
                 move.y=660
-                FMOD.effect.play('clear_1')
+                FMOD.effect('clear_1')
                 if floor>0 and move.x==base.x then
-                    FMOD.effect.play('ren_mega')
+                    FMOD.effect('ren_mega')
                 end
                 state='shorten'
             end
