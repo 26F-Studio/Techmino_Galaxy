@@ -219,23 +219,28 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
     if not FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Master.strings.bank") then
         MSG.new('warn',"Strings bank file load failed")
     end
+    if not FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Master.bank") then
+        MSG.new('warn',"Master bank file load failed")
+    end
     FMOD.registerMusic((function()
         if not love.filesystem.getInfo("soundbank/Master.bank") then
             MSG.new('warn',"Music bank not found")
             return {}
         end
-        local bankMusic=FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Master.bank")
-        if not bankMusic then
-            MSG.new('warn',"Music bank file load failed")
-            return {}
-        end
         local L={}
+        for _,bankName in next,{"Music_Beepbox","Music_FL","Music_Community","Music_Extra"} do
+            local bankMusic=FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/"..bankName..".bank")
+            if not bankMusic then
+                MSG.new('warn',"bank "..bankName.." load failed")
+            else
         local l,c=bankMusic:getEventList(bankMusic:getEventCount())
         for i=1,c do
             local path=l[i-1]:getPath()
             if path then
                 local name=path:match("/([^/]+)$"):lower()
                 L[name]=path
+                    end
+                end
             end
         end
         return L
@@ -275,7 +280,7 @@ SFX[('play')]=function(name,vol,pos,tune)
         tune=tune,
     })
 end
-DEBUG.checkLoadTime("Load Zenitha resources and things relevant to Fmod")
+DEBUG.checkLoadTime("Config Zenitha and Fmod")
 --------------------------------------------------------------
 -- Load saving data
 TABLE.coverR(FILE.load('conf/settings','-json -canskip') or {},SETTINGS)
