@@ -819,7 +819,7 @@ function MP:ifoverlap(CB,cx,cy)
 
     -- Special check
     for i=1,#self.event.extraSolidCheck do
-        local res=self.event.extraSolidCheck[i](self,CB,cx,cy)
+        local res=self.event.extraSolidCheck[i][2](self,CB,cx,cy)
         if res~=nil then return res end
     end
 
