@@ -1331,7 +1331,7 @@ function PP.new()
     }
     self.soundEvent=setmetatable({},soundEventMeta)
 
-    mechLib.puyo.statistics.event_playerInit(self)
+    mechLib.puyo.statistics.event_playerInit[2](self)
 
     return self
 end
