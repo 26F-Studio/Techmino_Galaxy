@@ -3,11 +3,12 @@ local floor=math.floor
 
 local scene={}
 
-local pauseText
+local pauseText,textScale
 
 function scene.enter()
     PROGRESS.setExteriorBG()
     pauseText=GC.newText(FONT.get(80,'bold'),Text.pause)
+    textScale=math.min(500/pauseText:getWidth(),226/pauseText:getHeight(),2)
 end
 function scene.leave()
     SCN.scenes['game_out'].leave()
@@ -52,7 +53,7 @@ function scene.draw()
     if SETTINGS.system.touchControl then VCTRL.draw() end
 
     GC.replaceTransform(SCR.xOy_m)
-    GC.scale(2)
+    GC.scale(textScale)
     GC.setColor(COLOR.L)
 
     local t=love.timer.getTime()
