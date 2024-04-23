@@ -86,7 +86,7 @@ return {
     },
     ['reminiscence']={
         author="MrZ",
-        message="Nitrome games is fun!",
+        message="Nitrome games are fun!",
     },
     ['secret7th']={
         author="MrZ",
@@ -207,6 +207,9 @@ return {
     },
     ['malate']={
         author="ZUN & C₂₉H₂₅N₃O₅",
+    },
+    ['shibamata']={
+        author="C₂₉H₂₅N₃O₅",
     },
     ['race remix']={
         author="柒栎流星",
