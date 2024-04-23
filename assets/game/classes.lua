@@ -100,6 +100,8 @@
 ---@field visStep? number
 ---@field visMax? number
 
+---@alias Techmino.RectPiece (Techmino.Cell|false)[][]
+
 ---@class Techmino.RectField
 ---@field _width number
 ---@field _matrix (Techmino.Cell|false)[][]

@@ -46,29 +46,7 @@ local GP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=tr
 --------------------------------------------------------------
 -- Function tables
 local defaultSoundFunc={
-    countDown=function(num)
-        if num==0 then -- 6, 3+6+6
-            playSample('sine',{'A3',.8})
-            playSample('square',{'A4',.9},{'E5',.9},{'A5',.9})
-        elseif num==1 then -- 5, 3+7
-            playSample('sine',{'G3',.9})
-            playSample('square',{'B4',.9},{'E5',.9})
-        elseif num==2 then -- 4, 6+2
-            playSample('sine',{'F3'})
-            playSample('square',{'A4',.8},{'D5',.8})
-        elseif num==3 then -- 6+6
-            playSample('sine',{'A3',.9},{'E4',.9})
-            playSample('square',{'A4',.8})
-        elseif num==4 then -- 5+7, 5
-            playSample('sine',{'G3',.9},{'B3',.9})
-            playSample('square',{'G4',.6})
-        elseif num==5 then -- 4+6, 4
-            playSample('sine',{'F3',.8},{'A3',.8})
-            playSample('square',{'F4',.3})
-        elseif num<=10 then
-            playSample('sine',{'A2',2.2-num/5},{'E3',2.2-num/5})
-        end
-    end,
+    countDown=      countDownSound,
     move=           function() FMOD.effect('move')          end,
     move_failed=    function() FMOD.effect('move_failed')   end,
     swap=           function() FMOD.effect('rotate')        end,
@@ -790,7 +768,6 @@ function GP:render()
                     skin.drawFieldCell(C,F,(x-1)*40+2,-y*40+2)
                 end
             end end
-            skin.drawFieldCell(self.field)
 
             self:triggerEvent('drawInField') -- From frame's bottom-left, 40px a cell
 

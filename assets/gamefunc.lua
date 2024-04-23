@@ -50,6 +50,62 @@ function playSample(...)
         end
     end
 end
+function countDownSound(num)
+    if num==0 then -- 6, 3+6+6
+        playSample('sine',{'A3',.8})
+        playSample('square',{'A4',.9},{'E5',.9},{'A5',.9})
+    elseif num==1 then -- 5, 3+7
+        playSample('sine',{'G3',.9})
+        playSample('square',{'B4',.9},{'E5',.9})
+    elseif num==2 then -- 4, 6+2
+        playSample('sine',{'F3'})
+        playSample('square',{'A4',.8},{'D5',.8})
+    elseif num==3 then -- 6+6
+        playSample('sine',{'A3',.9},{'E4',.9})
+        playSample('square',{'A4',.8})
+    elseif num==4 then -- 5+7, 5
+        playSample('sine',{'G3',.9},{'B3',.9})
+        playSample('square',{'G4',.6})
+    elseif num==5 then -- 4+6, 4
+        playSample('sine',{'F3',.8},{'A3',.8})
+        playSample('square',{'F4',.3})
+    elseif num<=10 then
+        playSample('sine',{'A2',2.2-num/5},{'E3',2.2-num/5})
+    end
+end
+comboSound=setmetatable({
+    function() playSample('sine',{'A2',.70,420}) end, -- 1
+    function() playSample('sine',{'C3',.75,410}) end, -- 2
+    function() playSample('sine',{'D3',.80,400}) end, -- 3
+    function() playSample('sine',{'E3',.85,390}) end, -- 4
+    function() playSample('sine',{'G3',.90,380}) end, -- 5
+    function() playSample('sine',{'A3',.90,370},'square',{'A2',.20,420,620}) end, -- 6
+    function() playSample('sine',{'C4',.75,360},'square',{'C3',.40,400,620}) end, -- 7
+    function() playSample('sine',{'D4',.60,350},'square',{'D3',.60,380,620}) end, -- 8
+    function() playSample('sine',{'E4',.40,340},'square',{'E3',.75,360,620}) end, -- 9
+    function() playSample('sine',{'G4',.20,330},'square',{'G3',.90,340,620}) end, -- 10
+    function() playSample('sine',{'A4',.20,320},'square',{'A3',.85,320,620}) end, -- 11
+    function() playSample('sine',{'A4',.40,310},'square',{'C4',.80,300,620}) end, -- 12
+    function() playSample('sine',{'A4',.60,300},'square',{'D4',.75,280,620}) end, -- 13
+    function() playSample('sine',{'A4',.75,290},'square',{'E4',.70,270,620}) end, -- 14
+    function() playSample('sine',{'A4',.90,280},'square',{'G4',.65,260,640}) end, -- 15
+    function() playSample('sine',{'A4',.90,270},{'E5',.70},'square',{'A4',1,250,660}) end, -- 16
+    function() playSample('sine',{'A4',.85,260},{'E5',.75},'square',{'C5',1,240,680}) end, -- 17
+    function() playSample('sine',{'A4',.80,250},{'E5',.80},'square',{'D5',1,230,700}) end, -- 18
+    function() playSample('sine',{'A4',.75,240},{'E5',.85},'square',{'E5',1,220,720}) end, -- 19
+    function() playSample('sine',{'A4',.70,230},{'E5',.90},'square',{'G5',1,210,740}) end, -- 20
+},{__call=function(self,combo)
+    if self[combo] then
+        self[combo]()
+    else
+        playSample('sine',{'A4',.626-.01*combo,430-10*combo})
+        local phase=(combo-21)%12
+        playSample('square',{40+phase,1-((11-phase)/12)^2,400-10*combo,700+20*combo}) -- E4+
+        playSample('square',{45+phase,1-((11-phase)/12)^2,400-10*combo,700+20*combo}) -- A4+
+        playSample('square',{52+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- E5+
+        playSample('square',{57+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- A5+
+    end
+end,__metatable=true})
 
 local interiorModeMeta={
     __call=function(self)

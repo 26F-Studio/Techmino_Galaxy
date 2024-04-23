@@ -9,24 +9,25 @@ local function _getTime() return SKIN.time end
 ---@field base string
 ---@field getTime function
 ---@field drawFieldBackground fun(fieldW:number)
----@field drawFieldBorder fun()
 ---@field drawFieldCell fun(C:Techmino.Cell, F:Techmino.RectField, x:number, y:number)
----@field drawFloatHold fun(n:number|string, B:table, handX:number, handY:number, unavailable:boolean)
----@field drawHeightLines fun(fieldW:number, maxSpawnH:number, spawnH,lockoutH:number, deathH:number, voidH:number)
+---@field drawGhostCell fun(C:Techmino.Cell, B:Techmino.RectPiece, x:number, y:number)
+---@field drawHandCellStroke fun(C:Techmino.Cell, B:Techmino.RectPiece, x:number, y:number)
+---@field drawHandCell fun(C:Techmino.Cell, B:Techmino.RectPiece, x:number, y:number)
+---@field drawFloatHoldCell fun(C:Techmino.Cell, unavailable:boolean, B:Techmino.RectPiece, x:number, y:number)
+---@field drawFloatHoldMark fun(n:number, unavailable:boolean)
+---@field drawHeightLines fun(fieldW:number, maxSpawnH:number, spawnH:number, lockoutH:number, deathH:number, voidH:number)
+---@field drawFieldBorder fun()
 ---@field drawAsdIndicator fun(dir:number , charge:number, asdMax:number, aspMax:number, ash:number)
 ---@field drawDelayIndicator fun(color:Zenitha.Color, value:number)
 ---@field drawGarbageBuffer fun(garbageBuffer:table)
 ---@field drawLockDelayIndicator fun(freshCondition:string, freshChance:number, maxFreshTime:number, freshTime:number)
----@field drawGhost fun(B:table, handX:number, ghostY:number)
----@field drawHandStroke fun(B:table, handX:number, handY:number)
----@field drawHand fun(B:table, handX:number, handY:number)
 ---@field drawNextBorder fun(slot:number)
----@field drawNext fun(n:number, B:table, unavailable:boolean)
+---@field drawNextCell fun(C:Techmino.Cell, unavailable:boolean, B:Techmino.RectPiece, x:number, y:number)
 ---@field drawHoldBorder fun(mode:string, slot:number)
----@field drawHold fun(n:number, B:table, unavailable:boolean)
+---@field drawHoldCell fun(C:Techmino.Cell, unavailable:boolean, B:Techmino.RectPiece, x:number, y:number)
 ---@field drawTime fun(time:number)
----@field drawInfoPanel fun(x:number, y:number, w:number, h:number)
 ---@field drawStartingCounter fun(readyDelay:number)
+---@field drawInfoPanel fun(x:number, y:number, w:number, h:number) Only called by mode
 
 ---@class Techmino.skin.mino: Techmino.skin
 

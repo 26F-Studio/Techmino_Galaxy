@@ -57,26 +57,20 @@ function S.drawFieldCell(C)
     gc_rectangle('fill',0,0,40,40)
 end
 
-function S.drawFloatHold(n,B,handX,handY,unavailable)
+function S.drawFloatHoldCell(C,unavailable,_,_,_)
     if unavailable then
         gc_setColor(.6,.6,.6,.25)
-        for y=1,#B do for x=1,#B[1] do
-            if B[y][x] then
-                gc_rectangle('fill',(handX+x-2)*40,-(handY+y-1)*40,40,40)
-            end
-        end end
     else
-        for y=1,#B do for x=1,#B[1] do
-            if B[y][x] then
-                local r,g,b=unpack(ColorTable[B[y][x].color])
-                gc_setColor(r,g,b,S.getTime()%150/200)
-                gc_rectangle('fill',(handX+x-2)*40,-(handY+y-1)*40,40,40)
-            end
-        end end
+        local r,g,b=unpack(ColorTable[C.color])
+        gc_setColor(r,g,b,S.getTime()%150/200)
     end
-    FONT.set(50)
+    gc_rectangle('fill',0,0,40,40)
+end
+
+function S.drawFloatHoldMark(n,unavailable)
     gc_setColor(unavailable and COLOR.DL or COLOR.L)
-    GC.mStr(n,(handX-1+#B[1]/2)*40,-(handY+#B/2)*40+5)
+    FONT.set(50)
+    GC.mStr(n,0,5)
 end
 
 function S.drawHeightLines(fieldW,maxSpawnH,spawnH,lockoutH,deathH,voidH)
@@ -159,33 +153,23 @@ function S.drawLockDelayIndicator(freshCondition,freshChance,timeRem)
     end
 end
 
-function S.drawGhost(B,handX,ghostY)
+function S.drawGhostCell()
     gc_setColor(1,1,1,.162)
-    for y=1,#B do for x=1,#B[1] do
-        if B[y][x] then
-            gc_rectangle('fill',(handX+x-2)*40,-(ghostY+y-1)*40,40,40)
-        end
-    end end
+    gc_rectangle('fill',0,0,40,40)
 end
 
 local strokeR=4
-function S.drawHandStroke(B,handX,handY)
+function S.drawHandCellStroke()
     gc_setColor(1,1,1)
-    for y=1,#B do for x=1,#B[1] do
-        if B[y][x] then
-            gc_rectangle('fill',(handX+x-2)*40-strokeR,-(handY+y-1)*40-strokeR,40+2*strokeR,40+2*strokeR)
-        end
-    end end
+    gc_rectangle('fill',-strokeR,-strokeR,40+2*strokeR,40+2*strokeR)
 end
 
-function S.drawHand(B,handX,handY)
-    for y=1,#B do for x=1,#B[1] do
-        if B[y][x] then
-            gc_setColor(ColorTable[B[y][x].color])
-            gc_rectangle('fill',(handX+x-2)*40,-(handY+y-1)*40,40,40)
-        end
-    end end
+function S.drawHandCell(C)
+    gc_setColor(ColorTable[C.color])
+    gc_rectangle('fill',0,0,40,40)
 end
+
+local unavailableColor={.6,.6,.6}
 
 function S.drawNextBorder(slot)
     gc_setColor(0,0,0,.26)
@@ -195,26 +179,9 @@ function S.drawNextBorder(slot)
     gc_rectangle('line',30,0,140,100*slot)
 end
 
-function S.drawNext(n,B,unavailable)
-    gc_push('transform')
-    gc_translate(100,100*n-50)
-    gc_scale(min(2.3/#B,3/#B[1],.86))
-    if unavailable then
-        gc_setColor(.6,.6,.6)
-        for y=1,#B do for x=1,#B[1] do
-            if B[y][x] then
-                gc_rectangle('fill',(x-#B[1]/2-1)*40,(y-#B/2)*-40,40,40)
-            end
-        end end
-    else
-        for y=1,#B do for x=1,#B[1] do
-            if B[y][x] then
-                gc_setColor(ColorTable[B[y][x].color])
-                gc_rectangle('fill',(x-#B[1]/2-1)*40,(y-#B/2)*-40,40,40)
-            end
-        end end
-    end
-    gc_pop()
+function S.drawNextCell(C,unavailable,_,_,_)
+    gc_setColor(unavailable and unavailableColor or ColorTable[C.color])
+    gc_rectangle('fill',0,0,40,40)
 end
 
 function S.drawHoldBorder(mode,slot)
@@ -232,21 +199,9 @@ function S.drawHoldBorder(mode,slot)
     end
 end
 
-function S.drawHold(n,B,unavailable)
-    gc_push('transform')
-    gc_translate(-100,100*n-50)
-    gc_scale(min(2.3/#B,3/#B[1],.86))
-    for y=1,#B do for x=1,#B[1] do
-        if B[y][x] then
-            if unavailable then
-                gc_setColor(.6,.6,.6)
-            else
-                gc_setColor(ColorTable[B[y][x].color])
-            end
-            gc_rectangle('fill',(x-#B[1]/2-1)*40,(y-#B/2)*-40,40,40)
-        end
-    end end
-    gc_pop()
+function S.drawHoldCell(C,unavailable,_,_,_)
+    gc_setColor(unavailable and unavailableColor or ColorTable[C.color])
+    gc_rectangle('fill',0,0,40,40)
 end
 
 function S.drawTime(time)

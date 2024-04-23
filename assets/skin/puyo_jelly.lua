@@ -1,6 +1,4 @@
 local gc=love.graphics
-local gc_push,gc_pop=gc.push,gc.pop
-local gc_translate=gc.translate
 local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 
@@ -8,47 +6,33 @@ local gc_rectangle=gc.rectangle
 local S={}
 S.base='puyo_template'
 
-local function drawSide(B,x,y,bx,by)
+local function drawSide(B,x,y)
     local c=B[y][x].color
     local t
-    if B[y  ] then t=B[y  ][x+1] if t and t.connClear and t.color==c then gc_rectangle('fill',bx+40, by+8,  -5,24) end end
-    if B[y  ] then t=B[y  ][x-1] if t and t.connClear and t.color==c then gc_rectangle('fill',bx,    by+8,  5 ,24) end end
-    if B[y-1] then t=B[y-1][x  ] if t and t.connClear and t.color==c then gc_rectangle('fill',bx+8,  by+40, 24,-5) end end
-    if B[y+1] then t=B[y+1][x  ] if t and t.connClear and t.color==c then gc_rectangle('fill',bx+8,  by,    24, 5) end end
+    if B[y  ] then t=B[y  ][x+1] if t and t.connClear and t.color==c then gc_rectangle('fill',40, 8,  -5,24) end end
+    if B[y  ] then t=B[y  ][x-1] if t and t.connClear and t.color==c then gc_rectangle('fill',0,  8,  5 ,24) end end
+    if B[y-1] then t=B[y-1][x  ] if t and t.connClear and t.color==c then gc_rectangle('fill',8,  40, 24,-5) end end
+    if B[y+1] then t=B[y+1][x  ] if t and t.connClear and t.color==c then gc_rectangle('fill',8,  0,  24, 5) end end
 end
 
 function S.drawFieldCell(C,F,x,y)
-    local flashing=S.getTime()%100<=50
-    if C and (not C.clearing or flashing) then
+    if not C.clearing or S.getTime()%100<=50 then
         gc_setColor(ColorTable[C.color])
-        gc_rectangle('fill',(x-1)*40+2,-y*40+2,36,36,15)
-        drawSide(F,x,y,(x-1)*40,-y*40)
+        gc_rectangle('fill',2,2,36,36,15)
+        drawSide(F,x,y)
     end
 end
 
-function S.drawHand(B,handX,handY)
-    for y=1,#B do for x=1,#B[1] do
-        if B[y][x] then
-            local bx,by=(handX+x-2)*40,-(handY+y-1)*40
-            gc_setColor(ColorTable[B[y][x].color])
-            gc_rectangle('fill',bx+2,by+2,36,36,15)
-            drawSide(B,x,y,bx,by)
-        end
-    end end
+function S.drawHandCell(C,B,x,y)
+    gc_setColor(ColorTable[C.color])
+    gc_rectangle('fill',2,2,36,36,15)
+    drawSide(B,x,y)
 end
 
-function S.drawNext(n,B)
-    gc_push('transform')
-    gc_translate(80,100*n-50)
-    for y=1,#B do for x=1,#B[1] do
-        if B[y][x] then
-            local bx,by=(x-#B[1]/2-1)*40,(y-#B/2)*-40
-            gc_setColor(ColorTable[B[y][x].color])
-            gc_rectangle('fill',bx+2,by+2,36,36,18)
-            drawSide(B,x,y,bx,by)
-        end
-    end end
-    gc_pop()
+function S.drawNextCell(C,_,B,x,y)
+    gc_setColor(ColorTable[C.color])
+    gc_rectangle('fill',2,2,36,36,18)
+    drawSide(B,x,y)
 end
 
 return S
