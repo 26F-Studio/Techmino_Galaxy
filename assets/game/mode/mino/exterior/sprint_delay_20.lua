@@ -3,7 +3,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'mino')
         GAME.setMain(1)
-        playBgm('race_delay')
+        playBgm('race_old')
     end,
     settings={mino={
         inputDelay=620,
