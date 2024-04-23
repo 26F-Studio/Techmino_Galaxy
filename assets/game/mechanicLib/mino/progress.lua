@@ -391,7 +391,7 @@ end
 function progress.dig_checker_gameOver(P,reason)
     if not P.isMain then return true end
     if reason=='AC' then
-        PROGRESS.setModeState('mino_stdMap','dig_checkers',1)
+        PROGRESS.setModeState('mino_stdMap','dig_checker',1)
     end
 end
 
