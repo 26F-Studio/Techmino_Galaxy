@@ -17,7 +17,7 @@ local scene={}
 function scene.enter()
     FMOD.destroy()
     time=0
-    err=Zenitha.getErr('#') or {
+    err=ZENITHA.getErr('#') or {
         scene="NULL",
         msg={"??????????????????????????","","TRACEFORWARD","??????","?????","????","???","??","?"},
         shot=GC.load{200,120,
@@ -32,7 +32,7 @@ function scene.enter()
     table.insert(err.msg,"")
     table.insert(err.msg,SYSTEM.."-"..VERSION.appVer)
     table.insert(err.msg,"Scene: "..err.scene)
-    Zenitha.setVersionText("")
+    ZENITHA.setVersionText("")
 end
 
 function scene.keyDown(key,isRep)

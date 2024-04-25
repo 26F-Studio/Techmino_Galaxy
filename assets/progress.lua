@@ -160,8 +160,8 @@ function PROGRESS.setEnv(env)
     if env=='interior' then
         PROGRESS.setInteriorBG()
         PROGRESS.playInteriorBGM()
-        Zenitha.setClickFX(true)
-        Zenitha.setDrawCursor(function(_,x,y)
+        ZENITHA.setClickFX(true)
+        ZENITHA.setDrawCursor(function(_,x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)
                 gc.setLineWidth(2)
@@ -177,8 +177,8 @@ function PROGRESS.setEnv(env)
     elseif env=='exterior' then
         PROGRESS.setExteriorBG()
         PROGRESS.playExteriorBGM()
-        Zenitha.setClickFX(function(x,y) SYSFX.new('glow',2,x,y,20) end)
-        Zenitha.setDrawCursor(function(_,x,y)
+        ZENITHA.setClickFX(function(x,y) SYSFX.new('glow',2,x,y,20) end)
+        ZENITHA.setDrawCursor(function(_,x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)
                 gc.setLineWidth(2)
@@ -193,7 +193,7 @@ function PROGRESS.setEnv(env)
                 gc.line(-20,0,20,0)
             end
         end)
-        Zenitha.setDrawSysInfo(sysInfoFunc)
+        ZENITHA.setDrawSysInfo(sysInfoFunc)
     else
         error("?")
     end
@@ -229,7 +229,7 @@ function PROGRESS.transcendTo(n)
             coverAlpha=0,
             noDefaultDraw=true,
             init=function()
-                Zenitha.setDrawCursor(NULL)
+                ZENITHA.setDrawCursor(NULL)
             end,
             update=function(dt,t)
                 if t<1.626 then

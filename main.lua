@@ -62,15 +62,15 @@ FMOD=require("assets.fmod20221")
 DEBUG.checkLoadTime("Load game modules")
 --------------------------------------------------------------
 -- Config Zenitha and Fmod
-Zenitha.setAppName('Techmino')
-Zenitha.setVersionText(VERSION.appVer)
-Zenitha.setFirstScene('hello')
-Zenitha.setMaxFPS(260)
-Zenitha.setOnGlobalKey('f11',function()
+ZENITHA.setAppName('Techmino')
+ZENITHA.setVersionText(VERSION.appVer)
+ZENITHA.setFirstScene('hello')
+ZENITHA.setMaxFPS(260)
+ZENITHA.setOnGlobalKey('f11',function()
     SETTINGS.system.fullscreen=not SETTINGS.system.fullscreen
     saveSettings()
 end)
-Zenitha.setOnFnKeys({
+ZENITHA.setOnFnKeys({
     function() MSG.new('info',("System:%s[%s]\nLuaVer:%s\nJitVer:%s\nJitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,
     function() MSG.new('check',PROFILE.switch() and "Profile start!" or "Profile report copied!") end,
     function() if love['_openConsole'] then love['_openConsole']() end end,
@@ -79,13 +79,13 @@ Zenitha.setOnFnKeys({
     function() end,
     function() end,
 })
-Zenitha.setDebugInfo{
+ZENITHA.setDebugInfo{
     {"Cache", gcinfo},
     {"Tasks", TASK.getCount},
     {"Mouse", function() local x,y=SCR.xOy:inverseTransformPoint(love.mouse.getPosition()) return math.floor(x+.5)..' '..math.floor(y+.5) end},
     -- {"FMOD", function() local a,b,c=FMOD.studio:getMemoryUsage() return a..","..b..","..c end}, -- Only available in logging builds Fmod
 }
-Zenitha.setOnFocus(function(f)
+ZENITHA.setOnFocus(function(f)
     if SETTINGS.system.autoMute then
         if f then
             FMOD.setMainVolume(SETTINGS.system.mainVol)
@@ -285,12 +285,13 @@ DEBUG.checkLoadTime("Config Zenitha and Fmod")
 -- Load saving data
 TABLE.coverR(FILE.load('conf/settings','-json -canskip') or {},SETTINGS)
 for k,v in next,SETTINGS._system do
+    -- Gurantee triggering all setting-triggers
     SETTINGS._system[k]=nil
     SETTINGS.system[k]=v
-end                              -- Gurantee triggering all setting-triggers
-if SETTINGS.system.portrait then -- Brute fullscreen config
+end
+if SETTINGS.system.portrait then -- Brute fullscreen config for mobile device
     SCR.setSize(1600,2560)
-    SCR.resize(love.graphics.getWidth(),love.graphics.getHeight())
+    SCR._resize(love.graphics.getWidth(),love.graphics.getHeight())
 end
 PROGRESS.load()
 VCTRL.importSettings(FILE.load('conf/touch','-json -canskip'))

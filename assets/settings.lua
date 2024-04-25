@@ -69,11 +69,11 @@ local settingTriggers={ -- Changing values in SETTINGS.system will trigger these
 
     -- Video
     fullscreen=     function(v) love.window.setFullscreen(v); love.resize(love.graphics.getWidth(),love.graphics.getHeight()) end,
-    maxFPS=         function(v) Zenitha.setMaxFPS(v) end,
-    updRate=        function(v) Zenitha.setUpdateFreq(v) end,
-    drawRate=       function(v) Zenitha.setDrawFreq(v) end,
+    maxFPS=         function(v) ZENITHA.setMaxFPS(v) end,
+    updRate=        function(v) ZENITHA.setUpdateFreq(v) end,
+    drawRate=       function(v) ZENITHA.setDrawFreq(v) end,
     sysCursor=      function(v) love.mouse.setVisible(v) end,
-    clean=          function(v) Zenitha.setCleanCanvas(v) end,
+    clean=          function(v) ZENITHA.setCleanCanvas(v) end,
 
     -- Other
     locale=         function(v) Text=LANG.set(v) end,

@@ -43,10 +43,10 @@ function scene.update(dt)
 end
 
 function scene.draw()
-    setFont(70)gc.setColor(1,.6,.6)
+    setFont(70) gc.setColor(1,.6,.6)
     mStr(("%.2f"):format(maxSpeed),800,20)
 
-    setFont(100)gc.setColor(COLOR.L)
+    setFont(100) gc.setColor(COLOR.L)
     mStr(("%.2f"):format(speed),800,150)
 
     setFont(35)
@@ -55,7 +55,7 @@ function scene.draw()
     gc.setColor(.8,.8,.8)
     mStr(("%.2f"):format(speed/60),800,255)
 
-    setFont(60)gc.setColor(.7,.7,.7)
+    setFont(60) gc.setColor(.7,.7,.7)
     mStr("/min",800,310)
 
 

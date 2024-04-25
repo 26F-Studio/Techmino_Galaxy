@@ -228,8 +228,8 @@ function scene.draw()
         gc.setColor(COLOR.D)
         gc.print(score,64,43)
 
-        gc.setColor(color1)gc.rectangle('fill',move.x,move.y,move.l,30)
-        gc.setColor(color2)gc.rectangle('fill',base.x,base.y,base.l,30)
+        gc.setColor(color1) gc.rectangle('fill',move.x,move.y,move.l,30)
+        gc.setColor(color2) gc.rectangle('fill',base.x,base.y,base.l,30)
     end
 end
 

@@ -24,7 +24,7 @@ end
 function scene.draw()
     SCN.scenes['game_out'].draw()
 
-    GC.setCanvas(Zenitha.getBigCanvas('result'))
+    GC.setCanvas(ZENITHA.getBigCanvas('result'))
     GC.clear(0,0,0,0)
     GC.replaceTransform(SCR.xOy)
     GAME.mode.resultPage(time)
@@ -35,7 +35,7 @@ function scene.draw()
     GC.rectangle('fill',0,0,SCR.w,SCR.h)
 
     GC.setColor(1,1,1)
-    GC.draw(Zenitha.getBigCanvas('result'))
+    GC.draw(ZENITHA.getBigCanvas('result'))
 end
 
 scene.widgetList={

@@ -96,7 +96,7 @@ local generator={
         ins(pos,pos[#pos]<=2 and rnd(3,4) or rnd(2))
     end,
     Short=function()
-        if #pos<2 then ins(pos,rnd(4))ins(pos,rnd(4)) end
+        if #pos<2 then ins(pos,rnd(4)) ins(pos,rnd(4)) end
         local r
         if pos[#pos]==pos[#pos-1] then
             r=rnd(3)
@@ -298,7 +298,7 @@ function scene.update(dt)
     end
 end
 
-local function boardStencil()gc.rectangle('fill',300,0,680,720) end
+local function boardStencil() gc.rectangle('fill',300,0,680,720) end
 function scene.draw()
     setFont(50)
     if arcade then
@@ -328,7 +328,7 @@ function scene.draw()
     -- Draw mode
     if state~=0 then
         gc.setColor(COLOR.L)
-        setFont(30)mStr(mode,155,212)
+        setFont(30) mStr(mode,155,212)
     end
 
     -- Draw tiles

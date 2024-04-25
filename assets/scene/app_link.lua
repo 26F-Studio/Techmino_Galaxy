@@ -273,8 +273,8 @@ local function touch(x,y)
 end
 function scene.mouseDown(x,y,k) if k==1 or k==2 or not k then touch(x,y) end end
 function scene.mouseMove(x,y) if (msIsDown(1) or kbIsDown('z','x')) then touch(x,y) end end
-function scene.touchDown(x,y)touch(x,y) end
-function scene.touchMove(x,y)touch(x,y) end
+function scene.touchDown(x,y) touch(x,y) end
+function scene.touchMove(x,y) touch(x,y) end
 
 function scene.update(dt)
     if state==1 then
@@ -356,15 +356,15 @@ function scene.draw()
     end
 
     -- Maxcombo
-    setFont(20)gc.setColor(COLOR.dF)
+    setFont(20) gc.setColor(COLOR.dF)
     gc.print(maxCombo,1142,1)
 
     -- Time
-    setFont(30)gc.setColor(COLOR.L)
+    setFont(30) gc.setColor(COLOR.L)
     gc.print(("%.3f"):format(time),1140,20)
 
     -- Progress time list
-    setFont(15)gc.setColor(.6,.6,.6)
+    setFont(15) gc.setColor(.6,.6,.6)
     for i=1,#progress do gc.print(progress[i],1140,40+20*i) end
 
     -- Combo Rectangle
@@ -387,7 +387,7 @@ function scene.draw()
     mStr(combo,1205,398)
 
     -- Score
-    setFont(25)gc.setColor(COLOR.L)
+    setFont(25) gc.setColor(COLOR.L)
     mStr(score1,1205,560)
 end
 

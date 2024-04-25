@@ -55,7 +55,9 @@ local currentDict={locale=false}
 -- Dict data of English
 local enDict=FILE.load('assets/language/dict_en.lua','-lua -canskip')
 
-local listBox,inputBox,linkButton,copyButton
+local listBox ---@type Zenitha.widget.listBox
+local inputBox ---@type Zenitha.widget.inputBox
+local linkButton,copyButton
 local function close()
     quiting=true
     FMOD.effect('dict_close')
@@ -164,8 +166,10 @@ do -- Widgets
             selectItem(listBox:getItem())
         end
     end
+    ---@type Zenitha.widget.listBox
     listBox=WIDGET.new(listBox)
 
+    ---@type Zenitha.widget.inputBox
     inputBox=WIDGET.new{
         type='inputBox',pos={.5,.5},x=mainX,y=280,w=mainW,h=searchH-10,
         frameColor={0,0,0,0},
@@ -274,6 +278,7 @@ function scene.enter()
                 currentDict=data
             else
                 currentDict=nil
+                ---@cast data string
                 MSG.new('error',data,10)
             end
         end
@@ -330,7 +335,7 @@ function scene.enter()
 
     if not selected then selectItem(dispDict[1]) end
     listBox:setList(dispDict)
-    if selectedNum then listBox:select(selectedNum or 1)end
+    if selectedNum then listBox:select(selectedNum or 1) end
     collectgarbage()
 end
 
@@ -400,7 +405,7 @@ function scene.touchMove(x,y,_,dy)
 end
 
 function scene.wheelMoved(_,y)
-    if not WIDGET.isFocus(listBox)then
+    if not WIDGET.isFocus(listBox) then
         scroll(y*62)
     else
         return true

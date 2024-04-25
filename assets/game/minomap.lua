@@ -465,13 +465,13 @@ function map:draw()
     end
 
     -- Back and particles
-    gc_rotate(-tau/4)gc_setColor(1,0,0,.01)gc_polygon('fill',mapPoly)gc_scale(.5)gc_setColor(0,0,0,.0626)gc_polygon('fill',mapPoly)gc_scale(2)
-    gc_rotate(tau/3) gc_setColor(0,1,0,.01)gc_polygon('fill',mapPoly)gc_scale(.5)gc_setColor(0,0,0,.0626)gc_polygon('fill',mapPoly)gc_scale(2)
-    gc_rotate(tau/3) gc_setColor(0,0,1,.01)gc_polygon('fill',mapPoly)gc_scale(.5)gc_setColor(0,0,0,.0626)gc_polygon('fill',mapPoly)gc_scale(2)
+    gc_rotate(-tau/4) gc_setColor(1,0,0,.01) gc_polygon('fill',mapPoly) gc_scale(.5) gc_setColor(0,0,0,.0626) gc_polygon('fill',mapPoly) gc_scale(2)
+    gc_rotate(tau/3)  gc_setColor(0,1,0,.01) gc_polygon('fill',mapPoly) gc_scale(.5) gc_setColor(0,0,0,.0626) gc_polygon('fill',mapPoly) gc_scale(2)
+    gc_rotate(tau/3)  gc_setColor(0,0,1,.01) gc_polygon('fill',mapPoly) gc_scale(.5) gc_setColor(0,0,0,.0626) gc_polygon('fill',mapPoly) gc_scale(2)
     if full then
-        gc_rotate(tau/3) gc_setColor(1,.26,.26)gc_draw(pSys[1])
-        gc_rotate(tau/3) gc_setColor(.26,1,.26)gc_draw(pSys[2])
-        gc_rotate(tau/3) gc_setColor(.26,.26,1)gc_draw(pSys[3])
+        gc_rotate(tau/3) gc_setColor(1,.26,.26) gc_draw(pSys[1])
+        gc_rotate(tau/3) gc_setColor(.26,1,.26) gc_draw(pSys[2])
+        gc_rotate(tau/3) gc_setColor(.26,.26,1) gc_draw(pSys[3])
     end
 
     -- Keyboard cursor

@@ -130,7 +130,7 @@ function scene.draw()
     FONT.set(45)
     if reg then gc.printf(reg,0,100,720,'right') end
     if val then gc.printf(val,0,150,720,'right') end
-    if sym then FONT.set(50)gc.print(sym,126,150) end
+    if sym then FONT.set(50) gc.print(sym,126,150) end
 end
 
 scene.widgetList={

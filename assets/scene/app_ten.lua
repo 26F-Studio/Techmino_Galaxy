@@ -79,10 +79,10 @@ local function merge()
         if board[y][x]~=0 then
             board[y][x]=0
             SYSFX.newShade(2,320+x*128-128,40+y*128-128,128,128)
-            if x>1 and board[y][x-1]==chosen then ins(connected,{y,x-1})count=count+1 end
-            if x<5 and board[y][x+1]==chosen then ins(connected,{y,x+1})count=count+1 end
-            if y>1 and board[y-1][x]==chosen then ins(connected,{y-1,x})count=count+1 end
-            if y<5 and board[y+1][x]==chosen then ins(connected,{y+1,x})count=count+1 end
+            if x>1 and board[y][x-1]==chosen then ins(connected,{y,x-1}) count=count+1 end
+            if x<5 and board[y][x+1]==chosen then ins(connected,{y,x+1}) count=count+1 end
+            if y>1 and board[y-1][x]==chosen then ins(connected,{y-1,x}) count=count+1 end
+            if y<5 and board[y+1][x]==chosen then ins(connected,{y+1,x}) count=count+1 end
         end
     until not connected[1]
     if count>1 then
