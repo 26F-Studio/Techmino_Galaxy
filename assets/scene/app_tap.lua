@@ -3,6 +3,7 @@ local max=math.max
 local ins=table.insert
 local setFont,mStr=FONT.set,GC.mStr
 
+---@type Zenitha.Scene
 local scene={}
 
 local lastKey,keyTime

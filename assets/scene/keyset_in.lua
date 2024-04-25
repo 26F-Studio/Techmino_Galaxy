@@ -1,5 +1,6 @@
 local gc=love.graphics
 
+---@type Zenitha.Scene
 local scene={}
 
 local sysKeyInfo={

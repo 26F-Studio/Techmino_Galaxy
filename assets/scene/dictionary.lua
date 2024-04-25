@@ -5,6 +5,7 @@ local gc_translate,gc_replaceTransform=GC.translate,GC.replaceTransform
 
 local ins=table.insert
 local kbIsDown=love.keyboard.isDown
+---@type Zenitha.Scene
 local scene={}
 
 local categoryColor={

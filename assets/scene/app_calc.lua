@@ -1,6 +1,7 @@
 local gc=love.graphics
 local kb=love.keyboard
 
+---@type Zenitha.Scene
 local scene={}
 
 local reg -- register

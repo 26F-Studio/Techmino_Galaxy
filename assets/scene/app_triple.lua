@@ -262,6 +262,7 @@ function player:drawBoard()
     gc.pop()
 end
 
+---@type Zenitha.Scene
 local scene={}
 
 function scene.enter()

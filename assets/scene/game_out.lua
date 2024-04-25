@@ -1,6 +1,7 @@
 local gc=love.graphics
 local tc=love.touch
 
+---@type Zenitha.Scene
 local scene={}
 
 local repMode=false

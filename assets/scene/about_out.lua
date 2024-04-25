@@ -1,3 +1,5 @@
+---@type Zenitha.Scene
+---@type Zenitha.Scene
 local scene={}
 
 local modules={

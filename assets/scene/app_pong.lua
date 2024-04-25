@@ -5,6 +5,7 @@ local abs=math.abs
 local max,min=math.max,math.min
 local rnd=math.random
 
+---@type Zenitha.Scene
 local scene={}
 
 local state

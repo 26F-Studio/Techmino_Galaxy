@@ -1,6 +1,7 @@
 -- Welcome scene with animation
 
 local t
+---@type Zenitha.Scene
 local scene={}
 
 function scene.enter()

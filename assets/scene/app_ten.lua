@@ -6,6 +6,7 @@ local floor,rnd=math.floor,math.random
 local ins,rem=table.insert,table.remove
 local setFont,mStr=FONT.set,GC.mStr
 
+---@type Zenitha.Scene
 local scene={}
 
 local previewX={245,186,129,78,35}

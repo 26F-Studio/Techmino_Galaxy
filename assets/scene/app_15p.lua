@@ -2,6 +2,7 @@ local gc=love.graphics
 
 local floor,rnd=math.floor,math.random
 
+---@type Zenitha.Scene
 local scene={}
 
 local scale=1.4

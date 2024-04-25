@@ -11,6 +11,7 @@ local texts={
     "問題が発生！ゲームを再起動してください、できるならエラーログを開発者に送ってください。",
     "Techmino终端被高能粒子射线击中产生错误，需要重新启动。你可以将上面的错误信息反馈给作者。",
 }
+---@type Zenitha.Scene
 local scene={}
 
 function scene.enter()

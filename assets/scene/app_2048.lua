@@ -4,6 +4,7 @@ local setColor,rectangle=gc.setColor,gc.rectangle
 local floor,abs=math.floor,math.abs
 local rnd,min=math.random,math.min
 
+---@type Zenitha.Scene
 local scene={}
 
 local invis,tapControl

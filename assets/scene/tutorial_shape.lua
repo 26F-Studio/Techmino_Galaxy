@@ -40,6 +40,7 @@ end
 
 local rnd=math.random
 
+---@type Zenitha.Scene
 local scene={}
 
 local function flipPiece(name)

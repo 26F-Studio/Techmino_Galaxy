@@ -6,6 +6,7 @@ local pi=math.pi
 
 local areaX,areaY,areaR=800,400,300
 
+---@type Zenitha.Scene
 local scene={}
 
 local widgetList_ui

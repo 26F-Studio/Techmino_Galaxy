@@ -83,6 +83,7 @@ local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1
 }
 
 
+---@type Zenitha.Scene
 local scene={}
 
 function scene.enter()

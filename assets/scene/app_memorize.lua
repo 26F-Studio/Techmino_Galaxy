@@ -8,6 +8,7 @@ local showTime
 local input
 local inputTime
 
+---@type Zenitha.Scene
 local scene={}
 
 local function newNum(lv)

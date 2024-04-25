@@ -10,6 +10,7 @@ local perfect={"Perfect!","Excellent!","Nice!","Good!","Great!","Just!","300"}
 local great={"Pay attention!","Be carefully!","Teacher behind you!","Feel tired?","You are in danger!"," Do your homework!","A good game!","Minecraft!","y=ax^2+bx+c!","No music?","Internet unavailable.","It's raining!","Too hard!","Shorter?","Higher!","English messages!","Hi!","^_^","Drop!","Colorful!",":)","100$","~~~wave~~~","★★★","中文!","NOW!!!!!","Also try the TEN!","I'm a programer!","Also try minesweeperZ!","This si Dropper!","Hold your calculatoor!","Look! UFO!","Bonjour!","[string]","Author:MrZ","Boom!","PvZ!","China!","TI-nspire!","I love LUA!"}
 local miss={"Oops!","Uh-oh","Ouch!","Oh no."}
 
+---@type Zenitha.Scene
 local scene={}
 
 local highScore,highFloor=0,0

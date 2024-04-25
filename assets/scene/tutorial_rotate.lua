@@ -48,6 +48,7 @@ local shapes do
     }
 end
 
+---@type Zenitha.Scene
 local scene={}
 
 local function newQuestion()

@@ -73,6 +73,7 @@ local sims={
 ---@type integer|false
 local subjectFocused=false
 
+---@type Zenitha.Scene
 local scene={}
 
 function scene.enter()

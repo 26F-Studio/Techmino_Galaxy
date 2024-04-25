@@ -21,6 +21,7 @@ local levels={
     BPW="OHOOOOOOOOOAAAAEAAIAUJOOOOOOOOOOOAAEOAAUUAEEEEEEEEEAAAAEAEIEAJOOOOOOOOOOEEEEOAAAAAAA",
 }
 
+---@type Zenitha.Scene
 local scene={}
 
 local levelName="A_Z"

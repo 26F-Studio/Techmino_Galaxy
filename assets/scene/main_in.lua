@@ -1,6 +1,7 @@
 local consoleClickCount
 local settingHint
 
+---@type Zenitha.Scene
 local scene={}
 function scene.enter()
     consoleClickCount=0

@@ -240,6 +240,7 @@ local function tap(x,y)
     end
 end
 
+---@type Zenitha.Scene
 local scene={}
 
 function scene.enter()

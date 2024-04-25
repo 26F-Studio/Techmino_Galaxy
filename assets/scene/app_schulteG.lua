@@ -3,6 +3,7 @@ local floor,rnd=math.floor,math.random
 local rem=table.remove
 local setFont,mStr=FONT.set,GC.mStr
 
+---@type Zenitha.Scene
 local scene={}
 
 local board,rank

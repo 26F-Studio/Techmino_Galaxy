@@ -1,6 +1,7 @@
 local sin=math.sin
 local floor=math.floor
 
+---@type Zenitha.Scene
 local scene={}
 
 local pauseText,textScale

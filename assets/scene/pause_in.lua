@@ -1,3 +1,4 @@
+---@type Zenitha.Scene
 local scene={}
 
 local pauseText
