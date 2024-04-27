@@ -211,7 +211,6 @@ return {
     },
     ['shibamata']={
         author="C₂₉H₂₅N₃O₅",
-        plain=true,
     },
     ['race remix']={
         author="柒栎流星",

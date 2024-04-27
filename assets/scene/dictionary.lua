@@ -55,8 +55,8 @@ local currentDict={locale=false}
 -- Dict data of English
 local enDict=FILE.load('assets/language/dict_en.lua','-lua -canskip')
 
-local listBox ---@type Zenitha.widget.listBox
-local inputBox ---@type Zenitha.widget.inputBox
+local listBox ---@type Zenitha.Widget.listBox
+local inputBox ---@type Zenitha.Widget.inputBox
 local linkButton,copyButton
 local function close()
     quiting=true
@@ -166,10 +166,10 @@ do -- Widgets
             selectItem(listBox:getItem())
         end
     end
-    ---@type Zenitha.widget.listBox
+    ---@type Zenitha.Widget.listBox
     listBox=WIDGET.new(listBox)
 
-    ---@type Zenitha.widget.inputBox
+    ---@type Zenitha.Widget.inputBox
     inputBox=WIDGET.new{
         type='inputBox',pos={.5,.5},x=mainX,y=280,w=mainW,h=searchH-10,
         frameColor={0,0,0,0},

@@ -64,18 +64,21 @@ local musicListBox do
     function musicListBox.code()
         if selected~=musicListBox:getItem() then
             selected=musicListBox:getItem()
-            if not bgmList[selected].plain and (noProgress or PROGRESS.getBgmUnlocked(selected)==2) then
+            local fullBandMode=not bgmList[selected].plain and (noProgress or PROGRESS.getBgmUnlocked(selected)==2)
+            scene.widgetList.fullband:setVisible(fullBandMode)
+            if fullBandMode then
                 fullband=fullband==true
-                scene.widgetList.fullband:setVisible(true)
             else
                 fullband=nil
-                scene.widgetList.fullband:setVisible(false)
             end
             playBgm(selected,fullband,noProgress)
         end
     end
+    ---@type Zenitha.Widget.listBox
     musicListBox=WIDGET.new(musicListBox)
 end
+
+---@type Zenitha.Widget.slider_progress
 local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1400,
     disp=function() return fakeProgress end,
     code=function(v,mode)
