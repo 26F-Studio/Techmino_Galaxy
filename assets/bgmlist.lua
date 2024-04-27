@@ -204,18 +204,22 @@ return {
     },
     ['sakura']={
         author="ZUN & C₂₉H₂₅N₃O₅",
+        plain=true,
     },
     ['malate']={
         author="ZUN & C₂₉H₂₅N₃O₅",
     },
     ['shibamata']={
         author="C₂₉H₂₅N₃O₅",
+        plain=true,
     },
     ['race remix']={
         author="柒栎流星",
+        plain=true,
     },
     ['secret7th remix']={
         author="柒栎流星",
+        plain=true,
     },
     ['propel']={
         author="TetraCepra",

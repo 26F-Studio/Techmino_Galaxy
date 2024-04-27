@@ -15,6 +15,9 @@ local autoplay=false ---@type number|false
 local fakeProgress=0
 local searchStr,searchTimer
 
+---@type Zenitha.Scene
+local scene={}
+
 local bigTitle=setmetatable({},{
     __index=function(self,name)
         local up=true
@@ -61,10 +64,12 @@ local musicListBox do
     function musicListBox.code()
         if selected~=musicListBox:getItem() then
             selected=musicListBox:getItem()
-            if noProgress or PROGRESS.getBgmUnlocked(selected)==2 then
+            if not bgmList[selected].plain and (noProgress or PROGRESS.getBgmUnlocked(selected)==2) then
                 fullband=fullband==true
+                scene.widgetList.fullband:setVisible(true)
             else
                 fullband=nil
+                scene.widgetList.fullband:setVisible(false)
             end
             playBgm(selected,fullband,noProgress)
         end
@@ -82,20 +87,11 @@ local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1
     visibleTick=function() return FMOD.music.getPlaying() end,
 }
 
-
----@type Zenitha.Scene
-local scene={}
-
 function scene.enter()
     selected=getBgm()
     fakeProgress=0
     searchStr,searchTimer="",0
     if not selected then selected='blank' end
-    if PROGRESS.getBgmUnlocked(selected)==2 then
-        fullband=fullband==true
-    else
-        fullband=nil
-    end
     local l={}
     for k in next,bgmList do
         if noProgress or PROGRESS.getBgmUnlocked(k) then
@@ -107,6 +103,7 @@ function scene.enter()
     totalBgmCount=totalBgmCount or TABLE.getSize(bgmList)
     musicListBox:setList(l)
     musicListBox:select(TABLE.find(musicListBox:getList(),selected))
+    musicListBox.code()
 
     if SETTINGS.system.bgmVol<.0626 then
         MSG.new('warn',Text.musicroom_lowVolume)
