@@ -2042,7 +2042,7 @@ function MP:initialize()
     self.nextQueue={}
     self.seqData={}
     self.seqGen=mechLib.mino.sequence[self.settings.seqType] or self.settings.seqType
-    self:seqGen(self.seqData,true)
+    assert(self:seqGen(self.seqData,true)==nil,"First call of sequence generator must return nil")
     self:freshNextQueue()
 
     self.holdQueue={}

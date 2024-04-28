@@ -9,8 +9,14 @@ local Pentos={8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}
 local easyPentos={10,11,14,19,20,23,24,25} -- P Q T5 J5 L5 N H I5
 local hardPentos={8,9,12,13,15,16,17,18,21,22} -- Z5 S5 F E U V W X R Y
 
+-- Fill list when empty, with source
+---@return boolean #True when filled
 local function supply(list,src)
-    if not list[1] then TABLE.connect(list,src) end
+    if not list[1] then
+        TABLE.connect(list,src)
+        return true
+    end
+    return false
 end
 
 ---@param P Techmino.Player.mino
@@ -19,6 +25,9 @@ end
 ---@diagnostic disable-next-line
 function sequence.none(P,d,init)
 end
+
+--------------------------------------------------------------
+-- Tetro
 
 function sequence.bag7(P,d,init)
     if init then
@@ -35,10 +44,31 @@ function sequence.bag7_p1fromBag7(P,d,init) -- bag8, which the extra piece from 
         d.extra={}
         return
     end
-    if not d.bag[1] then
-        d.bag=TABLE.shift(Tetros)
+    if supply(d.bag) then
         supply(d.extra,Tetros)
         d.bag[8]=rem(d.extra,P:random(#d.extra))
+    end
+    return rem(d.bag,P:random(#d.bag))
+end
+
+function sequence.bag7_p1(P,d,init) -- bag7 + 1rnd
+    if init then
+        d.bag={}
+        return
+    end
+    if supply(d.bag,Tetros) then
+        d.bag[8]=P:random(7)
+    end
+    return rem(d.bag,P:random(#d.bag))
+end
+
+function sequence.bag7_m1p1(P,d,init) -- bag7 -1rnd +1rnd
+    if init then
+        d.bag={}
+        return
+    end
+    if supply(d.bag,Tetros) then
+        d.bag[P:random(7)]=P:random(7)
     end
     return rem(d.bag,P:random(#d.bag))
 end
@@ -53,7 +83,7 @@ function sequence.bag7_twin(P,d,init) -- bag7, but two bags work in turn
     return rem(d.bag1,P:random(#d.bag1))
 end
 
-function sequence.bag7_sprint(P,d,init)
+function sequence.bag7_sprint(P,d,init) -- bag7, but no early S/Z/O and shuffling range start from 3, +1 each bag
     if init then
         d.bag={}
 
@@ -96,6 +126,26 @@ function sequence.bag7_sprint(P,d,init)
     end
 end
 
+function sequence.bag7_spreadFirstTo3211(P,d,init) -- bag7, but first bag 3+2+1+1-ly splited into next four bags 
+    if init then
+        d.bag={}
+        d.victim=TABLE.shift(Tetros)
+        d.wave=1
+        return
+    end
+    if supply(d.bag,Tetros) then
+        if d.wave then
+            for _=1,
+                d.wave==1 and 3 or
+                d.wave==2 and 2 or
+                1
+            do ins(d.bag,rem(d.victim,P:random(#d.victim))) end
+            d.wave=d.wave+1 if #d.victim==0 then d.wave=nil end
+        end
+    end
+    return rem(d.bag,P:random(#d.bag))
+end
+
 function sequence.bag7_steal1(P,d,init) -- bag7, but each bag steals a piece from the next bag
     if init then
         d.bag={}
@@ -134,7 +184,7 @@ function sequence.bag7p7p7p5_power(P,d,init) -- bag 7+7+7+TTOII
     return rem(d.bag,P:random(#d.bag))
 end
 
-function sequence.bag6p6_drought(P,d,init) -- bag14 without I piece
+function sequence.bag6p6_drought(P,d,init) -- bag7+7 without I piece
     if init then
         d.bag={}
     end
@@ -195,7 +245,7 @@ function sequence.his4_roll4(P,d,init)
     return r
 end
 
-function sequence.pool7_bag7(P,d,init)
+function sequence.pool8_bag7(P,d,init)
     if init then
         d.pool=TABLE.shift(Tetros)
         d.bag={}
@@ -239,30 +289,8 @@ function sequence.random(P,d,init) -- pure random
     return P:random(7)
 end
 
-function sequence.bag18_pento(P,d,init)
-    if init then
-        d.bag={}
-        return
-    end
-    supply(d.bag,Pentos)
-    return rem(d.bag,P:random(#d.bag))
-end
-
-function sequence.bag8_pentoEZ_p4fromBag10_pentoHD(P,d,init)
-    if init then
-        d.bag={}
-        d.extra={}
-        return
-    end
-    if not d.bag[1] then
-        d.bag=TABLE.shift(easyPentos)
-        for _=1,4 do
-            supply(d.extra,hardPentos)
-            ins(d.bag,rem(d.extra,P:random(#d.extra)))
-        end
-    end
-    return rem(d.bag,P:random(#d.bag))
-end
+--------------------------------------------------------------
+-- Dist-Weight sequence invented by MrZ & Farter
 
 sequence.distWeight={}
 for variant,data in next,{
@@ -312,6 +340,34 @@ for variant,data in next,{
         end
         error("WTF")
     end
+end
+
+--------------------------------------------------------------
+-- Pento
+
+function sequence.bag18_pento(P,d,init)
+    if init then
+        d.bag={}
+        return
+    end
+    supply(d.bag,Pentos)
+    return rem(d.bag,P:random(#d.bag))
+end
+
+function sequence.bag8_pentoEZ_p4fromBag10_pentoHD(P,d,init)
+    if init then
+        d.bag={}
+        d.extra={}
+        return
+    end
+    if not d.bag[1] then
+        d.bag=TABLE.shift(easyPentos)
+        for _=1,4 do
+            supply(d.extra,hardPentos)
+            ins(d.bag,rem(d.extra,P:random(#d.extra)))
+        end
+    end
+    return rem(d.bag,P:random(#d.bag))
 end
 
 return sequence
