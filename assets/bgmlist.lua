@@ -5,6 +5,10 @@ return {
     ['8-bit sadness']={
         author="MrZ",
     },
+    ['antispace']={
+        author="MrZ",
+        message="Space VMX",
+    },
     ['battle']={
         author="Aether & MrZ",
     },
