@@ -1,5 +1,5 @@
 local ffi=require("ffi")
-local path=(...):gsub(".init$", "").."."
+local path=(...):gsub(".init$","").."."
 local r=require; local function require(m) return r(path..m) end
 
 require("cdef")
@@ -8,12 +8,12 @@ require("cdef")
 local M=require("master")
 
 -- search for fmod shared libraries in package.cpath
-local fmodPath=package.searchpath("fmod", package.cpath)
-local fmodstudioPath=package.searchpath("fmodstudio", package.cpath)
-assert(fmodPath and fmodstudioPath, "FMOD shared libraries not found!")
+local fmodPath=package.searchpath("fmod",package.cpath)
+local fmodstudioPath=package.searchpath("fmodstudio",package.cpath)
+assert(fmodPath and fmodstudioPath,"FMOD shared libraries not found!")
 
 -- pretend to load libfmod through Lua (it's going to fail but not raise any errors) so that its location is known when loading libfmodstudio through ffi
--- package.loadlib(paths.fmod, "")
+-- package.loadlib(fmodPath,"")
 
 M.C=ffi.load(fmodPath)
 M.C2=ffi.load(fmodstudioPath)
