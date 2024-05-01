@@ -170,6 +170,7 @@ function M.music.play(name,args)
     return event
 end
 
+---Set current playing music fading out (need param 'fade' in event)
 ---@param instant? boolean only `true` take effect
 function M.music.stop(instant)
     if not playing then return end
@@ -178,10 +179,11 @@ function M.music.stop(instant)
         e:stop(M.FMOD_STUDIO_STOP_IMMEDIATE)
     else
         TASK.new(function()
-            e:setParameterByName('fade',0,true)
+            e:setParameterByName('fade',0,false)
             repeat
-                coroutine.yield()
-            until e:getParameterByName('fade')==0
+                DEBUG.yieldT(0.26)
+                local _,v=e:getParameterByName('fade')
+            until v<=0
             e:stop(M.FMOD_STUDIO_STOP_IMMEDIATE)
         end)
     end
