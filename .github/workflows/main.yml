@@ -111,7 +111,7 @@ jobs:
         with:
           submodules: recursive
       - name: Love actions for testing
-        uses: 26F-Studio/love-actions-test@v1
+        uses: love-actions/love-actions-test@feat-use-luajit
         with:
           font-path: ./assets/fonts/RHDisplayGalaxy-Medium.otf
           language-folder: ./assets/language
