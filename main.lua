@@ -47,18 +47,19 @@ for _,v in next,{'conf','progress','replay','cache','lib','soundbank'} do
 end
 --------------------------------------------------------------
 -- Misc modules
-require'assets.gamefunc'
-VERSION=require"version"
-GAME=require'assets.game'
-AI=require'assets.ai'
-PROGRESS=require'assets.progress'
-VCTRL=require'assets.vctrl'
-KEYMAP=require'assets.keymap'
-SKIN=require'assets.skin'
-CHAR=require'assets.char'
-SETTINGS=require'assets.settings'
-bgmList=require'assets.bgmlist'
-FMOD=require("assets.fmod20221")
+local require=simpRequire('assets.')
+require'gamefunc'
+VERSION=_G.require"version"
+GAME=require'game'
+AI=require'ai'
+PROGRESS=require'progress'
+VCTRL=require'vctrl'
+KEYMAP=require'keymap'
+SKIN=require'skin'
+CHAR=require'char'
+SETTINGS=require'settings'
+bgmList=require'bgmlist'
+FMOD=require'fmod20221'
 DEBUG.checkLoadTime("Load game modules")
 --------------------------------------------------------------
 -- Config Zenitha and Fmod
@@ -283,7 +284,7 @@ end
 DEBUG.checkLoadTime("Config Zenitha and Fmod")
 --------------------------------------------------------------
 -- Load saving data
-TABLE.coverR(FILE.load('conf/settings','-json -canskip') or {},SETTINGS)
+TABLE.cover(FILE.load('conf/settings','-json -canskip') or {},SETTINGS,1e99)
 for k,v in next,SETTINGS._system do
     -- Gurantee triggering all setting-triggers
     SETTINGS._system[k]=nil
@@ -381,13 +382,13 @@ end
 for _,v in next,love.filesystem.getDirectoryItems('assets/background') do
     if FILE.isSafe('assets/background/'..v) and v:sub(-3)=='lua' then
         local name=v:sub(1,-5)
-        BG.add(name,require('assets/background/'..name))
+        BG.add(name,require('background/'..name))
     end
 end
 for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
     if FILE.isSafe('assets/scene/'..v) then
         local sceneName=v:sub(1,-5)
-        SCN.add(sceneName,require('assets/scene/'..sceneName))
+        SCN.add(sceneName,require('scene/'..sceneName))
     end
 end
 for _,v in next,{
@@ -401,7 +402,7 @@ for _,v in next,{
     'gem_template',
 } do
     if FILE.isSafe('assets/skin/'..v..'.lua') then
-        SKIN.add(v,require('assets.skin.'..v))
+        SKIN.add(v,require('skin/'..v))
     end
 end
 SCN.addSwap('fadeHeader',{

@@ -1,3 +1,5 @@
+local require=simpRequire('assets.game.')
+
 local gc=love.graphics
 local gc_push,gc_pop=gc.push,gc.pop
 local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
@@ -11,7 +13,7 @@ local ins,rem=table.insert,table.remove
 
 ---@class Techmino.Player.gem: Techmino.Player
 ---@field field any[][]
-local GP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
+local GP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 --[[ Gem tags:
     int color <1~7>
@@ -859,7 +861,7 @@ local soundEventMeta={
     __metatable=true,
 }
 function GP.new()
-    local self=setmetatable(require'assets.game.basePlayer'.new(),{__index=GP,__metatable=true})
+    local self=setmetatable(require'basePlayer'.new(),{__index=GP,__metatable=true})
     self.settings=TABLE.copy(baseEnv)
     self.event={
         -- Press & Release
@@ -892,7 +894,7 @@ function GP.new()
     return self
 end
 function GP:initialize()
-    require'assets.game.basePlayer'.initialize(self)
+    require'basePlayer'.initialize(self)
 
     self.field={}
     for y=1,self.settings.fieldSize do

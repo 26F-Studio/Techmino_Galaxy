@@ -79,7 +79,7 @@
 ---@field trail love.ParticleSystem
 ---@field minoMapBack love.ParticleSystem
 
----@alias Techmino.Mino.Shape table<number, table<number, boolean>>
+---@alias Techmino.Mino.Shape Map<Map<boolean>>
 ---@alias Techmino.Mino.Name 'Z'|'S'|'J'|'L'|'T'|'O'|'I'|'Z5'|'S5'|'P'|'Q'|'F'|'E'|'T5'|'U'|'V'|'W'|'X'|'J5'|'L5'|'R'|'Y'|'N'|'H'|'I5'|'I3'|'C'|'I2'|'O1'|string
 ---@alias Techmino.Mino.ID 1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|integer
 ---@alias Techmino.Event {[1]:number, [2]:function}
@@ -116,13 +116,13 @@
 ---@field name string Mode name, for debug use
 
 ---@class Techmino.Mode.Setting.Mino
----@field event table<Techmino.mode.event.basic|Techmino.mode.event.mino, string|table|function|table<number, string|table|function>>
+---@field event table<Techmino.mode.event.basic|Techmino.mode.event.mino, string|table|function|Map<string|table|function>>
 
 ---@class Techmino.Mode.Setting.Puyo
----@field event table<Techmino.mode.event.basic|Techmino.mode.event.puyo, string|table|function|table<number, string|table|function>>
+---@field event table<Techmino.mode.event.basic|Techmino.mode.event.puyo, string|table|function|Map<string|table|function>>
 
 ---@class Techmino.Mode.Setting.Gem
----@field event table<Techmino.mode.event.basic|Techmino.mode.event.gem, string|table|function|table<number, string|table|function>>
+---@field event table<Techmino.mode.event.basic|Techmino.mode.event.gem, string|table|function|Map<string|table|function>>
 
 ---@class Techmino.mino.clearRule
 ---@field getDelay fun(P:Techmino.Player.mino, lines:number[]): number?
@@ -132,8 +132,8 @@
 
 ---@class Techmino.Game
 ---@field playing boolean
----@field playerList table<number, Techmino.Player>|false
----@field playerMap table<number, Techmino.Player>|false
+---@field playerList Techmino.Player[]|false
+---@field playerMap Techmino.Player[]|false
 ---@field camera Zenitha.Camera
 ---@field hitWaves table
 ---@field seed number|false
@@ -169,7 +169,7 @@
 ---@field hand table|false Piece object
 ---@field handX number
 ---@field handY number
----@field event table<string, table<number, Techmino.Event>>
+---@field event table<string, Techmino.Event[]>
 ---@field soundEvent table
 ---@field _actions table<string, {press:fun(P:Techmino.Player), release:fun(P:Techmino.Player)}>
 ---

@@ -1,3 +1,5 @@
+local require=simpRequire('assets.game.')
+
 local gc=love.graphics
 local gc_push,gc_pop=gc.push,gc.pop
 local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
@@ -12,7 +14,7 @@ local clamp,expApproach=MATH.clamp,MATH.expApproach
 
 ---@class Techmino.Player.mino: Techmino.Player
 ---@field field Techmino.RectField
-local MP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
+local MP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 --------------------------------------------------------------
 -- Function tables
@@ -1253,7 +1255,7 @@ end
     {4,6,6,3,0,0,2,2,5,5},
     {4,4,3,3,0,0,0,2,2,5},
 }]]
----@param arg {color:'template'|'absolute'|nil, resetHand?:boolean, sudden?:boolean, number:table<number, number>}
+---@param arg {color:'template'|'absolute'|nil, resetHand?:boolean, sudden?:boolean, [number]:number[]}
 function MP:setField(arg)
     local F=self.field
     local w=self.settings.fieldW
@@ -1976,7 +1978,7 @@ local soundEventMeta={
     __metatable=true,
 }
 function MP.new()
-    local self=setmetatable(require'assets.game.basePlayer'.new(),{__index=MP,__metatable=true})
+    local self=setmetatable(require'basePlayer'.new(),{__index=MP,__metatable=true})
     self.settings=TABLE.copy(baseEnv)
     self.event={
         -- Press & Release
@@ -2024,9 +2026,9 @@ function MP.new()
     return self
 end
 function MP:initialize()
-    require'assets.game.basePlayer'.initialize(self)
+    require'basePlayer'.initialize(self)
 
-    self.field=require'assets.game.rectField'.new(self.settings.fieldW)
+    self.field=require'rectField'.new(self.settings.fieldW)
     self.fieldDived=0
     self.fieldRisingSpeed=0
 
@@ -2099,7 +2101,7 @@ end
 function MP:unserialize_custom()
     -- Recover field object
     local f=self.field
-    self.field=require'assets.game.rectField'.new(self.settings.fieldW)
+    self.field=require'rectField'.new(self.settings.fieldW)
     self.field._width=f._width
     self.field._matrix=f._matrix
 

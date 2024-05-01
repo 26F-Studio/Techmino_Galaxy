@@ -1,3 +1,5 @@
+local require=simpRequire('assets.game.')
+
 local gc=love.graphics
 local gc_push,gc_pop=gc.push,gc.pop
 local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
@@ -12,7 +14,7 @@ local ins,rem=table.insert,table.remove
 
 ---@class Techmino.Player.puyo: Techmino.Player
 ---@field field Techmino.RectField
-local PP=setmetatable({},{__index=require'assets.game.basePlayer',__metatable=true})
+local PP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 --------------------------------------------------------------
 -- Function tables
@@ -1286,7 +1288,7 @@ local soundEventMeta={
     __metatable=true,
 }
 function PP.new()
-    local self=setmetatable(require'assets.game.basePlayer'.new(),{__index=PP,__metatable=true})
+    local self=setmetatable(require'basePlayer'.new(),{__index=PP,__metatable=true})
     self.settings=TABLE.copy(baseEnv)
     self.event={
         -- Press & Release
@@ -1327,9 +1329,9 @@ function PP.new()
     return self
 end
 function PP:initialize()
-    require'assets.game.basePlayer'.initialize(self)
+    require'basePlayer'.initialize(self)
 
-    self.field=require'assets.game.rectField'.new(self.settings.fieldW)
+    self.field=require'rectField'.new(self.settings.fieldW)
     self.clearingGroups={}
 
     self.pieceCount=0

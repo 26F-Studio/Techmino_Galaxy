@@ -1,7 +1,7 @@
 local Mino={}
 
 
----@type table<any, Techmino.Mino>
+---@type Map<Techmino.Mino>
 local minoes={}
 
 function Mino.registerMino(name,id,shape)

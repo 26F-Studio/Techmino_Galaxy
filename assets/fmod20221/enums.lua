@@ -1,5 +1,4 @@
-local path=(...):gsub("[^%.]*$", "")
-local r=require; local function require(m) return r(path..m) end
+local require=simpRequire(((...):gsub("[^%.]*$", "")))
 
 ---@class FMOD.master
 local M=require("master")

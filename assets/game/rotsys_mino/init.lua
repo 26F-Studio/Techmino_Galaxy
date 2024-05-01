@@ -112,16 +112,17 @@ function minoRotSys._reflect(m) -- Only available for 4/2/1 state minoes
 end
 
 love.graphics.setDefaultFilter('nearest','nearest')
-minoRotSys.None=     require'assets.game.rotsys_mino.none'
-minoRotSys.TRS=      require'assets.game.rotsys_mino.trs'
-minoRotSys.SRS=      require'assets.game.rotsys_mino.srs'
-minoRotSys.BiRS=     require'assets.game.rotsys_mino.birs'
-minoRotSys.C2_plus=  require'assets.game.rotsys_mino.c2_plus'
-minoRotSys.Classic=  require'assets.game.rotsys_mino.classic'
-minoRotSys.ASC_plus= require'assets.game.rotsys_mino.asc_plus'
-minoRotSys.ARS_plus= require'assets.game.rotsys_mino.ars_plus'
-minoRotSys.DRS_weak= require'assets.game.rotsys_mino.drs_weak'
-minoRotSys.Physical= require'assets.game.rotsys_mino.physical'
+local require=simpRequire('assets.game.')
+minoRotSys.None=     require'rotsys_mino.none'
+minoRotSys.TRS=      require'rotsys_mino.trs'
+minoRotSys.SRS=      require'rotsys_mino.srs'
+minoRotSys.BiRS=     require'rotsys_mino.birs'
+minoRotSys.C2_plus=  require'rotsys_mino.c2_plus'
+minoRotSys.Classic=  require'rotsys_mino.classic'
+minoRotSys.ASC_plus= require'rotsys_mino.asc_plus'
+minoRotSys.ARS_plus= require'rotsys_mino.ars_plus'
+minoRotSys.DRS_weak= require'rotsys_mino.drs_weak'
+minoRotSys.Physical= require'rotsys_mino.physical'
 love.graphics.setDefaultFilter('linear','linear')
 
 for name,rs in next,minoRotSys do

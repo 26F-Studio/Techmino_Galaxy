@@ -1,6 +1,5 @@
 local ffi=require("ffi")
-local path=(...):gsub("[^%.]*$", "")
-local r=require; local function require(m) return r(path..m) end
+local require=simpRequire(((...):gsub("[^%.]*$", "")))
 
 ---@alias FMOD.GUID FMOD.GUID
 ---@alias FMOD.Result FMOD.Result

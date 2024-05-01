@@ -1,5 +1,6 @@
-Mino=require'assets.game.minoes'
-ColorTable=require'assets.game.colorTable'
+local require=simpRequire('assets.game.')
+Mino=require'minoes'
+ColorTable=require'colorTable'
 defaultMinoColor=setmetatable({
     2,22,42,6,52,12,32,
     2,22,62,26,38,4,52,16,32,56,12,42,6,38,4,60,28,12,
@@ -7,9 +8,9 @@ defaultMinoColor=setmetatable({
 },{__index=function() return math.random(64) end})
 defaultPuyoColor=setmetatable({2,12,42,22,52},{__index=function() return math.random(64) end})
 ---@type Techmino.Mech
-mechLib=TABLE.newResourceTable(require'assets.game.mechanicLib',function(path) return FILE.load(path,'-lua') end)
+mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
 regFuncLib(mechLib,"mechLib")
-require'assets.game.rotsys_mino'
+require'rotsys_mino'
 
 local gc=love.graphics
 
@@ -172,7 +173,7 @@ GAME.camera.moveSpeed=12
 function GAME.getMode(name)
     if love.keyboard.isDown('f5') then
         modeLib[name]=nil
-        mechLib=TABLE.newResourceTable(require'assets.game.mechanicLib',function(path) return FILE.load(path,'-lua') end)
+        mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
         regFuncLib(mechLib,"mechLib")
     end
     if modeLib[name] then
@@ -261,11 +262,11 @@ function GAME.newPlayer(id,pType)
 
     local P
     if pType=='mino' then
-        P=require'assets.game.minoPlayer'.new(GAME.mode)
+        P=require'minoPlayer'.new(GAME.mode)
     elseif pType=='puyo' then
-        P=require'assets.game.puyoPlayer'.new(GAME.mode)
+        P=require'puyoPlayer'.new(GAME.mode)
     elseif pType=='gem' then
-        P=require'assets.game.gemPlayer'.new(GAME.mode)
+        P=require'gemPlayer'.new(GAME.mode)
     else
         MSG.new('error',"invalid player type :'"..tostring(pType).."'")
         return

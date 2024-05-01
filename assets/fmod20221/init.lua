@@ -1,6 +1,5 @@
 local ffi=require("ffi")
-local path=(...):gsub(".init$","").."."
-local r=require; local function require(m) return r(path..m) end
+local require=simpRequire(((...):gsub(".init$","").."."))
 
 require("cdef")
 
@@ -65,7 +64,7 @@ function M.loadBank(bankPath,flag)
     return bank
 end
 
----@type table<any,FMOD.Studio.EventDescription>
+---@type Map<FMOD.Studio.EventDescription>
 local musicLib={}
 function M.registerMusic(map)
     if not studio then return end
@@ -76,7 +75,7 @@ function M.registerMusic(map)
     end
 end
 
----@type table<any,FMOD.Studio.EventDescription>
+---@type Map<FMOD.Studio.EventDescription>
 local effectLib={}
 function M.registerEffect(map)
     if not studio then return end
@@ -108,7 +107,7 @@ end
 
 --------------------------
 
----@type table|fun(name:string, args?:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:table<number,number>, param?:table}):FMOD.Studio.EventInstance?
+---@type table|fun(name:string, args?:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}):FMOD.Studio.EventInstance?
 M.music={}
 
 ---@param v number
@@ -123,7 +122,7 @@ end
 local playing=nil
 
 ---@param name string
----@param args? {instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:table<number,number>, param?:table}
+---@param args? {instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}
 ---@return FMOD.Studio.EventInstance?
 function M.music.play(name,args)
     FMOD.music.stop()
@@ -227,7 +226,7 @@ setmetatable(M.music,{__call=function(_,...) return playMusic(...) end})
 
 --------------------------
 
----@type table|fun(name:string, args?:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:table<number,number>, param?:table}):FMOD.Studio.EventInstance?
+---@type table|fun(name:string, args?:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}):FMOD.Studio.EventInstance?
 M.effect={}
 
 ---@param v number
@@ -244,7 +243,7 @@ end
 ---
 ---param:{'paramName', 0, true?}
 ---@param name string
----@param args? {volume?:number, pitch?:number, tune?:number, fine?:number, pos?:table<number,number>, param?:table}
+---@param args? {volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}
 ---@return FMOD.Studio.EventInstance?
 function M.effect.play(name,args)
     local desc=effectLib[name]

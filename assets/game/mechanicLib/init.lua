@@ -1,51 +1,50 @@
--- Fake require function, make both human and language server happy
--- Those files will be loaded in another way, not require
-local function require(path) return path:gsub('%.','/')..'.lua' end
+-- Fake require function, only do string manipulation, real require when needed
+local require=simpRequire(function(path) return 'assets/game/mechanicLib/'..path..'.lua' end)
 
 ---@class Techmino.Mech
 local mechLib={
     common={
-        timer=require'assets.game.mechanicLib.common.timer',
-        finish=require'assets.game.mechanicLib.common.finish',
+        timer=require'common/timer',
+        finish=require'common/finish',
     },
     mino={
         -- Basic
-        actions=require'assets.game.mechanicLib.mino.actions',
-        statistics=require'assets.game.mechanicLib.mino.statistics',
-        sequence=require'assets.game.mechanicLib.mino.sequence',
-        clearRule=require'assets.game.mechanicLib.mino.clearRule',
-        attackSys=require'assets.game.mechanicLib.mino.attackSys',
-        misc=require'assets.game.mechanicLib.mino.misc',
+        actions=require'mino/actions',
+        statistics=require'mino/statistics',
+        sequence=require'mino/sequence',
+        clearRule=require'mino/clearRule',
+        attackSys=require'mino/attackSys',
+        misc=require'mino/misc',
 
         -- Mode
-        sprint=require'assets.game.mechanicLib.mino.sprint',
-        dig=require'assets.game.mechanicLib.mino.dig',
-        survivor=require'assets.game.mechanicLib.mino.survivor',
-        backfire=require'assets.game.mechanicLib.mino.backfire',
-        marathon=require'assets.game.mechanicLib.mino.marathon',
-        hypersonic=require'assets.game.mechanicLib.mino.hypersonic',
-        comboPractice=require'assets.game.mechanicLib.mino.comboPractice',
-        tsdChallenge=require'assets.game.mechanicLib.mino.tsdChallenge',
-        techrashChallenge=require'assets.game.mechanicLib.mino.techrashChallenge',
-        acGenerator=require'assets.game.mechanicLib.mino.acGenerator',
+        sprint=require'mino/sprint',
+        dig=require'mino/dig',
+        survivor=require'mino/survivor',
+        backfire=require'mino/backfire',
+        marathon=require'mino/marathon',
+        hypersonic=require'mino/hypersonic',
+        comboPractice=require'mino/comboPractice',
+        tsdChallenge=require'mino/tsdChallenge',
+        techrashChallenge=require'mino/techrashChallenge',
+        acGenerator=require'mino/acGenerator',
 
         -- Special
-        stack=require'assets.game.mechanicLib.mino.stack',
-        squeeze=require'assets.game.mechanicLib.mino.squeeze',
-        progress=require'assets.game.mechanicLib.mino.progress',
-        music=require'assets.game.mechanicLib.mino.music',
+        stack=require'mino/stack',
+        squeeze=require'mino/squeeze',
+        progress=require'mino/progress',
+        music=require'mino/music',
     },
     puyo={
         -- Basic
-        actions=require'assets.game.mechanicLib.puyo.actions',
-        statistics=require'assets.game.mechanicLib.puyo.statistics',
-        sequence=require'assets.game.mechanicLib.puyo.sequence',
-        attackSys=require'assets.game.mechanicLib.puyo.attackSys',
-        misc=require'assets.game.mechanicLib.puyo.misc',
+        actions=require'puyo/actions',
+        statistics=require'puyo/statistics',
+        sequence=require'puyo/sequence',
+        attackSys=require'puyo/attackSys',
+        misc=require'puyo/misc',
     },
     gem={
         -- Basic
-        actions=require'assets.game.mechanicLib.gem.actions',
+        actions=require'gem/actions',
     },
 }
 return mechLib

@@ -177,7 +177,7 @@ function P:triggerEvent(name,...)
         end
     end
 end
----@param E Techmino.Event|function|string|table<number, Techmino.Event>|any
+---@param E Techmino.Event|Map<Techmino.Event>|function|string|any
 function P:addEvent(name,E)
     local L=self.event[name]
     assert(L,"Wrong event key: '"..tostring(name).."'")
