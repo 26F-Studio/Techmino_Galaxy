@@ -57,8 +57,8 @@ function S.drawFieldCell(C)
     gc_rectangle('fill',0,0,40,40)
 end
 
-function S.drawFloatHoldCell(C,unavailable,_,_,_)
-    if unavailable then
+function S.drawFloatHoldCell(C,disabled,_,_,_)
+    if disabled then
         gc_setColor(.6,.6,.6,.25)
     else
         local r,g,b=unpack(ColorTable[C.color])
@@ -67,8 +67,8 @@ function S.drawFloatHoldCell(C,unavailable,_,_,_)
     gc_rectangle('fill',0,0,40,40)
 end
 
-function S.drawFloatHoldMark(n,unavailable)
-    gc_setColor(unavailable and COLOR.DL or COLOR.L)
+function S.drawFloatHoldMark(n,disabled)
+    gc_setColor(disabled and COLOR.DL or COLOR.L)
     FONT.set(50)
     GC.mStr(n,0,5)
 end
@@ -169,7 +169,7 @@ function S.drawHandCell(C)
     gc_rectangle('fill',0,0,40,40)
 end
 
-local unavailableColor={.6,.6,.6}
+local disabledColor={.6,.6,.6}
 
 function S.drawNextBorder(slot)
     gc_setColor(0,0,0,.26)
@@ -179,8 +179,8 @@ function S.drawNextBorder(slot)
     gc_rectangle('line',30,0,140,100*slot)
 end
 
-function S.drawNextCell(C,unavailable,_,_,_)
-    gc_setColor(unavailable and unavailableColor or ColorTable[C.color])
+function S.drawNextCell(C,disabled,_,_,_)
+    gc_setColor(disabled and disabledColor or ColorTable[C.color])
     gc_rectangle('fill',0,0,40,40)
 end
 
@@ -199,8 +199,8 @@ function S.drawHoldBorder(mode,slot)
     end
 end
 
-function S.drawHoldCell(C,unavailable,_,_,_)
-    gc_setColor(unavailable and unavailableColor or ColorTable[C.color])
+function S.drawHoldCell(C,disabled,_,_,_)
+    gc_setColor(disabled and disabledColor or ColorTable[C.color])
     gc_rectangle('fill',0,0,40,40)
 end
 

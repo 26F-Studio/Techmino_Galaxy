@@ -55,8 +55,8 @@ function S.drawFieldCell(C,F,x,y)
     end
 end
 
-function S.drawFloatHoldCell(C,unavailable,B,x,y)
-    if unavailable then
+function S.drawFloatHoldCell(C,disabled,B,x,y)
+    if disabled then
         gc_setColor(.6,.6,.6,.25)
         gc_rectangle('fill',0,0,40,40)
     else
@@ -76,15 +76,15 @@ function S.drawHandCell(C,B,x,y)
     drawCell(B,x,y,r,g,b,1)
 end
 
-local unavailableColor={.6,.6,.6}
+local disabledColor={.6,.6,.6}
 
-function S.drawNextCell(C,unavailable,B,x,y)
-    local r,g,b=unpack(unavailable and unavailableColor or ColorTable[C.color])
+function S.drawNextCell(C,disabled,B,x,y)
+    local r,g,b=unpack(disabled and disabledColor or ColorTable[C.color])
     drawCell(B,x,y,r,g,b,1)
 end
 
-function S.drawHoldCell(C,unavailable,B,x,y)
-    local r,g,b=unpack(unavailable and unavailableColor or ColorTable[C.color])
+function S.drawHoldCell(C,disabled,B,x,y)
+    local r,g,b=unpack(disabled and disabledColor or ColorTable[C.color])
     drawCell(B,x,y,r,g,b,1)
 end
 

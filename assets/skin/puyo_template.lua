@@ -24,10 +24,10 @@ function S.drawGhostCell(_,_,_,_)
     gc_rectangle('fill',2,2,36,36,15)
 end
 
-local strokeR=4
+local strokeR=2
 function S.drawHandCellStroke(_,_,_,_)
     gc_setColor(1,1,1)
-    gc_rectangle('fill',2-strokeR,2-strokeR,36+2*strokeR,36+2*strokeR,15)
+    gc_rectangle('fill',2-strokeR,2-strokeR,36+2*strokeR,36+2*strokeR,15+strokeR)
 end
 
 function S.drawHandCell(C,_,_,_)
@@ -43,10 +43,10 @@ function S.drawNextBorder(slot)
     gc_rectangle('line',30,0,100,100*slot)
 end
 
-local unavailableColor={.6,.6,.6}
+local disabledColor={.6,.6,.6}
 
-function S.drawNextCell(C,unavailable,_,_,_)
-    gc_setColor(unavailable and unavailableColor or ColorTable[C.color])
+function S.drawNextCell(C,disabled,_,_,_)
+    gc_setColor(disabled and disabledColor or ColorTable[C.color])
     gc_rectangle('fill',2,2,36,36,18)
 end
 
