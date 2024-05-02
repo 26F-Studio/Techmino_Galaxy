@@ -36,6 +36,12 @@ end
 
 function scene.keyDown(key,isRep)
     if isRep then return end
+    if key=='`' and isAltPressed then
+        scene.widgetList.Sgem._visible=true
+        scene.widgetList.Spuyo._visible=true
+        scene.widgetList.Smino._visible=true
+        scene.widgetList.Ssys._visible=true
+    end
     if KEYMAP.sys:getAction(key)=='back' then
         SCN.back('fadeHeader')
     end
@@ -88,7 +94,7 @@ scene.widgetList={
     {type='button',name='puyo',x=140,y=460,w=200,h=60,text=LANG"keyset_puyo_rotate180",  fontSize=20, color='lG',code=selAct('puyo','rotate180')},
     {type='button',name='puyo',x=140,y=530,w=200,h=60,text=LANG"keyset_puyo_softDrop",   fontSize=20, color='lG',code=selAct('puyo','softDrop' )},
     {type='button',name='puyo',x=140,y=600,w=200,h=60,text=LANG"keyset_puyo_hardDrop",   fontSize=20, color='lG',code=selAct('puyo','hardDrop' )},
-    {type='button',name='puyo',x=140,y=950,w=200,h=60,text=LANG"keyset_puyo_skip",       fontSize=20, color='lG',code=selAct('puyo','skip' )},
+    {type='button',name='puyo',x=140,y=670,w=200,h=60,text=LANG"keyset_puyo_skip",       fontSize=20, color='lG',code=selAct('puyo','skip' )},
     {type='button',name='puyo',x=900,y=180,w=200,h=60,text=LANG"keyset_func1",           fontSize=20, color='lY',code=selAct('puyo','func1')},
     {type='button',name='puyo',x=900,y=250,w=200,h=60,text=LANG"keyset_func2",           fontSize=20, color='lY',code=selAct('puyo','func2')},
     {type='button',name='puyo',x=900,y=320,w=200,h=60,text=LANG"keyset_func3",           fontSize=20, color='lY',code=selAct('puyo','func3')},

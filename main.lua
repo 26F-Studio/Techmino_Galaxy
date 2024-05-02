@@ -340,11 +340,11 @@ KEYMAP.gem=KEYMAP.new{
     {act='moveUp',   keys={'w'}},
     {act='moveDown', keys={'s'}},
     {act='skip',     keys={'space'}},
-    {act='func1',    keys={'x'}},
-    {act='func2',    keys={'c'}},
-    {act='func3',    keys={'v'}},
-    {act='func4',    keys={'f'}},
-    {act='func5',    keys={'r'}},
+    {act='func1',    keys={'r'}},
+    {act='func2',    keys={'f'}},
+    {act='func3',    keys={'c'}},
+    {act='func4',    keys={'x'}},
+    {act='func5',    keys={'v'}},
 }
 KEYMAP.sys=KEYMAP.new{
     {act='view',   keys={'lshift'}},
