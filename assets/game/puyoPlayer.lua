@@ -54,7 +54,7 @@ PP.scriptCmd={
 --------------------------------------------------------------
 -- Actions
 PP._actions={}
-for k,v in next,mechLib.mino.actions do PP._actions[k]=PP:_getActionObj(v) end
+for k,v in next,mechLib.puyo.actions do PP._actions[k]=PP:_getActionObj(v) end
 --------------------------------------------------------------
 -- Effects
 function PP:createMoveEffect(x1,y1,x2,y2)
@@ -559,6 +559,7 @@ function PP:rotate(dir,ifInit)
             self:moveHand('rotate',ix,iy,ifInit)
             self:freshGhost()
             if self.ghostState and self.settings.IRSpushUp then self:moveHand('moveY',origY-self.handY) end
+            break
         end
     end
     self:freshDelay('rotate')
