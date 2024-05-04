@@ -1704,18 +1704,18 @@ function MP:render()
                 if #self.floatHolds>0 then
                     for n=1,#self.floatHolds do
                         local H=self.floatHolds[n]
-                        local unavailable=SET.holdMode=='float' and not SET.infHold and n<=self.holdTime
+                        local disabled=SET.holdMode=='float' and not SET.infHold and n<=self.holdTime
                         for y=1,#H do for x=1,#H[1] do
                             if H[y][x] then
                                 local dx,dy=(self.handX+x-2)*40,-(self.handY+y-1)*40
                                 gc_translate(dx,dy)
-                                skin.drawFloatHoldCell(H[y][x],unavailable,H,x,y)
+                                skin.drawFloatHoldCell(H[y][x],disabled,H,x,y)
                                 gc_translate(-dx,-dy)
                             end
                         end end
                         local dx,dy=(self.handX-1+#H[1]/2)*40,-(self.handY+#H/2)*40+5
                         gc_translate(dx,dy)
-                        skin.drawFloatHoldMark(n,unavailable)
+                        skin.drawFloatHoldMark(n,disabled)
                         gc_translate(-dx,-dy)
                     end
                 end
@@ -1778,7 +1778,7 @@ function MP:render()
         gc_translate(200,-400)
         skin.drawNextBorder(SET.nextSlot)
         for n=1,min(#self.nextQueue,SET.nextSlot) do
-            local unavailable=SET.holdMode=='swap' and not SET.infHold and n<=self.holdTime
+            local disabled=SET.holdMode=='swap' and not SET.infHold and n<=self.holdTime
             local B=self.nextQueue[n].matrix
             gc_push('transform')
                 gc_translate(100,100*n-50)
@@ -1787,7 +1787,7 @@ function MP:render()
                     if B[y][x] then
                         local dx,dy=(x-#B[1]/2-1)*40,(y-#B/2)*-40
                         gc_translate(dx,dy)
-                        skin.drawNextCell(B[y][x],unavailable,B,x,y)
+                        skin.drawNextCell(B[y][x],disabled,B,x,y)
                         gc_translate(-dx,-dy)
                     end
                 end end
@@ -1800,7 +1800,7 @@ function MP:render()
         gc_translate(-200,-400)
         skin.drawHoldBorder(SET.holdMode,SET.holdSlot)
         for n=1,#self.holdQueue do
-            local unavailable=SET.holdMode=='hold' and not SET.infHold and n<=self.holdTime
+            local disabled=SET.holdMode=='hold' and not SET.infHold and n<=self.holdTime
             local B=self.holdQueue[n].matrix
             gc_push('transform')
                 gc_translate(-100,100*n-50)
@@ -1809,7 +1809,7 @@ function MP:render()
                     if B[y][x] then
                         local dx,dy=(x-#B[1]/2-1)*40,(y-#B/2)*-40
                         gc_translate(dx,dy)
-                        skin.drawHoldCell(B[y][x],unavailable,B,x,y)
+                        skin.drawHoldCell(B[y][x],disabled,B,x,y)
                         gc_translate(-dx,-dy)
                     end
                 end end
