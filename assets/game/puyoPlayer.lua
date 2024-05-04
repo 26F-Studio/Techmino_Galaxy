@@ -408,7 +408,7 @@ function PP:freshDelay(reason)
 end
 function PP:freshNextQueue()
     while #self.nextQueue<max(self.settings.nextSlot,1) do
-        local shape=self:seqGen()
+        local shape=self:seqGen(self.seqData)
         if shape then self:getPuyo(shape) end
     end
 end
@@ -445,7 +445,7 @@ function PP:getPuyo(mat)
 
     local puyo={
         id=self.pieceCount,
-        shapeH=#mat[1],
+        size=max(#mat,#mat[1]),
         direction=0,
         matrix=mat,
     }
@@ -550,7 +550,7 @@ function PP:rotate(dir,ifInit)
     local cb=self.hand.matrix
     local icb=TABLE.rotate(cb,dir)
 
-    local kicks=PRS[self.hand.shapeH][self.hand.direction][dir]
+    local kicks=PRS[self.hand.size][self.hand.direction][dir]
     for n=1,#kicks do
         local ix,iy=self.handX+kicks[n][1],self.handY+kicks[n][2]
         if not self:ifoverlap(icb,ix,iy) then
@@ -1227,13 +1227,15 @@ local baseEnv={
     lockoutH=1e99,
     deathH=1e99,
     voidH=620,
-    connH=12, -- Default to 12
+    connH=4, -- Default to 12
 
     -- Clear
     clearGroupSize=4,
 
     -- Sequence
-    seqType='double4color',
+    seqType='twin_2S4C',
+    maxOpeningLength=2,
+    maxOpeningColor=3,
     nextSlot=6,
 
     -- Delay
@@ -1344,8 +1346,48 @@ function PP:initialize()
     self.garbageBuffer={}
 
     self.nextQueue={}
-    self.seqGen=coroutine.wrap(mechLib.puyo.sequence[self.settings.seqType] or self.settings.seqType)
+    self.seqData={}
+    self.seqGen=mechLib.puyo.sequence[self.settings.seqType] or self.settings.seqType
+    assert(self:seqGen(self.seqData,true)==nil,"First call of sequence generator must return nil")
     self:freshNextQueue()
+    while true do
+        -- Collect all cells in first N pieces
+        local cells={}
+        for n=1,min(self.settings.maxOpeningLength,#self.nextQueue) do
+            local mat=self.nextQueue[n].matrix
+            for y=1,#mat do for x=1,#mat[1] do
+                local c=mat[y][x]
+                if c then
+                    ins(cells,{n,y,x,c.color})
+                end
+            end end
+        end
+
+        -- Count colors
+        local colors={}
+        for i=1,#cells do
+            local c=cells[i]
+            local dictKey='mrz'..c[4]
+            if not colors[dictKey] then
+                colors[dictKey]={c[4],0}
+                ins(colors,colors[dictKey])
+            end
+            colors[dictKey][2]=colors[dictKey][2]+1
+        end
+
+        -- Finish when color count is less enough
+        if #colors<=1 or #colors<=self.settings.maxOpeningColor then break end
+
+        -- Merge the rarest two colors
+        table.sort(colors,function(a,b) return a[2]<b[2] end)
+        local orig,dest=colors[1][1],colors[2][1]
+        for i=1,#cells do
+            if cells[i][4]==orig then
+                self.nextQueue[cells[i][1]].matrix[cells[i][2]][cells[i][3]].color=dest
+            end
+        end
+        -- print('Merged color '..orig..' to '..dest)
+    end
 
     self.dropTimer=0
     self.lockTimer=0
