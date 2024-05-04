@@ -1061,11 +1061,12 @@ function PP:render()
                 gc_translate(0,-40) -- Move to up-left corner of first cell
 
                 local width=SET.fieldW
+                local connH=self.settings.connH
                 for y=1,#matrix do
                     for x=1,width do
                         local C=matrix[y][x]
                         if C then
-                            skin.drawFieldCell(C,matrix,x,y)
+                            skin.drawFieldCell(C,matrix,x,y,connH)
                         end
                         gc_translate(40,0)
                     end

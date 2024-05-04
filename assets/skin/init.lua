@@ -9,7 +9,7 @@ local function _getTime() return SKIN.time end
 ---@field base string
 ---@field getTime function
 ---@field drawFieldBackground fun(fieldW:number)
----@field drawFieldCell fun(C:Techmino.Cell, F:Techmino.RectField, x:number, y:number)
+---@field drawFieldCell fun(C:Techmino.Cell, F:Techmino.RectField, x:number, y:number, connH?:number)
 ---@field drawGhostCell fun(C:Techmino.Cell, B:Techmino.RectPiece, x:number, y:number)
 ---@field drawHandCellStroke fun(C:Techmino.Cell, B:Techmino.RectPiece, x:number, y:number)
 ---@field drawHandCell fun(C:Techmino.Cell, B:Techmino.RectPiece, x:number, y:number)

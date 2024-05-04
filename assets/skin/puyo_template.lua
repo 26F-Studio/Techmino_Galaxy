@@ -12,7 +12,7 @@ function S.drawFieldBackground(fieldW)
     gc_rectangle('fill',0,0,40*fieldW,-80*fieldW)
 end
 
-function S.drawFieldCell(C,_,x,y)
+function S.drawFieldCell(C,_,x,y,_)
     if not C.clearing or S.getTime()%100<=50 then
         gc_setColor(ColorTable[C.color])
         gc_rectangle('fill',x,y,36,36,15)
