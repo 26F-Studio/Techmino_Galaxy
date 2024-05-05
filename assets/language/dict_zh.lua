@@ -303,5 +303,6 @@ Memoryless，Previewless，Holdless
 # 26f_studio
 @ title 26F Studio
 @ contentSize 26
+@ link http://studio26f.org
 一个组织
 ]]
