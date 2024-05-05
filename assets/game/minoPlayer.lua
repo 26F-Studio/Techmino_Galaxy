@@ -66,6 +66,7 @@ local defaultSoundFunc={
     win=         function() FMOD.effect('win')         end,
     fail=        function() FMOD.effect('fail')        end,
 }
+---@type Map<fun(P:Techmino.Player.mino):any>
 MP.scriptCmd={
     clearHold=function(P) P:clearHold() end,
     clearNext=function(P) P:clearNext() end,
@@ -1215,7 +1216,7 @@ function MP:riseGarbage(holePos)
 
     -- Generate line
     for x=1,w do
-        L[x]=self:newCell(0)
+        L[x]=self:newCell(-1)
     end
 
     -- Generate hole
@@ -1283,12 +1284,12 @@ function MP:setField(arg)
                     if c%1==0 and c>=1 and c<=7 then
                         c=defaultMinoColor[c]
                     elseif c==8 then
-                        c=0
+                        c=-1
                     else
                         c=false
                     end
                 end
-                if c and c%1==0 and c>=0 and c<=64 then
+                if c and c%1==0 and c>=-1 and c<=999 then
                     f[y][x]=self:newCell(c)
                 else
                     f[y][x]=false

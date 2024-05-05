@@ -58,6 +58,7 @@ KEYMAP=require'keymap'
 SKIN=require'skin'
 CHAR=require'char'
 SETTINGS=require'settings'
+NumColor=require'numcolor'
 FMOD=require'fmod20221'
 DEBUG.checkLoadTime("Load game modules")
 --------------------------------------------------------------

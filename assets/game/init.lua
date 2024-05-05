@@ -1,12 +1,10 @@
 local require=simpRequire('assets.game.')
 Mino=require'minoes'
-ColorTable=require'colorTable'
 defaultMinoColor=setmetatable({
-    2,22,42,6,52,12,32,
-    2,22,62,26,38,4,52,16,32,56,12,42,6,38,4,60,28,12,
-    36,52,4,24,
+    844,484,448,864,748,884,488,
+    844,484,845,485,468,854,748,684,488,847,884,448,864,468,854,846,486,884,
+    478,748,854,484,
 },{__index=function() return math.random(64) end})
-defaultPuyoColor=setmetatable({2,12,42,22,52},{__index=function() return math.random(64) end})
 ---@type Techmino.Mech
 mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
 regFuncLib(mechLib,"mechLib")

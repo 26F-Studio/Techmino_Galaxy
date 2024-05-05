@@ -71,6 +71,7 @@ local defaultSoundFunc={
     win=         function() FMOD.effect('win')         end,
     fail=        function() FMOD.effect('fail')        end,
 }
+---@type Map<fun(P:Techmino.Player.gem):any>
 GP.scriptCmd={
 }
 --------------------------------------------------------------

@@ -3,6 +3,8 @@ local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 local gc_setLineWidth=gc.setLineWidth
 
+local NumColor=NumColor
+
 ---@type Techmino.skin.puyo
 local S={}
 S.base='mino_template'
@@ -14,7 +16,7 @@ end
 
 function S.drawFieldCell(C,_,x,y,_)
     if not C.clearing or S.getTime()%100<=50 then
-        gc_setColor(ColorTable[C.color])
+        gc_setColor(NumColor[C.color])
         gc_rectangle('fill',x,y,36,36,15)
     end
 end
@@ -31,7 +33,7 @@ function S.drawHandCellStroke(_,_,_,_)
 end
 
 function S.drawHandCell(C,_,_,_)
-    gc_setColor(ColorTable[C.color])
+    gc_setColor(NumColor[C.color])
     gc_rectangle('fill',2,2,36,36,15)
 end
 
@@ -46,7 +48,7 @@ end
 local disabledColor={.6,.6,.6}
 
 function S.drawNextCell(C,disabled,_,_,_)
-    gc_setColor(disabled and disabledColor or ColorTable[C.color])
+    gc_setColor(disabled and disabledColor or NumColor[C.color])
     gc_rectangle('fill',2,2,36,36,18)
 end
 

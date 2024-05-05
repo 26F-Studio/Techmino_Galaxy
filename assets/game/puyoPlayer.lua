@@ -49,6 +49,7 @@ local defaultSoundFunc={
     win=         function() FMOD.effect('win')         end,
     fail=        function() FMOD.effect('fail')        end,
 }
+---@type Map<fun(P:Techmino.Player.puyo):any>
 PP.scriptCmd={
 }
 --------------------------------------------------------------
@@ -765,7 +766,7 @@ function PP:dropGarbage(count)
         local y=self.settings.spawnH+1
         while F:getCell(x,y) do y=y+1 end
         F:setCell({
-            color=0,
+            color=-1,
             diggable=true,
         },x,y)
     end
@@ -1241,7 +1242,7 @@ local baseEnv={
     lockoutH=1e99,
     deathH=1e99,
     voidH=16,
-    connH=4, -- Default to 12
+    connH=12, -- Default to 12
 
     -- Clear
     clearGroupSize=4,

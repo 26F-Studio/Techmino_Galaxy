@@ -31,7 +31,7 @@ local contents={
 }
 -- Base dict data, not formatted
 local baseDict do
-    baseDict=require('assets/basedictionary')
+    baseDict=require('assets/dict_base')
     local dictObjMeta={__index=function(obj,k)
         if k=='titleText' then
             obj.titleText=GC.newText(FONT.get(obj.titleSize,'bold'),obj.titleFull)
@@ -322,7 +322,7 @@ function scene.enter()
             obj.contentSize=5*math.floor(obj.contentSize/5+.5)
             obj.titleFull=curObj.titleFull or obj.title or enObj.titleFull or enObj.title
             obj.link=curObj.link or false
-            obj.titleText=nil -- Generate when needed (__index at basedictionary.lua)
+            obj.titleText=nil -- Generate when needed (__index at dict_base.lua)
 
             ins(dispDict,obj)
             dispDict[obj.id]=obj

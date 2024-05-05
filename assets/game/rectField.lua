@@ -83,7 +83,7 @@ function F:drawThumbnail_color(step,size)
         for x=1,self._width do
             local c=f[y][x]
             if c then
-                gc.setColor(ColorTable[c.color])
+                gc.setColor(NumColor[c.color])
                 gc.rectangle('fill',(x-1)*step,-y*step,size,size)
             end
         end

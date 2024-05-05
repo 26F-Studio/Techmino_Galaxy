@@ -16,6 +16,7 @@ local stc_reset,stc_rect,stc_stop=GC.stc_reset,GC.stc_rect,GC.stc_stop
 local max,min=math.max,math.min
 
 local COLOR=COLOR
+local NumColor=NumColor
 
 ---@type Techmino.skin.mino
 local S={}
@@ -51,7 +52,7 @@ function S.drawFieldBorder()
 end
 
 function S.drawFieldCell(C)
-    local r,g,b=unpack(ColorTable[C.color])
+    local r,g,b=unpack(NumColor[C.color])
     local a=C.alpha or 1
     gc_setColor(r,g,b,a)
     gc_rectangle('fill',0,0,40,40)
@@ -61,7 +62,7 @@ function S.drawFloatHoldCell(C,disabled,_,_,_)
     if disabled then
         gc_setColor(.6,.6,.6,.25)
     else
-        local r,g,b=unpack(ColorTable[C.color])
+        local r,g,b=unpack(NumColor[C.color])
         gc_setColor(r,g,b,S.getTime()%150/200)
     end
     gc_rectangle('fill',0,0,40,40)
@@ -165,7 +166,7 @@ function S.drawHandCellStroke()
 end
 
 function S.drawHandCell(C)
-    gc_setColor(ColorTable[C.color])
+    gc_setColor(NumColor[C.color])
     gc_rectangle('fill',0,0,40,40)
 end
 
@@ -180,7 +181,7 @@ function S.drawNextBorder(slot)
 end
 
 function S.drawNextCell(C,disabled,_,_,_)
-    gc_setColor(disabled and disabledColor or ColorTable[C.color])
+    gc_setColor(disabled and disabledColor or NumColor[C.color])
     gc_rectangle('fill',0,0,40,40)
 end
 
@@ -200,7 +201,7 @@ function S.drawHoldBorder(mode,slot)
 end
 
 function S.drawHoldCell(C,disabled,_,_,_)
-    gc_setColor(disabled and disabledColor or ColorTable[C.color])
+    gc_setColor(disabled and disabledColor or NumColor[C.color])
     gc_rectangle('fill',0,0,40,40)
 end
 

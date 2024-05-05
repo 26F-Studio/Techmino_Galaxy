@@ -69,7 +69,7 @@ local function newQuestion()
         local piece=Mino.get(choices[i])
         choices[i]={
             shape=TABLE.shift(piece.shape),
-            color=ColorTable[defaultMinoColor[piece.id]],
+            color=NumColor[defaultMinoColor[piece.id]],
             correct=i==1,
         }
         if level==2 then
@@ -223,7 +223,7 @@ function scene.draw()
         GC.line(-len*30,y,len*30,y)
     end
     -- Field
-    GC.setColor(ColorTable[0])
+    GC.setColor(NumColor[-1])
     for i=1,len do
         GC.rectangle('fill',60*(i-1-len/2),380,60,-60*quest[i])
     end

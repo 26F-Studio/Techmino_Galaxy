@@ -7,6 +7,7 @@ local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 
 local unpack=unpack
+local NumColor=NumColor
 
 ---@type Techmino.skin.mino
 local S={}
@@ -35,7 +36,7 @@ local function getCID(F,y,x)
     return line and line[x] and line[x].cid or false
 end
 function S.drawFieldCell(C,F,x,y)
-    local r,g,b=unpack(ColorTable[C.color])
+    local r,g,b=unpack(NumColor[C.color])
     local a=C.alpha
     gc_setColor(r,g,b,a)
     gc_rectangle('fill',0,0,40,40)
@@ -60,31 +61,31 @@ function S.drawFloatHoldCell(C,disabled,B,x,y)
         gc_setColor(.6,.6,.6,.25)
         gc_rectangle('fill',0,0,40,40)
     else
-        local r,g,b=unpack(ColorTable[C.color])
+        local r,g,b=unpack(NumColor[C.color])
         local a=S.getTime()%150/200
         drawCell(B,x,y,r,g,b,a)
     end
 end
 
 function S.drawGhostCell(C,B,x,y)
-    local r,g,b=unpack(ColorTable[C.color])
+    local r,g,b=unpack(NumColor[C.color])
     drawCell(B,x,y,r,g,b,.26)
 end
 
 function S.drawHandCell(C,B,x,y)
-    local r,g,b=unpack(ColorTable[C.color])
+    local r,g,b=unpack(NumColor[C.color])
     drawCell(B,x,y,r,g,b,1)
 end
 
 local disabledColor={.6,.6,.6}
 
 function S.drawNextCell(C,disabled,B,x,y)
-    local r,g,b=unpack(disabled and disabledColor or ColorTable[C.color])
+    local r,g,b=unpack(disabled and disabledColor or NumColor[C.color])
     drawCell(B,x,y,r,g,b,1)
 end
 
 function S.drawHoldCell(C,disabled,B,x,y)
-    local r,g,b=unpack(disabled and disabledColor or ColorTable[C.color])
+    local r,g,b=unpack(disabled and disabledColor or NumColor[C.color])
     drawCell(B,x,y,r,g,b,1)
 end
 
