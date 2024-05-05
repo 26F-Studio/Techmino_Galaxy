@@ -445,7 +445,7 @@ function PP:getPuyo(mat)
 
     local puyo={
         id=self.pieceCount,
-        size=max(#mat,#mat[1]),
+        size=min(#mat,#mat[1]),
         direction=0,
         matrix=mat,
     }
@@ -509,24 +509,24 @@ end
 local PRS={
     [1]={
         [0]={
-            R={target=1,{0,0},{0,1},{-1,0},{-1,1}},
-            L={target=3,{-1,0},{-1,1},{0,0},{0,1}},
-            F={target=2,{0,-1},{0,0}},
+            R={target=1,base={0,0},{0,0},{0,1},{-1,0},{-1,1}},
+            L={target=3,base={-1,0},{0,0},{0,1},{1,0},{1,1}},
+            F={target=2,base={0,-1},{0,0},{0,1}},
         },
         [1]={
-            R={target=2,{0,-1},{0,0},{1,-1},{1,0}},
-            L={target=0,{0,0},{1,0},{0,-1},{1,-1}},
-            F={target=3,{-1,0},{0,0}},
+            R={target=2,base={0,-1},{0,0},{0,1},{1,0},{1,1}},
+            L={target=0,base={0,0},{0,0},{1,0},{0,-1},{1,-1}},
+            F={target=3,base={-1,0},{0,0},{1,0}},
         },
         [2]={
-            R={target=3,{-1,1},{0,1},{-1,0},{0,0}},
-            L={target=1,{0,1},{-1,1},{0,0},{-1,0}},
-            F={target=0,{0,1},{0,0}},
+            R={target=3,base={-1,1},{0,0},{1,0},{0,-1},{1,-1}},
+            L={target=1,base={0,1},{0,0},{-1,0},{0,-1},{-1,-1}},
+            F={target=0,base={0,1},{0,0},{0,-1}},
         },
         [3]={
-            R={target=0,{1,0},{0,0},{1,-1},{0,-1}},
-            L={target=2,{1,-1},{1,0},{0,-1},{0,0}},
-            F={target=1,{1,0},{0,0}},
+            R={target=0,base={1,0},{0,0},{-1,0},{0,-1},{-1,-1}},
+            L={target=2,base={1,-1},{0,0},{0,1},{-1,0},{-1,1}},
+            F={target=1,base={1,0},{0,0},{-1,0}},
         },
     },
     [2]={
@@ -536,6 +536,20 @@ local PRS={
         [3]={R={target=0,{0,0}},L={target=2,{0,0}},F={target=1,{0,0}}},
     },
 }
+for size=1,2 do
+    for _,sizeData in next,PRS[size] do
+        for _,rotData in next,sizeData do
+            if rotData.base then
+                for i=1,#rotData do
+                    local kick=rotData[i]
+                    kick[1]=kick[1]+rotData.base[1]
+                    kick[2]=kick[2]+rotData.base[2]
+                end
+                rotData.base=nil
+            end
+        end
+    end
+end
 function PP:rotate(dir,ifInit)
     if self.settings.stopMoveWhenRotate then
         self.moveDir=false
@@ -1226,7 +1240,7 @@ local baseEnv={
     spawnH=11,
     lockoutH=1e99,
     deathH=1e99,
-    voidH=620,
+    voidH=16,
     connH=4, -- Default to 12
 
     -- Clear
@@ -1246,6 +1260,7 @@ local baseEnv={
     fallDelay=100,
     clearDelay=200,
     deathDelay=260,
+    voidDelay=6200,
 
     -- Fresh
     freshCondition='fall',

@@ -1891,6 +1891,7 @@ local baseEnv={
     lockoutH=1e99,
     deathH=1e99,
     voidH=1260,
+    voidDelay=260,
 
     -- Clear
     clearRule='line',
