@@ -1223,7 +1223,7 @@ function MP:riseGarbage(holePos)
 
     -- Generate line
     for x=1,w do
-        L[x]=self:newCell(-1)
+        L[x]=self:newCell(777)
     end
 
     -- Generate hole
@@ -1291,12 +1291,12 @@ function MP:setField(arg)
                     if c%1==0 and c>=1 and c<=7 then
                         c=defaultMinoColor[c]
                     elseif c==8 then
-                        c=-1
+                        c=777
                     else
                         c=false
                     end
                 end
-                if c and c%1==0 and c>=-1 and c<=999 then
+                if c and c%1==0 and c>=0 and c<=999 then
                     f[y][x]=self:newCell(c)
                 else
                     f[y][x]=false

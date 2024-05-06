@@ -2,27 +2,15 @@
 local colorSet={}
 
 -- R Y B G P C O M
-colorSet.light={955,994,469,696,759,699,974,969}
-colorSet.classic={933,882,249,484,539,489,952,849}
-colorSet.black={400,440,014,141,204,144,420,414}
+colorSet.light  ={955,994,469,696,759,699,974,968}
+colorSet.classic={933,882,249,484,639,489,952,948}
+colorSet.dark   ={400,440,014,141,204,144,420,413}
 
-colorSet.grey={111,333,555,999,888,666,444,222}
+-- (Garbage use 666)
+colorSet.greyscale={111,333,777,999,888,555,444,222}
 
 function colorSet.getRandom(P)
-    P:random()
+    P:random(1,9)
 end
-
-setmetatable(colorSet,{
-    __index=function(_,k)
-        assertf(k=='random','Invalid color set key : %s',k)
-        if 1 then
-            local l={}
-            -- TODO
-            return l
-        else
-            error('Not color set : '..k)
-        end
-    end
-})
 
 return colorSet

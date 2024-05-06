@@ -813,7 +813,7 @@ function PP:dropGarbage(count)
         local y=self.settings.spawnH+1
         while F:getCell(x,y) do y=y+1 end
         F:setCell({
-            color=-1,
+            color=555,
             diggable=true,
         },x,y)
     end
@@ -1233,7 +1233,7 @@ function PP:render()
     for n=1,min(#self.nextQueue,SET.nextSlot) do
         local B=self.nextQueue[n].matrix
         gc_push('transform')
-            gc_translate(80,100*n-50)
+            gc_translate(80+5*(-1)^n,100*n-50)
             -- gc_scale(min(2.3/#B,3/#B[1],.86))
             for y=1,#B do for x=1,#B[1] do
                 if B[y][x] then
