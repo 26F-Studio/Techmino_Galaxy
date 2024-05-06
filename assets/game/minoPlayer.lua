@@ -12,12 +12,13 @@ local ins,rem=table.insert,table.remove
 
 local clamp,expApproach=MATH.clamp,MATH.expApproach
 
----@class Techmino.Player.mino: Techmino.Player
+---@class Techmino.Player.Mino: Techmino.Player
 ---@field field Techmino.RectField
 local MP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 --------------------------------------------------------------
 -- Function tables
+
 local defaultSoundFunc={
     countDown=      countDownSound,
     move=           function() FMOD.effect('move')               end,
@@ -66,7 +67,7 @@ local defaultSoundFunc={
     win=         function() FMOD.effect('win')         end,
     fail=        function() FMOD.effect('fail')        end,
 }
----@type Map<fun(P:Techmino.Player.mino):any>
+---@type Map<fun(P:Techmino.Player.Mino):any>
 MP.scriptCmd={
     clearHold=function(P) P:clearHold() end,
     clearNext=function(P) P:clearNext() end,
@@ -74,12 +75,16 @@ MP.scriptCmd={
     setField=function(P,arg) P:setField(arg) end,
     switchAction=function(P,arg) P:switchAction(arg) end,
 }
+
 --------------------------------------------------------------
 -- Actions
+
 MP._actions={}
 for k,v in next,mechLib.mino.actions do MP._actions[k]=MP:_getActionObj(v) end
+
 --------------------------------------------------------------
 -- Effects
+
 function MP:createMoveEffect(x1,y1,x2,y2)
     local p=self.particles.rectShade
     local dx,dy=self:getSmoothPos()
@@ -214,8 +219,10 @@ function MP:getSmoothPos()
             self.ghostY and self.handY>self.ghostY and 40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6 or 0
     end
 end
+
 --------------------------------------------------------------
 -- Game methods
+
 ---@param action 'moveX'|'moveY'|'drop'|'rotate'|'reset'
 function MP:moveHand(action,A,B,C,D)
     --[[
@@ -1365,8 +1372,10 @@ function MP:getScriptValue(arg)
         arg.d=='field_height' and self.field:getHeight() or
         arg.d=='cell' and (self.field:getCell(arg.x,arg.y) and 1 or 0)
 end
+
 --------------------------------------------------------------
 -- Press & Release & Update & Render
+
 function MP:updateFrame()
     local SET=self.settings
 
@@ -1843,8 +1852,10 @@ function MP:render()
 
     gc_pop()
 end
+
 --------------------------------------------------------------
 -- Other
+
 function MP:decodeScript(line,errMsg)
     if line.cmd=='setField' then
     elseif line.cmd=='switchAction' then
@@ -1881,8 +1892,10 @@ function MP:checkScriptSyntax(cmd,arg,errMsg)
         end
     end
 end
+
 --------------------------------------------------------------
 -- Builder
+
 ---@class Techmino.Mode.Setting.Mino
 local baseEnv={
     -- Size

@@ -11,7 +11,7 @@ local max,min=math.max,math.min
 local floor=math.floor
 local ins,rem=table.insert,table.remove
 
----@class Techmino.Player.gem: Techmino.Player
+---@class Techmino.Player.Gem: Techmino.Player
 ---@field field any[][]
 local GP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
@@ -47,6 +47,7 @@ local GP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 --------------------------------------------------------------
 -- Function tables
+
 local defaultSoundFunc={
     countDown=      countDownSound,
     move=           function() FMOD.effect('move')          end,
@@ -71,17 +72,22 @@ local defaultSoundFunc={
     win=         function() FMOD.effect('win')         end,
     fail=        function() FMOD.effect('fail')        end,
 }
----@type Map<fun(P:Techmino.Player.gem):any>
+---@type Map<fun(P:Techmino.Player.Gem):any>
 GP.scriptCmd={
 }
+
 --------------------------------------------------------------
 -- Actions
+
 GP._actions={}
 for k,v in next,mechLib.mino.actions do GP._actions[k]=GP:_getActionObj(v) end
+
 --------------------------------------------------------------
 -- Effects
+
 --------------------------------------------------------------
 -- Game methods
+
 function GP:printField() -- For debugging
     local F=self.field
     print('----------')
@@ -473,8 +479,10 @@ function GP:getScriptValue(arg)
         arg.d=='field_size' and self.settings.fieldSize or
         arg.d=='cell' and (self.field[arg.y][arg.x] and 1 or 0)
 end
+
 --------------------------------------------------------------
 -- Press & Release & Update & Render
+
 function GP:getMousePos(x,y)
     local pos=self.pos
     x,y=((x-pos.x)/pos.k/360+1)/2,((pos.y-y)/pos.k/360+1)/2
@@ -813,8 +821,10 @@ function GP:render()
 
     gc_pop()
 end
+
 --------------------------------------------------------------
 -- Other
+
 function GP:decodeScript(line,errMsg)
     -- TODO
     -- error(errMsg.."No string command '"..cmd.."'")
@@ -822,8 +832,10 @@ end
 function GP:checkScriptSyntax(cmd,arg,errMsg)
     -- TODO
 end
+
 --------------------------------------------------------------
 -- Builder
+
 ---@class Techmino.Mode.Setting.Gem
 local baseEnv={
     -- Size

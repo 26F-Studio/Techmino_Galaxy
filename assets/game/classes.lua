@@ -63,9 +63,9 @@
 ---|'drawOnPlayer'
 
 ---@alias Techmino.Mech.basic table<string, table|fun(P:Techmino.Player|any):any>
----@alias Techmino.Mech.mino table<string, table|fun(P:Techmino.Player.mino|any):any, any>
----@alias Techmino.Mech.puyo table<string, table|fun(P:Techmino.Player.puyo|any):any, any>
----@alias Techmino.Mech.gem table<string, table|fun(P:Techmino.Player.gem|any):any, any>
+---@alias Techmino.Mech.mino table<string, table|fun(P:Techmino.Player.Mino|any):any, any>
+---@alias Techmino.Mech.puyo table<string, table|fun(P:Techmino.Player.Puyo|any):any, any>
+---@alias Techmino.Mech.gem table<string, table|fun(P:Techmino.Player.Gem|any):any, any>
 
 ---@class Techmino.ParticleSystems
 ---@field rectShade love.ParticleSystem
@@ -125,10 +125,10 @@
 ---@field event table<Techmino.mode.event.basic|Techmino.mode.event.gem, string|table|function|Map<string|table|function>>
 
 ---@class Techmino.mino.clearRule
----@field getDelay fun(P:Techmino.Player.mino, lines:number[]): number?
----@field isFill fun(P:Techmino.Player.mino, y:number): boolean
----@field getFill fun(P:Techmino.Player.mino): number[]?
----@field clear fun(P:Techmino.Player.mino, lines:number[])
+---@field getDelay fun(P:Techmino.Player.Mino, lines:number[]): number?
+---@field isFill fun(P:Techmino.Player.Mino, y:number): boolean
+---@field getFill fun(P:Techmino.Player.Mino): number[]?
+---@field clear fun(P:Techmino.Player.Mino, lines:number[])
 
 ---@class Techmino.Game
 ---@field playing boolean

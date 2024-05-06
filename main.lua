@@ -24,18 +24,23 @@
 
 -------------------------------------------------------------
 -- Load Zenitha
+
 require("Zenitha")
 DEBUG.checkLoadTime("Load Zenitha")
 -- DEBUG.runVarMonitor()
 -- DEBUG.setCollectGarvageVisible()
+
 --------------------------------------------------------------
 -- System setting
+
 STRING.install()
 math.randomseed(os.time()*626)
 love.setDeprecationOutput(false)
 love.keyboard.setTextInput(false)
+
 --------------------------------------------------------------
 -- Create directories
+
 for _,v in next,{'conf','progress','replay','cache','lib','soundbank'} do
     local info=love.filesystem.getInfo(v)
     if not info then
@@ -45,8 +50,10 @@ for _,v in next,{'conf','progress','replay','cache','lib','soundbank'} do
         love.filesystem.createDirectory(v)
     end
 end
+
 --------------------------------------------------------------
 -- Misc modules
+
 local require=simpRequire('assets.')
 require'gamefunc'
 VERSION=_G.require"version"
@@ -61,8 +68,10 @@ SETTINGS=require'settings'
 NumColor=require'numcolor'
 FMOD=require'fmod20221'
 DEBUG.checkLoadTime("Load game modules")
+
 --------------------------------------------------------------
 -- Config Zenitha and Fmod
+
 ZENITHA.setAppName('Techmino')
 ZENITHA.setVersionText(VERSION.appVer)
 ZENITHA.setFirstScene('hello')
@@ -282,8 +291,10 @@ SFX[('play')]=function(name,vol,pos,tune)
     })
 end
 DEBUG.checkLoadTime("Config Zenitha and Fmod")
+
 --------------------------------------------------------------
 -- Load saving data
+
 TABLE.cover(FILE.load('conf/settings','-json -canskip') or {},SETTINGS,1e99)
 for k,v in next,SETTINGS._system do
     -- Gurantee triggering all setting-triggers
@@ -368,8 +379,10 @@ if keys then
     KEYMAP.sys:import(keys['sys'])
 end
 DEBUG.checkLoadTime("Load settings & data")
+
 --------------------------------------------------------------
 -- Load SOURCE ONLY resources
+
 ---@type table<string, love.Shader>
 SHADER={}
 for _,v in next,love.filesystem.getDirectoryItems('assets/shader') do
@@ -434,5 +447,7 @@ SCN.addSwap('fastFadeHeader',{
     end,
 })
 DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins")
+
 --------------------------------------------------------------
+
 DEBUG.logLoadTime()

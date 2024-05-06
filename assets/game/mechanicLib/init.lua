@@ -39,6 +39,7 @@ local mechLib={
         actions=require'puyo/actions',
         statistics=require'puyo/statistics',
         sequence=require'puyo/sequence',
+        colorSet=require'puyo/colorSet',
         attackSys=require'puyo/attackSys',
         misc=require'puyo/misc',
     },

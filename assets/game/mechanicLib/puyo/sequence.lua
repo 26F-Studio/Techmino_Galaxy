@@ -15,7 +15,7 @@ end
 ---@type Techmino.Mech.puyo
 local sequence={}
 
----@param P Techmino.Player.puyo
+---@param P Techmino.Player.Puyo
 ---@param d table cached data of generator
 ---@param init boolean true if this is the first initializating call
 ---@diagnostic disable-next-line

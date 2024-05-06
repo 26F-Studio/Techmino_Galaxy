@@ -10,11 +10,14 @@ local P={}
 
 --------------------------------------------------------------
 -- Tools
+
 function P:drawInfoPanel(x,y,w,h)
     return SKIN.get(self.settings.skin).drawInfoPanel(x,y,w,h)
 end
+
 --------------------------------------------------------------
 -- Effects
+
 function P:shakeBoard(args,v)
     local shake=self.settings.shakeness
     local pos=self.pos
@@ -116,11 +119,15 @@ function P:say(arg)
         a=arg.c and arg.c[4] or 1,
     }
 end
+
 --------------------------------------------------------------
 -- Game methods
+
+---Random Int
 function P:random(a,b)
     return self.RND:random(a,b)
 end
+---Random Float
 function P:rand(a,b)
     return a+self.RND:random()*(b-a)
 end
@@ -240,8 +247,10 @@ function P:finish(reason)
         self:playSound(reason=='AC' and 'win' or 'fail')
     end
 end
+
 --------------------------------------------------------------
 -- Press & Release & Update & Render
+
 function P:pressKey(act)
     if self.settings.inputDelay<=0 then
         self:press(act)
@@ -434,8 +443,10 @@ function P:update(dt)
     for _,v in next,self.particles do v:update(dt) end
     self.texts:update(dt)
 end
+
 --------------------------------------------------------------
 -- Builder
+
 function P:addSoundEvent(name,F)
     assert(self.soundEvent[name],"Wrong soundEvent key: '"..tostring(name).."'")
     assert(type(F)=='function',"soundEvent must be function")
@@ -827,6 +838,7 @@ end
 function P:unserialize_custom()
     -- Flandre kawaii
 end
+
 --------------------------------------------------------------
 
 return P

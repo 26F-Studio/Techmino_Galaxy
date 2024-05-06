@@ -12,12 +12,13 @@ local max,min=math.max,math.min
 local floor=math.floor
 local ins,rem=table.insert,table.remove
 
----@class Techmino.Player.puyo: Techmino.Player
+---@class Techmino.Player.Puyo: Techmino.Player
 ---@field field Techmino.RectField
 local PP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 --------------------------------------------------------------
 -- Function tables
+
 local defaultSoundFunc={
     countDown=      countDownSound,
     move=           function() FMOD.effect('move')           end,
@@ -49,15 +50,19 @@ local defaultSoundFunc={
     win=         function() FMOD.effect('win')         end,
     fail=        function() FMOD.effect('fail')        end,
 }
----@type Map<fun(P:Techmino.Player.puyo):any>
+---@type Map<fun(P:Techmino.Player.Puyo):any>
 PP.scriptCmd={
 }
+
 --------------------------------------------------------------
 -- Actions
+
 PP._actions={}
 for k,v in next,mechLib.puyo.actions do PP._actions[k]=PP:_getActionObj(v) end
+
 --------------------------------------------------------------
 -- Effects
+
 function PP:createMoveEffect(x1,y1,x2,y2)
     local p=self.particles.rectShade
     local dx,dy=self:getSmoothPos()
@@ -136,8 +141,10 @@ function PP:getSmoothPos()
             self.ghostY and self.handY>self.ghostY and 40*(max(1-self.dropTimer/self.settings.dropDelay*2.6,0))^2.6 or 0
     end
 end
+
 --------------------------------------------------------------
 -- Game methods
+
 ---@param action 'moveX'|'moveY'|'drop'|'rotate'|'reset'
 function PP:moveHand(action,A,B,C)
     --[[
@@ -413,6 +420,46 @@ function PP:freshNextQueue()
         if shape then self:getPuyo(shape) end
     end
 end
+function PP:decreaseNextColor(maxLength,maxColor)
+    while true do
+        -- Collect all cells in first N pieces
+        local cells={}
+        for n=1,min(maxLength,#self.nextQueue) do
+            local mat=self.nextQueue[n].matrix
+            for y=1,#mat do for x=1,#mat[1] do
+                local c=mat[y][x]
+                if c then
+                    ins(cells,{n,y,x,c.color})
+                end
+            end end
+        end
+
+        -- Count colors
+        local colors={}
+        for i=1,#cells do
+            local c=cells[i]
+            local dictKey='mrz'..c[4]
+            if not colors[dictKey] then
+                colors[dictKey]={c[4],0}
+                ins(colors,colors[dictKey])
+            end
+            colors[dictKey][2]=colors[dictKey][2]+1
+        end
+
+        -- Finish when color count is less enough
+        if #colors<=1 or #colors<=maxColor then break end
+
+        -- Merge the rarest two colors
+        table.sort(colors,function(a,b) return a[2]<b[2] end)
+        local orig,dest=colors[1][1],colors[2][1]
+        for i=1,#cells do
+            if cells[i][4]==orig then
+                self.nextQueue[cells[i][1]].matrix[cells[i][2]][cells[i][3]].color=dest
+            end
+        end
+        -- print('Merged color '..orig..' to '..dest)
+    end
+end
 function PP:popNext()
     if self.nextQueue[1] then -- Most cases there is pieces in next queue
         self.hand=rem(self.nextQueue,1)
@@ -439,7 +486,7 @@ function PP:getPuyo(mat)
     for y=1,#mat do for x=1,#mat[1] do
         mat[y][x]=mat[y][x] and {
             puyoID=self.pieceCount,
-            color=defaultPuyoColor[mat[y][x]],
+            color=self.settings.colorSet[mat[y][x]],
             connClear=true,
         }
     end end
@@ -853,8 +900,10 @@ function PP:getScriptValue(arg)
         arg.d=='field_height' and self.field:getHeight() or
         arg.d=='cell' and (self.field:getCell(arg.x,arg.y) and 1 or 0)
 end
+
 --------------------------------------------------------------
 -- Press & Release & Update & Render
+
 function PP:updateFrame()
     local SET=self.settings
 
@@ -1223,8 +1272,10 @@ function PP:render()
 
     gc_pop()
 end
+
 --------------------------------------------------------------
 -- Other
+
 function PP:decodeScript(line,errMsg)
     -- TODO
     -- error(errMsg.."No string command '"..cmd.."'")
@@ -1232,8 +1283,10 @@ end
 function PP:checkScriptSyntax(cmd,arg,errMsg)
     -- TODO
 end
+
 --------------------------------------------------------------
 -- Builder
+
 ---@class Techmino.Mode.Setting.Puyo
 local baseEnv={
     -- Size
@@ -1296,6 +1349,7 @@ local baseEnv={
     freshLockInASP=true,
 
     -- Other
+    colorSet='classic', ---@type string|table
     script=false,
     IRSpushUp=true,
     skin='puyo_jelly',
@@ -1351,6 +1405,13 @@ end
 function PP:initialize()
     require'basePlayer'.initialize(self)
 
+    if self.settings.colorSet=='random' then
+        self.settings.colorSet=mechLib.puyo.colorSet.getRandom(self)
+    elseif type(self.settings.colorSet)=='string' then
+        self.settings.colorSet=mechLib.puyo.colorSet[self.settings.colorSet]
+    end
+    assert(type(self.settings.colorSet)=='table',"Invalid P.settings.colorSet")
+
     self.field=require'rectField'.new(self.settings.fieldW)
     self.clearingGroups={}
 
@@ -1366,44 +1427,7 @@ function PP:initialize()
     self.seqGen=mechLib.puyo.sequence[self.settings.seqType] or self.settings.seqType
     assert(self:seqGen(self.seqData,true)==nil,"First call of sequence generator must return nil")
     self:freshNextQueue()
-    while true do
-        -- Collect all cells in first N pieces
-        local cells={}
-        for n=1,min(self.settings.maxOpeningLength,#self.nextQueue) do
-            local mat=self.nextQueue[n].matrix
-            for y=1,#mat do for x=1,#mat[1] do
-                local c=mat[y][x]
-                if c then
-                    ins(cells,{n,y,x,c.color})
-                end
-            end end
-        end
-
-        -- Count colors
-        local colors={}
-        for i=1,#cells do
-            local c=cells[i]
-            local dictKey='mrz'..c[4]
-            if not colors[dictKey] then
-                colors[dictKey]={c[4],0}
-                ins(colors,colors[dictKey])
-            end
-            colors[dictKey][2]=colors[dictKey][2]+1
-        end
-
-        -- Finish when color count is less enough
-        if #colors<=1 or #colors<=self.settings.maxOpeningColor then break end
-
-        -- Merge the rarest two colors
-        table.sort(colors,function(a,b) return a[2]<b[2] end)
-        local orig,dest=colors[1][1],colors[2][1]
-        for i=1,#cells do
-            if cells[i][4]==orig then
-                self.nextQueue[cells[i][1]].matrix[cells[i][2]][cells[i][3]].color=dest
-            end
-        end
-        -- print('Merged color '..orig..' to '..dest)
-    end
+    self:decreaseNextColor(self.settings.maxOpeningLength,self.settings.maxOpeningColor)
 
     self.dropTimer=0
     self.lockTimer=0

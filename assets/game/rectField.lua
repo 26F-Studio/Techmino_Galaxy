@@ -5,6 +5,7 @@ local F={}
 
 --------------------------------------------------------------
 -- Methods
+
 function F:removeLine(h)
     table.remove(self._matrix,h)
 end
@@ -115,8 +116,10 @@ function F:setCell(cell,x,y)
     end
     self._matrix[y][x]=cell
 end
+
 --------------------------------------------------------------
 -- Builder
+
 function F.new(width)
     assert(type(width)=='number',"[Field].new(width): Need number")
     local f=setmetatable({_width=width},{__index=F,__metatable=true})
