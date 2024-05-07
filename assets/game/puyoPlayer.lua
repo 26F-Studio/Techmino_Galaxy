@@ -460,6 +460,13 @@ function PP:decreaseNextColor(maxLength,maxColor)
         -- print('Merged color '..orig..' to '..dest)
     end
 end
+function PP:shuffleColor(n)
+    local list=self.settings.colorSet
+    for i=n,2,-1 do
+        local r=self:random(i)
+        list[i],list[r]=list[r],list[i]
+    end
+end
 function PP:popNext()
     if self.nextQueue[1] then -- Most cases there is pieces in next queue
         self.hand=rem(self.nextQueue,1)
@@ -1297,6 +1304,10 @@ local baseEnv={
     voidH=16,
     connH=12, -- Default to 12
 
+    -- Color
+    colorSet='classic', ---@type string|table
+    colorShuffleRange=5,
+
     -- Clear
     clearGroupSize=4,
 
@@ -1349,7 +1360,6 @@ local baseEnv={
     freshLockInASP=true,
 
     -- Other
-    colorSet='classic', ---@type string|table
     script=false,
     IRSpushUp=true,
     skin='puyo_jelly',
@@ -1411,6 +1421,8 @@ function PP:initialize()
         self.settings.colorSet=mechLib.puyo.colorSet[self.settings.colorSet]
     end
     assert(type(self.settings.colorSet)=='table',"Invalid P.settings.colorSet")
+    self.settings.colorSet=TABLE.shift(self.settings.colorSet)
+    self:shuffleColor(self.settings.colorShuffleRange)
 
     self.field=require'rectField'.new(self.settings.fieldW)
     self.clearingGroups={}
