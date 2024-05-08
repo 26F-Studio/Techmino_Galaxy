@@ -1,6 +1,6 @@
 local require=simpRequire('assets.game.')
-Mino=require'minoes'
-defaultMinoColor=setmetatable({
+Brik=require'briks'
+defaultBrikColor=setmetatable({
     844,484,448,864,748,884,488,
     844,484,845,485,468,854,748,684,488,847,884,448,864,468,854,846,486,884,
     478,748,854,484,
@@ -8,7 +8,7 @@ defaultMinoColor=setmetatable({
 ---@type Techmino.Mech
 mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
 regFuncLib(mechLib,"mechLib")
-require'rotsys_mino'
+require'rotsys_brik'
 
 local gc=love.graphics
 
@@ -259,12 +259,12 @@ function GAME.newPlayer(id,pType)
     end
 
     local P
-    if pType=='mino' then
-        P=require'minoPlayer'.new(GAME.mode)
-    elseif pType=='puyo' then
-        P=require'puyoPlayer'.new(GAME.mode)
-    elseif pType=='gem' then
-        P=require'gemPlayer'.new(GAME.mode)
+    if pType=='brik' then
+        P=require'brikPlayer'.new(GAME.mode)
+    elseif pType=='gela' then
+        P=require'gelaPlayer'.new(GAME.mode)
+    elseif pType=='acry' then
+        P=require'acryPlayer'.new(GAME.mode)
     else
         MSG.new('error',"invalid player type :'"..tostring(pType).."'")
         return

@@ -2,7 +2,7 @@
 local scene={}
 
 function scene.enter()
-    resetVirtualKeyMode('mino')
+    resetVirtualKeyMode('brik')
     updateWidgetVisible(scene.widgetList)
 end
 

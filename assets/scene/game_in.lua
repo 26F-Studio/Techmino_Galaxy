@@ -62,27 +62,27 @@ end
 
 function scene.touchDown(x,y,id)
     if GAME.mainPlayer then
-        if GAME.mainPlayer.gameMode=='mino' or GAME.mainPlayer.gameMode=='puyo' then
+        if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
             if SETTINGS.system.touchControl then VCTRL.press(x,y,id) end
-        elseif GAME.mainPlayer.gameMode=='gem' then
+        elseif GAME.mainPlayer.gameMode=='acry' then
             GAME.mainPlayer:mouseDown(x,y,id)
         end
     end
 end
 function scene.touchMove(x,y,dx,dy,id)
     if GAME.mainPlayer then
-        if GAME.mainPlayer.gameMode=='mino' or GAME.mainPlayer.gameMode=='puyo' then
+        if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
             if SETTINGS.system.touchControl then VCTRL.move(x,y,id) end
-        elseif GAME.mainPlayer.gameMode=='gem' then
+        elseif GAME.mainPlayer.gameMode=='acry' then
             GAME.mainPlayer:mouseMove(x,y,dx,dy,id)
         end
     end
 end
 function scene.touchUp(x,y,id)
     if GAME.mainPlayer then
-        if GAME.mainPlayer.gameMode=='mino' or GAME.mainPlayer.gameMode=='puyo' then
+        if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
             if SETTINGS.system.touchControl then VCTRL.release(id) end
-        elseif GAME.mainPlayer.gameMode=='gem' then
+        elseif GAME.mainPlayer.gameMode=='acry' then
             GAME.mainPlayer:mouseUp(x,y,id)
         end
     end

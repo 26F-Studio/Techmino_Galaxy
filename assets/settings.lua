@@ -30,7 +30,7 @@ local settings={
         clean=false,
         locale='en',
     },
-    game_mino={
+    game_brik={
         -- Handling
         asd=120,
         asp=20,
@@ -40,7 +40,7 @@ local settings={
         -- Video
         shakeness=.6,
     },
-    game_puyo={
+    game_gela={
         -- Handling
         asd=120,
         asp=20,
@@ -51,7 +51,7 @@ local settings={
         -- Video
         shakeness=.6,
     },
-    game_gem={
+    game_acry={
         -- Handling
         asd=150,
         asp=40,

@@ -128,7 +128,7 @@ function scene.keyDown(key,isRep)
 
     local action
     if not controlCD then
-        action=KEYMAP.mino:getAction(key)
+        action=KEYMAP.brik:getAction(key)
         if action and action:find('rotate')==1 then
             FMOD.effect('rotate')
 
@@ -237,7 +237,7 @@ end
 local size=60
 function scene.draw()
     GC.replaceTransform(SCR.xOy_m)
-    GC.setColor(NumColor[defaultMinoColor[handID]])
+    GC.setColor(NumColor[defaultBrikColor[handID]])
 
     -- Hand shape
     GC.translate(-#handMat*size/2,-#handMat*size/2-250)

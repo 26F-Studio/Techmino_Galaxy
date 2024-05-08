@@ -7,45 +7,45 @@ local mechLib={
         timer=require'common/timer',
         finish=require'common/finish',
     },
-    mino={
+    brik={
         -- Basic
-        actions=require'mino/actions',
-        statistics=require'mino/statistics',
-        sequence=require'mino/sequence',
-        clearRule=require'mino/clearRule',
-        attackSys=require'mino/attackSys',
-        misc=require'mino/misc',
+        actions=require'brik/actions',
+        statistics=require'brik/statistics',
+        sequence=require'brik/sequence',
+        clearRule=require'brik/clearRule',
+        attackSys=require'brik/attackSys',
+        misc=require'brik/misc',
 
         -- Mode
-        sprint=require'mino/sprint',
-        dig=require'mino/dig',
-        survivor=require'mino/survivor',
-        backfire=require'mino/backfire',
-        marathon=require'mino/marathon',
-        hypersonic=require'mino/hypersonic',
-        comboPractice=require'mino/comboPractice',
-        tsdChallenge=require'mino/tsdChallenge',
-        techrashChallenge=require'mino/techrashChallenge',
-        acGenerator=require'mino/acGenerator',
+        sprint=require'brik/sprint',
+        dig=require'brik/dig',
+        survivor=require'brik/survivor',
+        backfire=require'brik/backfire',
+        marathon=require'brik/marathon',
+        hypersonic=require'brik/hypersonic',
+        comboPractice=require'brik/comboPractice',
+        tsdChallenge=require'brik/tsdChallenge',
+        techrashChallenge=require'brik/techrashChallenge',
+        acGenerator=require'brik/acGenerator',
 
         -- Special
-        stack=require'mino/stack',
-        squeeze=require'mino/squeeze',
-        progress=require'mino/progress',
-        music=require'mino/music',
+        stack=require'brik/stack',
+        squeeze=require'brik/squeeze',
+        progress=require'brik/progress',
+        music=require'brik/music',
     },
-    puyo={
+    gela={
         -- Basic
-        actions=require'puyo/actions',
-        statistics=require'puyo/statistics',
-        sequence=require'puyo/sequence',
-        colorSet=require'puyo/colorSet',
-        attackSys=require'puyo/attackSys',
-        misc=require'puyo/misc',
+        actions=require'gela/actions',
+        statistics=require'gela/statistics',
+        sequence=require'gela/sequence',
+        colorSet=require'gela/colorSet',
+        attackSys=require'gela/attackSys',
+        misc=require'gela/misc',
     },
-    gem={
+    acry={
         -- Basic
-        actions=require'gem/actions',
+        actions=require'acry/actions',
     },
 }
 return mechLib

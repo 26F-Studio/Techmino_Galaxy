@@ -1,5 +1,5 @@
----@alias Techmino.Player.Type 'mino'|'puyo'|'gem'
----@alias Techmino.Mode.Setting Techmino.Mode.Setting.Mino|Techmino.Mode.Setting.Puyo|Techmino.Mode.Setting.Gem
+---@alias Techmino.Player.Type 'brik'|'gela'|'acry'
+---@alias Techmino.Mode.Setting Techmino.Mode.Setting.Brik|Techmino.Mode.Setting.Gela|Techmino.Mode.Setting.Acry
 ---@alias Techmino.EndReason
 ---|'AC'  Win
 ---|'WA'  Block out
@@ -21,7 +21,7 @@
 ---|'afterRelease'
 ---|'gameOver'
 
----@alias Techmino.mode.event.mino
+---@alias Techmino.mode.event.brik
 ---|'afterResetPos'
 ---|'afterSpawn'
 ---|'afterDrop'
@@ -40,7 +40,7 @@
 ---|'drawInField'
 ---|'drawOnPlayer'
 
----@alias Techmino.mode.event.puyo
+---@alias Techmino.mode.event.gela
 ---|'afterSpawn'
 ---|'afterResetPos'
 ---|'afterDrop'
@@ -54,7 +54,7 @@
 ---|'drawInField'
 ---|'drawOnPlayer'
 
----@alias Techmino.mode.event.gem
+---@alias Techmino.mode.event.acry
 ---|'illegalMove'
 ---|'legalMove'
 ---
@@ -63,9 +63,9 @@
 ---|'drawOnPlayer'
 
 ---@alias Techmino.Mech.basic table<string, table|fun(P:Techmino.Player|any):any>
----@alias Techmino.Mech.mino table<string, table|fun(P:Techmino.Player.Mino|any):any, any>
----@alias Techmino.Mech.puyo table<string, table|fun(P:Techmino.Player.Puyo|any):any, any>
----@alias Techmino.Mech.gem table<string, table|fun(P:Techmino.Player.Gem|any):any, any>
+---@alias Techmino.Mech.brik table<string, table|fun(P:Techmino.Player.Brik|any):any, any>
+---@alias Techmino.Mech.gela table<string, table|fun(P:Techmino.Player.Gela|any):any, any>
+---@alias Techmino.Mech.acry table<string, table|fun(P:Techmino.Player.Acry|any):any, any>
 
 ---@class Techmino.ParticleSystems
 ---@field rectShade love.ParticleSystem
@@ -77,17 +77,17 @@
 ---@field cornerCheck love.ParticleSystem
 ---@field tiltRect love.ParticleSystem
 ---@field trail love.ParticleSystem
----@field minoMapBack love.ParticleSystem
+---@field brikMapBack love.ParticleSystem
 
----@alias Techmino.Mino.Shape Map<Map<boolean>>
----@alias Techmino.Mino.Name 'Z'|'S'|'J'|'L'|'T'|'O'|'I'|'Z5'|'S5'|'P'|'Q'|'F'|'E'|'T5'|'U'|'V'|'W'|'X'|'J5'|'L5'|'R'|'Y'|'N'|'H'|'I5'|'I3'|'C'|'I2'|'O1'|string
----@alias Techmino.Mino.ID 1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|integer
+---@alias Techmino.Brik.Shape Map<Map<boolean>>
+---@alias Techmino.Brik.Name 'Z'|'S'|'J'|'L'|'T'|'O'|'I'|'Z5'|'S5'|'P'|'Q'|'F'|'E'|'T5'|'U'|'V'|'W'|'X'|'J5'|'L5'|'R'|'Y'|'N'|'H'|'I5'|'I3'|'C'|'I2'|'O1'|string
+---@alias Techmino.Brik.ID 1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|integer
 ---@alias Techmino.Event {[1]:number, [2]:function}
 
----@class Techmino.Mino
----@field name Techmino.Mino.Name
----@field id Techmino.Mino.ID
----@field shape Techmino.Mino.Shape
+---@class Techmino.Brik
+---@field name Techmino.Brik.Name
+---@field id Techmino.Brik.ID
+---@field shape Techmino.Brik.Shape
 
 ---@class Techmino.Cell
 ---@field cid string cell's mem pointer string
@@ -108,27 +108,27 @@
 
 ---@class Techmino.Mode
 ---@field initialize function Called when initializing the mode
----@field settings {mino:Techmino.Mode.Setting.Mino?, puyo:Techmino.Mode.Setting.Puyo?, gem:Techmino.Mode.Setting.Gem?}
+---@field settings {brik:Techmino.Mode.Setting.Brik?, gela:Techmino.Mode.Setting.Gela?, acry:Techmino.Mode.Setting.Acry?}
 ---@field layout 'default' Layout mode
 ---@field checkFinish function Return if the game should end when a player finishes
 ---@field result function Called when the game ends
 ---@field resultPage fun(time:number) Drawing the result page
 ---@field name string Mode name, for debug use
 
----@class Techmino.Mode.Setting.Mino
----@field event table<Techmino.mode.event.basic|Techmino.mode.event.mino, string|table|function|Map<string|table|function>>
+---@class Techmino.Mode.Setting.Brik
+---@field event table<Techmino.mode.event.basic|Techmino.mode.event.brik, string|table|function|Map<string|table|function>>
 
----@class Techmino.Mode.Setting.Puyo
----@field event table<Techmino.mode.event.basic|Techmino.mode.event.puyo, string|table|function|Map<string|table|function>>
+---@class Techmino.Mode.Setting.Gela
+---@field event table<Techmino.mode.event.basic|Techmino.mode.event.gela, string|table|function|Map<string|table|function>>
 
----@class Techmino.Mode.Setting.Gem
----@field event table<Techmino.mode.event.basic|Techmino.mode.event.gem, string|table|function|Map<string|table|function>>
+---@class Techmino.Mode.Setting.Acry
+---@field event table<Techmino.mode.event.basic|Techmino.mode.event.acry, string|table|function|Map<string|table|function>>
 
----@class Techmino.mino.clearRule
----@field getDelay fun(P:Techmino.Player.Mino, lines:number[]): number?
----@field isFill fun(P:Techmino.Player.Mino, y:number): boolean
----@field getFill fun(P:Techmino.Player.Mino): number[]?
----@field clear fun(P:Techmino.Player.Mino, lines:number[])
+---@class Techmino.brik.clearRule
+---@field getDelay fun(P:Techmino.Player.Brik, lines:number[]): number?
+---@field isFill fun(P:Techmino.Player.Brik, y:number): boolean
+---@field getFill fun(P:Techmino.Player.Brik): number[]?
+---@field clear fun(P:Techmino.Player.Brik, lines:number[])
 
 ---@class Techmino.Game
 ---@field playing boolean

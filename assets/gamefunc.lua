@@ -157,16 +157,16 @@ end
 function saveSettings()
     FILE.save({
         system=SETTINGS._system,
-        game_mino=SETTINGS.game_mino,
-        game_puyo=SETTINGS.game_puyo,
-        game_gem=SETTINGS.game_gem,
+        game_brik=SETTINGS.game_brik,
+        game_gela=SETTINGS.game_gela,
+        game_acry=SETTINGS.game_acry,
     },'conf/settings','-json')
 end
 function saveKey()
     FILE.save({
-        mino=KEYMAP.mino:export(),
-        puyo=KEYMAP.puyo:export(),
-        gem=KEYMAP.gem:export(),
+        brik=KEYMAP.brik:export(),
+        gela=KEYMAP.gela:export(),
+        acry=KEYMAP.acry:export(),
         sys=KEYMAP.sys:export(),
     },'conf/keymap','-json')
 end

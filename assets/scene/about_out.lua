@@ -64,8 +64,8 @@ function scene.update(dt)
             vx=math.random(-200,200),vy=math.random(926,1260),
             r=math.random(25,45),
             a=math.random()*MATH.tau,va=10*math.random()-5,
-            mino=MATH.randFrom(CHAR.mino),
-            minoColor=math.random()*MATH.tau,
+            brik=MATH.randFrom(CHAR.brik),
+            brikColor=math.random()*MATH.tau,
         }
         if o.x*o.vx<0 and MATH.roll(.062) then
             setName(o)
@@ -114,9 +114,9 @@ function scene.draw()
         else
             -- GC.setColor(.6,.6,.6,.26)
             -- GC.rectangle('line',o.x-o.r,-o.y-o.r,2*o.r,2*o.r)
-            GC.setColor(COLOR.rainbow(o.minoColor))
+            GC.setColor(COLOR.rainbow(o.brikColor))
             FONT.set(60)
-            GC.printf(o.mino,o.x,-o.y,100,'center',o.a,o.r/16,nil,50,41)
+            GC.printf(o.brik,o.x,-o.y,100,'center',o.a,o.r/16,nil,50,41)
         end
     end
 

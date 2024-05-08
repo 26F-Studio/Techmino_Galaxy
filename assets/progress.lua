@@ -15,7 +15,7 @@ local prgs=setmetatable({
         marathon=0,
     },
     bgmUnlocked={},
-    mino_stdMap={
+    brik_stdMap={
         unlocked=true,
         modeUnlocked={
             -- 0 = unlocked, 1~5 = rank got
@@ -24,8 +24,8 @@ local prgs=setmetatable({
             dig_practice=0,
         },
     },
-    puyo_wip=false,
-    gem_wip=false,
+    gela_wip=false,
+    acry_wip=false,
 },{
     __index=function(_,k)
         LOG("Attempt to read undefined progress data: "..tostring(k))
@@ -396,7 +396,7 @@ function PROGRESS.setModeState(style,name,state,force)
         prgs[style].modeUnlocked[name]=state
         PROGRESS.save()
         if state==0 and state>orgState then
-            if TASK.lock('minomap_unlockSound_background',2.6) then
+            if TASK.lock('brikmap_unlockSound_background',2.6) then
                 FMOD.effect('map_unlock_background')
                 MSG.new('check',Text.new_level_unlocked,2.6)
             end

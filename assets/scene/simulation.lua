@@ -12,11 +12,11 @@
 
 ---@type Techmino.simulation[]
 local sims={
-    { -- Mino
+    { -- Brik
         trigger=function()
             DEBUG.yieldUntilNextScene()
             if SCN.cur=='simulation' then
-                SCN.go('mode_mino_stdMap','fadeHeader')
+                SCN.go('mode_brik_stdMap','fadeHeader')
             end
         end,
         draw=function()
@@ -35,11 +35,11 @@ local sims={
             )
         end,
     },
-    { -- Puyo
+    { -- Gela
         trigger=function()
             DEBUG.yieldUntilNextScene()
             if SCN.cur=='simulation' then
-                SCN.go('mode_puyo','fadeHeader')
+                SCN.go('mode_gela','fadeHeader')
             end
         end,
         draw=function()
@@ -49,11 +49,11 @@ local sims={
             GC.circle('line',35,60,70)
         end,
     },
-    { -- Gem
+    { -- Acry
         trigger=function()
             DEBUG.yieldUntilNextScene()
             if SCN.cur=='simulation' then
-                SCN.go('mode_gem','fadeHeader')
+                SCN.go('mode_acry','fadeHeader')
             end
         end,
         draw=function()
@@ -85,9 +85,9 @@ function scene.enter()
         s.trigTimer=false
     end
     subjectFocused=false
-    sims[1].valid=PROGRESS.getModeUnlocked('mino_stdMap')
-    sims[2].valid=PROGRESS.getModeUnlocked('puyo_wip')
-    sims[3].valid=PROGRESS.getModeUnlocked('gem_wip')
+    sims[1].valid=PROGRESS.getModeUnlocked('brik_stdMap')
+    sims[2].valid=PROGRESS.getModeUnlocked('gela_wip')
+    sims[3].valid=PROGRESS.getModeUnlocked('acry_wip')
     scene.update(0)
     PROGRESS.setExteriorBG()
     PROGRESS.playExteriorBGM()

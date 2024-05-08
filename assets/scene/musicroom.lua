@@ -104,6 +104,7 @@ local bgmList={
     ['subzero']               ={author="TetraCepra",message="A cool blank remix"},
     ['infinitesimal']         ={author="TetraCepra",message="A cool blank remix"},
     ['vanifish']              ={author="Trebor & MrZ",message="A cool blank remix"},
+    ['gelly']                 ={author="MrZ",message="Old song remix"},
 }
 
 local musicListBox do

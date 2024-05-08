@@ -1,0 +1,116 @@
+local Physical={}
+Physical.centerTex=GC.load{10,10,
+    {'setLW',2},
+    {'dRect',0,0,10,10},
+}
+Physical[1]={ -- Z
+    [0]={
+        R={target=1,base='+1+0',test={'+0+0','+0-1','-1+0','+0+1','-1+1'}},
+        L={target=1,base='+0+0',test={'+0+0','+0-1','+0+1','+1+0','+1+1'}},
+        F={target=0,base='+0-1',test={'+0+0','+1+0','-1+1','+0+1'}},
+    },
+    [1]={
+        R={target=0,base='-1+0',test={'+0+0','+1+0','+1-1','+0+1','+1+1','-1+0','+0+2','+1+2'}},
+        L={target=0,base='+0+0',test={'+0+0','-1+0','+0-1','-1-1','-1+1','+0+1','-1+2','+0+2'}},
+        F={target=1,base='-1+0',test={'+0+0','+0-1','+1+1','+1+0'}},
+    },
+}
+Physical[2]={ -- S
+    [0]={
+        R={target=1,base='+1+0',test=brikRotSys._flipList(Physical[1][0].L.test)},
+        L={target=1,base='+0+0',test=brikRotSys._flipList(Physical[1][0].R.test)},
+        F={target=0,base='+0-1',test=brikRotSys._flipList(Physical[1][0].F.test)},
+    },
+    [1]={
+        R={target=0,base='-1+0',test=brikRotSys._flipList(Physical[1][1].L.test)},
+        L={target=0,base='+0+0',test=brikRotSys._flipList(Physical[1][1].R.test)},
+        F={target=1,base='+1+0',test=brikRotSys._flipList(Physical[1][1].F.test)},
+    },
+}
+Physical[3]={ -- J
+    [0]={
+        R={base='+1-1',test={'+0+0','-1+0','+0+1','-1+1','+1+0','+1+1'}},
+        L={base='+0-1',test={'+0+0','+1+0','+0+1','+1+1','-1+0','+0-1','+1-1'}},
+        F={base='+0-1',test={'+0+0','+1+0','-1+0','+0+1','-1+1'}},
+    },
+    [1]={
+        R={base='-1+0',test={'+0+0','+1+0','-1+0','+1-1','+0-1','+0+1','-1+1','+1+1','+0+2','+1+2'}},
+        L={base='-1+1',test={'+0+0','+1+0','-1+0','+1-1','+0-1','+0+1','+1+1','+0+2','+1+2'}},
+        F={base='-1+0',test={'+0+0','+0-1','+1+0','+0+1','+1+1'}},
+    },
+    [2]={
+        R={base='+0+0',test={'+0+0','+1+0','+1-1','-1+0','+0-1'}},
+        L={base='+1+0',test={'+0+0','-1+0','+0+1','-1-1','+1+0','-1+1'}},
+        F={base='+0+1',test={'+0+0','-1+0','+0+1','-1-1','+1+0','-1+1'}},
+    },
+    [3]={
+        R={base='+0+1',test={'+0+0','+1+0','-1+0','+0-1','+1-1','+0+0','-1+0','+0-1','-1-1','+1+0','+0+1','-1+1','+0+2','-1+2'}},
+        L={base='+0+0',test={'+0+0','-1+0','+0-1','-1-1','+1+0','+0+1','-1+1','+0+2','-1+2'}},
+        F={base='+1+0',test={'+0+0','+1+0','+0-1','+1-1','+0+1','+0+2'}},
+    },
+}
+Physical[4]={ -- L
+    [0]={
+        R={base=Physical[3][0].R.base,test=brikRotSys._flipList(Physical[3][0].L.test)},
+        L={base=Physical[3][0].L.base,test=brikRotSys._flipList(Physical[3][0].R.test)},
+        F={base=Physical[3][0].F.base,test=brikRotSys._flipList(Physical[3][0].F.test)},
+    },
+    [1]={
+        R={base=Physical[3][1].R.base,test=brikRotSys._flipList(Physical[3][3].L.test)},
+        L={base=Physical[3][1].L.base,test=brikRotSys._flipList(Physical[3][3].R.test)},
+        F={base=Physical[3][1].F.base,test=brikRotSys._flipList(Physical[3][3].F.test)},
+    },
+    [2]={
+        R={base=Physical[3][2].R.base,test=brikRotSys._flipList(Physical[3][2].L.test)},
+        L={base=Physical[3][2].L.base,test=brikRotSys._flipList(Physical[3][2].R.test)},
+        F={base=Physical[3][2].F.base,test=brikRotSys._flipList(Physical[3][2].F.test)},
+    },
+    [3]={
+        R={base=Physical[3][3].R.base,test=brikRotSys._flipList(Physical[3][1].L.test)},
+        L={base=Physical[3][3].L.base,test=brikRotSys._flipList(Physical[3][1].R.test)},
+        F={base=Physical[3][3].F.base,test=brikRotSys._flipList(Physical[3][1].F.test)},
+    },
+}
+Physical[5]={ -- T
+    [0]={
+        R={base=Physical[3][0].R.base,test={'+0+0','-1+0','+0+1','-1+1','+1+0'}},
+        L={base=Physical[3][0].L.base,test={'+0+0','+1+0','+0+1','+1+1','-1+0'}},
+        F={base=Physical[3][0].F.base,test={'+0+0','+0+1','-1+0','+1+0','-1+1','+1+1'}},
+    },
+    [1]={
+        R={base=Physical[3][1].R.base,test={'+0+0','+0-1','+1+0','+1-1','-1-1','+0+1','+1+1','+0+2','+1+2'}},
+        L={base=Physical[3][1].L.base,test={'+0+0','+0-1','+1+0','+1-1','+0+1','+1+1','+0+2','+1+2'}},
+        F={base=Physical[3][1].F.base,test={'+0+0','+1+0','+0-1','+1-1','+0+1','+1+1','+0+2','+1+2'}},
+    },
+    [2]={
+        R={base=Physical[3][2].R.base,test={'+0+0','-1+0','+0-1','-1-1','+1+0'}},
+        L={base=Physical[3][2].L.base,test={'+0+0','+1+0','+0-1','+1-1','-1+0'}},
+        F={base=Physical[3][2].F.base,test={'+0+0','+0-1','-1+0','+1+0','-1-1','+1-1'}},
+    },
+    [3]={
+        R={base=Physical[3][3].L.base,test={'+0+0','+0-1','-1+0','-1-1','+0+1','-1+1','+0+2','-1+2'}},
+        L={base=Physical[3][3].R.base,test={'+0+0','+0-1','-1+0','-1-1','+1-1','+0+1','-1+1','+0+2','-1+2'}},
+        F={base=Physical[3][3].F.base,test={'+0+0','-1+0','+0-1','-1-1','+0+1','-1+1','+0+2','-1+2'}},
+    },
+}
+Physical[6]={ -- O
+    [0]={
+        R={target=0,base='+1+0',test={'+0+0','+0-1','+1-1','+0-2'}},
+        L={target=0,base='-1+0',test={'+0+0','+0-1','-1-1','+0-2'}},
+        F={target=0,base='+0-1',test={'+0+0','-1+0','+1+0'}},
+    },
+}
+Physical[7]={ -- I
+    [0]={
+        R={target=1,base='+2-1',test={'+0+0','+1+0','-1-1','-2-1','+0-1','+1-1','-1+0','-2+0','+0-2','+1-2','-1+1','-2+1'}},
+        L={target=1,base='+1-1',test={'+0+0','-1+0','+1-1','+2-1','+0-1','-1-1','+1+0','+2+0','+0-2','-1-2','+1+1','+2+1'}},
+        F={target=0,base='+0+0',test={'+0+0','-1+0','+1+0','-2+0','+2+0'}},
+    },
+    [1]={
+        R={target=0,base='-2+1',test={'+0+0','-1+0','+1+1','+2+1','+0-1','-1-1','+1+2','+2+2'}},
+        L={target=0,base='-1+1',test={'+0+0','+1+0','-1+1','-2+1','+0-1','+1-1','-1+2','-2+2'}},
+        F={target=1,base='+0-1',test={'+0+0','-1+0','+1+0'}},
+    },
+}
+
+return Physical

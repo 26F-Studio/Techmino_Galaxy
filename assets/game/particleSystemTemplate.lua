@@ -164,7 +164,7 @@ do -- Harddrop light
     ps.trail=p
 end
 
-do -- Background light of mino map
+do -- Background light of brik map
     local p=love.graphics.newParticleSystem(GC.load{10,10,
         {'setCL',1,1,1,.5},
         {'fRect',0,0,10,10},
@@ -179,7 +179,7 @@ do -- Background light of mino map
     p:setParticleLifetime(5.62,7.26)
     p:setSpeed(620,1260)
     p:setEmissionRate(10)
-    ps.minoMapBack=p
+    ps.brikMapBack=p
 end
 
 return ps

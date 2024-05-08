@@ -66,10 +66,10 @@ local function newQuestion()
 
     choices={c1,c2}
     for i=1,#choices do
-        local piece=Mino.get(choices[i])
+        local piece=Brik.get(choices[i])
         choices[i]={
             shape=TABLE.shift(piece.shape),
-            color=NumColor[defaultMinoColor[piece.id]],
+            color=NumColor[defaultBrikColor[piece.id]],
             correct=i==1,
         }
         if level==2 then
@@ -169,7 +169,7 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return end
     local action
-    action=KEYMAP.mino:getAction(key)
+    action=KEYMAP.brik:getAction(key)
     if action=='moveLeft' or action=='moveRight' then
         answer(action=='moveLeft' and 1 or 2)
         return

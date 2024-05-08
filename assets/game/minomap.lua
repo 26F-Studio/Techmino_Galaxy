@@ -142,7 +142,7 @@ end
 
 local animations={}
 
-local pSys={} for i=1,3 do pSys[i]=require'assets.game.particleSystemTemplate'.minoMapBack:clone() end
+local pSys={} for i=1,3 do pSys[i]=require'assets.game.particleSystemTemplate'.brikMapBack:clone() end
 local mapPoly={
     0,0,
     6200,10738.715,
@@ -265,11 +265,11 @@ local function _selectMode(m)
 end
 local function _enterMode(m)
     if m then
-        if love.filesystem.getInfo('assets/game/mode/mino/exterior/'..m.name..'.lua') then
+        if love.filesystem.getInfo('assets/game/mode/brik/exterior/'..m.name..'.lua') then
             enterFX.timer=0
             enterFX.x,enterFX.y,enterFX.r=m.x,m.y,m.r
             FMOD.effect('map_enter')
-            SCN.go('game_out','fade','mino/exterior/'..m.name)
+            SCN.go('game_out','fade','brik/exterior/'..m.name)
         else
             MSG.new('warn',"Mode file not exist")
         end
@@ -342,7 +342,7 @@ function map:update(dt)
             if a.wait<=0 and a.type=='bridge' then
                 cam.x0,cam.y0=-a.x,-a.y
                 cam.k0,cam.a0=1,0
-                if TASK.lock('minomap_unlockSound',.26) then
+                if TASK.lock('brikmap_unlockSound',.26) then
                     FMOD.effect(a.sound)
                 end
             end

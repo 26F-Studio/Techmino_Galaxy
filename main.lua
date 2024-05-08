@@ -160,7 +160,7 @@ WIDGET.setDefaultOption{
 IMG.init{
     actionIcons={
         texture='assets/image/action_icon.png',
-        mino=(function()
+        brik=(function()
             local t={}
             local w=180
             for i,name in next,{
@@ -171,7 +171,7 @@ IMG.init{
             } do if #name>0 then t[name]=GC.newQuad((i-1)%5*w,math.floor((i-1)/5)*w,w,w,5*w,7*w) end end
             return t
         end)(),
-        puyo=(function()
+        gela=(function()
             local t={}
             local w=180
             for i,name in next,{
@@ -182,7 +182,7 @@ IMG.init{
             } do if #name>0 then t[name]=GC.newQuad((i-1)%5*w,math.floor((i-1)/5)*w,w,w,5*w,7*w) end end
             return t
         end)(),
-        gem=(function()
+        acry=(function()
             local t={}
             local w=180
             for i,name in next,{
@@ -243,12 +243,12 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
             if not bankMusic then
                 MSG.new('warn',"bank "..bankName.." load failed")
             else
-        local l,c=bankMusic:getEventList(bankMusic:getEventCount())
-        for i=1,c do
-            local path=l[i-1]:getPath()
-            if path then
-                local name=path:match("/([^/]+)$"):lower()
-                L[name]=path
+                local l,c=bankMusic:getEventList(bankMusic:getEventCount())
+                for i=1,c do
+                    local path=l[i-1]:getPath()
+                    if path then
+                        local name=path:match("/([^/]+)$"):lower()
+                        L[name]=path
                     end
                 end
             end
@@ -307,7 +307,7 @@ if SETTINGS.system.portrait then -- Brute fullscreen config for mobile device
 end
 PROGRESS.load()
 VCTRL.importSettings(FILE.load('conf/touch','-json -canskip'))
-KEYMAP.mino=KEYMAP.new{
+KEYMAP.brik=KEYMAP.new{
     {act='moveLeft', keys={'left'}},
     {act='moveRight',keys={'right'}},
     {act='rotateCW', keys={'up'}},
@@ -323,7 +323,7 @@ KEYMAP.mino=KEYMAP.new{
     {act='func4',    keys={'w'}},
     {act='func5',    keys={'e'}},
 }
-KEYMAP.puyo=KEYMAP.new{
+KEYMAP.gela=KEYMAP.new{
     {act='moveLeft', keys={'left'}},
     {act='moveRight',keys={'right'}},
     {act='rotateCW', keys={'up'}},
@@ -338,7 +338,7 @@ KEYMAP.puyo=KEYMAP.new{
     {act='func4',    keys={'w'}},
     {act='func5',    keys={'e'}},
 }
-KEYMAP.gem=KEYMAP.new{
+KEYMAP.acry=KEYMAP.new{
     {act='swapLeft', keys={'left'}},
     {act='swapRight',keys={'right'}},
     {act='swapUp',   keys={'up'}},
@@ -373,9 +373,9 @@ KEYMAP.sys=KEYMAP.new{
 }
 local keys=FILE.load('conf/keymap','-json -canskip')
 if keys then
-    KEYMAP.mino:import(keys['mino'])
-    KEYMAP.puyo:import(keys['puyo'])
-    KEYMAP.gem:import(keys['gem'])
+    KEYMAP.brik:import(keys['brik'])
+    KEYMAP.gela:import(keys['gela'])
+    KEYMAP.acry:import(keys['acry'])
     KEYMAP.sys:import(keys['sys'])
 end
 DEBUG.checkLoadTime("Load settings & data")
@@ -405,14 +405,14 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
     end
 end
 for _,v in next,{
-    'mino_template', -- Shouldn't be used
-    'mino_plastic',
-    'mino_interior',
+    'brik_template', -- Shouldn't be used
+    'brik_plastic',
+    'brik_interior',
 
-    'puyo_template', -- Shouldn't be used
-    'puyo_jelly',
+    'gela_template', -- Shouldn't be used
+    'gela_jelly',
 
-    'gem_template',
+    'acry_template',
 } do
     if FILE.isSafe('assets/skin/'..v..'.lua') then
         SKIN.add(v,require('skin/'..v))

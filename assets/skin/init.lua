@@ -29,11 +29,11 @@ local function _getTime() return SKIN.time end
 ---@field drawStartingCounter fun(readyDelay:number)
 ---@field drawInfoPanel fun(x:number, y:number, w:number, h:number) Only called by mode
 
----@class Techmino.skin.mino: Techmino.skin
+---@class Techmino.skin.brik: Techmino.skin
 
----@class Techmino.skin.puyo: Techmino.skin
+---@class Techmino.skin.gela: Techmino.skin
 
----@class Techmino.skin.gem: Techmino.skin
+---@class Techmino.skin.acry: Techmino.skin
 ---@field drawSwapCursor fun(cx:number, cy:number, lock:boolean)
 ---@field drawTwistCursor fun(sx:number, sy:number)
 
