@@ -66,7 +66,7 @@ local scene={}
 
 function scene.enter()
     if not brikMap then
-        brikMap=require'assets.game.brik'
+        brikMap=require'assets.game.brikmap'
         brikMap:freshUnlocked(PROGRESS.getModeState('brik_stdMap'),true)
     else
         brikMap:freshUnlocked(PROGRESS.getModeState('brik_stdMap'))
