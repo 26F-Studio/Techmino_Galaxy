@@ -847,6 +847,13 @@ function GP:checkClear()
     if #self.clearingGroups>0 then
         self:playSound('desuffocate')
     end
+    if self.clearTimer<=0 then
+        -- Attack
+        local atk=GAME.initAtk(self:atkEvent('clear'))
+        if atk then
+            GAME.send(self,atk)
+        end
+    end
     if self.clearTimer<=0 or not self.settings.clearStuck then
         self:checkGarbage()
     end
@@ -1435,8 +1442,7 @@ function GP:initialize()
     self.chain=0
 
     self.atkSysData={}
-    assert(mechLib.gela.attackSys[self.settings.atkSys],"Invalid P.settings.atkSys")
-    mechLib.gela.attackSys[self.settings.atkSys].init(self)
+    self:atkEvent('init')
     self.garbageBuffer={}
 
     self.nextQueue={}

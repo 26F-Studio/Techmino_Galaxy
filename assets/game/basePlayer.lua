@@ -66,6 +66,13 @@ function P:movePosition(dx,dy,k,da)
     pos.k=pos.k*(k  or 1)
     pos.a=pos.a+(da or 0)
 end
+---@param method 'init'|'drop'|string
+---@vararg any
+function P:atkEvent(method,...)
+    local sys=mechLib[self.gameMode].attackSys[self.settings.atkSys]
+    assert(sys and sys[method],"Invalid attackSys / method")
+    return sys[method](self,...)
+end
 local function parseTime(str)
     local num,unit=str:cutUnit()
     return

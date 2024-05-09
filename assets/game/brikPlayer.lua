@@ -1111,7 +1111,7 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
     end
 
     -- Attack
-    local atk=GAME.initAtk(mechLib.brik.attackSys[SET.atkSys].drop(self))
+    local atk=GAME.initAtk(self:atkEvent('drop'))
     if atk then
 
         self:triggerEvent('beforeCancel',atk)
@@ -2051,7 +2051,7 @@ function BP:initialize()
     self.combo=0
 
     self.atkSysData={}
-    mechLib.brik.attackSys[self.settings.atkSys].init(self)
+    self:atkEvent('init')
     self.garbageBuffer={}
     self.garbageSum=0
 

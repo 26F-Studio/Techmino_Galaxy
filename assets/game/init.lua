@@ -314,15 +314,17 @@ function GAME.release(action,id)
     end
 end
 
---[[ data:
-    power      (0~∞,  no default)
-    cancelRate (0~∞,  default to 1)
-    defendRate (0~∞,  default to 1)
-    mode       (0~1,   default to 0, 0: trigger by time, 1:trigger by step)
-    time       (0~∞,  default to 0, ms / step)
-    fatal      (0~100, default to 30, percentage)
-    speed      (0~100, default to 30, percentage)
-]]
+---@class Techmino.Game.Attack
+---@field power number 0~∞, no default
+---@field cancelRate number 0~∞, default to 1
+---@field defendRate number 0~∞, default to 1
+---@field mode number 0|1, default to 0, 0: trigger by time, 1:trigger by step
+---@field time number 0~∞, default to 0, ms / step
+---@field fatal number 0~100, default to 30, percentage
+---@field speed number 0~100, default to 30, percentage
+---@field target number|Techmino.Player, default to nil
+
+---@param atk Techmino.Game.Attack
 function GAME.initAtk(atk) -- Normalize the attack object
     if not atk then return end
     assert(type(atk)=='table',"data not table")
@@ -351,9 +353,14 @@ function GAME.initAtk(atk) -- Normalize the attack object
     end
     return atk
 end
-function GAME.send(source,data)
+
+---@param source Techmino.Player
+---@param atk Techmino.Game.Attack
+function GAME.send(source,atk)
+    local target
+
     -- Find target
-    if data.target==nil then
+    if atk.target==nil then
         local l=GAME.playerList
         local sourceGroup=source and source.group or 0
         if #l>1 then
@@ -369,7 +376,7 @@ function GAME.send(source,data)
                     if sourceGroup==0 and l[i]~=source or sourceGroup~=l[i].group then
                         count=count-1
                         if count==0 then
-                            data.target=l[i]
+                            target=l[i]
                             break
                         end
                     end
@@ -377,13 +384,13 @@ function GAME.send(source,data)
             end
         end
     else
-        assert(type(data.target)=='number',"target not number")
-        data.target=GAME.playerMap[data.target]
+        assert(type(atk.target)=='number',"target not number")
+        target=GAME.playerMap[atk.target]
     end
 
     -- Sending airmail
-    if data.target then
-        data.target:receive(data)
+    if target then
+        target:receive(atk)
     end
 end
 
