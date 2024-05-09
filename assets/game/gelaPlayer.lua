@@ -803,8 +803,9 @@ function GP:doFall()
     return fallen
 end
 function GP:checkClear()
+    local SET=self.settings
     local F=self.field
-    for y=1,F:getHeight() do for x=1,self.settings.fieldW do
+    for y=1,F:getHeight() do for x=1,SET.fieldW do
         local c=F:getCell(x,y)
         if c and c.connClear then
             self:checkPosition(x,y)
@@ -812,11 +813,28 @@ function GP:checkClear()
     end end
     if #self.clearingGroups>0 then
         self:playSound('desuffocate')
-        if self.settings.clearDelay<=0 then
+        if SET.clearDelay<=0 then
             self:doClear()
             self:updField()
         else
-            self.clearTimer=self.settings.clearDelay
+            self.clearTimer=SET.clearDelay
+        end
+    elseif not (SET.clearStuck and self.chain>0) then
+        local i=1
+        while true do
+            local l=self.garbageBuffer[i]
+            if not l then break end
+            if l._time==l.time then
+                self:dropGarbage(l.power*2)
+                rem(self.garbageBuffer,i)
+                i=i-1 -- Avoid index error
+            elseif l.mode==1 then
+                l._time=l._time+1
+            end
+            i=i+1
+        end
+        if self:canFall() then
+            self:updField()
         end
     end
 end
@@ -847,21 +865,6 @@ function GP:doClear()
         end
     end
     self.clearingGroups={}
-end
-function GP:checkGarbage()
-    local i=1
-    while true do
-        l=self.garbageBuffer[i]
-        if not l then break end
-        if l._time==l.time then
-            self:dropGarbage(l.power*2)
-            rem(self.garbageBuffer,i)
-            i=i-1 -- Avoid index error
-        elseif l.mode==1 then
-            l._time=l._time+1
-        end
-        i=i+1
-    end
 end
 function GP:dropGarbage(count)
     local F=self.field
