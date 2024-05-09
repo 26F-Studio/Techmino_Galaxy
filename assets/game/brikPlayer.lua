@@ -386,6 +386,7 @@ function BP:resetPos() -- Move hand piece to the normal spawn position
 
 end
 function BP:resetPosCheck()
+    local SET=self.settings
     local suffocated
     if self.deathTimer then
         self.ghostState=false
@@ -396,8 +397,8 @@ function BP:resetPosCheck()
     end
 
     if suffocated then
-        if self.settings.deathDelay>0 then
-            self.deathTimer=self.settings.deathDelay
+        if SET.deathDelay>0 then
+            self.deathTimer=SET.deathDelay
             self.ghostState=true
 
             -- Suffocate IMS, always trigger when held
@@ -407,14 +408,14 @@ function BP:resetPosCheck()
             end
 
             -- Suffocate IRS
-            if self.settings.initRotate then
-                if self.settings.initRotate=='hold' then
+            if SET.initRotate then
+                if SET.initRotate=='hold' then
                     if self.keyState.rotate180 then
                         self:rotate('F',true)
                     elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                         self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                     end
-                elseif self.settings.initRotate=='buffer' then
+                elseif SET.initRotate=='buffer' then
                     if self.keyBuffer.rotate then
                         self:rotate(self.keyBuffer.rotate,true)
                         if not self.keyBuffer.hold then
@@ -428,7 +429,7 @@ function BP:resetPosCheck()
 
             if self.deathTimer then
                 self:playSound('suffocate')
-                if self.settings.particles then
+                if SET.particles then
                     self:createSuffocateEffect()
                 end
             end
@@ -445,13 +446,13 @@ function BP:resetPosCheck()
         end
     else
         -- IMS
-        if self.settings.initMove then
-            if self.settings.initMove=='hold' then
+        if SET.initMove then
+            if SET.initMove=='hold' then
                 if self.keyState.softDrop then self:moveDown() end
                 if self.keyState.moveRight~=self.keyState.moveLeft then
                     if self.keyState.moveRight then self:moveRight(true) else self:moveLeft(true) end
                 end
-            elseif self.settings.initMove=='buffer' then
+            elseif SET.initMove=='buffer' then
                 if self.keyBuffer.move then
                     if self.keyBuffer.move=='L' then
                         self:moveLeft(true)
@@ -464,14 +465,14 @@ function BP:resetPosCheck()
         end
 
         -- IRS
-        if self.settings.initRotate then
-            if self.settings.initRotate=='hold' then
+        if SET.initRotate then
+            if SET.initRotate=='hold' then
                 if self.keyState.rotate180 then
                     self:rotate('F',true)
                 elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                     self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                 end
-            elseif self.settings.initRotate=='buffer' then
+            elseif SET.initRotate=='buffer' then
                 if self.keyBuffer.rotate then
                     self:rotate(self.keyBuffer.rotate,true)
                     if not self.keyBuffer.hold then
@@ -485,11 +486,11 @@ function BP:resetPosCheck()
         self:freshDelay('spawn')
     end
 
-    if self.settings.stopMoveWhenSpawn then
+    if SET.stopMoveWhenSpawn then
         self.moveDir=false
         self.moveCharge=0
-    elseif self.settings.ash>0 then
-        self.moveCharge=min(self.moveCharge,self.settings.asd-self.settings.ash)
+    elseif SET.ash>0 then
+        self.moveCharge=min(self.moveCharge,SET.asd-SET.ash)
     end
 end
 function BP:freshGhost()
