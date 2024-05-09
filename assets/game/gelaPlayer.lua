@@ -661,27 +661,9 @@ function GP:gelaDropped() -- Drop & lock gela, and trigger a lot of things
         self:finish('CE')
     end
 
-    -- Update & Release garbage
-    local i=1
-    while true do
-        l=self.garbageBuffer[i]
-        if not l then break end
-        if l._time==l.time then
-            self:dropGarbage(l.power*2)
-            rem(self.garbageBuffer,i)
-            i=i-1 -- Avoid index error
-        elseif l.mode==1 then
-            l._time=l._time+1
-        end
-        i=i+1
-    end
-
+    -- Trimmed self:updField()
     if self:canFall() then
-        if self.settings.fallDelay<=0 then
-            repeat until not self:fieldFall()
-        else
-            self.fallTimer=self.settings.fallDelay
-        end
+        self.fallTimer=self.settings.fallDelay
     else
         self:checkClear()
     end
@@ -774,9 +756,23 @@ function GP:checkPosition(x,y)
         for k in next,set do k.clearing=true end
         if self.settings.clearDelay<=0 then
             self:clearField()
+            self:updField()
         else
             self.clearTimer=self.settings.clearDelay
         end
+    end
+end
+function GP:updField()
+    if self:canFall() then
+        if self.settings.fallDelay<=0 then
+            while self:fieldFall() do end
+            self:checkClear()
+        else
+            self:fieldFall()
+            self.fallTimer=self.settings.fallDelay
+        end
+    else
+        self:checkClear()
     end
 end
 function GP:canFall()
@@ -812,6 +808,21 @@ function GP:fieldFall()
     end
     return fallen
 end
+function GP:checkGarbage()
+    local i=1
+    while true do
+        l=self.garbageBuffer[i]
+        if not l then break end
+        if l._time==l.time then
+            self:dropGarbage(l.power*2)
+            rem(self.garbageBuffer,i)
+            i=i-1 -- Avoid index error
+        elseif l.mode==1 then
+            l._time=l._time+1
+        end
+        i=i+1
+    end
+end
 function GP:dropGarbage(count)
     local F=self.field
     local w=self.settings.fieldW
@@ -836,6 +847,9 @@ function GP:checkClear()
     if #self.clearingGroups>0 then
         self:playSound('desuffocate')
     end
+    if self.clearTimer<=0 or not self.settings.clearStuck then
+        self:checkGarbage()
+    end
 end
 function GP:clearField()
     self.chain=self.chain+1
@@ -858,17 +872,6 @@ function GP:clearField()
         end
     end
     self.clearingGroups={}
-
-    if self:canFall() then
-        if self.settings.fallDelay<=0 then
-            repeat until not self:fieldFall()
-            self:checkClear()
-        else
-            self.fallTimer=self.settings.fallDelay
-        end
-    else
-        self:checkClear()
-    end
 end
 function GP:changeFieldWidth(w,origPos)
     if w>0 and w%1==0 then
@@ -1014,20 +1017,15 @@ function GP:updateFrame()
             if self.fallTimer>0 then
                 self.fallTimer=self.fallTimer-1
                 if self.fallTimer<=0 then
-                    if self:canFall() then
-                        if self:fieldFall() then
-                            self.fallTimer=self.settings.fallDelay
-                        end
-                    else
-                        self:checkClear()
-                    end
+                    self:updField()
                 end
                 break
             end
             if self.clearTimer>0 then
                 self.clearTimer=self.clearTimer-1
-                if self.clearTimer==0 then
+                if self.clearTimer<=0 then
                     self:clearField()
+                    self:updField()
 
                     self:triggerEvent('afterClear')
 
@@ -1257,6 +1255,10 @@ function GP:render()
     -- Timer
     skin.drawTime(self.gameTime)
 
+    -- Debug
+    -- gc.print("fallTimer "..self.fallTimer,-200,-400)
+    -- gc.print("clearTimer "..self.clearTimer,-200,-370)
+
     -- Texts
     self.texts:draw()
 
@@ -1334,6 +1336,8 @@ local baseEnv={
 
     -- Attack
     atkSys='none',
+    allowCancel=true,
+    clearStuck=true,
 
     -- Control
     asd=122,
@@ -1431,6 +1435,7 @@ function GP:initialize()
     self.chain=0
 
     self.atkSysData={}
+    assert(mechLib.gela.attackSys[self.settings.atkSys],"Invalid P.settings.atkSys")
     mechLib.gela.attackSys[self.settings.atkSys].init(self)
     self.garbageBuffer={}
 
