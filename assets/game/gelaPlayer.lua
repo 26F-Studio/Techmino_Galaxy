@@ -661,12 +661,8 @@ function GP:gelaDropped() -- Drop & lock gela, and trigger a lot of things
         self:finish('CE')
     end
 
-    -- Trimmed self:updField()
-    if self:canFall() then
-        self.fallTimer=self.settings.fallDelay
-    else
-        self:checkClear()
-    end
+    -- Update field
+    self:updField()
 
     -- Discard hand
     self.hand=false
@@ -674,6 +670,11 @@ function GP:gelaDropped() -- Drop & lock gela, and trigger a lot of things
 
     -- Fresh hand
     if self.settings.spawnDelay<=0 then
+        -- TODO
+        -- Trigger garbage
+        if self.chain<=0 or not self.settings.clearStuck then
+            self:checkGarbage()
+        end
         if self.fallTimer<=0 and self.clearTimer<=0 then
             self:popNext()
         end
@@ -749,26 +750,23 @@ function GP:checkPosition(x,y)
         self:getGroup(x,y,cell,set)
     end
 
-    -- Record the group, mark cells, trigger clearing (or later)
+    -- Record the group, mark cells
     if TABLE.getSize(set)>=self.settings.clearGroupSize then
         ins(self.clearingGroups,set)
         self:checkDig(set)
         for k in next,set do k.clearing=true end
-        if self.settings.clearDelay<=0 then
-            self:clearField()
-            self:updField()
-        else
-            self.clearTimer=self.settings.clearDelay
-        end
     end
 end
-function GP:updField()
+---@param byTimer? boolean Only true when called by P:update, trigger falling, otherwise only start the falling timer but not do fall
+function GP:updField(byTimer)
     if self:canFall() then
         if self.settings.fallDelay<=0 then
-            while self:fieldFall() do end
+            while self:doFall() do end
             self:checkClear()
         else
-            self:fieldFall()
+            if byTimer then
+                self:doFall()
+            end
             self.fallTimer=self.settings.fallDelay
         end
     else
@@ -785,7 +783,7 @@ function GP:canFall()
         end end
     end
 end
-function GP:fieldFall()
+function GP:doFall()
     local F=self.field
     local fallen=false
     for x=1,self.settings.fieldW do
@@ -807,6 +805,52 @@ function GP:fieldFall()
         end
     end
     return fallen
+end
+function GP:checkClear()
+    local F=self.field
+    for y=1,F:getHeight() do for x=1,self.settings.fieldW do
+        local c=F:getCell(x,y)
+        if c and c.connClear then
+            self:checkPosition(x,y)
+        end
+    end end
+    if #self.clearingGroups>0 then
+        self:playSound('desuffocate')
+        if self.settings.clearDelay<=0 then
+            self:doClear()
+            self:updField()
+        else
+            self.clearTimer=self.settings.clearDelay
+        end
+    end
+end
+function GP:doClear()
+    self.chain=self.chain+1
+    self:playSound('chain',self.chain)
+    self:playSound('clear',#self.clearingGroups)
+
+    -- Attack
+    local atk=GAME.initAtk(self:atkEvent('clear'))
+    if atk then
+        GAME.send(self,atk)
+    end
+
+    local F=self.field
+    for i=1,#self.clearingGroups do
+        local set=self.clearingGroups[i]
+        for k,pos in next,set do
+            if k.shield then
+                k.shield=k.shield>0 and k.shield-1 or nil
+            else
+                k=false
+            end
+            F:setCell(k,pos[1],pos[2])
+            if self.settings.particles then
+                self:createClearEffect(pos[1],pos[2])
+            end
+        end
+    end
+    self.clearingGroups={}
 end
 function GP:checkGarbage()
     local i=1
@@ -835,50 +879,6 @@ function GP:dropGarbage(count)
             diggable=true,
         },x,y)
     end
-end
-function GP:checkClear()
-    local F=self.field
-    for y=1,F:getHeight() do for x=1,self.settings.fieldW do
-        local c=F:getCell(x,y)
-        if c and c.connClear then
-            self:checkPosition(x,y)
-        end
-    end end
-    if #self.clearingGroups>0 then
-        self:playSound('desuffocate')
-    end
-    if self.clearTimer<=0 then
-        -- Attack
-        local atk=GAME.initAtk(self:atkEvent('clear'))
-        if atk then
-            GAME.send(self,atk)
-        end
-    end
-    if self.clearTimer<=0 or not self.settings.clearStuck then
-        self:checkGarbage()
-    end
-end
-function GP:clearField()
-    self.chain=self.chain+1
-    self:playSound('chain',self.chain)
-    self:playSound('clear',#self.clearingGroups)
-
-    local F=self.field
-    for i=1,#self.clearingGroups do
-        local set=self.clearingGroups[i]
-        for k,pos in next,set do
-            if k.shield then
-                k.shield=k.shield>0 and k.shield-1 or nil
-            else
-                k=false
-            end
-            F:setCell(k,pos[1],pos[2])
-            if self.settings.particles then
-                self:createClearEffect(pos[1],pos[2])
-            end
-        end
-    end
-    self.clearingGroups={}
 end
 function GP:changeFieldWidth(w,origPos)
     if w>0 and w%1==0 then
@@ -1024,14 +1024,14 @@ function GP:updateFrame()
             if self.fallTimer>0 then
                 self.fallTimer=self.fallTimer-1
                 if self.fallTimer<=0 then
-                    self:updField()
+                    self:updField(true)
                 end
                 break
             end
             if self.clearTimer>0 then
                 self.clearTimer=self.clearTimer-1
                 if self.clearTimer<=0 then
-                    self:clearField()
+                    self:doClear()
                     self:updField()
 
                     self:triggerEvent('afterClear')
@@ -1342,7 +1342,7 @@ local baseEnv={
     maxFreshTime=6200,
 
     -- Attack
-    atkSys='none',
+    atkSys='classic',
     allowCancel=true,
     clearStuck=true,
 
