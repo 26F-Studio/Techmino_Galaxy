@@ -267,22 +267,20 @@ function AP:psedoCheckPos(x,y)
 end
 function AP:setClear(g,linkMode,len)
     g.movable=false
-    g.clearTimer=g.immediately and 0 or self.settings.clearDelay
+    g.clearTimer=self.settings.clearDelay
     g.clearDelay=self.settings.clearDelay
     g[linkMode]=len
 end
 function AP:setGenerate(g,gen)
-    g.immediately=true
     g.clearTimer=0
     g.generate=self:getAcry(gen)
 end
 function AP:checkPosition(x,y)
     local F=self.field
-    if not F[y][x] then return end
-
     local g=F[y][x]
-    local color=g.color
+    if not g then return end
 
+    local color=g.color
     local line=0
 
     if not g.lrCnt then
@@ -359,47 +357,8 @@ function AP:checkPosition(x,y)
         if g.udCnt   then lineCount=lineCount+1 maxLen=max(maxLen,g.udCnt)   end
         if g.riseCnt then lineCount=lineCount+1 maxLen=max(maxLen,g.riseCnt) end
         if g.dropCnt then lineCount=lineCount+1 maxLen=max(maxLen,g.dropCnt) end
-        if maxLen>3 then
-            if maxLen==4 then
-                self:setGenerate(g,{
-                    color=g.color,
-                    appearance='flame',
-                    immediately=true,
-                    destroyed={
-                        mode='explosion',
-                        radius=1,
-                    }
-                })
-            elseif maxLen==5 then
-                self:setGenerate(g,{
-                    type='cube',
-                    moved='destroy',
-                    destroyed={
-                        mode='color',
-                    }
-                })
-            else
-                self:setGenerate(g,{
-                    color=g.color,
-                    appearance='nova',
-                    destroyed={
-                        mode='lightning',
-                        radius=1,
-                    }
-                })
-            end
-        else
-            if lineCount>1 then
-                self:setGenerate(g,{
-                    color=g.color,
-                    appearance='star',
-                    destroyed={
-                        mode='lightning',
-                        radius=0,
-                    }
-                })
-            end
-        end
+        local genData=mechLib.acry.mergeSys[self.settings.mergeSys](self,g,maxLen,lineCount)
+        if genData then self:setGenerate(g,genData) end
     end
 
     if line>0 then
@@ -852,6 +811,7 @@ local baseEnv={
 
     -- Attack
     atkSys='none',
+    mergeSys='modern',
     multiMove=true,
     swap=true,
     swapForce=true,
