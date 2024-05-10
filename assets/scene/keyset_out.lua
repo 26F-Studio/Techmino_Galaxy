@@ -13,7 +13,7 @@ function scene.enter(mode)
     keyMode=mode or keyMode
     keyMap=KEYMAP[keyMode]
 
-    TABLE.cut(keyButtons)
+    TABLE.clear(keyButtons)
 
     for _,v in next,scene.widgetList do
         if v.name then

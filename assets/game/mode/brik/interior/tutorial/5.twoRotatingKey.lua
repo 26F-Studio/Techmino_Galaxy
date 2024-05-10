@@ -122,7 +122,7 @@ return {
                 P.modeData.rotDir=false
                 P.modeData.rotCount=0
                 local ans=correctPositions[#P.dropHistory+1]
-                local shape=TABLE.shift(Brik.getShape(P.hand.name),1)
+                local shape=TABLE.copy(Brik.getShape(P.hand.name),1)
                 if ans then
                     if ans.dir[1]~=0 then
                         shape=TABLE.rotate(shape,ans.dir[1]==1 and 'R' or ans.dir[1]==2 and ans.dir[1] and 'F' or 'L')

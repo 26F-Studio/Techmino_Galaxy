@@ -7,7 +7,7 @@ function Map:import(data)
     for k,v in next,data do
         for i=1,#self do
             if self[i].act==k then
-                self[i].keys=TABLE.shift(v,0)
+                self[i].keys=TABLE.copy(v,0)
                 break
             end
         end
@@ -17,7 +17,7 @@ end
 function Map:export()
     local data={}
     for i=1,#self do
-        data[self[i].act]=TABLE.shift(self[i].keys,0)
+        data[self[i].act]=TABLE.copy(self[i].keys,0)
     end
     return data
 end

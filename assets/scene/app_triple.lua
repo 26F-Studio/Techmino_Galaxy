@@ -154,7 +154,7 @@ function player:click(y,x)
 
             local cur,merged
             repeat
-                local b1=TABLE.shift(self.board)
+                local b1=TABLE.copy(self.board)
                 cur=b1[y][x]
                 self.mergedTiles={}
                 local count=self:merge(b1,cur,y,x)

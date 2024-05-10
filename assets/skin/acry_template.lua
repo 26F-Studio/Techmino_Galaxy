@@ -130,7 +130,7 @@ local acryShapes={
     },
 }
 for i=1,#acryShapes do
-    acryShapes[i].lineColor=TABLE.shift(acryShapes[i].color)
+    acryShapes[i].lineColor=TABLE.copy(acryShapes[i].color)
     acryShapes[i].lineColor[4]=nil
 end
 local function drawAcry(g)

@@ -583,10 +583,10 @@ function BP:freshNextQueue()
     end
 end
 function BP:clearHold()
-    TABLE.cut(self.holdQueue)
+    TABLE.clear(self.holdQueue)
 end
 function BP:clearNext()
-    TABLE.cut(self.nextQueue)
+    TABLE.clear(self.nextQueue)
 end
 ---@param piece string|number|table
 function BP:pushNext(piece)
@@ -666,13 +666,13 @@ function BP:getBrik(shapeData)
     if type(shapeData)=='table' then
         shapeID=shapeData.id
         shapeName=shapeData.name or "?"
-        shapeMat=TABLE.shift(shapeData.shape)
+        shapeMat=TABLE.copy(shapeData.shape)
         shapeColor=shapeData.color or defaultBrikColor[shapeID] or self:random(64)
     else
         shapeID=shapeData
         assert(type(shapeID)=='number',"shapeID must be number")
         shapeName=Brik.getName(shapeID)
-        shapeMat=TABLE.shift(Brik.getShape(shapeID))
+        shapeMat=TABLE.copy(Brik.getShape(shapeID))
         shapeColor=defaultBrikColor[shapeID]
     end
     self.pieceCount=self.pieceCount+1
@@ -705,7 +705,7 @@ function BP:getBrik(shapeData)
         name=shapeName,
         matrix=shapeMat,
     }
-    brik._origin=TABLE.copy(brik,0)
+    brik._origin=TABLE.copyAll(brik,0)
     return brik
 end
 function BP:getConnectedCells(x0,y0)
@@ -1319,7 +1319,7 @@ function BP:setField(arg)
     end
 
     -- Apply field
-    TABLE.cut(F._matrix)
+    TABLE.clear(F._matrix)
     for y=1,#arg do
         F._matrix[y]=f[#arg+1-y]
     end
@@ -1996,7 +1996,7 @@ local soundEventMeta={
 function BP.new()
     local self=setmetatable(require'basePlayer'.new(),{__index=BP,__metatable=true})
     ---@type Techmino.Mode.Setting.Brik
-    self.settings=TABLE.copy(baseEnv)
+    self.settings=TABLE.copyAll(baseEnv)
     self.event={
         -- Press & Release
         beforePress={},

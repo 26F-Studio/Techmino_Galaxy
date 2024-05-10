@@ -44,7 +44,7 @@ function scene.keyDown(key,isRep)
             duration=.8,
         }
     elseif key=='tab' then
-        inst=TABLE.next(instList,inst)
+        inst=TABLE.next(instList,inst) or instList[1]
     elseif key=='lalt' then
         offset=math.max(offset-1,-12)
     elseif key=='ralt' then

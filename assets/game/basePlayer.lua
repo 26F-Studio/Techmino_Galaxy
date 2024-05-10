@@ -474,7 +474,7 @@ function P:loadSettings(settings) -- Load data & events from mode settings
             end
         else
             if type(v)=='table' then
-                self.settings[k]=TABLE.copy(v)
+                self.settings[k]=TABLE.copyAll(v)
             elseif v~=nil then
                 self.settings[k]=v
             end
@@ -706,7 +706,7 @@ function P.new()
     return self
 end
 function P:initialize()
-    self.actions=TABLE.copy(self._actions,0)
+    self.actions=TABLE.copyAll(self._actions,0)
     self.actionHistory={}
     self.keyState={}
     for k in next,self.actions do
@@ -722,7 +722,7 @@ local dumpIgnore={
 for _,v in next,dumpIgnore do
     dumpIgnore[v]=true
 end
-TABLE.cut(dumpIgnore)
+TABLE.clear(dumpIgnore)
 local function dump(self,L,t,path)
     local s='{'
     local count=1

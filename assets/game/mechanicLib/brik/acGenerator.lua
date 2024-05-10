@@ -114,7 +114,7 @@ local function getExposedFour(field)
         for cx=1,#field[1]-#piece[1]+1 do
             for cy=math.max(unpack(heights,cx,cx+#piece[1]-1)),1,-1 do
                 if existInField(field,piece,cx,cy) then
-                    local f=TABLE.shift(field)
+                    local f=TABLE.copy(field)
                     carveField(f,piece,cx,cy)
                     if cy==1 or ifOverlap(f,piece,cx,cy-1) then
                         local exposed=true
@@ -130,7 +130,7 @@ local function getExposedFour(field)
                         if exposed then
                             table.insert(tar,{
                                 name=Brik.getName(piece.id),
-                                shape=TABLE.shift(piece),
+                                shape=TABLE.copy(piece),
                                 x=cx,y=cy,
                             })
                         end
@@ -176,7 +176,7 @@ local function printField(f)
     end
 end
 local function printSeq(s)
-    s=TABLE.shift(s,0)
+    s=TABLE.copy(s,0)
     TABLE.reverse(s)
     print(table.concat(s))
 end
@@ -205,7 +205,7 @@ function ACGenerator._getQuestion(P,args)
         splitRate=.26,
         highRate=0,
     }
-    if type(args)=='table' then TABLE.cover(args,args1) end
+    if type(args)=='table' then TABLE.update(args,args1) end
 
     local debugging=  args1.debugging
     local width=      TABLE.getFirstValue(args1.width,P and P.settings.fieldW)
@@ -221,7 +221,7 @@ function ACGenerator._getQuestion(P,args)
     if holdUsed==true then holdUsed=1 end
 
     while #seq<pieceCount do
-        local field_bak=TABLE.shift(field)
+        local field_bak=TABLE.copy(field)
         generateSolidGarbage(P,field,width,growRate,splitRate)
         local pieces=getExposedFour(field)
 

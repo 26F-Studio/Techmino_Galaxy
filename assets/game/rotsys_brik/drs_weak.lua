@@ -47,7 +47,7 @@ DRS_weak[29]=Z -- O1
 
 local function _fillCenter(id,list)
     for k,v in next,list do
-        DRS_weak[id]=TABLE.copy(DRS_weak[id])
+        DRS_weak[id]=TABLE.copyAll(DRS_weak[id])
         DRS_weak[id][k].center=v
     end
 end

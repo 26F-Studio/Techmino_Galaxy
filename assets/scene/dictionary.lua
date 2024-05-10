@@ -120,7 +120,7 @@ local function search(str)
     if str=='' then
         listBox:setList(dispDict)
     else
-        TABLE.cut(filteredDict)
+        TABLE.clear(filteredDict)
         for i=1,#dispDict do
             local obj=dispDict[i]
             obj._priority=
@@ -288,7 +288,7 @@ function scene.enter()
 
     -- Refresh items
     local selectedNum
-    TABLE.cut(dispDict)
+    TABLE.clear(dispDict)
     for _,obj in next,baseDict do
         if not obj.hidden or type(obj.hidden)=='function' and obj.hidden() or target==obj.id then
             local curObj=currentDict[obj.id] or NONE

@@ -16,7 +16,7 @@ local keyButtons={}
 function scene.enter()
     BG.set('none')
 
-    TABLE.cut(keyButtons)
+    TABLE.clear(keyButtons)
     for i=1,#scene.widgetList do
         table.insert(keyButtons,scene.widgetList[i])
     end

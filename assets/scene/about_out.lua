@@ -33,7 +33,7 @@ end
 local obj={}
 
 function scene.enter()
-    TABLE.cut(obj)
+    TABLE.clear(obj)
     timer,score=12.6,0
 end
 

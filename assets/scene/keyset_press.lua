@@ -24,7 +24,7 @@ function scene.keyDown(key,isRep)
         escTimerWTF=.626
     elseif key=='backspace' then
         local L=KEYMAP[mode]:getKeys(act)
-        if L then TABLE.cut(L) end
+        if L then TABLE.clear(L) end
         result=Text.keyset_deleted
         FMOD.effect('beep_down')
     else

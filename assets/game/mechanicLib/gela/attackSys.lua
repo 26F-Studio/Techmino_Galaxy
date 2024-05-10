@@ -7,6 +7,13 @@ atkSys.none={
     clear=NULL,
 }
 
+-- Classic
+atkSys.classic={
+    clear=function(P)
+        -- TODO
+    end,
+}
+
 for _,sys in next,atkSys do
     setmetatable(sys,{__index=atkSys.none})
 end

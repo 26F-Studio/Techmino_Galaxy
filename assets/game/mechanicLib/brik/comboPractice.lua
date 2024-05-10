@@ -17,7 +17,7 @@ local function newMap(P)
     wellL=P:random(1,w+1-wellWidth)
     wellR=wellL+wellWidth-1
 
-    TABLE.cut(F._matrix)
+    TABLE.clear(F._matrix)
     for y=1,height do
         F._matrix[y]=TABLE.new(false,w)
         for x=1,w do

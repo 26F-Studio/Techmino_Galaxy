@@ -89,7 +89,7 @@ function paperArtist.findPosition(field,shape)
     local w=#field[1]
     for d=1,4 do
         for cx=1,w-#shape[1]+1 do
-            local F=TABLE.shift(field,1)
+            local F=TABLE.copy(field,1)
             local cy,colH=simulateDrop(F,shape,cx)
             local clear,rowB,colB=paperArtist.calculateFieldScore(F,shape,cx,cy)
 

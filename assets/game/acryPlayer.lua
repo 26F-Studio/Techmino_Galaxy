@@ -111,7 +111,7 @@ function AP:getAcry(data)
         type='acry',
         movable=true,
     }
-    if data then TABLE.cover(data,G) end
+    if data then TABLE.update(data,G) end
     return G
 end
 function AP:setMoveBias(mode,C,dx,dy)
@@ -833,7 +833,7 @@ local soundEventMeta={
 function AP.new()
     local self=setmetatable(require'basePlayer'.new(),{__index=AP,__metatable=true})
     ---@type Techmino.Mode.Setting.Acry
-    self.settings=TABLE.copy(baseEnv)
+    self.settings=TABLE.copyAll(baseEnv)
     self.event={
         -- Press & Release
         beforePress={},

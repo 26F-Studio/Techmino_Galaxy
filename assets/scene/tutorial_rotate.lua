@@ -62,12 +62,12 @@ local function newQuestion()
         end
     until not shapes[handID].unuse
 
-    handMat=TABLE.shift(shapes[handID].matrix)
+    handMat=TABLE.copy(shapes[handID].matrix)
     if level==2 or level==4 then handMat=TABLE.rotate(handMat,({'R','L','F'})[math.random(3)]) end
 
     local answer=({'R','L','F'})[math.random((not shapes[handID].no180 and score>=20) and 3 or 2)]
     protect=answer=='F'
-    targetMat=TABLE.rotate(TABLE.shift(handMat),answer)
+    targetMat=TABLE.rotate(TABLE.copy(handMat),answer)
 end
 
 local function reset()
@@ -142,7 +142,7 @@ function scene.keyDown(key,isRep)
 
             local same=true
             for i=1,#handMat do
-                if not TABLE.compare(handMat[i],targetMat[i]) then
+                if not TABLE.equal(handMat[i],targetMat[i]) then
                     same=false
                     break
                 end

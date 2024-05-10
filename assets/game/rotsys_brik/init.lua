@@ -88,7 +88,7 @@ function brikRotSys._flipList(O)
 end
 
 function brikRotSys._reflect(m) -- Only available for 4/2/1 state briks
-    local m2=TABLE.copy(m)
+    local m2=TABLE.copyAll(m)
     if m2[0] and m2[1] and m2[2] and m2[3] then
         m2[0].R.test,m2[0].L.test,m2[0].F.test,
         m2[1].R.test,m2[1].L.test,m2[1].F.test,
@@ -133,7 +133,7 @@ for name,rs in next,brikRotSys do
             end
         end
 
-        rs=TABLE.copy(rs)
+        rs=TABLE.copyAll(rs)
 
         if not rs.centerTex then rs.centerTex=brikRotSys._defaultCenterTex end
         if rs.centerPreset then
@@ -146,7 +146,7 @@ for name,rs in next,brikRotSys do
                             if not set[i][dir] then
                                 error("Preset '"..rs.centerPreset.."' has no center for RS '"..name.."', brik "..i..", dir "..dir)
                             end
-                            state.center=TABLE.copy(set[i][dir])
+                            state.center=TABLE.copyAll(set[i][dir])
                         end
                     end
                 end

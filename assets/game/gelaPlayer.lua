@@ -489,7 +489,7 @@ function GP:popNext()
 end
 function GP:getGela(mat)
     self.pieceCount=self.pieceCount+1
-    mat=TABLE.shift(mat)
+    mat=TABLE.copy(mat)
 
     -- Generate cell matrix from bool matrix
     for y=1,#mat do for x=1,#mat[1] do
@@ -506,7 +506,7 @@ function GP:getGela(mat)
         direction=0,
         matrix=mat,
     }
-    gela._origin=TABLE.copy(gela,0)
+    gela._origin=TABLE.copyAll(gela,0)
     ins(self.nextQueue,gela)
 end
 function GP:ifoverlap(CB,cx,cy)
@@ -729,7 +729,7 @@ function GP:checkDig(set)
             end
         end
     end
-    TABLE.cover(tset,set)
+    TABLE.update(tset,set)
 end
 function GP:checkPosition(x,y)
     local set={}
@@ -1436,7 +1436,7 @@ local soundEventMeta={
 function GP.new()
     local self=setmetatable(require'basePlayer'.new(),{__index=GP,__metatable=true})
     ---@type Techmino.Mode.Setting.Gela
-    self.settings=TABLE.copy(baseEnv)
+    self.settings=TABLE.copyAll(baseEnv)
     self.event={
         -- Press & Release
         beforePress={},
@@ -1486,7 +1486,7 @@ function GP:initialize()
     elseif type(set)~='table' then
         error("Invalid P.settings.colorSet")
     end
-    set=TABLE.shift(set)
+    set=TABLE.copy(set)
     self.settings.colorSet=set
 
     self:shuffleColor(self.settings.colorShuffleRange)

@@ -267,7 +267,7 @@ do -- obstacle
         local F=P.field
         local w=P.settings.fieldW
         local r0,r1=0
-        TABLE.cut(F._matrix)
+        TABLE.clear(F._matrix)
         for y=1,maxHeight do
             F._matrix[y]=TABLE.new(false,w)
             repeat

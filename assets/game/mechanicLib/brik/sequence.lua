@@ -90,7 +90,7 @@ function sequence.bag7_sprint(P,d,init) -- bag7, but no early S/Z/O and shufflin
         d.start={}
 
         -- First bag, try to prevent early S/Z/O
-        mixture=TABLE.shift(Tetros)
+        mixture=TABLE.copy(Tetros)
         for i=7,2,-1 do ins(mixture,rem(mixture,P:random(1,i))) end
         for _=1,2 do
             if mixture[1]==1 or mixture[1]==2 or mixture[1]==6 then
@@ -128,7 +128,7 @@ end
 function sequence.bag7_spreadFirstTo3211(P,d,init) -- bag7, but first bag 3+2+1+1-ly splited into next four bags 
     if init then
         d.bag={}
-        d.victim=TABLE.shift(Tetros)
+        d.victim=TABLE.copy(Tetros)
         d.wave=1
         return
     end
@@ -148,7 +148,7 @@ end
 function sequence.bag7_steal1(P,d,init) -- bag7, but each bag steals a piece from the next bag
     if init then
         d.bag={}
-        d.victim=TABLE.shift(Tetros)
+        d.victim=TABLE.copy(Tetros)
         return
     end
     if supply(d.bag,Tetros) then
@@ -243,7 +243,7 @@ end
 
 function sequence.pool8_bag7(P,d,init)
     if init then
-        d.pool=TABLE.shift(Tetros)
+        d.pool=TABLE.copy(Tetros)
         d.bag={}
         return
     end

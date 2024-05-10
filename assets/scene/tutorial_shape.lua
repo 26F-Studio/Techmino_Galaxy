@@ -57,7 +57,7 @@ local function newQuestion()
     if TABLE.find(q,3) then q=questList[rnd(#questList)] end
     local flip=MATH.roll()
 
-    quest=TABLE.shift(q.quest)
+    quest=TABLE.copy(q.quest)
     if flip then TABLE.reverse(quest) end
 
     local c1=q.good[rnd(#q.good)]
@@ -68,7 +68,7 @@ local function newQuestion()
     for i=1,#choices do
         local piece=Brik.get(choices[i])
         choices[i]={
-            shape=TABLE.shift(piece.shape),
+            shape=TABLE.copy(piece.shape),
             color=NumColor[defaultBrikColor[piece.id]],
             correct=i==1,
         }

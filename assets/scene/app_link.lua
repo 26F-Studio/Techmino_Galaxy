@@ -80,7 +80,7 @@ local function resetBoard()
     field.full=true
     total=total*2
 
-    TABLE.cut(field)
+    TABLE.clear(field)
     for y=1,field.r do
         field[y]={}
         for x=1,field.c do

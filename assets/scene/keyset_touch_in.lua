@@ -18,7 +18,7 @@ function scene.keyDown(key,isRep)
         VCTRL.addButton()
     elseif key=='0' then
         if VCTRL.focus and VCTRL.focus.type=='button' then
-            VCTRL.focus.shape=TABLE.next({'circle','square'},VCTRL.focus.shape)
+            VCTRL.focus.shape=TABLE.next({'circle','square'},VCTRL.focus.shape) or 'circle'
         end
     elseif key=='[' or key==']' then
         if VCTRL.focus then

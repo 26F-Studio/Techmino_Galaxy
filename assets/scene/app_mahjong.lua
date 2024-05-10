@@ -78,7 +78,7 @@ local function _getHandCardArea(i)
 end
 
 local function _newGame()
-    deck=TABLE.shift(deck0)
+    deck=TABLE.copy(deck0)
     hand={}
     pool={}
     for _=1,14 do ins(hand,(TABLE.popRandom(deck))) end

@@ -263,7 +263,7 @@ local sandBoxEnv={
 }
 function setSafeEnv(func)
     sandBoxEnv.mechLib=mechLib -- Update in case it changes during game
-    setfenv(func,TABLE.copy(sandBoxEnv))
+    setfenv(func,TABLE.copyAll(sandBoxEnv))
 end
 
 regFuncToStr={}

@@ -27,7 +27,7 @@ ARS_plus[25]=upSet
 
 local function _fillCenter(id,list)
     for k,v in next,list do
-        ARS_plus[id]=TABLE.copy(ARS_plus[id])
+        ARS_plus[id]=TABLE.copyAll(ARS_plus[id])
         ARS_plus[id][k].center=v
     end
 end

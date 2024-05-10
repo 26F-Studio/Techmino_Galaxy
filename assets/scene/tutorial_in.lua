@@ -10,7 +10,7 @@ local function B(t)
         fontSize=50,
         cornerR=0,
     }
-    TABLE.cover(t,w)
+    TABLE.update(t,w)
     return WIDGET.new(w)
 end
 
