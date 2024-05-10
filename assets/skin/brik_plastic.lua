@@ -9,7 +9,7 @@ local gc_rectangle=gc.rectangle
 local unpack=unpack
 local NumColor=NumColor
 
----@type Techmino.skin.brik
+---@type Techmino.Skin.Brik
 local S={}
 S.base='brik_template'
 

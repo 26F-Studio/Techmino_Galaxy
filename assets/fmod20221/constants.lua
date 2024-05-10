@@ -2,7 +2,7 @@ local bit=require("bit")
 local ffi=require("ffi")
 local require=simpRequire(((...):gsub("[^%.]*$", "")))
 
----@class FMOD.master
+---@class FMOD.Master
 local M=require("master")
 
 M.FMOD_VERSION=0x00020221

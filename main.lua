@@ -54,19 +54,18 @@ end
 --------------------------------------------------------------
 -- Misc modules
 
-local require=simpRequire('assets.')
-require'gamefunc'
-VERSION=_G.require"version"
-GAME=require'game'
-AI=require'ai'
-PROGRESS=require'progress'
-VCTRL=require'vctrl'
-KEYMAP=require'keymap'
-SKIN=require'skin'
-CHAR=require'char'
-SETTINGS=require'settings'
-NumColor=require'numcolor'
-FMOD=require'fmod20221'
+require'assets.gamefunc'
+VERSION=_G.require"assets.version"
+GAME=require'assets.game'
+AI=require'assets.ai'
+PROGRESS=require'assets.progress'
+VCTRL=require'assets.vctrl'
+KEYMAP=require'assets.keymap'
+SKIN=require'assets.skin'
+CHAR=require'assets.char'
+SETTINGS=require'assets.settings'
+NumColor=require'assets.numcolor'
+FMOD=require'assets.fmod20221'
 DEBUG.checkLoadTime("Load game modules")
 
 --------------------------------------------------------------
@@ -395,13 +394,13 @@ end
 for _,v in next,love.filesystem.getDirectoryItems('assets/background') do
     if FILE.isSafe('assets/background/'..v) and v:sub(-3)=='lua' then
         local name=v:sub(1,-5)
-        BG.add(name,require('background/'..name))
+        BG.add(name,require('assets/background/'..name))
     end
 end
 for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
     if FILE.isSafe('assets/scene/'..v) then
         local sceneName=v:sub(1,-5)
-        SCN.add(sceneName,require('scene/'..sceneName))
+        SCN.add(sceneName,require('assets/scene/'..sceneName))
     end
 end
 for _,v in next,{
@@ -415,7 +414,7 @@ for _,v in next,{
     'acry_template',
 } do
     if FILE.isSafe('assets/skin/'..v..'.lua') then
-        SKIN.add(v,require('skin/'..v))
+        SKIN.add(v,require('assets/skin/'..v))
     end
 end
 SCN.addSwap('fadeHeader',{

@@ -1,4 +1,4 @@
----@type Techmino.Mech.brik
+---@type Map<Techmino.Mech.Brik>
 local backfire={}
 
 function backfire.storePower_event_beforeCancel(P,atk)

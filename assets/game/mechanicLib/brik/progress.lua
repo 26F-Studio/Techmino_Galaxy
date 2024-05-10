@@ -1,4 +1,4 @@
----@type Techmino.Mech.brik
+---@type Map<Techmino.Event|Techmino.Mech.Brik>
 local progress={}
 
 do -- sprint_40
@@ -483,7 +483,10 @@ do -- backfire_cheese_100
     end
 end
 
--- Lowest priority for all statistics events
-for k,v in next,progress do progress[k]={1e99,v} end
+-- Lowest priority for all progress events
+for k,v in next,progress do
+    ---@cast v fun(P:Techmino.Player.Brik):any
+    progress[k]={1e99,v}
+end
 
 return progress

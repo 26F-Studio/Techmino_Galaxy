@@ -1,4 +1,4 @@
----@type Techmino.Mech.brik
+---@type Map<Techmino.Mech.Brik|Map<Techmino.Mech.Brik>>
 local dig={}
 
 dig.sprint_event_playerInit=TABLE.newPool(function(self,lineStay)

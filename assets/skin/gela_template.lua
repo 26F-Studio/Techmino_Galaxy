@@ -5,7 +5,7 @@ local gc_setLineWidth=gc.setLineWidth
 
 local NumColor=NumColor
 
----@type Techmino.skin.gela
+---@type Techmino.Skin.Gela
 local S={}
 S.base='brik_template'
 

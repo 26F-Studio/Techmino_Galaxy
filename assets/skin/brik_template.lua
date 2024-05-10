@@ -18,7 +18,7 @@ local max,min=math.max,math.min
 local COLOR=COLOR
 local NumColor=NumColor
 
----@type Techmino.skin.brik
+---@type Techmino.Skin.Brik
 local S={}
 
 local crossR,crossL=1,6

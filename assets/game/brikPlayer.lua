@@ -1995,6 +1995,7 @@ local soundEventMeta={
 }
 function BP.new()
     local self=setmetatable(require'basePlayer'.new(),{__index=BP,__metatable=true})
+    ---@type Techmino.Mode.Setting.Brik
     self.settings=TABLE.copy(baseEnv)
     self.event={
         -- Press & Release
@@ -2076,7 +2077,8 @@ function BP:initialize()
     self.freshChance=self.settings.maxFreshChance
     self.freshTime=0
 
-    self.hand=false -- Controlling brik object
+    ---@type Techmino.Hand|false
+    self.hand=false
     self.handX=false
     self.handY=false
     self.lastMovement=false -- Table contain last movement info of brik, for spin/tuck/... checking

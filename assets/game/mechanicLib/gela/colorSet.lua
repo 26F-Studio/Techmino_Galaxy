@@ -1,4 +1,4 @@
----@type Techmino.Mech.gela
+---@type Map<Techmino.Mech.Gela|number[]>
 local colorSet={}
 
 -- R Y B G P C O M

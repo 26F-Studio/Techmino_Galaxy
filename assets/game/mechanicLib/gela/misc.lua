@@ -1,4 +1,4 @@
----@type Techmino.Mech.gela
+---@type Map<Techmino.Mech.Gela>
 local misc={}
 
 return misc

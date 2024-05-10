@@ -240,7 +240,6 @@ function P:finish(reason)
     if self.finished then return end
     self.timing=false
     self.finished=reason
-    self.hand=false
     self.spawnTimer=1e99
 
     self:triggerEvent('gameOver',reason)

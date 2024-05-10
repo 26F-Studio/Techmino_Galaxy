@@ -10,7 +10,7 @@ local max,min=math.max,math.min
 
 local COLOR=COLOR
 
----@type Techmino.skin.acry
+---@type Techmino.Skin.Acry
 local S={}
 
 local crossR,crossL=1,6

@@ -1,7 +1,7 @@
 local gc=love.graphics
 local min,max=math.min,math.max
 
----@type Techmino.Mech.brik
+---@type Map<Techmino.Mech.Brik>
 local marathon={}
 
 local levels={-- par: drop interval

@@ -1,4 +1,4 @@
----@type Techmino.Mech.brik
+---@type Map<Techmino.Event|Techmino.Mech.Brik>
 local stat={}
 
 function stat.event_playerInit(P) -- Initially used in brikPlayer.lua
@@ -60,6 +60,9 @@ function stat.event_beforeSend(P,atk)
 end
 
 -- Highest priority for all statistics events
-for k,v in next,stat do stat[k]={-1,v} end
+for k,v in next,stat do
+    ---@cast v fun(P:Techmino.Player.Brik):any
+    stat[k]={-1,v}
+end
 
 return stat

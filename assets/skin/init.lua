@@ -5,11 +5,11 @@ local SKIN={}
 SKIN.time=0
 local function _getTime() return SKIN.time end
 
----@class Techmino.skin
+---@class Techmino.Skin
 ---@field base string
 ---@field getTime function
 ---@field drawFieldBackground fun(fieldW:number)
----@field drawFieldCell fun(C:Techmino.Cell, F:Techmino.RectField, x:number, y:number, connH?:number)
+---@field drawFieldCell fun(C:Techmino.Cell, F:Techmino.RectField, x:number, y:number)
 ---@field drawGhostCell fun(C:Techmino.Cell, B:Techmino.RectPiece, x:number, y:number)
 ---@field drawHandCellStroke fun(C:Techmino.Cell, B:Techmino.RectPiece, x:number, y:number)
 ---@field drawHandCell fun(C:Techmino.Cell, B:Techmino.RectPiece, x:number, y:number)
@@ -29,16 +29,17 @@ local function _getTime() return SKIN.time end
 ---@field drawStartingCounter fun(readyDelay:number)
 ---@field drawInfoPanel fun(x:number, y:number, w:number, h:number) Only called by mode
 
----@class Techmino.skin.brik: Techmino.skin
+---@class Techmino.Skin.Brik: Techmino.Skin
 
----@class Techmino.skin.gela: Techmino.skin
+---@class Techmino.Skin.Gela: Techmino.Skin
+---@field drawFieldCell fun(C:Techmino.Cell, F:Techmino.RectField, x:number, y:number, connH?:number)
 
----@class Techmino.skin.acry: Techmino.skin
+---@class Techmino.Skin.Acry: Techmino.Skin
 ---@field drawSwapCursor fun(cx:number, cy:number, lock:boolean)
 ---@field drawTwistCursor fun(sx:number, sy:number)
 
 ---@param name string
----@param skin Techmino.skin
+---@param skin Techmino.Skin
 function SKIN.add(name,skin)
     assert(type(name)=='string',"Skin name must be string")
     assert(not SKIN[name],"Skin "..name.." already exists")

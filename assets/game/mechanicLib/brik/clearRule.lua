@@ -1,6 +1,12 @@
 local ins,rem=table.insert,table.remove
 
----@type table<string, Techmino.brik.clearRule>
+---@class Techmino.Mech.Brik.Clearrule
+---@field getDelay fun(P:Techmino.Player.Brik, lines:number[]): number?
+---@field isFill fun(P:Techmino.Player.Brik, y:number): boolean
+---@field getFill fun(P:Techmino.Player.Brik): number[]?
+---@field clear fun(P:Techmino.Player.Brik, lines:number[])
+
+---@type Map<Techmino.Mech.Brik.Clearrule>
 local clearRule={}
 
 local function setBias(P,x,y,dx,dy,moveType,clearDelay)
@@ -17,7 +23,6 @@ local function setBias(P,x,y,dx,dy,moveType,clearDelay)
 end
 
 do -- none (no line clear)
-    ---@type Techmino.brik.clearRule
     clearRule.none={}
     function clearRule.none.getDelay() return 0 end
     clearRule.none.getFill=NULL
@@ -25,7 +30,6 @@ do -- none (no line clear)
 end
 
 do -- line (fill row to clear)
-    ---@type Techmino.brik.clearRule
     clearRule.line={}
 
     function clearRule.line.getDelay(P,lines)
@@ -76,7 +80,6 @@ do -- line (fill row to clear)
 end
 
 do -- triplets (filled lines which form arithmetic progression to clear, from tetr.js)
-    ---@type Techmino.brik.clearRule
     clearRule.triplets={}
 
     clearRule.triplets.getDelay=clearRule.line.getDelay
@@ -119,7 +122,6 @@ do -- triplets (filled lines which form arithmetic progression to clear, from te
 end
 
 do -- cheese (90% fill to clear)
-    ---@type Techmino.brik.clearRule
     clearRule.cheese={}
 
     clearRule.cheese.getDelay=clearRule.line.getDelay
@@ -151,7 +153,6 @@ do -- cheese (90% fill to clear)
 end
 
 do -- line_float (fill row to clear, but not move above lines down)
-    ---@type Techmino.brik.clearRule
     clearRule.line_float={}
 
     clearRule.line_float.getDelay=clearRule.line.getDelay

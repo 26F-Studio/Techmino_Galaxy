@@ -1,6 +1,6 @@
 local require=simpRequire(((...):gsub("[^%.]*$", "")))
 
----@class FMOD.master
+---@class FMOD.Master
 local M=require("master")
 local C=M.C
 

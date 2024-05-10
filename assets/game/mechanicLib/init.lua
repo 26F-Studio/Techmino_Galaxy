@@ -6,6 +6,7 @@ local mechLib={
     common={
         timer=require'common/timer',
         finish=require'common/finish',
+        characterAnim=require'common/characterAnim',
     },
     brik={
         -- Basic

@@ -4,7 +4,7 @@ local gc_rectangle,gc_polygon=gc.rectangle,gc.polygon
 
 local NumColor=NumColor
 
----@type Techmino.skin.gela
+---@type Techmino.Skin.Gela
 local S={}
 S.base='gela_template'
 

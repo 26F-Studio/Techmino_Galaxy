@@ -1,4 +1,4 @@
----@type Techmino.Mech.brik
+---@type Map<Techmino.Event|Techmino.Mech.Brik>
 local music={}
 
 function music.sprint_40_afterClear(P)
@@ -213,6 +213,9 @@ function music.backfire_cheese_100_afterClear(P)
     FMOD.music.setParam('intensity',MATH.icLerp(40,75,P.modeData.stat.line))
 end
 
-for k,v in next,music do music[k]={1e62,v} end
+for k,v in next,music do
+    ---@cast v fun(P:Techmino.Player.Brik):any
+    music[k]={1e62,v}
+end
 
 return music

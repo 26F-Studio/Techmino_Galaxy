@@ -1,4 +1,4 @@
----@type Techmino.Mech.brik
+---@type Map<Techmino.Mech.Brik>
 local ACGenerator={}
 
 local pieceShapes do

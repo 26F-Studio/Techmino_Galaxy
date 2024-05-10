@@ -13,7 +13,7 @@ local function supply(list,src,rep)
     return false
 end
 
----@type Techmino.Mech.brik
+---@type Map<Techmino.Mech.Brik|Map<Techmino.Mech.Brik>>
 local sequence={}
 
 ---@param P Techmino.Player.Brik

@@ -1,6 +1,6 @@
 local gc=love.graphics
 
----@type Techmino.Mech.brik
+---@type Map<Techmino.Mech.Brik>
 local hypersonic={}
 
 ---@param mode 'low'|'high'|'hidden'|'titanium'

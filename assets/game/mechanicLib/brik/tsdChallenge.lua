@@ -1,6 +1,6 @@
 local gc=love.graphics
 
----@type Techmino.Mech.brik
+---@type Map<Techmino.Mech.Brik>
 local tsd={}
 
 function tsd.easy_event_playerInit(P)

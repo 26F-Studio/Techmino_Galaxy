@@ -12,38 +12,33 @@ local floor=math.floor
 local ins,rem=table.insert,table.remove
 
 ---@class Techmino.Player.Acry: Techmino.Player
----@field field any[][]
+---@field field (Techmino.Acry.Cell|false)[][]
 local AP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
---[[ Acry tags:
-    int color <1~7>
-    string type <'acry','cube'>
-    boolean movable
-
-    string appearance <'flame'|'star'|'nova'>
-    function moved
-    function aftermove
-    table destroyed {
-        string mode <'explosion'|'lightning'|'color'>
-        if mode=='explosion' or 'lightning':
-            int radius <0|1|2|...>
-    }
-
-    boolean immediately
-    int clearTimer
-    int clearDelay
-
-    int moveTimer
-    int moveDelay
-    float dx
-    float dy
-    boolean fall
-
-    int lrCnt
-    int udCnt
-    int riseCnt
-    int dropCnt
-]]
+---@class Techmino.Acry.Cell
+---@field color number 1~7
+---@field type 'acry'|'cube'
+---@field appearance 'flame'|'star'|'nova'
+---@field destroyed {mode:'explosion'|'lightning'|'color', radius:number}
+---@field movable boolean
+---
+---@field needCheck boolean
+---@field clearTimer number
+---@field clearDelay number Set when enter clearing state
+---@field moveTimer number
+---@field moveDelay number
+---@field dx number
+---@field dy number
+---@field fall boolean
+---
+---@field lrCnt number Left/Right connecting length
+---@field udCnt number Up/Down connecting length
+---@field riseCnt number BL/UR (rising diagonal) connecting length (when enabled)
+---@field dropCnt number UL/BR (dropping diagonal) connecting length (when enabled)
+---
+---@field moved function
+---@field aftermove function
+---@field generate? Techmino.Acry.Cell
 
 --------------------------------------------------------------
 -- Function tables
@@ -80,7 +75,7 @@ AP.scriptCmd={
 -- Actions
 
 AP._actions={}
-for k,v in next,mechLib.brik.actions do AP._actions[k]=AP:_getActionObj(v) end
+for k,v in next,mechLib.acry.actions do AP._actions[k]=AP:_getActionObj(v) end
 
 --------------------------------------------------------------
 -- Effects
@@ -258,6 +253,7 @@ local function linkLen(F,color,x,y,dx,dy)
     end
     return cnt
 end
+---Check if a position can be activated
 function AP:psedoCheckPos(x,y)
     local F=self.field
     if not F[y][x] then return end
@@ -667,6 +663,7 @@ function AP:updateFrame()
         local leagl=false
         local posList=group.positions
         for n=1,#posList,2 do
+            ---@type Techmino.Acry.Cell
             local g=F[posList[n+1]][posList[n]]
             if g.movable then
                 fin=true
@@ -875,6 +872,7 @@ local soundEventMeta={
 }
 function AP.new()
     local self=setmetatable(require'basePlayer'.new(),{__index=AP,__metatable=true})
+    ---@type Techmino.Mode.Setting.Acry
     self.settings=TABLE.copy(baseEnv)
     self.event={
         -- Press & Release

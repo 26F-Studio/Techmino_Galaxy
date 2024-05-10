@@ -1,6 +1,8 @@
 local gc=love.graphics
 
 ---@class Techmino.RectField
+---@field _width number
+---@field _matrix (Techmino.Cell|false)[][]
 local F={}
 
 --------------------------------------------------------------

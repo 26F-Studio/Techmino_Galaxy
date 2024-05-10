@@ -6,7 +6,7 @@ local require=simpRequire(((...):gsub("[^%.]*$", "")))
 ---@alias FMOD.Const FMOD.Const
 ---@alias FMOD.Enum FMOD.Enum
 
----@class FMOD.master
+---@class FMOD.Master
 local M=require("master")
 local C=M.C
 local C2=M.C2

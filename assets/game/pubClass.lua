@@ -62,10 +62,10 @@
 ---|'drawInField'
 ---|'drawOnPlayer'
 
----@alias Techmino.Mech.basic table<string, table|fun(P:Techmino.Player|any):any>
----@alias Techmino.Mech.brik table<string, table|fun(P:Techmino.Player.Brik|any):any, any>
----@alias Techmino.Mech.gela table<string, table|fun(P:Techmino.Player.Gela|any):any, any>
----@alias Techmino.Mech.acry table<string, table|fun(P:Techmino.Player.Acry|any):any, any>
+---@alias Techmino.Mech.Basic fun(P:Techmino.Player):any,any
+---@alias Techmino.Mech.Brik fun(P:Techmino.Player.Brik):any,any
+---@alias Techmino.Mech.Gela fun(P:Techmino.Player.Gela):any,any
+---@alias Techmino.Mech.Acry fun(P:Techmino.Player.Acry):any,any
 
 ---@class Techmino.ParticleSystems
 ---@field rectShade love.ParticleSystem
@@ -79,15 +79,7 @@
 ---@field trail love.ParticleSystem
 ---@field brikMapBack love.ParticleSystem
 
----@alias Techmino.Brik.Shape Map<Map<boolean>>
----@alias Techmino.Brik.Name 'Z'|'S'|'J'|'L'|'T'|'O'|'I'|'Z5'|'S5'|'P'|'Q'|'F'|'E'|'T5'|'U'|'V'|'W'|'X'|'J5'|'L5'|'R'|'Y'|'N'|'H'|'I5'|'I3'|'C'|'I2'|'O1'|string
----@alias Techmino.Brik.ID 1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|integer
----@alias Techmino.Event {[1]:number, [2]:function}
-
----@class Techmino.Brik
----@field name Techmino.Brik.Name
----@field id Techmino.Brik.ID
----@field shape Techmino.Brik.Shape
+---@alias Techmino.Event {[1]:number, [2]:fun(P:Techmino.Player):any}
 
 ---@class Techmino.Cell
 ---@field cid string cell's mem pointer string
@@ -97,14 +89,24 @@
 ---@field conn table<string, true>
 ---@field bias {expBack?:number, lineBack?:number, teleBack?:number, x:number, y:number}
 ---@field visTimer? number
+---@field fadeTime? number
 ---@field visStep? number
 ---@field visMax? number
+---
+---@field diggable boolean Gela only
+---@field connClear boolean Gela only
 
 ---@alias Techmino.RectPiece (Techmino.Cell|false)[][]
 
----@class Techmino.RectField
----@field _width number
----@field _matrix (Techmino.Cell|false)[][]
+---@class Techmino.Hand
+---@field id number
+---@field shape number
+---@field direction number
+---@field name string
+---@field matrix Techmino.RectPiece
+---@field _origin Techmino.Hand
+---
+---@field size number Gela only
 
 ---@class Techmino.Mode
 ---@field initialize function Called when initializing the mode
@@ -114,32 +116,6 @@
 ---@field result function Called when the game ends
 ---@field resultPage fun(time:number) Drawing the result page
 ---@field name string Mode name, for debug use
-
----@class Techmino.Mode.Setting.Brik
----@field event table<Techmino.mode.event.basic|Techmino.mode.event.brik, string|table|function|Map<string|table|function>>
-
----@class Techmino.Mode.Setting.Gela
----@field event table<Techmino.mode.event.basic|Techmino.mode.event.gela, string|table|function|Map<string|table|function>>
-
----@class Techmino.Mode.Setting.Acry
----@field event table<Techmino.mode.event.basic|Techmino.mode.event.acry, string|table|function|Map<string|table|function>>
-
----@class Techmino.brik.clearRule
----@field getDelay fun(P:Techmino.Player.Brik, lines:number[]): number?
----@field isFill fun(P:Techmino.Player.Brik, y:number): boolean
----@field getFill fun(P:Techmino.Player.Brik): number[]?
----@field clear fun(P:Techmino.Player.Brik, lines:number[])
-
----@class Techmino.Game
----@field playing boolean
----@field playerList Techmino.Player[]|false
----@field playerMap Techmino.Player[]|false
----@field camera Zenitha.Camera
----@field hitWaves table
----@field seed number|false
----@field mode Techmino.Mode|false
----@field mainID number|false
----@field mainPlayer Techmino.Player|false
 
 ---@class Techmino.Player
 ---@field gameMode Techmino.Player.Type
@@ -166,7 +142,7 @@
 ---@field decodeScript function
 ---@field checkScriptSyntax function
 ---
----@field hand table|false Piece object
+---@field hand Techmino.Hand|false Current controlling piece object
 ---@field handX number
 ---@field handY number
 ---@field event table<string, Techmino.Event[]>

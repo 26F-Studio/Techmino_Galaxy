@@ -7,10 +7,11 @@ local gc_setBlendMode,gc_setColorMask=gc.setBlendMode,gc.setColorMask
 local gc_setColor=gc.setColor
 local gc_draw,gc_rectangle=gc.draw,gc.rectangle
 
-
 local max,min=math.max,math.min
 local floor=math.floor
 local ins,rem=table.insert,table.remove
+
+local clamp,expApproach=MATH.clamp,MATH.expApproach
 
 ---@class Techmino.Player.Gela: Techmino.Player
 ---@field field Techmino.RectField
@@ -493,7 +494,7 @@ function GP:getGela(mat)
     -- Generate cell matrix from bool matrix
     for y=1,#mat do for x=1,#mat[1] do
         mat[y][x]=mat[y][x] and {
-            gelaID=self.pieceCount,
+            id=self.pieceCount,
             color=self.settings.colorSet[mat[y][x]],
             connClear=true,
         }
@@ -1395,6 +1396,7 @@ local soundEventMeta={
 }
 function GP.new()
     local self=setmetatable(require'basePlayer'.new(),{__index=GP,__metatable=true})
+    ---@type Techmino.Mode.Setting.Gela
     self.settings=TABLE.copy(baseEnv)
     self.event={
         -- Press & Release
@@ -1437,13 +1439,17 @@ end
 function GP:initialize()
     require'basePlayer'.initialize(self)
 
-    if self.settings.colorSet=='random' then
-        self.settings.colorSet=mechLib.gela.colorSet.getRandom(self)
-    elseif type(self.settings.colorSet)=='string' then
-        self.settings.colorSet=mechLib.gela.colorSet[self.settings.colorSet]
+    local set=self.settings.colorSet
+    if set=='random' then
+        set=mechLib.gela.colorSet.getRandom(self)
+    elseif type(set)=='string' then
+        set=mechLib.gela.colorSet[set]
+    elseif type(set)~='table' then
+        error("Invalid P.settings.colorSet")
     end
-    assert(type(self.settings.colorSet)=='table',"Invalid P.settings.colorSet")
-    self.settings.colorSet=TABLE.shift(self.settings.colorSet)
+    set=TABLE.shift(set)
+    self.settings.colorSet=set
+
     self:shuffleColor(self.settings.colorShuffleRange)
 
     self.field=require'rectField'.new(self.settings.fieldW)
@@ -1474,7 +1480,8 @@ function GP:initialize()
     self.freshChance=self.settings.maxFreshChance
     self.freshTime=0
 
-    self.hand=false -- Controlling gela object
+    ---@type Techmino.Hand|false
+    self.hand=false
     self.handX=false
     self.handY=false
     self.ghostY=false

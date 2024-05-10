@@ -3,7 +3,7 @@ local require=simpRequire(((...):gsub(".init$","").."."))
 
 require("cdef")
 
----@class FMOD.master
+---@class FMOD.Master
 local M=require("master")
 
 -- search for fmod shared libraries in package.cpath

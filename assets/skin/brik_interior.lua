@@ -16,7 +16,7 @@ local gc_line=gc.line
 
 local COLOR=COLOR
 
----@type Techmino.skin.brik
+---@type Techmino.Skin.Brik
 local S={}
 S.base='brik_template'
 

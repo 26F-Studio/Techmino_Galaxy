@@ -1,4 +1,4 @@
----@type Techmino.Mech.gela
+---@type Map<Techmino.Event|Techmino.Mech.Gela>
 local stat={}
 
 function stat.event_playerInit(P) -- Initially used in gelaPlayer.lua
@@ -40,6 +40,9 @@ function stat.event_afterClear(P)
 end
 
 -- Highest priority for all statistics events
-for k,v in next,stat do stat[k]={-1,v} end
+for k,v in next,stat do
+    ---@cast v fun(P:Techmino.Player.Gela):any
+    stat[k]={-1,v}
+end
 
 return stat
