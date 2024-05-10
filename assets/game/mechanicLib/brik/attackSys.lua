@@ -1,4 +1,4 @@
----@type Map<Map<function>>
+---@type Map<Map<fun(P:Techmino.Player.Brik):any>>
 local atkSys={}
 
 -- No attack
