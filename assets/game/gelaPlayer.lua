@@ -873,9 +873,9 @@ function GP:dropGarbage(count)
     local curGenY=self.settings.spawnH+1
     while count>=w do
         for x=1,w do
-        F:setCell({
-            color=555,
-            diggable=true,
+            F:setCell({
+                color=555,
+                diggable=true,
             },x,curGenY)
         end
         curGenY=curGenY+1
@@ -1113,6 +1113,45 @@ function GP:updateFrame()
             g._time=g._time+1
         end
     end
+
+    -- Update field cells' visiblity
+    local F=self.field._matrix
+    for y=1,#F do for x=1,#F[1] do
+        local C=F[y][x]
+        if C then
+            if C.visTimer then
+                local step=C.visStep or -1
+                C.visTimer=C.visTimer+step
+                C.alpha=clamp(C.visTimer/C.fadeTime,0,1)
+                if step<0 and C.visTimer<=0 or step>0 and C.visTimer>=(C.visMax or C.fadeTime) then
+                    C.visTimer=nil
+                end
+            end
+            local b=C.bias
+            if b then
+                if b.expBack then
+                    b.x=expApproach(b.x,0,b.expBack)
+                    b.y=expApproach(b.y,0,b.expBack)
+                    if b.x^2+b.y^2<=.26^2 then
+                        C.bias=nil
+                    end
+                elseif b.lineBack then
+                    local dist=(b.x^2+b.y^2)^.5
+                    if b.lineBack>=dist then
+                        C.bias=nil
+                    else
+                        local k=1-b.lineBack/dist
+                        b.x,b.y=b.x*k,b.y*k
+                    end
+                elseif b.teleBack then
+                    b.teleBack=b.teleBack-1
+                    if b.teleBack<=0 then
+                        C.bias=nil
+                    end
+                end
+            end
+        end
+    end end
 end
 function GP:render()
     local SET=self.settings
