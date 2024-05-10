@@ -869,14 +869,26 @@ end
 function GP:dropGarbage(count)
     local F=self.field
     local w=self.settings.fieldW
-    for _=1,count do
-        local x=self:random(w)
-        local y=self.settings.spawnH+1
-        while F:getCell(x,y) do y=y+1 end
+    local curGenY=self.settings.spawnH+1
+    while count>=w do
+        for x=1,w do
         F:setCell({
             color=555,
             diggable=true,
-        },x,y)
+            },x,curGenY)
+        end
+        curGenY=curGenY+1
+        count=count-w
+    end
+    if count>0 then
+        local pos={}
+        for x=1,w do pos[x]=x end
+        for n=1,count do
+            F:setCell({
+                color=555,
+                diggable=true,
+            },table.remove(pos,GP:random(w+1-n)),curGenY)
+        end
     end
 end
 function GP:changeFieldWidth(w,origPos)
