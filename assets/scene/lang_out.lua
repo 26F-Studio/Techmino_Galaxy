@@ -29,7 +29,6 @@ end
 function scene.keyDown(key)
     if KEYMAP.sys:getAction(key)=='back' then
         SCN.back()
-    else
         return true
     end
 end

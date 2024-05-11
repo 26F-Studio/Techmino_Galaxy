@@ -18,7 +18,7 @@ function scene.enter()
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='escape' then
         SCN.back()
     else
@@ -30,6 +30,7 @@ function scene.keyDown(key,isRep)
             FMOD.effect('lock')
         end
     end
+    return true
 end
 
 function scene.update(dt)

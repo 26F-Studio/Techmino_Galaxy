@@ -93,7 +93,7 @@ function scene.touchUp(x)
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='escape' then
         SCN.back()
     elseif play then
@@ -109,6 +109,7 @@ function scene.keyDown(key,isRep)
             level=1
         end
     end
+    return true
 end
 function scene.keyUp(key)
     if play then

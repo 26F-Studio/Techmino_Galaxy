@@ -105,6 +105,7 @@ function scene.wheelMoved(dx,dy)
     else
         brikMap:scaleCam(1.1^(dx+dy))
     end
+    return true
 end
 function scene.touchMove(_,_,dx,dy)
     brikMap:hideCursor()
@@ -129,10 +130,11 @@ local function sysAction(action)
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
-    -- if key=='z' then brikMap:_printModePos() return end
+    if isRep then return true end
+    -- if key=='z' then brikMap:_printModePos() return true end
     if key=='`' and isAltPressed() then brikMap:_unlockall() end
     sysAction(KEYMAP.sys:getAction(key))
+    return true
 end
 
 function scene.update(dt)

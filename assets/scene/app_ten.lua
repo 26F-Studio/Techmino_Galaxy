@@ -121,9 +121,9 @@ local function merge()
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='up' or key=='down' or key=='left' or key=='right' then
-        if state==2 then return end
+        if state==2 then return true end
         if not cx then
             cx,cy=3,3
         else
@@ -156,6 +156,7 @@ function scene.keyDown(key,isRep)
     elseif key=='escape' then
         if sureCheck('back') then SCN.back() end
     end
+    return true
 end
 function scene.mouseMove(x,y)
     cx,cy=floor((x-192)/128),floor((y+88)/128)

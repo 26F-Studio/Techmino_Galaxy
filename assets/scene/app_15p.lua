@@ -129,7 +129,7 @@ local function tapBoard(x,y,key)
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='up' then
         tapBoard(cx,cy-(revKB and 1 or -1),true)
     elseif key=='down' then
@@ -169,6 +169,7 @@ function scene.keyDown(key,isRep)
     elseif key=='escape' then
         SCN.back()
     end
+    return true
 end
 function scene.mouseDown(x,y)
     tapBoard(x,y)

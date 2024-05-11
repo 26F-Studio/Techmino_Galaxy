@@ -52,6 +52,7 @@ function scene.keyDown(key,isRep)
     elseif key=='escape' then
         SCN.back()
     end
+    return true
 end
 function scene.keyUp(key)
     if keys[key] and activeEventMap[key] then

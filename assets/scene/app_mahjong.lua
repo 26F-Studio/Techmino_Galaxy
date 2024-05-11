@@ -129,7 +129,7 @@ end
 function scene.touchMove(x,y) scene.mouseMove(x,y) end
 function scene.touchDown(x,y) scene.mouseMove(x,y) end
 function scene.touchClick(x,y) scene.mouseDown(x,y) end
-function scene.keyDown(key)
+function scene.keyDown(key,isRep)
     if key=='left' then
         if selected then
             selected=max(selected-1,1)
@@ -142,15 +142,18 @@ function scene.keyDown(key)
         else
             selected=#hand
         end
-    elseif key=='space' then
-        _throwCard()
-    elseif key=='r' then
-        _newGame()
-    elseif key=='return' then
-        _checkWin()
-    elseif key=='escape' then
-        SCN.back()
+    elseif not isRep then
+        if key=='space'then
+            _throwCard()
+        elseif key=='r' then
+            _newGame()
+        elseif key=='return' then
+            _checkWin()
+        elseif key=='escape' then
+            SCN.back()
+        end
     end
+    return true
 end
 
 function scene.draw()

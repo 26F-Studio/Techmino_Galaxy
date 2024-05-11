@@ -128,7 +128,7 @@ function scene.touchClick(x,y)
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='left' or key=='right' then
         if not subjectFocused then
             for i,s in next,sims do
@@ -155,6 +155,7 @@ function scene.keyDown(key,isRep)
         end
         SCN.back('fadeHeader')
     end
+    return true
 end
 
 function scene.update(dt)

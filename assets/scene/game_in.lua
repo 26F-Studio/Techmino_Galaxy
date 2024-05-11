@@ -32,7 +32,7 @@ local function sysAction(action)
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     local action
 
     local p=GAME.mainPlayer
@@ -40,11 +40,13 @@ function scene.keyDown(key,isRep)
         action=KEYMAP[p.gameMode]:getAction(key)
         if action then
             GAME.press(action)
-            return
+            return true
         end
     end
 
     sysAction(KEYMAP.sys:getAction(key))
+
+    return true
 end
 
 function scene.keyUp(key)

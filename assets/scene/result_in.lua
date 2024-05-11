@@ -14,6 +14,7 @@ function scene.keyDown(key)
     elseif action=='back' then
         SCN.back('none')
     end
+    return true
 end
 
 function scene.update(dt)

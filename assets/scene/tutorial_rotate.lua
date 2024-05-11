@@ -124,7 +124,7 @@ function scene.leave()
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
 
     local action
     if not controlCD then
@@ -181,7 +181,7 @@ function scene.keyDown(key,isRep)
                     totalTime=totalTime+1.26
                 end
             end
-            return
+            return true
         end
     end
 
@@ -191,6 +191,7 @@ function scene.keyDown(key,isRep)
     elseif action=='back' then
         if sureCheck('back') then SCN.back('none') end
     end
+    return true
 end
 
 function scene.touchDown(x,y,id)

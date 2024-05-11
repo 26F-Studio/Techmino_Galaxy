@@ -245,6 +245,7 @@ function scene.keyDown(key,isRep)
             SCN.back('fadeHeader')
         end
     end
+    return true
 end
 
 function scene.update(dt)

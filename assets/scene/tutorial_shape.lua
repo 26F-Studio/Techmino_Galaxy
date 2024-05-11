@@ -167,12 +167,12 @@ function scene.leave()
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     local action
     action=KEYMAP.brik:getAction(key)
     if action=='moveLeft' or action=='moveRight' then
         answer(action=='moveLeft' and 1 or 2)
-        return
+        return true
     end
     action=KEYMAP.sys:getAction(key)
     if action=='restart' then
@@ -180,6 +180,7 @@ function scene.keyDown(key,isRep)
     elseif action=='back' then
         if sureCheck('back') then SCN.back('none') end
     end
+    return true
 end
 
 function scene.update(dt)

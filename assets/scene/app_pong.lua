@@ -43,7 +43,7 @@ local function start()
     vy=rnd()*6-3
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='space' then
         if state==0 then
             start()
@@ -62,6 +62,7 @@ function scene.keyDown(key,isRep)
     elseif key=='escape' then
         SCN.back()
     end
+    return true
 end
 function scene.touchDown(x,y)
     scene.touchMove(x,y)

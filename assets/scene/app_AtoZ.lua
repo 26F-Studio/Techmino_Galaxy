@@ -44,7 +44,7 @@ function scene.enter()
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if #key==1 then
         if state<2 and frameKeyCount<3 then
             if key:upper():byte()==targetString:byte(progress) then
@@ -84,6 +84,7 @@ function scene.keyDown(key,isRep)
     elseif key=='escape' then
         SCN.back()
     end
+    return true
 end
 
 function scene.update()

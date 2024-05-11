@@ -39,7 +39,7 @@ function scene.enter()
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='escape' then
         if sureCheck('back') then SCN.back() end
     elseif key=='r' then
@@ -58,6 +58,7 @@ function scene.keyDown(key,isRep)
             input=""
         end
     end
+    return true
 end
 
 function scene.update(dt)

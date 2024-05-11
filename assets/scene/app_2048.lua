@@ -294,7 +294,7 @@ local function playRep(n)
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='up' or key=='down' or key=='left' or key=='right' then
         if repeater.focus then
             local f=repeater.focus
@@ -345,6 +345,7 @@ function scene.keyDown(key,isRep)
             if sureCheck('back') then SCN.back() end
         end
     end
+    return true
 end
 
 function scene.update(dt)

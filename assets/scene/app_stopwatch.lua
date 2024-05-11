@@ -45,12 +45,13 @@ function scene.touchUp()
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='escape' then
         SCN.back()
     else
         press()
     end
+    return true
 end
 function scene.keyUp()
     release()

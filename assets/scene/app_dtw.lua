@@ -244,7 +244,7 @@ local function touch(n)
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='r' or key=='space' then reset()
     elseif key=='escape' then SCN.back()
     elseif state~=2 then
@@ -264,6 +264,7 @@ function scene.keyDown(key,isRep)
             end
         end
     end
+    return true
 end
 function scene.mouseDown(x)
     scene.touchDown(x)

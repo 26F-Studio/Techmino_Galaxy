@@ -11,7 +11,7 @@ function scene.leave()
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='-' then
         VCTRL.removeButton()
     elseif key=='+' then
@@ -31,6 +31,7 @@ function scene.keyDown(key,isRep)
     elseif key=='escape' then
         SCN.back(SCN.cur=='keyset_touch_in' and 'none' or nil)
     end
+    return true
 end
 
 function scene.touchDown(x,y,id)

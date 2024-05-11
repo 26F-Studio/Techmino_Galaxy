@@ -249,7 +249,7 @@ function scene.enter()
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='r' then
         if state~=1 or sureCheck('reset') then
             newGame()
@@ -265,6 +265,7 @@ function scene.keyDown(key,isRep)
             invis=not invis
         end
     end
+    return true
 end
 local function touch(x,y)
     x=floor((x-field.x)/field.w*field.c+1)

@@ -41,7 +41,7 @@ function scene.enter()
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='space' or key=='return' then
         if state=='move' then
             if floor>0 then
@@ -64,6 +64,7 @@ function scene.keyDown(key,isRep)
     elseif key=='escape' then
         if sureCheck('back') then SCN.back() end
     end
+    return true
 end
 function scene.mouseDown(_,_,k)
     if k==1 then

@@ -36,10 +36,11 @@ function scene.leave()
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if KEYMAP.sys:getAction(key)=='back' then
         SCN.back('none')
     end
+    return true
 end
 
 function scene.draw()

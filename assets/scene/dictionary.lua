@@ -340,7 +340,7 @@ function scene.enter()
 end
 
 function scene.keyDown(key,isRep)
-    if WIDGET.isFocus(inputBox) and #key==1 then return end
+    if WIDGET.isFocus(inputBox) and #key==1 then return true end
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
         if not (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
@@ -378,6 +378,7 @@ function scene.keyDown(key,isRep)
             listBox:scroll(1e99)
         end
     end
+    return true
 end
 
 local function inScreen(x,y)
@@ -407,7 +408,6 @@ end
 function scene.wheelMoved(_,y)
     if not WIDGET.isFocus(listBox) then
         scroll(y*62)
-    else
         return true
     end
 end

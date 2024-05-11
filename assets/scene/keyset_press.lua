@@ -18,8 +18,8 @@ function scene.enter()
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
-    if result then return end
+    if isRep then return true end
+    if result then return true end
     if key=='escape' and not escTimerWTF then
         escTimerWTF=.626
     elseif key=='backspace' then
@@ -34,6 +34,7 @@ function scene.keyDown(key,isRep)
         KEYMAP[mode]:addKey(act,key)
         FMOD.effect('beep_rise')
     end
+    return true
 end
 
 function scene.touchDown(x,y,id)

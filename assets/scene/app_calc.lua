@@ -27,14 +27,14 @@ function scene.keyDown(key)
     if kb.isDown('lshift','rshift') then
         if key=='=' then
             scene.keyDown('+')
-            return
+            return true
         elseif kb.isDown('lshift','rshift') and key=='8' then
             scene.keyDown('*')
-            return
+            return true
         end
     elseif key:sub(1,2)=='kp' then
         scene.keyDown(key:sub(3))
-        return
+        return true
     end
     if key=='.' then
         if sym=="=" then
@@ -118,6 +118,7 @@ function scene.keyDown(key)
     elseif key=='delete' then
         val="0"
     end
+    return true
 end
 
 function scene.draw()

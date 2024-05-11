@@ -22,8 +22,9 @@ local function sysAction(action)
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     sysAction(KEYMAP.sys:getAction(key))
+    return true
 end
 
 function scene.update(dt)

@@ -42,15 +42,17 @@ local function sysAction(action)
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
 
     -- Debug
     if key=='f7' then
         love.system.setClipboardText(GAME.playerList[1]:serialize())
-        return MSG.new('info',"Player data imported")
+        MSG.new('info',"Player data imported")
+        return true
     elseif key=='f8' then
         GAME.playerList[1]:unserialize(love.system.getClipboardText())
-        return MSG.new('info',"Player data exported")
+        MSG.new('info',"Player data exported")
+        return true
     end
 
     local action
@@ -60,11 +62,12 @@ function scene.keyDown(key,isRep)
         action=KEYMAP[p.gameMode]:getAction(key)
         if action then
             GAME.press(action)
-            return
+            return true
         end
     end
 
     sysAction(KEYMAP.sys:getAction(key))
+    return true
 end
 
 function scene.keyUp(key)

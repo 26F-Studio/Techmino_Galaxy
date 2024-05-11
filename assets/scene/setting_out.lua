@@ -31,7 +31,7 @@ function scene.leave()
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     local act=KEYMAP.sys:getAction(key)
     if act=='back' then
         SCN.back('fadeHeader')
@@ -40,6 +40,7 @@ function scene.keyDown(key,isRep)
     elseif act=='help' then
         callDict('setting_out')
     end
+    return true
 end
 
 function scene.draw()

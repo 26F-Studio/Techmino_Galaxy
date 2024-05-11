@@ -35,7 +35,7 @@ function scene.leave()
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='`' and isAltPressed then
         scene.widgetList.Sacry._visible=true
         scene.widgetList.Sgela._visible=true
@@ -45,6 +45,7 @@ function scene.keyDown(key,isRep)
     if KEYMAP.sys:getAction(key)=='back' then
         SCN.back('fadeHeader')
     end
+    return true
 end
 
 function scene.draw()

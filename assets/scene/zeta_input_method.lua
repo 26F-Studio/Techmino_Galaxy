@@ -254,6 +254,7 @@ function scene.keyDown(k)
             freshResult()
         end
     end
+    return true
 end
 
 function scene.update(dt)

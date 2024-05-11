@@ -279,7 +279,7 @@ function scene.touchClick(x,y)
     scene.mouseClick(x,y)
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='up' or key=='down' or key=='left' or key=='right' then
         if not player.selectX then
             player.selectX,player.selectY=3,3
@@ -309,6 +309,7 @@ function scene.keyDown(key,isRep)
     elseif key=='escape' then
         if sureCheck('back') then SCN.back() end
     end
+    return true
 end
 
 function scene.update()
