@@ -96,7 +96,7 @@ local bgmList={
     ['1980s']                 ={author="C₂₉H₂₅N₃O₅",message="Old song remix"},
     ['sakura']                ={author="ZUN & C₂₉H₂₅N₃O₅",plain=true},
     ['malate']                ={author="ZUN & C₂₉H₂₅N₃O₅"},
-    ['shibamata']             ={author="C₂₉H₂₅N₃O₅"},
+    ['shibamata']             ={author="C₂₉H₂₅N₃O₅",message="Nice song, Nice remix"},
     ['race remix']            ={author="柒栎流星",plain=true},
     ['secret7th remix']       ={author="柒栎流星",plain=true},
     ['propel']                ={author="TetraCepra",message="A cool push remix"},
@@ -105,6 +105,8 @@ local bgmList={
     ['infinitesimal']         ={author="TetraCepra",message="A cool blank remix"},
     ['vanifish']              ={author="Trebor & MrZ",message="A cool blank remix"},
     ['gelly']                 ={author="MrZ",message="Old song remix"},
+    ['humanity']              ={author="MrZ"},
+    ['space retro']           ={author="LR & MrZ"},
 }
 
 local musicListBox do

@@ -37,6 +37,7 @@ STRING.install()
 math.randomseed(os.time()*626)
 love.setDeprecationOutput(false)
 love.keyboard.setTextInput(false)
+VERSION=require"version"
 
 --------------------------------------------------------------
 -- Create directories
@@ -55,7 +56,6 @@ end
 -- Misc modules
 
 require'assets.gamefunc'
-VERSION=_G.require"assets.version"
 GAME=require'assets.game'
 AI=require'assets.ai'
 PROGRESS=require'assets.progress'
