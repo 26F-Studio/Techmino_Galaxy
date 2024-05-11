@@ -294,7 +294,7 @@ DEBUG.checkLoadTime("Config Zenitha and Fmod")
 --------------------------------------------------------------
 -- Load saving data
 
-TABLE.cover(FILE.load('conf/settings','-json -canskip') or {},SETTINGS,1e99)
+TABLE.update(FILE.load('conf/settings','-json -canskip') or {},SETTINGS,1e99)
 for k,v in next,SETTINGS._system do
     -- Gurantee triggering all setting-triggers
     SETTINGS._system[k]=nil

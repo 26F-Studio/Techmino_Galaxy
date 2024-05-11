@@ -820,7 +820,7 @@ function GP:checkClear()
         else
             self.clearTimer=SET.clearDelay
         end
-    elseif not (SET.clearStuck and self.chain>0) then
+    elseif not (SET.allowBlock and self.chain>0) then
         local i=1
         while true do
             local l=self.garbageBuffer[i]
@@ -1395,7 +1395,7 @@ local baseEnv={
     -- Attack
     atkSys='classic',
     allowCancel=true,
-    clearStuck=true,
+    allowBlock=true,
 
     -- Control
     asd=122,

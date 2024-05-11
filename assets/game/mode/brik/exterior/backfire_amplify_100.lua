@@ -8,7 +8,7 @@ return {
     settings={brik={
         atkSys='nextgen',
         allowCancel=true,
-        clearStuck=true,
+        allowBlock=true,
         event={
             beforeCancel=mechLib.brik.backfire.triplePower_event_beforeCancel,
             beforeSend=mechLib.brik.backfire.easy_event_beforeSend,

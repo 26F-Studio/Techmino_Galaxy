@@ -1164,7 +1164,7 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
     if self.finished then return end
 
     -- Update & Release garbage
-    if not (SET.clearStuck and fullLines) then
+    if not (SET.allowBlock and fullLines) then
         local iBuffer=1
         while true do
             local g=self.garbageBuffer[iBuffer]
@@ -1948,10 +1948,10 @@ local baseEnv={
     rotSys='TRS',
     tuck=false,
     spin_immobile=false,
-    spin_corners=false,
+    spin_corners=false,---@type false|number
     atkSys='none',
     allowCancel=true,
-    clearStuck=true,
+    allowBlock=true,
 
     -- Control
     asd=122, -- *Auto shift delay

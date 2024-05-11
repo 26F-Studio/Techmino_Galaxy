@@ -8,7 +8,7 @@ return {
     settings={brik={
         atkSys='basic',
         allowCancel=true,
-        clearStuck=false,
+        allowBlock=false,
         initialRisingSpeed=0,
         risingAcceleration=.003,
         risingDeceleration=.001,
