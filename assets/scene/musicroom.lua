@@ -14,6 +14,7 @@ local noProgress=false
 local autoplay=false ---@type number|false
 local fakeProgress=0
 local searchStr,searchTimer
+local noResponseTimer=6.26
 
 ---@type Zenitha.Scene
 local scene={}
@@ -164,6 +165,8 @@ local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1
 }
 
 function scene.enter()
+    noResponseTimer=-1
+    scene.focus(true)
     selected=getBgm()
     fakeProgress=0
     searchStr,searchTimer="",0
@@ -185,6 +188,9 @@ function scene.enter()
         MSG.new('warn',Text.musicroom_lowVolume)
     end
 end
+function scene.leave()
+    scene.focus(true)
+end
 
 local function searchMusic(str)
     local bestID,bestDist=-1,999
@@ -200,6 +206,7 @@ local function searchMusic(str)
     end
 end
 function scene.keyDown(key,isRep)
+    scene.focus(true)
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
         musicListBox:arrowKey(key)
@@ -247,8 +254,30 @@ function scene.keyDown(key,isRep)
     end
     return true
 end
+function scene.mouseMove() scene.focus(true) end
+function scene.touchDown() scene.focus(true) end
+function scene.focus(f) -- Reduce carbon footprint for music lovers
+    if f then
+        if noResponseTimer<=0 then
+            ZENITHA.setMaxFPS(SETTINGS.system.maxFPS)
+            ZENITHA.setUpdateFreq(SETTINGS.system.updRate)
+            ZENITHA.setDrawFreq(SETTINGS.system.drawRate)
+        end
+        noResponseTimer=6.26
+    else
+        ZENITHA.setMaxFPS(26)
+        ZENITHA.setUpdateFreq(26)
+        ZENITHA.setDrawFreq(26)
+    end
+end
 
 function scene.update(dt)
+    if noResponseTimer>0 then
+        noResponseTimer=noResponseTimer-dt
+        if noResponseTimer<=0 then
+            scene.focus(false)
+        end
+    end
     if searchTimer>0 then
         searchTimer=max(searchTimer-dt,0)
     end
