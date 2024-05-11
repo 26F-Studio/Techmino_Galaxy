@@ -7,20 +7,20 @@ local ins,rem=table.insert,table.remove
 local setFont,mStr=FONT.set,GC.mStr
 
 local tileColor={
-    [-2]=COLOR.R,  -- Bomb
+    [-2]=COLOR.R,    -- Bomb
     [-1]=COLOR.DL,   -- Stone
-    {.39, 1.0, .39},-- Tile 1
-    {.39, .39, 1.0},-- Tile 2
-    {1.0, .70, .31},-- Tile 3
-    {.94, .31, .31},-- Tile 4
-    {.00, .71, .12},-- Tile 5
-    {.90, .20, .90},-- Tile 6
-    {.94, .47, .39},-- Tile 7
-    {.90, .00, .00},-- Tile 8
-    {.86, .86, .31},-- Tile 9
-    {.78, .31, .00},-- Tile 10
-    {.78, .55, .04},-- Tile 11
-    {.12, .12, .51},-- Tile 12
+    {.39, 1.0, .39}, -- Tile 1
+    {.39, .39, 1.0}, -- Tile 2
+    {1.0, .70, .31}, -- Tile 3
+    {.94, .31, .31}, -- Tile 4
+    {.00, .71, .12}, -- Tile 5
+    {.90, .20, .90}, -- Tile 6
+    {.94, .47, .39}, -- Tile 7
+    {.90, .00, .00}, -- Tile 8
+    {.86, .86, .31}, -- Tile 9
+    {.78, .31, .00}, -- Tile 10
+    {.78, .55, .04}, -- Tile 11
+    {.12, .12, .51}, -- Tile 12
 }
 local textColor={
     [-2]=COLOR.dR,

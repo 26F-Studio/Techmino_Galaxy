@@ -24,8 +24,8 @@ require("errors")
 
 --------------------------------------------------------------
 
-local studio ---@type FMOD.Studio.System
-local core ---@type FMOD.Core.System
+local studio ---@type FMOD.Studio.System?
+local core ---@type FMOD.Core.System?
 
 ---@param args {maxChannel:number, DSPBufferLength:number, DSPBufferCount:number, studioFlag:FMOD.Const, coreFlag:FMOD.Const}
 function M.init(args)
@@ -51,6 +51,7 @@ end
 
 ---Release studio object (call this when game running into critical error)
 function M.destroy()
+    if not studio then return end
     studio:release()
     studio=nil
 end

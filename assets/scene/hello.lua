@@ -7,7 +7,7 @@ local scene={}
 function scene.enter()
     t=0
     ZENITHA.setClickFX(false)
-    ZENITHA.setDrawCursor(NULL)
+    ZENITHA.globalEvent.drawCursor=NULL
     if PROGRESS.get('main')>=3 then PROGRESS.applyCoolWaitTemplate() end
 end
 

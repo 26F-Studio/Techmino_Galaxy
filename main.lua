@@ -75,26 +75,23 @@ ZENITHA.setAppName('Techmino')
 ZENITHA.setVersionText(VERSION.appVer)
 ZENITHA.setFirstScene('hello')
 ZENITHA.setMaxFPS(260)
-ZENITHA.setOnGlobalKey('f11',function()
-    SETTINGS.system.fullscreen=not SETTINGS.system.fullscreen
-    saveSettings()
-end)
-ZENITHA.setOnFnKeys({
-    function() MSG.new('info',("System:%s[%s]\nLuaVer:%s\nJitVer:%s\nJitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,
-    function() MSG.new('check',PROFILE.switch() and "Profile start!" or "Profile report copied!") end,
-    function() if love['_openConsole'] then love['_openConsole']() end end,
-    function() for k,v in next,_G do print(k,v) end end,
-    function() print(WIDGET.sel and WIDGET.sel:getInfo() or "No widget selected") end,
-    function() end,
-    function() end,
-})
 ZENITHA.setDebugInfo{
     {"Cache", gcinfo},
     {"Tasks", TASK.getCount},
     {"Mouse", function() local x,y=SCR.xOy:inverseTransformPoint(love.mouse.getPosition()) return math.floor(x+.5)..' '..math.floor(y+.5) end},
     -- {"FMOD", function() local a,b,c=FMOD.studio:getMemoryUsage() return a..","..b..","..c end}, -- Only available in logging builds Fmod
 }
-ZENITHA.setOnFocus(function(f)
+
+local _keyDown_orig=ZENITHA.globalEvent.keyDown
+function ZENITHA.globalEvent.keyDown(key,isRep)
+    if _keyDown_orig(key,isRep) then return true end
+    if key=='f11' then
+        SETTINGS.system.fullscreen=not SETTINGS.system.fullscreen
+        saveSettings()
+        return true
+    end
+end
+function ZENITHA.globalEvent.focus(f)
     if SETTINGS.system.autoMute then
         if f then
             FMOD.setMainVolume(SETTINGS.system.mainVol)
@@ -102,7 +99,15 @@ ZENITHA.setOnFocus(function(f)
             FMOD.setMainVolume(0)
         end
     end
-end)
+end
+local autoGCcount=0
+function ZENITHA.globalEvent.lowMemory()
+    collectgarbage()
+    if autoGCcount<6 then
+        autoGCcount=autoGCcount+1
+        MSG.new('check',Text.autoGC..('.'):rep(4-autoGCcount))
+    end
+end
 
 FONT.setDefaultFallback('symbols')
 FONT.setDefaultFont('norm')

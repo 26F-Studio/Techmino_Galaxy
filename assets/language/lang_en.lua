@@ -1,4 +1,5 @@
-return {
+---@class Techmino.I18N
+local L={
     -- Info
     sureText={
         back="Press again to go back",
@@ -11,6 +12,7 @@ return {
     interior_crash="Sandbox exited due to performance rate overflow",
     booting_changed="Booting application changed",
     musicroom_lowVolume="Please increase BGM volume (bottom right)",
+    autoGC="[Auto GC] Low Memory",
 
     -- In-Game
     clearName={
@@ -296,3 +298,4 @@ return {
     tutorial_rotating_1="6. Rotating Practice",
     tutorial_rotating_2="Please rotating the top piece to align the bottom one",
 }
+return L

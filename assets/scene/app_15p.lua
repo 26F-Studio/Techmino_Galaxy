@@ -199,31 +199,31 @@ local frontColor={
         COLOR.lG,COLOR.lB,COLOR.lB,COLOR.lB,
         COLOR.lG,COLOR.lY,COLOR.lV,COLOR.lV,
         COLOR.lG,COLOR.lY,COLOR.lV,COLOR.lV,
-    },-- Colored(rank)
+    }, -- Colored(rank)
     rainbow={
         COLOR.lR,COLOR.lR,COLOR.lR,COLOR.lR,
         COLOR.lO,COLOR.lY,COLOR.lY,COLOR.lY,
         COLOR.lO,COLOR.lG,COLOR.lB,COLOR.lB,
         COLOR.lO,COLOR.lG,COLOR.lB,COLOR.lB,
-    },-- Rainbow(rank)
+    }, -- Rainbow(rank)
     color2={
         COLOR.lR,COLOR.lR,COLOR.lR,COLOR.lR,
         COLOR.lB,COLOR.lB,COLOR.lB,COLOR.lB,
         COLOR.lG,COLOR.lY,COLOR.lV,COLOR.lV,
         COLOR.lG,COLOR.lY,COLOR.lV,COLOR.lV,
-    },-- Colored(row)
+    }, -- Colored(row)
     gray={
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
-    },-- Gray
+    }, -- Gray
     black={
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
-    },-- Black
+    }, -- Black
 }
 local backColor={
     color1={
@@ -231,31 +231,31 @@ local backColor={
         COLOR.dG,COLOR.dB,COLOR.dB,COLOR.dB,
         COLOR.dG,COLOR.dY,COLOR.dP,COLOR.dP,
         COLOR.dG,COLOR.dY,COLOR.dP,COLOR.dP,
-    },-- Colored(rank)
+    }, -- Colored(rank)
     rainbow={
         COLOR.dR,COLOR.dR,COLOR.dR,COLOR.dR,
         COLOR.dO,COLOR.dY,COLOR.dY,COLOR.dY,
         COLOR.dO,COLOR.dG,COLOR.dB,COLOR.dB,
         COLOR.dO,COLOR.dG,COLOR.dB,COLOR.dB,
-    },-- Rainbow(rank)
+    }, -- Rainbow(rank)
     color2={
         COLOR.dR,COLOR.dR,COLOR.dR,COLOR.dR,
         COLOR.dB,COLOR.dB,COLOR.dB,COLOR.dB,
         COLOR.dG,COLOR.dY,COLOR.dP,COLOR.dP,
         COLOR.dG,COLOR.dY,COLOR.dP,COLOR.dP,
-    },-- Colored(row)
+    }, -- Colored(row)
     gray={
         COLOR.dL,COLOR.dL,COLOR.dL,COLOR.dL,
         COLOR.dL,COLOR.dL,COLOR.dL,COLOR.dL,
         COLOR.dL,COLOR.dL,COLOR.dL,COLOR.dL,
         COLOR.dL,COLOR.dL,COLOR.dL,COLOR.dL,
-    },-- Gray
+    }, -- Gray
     black={
         COLOR.D,COLOR.D,COLOR.D,COLOR.D,
         COLOR.D,COLOR.D,COLOR.D,COLOR.D,
         COLOR.D,COLOR.D,COLOR.D,COLOR.D,
         COLOR.D,COLOR.D,COLOR.D,COLOR.D,
-    },-- Black
+    }, -- Black
 }
 function scene.draw()
     gc.replaceTransform(SCR.xOy_l)

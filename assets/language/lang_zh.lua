@@ -1,4 +1,5 @@
-return {
+---@class Techmino.I18N
+local L={
     -- Info
     sureText={
         back="再按一次返回",
@@ -11,6 +12,7 @@ return {
     interior_crash="沙箱意外退出:性能评分越界",
     booting_changed="引导程序已更改",
     musicroom_lowVolume="请调高音乐音量（开关在右下角）",
+    autoGC="[Auto GC] 设备内存过低",
 
     -- In-Game
     clearName={
@@ -296,3 +298,4 @@ return {
     tutorial_rotating_1="6. 旋转练习",
     tutorial_rotating_2="请将上面的方块旋转成下面的朝向",
 }
+return L
