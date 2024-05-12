@@ -255,6 +255,8 @@ function scene.keyDown(key,isRep)
     return true
 end
 function scene.mouseMove() scene.focus(true) end
+function scene.mouseDown() scene.focus(true) end
+function scene.wheelMove() scene.focus(true) end
 function scene.touchDown() scene.focus(true) end
 function scene.focus(f) -- Reduce carbon footprint for music lovers
     if f then

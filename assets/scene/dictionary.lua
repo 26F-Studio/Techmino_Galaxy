@@ -405,7 +405,7 @@ function scene.touchMove(x,y,_,dy)
     end
 end
 
-function scene.wheelMoved(_,y)
+function scene.wheelMove(_,y)
     if not WIDGET.isFocus(listBox) then
         scroll(y*62)
         return true

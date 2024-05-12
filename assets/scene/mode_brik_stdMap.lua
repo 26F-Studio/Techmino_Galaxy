@@ -98,7 +98,7 @@ function scene.mouseClick(x,y,k)
         panel:setSel(brikMap:mouseClick(x,y))
     end
 end
-function scene.wheelMoved(dx,dy)
+function scene.wheelMove(dx,dy)
     brikMap:hideCursor()
     if isCtrlPressed() then
         brikMap:rotateCam(-(dx+dy)*.26)
