@@ -78,7 +78,7 @@ ZENITHA.setMaxFPS(260)
 ZENITHA.setDebugInfo{
     {"Cache", gcinfo},
     {"Tasks", TASK.getCount},
-    {"Mouse", function() local x,y=SCR.xOy:inverseTransformPoint(love.mouse.getPosition()) return math.floor(x+.5)..' '..math.floor(y+.5) end},
+    {"Mouse", function() return ("%d %d"):format(SCR.xOy:inverseTransformPoint(love.mouse.getPosition())) end},
     -- {"FMOD", function() local a,b,c=FMOD.studio:getMemoryUsage() return a..","..b..","..c end}, -- Only available in logging builds Fmod
 }
 
@@ -214,8 +214,30 @@ IMG.init{
     },
     title_techmino='assets/image/title_techmino.png',
     logo_fmod='assets/image/logo_fmod.png',
+    -- touhou=(function()
+    --     local path='assets/image/touhou/'
+    --     local L={}
+    --     for _,v in next,love.filesystem.getDirectoryItems(path) do
+    --         if FILE.isSafe(path..v) then
+    --             L[tonumber(v:match("%d+"))]=path..v
+    --         end
+    --     end
+    --     return L
+    -- end)(),
+    touhou={
+        ball='assets/image/touhou/ball.png',
+        reimu='assets/image/touhou/001.png',
+        marisa='assets/image/touhou/002.png',
+    },
+    heart={
+        'assets/image/heart/1.png',
+        'assets/image/heart/2.png',
+        'assets/image/heart/3.png',
+        'assets/image/heart/4.png',
+    },
 }
 
+Text=nil---@type Techmino.I18N
 LANG.add{
     en='assets/language/lang_en.lua',
     zh='assets/language/lang_zh.lua',
@@ -417,6 +439,8 @@ for _,v in next,{
     'gela_jelly',
 
     'acry_template',
+
+    'touhou.brik_reimu',
 } do
     if FILE.isSafe('assets/skin/'..v..'.lua') then
         SKIN.add(v,require('assets/skin/'..v))
