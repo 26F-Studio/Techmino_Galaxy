@@ -273,7 +273,7 @@ do -- obstacle
             repeat
                 r1=P:random(1,w)
             until math.abs(r1-r0)>=minDist;
-            F._matrix[y][r1]=P:newCell(0)
+            F._matrix[y][r1]=P:newCell(777)
             r0=r1
         end
         for _=1,extraCount do
@@ -282,7 +282,7 @@ do -- obstacle
                 x=P:random(1,w)
                 y=math.floor(P:random()^2.6*(maxHeight-1))+1
             until not F._matrix[y][x]
-            F._matrix[y][x]=P:newCell(0)
+            F._matrix[y][x]=P:newCell(777)
         end
         for y=1,maxHeight do
             if TABLE.count(F._matrix[y],false)==w then

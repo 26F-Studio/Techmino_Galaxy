@@ -8,7 +8,7 @@ return {
     settings={brik={
         spawnDelay=60,
         clearDelay=120,
-        atkSys='modern',
+        atkSys='nextgen',
         event={
             playerInit=mechLib.brik.comboPractice.event_playerInit,
             afterDrop=mechLib.brik.comboPractice.event_afterDrop,
