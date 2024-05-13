@@ -125,6 +125,11 @@ function PROGRESS.load()
         MSG.new('info',"Load progress failed: "..res)
     end
 end
+function PROGRESS.fix()
+    if prgs.brik_stdMap.modeUnlocked.survivor_b2b then
+        prgs.brik_stdMap.modeUnlocked.survivor_power,prgs.brik_stdMap.modeUnlocked.survivor_b2b=prgs.brik_stdMap.modeUnlocked.survivor_b2b,nil
+    end
+end
 
 function PROGRESS.swapMainScene()
     if prgs.main<=2 then

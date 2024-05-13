@@ -332,6 +332,7 @@ if SETTINGS.system.portrait then -- Brute fullscreen config for mobile device
     SCR._resize(love.graphics.getWidth(),love.graphics.getHeight())
 end
 PROGRESS.load()
+PROGRESS.fix()
 VCTRL.importSettings(FILE.load('conf/touch','-json -canskip'))
 KEYMAP.brik=KEYMAP.new{
     {act='moveLeft', keys={'left'}},
