@@ -5,10 +5,13 @@ defaultBrikColor=setmetatable({
     844,484,845,485,468,854,748,684,488,847,884,448,864,468,854,846,486,884,
     478,748,854,484,
 },{__index=function() return math.random(64) end})
+require'rotsys_brik'
+local function loadMechFile()
 ---@type Techmino.Mech
 mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
 regFuncLib(mechLib,"mechLib")
-require'rotsys_brik'
+end
+loadMechFile()
 
 local gc=love.graphics
 
@@ -151,7 +154,7 @@ end
 ---@class Techmino.Game
 ---@field playing boolean
 ---@field playerList Techmino.Player[]|false
----@field playerMap Map<Techmino.Player[]>|false
+---@field playerMap Map<Techmino.Player>|false
 ---@field camera Zenitha.Camera
 ---@field hitWaves table
 ---@field seed number|false
@@ -179,9 +182,7 @@ GAME.camera.moveSpeed=12
 ---@return Techmino.Mode
 function GAME.getMode(name)
     if love.keyboard.isDown('f5') then
-        modeLib[name]=nil
-        mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
-        regFuncLib(mechLib,"mechLib")
+        loadMechFile()
     end
     if modeLib[name] then
         return modeLib[name]
@@ -281,7 +282,7 @@ function GAME.newPlayer(id,pType)
 
     P.gameMode=pType
     P.id=id
-    P.group=0
+    P.team=0
     GAME.playerMap[id]=P
     table.insert(GAME.playerList,P)
 end
@@ -300,10 +301,10 @@ function GAME.setMain(id)
     end
 end
 
-function GAME.setGroup(id,gid)
-    assert(type(gid)=='number' and gid>=0 and gid%1==gid,"Invalid group id")
+function GAME.setTeam(id,teamID)
+    assert(type(teamID)=='number' and teamID>=0 and teamID%1==teamID,"Invalid team id")
     if GAME.playerMap[id] then
-        GAME.playerMap[id].group=gid
+        GAME.playerMap[id].team=teamID
     end
 end
 
@@ -324,65 +325,70 @@ function GAME.release(action,id)
 end
 
 ---@class Techmino.Game.Attack
----@field power number 0~∞, no default
----@field cancelRate number 0~∞, default to 1
----@field defendRate number 0~∞, default to 1
+---@field srcMode Techmino.Player.Type
+---@field power number -∞~∞, no default
+---@field sharpness number 0~∞, default to 1, how strong the attack can cancel the others
+---@field hardness number 0~∞, default to 1, how strong the attack can defend the others
 ---@field mode number 0|1, default to 0, 0: trigger by time, 1:trigger by step
 ---@field time number 0~∞, default to 0, ms / step
 ---@field fatal number 0~100, default to 30, percentage
 ---@field speed number 0~100, default to 30, percentage
 ---@field target number|Techmino.Player, default to nil
 
----@param atk Techmino.Game.Attack
+---@param atk Techmino.Game.Attack?
 function GAME.initAtk(atk) -- Normalize the attack object
     if not atk then return end
-    assert(type(atk)=='table',"data not table")
-    assert(type(atk.power)=='number' and atk.power>0,"wrong power value")
-    if atk.cancelRate==nil then atk.cancelRate=1 else
-        assert(type(atk.cancelRate)=='number' and atk.cancelRate>=0,"cancelRate not non-negative number")
-    end
+    assert(type(atk)=='table',"GAME.initAtk: need table")
 
-    if atk.defendRate==nil then atk.defendRate=1 else
-        assert(type(atk.defendRate)=='number' and atk.defendRate>=0,"defendRate not non-negative number")
+    assert(type(atk.power)=='number',"GAME.initAtk: .power need number")
+    if atk.sharpness==nil then atk.sharpness=1 else
+        assert(type(atk.sharpness)=='number' and atk.sharpness>=0,"GAME.initAtk: .sharpness need non-negative number")
     end
-
+    if atk.hardness==nil then atk.hardness=1 else
+        assert(type(atk.hardness)=='number' and atk.hardness>=0,"GAME.initAtk: .hardness need non-negative number")
+    end
     if atk.mode==nil then atk.mode=0 end
     assert(atk.mode==0 or atk.mode==1,"mode not 0 or 1")
     if atk.time==nil then atk.time=0 else
-        assert(type(atk.time)=='number' and atk.time>=0,"time not non-negative number")
+        assert(type(atk.time)=='number' and atk.time>=0,"GAME.initAtk: .time need non-negative number")
         if atk.mode==1 then atk.time=math.floor(atk.time+.5) end
     end
     if atk.fatal==nil then atk.fatal=30 else
-        assert(type(atk.fatal)=='number',"fatal not number")
+        assert(type(atk.fatal)=='number',"GAME.initAtk: .fatal need number")
         atk.fatal=MATH.clamp(math.floor(atk.fatal+.5),0,100)
     end
     if atk.speed==nil then atk.speed=30 else
-        assert(type(atk.speed)=='number',"speed not number")
+        assert(type(atk.speed)=='number',"GAME.initAtk: .speed need number")
         atk.speed=MATH.clamp(math.floor(atk.speed+.5),0,100)
     end
+
     return atk
 end
 
----@param source Techmino.Player
----@param atk Techmino.Game.Attack
-function GAME.send(source,atk)
+---@param sender Techmino.Player|number|false
+---@param atk Techmino.Game.Attack?
+function GAME.send(sender,atk)
+    if not atk then return end
+
+    ---@type Techmino.Player
     local target
 
     -- Find target
     if atk.target==nil then
+        ---@type Techmino.Player[]
         local l=GAME.playerList
-        local sourceGroup=source and source.group or 0
+        local sourceTeam=sender and sender.team or 0 -- 0 means no team, not Team 0
         if #l>1 then
             local count=0
             for i=1,#l do
-                if sourceGroup==0 and l[i]~=source or sourceGroup~=l[i].group then
+                if sourceTeam==0 and l[i]~=sender or sourceTeam~=l[i].team then
                     count=count+1
                 end
             end
             if count>0 then
                 count=math.random(count)
                 for i=1,#l do
-                    if sourceGroup==0 and l[i]~=source or sourceGroup~=l[i].group then
+                    if sourceTeam==0 and l[i]~=sender or sourceTeam~=l[i].team then
                         count=count-1
                         if count==0 then
                             target=l[i]
@@ -392,9 +398,10 @@ function GAME.send(source,atk)
                 end
             end
         end
-    else
-        assert(type(atk.target)=='number',"target not number")
+    elseif type(atk.target)=='number' then
         target=GAME.playerMap[atk.target]
+    else
+        error("GAME.send: invalid target type")
     end
 
     -- Sending airmail

@@ -12,17 +12,18 @@ function tsd.easy_event_afterClear(P,clear)
         P.modeData.tsd=P.modeData.tsd+1
         if P.modeData.tsd>1 then
             local n=P.modeData.tsd
-            P:playSound('b2b',
-                n<=4 and 1 or
-                n<=7 and 2 or
-                n<=9 and 3 or
-                n<=11 and 4 or
-                n<=13 and 5 or
-                n<=15 and 6 or
-                n<=17 and 7 or
-                n<=19 and 8 or
-                n<=21 and 9 or
-                10
+            P:playSound('charge',
+                n<=3 and 1 or
+                n<=5 and 2 or
+                n<=7 and 3 or
+                n<=9 and 4 or
+                n<=11 and 5 or
+                n<=13 and 6 or
+                n<=15 and 7 or
+                n<=17 and 8 or
+                n<=19 and 9 or
+                n<=22 and 10 or
+                11
             )
         end
     else
@@ -83,7 +84,7 @@ function tsd.hard_event_afterClear(P,clear)
                 P.modeData.tsd=P.modeData.tsd+1
                 if P.modeData.tsd>1 then
                     local n=P.modeData.tsd
-                    P:playSound('b2b',
+                    P:playSound('charge',
                         n<=3 and 1 or
                         n<=5 and 2 or
                         n<=7 and 3 or
@@ -93,7 +94,8 @@ function tsd.hard_event_afterClear(P,clear)
                         n<=15 and 7 or
                         n<=17 and 8 or
                         n<=19 and 9 or
-                        10
+                        n<=22 and 10 or
+                        11
                     )
                 end
             end

@@ -27,7 +27,7 @@ function survivor.event_drawOnPlayer(P)
     gc.circle('line',-300,130,48)
 end
 
-function survivor.b2b_event_always(P)
+function survivor.power_event_always(P)
     if not P.timing then return end
     local md=P.modeData
     if md.waveTimer>0 then
@@ -43,7 +43,7 @@ function survivor.b2b_event_always(P)
             max(MATH.interpolate(80,1500,150,800,wave),800)
         )
         md.waveTimer=md.curWaveTime
-        GAME.send(nil,GAME.initAtk{
+        GAME.send(false,GAME.initAtk{
             target=GAME.mainID,
             power=4+P:random(0,MATH.clamp(math.floor(wave/30-P.field:getHeight()/10),0,3)),
             mode=0,
@@ -71,10 +71,10 @@ function survivor.cheese_event_always(P)
             math.max(2000-(wave-150)*10,1000)
         )
         md.waveTimer=md.curWaveTime
-        GAME.send(nil,GAME.initAtk{
+        GAME.send(false,GAME.initAtk{
             target=GAME.mainID,
             power=P:random(0,10)+P:random(-5,5)>=P.field:getHeight() and 2 or 1,
-            defendRate=wave<60 and 2 or 3,
+            hardness=wave<60 and 2 or 3,
             mode=0,
             time=wave<50 and 100e3/(50+wave)-1000 or 0,
             fatal=MATH.clamp(
@@ -106,7 +106,7 @@ function survivor.spike_event_always(P)
         )
         md.waveTimer=md.curWaveTime
         for i=1,3 do
-            GAME.send(nil,GAME.initAtk{
+            GAME.send(false,GAME.initAtk{
                 target=GAME.mainID,
                 power=
                     2+2*i+ -- Basic Attack (4+6+8)

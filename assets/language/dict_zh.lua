@@ -106,39 +106,41 @@ C4.禁用暂存，稳定全部消四完成40行
 # clear
 @ title 消1/2/3/4
 落下一块后消除的行数。
-1行: Single
-2行: Double
-3行: Triple
-4行: Techrash
+1行：Single
+2行：Double
+3行：Triple
+4行：Techrash
 
 # clear_big
 @ title 消5/6/7
 单次消除四行以上的大型消除，仅在特殊规则下可行。
-5行: Pentacrash
-6行: Hexacrash
-7行: Heptacrash
+5行：Pentacrash
+6行：Hexacrash
+7行：Heptacrash
 
 # clear_huge
 @ title 消8+
 单次消除至少八行的巨型消除。
-8行: Octacrash
-9行: Nonacrash
-10行: Decacrash
-11行: Undecacrash
-12行: Dodecacrash
-13行: Tridecacrash
-14行: Tetradecacrash
-15行: Pentadecacrash
-16行: Hexadecacrash
-17行: Heptadecacrash
-18行: Octadecacrash
-19行: Nonadecacrash
-20行: Ultracrash
-21行: Impossicrash
+8行：Octacrash
+9行：Nonacrash
+10行：Decacrash
+11行：Undecacrash
+12行：Dodecacrash
+13行：Tridecacrash
+14行：Tetradecacrash
+15行：Pentadecacrash
+16行：Hexadecacrash
+17行：Heptadecacrash
+18行：Octadecacrash
+19行：Nonadecacrash
+20行：Ultracrash
+21行：Impossicrash
 
-# b2b
-@ title 满贯（B2B）
-Back to Back，指连着两次消除都是特殊消行（通常包括消四和回旋消除），中间没有间隔普通消行。
+# charge
+@ title 充能（CHG / B2B）
+进行特殊消行（通常为消四和回旋消除）中间没有间隔普通消行时可以获得充能，为后续的攻击提供加成。
+CHG：Charge
+B2B：Back to Back，连续
 
 # all_clear
 @ title 全消（AC）
@@ -158,7 +160,7 @@ Half Clear，AC（全消）的外延，指“下方有剩余方块”的全消�
 @ title 回旋消除（Spin）
 在规则允许的情况下，使用旋转操作将方块卡进不能直接移到的位置称为Spin，根据使用的具体方块，操作会被称为例如Z-Spin、J-Spin等。
 如果Spin的同时产生了消除，则该消除为Spin消除。
-Mini-Spin:不满足一些条件的回旋消除可能会被附加Mini的前缀，获得的奖励会减少。
+Mini-Spin：不满足一些条件的回旋消除可能会被附加Mini的前缀，获得的奖励会减少。
 
 # all_spin
 @ title 所有块可旋（All-Spin）
@@ -179,27 +181,27 @@ Mini-Spin:不满足一些条件的回旋消除可能会被附加Mini的前缀，
 # drop_speed
 @ title 落块速度（LPM / BPM / PPS）
 表示落块速度的常用标准有PPS和BPM和LPM。
-PPS: Piece per Second，块每秒
-BPM: Block per Minute，块每分，也有写作PPM的，第一个P同PPS，意思相同
-LPM: Line per Minute，行每分，其中行的计算方式有两种，一是字面意义上的消了几行，二是只用落下的方块数来换算，去掉垃圾行等外部因素的影响
+PPS：Piece per Second，块每秒
+BPM：Block per Minute，块每分，也有写作PPM的，第一个P同PPS，意思相同
+LPM：Line per Minute，行每分，其中行的计算方式有两种，一是字面意义上的消了几行，二是只用落下的方块数来换算，去掉垃圾行等外部因素的影响
 
 # key_speed
 @ title 按键速度（KPS / KPM）
 表示按键速度的常用标准有KPS和KPM。
-KPS: Key per Second，按键每秒
-KPM: Key per Minute，按键每分
+KPS：Key per Second，按键每秒
+KPM：Key per Minute，按键每分
 
 # attack_power
 @ title 攻击强度（APM / APL）
 表示攻击强度的常用标准有APM和APL。
-APM: Attack per Minute，攻击每分
-APL: Attack per Line，攻击每行（行的计算方式也可以分两种，详见LPM词条），也叫效率
+APM：Attack per Minute，攻击每分
+APL：Attack per Line，攻击每行（行的计算方式也可以分两种，详见LPM词条），也叫效率
 
 # asd_asp
 @ title 移动延迟（ASD & ASP & ADP）
 @ contentSize 25
-ASD: Auto Shift Delay，自动移动延迟，旧称DAS（Delayed Auto Shift）
-ASP: Auto Shift Period，自动重复周期，旧称ARR（Auto Repeat Rate)
+ASD：Auto Shift Delay，自动移动延迟，旧称DAS（Delayed Auto Shift）
+ASP：Auto Shift Period，自动重复周期，旧称ARR（Auto Repeat Rate)
 ~~
 在使用键盘输入文本时按住一个键，会连续输入了一大串字符。注意字符出现的时机：第一个字按下后立刻出现，停了一小会后开始快速连续自动输入，其中“停了一小会”就是ASD长度，“连续自动输入”的间隔就是ASP长度。
 ADP类似ASP，区别是用于软降。
@@ -208,7 +210,7 @@ ADP类似ASP，区别是用于软降。
 
 # ash
 @ title 自动移动阻止（ASH）
-ASH: Auto Shift Halt，新的方块出现后即使ASD已充满，方块也会等ASH的时长后再开始移动，优化手感。
+ASH：Auto Shift Halt，新的方块出现后即使ASD已充满，方块也会等ASH的时长后再开始移动，优化手感。
 
 # init_control
 @ title 预输入

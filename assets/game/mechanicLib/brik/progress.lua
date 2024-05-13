@@ -359,7 +359,7 @@ do -- dig_practice
         if reason=='AC' then
             PROGRESS.setModeState('brik_stdMap','dig_shale')
             if P.gameTime<30e3 then
-                PROGRESS.setModeState('brik_stdMap','survivor_b2b')
+                PROGRESS.setModeState('brik_stdMap','survivor_power')
             end
             if P.modeData.stat.piece<62 then
                 PROGRESS.setModeState('brik_stdMap','dig_40')
@@ -424,13 +424,13 @@ do -- dig_400
     end
 end
 
-do -- survivor_b2b
-    function progress.survivor_b2b_afterClear(P)
+do -- survivor_power
+    function progress.survivor_power_afterClear(P)
         if not P.isMain then return true end
         if P.modeData.wave==42 then
             PROGRESS.setModeState('brik_stdMap','backfire_100')
             PROGRESS.setModeState('brik_stdMap','survivor_cheese')
-            PROGRESS.setModeState('brik_stdMap','survivor_b2b',1)
+            PROGRESS.setModeState('brik_stdMap','survivor_power',1)
         end
     end
 end

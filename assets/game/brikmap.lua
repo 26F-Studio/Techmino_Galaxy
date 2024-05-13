@@ -37,7 +37,7 @@ local modes={
     {pos={30,0,10},name='dig_shale'},
     {pos={40,0,10},name='dig_volcanics'},
     {pos={40,0,20},name='dig_checker'},
-    {pos={10,0,30},name='survivor_b2b'},
+    {pos={10,0,30},name='survivor_power'},
     {pos={10,0,40},name='survivor_cheese'},
     {pos={10,0,50},name='survivor_spike'},
     {pos={20,0,40},name='backfire_100'},
@@ -92,8 +92,8 @@ local bridgeLinks={
     'dig_practice - dig_shale - dig_volcanics',
     'dig_shale - dig_checker',
     'dig_practice - dig_40 - dig_100 - dig_400',
-    'dig_practice - survivor_b2b - survivor_cheese - survivor_spike',
-    'survivor_b2b - backfire_100 - backfire_cheese_100',
+    'dig_practice - survivor_power - survivor_cheese - survivor_spike',
+    'survivor_power - backfire_100 - backfire_cheese_100',
     'backfire_100 - backfire_amplify_100',
     'sprint_40 - sprint_10 - sprint_200 - sprint_1000',
     'sprint_10 - sprint_obstacle_20 - sprint_drought_40 - sprint_flood_40 - sprint_pento_40 - sprint_sym_40',
@@ -189,17 +189,20 @@ function map:freshUnlocked(modeList,init)
     -- Unlock modes
     for name,state in next,modeList do
         local mode=modes_str[name]
-        assert(mode,"WTF mode '"..tostring(name).."' doesn't exist")
-        if not (init or mode.enable) then
-            animations[mode]={
-                type='mode',
-                wait=modeTime,
-                t=0,
-            }
-            modeTime=modeTime+.626
+        if mode then
+            if not (init or mode.enable) then
+                animations[mode]={
+                    type='mode',
+                    wait=modeTime,
+                    t=0,
+                }
+                modeTime=modeTime+.626
+            end
+            mode.enable=true
+            mode.state=state
+        else
+            print("Mode "..tostring(name).." doesn't exist")
         end
-        mode.enable=true
-        mode.state=state
     end
 
     -- Create bridges

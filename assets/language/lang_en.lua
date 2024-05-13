@@ -44,7 +44,7 @@ local L={
     combo_large="$1 Combo!",
     mega_combo="MEGACMB",
 
-    b2b="B2B",
+    charge="CHG",
     spin="$1-spin",
     tuck="Tuck",
 
@@ -224,7 +224,7 @@ local L={
         dig_volcanics=         {"Dig Volcanics","Clear some compilicated garbage lines"},
         dig_checker=           {"Dig Checker","Clear 10 checkerboard garbage lines"},
         survivor_cheese=       {"Survivor Cheese","Survive under scattered attacks"},
-        survivor_b2b=          {"Survivor B2B","Survive under heavy attacks"},
+        survivor_power=        {"Survivor Power","Survive under heavy attacks"},
         survivor_spike=        {"Survivor Spike","Survive under huge spike attacks"},
         backfire_100=          {"Backfire 100","Clear 100 lines, but with backfire"},
         backfire_amplify_100=  {"Backfire Amplify 100","Clear 100 lines, but with increased backfire"},

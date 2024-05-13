@@ -120,7 +120,7 @@
 ---@class Techmino.Player
 ---@field gameMode Techmino.Player.Type
 ---@field id number limited to 1~1000
----@field group number
+---@field team number Team ID, 0 as No Team
 ---@field isMain boolean
 ---@field sound boolean
 ---@field settings Techmino.Mode.Setting

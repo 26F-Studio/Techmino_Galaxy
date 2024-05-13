@@ -49,7 +49,7 @@ function techrash.easy_event_afterClear(P,clear)
     if P.hand.name=='I' and clear.line>=4 then
         P.modeData.techrash=P.modeData.techrash+1
         if P.modeData.techrash>1 then
-            P:playSound('b2b',math.min(math.floor((P.modeData.techrash+2.6)^1.2/5.4),10))
+            P:playSound('charge',math.min(math.floor((P.modeData.techrash+2.6)^1.2/5.4),11))
         end
         local HC=P.field:getHeight()==0
         if not HC then
@@ -116,7 +116,7 @@ function techrash.hard_event_afterClear(P,clear)
         local x=P.handX
         P.modeData.techrash=P.modeData.techrash+1
         if P.modeData.techrash>1 then
-            P:playSound('b2b',math.min(math.floor((P.modeData.techrash+2.6)^1.2/5.4),10))
+            P:playSound('charge',math.min(math.floor((P.modeData.techrash+2.6)^1.2/5.4),11))
         end
         if list[x].charge>=maxCharge then
             list[x].dead=true

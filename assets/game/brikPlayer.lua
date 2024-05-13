@@ -36,25 +36,24 @@ local defaultSoundFunc={
     touch=          function() FMOD.effect('touch')              end,
     drop=           function() FMOD.effect('drop')               end,
     lock=           function() FMOD.effect('lock')               end,
-    b2b=            function(lv) FMOD.effect('b2b_'..min(lv,10)) end,
-    b2b_break=      function() FMOD.effect('b2b_break')          end,
+    charge=         function(lv) FMOD.effect('charge_'..clamp(floor(lv),1,11)) end,
+    discharge=      function() FMOD.effect('discharge')          end,
     clear=function(lines)
+        lines=floor(max(lines,1))
         FMOD.effect(
-            lines<=6 and 'clear_'..lines or
-            lines<=18 and 'clear_'..(lines-lines%2) or
-            lines<=22 and 'clear_'..lines or
-            lines<=26 and 'clear_'..(lines-lines%2) or
+            lines<=6 and 'clear_'..lines or -- 1, 2, 3, 4, 5, 6
+            lines<=18 and 'clear_'..(lines-lines%2) or -- 8, 10, 12, 14, 16, 18
+            lines<=22 and 'clear_'..lines or -- 20, 21, 22
+            lines<=26 and 'clear_'..(lines-lines%2) or -- 24, 26
             'clear_26'
         )
     end,
     spin=function(lines)
-        if lines==0 then     FMOD.effect('spin_0')
-        elseif lines==1 then FMOD.effect('spin_1')
-        elseif lines==2 then FMOD.effect('spin_2')
-        elseif lines==3 then FMOD.effect('spin_3')
-        elseif lines==4 then FMOD.effect('spin_4')
-        else                 FMOD.effect('spin_mega')
-        end
+        lines=floor(max(lines,0))
+        FMOD.effect(
+            lines<=4 and 'spin_'..lines or
+            'spin_mega'
+        )
     end,
     combo=       comboSound,
     frenzy=      function() FMOD.effect('frenzy')      end,
@@ -1112,22 +1111,24 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
     end
 
     -- Attack
-    local atk=GAME.initAtk(self:atkEvent('drop'))
+    local atk=self:atkEvent('drop')
     if atk then
+        atk=GAME.initAtk(atk)
+        atk.srcMode=self.gameMode
 
         self:triggerEvent('beforeCancel',atk)
 
         if SET.allowCancel then
             while atk and self.garbageBuffer[1] do
-                local ap=atk.power*(atk.cancelRate or 1)
+                local ap=atk.power*(atk.sharpness or 1)
                 local gbg=self.garbageBuffer[1]
-                local gp=gbg.power*(gbg.defendRate or 1)
+                local gp=gbg.power*(gbg.hardness or 1)
                 local cancel=min(ap,gp)
                 ap=ap-cancel
                 gp=gp-cancel
-                local newGP=floor(gp/(gbg.defendRate or 1)+.5)
+                local newGP=floor(gp/(gbg.hardness or 1)+.5)
                 if newGP==0 then
-                    atk.power=ap/(atk.cancelRate or 1)
+                    atk.power=ap/(atk.sharpness or 1)
                     self.garbageSum=self.garbageSum-gbg.power
                     rem(self.garbageBuffer,1)
                 else
@@ -1356,8 +1357,8 @@ end
 function BP:receive(data)
     local B={
         power=data.power,
-        cancelRate=data.cancelRate,
-        defendRate=data.defendRate,
+        sharpness=data.sharpness,
+        hardness=data.hardness,
         mode=data.mode,
         time=floor(data.time+.5),
         _time=0,

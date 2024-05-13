@@ -183,7 +183,7 @@ function music.dig_400_afterClear(P)
     FMOD.music.setParam('intensity',MATH.icLerp(200,300,P.modeData.lineDig))
 end
 
-function music.survivor_b2b_afterClear(P)
+function music.survivor_power_afterClear(P)
     if not P.isMain then return true end
     FMOD.music.setParam('intensity',MATH.icLerp(20,50,P.modeData.wave))
 end

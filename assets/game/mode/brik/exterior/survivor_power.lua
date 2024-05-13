@@ -15,10 +15,10 @@ return {
         minRisingSpeed=1,
         event={
             playerInit=mechLib.brik.survivor.event_playerInit,
-            always=mechLib.brik.survivor.b2b_event_always,
+            always=mechLib.brik.survivor.power_event_always,
             afterClear={
-                mechLib.brik.music.survivor_b2b_afterClear,
-                mechLib.brik.progress.survivor_b2b_afterClear,
+                mechLib.brik.music.survivor_power_afterClear,
+                mechLib.brik.progress.survivor_power_afterClear,
             },
             drawOnPlayer=mechLib.brik.survivor.event_drawOnPlayer,
         },

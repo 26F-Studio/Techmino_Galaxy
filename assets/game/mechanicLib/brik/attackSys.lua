@@ -1,3 +1,6 @@
+local max,min=math.max,math.min
+local floor,ceil=math.floor,math.ceil
+
 ---@type Map<Map<fun(P:Techmino.Player.Brik):any>>
 local atkSys={}
 
@@ -15,7 +18,7 @@ atkSys.basic={
             P.texts:add{
                 text=Text.clearName[lines] or ('['..lines..']'),
                 a=.626,
-                fontSize=math.min(40+10*lines,70),
+                fontSize=min(40+10*lines,70),
                 style=lines>=4 and 'stretch' or 'appear',
                 duration=lines/2,
             }
@@ -24,28 +27,92 @@ atkSys.basic={
     end,
 }
 
--- 1~3 attack 0~2, 4+ attack 4+
--- T-Spin only, but both 3-corner or immobile count, attack=line*2
+-- 1~3 attack 0~2, CHARGE-6
+-- 4+ attack 4+, CHARGE+1
+-- T-Spin attack=line*2, CHARGE+1, (WIP: Both 3-corner or immobile count as T-Spin)
 -- Combo attack 0,0,1,1,1,2,2,2,3+
--- B2B give n/4 attack, up to 4 for T-Spin, 2 for Techrash. B2B chain length up to 26.
+-- CHARGE give 0.25*CHG (round+) more attack, up to 2 for T-Spin, 4 for Techrash(+), [Discharged count]/2 (round-) otherwise
 atkSys.modern={
     init=function(P)
-        P.atkSysData.b2b=0
+        P.atkSysData.charge=0
         P.settings.spin_immobile=true
         P.settings.spin_corners=3
     end,
     drop=function(P)
+        ---@type Techmino.Game.Attack
+        local atk
         local M=P.lastMovement
         local spin=P.hand.name=='T' and M.action=='rotate' and (M.corners or M.immobile)
         if M.clear then
             local lines,combo=#P.lastMovement.clear,P.lastMovement.combo
+
+            local oldCharge=P.atkSysData.charge
+            local newCharge=
+                spin and min(oldCharge+1,26) or
+                lines>=4 and min(oldCharge+1,26) or
+                max(oldCharge-6,0)
+            P.atkSysData.charge=newCharge
+
+            do -- Calculate attack
+                local power
+                local sharpness=1
+                local hardness=1
+                local time
+                local fatal=30
+
+                -- Clearing type
+                if spin then
+                    power=2*lines
+                    power=power+min(ceil(oldCharge/4),2)
+                    time=300
+                elseif lines>=4 then
+                    power=lines
+                    time=200
+                    power=power+min(ceil(oldCharge/4),4)
+                else
+                    power=lines-1+floor((oldCharge-newCharge)/2)
+                    time=100
+                    fatal=60
+                    sharpness=2
+                    hardness=2
+                    if newCharge>=2 then
+                        P:playSound('discharge')
+                    end
+                end
+
+                -- All clear bonus
+                if P.field:getHeight()==0 then
+                    power=max(power,10)
+                end
+
+                -- Combo bonus
+                time=time+P.combo*100
+                power=power+min(floor(P.combo/3),3)
+
+                -- Send
+                if power>0 then
+                    atk={
+                        power=power,
+                        sharpness=sharpness,
+                        hardness=hardness,
+                        time=time+power*50,
+                        fatal=fatal,
+                    }
+                end
+            end
+
             do -- Text & Sound
                 local t=""
 
-                -- Add B2B text & sound
-                if (lines>=4 or spin) and P.atkSysData.b2b>0 then
-                    t=t..Text.b2b.." "
-                    P:playSound('b2b',P.atkSysData.b2b)
+                -- Add CHG text & sound
+                if newCharge>oldCharge then
+                    if newCharge>1 then
+                        t=t..Text.charge.." "
+                        P:playSound('charge',newCharge)
+                    end
+                elseif oldCharge-newCharge>=2 then
+                        t=t..Text.charge.." "
+                        P:playSound('discharge')
                 end
 
                 -- Add spin text & sound
@@ -68,7 +135,7 @@ atkSys.modern={
                     P.texts:add{
                         text=t..(Text.clearName[lines] or ('['..lines..']')),
                         a=.626,
-                        fontSize=math.min(30+lines*10,60)+(spin and 0 or 10),
+                        fontSize=min(30+lines*10,60)+(spin and 0 or 10),
                         style=lines>=4 and 'stretch' or spin and 'spin' or 'appear',
                         duration=lines/3+(spin and .6 or 0),
                     }
@@ -83,54 +150,12 @@ atkSys.modern={
                             Text.mega_combo,
                         a=.7-.3/(2+combo),
                         y=60,
-                        fontSize=15+math.min(combo,15)*5,
+                        fontSize=15+min(combo,15)*5,
                     }
                 end
 
                 -- Combo sound
                 P:playSound('combo',combo)
-            end
-
-            do -- Calculate attack
-                local pwr
-                local tm
-
-                -- Clearing type
-                if spin then
-                    pwr=2*lines
-                    pwr=pwr+math.ceil(P.atkSysData.b2b/4,2)
-                    tm=300
-                    P.atkSysData.b2b=math.min(P.atkSysData.b2b+1,26)
-                elseif lines>=4 then
-                    pwr=lines
-                    tm=200
-                    pwr=pwr+math.min(math.ceil(P.atkSysData.b2b/4),4)
-                    P.atkSysData.b2b=math.min(P.atkSysData.b2b+1,26)
-                else
-                    pwr=lines-1
-                    tm=100
-                    if P.atkSysData.b2b>1 then
-                        P:playSound('b2b_break')
-                    end
-                    P.atkSysData.b2b=0
-                end
-
-                -- All clear bonus
-                if P.field:getHeight()==0 then
-                    pwr=math.max(pwr,10)
-                end
-
-                -- Combo bonus
-                tm=tm+P.combo*100
-                pwr=pwr+math.min(math.floor(P.combo/3),3)
-
-                -- Send
-                if pwr>0 then
-                    return {
-                        power=pwr,
-                        time=tm+pwr*50,
-                    }
-                end
             end
         elseif spin then
             P.texts:add{
@@ -140,6 +165,7 @@ atkSys.modern={
             }
             P:playSound('spin',0)
         end
+        return atk
     end,
 }
 
@@ -147,7 +173,6 @@ atkSys.modern={
 -- Continous 4+ get frenzy bonus (+1 attack)
 -- Combo attack 0,0,1,1,1,2,2,2,3+
 -- All and only `immobile` placement are spin, attack=line*2
--- No B2B
 atkSys.nextgen={
     init=function(P)
         P.settings.tuck=true
@@ -188,7 +213,7 @@ atkSys.nextgen={
             P.texts:add{
                 text=text,
                 a=.626,
-                fontSize=math.min(lines-3,0)*10+(spin and 60 or 70),
+                fontSize=min(lines-3,0)*10+(spin and 60 or 70),
                 style=lines>=4 and 'stretch' or spin and 'spin' or 'appear',
                 duration=textDuration,
             }
@@ -202,7 +227,7 @@ atkSys.nextgen={
                         Text.mega_combo,
                     a=.7-.3/(2+combo),
                     y=60,
-                    fontSize=15+math.min(combo,15)*5,
+                    fontSize=15+min(combo,15)*5,
                 }
             end
 
@@ -252,7 +277,7 @@ atkSys.nextgen={
             end
 
             -- Combo bonus
-            pwr=pwr+math.min(math.floor(P.combo/3),3)
+            pwr=pwr+min(floor(P.combo/3),3)
 
             -- Send
             if pwr>0 then

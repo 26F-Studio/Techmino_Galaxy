@@ -44,7 +44,7 @@ local L={
     combo_large="$1 Combo!",
     mega_combo="MEGACMB",
 
-    b2b='B2B',
+    charge="CHG",
     spin='$1-spin',
     tuck='Tuck',
 
@@ -224,7 +224,7 @@ local L={
         dig_volcanics=         {"挖掘-火山岩","消除混乱的垃圾行"},
         dig_checker=           {"挖掘-棋盘","消除棋盘形垃圾行"},
         survivor_cheese=       {"生存-奶酪","在零散的攻击下生存"},
-        survivor_b2b=          {"生存-火力","在猛烈的进攻下生存"},
+        survivor_power=          {"生存-火力","在猛烈的进攻下生存"},
         survivor_spike=        {"生存-爆发","在疯狂的瞬时火力下生存"},
         backfire_100=          {"回火100","消除100行，但是小心回火"},
         backfire_amplify_100=  {"回火100-放大","消除100行，但是小心被放大的回火"},

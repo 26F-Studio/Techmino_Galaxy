@@ -33,12 +33,13 @@ local defaultSoundFunc={
     drop=           function() FMOD.effect('drop')           end,
     lock=           function() FMOD.effect('lock')           end,
     clear=function(lines)
+        lines=floor(max(lines,1))
         FMOD.effect(
-            lines==1 and 'clear_1' or
-            lines==2 and 'clear_2' or
-            lines==3 and 'clear_3' or
-            lines==4 and 'clear_4' or
-            'clear_5'
+            lines<=6 and 'clear_'..lines or -- 1, 2, 3, 4, 5, 6
+            lines<=18 and 'clear_'..(lines-lines%2) or -- 8, 10, 12, 14, 16, 18
+            lines<=22 and 'clear_'..lines or -- 20, 21, 22
+            lines<=26 and 'clear_'..(lines-lines%2) or -- 24, 26
+            'clear_26'
         )
     end,
     chain=       comboSound,

@@ -81,7 +81,7 @@ function comboPractice.event_afterDrop(P)
     if P.handY>P.modeData.levelRemain then
         if P.modeData.levelStarted then
             newMap(P)
-            P:playSound('b2b_break')
+            P:playSound('discharge')
             P.combo=0
         end
         P.hand=false
@@ -110,7 +110,7 @@ comboPractice.event_beforeDiscard=TABLE.newPool(function(self,lineCount)
             end
         elseif P.modeData.levelStarted then
             newMap(P)
-            P:playSound('b2b_break')
+            P:playSound('discharge')
         end
     end
     return self[lineCount]
