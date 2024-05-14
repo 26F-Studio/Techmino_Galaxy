@@ -680,7 +680,7 @@ function GP:gelaDropped() -- Drop & lock gela, and trigger a lot of things
         self.spawnTimer=self.settings.spawnDelay
     end
 end
-function GP:lock() -- Put gela into field
+function GP:lock() -- Put hand into field
     local CB=self.hand.matrix
     local F=self.field
     for y=1,#CB do for x=1,#CB[1] do
@@ -824,14 +824,15 @@ function GP:checkClear()
     elseif not (SET.allowBlock and self.chain>0) then
         local i=1
         while true do
-            local l=self.garbageBuffer[i]
-            if not l then break end
-            if l._time==l.time then
-                self:dropGarbage(l.power*2)
+            local g=self.garbageBuffer[i]
+            if not g then break end
+            if g._time==g.time then
+                self:dropGarbage(g.power*2)
                 rem(self.garbageBuffer,i)
+                self.garbageSum=self.garbageSum-g.power
                 i=i-1 -- Avoid index error
-            elseif l.mode==1 then
-                l._time=l._time+1
+            elseif g.mode==1 then
+                g._time=g._time+1
             end
             i=i+1
         end
@@ -846,9 +847,44 @@ function GP:doClear()
     self:playSound('clear',#self.clearingGroups)
 
     -- Attack
-    local atk=GAME.initAtk(self:atkEvent('clear'))
+    local atk=self:atkEvent('clear')
     if atk then
-        GAME.send(self,atk)
+        atk=GAME.initAtk(atk)
+        atk.srcMode=self.gameMode
+
+        self:triggerEvent('beforeCancel',atk)
+
+        if self.settings.allowCancel then
+            while atk and self.garbageBuffer[1] do
+                local ap=atk.power*(atk.sharpness or 1)
+                local gbg=self.garbageBuffer[1]
+                local gp=gbg.power*(gbg.hardness or 1)
+                local cancel=min(ap,gp)
+                ap=ap-cancel
+                gp=gp-cancel
+                local newGP=floor(gp/(gbg.hardness or 1)+.5)
+                if newGP==0 then
+                    atk.power=ap/(atk.sharpness or 1)
+                    self.garbageSum=self.garbageSum-gbg.power
+                    rem(self.garbageBuffer,1)
+                else
+                    self.garbageSum=self.garbageSum-gbg.power+newGP
+                    gbg.power=newGP
+                end
+                if ap==0 then
+                    atk=nil
+                    break
+                end
+            end
+        end
+        if atk and atk.power>=.5 then
+            atk.power=floor(atk.power+.5)
+
+            self:triggerEvent('beforeSend',atk)
+
+            GAME.send(self,atk)
+        end
+        if self.finished then return end
     end
 
     local F=self.field
@@ -912,7 +948,7 @@ function GP:changeFieldWidth(w,origPos)
     end
 end
 function GP:receive(data)
-    local B={
+    local g={
         power=data.power,
         sharpness=data.sharpness,
         hardness=data.hardness,
@@ -922,7 +958,8 @@ function GP:receive(data)
         fatal=data.fatal,
         speed=data.speed,
     }
-    ins(self.garbageBuffer,B)
+    ins(self.garbageBuffer,g)
+    self.garbageSum=self.garbageSum+g.power
 end
 function GP:getScriptValue(arg)
     return
@@ -1501,6 +1538,7 @@ function GP:initialize()
     self.atkSysData={}
     self:atkEvent('init')
     self.garbageBuffer={}
+    self.garbageSum=0
 
     self.nextQueue={}
     self.seqData={}

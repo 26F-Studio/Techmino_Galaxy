@@ -1357,7 +1357,7 @@ function BP:changeFieldWidth(w,origPos)
     end
 end
 function BP:receive(data)
-    local B={
+    local g={
         power=data.power,
         sharpness=data.sharpness,
         hardness=data.hardness,
@@ -1367,8 +1367,8 @@ function BP:receive(data)
         fatal=data.fatal,
         speed=data.speed,
     }
-    ins(self.garbageBuffer,B)
-    self.garbageSum=self.garbageSum+data.power
+    ins(self.garbageBuffer,g)
+    self.garbageSum=self.garbageSum+g.power
 end
 function BP:getScriptValue(arg)
     return
