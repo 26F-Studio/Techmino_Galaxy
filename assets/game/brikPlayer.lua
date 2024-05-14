@@ -1132,7 +1132,7 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
                     self.garbageSum=self.garbageSum-gbg.power
                     rem(self.garbageBuffer,1)
                 else
-                    self.garbageSum=self.garbageSum+newGP-gbg.power
+                    self.garbageSum=self.garbageSum-gbg.power+newGP
                     gbg.power=newGP
                 end
                 if ap==0 then
@@ -1174,9 +1174,7 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
                 local holePos=self:calculateHolePos(self:parseAtkInfo(g))
 
                 -- Pushing up
-                for _=1,g.power do
-                    self:riseGarbage(holePos)
-                end
+                self:riseGarbage(holePos,g.power)
 
                 rem(self.garbageBuffer,iBuffer)
                 self.garbageSum=self.garbageSum-g.power
@@ -1195,7 +1193,7 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
         self:popNext()
     end
 end
-function BP:lock() -- Put brik into field
+function BP:lock() -- Put hand into field
     local CB=self.hand.matrix
     local F=self.field
     for y=1,#CB do for x=1,#CB[1] do
@@ -1219,42 +1217,46 @@ function BP:diveDown(cells)
     end
     self.fieldDived=self.fieldDived+cells*40
 end
-function BP:riseGarbage(holePos)
+function BP:riseGarbage(holePos,count)
     local w=self.settings.fieldW
-    local L={}
+    if not count then count=1 end
 
-    -- Generate line
-    for x=1,w do
-        L[x]=self:newCell(777)
-    end
+    for _=1,#count do
+        local L={}
 
-    -- Generate hole
-    if type(holePos)=='number' then
-        L[holePos]=false
-    elseif type(holePos)=='table' then
-        for i=1,#holePos do
-            L[holePos[i]]=false
+        -- Generate line
+        for x=1,w do
+            L[x]=self:newCell(777)
         end
-    else
-        L[rnd(w)]=false
-    end
 
-    -- Add connection
-    for x=1,w do
-        if L[x] then
-            if L[x-1] then L[x].conn[L[x-1].cid]=0 end
-            if L[x+1] then L[x].conn[L[x+1].cid]=0 end
+        -- Generate hole
+        if type(holePos)=='number' then
+            L[holePos]=false
+        elseif type(holePos)=='table' then
+            for i=1,#holePos do
+                L[holePos[i]]=false
+            end
+        else
+            L[rnd(w)]=false
         end
+
+        -- Add connection
+        for x=1,w do
+            if L[x] then
+                if L[x-1] then L[x].conn[L[x-1].cid]=0 end
+                if L[x+1] then L[x].conn[L[x+1].cid]=0 end
+            end
+        end
+        ins(self.field._matrix,1,L)
     end
-    ins(self.field._matrix,1,L)
 
     -- Update buried depth and rising speed
-    self:diveDown(1)
+    self:diveDown(count)
 
     -- Update hand position (if exist)
     if self.hand then
-        self.handY=self.handY+1
-        self.minY=self.minY+1
+        self.handY=self.handY+count
+        self.minY=self.minY+count
         self:freshGhost()
     end
 end
