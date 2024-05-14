@@ -113,9 +113,9 @@ function PROGRESS.load()
     local success,res=pcall(FILE.load,'conf/progress','-json -canskip')
     if success then
         if res then
-            TABLE.update(res,prgs,1e99)
+            TABLE.update(prgs,res)
             -- if res.hash==PROGRESS.getHash(res) then
-            --     TABLE.update(res,prgs,1e99)
+            --     TABLE.update(prgs,res)
             -- else
             --     MSG.new('info',"Hash not match")
             -- end

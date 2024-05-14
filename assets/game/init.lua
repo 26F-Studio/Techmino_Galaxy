@@ -333,34 +333,34 @@ end
 ---@field time number 0~∞, default to 0, ms / step
 ---@field fatal number 0~100, default to 30, percentage
 ---@field speed number 0~100, default to 30, percentage
----@field target number|Techmino.Player, default to nil
+---@field target number|Techmino.Player|nil default to nil
+
+local atkTemplate={
+    sharpness=1,
+    hardness=1,
+    mode=0,
+    time=0,
+    fatal=30,
+    speed=30,
+}
 
 ---@param atk Techmino.Game.Attack?
 function GAME.initAtk(atk) -- Normalize the attack object
     if not atk then return end
     assert(type(atk)=='table',"GAME.initAtk: need table")
 
+    TABLE.updateMissing(atk,atkTemplate)
+
     assert(type(atk.power)=='number',"GAME.initAtk: .power need number")
-    if atk.sharpness==nil then atk.sharpness=1 else
-        assert(type(atk.sharpness)=='number' and atk.sharpness>=0,"GAME.initAtk: .sharpness need non-negative number")
-    end
-    if atk.hardness==nil then atk.hardness=1 else
-        assert(type(atk.hardness)=='number' and atk.hardness>=0,"GAME.initAtk: .hardness need non-negative number")
-    end
-    if atk.mode==nil then atk.mode=0 end
+    assert(type(atk.sharpness)=='number' and atk.sharpness>=0,"GAME.initAtk: .sharpness need non-negative number")
+    assert(type(atk.hardness)=='number' and atk.hardness>=0,"GAME.initAtk: .hardness need non-negative number")
     assert(atk.mode==0 or atk.mode==1,"mode not 0 or 1")
-    if atk.time==nil then atk.time=0 else
-        assert(type(atk.time)=='number' and atk.time>=0,"GAME.initAtk: .time need non-negative number")
-        if atk.mode==1 then atk.time=math.floor(atk.time+.5) end
-    end
-    if atk.fatal==nil then atk.fatal=30 else
-        assert(type(atk.fatal)=='number',"GAME.initAtk: .fatal need number")
-        atk.fatal=MATH.clamp(math.floor(atk.fatal+.5),0,100)
-    end
-    if atk.speed==nil then atk.speed=30 else
-        assert(type(atk.speed)=='number',"GAME.initAtk: .speed need number")
-        atk.speed=MATH.clamp(math.floor(atk.speed+.5),0,100)
-    end
+    assert(type(atk.time)=='number' and atk.time>=0,"GAME.initAtk: .time need non-negative number")
+    assert(type(atk.fatal)=='number',"GAME.initAtk: .fatal need number")
+    assert(type(atk.speed)=='number',"GAME.initAtk: .speed need number")
+    if atk.mode==1 then atk.time=math.floor(atk.time+.5) end
+    atk.fatal=MATH.clamp(math.floor(atk.fatal+.5),0,100)
+    atk.speed=MATH.clamp(math.floor(atk.speed+.5),0,100)
 
     return atk
 end

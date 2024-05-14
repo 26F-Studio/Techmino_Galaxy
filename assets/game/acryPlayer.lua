@@ -112,7 +112,7 @@ function AP:getAcry(data)
         type='acry',
         movable=true,
     }
-    if data then TABLE.update(data,G) end
+    if data then TABLE.update(G,data) end
     return G
 end
 function AP:setMoveBias(mode,C,dx,dy)

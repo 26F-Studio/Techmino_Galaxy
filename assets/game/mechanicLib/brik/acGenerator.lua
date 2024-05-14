@@ -205,7 +205,7 @@ function ACGenerator._getQuestion(P,args)
         splitRate=.26,
         highRate=0,
     }
-    if type(args)=='table' then TABLE.update(args,args1) end
+    if type(args)=='table' then TABLE.update(args1,args) end
 
     local debugging=  args1.debugging
     local width=      TABLE.getFirstValue(args1.width,P and P.settings.fieldW)

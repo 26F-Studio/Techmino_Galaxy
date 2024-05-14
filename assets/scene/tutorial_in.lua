@@ -10,7 +10,7 @@ local function B(t)
         fontSize=50,
         cornerR=0,
     }
-    TABLE.update(t,w)
+    TABLE.update(w,t)
     return WIDGET.new(w)
 end
 

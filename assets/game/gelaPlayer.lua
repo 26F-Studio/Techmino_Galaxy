@@ -730,7 +730,7 @@ function GP:checkDig(set)
             end
         end
     end
-    TABLE.update(tset,set)
+    TABLE.update(set,tset)
 end
 function GP:checkPosition(x,y)
     local set={}
@@ -914,8 +914,8 @@ end
 function GP:receive(data)
     local B={
         power=data.power,
-        cancelRate=data.cancelRate,
-        defendRate=data.defendRate,
+        sharpness=data.sharpness,
+        hardness=data.hardness,
         mode=data.mode,
         time=floor(data.time+.5),
         _time=0,
