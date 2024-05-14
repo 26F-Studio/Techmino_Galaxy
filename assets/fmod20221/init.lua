@@ -126,6 +126,7 @@ local playing=nil
 ---@param args? {instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}
 ---@return FMOD.Studio.EventInstance?
 function M.music.play(name,args)
+    if not studio then return end
     FMOD.music.stop()
     local desc=musicLib[name]
     if not desc then
@@ -173,7 +174,7 @@ end
 ---Set current playing music fading out (need param 'fade' in event)
 ---@param instant? boolean only `true` take effect
 function M.music.stop(instant)
-    if not playing then return end
+    if not studio or not playing then return end
     local e=playing.event ---@type FMOD.Studio.EventInstance
     if instant then
         e:stop(M.FMOD_STUDIO_STOP_IMMEDIATE)
@@ -194,31 +195,31 @@ end
 ---@param value number
 ---@param instant? boolean only `true` take effect
 function M.music.setParam(name,value,instant)
-    if not playing then return end
+    if not studio or not playing then return end
     playing.event:setParameterByName(name,value,instant==true)
 end
 
 ---@param time number seconds
 function M.music.seek(time)
-    if not playing then return end
+    if not studio or not playing then return end
     playing.event:setTimelinePosition(time*1000)
 end
 
 ---@return number?
 function M.music.tell()
-    if not playing then return end
+    if not studio or not playing then return end
     return (playing.event:getTimelinePosition()/1000)
 end
 
 ---@return number?
 function M.music.getDuration()
-    if not playing then return end
+    if not studio or not playing then return end
     return (playing.desc:getLength()/1000)
 end
 
 ---@return FMOD.Studio.EventInstance?
 function M.music.getPlaying()
-    if not playing then return end
+    if not studio or not playing then return end
     return playing.event
 end
 
@@ -247,6 +248,7 @@ end
 ---@param args? {volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}
 ---@return FMOD.Studio.EventInstance?
 function M.effect.play(name,args)
+    if not studio then return end
     local desc=effectLib[name]
     if not desc then
         MSG.new('warn',"No SE named "..name)
@@ -297,6 +299,7 @@ end
 ---@param value number
 ---@param instant? boolean only `true` take effect
 function M.effect.setParam(event,name,value,instant)
+    if not studio then return end
     local desc=effectLib[event]
     if not desc then return end
     local l,c=desc:getInstanceList(desc:getInstanceCount())
@@ -307,6 +310,7 @@ end
 
 ---@param name string
 function M.effect.keyOff(name)
+    if not studio then return end
     local desc=effectLib[name]
     if not desc then return end
     local l,c=desc:getInstanceList(desc:getInstanceCount())
@@ -318,6 +322,7 @@ end
 ---@param name string
 ---@param instant? boolean only `true` take effect
 function M.effect.stop(name,instant)
+    if not studio then return end
     local desc=effectLib[name]
     if not desc then return end
     local l,c=desc:getInstanceList(desc:getInstanceCount())
