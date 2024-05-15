@@ -40,14 +40,14 @@ function scene.touchDown()
     press()
 end
 function scene.touchUp()
-    if #love.touch.getTouches()==0 then
+    if #getTouches()==0 then
         release()
     end
 end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='escape' then
-        SCN.back()
+        if sureCheck('back') then SCN.back() end
     else
         press()
     end

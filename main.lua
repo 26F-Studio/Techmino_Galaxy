@@ -144,6 +144,7 @@ WIDGET.setDefaultOption{
         soundPitchRange=7.02,
     },
     checkBox={
+        w=40,
         sound_on='check_on',
         sound_off='check_off',
     },
@@ -214,27 +215,6 @@ IMG.init{
     },
     title_techmino='assets/image/title_techmino.png',
     logo_fmod='assets/image/logo_fmod.png',
-    -- touhou=(function()
-    --     local path='assets/image/touhou/'
-    --     local L={}
-    --     for _,v in next,love.filesystem.getDirectoryItems(path) do
-    --         if FILE.isSafe(path..v) then
-    --             L[tonumber(v:match("%d+"))]=path..v
-    --         end
-    --     end
-    --     return L
-    -- end)(),
-    touhou={
-        ball='assets/image/touhou/ball.png',
-        reimu='assets/image/touhou/001.png',
-        marisa='assets/image/touhou/002.png',
-    },
-    heart={
-        'assets/image/heart/1.png',
-        'assets/image/heart/2.png',
-        'assets/image/heart/3.png',
-        'assets/image/heart/4.png',
-    },
 }
 
 Text=nil---@type Techmino.I18N
@@ -279,6 +259,9 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
                 end
             end
         end
+        -- print("--------------------------")
+        -- print("Musics")
+        -- for k,v in next,L do print(k,v)end
         return L
     end)())
     FMOD.registerEffect((function()
@@ -300,6 +283,9 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
                 L[name]=path
             end
         end
+        -- print("--------------------------")
+        -- print("Effects")
+        -- for k,v in next,L do print(k,v)end
         return L
     end)())
 end

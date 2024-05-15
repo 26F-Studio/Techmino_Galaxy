@@ -95,7 +95,7 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='escape' then
-        SCN.back()
+        if sureCheck('back') then SCN.back() end
     elseif play then
         if key=='left' or key=='a' then
             moveDir=-1
@@ -187,7 +187,7 @@ function scene.update(dt)
                 speed=speed+.2
             end
             level=level+1
-            FMOD.effect('warn_1')
+            FMOD.effect('beep_notice')
         end
         sunH=sunH+.01
     elseif menu==1 then

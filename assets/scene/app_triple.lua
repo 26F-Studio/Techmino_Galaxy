@@ -1,5 +1,5 @@
 local gc=love.graphics
-local setColor,rectangle=gc.setColor,gc.rectangle
+local gc_setColor,gc_rectangle=gc.setColor,gc.rectangle
 
 local floor,rnd=math.floor,math.random
 local ins,rem=table.insert,table.remove
@@ -168,7 +168,7 @@ function player:click(y,x)
                         if self.maxTile>=6 then
                             ins(self.progress,("%s - %.3fs"):format(self.maxTile,love.timer.getTime()-player.startTime))
                         end
-                        FMOD.effect('reach')
+                        FMOD.effect('beep_rise')
                     end
 
                     local getScore=4^cur*count
@@ -212,9 +212,9 @@ end
 
 local function drawTile(x,y,v)
     if v and v~=0 then
-        setColor(tileColor[v])
-        rectangle('fill',x*100-100,y*100-100,100,100)
-        setColor(textColor[v])
+        gc_setColor(tileColor[v])
+        gc_rectangle('fill',x*100-100,y*100-100,100,100)
+        gc_setColor(textColor[v])
         mStr(tileTexts[v],x*100-50,y*100-92)
     end
 end
@@ -223,16 +223,16 @@ function player:drawBoard()
     gc.translate(self.x,self.y)
 
     -- Board background
-    setColor(COLOR.dX)
-    rectangle('fill',0,0,600,600)
+    gc_setColor(COLOR.dX)
+    gc_rectangle('fill',0,0,600,600)
 
 
     -- Hold slot
-    setColor(0,1,1,.4)
-    rectangle('fill',0,0,100,100)
+    gc_setColor(0,1,1,.4)
+    gc_rectangle('fill',0,0,100,100)
     gc.setLineWidth(10)
-    setColor(COLOR.lC)
-    rectangle('line',5,5,90,90)
+    gc_setColor(COLOR.lC)
+    gc_rectangle('line',5,5,90,90)
 
     -- Hold tile
     setFont(60)
@@ -245,18 +245,18 @@ function player:drawBoard()
     end end
 
     -- Board lines
-    setColor(COLOR.L)
+    gc_setColor(COLOR.L)
     gc.setLineWidth(2)
     for x=1,5 do gc.line(x*100,0,x*100,600) end
     for y=1,5 do gc.line(0,y*100,600,y*100) end
     gc.setLineWidth(6)
-    rectangle('line',0,0,600,600)
+    gc_rectangle('line',0,0,600,600)
 
     -- Select box
     if self.selectX then
         local c=tileColor[self.nexts[1]]
-        setColor(c[1],c[2],c[3],.6+.3*math.sin(love.timer.getTime()*9.29))
-        rectangle('line',self.selectX*100-95,self.selectY*100-95,90,90)
+        gc_setColor(c[1],c[2],c[3],.6+.3*math.sin(love.timer.getTime()*9.29))
+        gc_rectangle('line',self.selectX*100-95,self.selectY*100-95,90,90)
     end
 
     gc.pop()
@@ -320,27 +320,27 @@ end
 
 function scene.draw()
     setFont(40)
-    setColor(1,1,1)
+    gc_setColor(1,1,1)
     gc.print(("%.3f"):format(player.time),1026,50)
     gc.print(player.score,1026,100)
 
     -- Progress time list
     setFont(25)
-    setColor(.7,.7,.7)
+    gc_setColor(.7,.7,.7)
     for i=1,#player.progress do
         gc.print(player.progress[i],1000,140+30*i)
     end
 
     gc.push('transform')
     gc.translate(745,13)
-    setColor(COLOR.L)
+    gc_setColor(COLOR.L)
     gc.setLineWidth(4)
     gc.rectangle('line',-5,-5,200,70)
     for i=1,3 do
-        setColor(tileColor[player.nexts[i]])
-        rectangle('fill',65*i-65,0,60,60)
+        gc_setColor(tileColor[player.nexts[i]])
+        gc_rectangle('fill',65*i-65,0,60,60)
         setFont(40)
-        setColor(textColor[player.nexts[i]])
+        gc_setColor(textColor[player.nexts[i]])
         mStr(player.nexts[i],65*i-35,0)
     end
     gc.pop()

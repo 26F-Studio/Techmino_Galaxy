@@ -73,7 +73,7 @@ end
 
 local function _getHandCardArea(i)
     return
-    20+70*i+(i==14 and 30 or 0),480,
+    100+70*i+(i==14 and 30 or 0),800,
     60,84
 end
 
@@ -157,12 +157,13 @@ function scene.keyDown(key,isRep)
 end
 
 function scene.draw()
-    FONT.set(35)
+    FONT.set(60)
     gc_setColor(COLOR.D)
-    gc_print('余 '..#deck,1060,30)
+    gc_print('余 '..#deck,1300,60)
 
     gc_setLineWidth(4)
     FONT.set(100)
+    -- Hand
     for i=1,#hand do
         local c=hand[i]
         local x,y,w,h=_getHandCardArea(i)
@@ -179,6 +180,8 @@ function scene.draw()
         GC.mStr(cardText[c],x+w/2,y-24)
         if i==selected then gc_translate(0,10) end
     end
+
+    -- Pool
     for i=1,#pool do
         local c=pool[i]
         local x,y,w,h=_getPoolCardArea(i)
@@ -194,8 +197,8 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,0},x=160, y=100,w=180,h=100,color='lR',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
-    WIDGET.new{type='button',          x=1150,y=370,w=140,h=80,fontSize=45,sound_trigger=false,text='自摸',code=WIDGET.c_pressKey'return'},
-    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button_fill',pos={0,0},x=160, y=100,w=180,h=100,color='lR',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
+    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-180,w=160,h=80,fontSize=45,sound_trigger=false,text='自摸',code=WIDGET.c_pressKey'return'},
+    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 return scene

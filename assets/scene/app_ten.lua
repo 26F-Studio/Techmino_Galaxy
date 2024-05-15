@@ -1,6 +1,5 @@
 local gc=love.graphics
-local msIsDown,kbIsDown,tcTouches=love.mouse.isDown,love.keyboard.isDown,love.touch.getTouches
-local setColor,rectangle=gc.setColor,gc.rectangle
+local gc_setColor,gc_rectangle=gc.setColor,gc.rectangle
 
 local floor,rnd=math.floor,math.random
 local ins,rem=table.insert,table.remove
@@ -53,7 +52,7 @@ local function reset()
     failPos=false
 end
 function scene.enter()
-    BG.set('rainbow2')
+    BG.set('space')
     preview={}
     board={{},{},{},{},{}}
     cx,cy=3,3
@@ -102,7 +101,7 @@ local function merge()
                 maxTile<=8 and 3 or
                 maxTile<=11 and 4 or
                 5
-            FMOD.effect('reach')
+            FMOD.effect('beep_rise')
         end
         if chosen>=5 then
             FMOD.effect(
@@ -211,9 +210,9 @@ function scene.update()
                 end
             end
         elseif fast and (
-            msIsDown(1) or
-            #tcTouches()>0 or
-            kbIsDown('space')
+            isMouseDown(1) or
+            #getTouches()>0 or
+            isKeyDown('space')
         ) then
             merge()
         end
@@ -222,13 +221,13 @@ end
 
 function scene.draw()
     setFont(40)
-    setColor(1,1,1)
+    gc_setColor(COLOR.L)
     gc.print(("%.3f"):format(time),1026,50)
     gc.print(score,1026,100)
 
     -- Progress time list
     setFont(25)
-    setColor(.7,.7,.7)
+    gc_setColor(.7,.7,.7)
     for i=1,#progress do
         gc.print(progress[i],1000,140+30*i)
     end
@@ -236,10 +235,10 @@ function scene.draw()
     -- Previews
     if nexts then
         gc.setColor(COLOR.dX)
-        rectangle('fill',20,450,280,75)
+        gc_rectangle('fill',20,450,280,75)
         gc.setLineWidth(6)
-        setColor(1,1,1)
-        rectangle('line',20,450,280,75)
+        gc_setColor(COLOR.L)
+        gc_rectangle('line',20,450,280,75)
         for i=1,5 do
             setFont(85-10*i)
             gc.setColor(tileColor[preview[i]])
@@ -249,16 +248,16 @@ function scene.draw()
 
     if state==2 then
         -- Draw no-setting area
-        setColor(1,0,0,.3)
-        rectangle('fill',15,200,285,210)
+        gc_setColor(1,0,0,.3)
+        gc_rectangle('fill',15,200,285,210)
     end
     gc.setLineWidth(10)
-    setColor(COLOR[
+    gc_setColor(COLOR[
         state==1 and (fast and 'R' or 'W') or
         state==0 and 'G' or
         state==2 and 'Y'
     ])
-    rectangle('line',315,35,650,650)
+    gc_rectangle('line',315,35,650,650)
 
     gc.setLineWidth(4)
     setFont(70)
@@ -267,31 +266,31 @@ function scene.draw()
         local N=board[i][j]
         if N>0 then
             if hide and N>maxNew then
-                setColor(COLOR.lD)
-                rectangle('fill',320+j*128-128,40+i*128-128,128,128)
-                setColor(1,1,1,.3)
+                gc_setColor(COLOR.lD)
+                gc_rectangle('fill',320+j*128-128,40+i*128-128,128,128)
+                gc_setColor(1,1,1,.3)
                 mStr("?",j*128+256,i*128-75)
             else
                 if N<=12 then
-                    setColor(tileColor[N])
+                    gc_setColor(tileColor[N])
                 elseif N<=14 then
-                    setColor(COLOR.rainbow(4*love.timer.getTime()-i-j))
+                    gc_setColor(COLOR.rainbow(4*love.timer.getTime()-i-j))
                 else
-                    setColor(0,0,0,1-math.abs(love.timer.getTime()%.5-.25)*6-.25)
+                    gc_setColor(0,0,0,1-math.abs(love.timer.getTime()%.5-.25)*6-.25)
                 end
-                rectangle('fill',320+j*128-128,40+i*128-128,128,128)
-                setColor(1,1,1,.9)
+                gc_rectangle('fill',320+j*128-128,40+i*128-128,128,128)
+                gc_setColor(1,1,1,.9)
                 mStr(N,j*128+256,i*128-75)
             end
         end
     end end
     if state<2 and cx then
-        setColor(1,1,1,.6)
+        gc_setColor(1,1,1,.6)
         gc.setLineWidth(10)
-        rectangle('line',325+cx*128-128,45+cy*128-128,118,118)
+        gc_rectangle('line',325+cx*128-128,45+cy*128-128,118,118)
     end
     setFont(50)
-    setColor(1,1,1)
+    gc_setColor(COLOR.L)
     mStr("Just Get Ten",160,580)
 end
 

@@ -74,7 +74,7 @@ local function place(X,x)
                 return
             end
         end
-        FMOD.effect('reach')
+        FMOD.effect('beep_rise')
     else
         if full(board[X]) then
             FMOD.effect('emit')
@@ -98,7 +98,7 @@ local scene={}
 
 function scene.enter()
     restart()
-    BG.set('rainbow')
+    BG.set('space')
 end
 
 function scene.mouseMove(x,y)

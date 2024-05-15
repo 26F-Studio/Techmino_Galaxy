@@ -31,7 +31,7 @@ local state,progress=0
 local frameKeyCount,mistake
 
 function scene.enter()
-    BG.set('rgb')
+    BG.set('space')
     levelName="A_Z"
     targetString=levels.A_Z
     progress=1
@@ -58,23 +58,23 @@ function scene.keyDown(key,isRep)
                     style='score',
                     duration=.4,
                 }
-                FMOD.effect('touch')
+                FMOD.effect('inputbox_input')
                 if progress==2 then
                     state=1
                     startTime=love.timer.getTime()
                 elseif progress>#targetString then
                     time=love.timer.getTime()-startTime
                     state=2
-                    FMOD.effect('reach')
+                    FMOD.effect('beep_rise')
                 end
             elseif progress>1 then
                 mistake=mistake+1
-                FMOD.effect('finesseError')
+                FMOD.effect('rotate_failed')
             end
         end
     elseif key=='left' or key=='right' then
         if state==0 then
-            scene.widgetList.level:scroll(key=='left' and 1 or -1,0)
+            scene.widgetList.level:arrowKey(key)
         end
     elseif key=='space' then
         progress=1
@@ -82,7 +82,7 @@ function scene.keyDown(key,isRep)
         time=0
         state=0
     elseif key=='escape' then
-        SCN.back()
+        if sureCheck('back') then SCN.back() end
     end
     return true
 end
@@ -117,7 +117,7 @@ function scene.draw()
 
     gc.setColor(COLOR.L)
     gc.print(targetString:sub(progress,progress),120,280,0,2)
-    gc.print(targetString:sub(progress+1),310,380)
+    gc.print(targetString:sub(progress+1),300,380)
 
     gc.setColor(1,1,1,.7)
     FONT.set(40)

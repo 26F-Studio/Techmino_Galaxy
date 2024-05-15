@@ -14,17 +14,19 @@ local targets={
     [2600]=true,
 }
 
+local B={x=400,y=20,w=800,h=960,cw=200,ch=160}
+
 local state,progress
 local startTime,time
 local keyTime
 local speed,maxSpeed
-local arcade,rollSpeed
+local arcade,rollSpeed,rollAcc
 
 local reset=error -- function, defined later
 
-local tileColor="black"
+local tileColor="D"
 local mode="Normal"
-local modeSelector=WIDGET.new{type='selector',x=150,y=220,w=290,
+local modeSelector=WIDGET.new{type='selector',x=200,y=240,w=290,
     list={
         "Normal",
         "Split",
@@ -40,16 +42,34 @@ local modeSelector=WIDGET.new{type='selector',x=150,y=220,w=290,
         "Quadstream",
     },disp=function() return mode end,code=function(m) mode=m reset() end
 }
-local colorSelector=WIDGET.new{type='selector',x=150,y=360,w=290,
-    list={"black","dGray","gray","lGray","dRed","red","lRed","dFire","fire","lFire","dOrange","orange","lOrange","dYellow","yellow","lYellow","dLime","lime","lLime","dJade","jade","lJade","dGreen","green","lGreen","dAqua","aqua","lAqua","dCyan","cyan","lCyan","dNavy","navy","lNavy","dSea","sea","lSea","dBlue","blue","lBlue","dViolet","violet","lViolet","dPurple","purple","lPurple","dMagenta","magenta","lMagenta","dWine","wine","lWine"},
+local colorSelector=WIDGET.new{type='selector',x=200,y=330,w=290,
+    list={
+        'D',
+        'dR','R','lR',
+        'dF','F','lF',
+        'dO','O','lO',
+        'dY','Y','lY',
+        'dA','A','lA',
+        'dK','K','lK',
+        'dG','G','lG',
+        'dJ','J','lJ',
+        'dC','C','lC',
+        'dI','I','lI',
+        'dS','S','lS',
+        'dB','B','lB',
+        'dP','P','lP',
+        'dV','V','lV',
+        'dM','M','lM',
+        'dW','W','lW'
+    },
     disp=function() return tileColor end,code=function(m) tileColor=m end
 }
-local arcadeSwitch=WIDGET.new{type='checkBox',x=240,y=430,widthLimit=200,fontSize=40,disp=function() return arcade end,code=WIDGET.c_pressKey'e'}
+local arcadeSwitch=WIDGET.new{type='checkBox',text="Arcade",x=300,y=430,widthLimit=200,fontSize=40,disp=function() return arcade end,code=WIDGET.c_pressKey'w'}
 local function freshSelectors()
-    local f=state~=0
-    modeSelector.hide=f
-    colorSelector.hide=f
-    arcadeSwitch.hide=f
+    local f=state==0
+    modeSelector._visible=f
+    colorSelector._visible=f
+    arcadeSwitch._visible=f
 end
 
 local score
@@ -178,13 +198,14 @@ function reset()
     time=0
     score=0
 
+    -- Get speed from clipboard, format: s=
     local t=love.system.getClipboardText()
     if type(t)=='string' then
-        t=t:lower():match("^s=(.+)")
-        t=t and tonumber(t) and tonumber(t)*2
-        t=t and tonumber(t)>=0 and tonumber(t)<=60 and t
+        rollSpeed,rollAcc=t:match("^s=(.+),(.+)")
+        rollSpeed,rollAcc=tonumber(rollSpeed),tonumber(rollAcc)
     end
-    rollSpeed=type(t)=='number' and t or 6.26
+    rollSpeed=rollSpeed or 620
+    rollAcc=rollAcc or 26
 
     pos={}
     while #pos<7 do generator[mode]() end
@@ -230,10 +251,10 @@ local function touch(n)
                     state=2
                     FMOD.effect('win')
                 else
-                    FMOD.effect('reach',{volume=.5})
+                    FMOD.effect('beep_notice',{volume=.5})
                 end
             end
-            height=height+120
+            height=height+B.ch
             FMOD.effect('lock')
         end
     else
@@ -248,17 +269,17 @@ function scene.keyDown(key,isRep)
     if key=='r' or key=='space' then reset()
     elseif key=='escape' then SCN.back()
     elseif state~=2 then
-        if key=='d' or key=='c' then touch(1)
+        if     key=='d' or key=='c' then touch(1)
         elseif key=='f' or key=='v' then touch(2)
         elseif key=='j' or key=='n' then touch(3)
         elseif key=='k' or key=='m' then touch(4)
         elseif state==0 then
             if key=='tab' then
                 local mode1=mode
-                modeSelector:scroll(love.keyboard.isDown('lshift','rshift') and -1 or 1)
+                modeSelector:scroll(love.keyboard.isDown('lshift','rshift') and 1 or -1,0)
                 if mode1~=mode then reset() end
             elseif key=='q' then
-                colorSelector:scroll(love.keyboard.isDown('lshift','rshift') and -1 or 1)
+                colorSelector:scroll(love.keyboard.isDown('lshift','rshift') and 1 or -1,0)
             elseif key=='w' then
                 arcade=not arcade
             end
@@ -287,31 +308,30 @@ function scene.update(dt)
         if speed>maxSpeed then maxSpeed=speed end
 
         if arcade then
-            height=height-rollSpeed
-            rollSpeed=rollSpeed+.00355
+            height=height-rollSpeed*dt
+            rollSpeed=rollSpeed+rollAcc*dt
             if height<-120 then
                 state=2
                 FMOD.effect('clear_2')
             end
         else
-            height=height*.6
+            height=MATH.expApproach(height,0,dt*26)
         end
     end
 end
 
-local function boardStencil() gc.rectangle('fill',300,0,680,720) end
 function scene.draw()
     setFont(50)
     if arcade then
         -- Draw rolling speed
-        mStr(("%.2f/s"):format(rollSpeed/2),155,490)
+        mStr(("%.2f/s"):format(rollSpeed/B.ch),200,490)
     else
         -- Draw speed
-        setFont(45)
+        setFont(60)
         gc.setColor(1,.6,.6)
-        mStr(("%.2f"):format(maxSpeed/60),155,460)
+        mStr(("%.2f"):format(maxSpeed/60),200,500)
         gc.setColor(COLOR.L)
-        mStr(("%.2f"):format(speed/60),155,520)
+        mStr(("%.2f"):format(speed/60),200,600)
 
         -- Progress time list
         setFont(30)
@@ -329,56 +349,63 @@ function scene.draw()
     -- Draw mode
     if state~=0 then
         gc.setColor(COLOR.L)
-        setFont(30) mStr(mode,155,212)
+        setFont(30)
+        mStr(mode,200,220)
     end
 
-    -- Draw tiles
-    gc.stencil(boardStencil)
-    gc.setStencilTest('equal',1)
-    gc.rectangle('fill',300,0,680,720)
-    gc.setColor(COLOR[tileColor])
-    gc.push('transform')
-    gc.translate(0,720-height+8)
-    for i=1,7 do
-        local t=pos[i]
-        while t>0 do
-            gc.rectangle('fill',130+170*(t%10)+8,-i*120,170-16,120-16)
-            t=(t-t%10)/10
+    gc.translate(B.x,B.y)
+    GC.stc_reset()
+    GC.stc_setComp()
+    GC.stc_rect(0,0,B.w,B.h)
+        -- Draw tiles
+        gc.rectangle('fill',0,0,B.w,B.h)
+        gc.setColor(COLOR[tileColor])
+        gc.push('transform')
+        gc.translate(0,B.h-height+8)
+        for i=1,7 do
+            local t=pos[i]
+            while t>0 do
+                gc.rectangle('fill',B.cw*(t%10-1)+8,-i*B.ch,B.cw-16,B.ch-16)
+                t=(t-t%10)/10
+            end
         end
-    end
-    gc.pop()
-    gc.setStencilTest()
-    -- Draw track line
-    gc.setColor(COLOR.D)
-    gc.setLineWidth(2)
-    for x=1,5 do
-        x=130+170*x
-        gc.line(x,0,x,720)
-    end
-    for y=0,6 do
-        y=720-120*y-height%120
-        gc.line(300,y,980,y)
-    end
+        gc.pop()
 
-    -- Draw red tile
-    if diePos then
-        gc.setColor(1,.2,.2)
-        gc.rectangle('fill',130+170*diePos+8,600-height+8,170-16,120-16)
-    end
+        -- Draw red tile
+        if diePos then
+            gc.setColor(1,.2,.2)
+            gc.rectangle('fill',B.cw*(diePos-1)+8,B.h-B.ch-height+8,B.cw-16,B.ch-16)
+        end
+
+        -- Draw track line
+        gc.setColor(COLOR.D)
+        gc.setLineWidth(2)
+        for x=1,5 do
+            x=B.cw*(x-1)
+            gc.line(x,0,x,B.h)
+        end
+        for y=0,6 do
+            y=B.h-B.ch*y-height%B.ch
+            gc.line(0,y,B.w,y)
+        end
+    GC.stc_stop()
+    gc.translate(-B.x,-B.y)
+
 
     -- Draw score
-    setFont(100)
+    setFont(80)
     gc.push('transform')
-    gc.translate(640,26)
-    gc.scale(1.6)
+    gc.translate(800,40)
+    gc.scale(2.6)
     gc.setColor(.5,.5,.5,.6)
     mStr(score,0,0)
     gc.pop()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,0},x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
-    modeSelector,colorSelector,
+    WIDGET.new{type='button',pos={0,0},x=200,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
+    modeSelector,
+    colorSelector,
     arcadeSwitch,
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }

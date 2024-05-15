@@ -1,5 +1,6 @@
 local gc=love.graphics
-local rnd,int,max=math.random,math.floor,math.max
+local rnd,int=math.random,math.floor
+local max,min=math.max,math.min
 local setFont,mStr=FONT.set,GC.mStr
 
 -- This mini-game is written for TI-nSpire CX CAS many years ago.
@@ -16,22 +17,29 @@ local scene={}
 local highScore,highFloor=0,0
 local move,base
 local state,message
-local speed
+local moveDir
 local score,floor,camY
-local color1,color2={},{}
+local color1,color2
+
+local moveSpeed=10
+local dropSpeed=22
+local shortenSpeed=6
+local climbSpeed=4
+local brickHeight=50
+
+local overflowWidth=420
+local brickStroke=5
 
 local function restart()
-    move={x=0,y=260,l=500}
-    base={x=40,y=690,l=1200}
+    move={x=0,y=260,w=500}
+    base={x=100,y=SCR.h0-brickHeight,w=1400}
     message="Welcome"
-    speed=10
+    moveDir=1
     score=0
     floor=0
     camY=0
-    for i=1,3 do
-        color1[i]=rnd()
-        color2[i]=rnd()
-    end
+    color1=COLOR.random(3)
+    color2=COLOR.random(3)
 end
 
 function scene.enter()
@@ -44,18 +52,14 @@ function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='space' or key=='return' then
         if state=='move' then
-            if floor>0 then
-                if move.x<base.x then
-                    move.x=move.x+10
-                elseif move.x>base.x then
-                    move.x=move.x-10
-                end
+            if floor>0 and math.abs(move.x-base.x)<10 then
+                move.x=base.x
             end
             FMOD.effect('hold')
             state='drop'
         elseif state=='dead' then
-            move.x,move.y,move.l=1e99,0,0
-            base.x,base.y,base.l=1e99,0,0
+            move.x,move.y,move.w=1e99,0,0
+            base.x,base.y,base.w=1e99,0,0
             state='scroll'
         elseif state=='menu' then
             restart()
@@ -75,82 +79,81 @@ function scene.touchDown()
     scene.keyDown('space')
 end
 
-function scene.update()
+function scene.update(dt)
+    dt=dt*60 -- Second to Frame
     if state=='move' then
-        move.x=move.x+speed
-        if speed<0 and move.x<=0 or speed>0 and move.x+move.l>=1280 then
+        move.x=move.x+moveSpeed*moveDir*dt
+        if moveDir<0 and move.x<=0 or moveDir>0 and move.x+move.w>=SCR.w0 then
             FMOD.effect('lock')
-            speed=-speed
+            moveDir=-moveDir
         end
     elseif state=='drop' then
-        move.y=move.y+18
-        if move.y>=660 then
-            if move.x>base.x+base.l or move.x+move.l<base.x then
+        move.y=move.y+dropSpeed*dt
+        if move.y>=SCR.h0-2*brickHeight then
+            if move.x>base.x+base.w or move.x+move.w<base.x then
                 message=miss[rnd(1,4)]
                 state='die'
             else
-                move.y=660
-                FMOD.effect('clear_1')
-                if floor>0 and move.x==base.x then
-                    FMOD.effect('ren_mega')
-                end
+                move.y=SCR.h0-2*brickHeight
+                comboSound(math.floor(floor/2)+1)
+                FMOD.effect(move.x==base.x and 'clear_3' or 'clear_2',{volume=.6})
                 state='shorten'
             end
         end
     elseif state=='shorten' then
-        if move.x>base.x+base.l or move.x+move.l<base.x then
+        if move.x>base.x+base.w or move.x+move.w<base.x then
             state='die'
         elseif move.x<base.x then
-            move.x=move.x+5
-            move.l=move.l-5
-        elseif move.x+move.l>base.x+base.l then
-            move.l=move.l-5
+            local d=min(shortenSpeed*dt,base.x-move.x)
+            move.x=move.x+d
+            move.w=move.w-d
+        elseif move.x+move.w>base.x+base.w then
+            local d=min(shortenSpeed*dt,(move.x+move.w)-(base.x+base.w))
+            move.w=move.w-d
         else
             state='climb'
         end
     elseif state=='climb' then
-        if base.y<720 then
-            move.y=move.y+3
-            base.y=base.y+3
-            camY=camY+3
+        if base.y<SCR.h0 then
+            local d=min(climbSpeed*dt,SCR.h0-base.y)
+            move.y=move.y+d
+            base.y=base.y+d
+            camY=camY+d
         else
-            if move.x==base.x and move.x+move.l==base.x+base.l and floor~=0 then
+            if move.x==base.x and move.x+move.w==base.x+base.w and floor~=0 then
                 score=score+2
                 message=perfect[rnd(1,3)]
             else
                 score=score+1
                 message=great[rnd(1,table.maxn(great))]
             end
-            for i=1,3 do
-                color2[i]=color1[i]
-                color1[i]=rnd()
-            end
+            color2=color1
+            color1=COLOR.random(3)
             base.x=move.x
-            base.y=690
-            base.l=move.l
+            base.y=SCR.h0-brickHeight
+            base.w=move.w
             floor=floor+1
             if rnd()<.5 then
-                move.x=-move.l
-                speed=10
+                move.x=-move.w
+                moveDir=1
             else
-                move.x=1280
-                speed=-10
+                move.x=SCR.w0
+                moveDir=-1
             end
             move.y=rnd(max(260-floor*4,60),max(420-floor*5,100))
             state='move'
         end
     elseif state=='die' then
-        move.y=move.y+18
-        if move.y>1000 then
+        move.y=move.y+dropSpeed*dt
+        if move.y>=SCR.h0 then
+            move.y=SCR.h0
             highScore=max(score,highScore)
             highFloor=max(floor,floor)
             state='dead'
         end
     elseif state=='scroll' then
-        camY=camY-floor/4
-        if camY<1000 then camY=camY-1 end
-        if camY<500 then camY=camY-1 end
-        if camY<0 then
+        camY=camY-(2.6+floor/6.2+camY/626)*dt
+        if camY<=0 then
             restart()
             state='move'
         end
@@ -175,67 +178,61 @@ end
 setmetatable(backColor,backColor)
 function scene.draw()
     -- Background
-    local lv,height=int(camY/700),camY%700
+    local lv,height=int(camY/(SCR.h0-brickHeight)),camY%(SCR.h0-brickHeight)
     gc.setColor(backColor[lv+1] or COLOR.D)
-    gc.rectangle('fill',0,720,1280,height-700)
+    gc.rectangle('fill',-overflowWidth,SCR.h0,SCR.w0+overflowWidth*2,height-(SCR.h0-brickHeight))
     gc.setColor(backColor[lv+2] or COLOR.D)
-    gc.rectangle('fill',0,height+20,1280,-height-20)
+    gc.rectangle('fill',-overflowWidth,height+brickHeight,SCR.w0+overflowWidth*2,-height-brickHeight)
     if height-680>0 then
         gc.setColor(backColor[lv+3] or COLOR.D)
-        gc.rectangle('fill',0,height-680,1280,680-height)
+        gc.rectangle('fill',0,height-680,SCR.w0,680-height)
     end
 
     if state=='menu' or state=='dead' then
         setFont(100)
+        GC.shadedPrint("DROPPER",800,150,'center',4,8,COLOR.L,COLOR.L)
         gc.setColor(COLOR.rainbow_light(love.timer.getTime()*2.6))
-        mStr("DROPPER",800,120)
+        mStr("DROPPER",800,150)
 
         gc.setColor(COLOR.rainbow_gray(love.timer.getTime()*1.626))
-        setFont(55)
-        mStr("Score - "..score,800,290)
-        mStr("High Score - "..highScore,800,370)
-        mStr("High Floor - "..highFloor,800,450)
+        setFont(70)
+        mStr("Score - "..score,800,400)
+        mStr("High Score - "..highScore,800,500)
+        mStr("High Floor - "..highFloor,800,600)
 
         gc.setColor(COLOR.D)
-        setFont(35)
-        mStr(MOBILE and "Touch to Start" or "Press space to Start",800,570)
-        setFont(20)
-        gc.print("Original CX-CAS version by MrZ",740,235)
-        gc.print("Ported / Rewritten / Balanced by MrZ",740,260)
+        setFont(50)
+        mStr(MOBILE and "Touch to Start" or "Press space to Start",800,800)
+        setFont(25)
+        gc.print("Original CX-CAS version by MrZ",740,265)
+        gc.print("Ported / Rewritten / Balanced by MrZ",740,290)
     end
     if state~='menu' then
         -- High floor
         gc.setColor(COLOR.L)
-        gc.setLineWidth(2)
-        local y=690+camY-30*highFloor
-        gc.line(0,y,1280,y)
+        gc.setLineWidth(3)
+        local y=SCR.h0+camY-brickHeight*highFloor
+        gc.line(-overflowWidth,y,SCR.w0+overflowWidth,y)
 
-        gc.setLineWidth(6)
-        gc.rectangle('line',move.x-3,move.y-3,move.l+6,36)
-        gc.rectangle('line',base.x-3,base.y-3,base.l+6,36)
+        setFont(60)
+        GC.shadedPrint(floor+1,move.x+move.w+10,move.y-15,'left',3,8,COLOR.L,COLOR.D)
+        GC.shadedPrint(floor,base.x+base.w+10,base.y-15,'left',3,8,COLOR.L,COLOR.D)
 
-        setFont(45)
-        gc.print(floor+1,move.x+move.l+15,move.y-18)
-        gc.print(floor,base.x+base.l+15,base.y-18)
-
-        gc.setColor(COLOR.L)
-        mStr(message,800,0)
-        gc.setColor(COLOR.D)
-        mStr(message,643,2)
+        GC.shadedPrint(message,800,0,'center',3,8,COLOR.L,COLOR.D)
 
         setFont(70)
-        gc.setColor(COLOR.L)
-        gc.print(score,60,40)
-        gc.setColor(COLOR.D)
-        gc.print(score,64,43)
+        GC.shadedPrint(score,100,40,'center',3,8,COLOR.L,COLOR.D)
 
-        gc.setColor(color1) gc.rectangle('fill',move.x,move.y,move.l,30)
-        gc.setColor(color2) gc.rectangle('fill',base.x,base.y,base.l,30)
+        gc.setColor(COLOR.L)
+        gc.rectangle('fill',move.x-brickStroke,move.y-brickStroke,move.w+2*brickStroke,brickHeight+2*brickStroke)
+        gc.rectangle('fill',base.x-brickStroke,base.y-brickStroke,base.w+2*brickStroke,brickHeight+2*brickStroke)
+        gc.setColor(color1) gc.rectangle('fill',move.x,move.y,move.w,brickHeight)
+        gc.setColor(color2) gc.rectangle('fill',base.x,base.y,base.w,brickHeight)
     end
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',x=1140,y=60,w=170,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button_fill',pos={1,0},x=-120,y=80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 
 return scene

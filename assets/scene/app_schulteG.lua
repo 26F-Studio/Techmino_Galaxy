@@ -55,7 +55,7 @@ local function tapBoard(x,y)
                 else
                     time=love.timer.getTime()-startTime+mistake
                     state=2
-                    FMOD.effect('reach')
+                    FMOD.effect('beep_rise')
                 end
                 if tapFX then
                     SYSFX.newShade(3,320+640/R*X,40+640/R*Y,640/R,640/R,.6,.8,1)
@@ -65,7 +65,7 @@ local function tapBoard(x,y)
                 if tapFX then
                     SYSFX.newShade(2,320+640/R*X,40+640/R*Y,640/R,640/R,1,.4,.5)
                 end
-                FMOD.effect('finesseError')
+                FMOD.effect('rotate_failed')
             end
         end
     end
@@ -106,7 +106,7 @@ function scene.keyDown(key,isRep)
             rank=tonumber(key)
         end
     elseif key=='escape' then
-        SCN.back()
+        if sureCheck('back') then SCN.back() end
     end
     return true
 end

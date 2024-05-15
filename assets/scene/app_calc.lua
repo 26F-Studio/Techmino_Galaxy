@@ -18,7 +18,6 @@ end
 
 function scene.enter()
     BG.set('none')
-    stopBgm()
     reg,val,sym=false,"0",false
 end
 
@@ -112,7 +111,7 @@ function scene.keyDown(key)
         if val~="0" then
             reg,sym=false,false
             val="0"
-        else
+        elseif sureCheck('back') then
             SCN.back()
         end
     elseif key=='delete' then
@@ -122,37 +121,39 @@ function scene.keyDown(key)
 end
 
 function scene.draw()
-    GC.replaceTransform(SCR.xOy_ul)
-    gc.setColor(COLOR.dX)
-    gc.rectangle('fill',100,80,650,150,5)
-    gc.setColor(COLOR.L)
+    gc.translate(260,80)
     gc.setLineWidth(2)
-    gc.rectangle('line',100,80,650,150,5)
-    FONT.set(45)
-    if reg then gc.printf(reg,0,100,720,'right') end
-    if val then gc.printf(val,0,150,720,'right') end
-    if sym then FONT.set(50) gc.print(sym,126,150) end
+    gc.setColor(COLOR.L)
+    gc.rectangle('line',0,0,740,250,10)
+    gc.setColor(COLOR.dX)
+    gc.rectangle('fill',0,0,740,250,10)
+    FONT.set(70)
+    gc.setColor(COLOR.L)
+    if reg then gc.printf(reg,0,30,700,'right') end
+    if val then gc.printf(val,0,130,700,'right') end
+    FONT.set(85)
+    if sym then gc.printf(sym,26,125,260) end
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,0},x=145,y=300,w=90,sound_trigger=false,text="1",fontSize=50,code=WIDGET.c_pressKey'1'},
-    WIDGET.new{type='button',pos={0,0},x=245,y=300,w=90,sound_trigger=false,text="2",fontSize=50,code=WIDGET.c_pressKey'2'},
-    WIDGET.new{type='button',pos={0,0},x=345,y=300,w=90,sound_trigger=false,text="3",fontSize=50,code=WIDGET.c_pressKey'3'},
-    WIDGET.new{type='button',pos={0,0},x=145,y=400,w=90,sound_trigger=false,text="4",fontSize=50,code=WIDGET.c_pressKey'4'},
-    WIDGET.new{type='button',pos={0,0},x=245,y=400,w=90,sound_trigger=false,text="5",fontSize=50,code=WIDGET.c_pressKey'5'},
-    WIDGET.new{type='button',pos={0,0},x=345,y=400,w=90,sound_trigger=false,text="6",fontSize=50,code=WIDGET.c_pressKey'6'},
-    WIDGET.new{type='button',pos={0,0},x=145,y=500,w=90,sound_trigger=false,text="7",fontSize=50,code=WIDGET.c_pressKey'7'},
-    WIDGET.new{type='button',pos={0,0},x=245,y=500,w=90,sound_trigger=false,text="8",fontSize=50,code=WIDGET.c_pressKey'8'},
-    WIDGET.new{type='button',pos={0,0},x=345,y=500,w=90,sound_trigger=false,text="9",fontSize=50,code=WIDGET.c_pressKey'9'},
-    WIDGET.new{type='button',pos={0,0},x=145,y=600,w=90,sound_trigger=false,text="0",fontSize=50,code=WIDGET.c_pressKey'0'},
-    WIDGET.new{type='button',pos={0,0},x=245,y=600,w=90,sound_trigger=false,text=".",color='lM',fontSize=50,code=WIDGET.c_pressKey'.'},
-    WIDGET.new{type='button',pos={0,0},x=345,y=600,w=90,sound_trigger=false,text="e",color='lM',fontSize=50,code=WIDGET.c_pressKey'e'},
-    WIDGET.new{type='button',pos={0,0},x=445,y=300,w=90,sound_trigger=false,text="+",color='lB',fontSize=50,code=WIDGET.c_pressKey'+'},
-    WIDGET.new{type='button',pos={0,0},x=445,y=400,w=90,sound_trigger=false,text="-",color='lB',fontSize=50,code=WIDGET.c_pressKey'-'},
-    WIDGET.new{type='button',pos={0,0},x=445,y=500,w=90,sound_trigger=false,text="*",color='lB',fontSize=50,code=WIDGET.c_pressKey'*'},
-    WIDGET.new{type='button',pos={0,0},x=445,y=600,w=90,sound_trigger=false,text="/",color='lB',fontSize=50,code=WIDGET.c_pressKey'/'},
-    WIDGET.new{type='button',pos={0,0},x=545,y=300,w=90,sound_trigger=false,text=CHAR.key.backspace,color='lR',fontSize=50,code=WIDGET.c_pressKey'backspace'},
-    WIDGET.new{type='button',pos={0,0},x=545,y=400,w=90,sound_trigger=false,text="=",color='lY',fontSize=50,code=WIDGET.c_pressKey'return'},
+    WIDGET.new{type='button',x=330,y=420,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'1',                   text="1"},
+    WIDGET.new{type='button',x=480,y=420,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'2',                   text="2"},
+    WIDGET.new{type='button',x=630,y=420,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'3',                   text="3"},
+    WIDGET.new{type='button',x=330,y=570,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'4',                   text="4"},
+    WIDGET.new{type='button',x=480,y=570,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'5',                   text="5"},
+    WIDGET.new{type='button',x=630,y=570,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'6',                   text="6"},
+    WIDGET.new{type='button',x=330,y=720,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'7',                   text="7"},
+    WIDGET.new{type='button',x=480,y=720,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'8',                   text="8"},
+    WIDGET.new{type='button',x=630,y=720,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'9',                   text="9"},
+    WIDGET.new{type='button',x=330,y=870,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'0',                   text="0"},
+    WIDGET.new{type='button',x=480,y=870,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'.',        color='lM',text="."},
+    WIDGET.new{type='button',x=630,y=870,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'e',        color='lM',text="e"},
+    WIDGET.new{type='button',x=780,y=420,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'+',        color='lB',text="+"},
+    WIDGET.new{type='button',x=780,y=570,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'-',        color='lB',text="-"},
+    WIDGET.new{type='button',x=780,y=720,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'*',        color='lB',text="*"},
+    WIDGET.new{type='button',x=780,y=870,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'/',        color='lB',text="/"},
+    WIDGET.new{type='button',x=930,y=420,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'backspace',color='lR',text=CHAR.key.backspace},
+    WIDGET.new{type='button',x=930,y=570,w=140,sound_trigger=false,fontSize=80,code=WIDGET.c_pressKey'return',   color='lY',text="="},
     WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 

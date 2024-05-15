@@ -60,7 +60,7 @@ function scene.keyDown(key,isRep)
     elseif key=='up' or key=='down' then
         p2.y0=false
     elseif key=='escape' then
-        SCN.back()
+        if sureCheck('back') then SCN.back() end
     end
     return true
 end
@@ -140,7 +140,7 @@ function scene.update()
             P=bx>640 and p1 or p2
             P.score=P.score+1
             TEXT:add("+1",P==p1 and 470 or 810,226,50,'score')
-            FMOD.effect('reach')
+            FMOD.effect('beep_rise')
 
             state=0
             bx,by=640,360

@@ -58,8 +58,8 @@ local progress,level
 local score,score1
 local combo,comboTime,maxCombo,noComboBreak
 local field={
-    x=160,y=40,
-    w=960,h=640,
+    x=200,y=100,
+    w=1200,h=800,
     c=16,r=10,
     remain=0,
 }
@@ -98,7 +98,7 @@ local function resetBoard()
 
     noComboBreak=true
     comboTime=comboTime+2
-    SYSFX.newShade(2,field.x,field.y,field.w,field.h,1,1,1)
+    SYSFX.new('rect',2,field.x,field.y,field.w,field.h,.8,.8,.8)
 end
 local function newGame()
     state=0
@@ -186,7 +186,7 @@ local function tap(x,y)
                 -- Score
                 local s=1000+floor(combo^.9)
                 score=score+s
-                TEXT:add("+"..s,1205,600,20,'score')
+                TEXT:add{text="+"..s,x=1500,y=600,fontSize=20,style='score'}
 
                 -- Combo
                 if comboTime==0 then
@@ -199,12 +199,29 @@ local function tap(x,y)
 
                 -- Check win
                 if field.remain==0 then
+                    FMOD.effect('frenzy',{volume=.8})
                     if noComboBreak then
-                        FMOD.effect('emit')
-                        FMOD.effect('clear_4')
-                        TEXT:add("FULL COMBO",640,360,100,'beat',.626)
+                        TEXT:add{text="FULL COMBO",x=800,y=500,fontSize=100,style='beat',styleArg=.626}
                         comboTime=comboTime+3
                         score=floor(score*1.1)
+                        FMOD.effect(
+                            level==1 and 'clear_2' or
+                            level==2 and 'clear_3' or
+                            level==3 and 'clear_4' or
+                            level==4 and 'clear_5' or
+                            level==5 and 'clear_6' or
+                            level==6 and 'clear_8' or
+                            level==7 and 'clear_10' or
+                            level==8 and 'clear_12' or
+                            level==9 and 'clear_14' or
+                            level==10 and 'clear_16' or
+                            level==11 and 'clear_18' or
+                            level==12 and 'clear_20' or
+                            level==13 and 'clear_21' or
+                            level==14 and 'clear_22' or
+                            level==15 and 'clear_24' or
+                            'clear_26'
+                        )
                     end
                     ins(progress,
                         noComboBreak and
@@ -214,27 +231,27 @@ local function tap(x,y)
                     level=level+1
                     if levels[level] then
                         resetBoard()
-                        FMOD.effect('reach')
+                        FMOD.effect('beep_rise')
                     else
                         state=2
                         FMOD.effect('win')
                     end
                 else
                     FMOD.effect(
-                        combo<50 and 'clear_1' or
-                        combo<100 and 'clear_2' or
-                        'clear_3',.8
+                        combo<50 and 'touch' or
+                        combo<100 and 'lock' or
+                        'drop'
                     )
                 end
                 selX,selY=false,false
             else
                 selX,selY=x,y
-                FMOD.effect('lock',{volume=.9})
+                FMOD.effect('move',{volume=.9})
             end
         else
             if field[y][x] and (x~=selX or y~=selY) then
                 selX,selY=x,y
-                FMOD.effect('lock',{volume=.8})
+                FMOD.effect('move',{volume=.8})
             end
         end
     end
@@ -327,7 +344,7 @@ function scene.draw()
         -- Selecting box
         gc.setLineWidth(.1)
         if selX then
-            gc_setColor(1,1,1)
+            gc_setColor(COLOR.L)
             gc_rectangle('line',selX-1+.05,selY-1+.05,.9,.9)
         end
 
@@ -338,8 +355,8 @@ function scene.draw()
             gc.line(lines[i].line)
         end
     gc.pop()
-    -- Frame
 
+    -- Frame
     if state==2 then
         gc.setColor(.9,.9,0)-- win
     elseif state==1 then
@@ -357,45 +374,45 @@ function scene.draw()
     end
 
     -- Maxcombo
-    setFont(20) gc.setColor(COLOR.dF)
-    gc.print(maxCombo,1142,1)
+    setFont(25) gc.setColor(COLOR.dF)
+    gc.print(maxCombo,1432,40)
 
     -- Time
-    setFont(30) gc.setColor(COLOR.L)
-    gc.print(("%.3f"):format(time),1140,20)
+    setFont(35) gc.setColor(COLOR.L)
+    gc.print(("%.3f"):format(time),1430,70)
 
-    -- Progress time list
-    setFont(15) gc.setColor(.6,.6,.6)
-    for i=1,#progress do gc.print(progress[i],1140,40+20*i) end
+    -- Section times
+    setFont(20) gc.setColor(.6,.6,.6)
+    for i=1,#progress do gc.print(progress[i],1430,90+20*i) end
 
     -- Combo Rectangle
     if comboTime>0 then
         local r=32*comboTime^.3
         gc.setColor(1,1,1,min(.6+comboTime,1)*.25)
-        gc.rectangle('fill',1205-r,440-r,2*r,2*r,2)
+        gc.rectangle('fill',1500-r,440-r,2*r,2*r,2)
         gc.setColor(1,1,1,min(.6+comboTime,1))
         gc.setLineWidth(2)
-        gc.rectangle('line',1205-r,440-r,2*r,2*r,4)
+        gc.rectangle('line',1500-r,440-r,2*r,2*r,4)
     end
 
     -- Combo Text
     setFont(60)
     if combo>50 then
         gc.setColor(1,.2,.2,min(.3+comboTime*.5,1)*min(comboTime,1))
-        mStr(combo,1205+(rnd()-.5)*combo^.5,398+(rnd()-.5)*combo^.5)
+        mStr(combo,1500+(rnd()-.5)*combo^.5,398+(rnd()-.5)*combo^.5)
     end
     gc.setColor(1,1,max(1-combo*.001,.5),min(.4+comboTime,1))
-    mStr(combo,1205,398)
+    mStr(combo,1500,398)
 
     -- Score
     setFont(25) gc.setColor(COLOR.L)
-    mStr(score1,1205,560)
+    mStr(score1,1500,560)
 end
 
 scene.widgetList={
     WIDGET.new{type='button',x=80,y=60,w=110,h=60,color='lG',text=CHAR.icon.retry,code=WIDGET.c_pressKey'r',visibleTick=function() return state~=0 end},
     WIDGET.new{type='checkBox',x=100,y=140,widthLimit=80,disp=function() return invis end,code=WIDGET.c_pressKey'q',visibleTick=function() return state~=1 end},
-    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={1,1},x=-60,y=-60,w=80,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 
 return scene
