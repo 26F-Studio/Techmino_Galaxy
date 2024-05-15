@@ -225,13 +225,15 @@ LANG.add{
 LANG.setDefault('en')
 
 function FMODLoadFunc() -- Will be called again when applying advanced options
-    FMOD.init{
-        maxChannel=math.min(SETTINGS.system.fmod_maxChannel,256),
-        DSPBufferCount=math.min(SETTINGS.system.fmod_DSPBufferCount,16),
-        DSPBufferLength=math.min(SETTINGS.system.fmod_DSPBufferLength,65536),
-        studioFlag=bit.bxor(FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,FMOD.FMOD_INIT_STREAM_FROM_UPDATE,FMOD.FMOD_INIT_MIX_FROM_UPDATE),
-        coreFlag=FMOD.FMOD_INIT_NORMAL,
-    }
+    if FMOD.C then
+        FMOD.init{
+            maxChannel=math.min(SETTINGS.system.fmod_maxChannel,256),
+            DSPBufferCount=math.min(SETTINGS.system.fmod_DSPBufferCount,16),
+            DSPBufferLength=math.min(SETTINGS.system.fmod_DSPBufferLength,65536),
+            studioFlag=bit.bxor(FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,FMOD.FMOD_INIT_STREAM_FROM_UPDATE,FMOD.FMOD_INIT_MIX_FROM_UPDATE),
+            coreFlag=FMOD.FMOD_INIT_NORMAL,
+        }
+    end
     if not FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Master.strings.bank") then
         MSG.new('warn',"Strings bank file load failed")
     end

@@ -9,18 +9,20 @@ local M=require("master")
 -- search for fmod shared libraries in package.cpath
 local fmodPath=package.searchpath("fmod",package.cpath)
 local fmodstudioPath=package.searchpath("fmodstudio",package.cpath)
-assert(fmodPath and fmodstudioPath,"FMOD shared libraries not found!")
 
--- pretend to load libfmod through Lua (it's going to fail but not raise any errors) so that its location is known when loading libfmodstudio through ffi
--- package.loadlib(fmodPath,"")
+if false and fmodPath and fmodstudioPath then
+    -- pretend to load libfmod through Lua (it's going to fail but not raise any errors) so that its location is known when loading libfmodstudio through ffi
+    -- package.loadlib(fmodPath,"")
+    M.C=ffi.load(fmodPath)
+    M.C2=ffi.load(fmodstudioPath)
+    require("enums")
+    require("constants")
+    require("wrap")
+    require("errors")
+else
+    MSG.new('error',"FMOD shared libraries not found!")
+end
 
-M.C=ffi.load(fmodPath)
-M.C2=ffi.load(fmodstudioPath)
-
-require("enums")
-require("constants")
-require("wrap")
-require("errors")
 
 --------------------------------------------------------------
 
@@ -29,6 +31,7 @@ local core ---@type FMOD.Core.System?
 
 ---@param args {maxChannel:number, DSPBufferLength:number, DSPBufferCount:number, studioFlag:FMOD.Const, coreFlag:FMOD.Const}
 function M.init(args)
+    if not (M.C and M.C2) then return end
     local firstTime=true
     if M.studio then
         M.studio:release()
