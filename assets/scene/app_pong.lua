@@ -1,5 +1,4 @@
 local gc=love.graphics
-local kb=love.keyboard
 
 local abs=math.abs
 local max,min=math.max,math.min
@@ -9,38 +8,45 @@ local rnd=math.random
 local scene={}
 
 local state
-local bx,by=640,360-- Ball posotion
-local vx,vy=0,0-- Ball velocity
-local ry=0-- Rotation Y
 
-local p1,p2-- Player data
+local player={} -- Player data
+local ball={ -- Rotation Y
+    x=640,y=360,
+    vx=0,vy=0,
+    ry=0,
+}
+
+local W,H=1400,900
+local autoMoveFactor=26
+local moveAcc,maxMoveSpeed=2600,2600
+local rollRate,ryTransSpeed=0.62,620
 
 function scene.enter()
     BG.set('none')
     state=0
 
-    bx,by=640,360
-    vx,vy=0,0
-    ry=0
+    ball.x,ball.y=640,360
+    ball.vx,ball.vy=0,0
+    ball.ry=0
 
-    p1={
+    player[1]={
         score=0,
         y=360,
         vy=0,
-        y0=false,
+        targetY=false,
     }
-    p2={
+    player[2]={
         score=0,
         y=360,
         vy=0,
-        y0=false,
+        targetY=false,
     }
 end
 
 local function start()
     state=1
-    vx=MATH.coin(6,-6)
-    vy=rnd()*6-3
+    ball.vx=MATH.coin(360,-360)
+    ball.vy=rnd()*6-3
 end
 function scene.keyDown(key,isRep)
     if isRep then return true end
@@ -50,15 +56,15 @@ function scene.keyDown(key,isRep)
         end
     elseif key=='r' then
         state=0
-        bx,by=640,360
-        vx,vy=0,0
-        ry=0
-        p1.score,p2.score=0,0
-        FMOD.effect('hold')
+        ball.x,ball.y=640,360
+        ball.vx,ball.vy=0,0
+        ball.ry=0
+        player[1].score,player[2].score=0,0
+        FMOD.effect('rotate')
     elseif key=='w' or key=='s' then
-        p1.y0=false
+        player[1].targetY=false
     elseif key=='up' or key=='down' then
-        p2.y0=false
+        player[2].targetY=false
     elseif key=='escape' then
         if sureCheck('back') then SCN.back() end
     end
@@ -68,94 +74,87 @@ function scene.touchDown(x,y)
     scene.touchMove(x,y)
     if state==0 then start() end
 end
-function scene.touchMove(x,y)(x<640 and p1 or p2).y0=y end
-function scene.mouseMove(x,y)(x<640 and p1 or p2).y0=y end
+function scene.mouseDown(_,_,k) if state==0 and k==1 then start() end end
+function scene.touchMove(x,y)(x<640 and player[1] or player[2]).targetY=y end
+function scene.mouseMove(x,y)(x<640 and player[1] or player[2]).targetY=y end
 
 -- Rect Area X:150~1130 Y:20~700
-function scene.update()
+function scene.update(dt)
     -- Update pads
-    local P=p1
-    while P do
-        if P.y0 then
-            if P.y>P.y0 then
-                P.y=max(P.y-8,P.y0,70)
-                P.vy=-10
-            elseif P.y<P.y0 then
-                P.y=min(P.y+8,P.y0,650)
-                P.vy=10
-            else
-                P.vy=P.vy/2
-            end
+    for i=1,2 do
+        local P=player[i]
+        if P.targetY then
+            P.vy=P.vy+(P.targetY-P.y)*dt*autoMoveFactor
         else
-            if kb.isDown(P==p1 and 'w' or 'up') then
-                P.vy=max(P.vy-1,-8)
+            if isKeyDown(P==player[1] and 'w' or 'up') then
+                P.vy=max(P.vy-moveAcc*dt,-maxMoveSpeed)
             end
-            if kb.isDown(P==p1 and 's' or 'down') then
-                P.vy=min(P.vy+1,8)
-            end
-            P.y=P.y+P.vy
-            P.vy=P.vy*.9
-            if P.y>650 then
-                P.vy=-P.vy/2
-                P.y=650
-            elseif P.y<70 then
-                P.vy=-P.vy/2
-                P.y=70
+            if isKeyDown(P==player[1] and 's' or 'down') then
+                P.vy=min(P.vy+moveAcc*dt,maxMoveSpeed)
             end
         end
-        P=P==p1 and p2
+        P.vy=MATH.expApproach(P.vy,0,dt*6.26)
+        P.y=P.y+P.vy*dt
+        if P.y~=MATH.clamp(P.y,70,650) then
+            P.y=MATH.clamp(P.y,70,650)
+            P.vy=-P.vy*0.626
+        end
     end
 
     -- Update ball
-    bx,by=bx+vx,by+vy
-    if ry~=0 then
-        if ry>0 then
-            ry=max(ry-.1,0)
-            vy=vy-.1
-        else
-            ry=min(ry+.1,0)
-            vy=vy+.1
-        end
+    ball.x,ball.y=ball.x+ball.vx*dt,ball.y+ball.vy*dt
+    if ball.ry~=0 then
+        local dry=ball.ry-MATH.linearApproach(ball.ry,0,ryTransSpeed*dt)
+        ball.vy=ball.vy+dry
+        ball.ry=ball.ry-dry
+        -- if ball.ry>0 then
+        --     ball.ry=max(ball.ry-ryTransSpeed,0)
+        --     ball.vy=ball.vy-ryTransSpeed*dt
+        -- else
+        --     ball.ry=min(ball.ry+ryTransSpeed,0)
+        --     ball.vy=ball.vy+ryTransSpeed*dt
+        -- end
     end
     if state==1 then -- Playing
-        if bx<160 or bx>1120 then
-            P=bx<160 and p1 or p2
-            local d=by-P.y
+        -- Player Hit
+        if ball.x<160 or ball.x>1120 then
+            local P=ball.x<160 and player[1] or player[2]
+            local d=ball.y-P.y
             if abs(d)<60 then
-                vx=-vx-(vx>0 and .05 or -.5)
-                vy=vy+d*.08+P.vy*.5
-                ry=P.vy
-                FMOD.effect('collect')
+                ball.vx=-(ball.vx+MATH.sign(ball.vx)*6)
+                ball.vy=ball.vy+d*.08+P.vy*.5
+                ball.ry=P.vy*rollRate
+                FMOD.effect('touch')
             else
                 state=2
             end
         end
-        if by<30 or by>690 then
-            by=by<30 and 30 or 690
-            vy,ry=-vy,-ry
-            FMOD.effect('collect')
+        -- Wall Hit
+        if ball.y<30 or ball.y>690 then
+            ball.y=ball.y<30 and 30 or 690
+            ball.vy,ball.ry=-ball.vy,-ball.ry
+            FMOD.effect('move')
         end
     elseif state==2 then -- Game over
-        if bx<-120 or bx>1400 or by<-40 or by>760 then
-            P=bx>640 and p1 or p2
-            P.score=P.score+1
-            TEXT:add("+1",P==p1 and 470 or 810,226,50,'score')
-            FMOD.effect('beep_rise')
-
+        if ball.x<-120 or ball.x>1400 or ball.y<-40 or ball.y>760 then
             state=0
-            bx,by=640,360
-            vx,vy=0,0
+            ball.x,ball.y=640,360
+            ball.vx,ball.vy=0,0
+
+            local winner=ball.x>640 and 1 or 2
+            player[winner].score=player[winner].score+1
+            TEXT:add({text="+1",x=winner==1 and 470 or 810,y=226,fontSize=50,style='score'})
+            FMOD.effect('beep_rise')
         end
     end
-    bx,by,vx,vy,ry=bx,by,vx,vy,ry
 end
 
 function scene.draw()
     -- Draw score
     gc.setColor(.4,.4,.4)
     FONT.set(100)
-    GC.mStr(p1.score,470,20)
-    GC.mStr(p2.score,810,20)
+    GC.mStr(player[1].score,470,20)
+    GC.mStr(player[2].score,810,20)
 
     -- Draw boundary
     gc.setColor(COLOR.L)
@@ -164,16 +163,20 @@ function scene.draw()
     gc.line(134,700,1146,700)
 
     -- Draw ball & speed line
-    gc.setColor(1,1,1-abs(ry)*.16)
-    gc.circle('fill',bx,by,10)
+    gc.setColor(1,1,1-abs(ball.ry)*.16)
+    gc.circle('fill',ball.x,ball.y,10)
     gc.setColor(1,1,1,.1)
-    gc.line(bx+vx*22,by+vy*22,bx+vx*30,by+vy*30)
+    gc.line(ball.x+ball.vx*22,ball.y+ball.vy*22,ball.x+ball.vx*30,ball.y+ball.vy*30)
 
     -- Draw pads
     gc.setColor(1,.8,.8)
-    gc.rectangle('fill',134,p1.y-50,16,100)
+    gc.rectangle('fill',134,player[1].y-50,16,100)
     gc.setColor(.8,.8,1)
-    gc.rectangle('fill',1130,p2.y-50,16,100)
+    gc.rectangle('fill',1130,player[2].y-50,16,100)
+
+    FONT.set(30)
+    gc.print(ball.vx,100,100)
+    gc.print(ball.vy,100,120)
 end
 
 scene.widgetList={
