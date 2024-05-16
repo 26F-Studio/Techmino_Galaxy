@@ -10,7 +10,7 @@ local M=require("master")
 local fmodPath=package.searchpath("fmod",package.cpath)
 local fmodstudioPath=package.searchpath("fmodstudio",package.cpath)
 
-if false and fmodPath and fmodstudioPath then
+if fmodPath and fmodstudioPath then
     -- pretend to load libfmod through Lua (it's going to fail but not raise any errors) so that its location is known when loading libfmodstudio through ffi
     -- package.loadlib(fmodPath,"")
     M.C=ffi.load(fmodPath)
