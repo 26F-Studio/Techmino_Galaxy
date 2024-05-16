@@ -1,4 +1,4 @@
-local gc,kb,tc=love.graphics,love.keyboard,love.touch
+local gc,tc=love.graphics,love.touch
 local rnd,floor,abs=math.random,math.floor,math.abs
 local max,min=math.max,math.min
 local setFont,mStr=FONT.set,GC.mStr
@@ -71,7 +71,7 @@ function scene.touchDown(x)
 end
 function scene.touchUp(x)
     if play then
-        local L=tc.getTouches()
+        local L=getTouches()
         if x<640 then
             for i=1,#L do
                 if tc.getPosition(L[i])>640 then
@@ -114,9 +114,9 @@ end
 function scene.keyUp(key)
     if play then
         if key=='left' or key=='a' then
-            moveDir=kb.isDown('right','d') and 1 or 0
+            moveDir=isKeyDown('right','d') and 1 or 0
         elseif key=='right' or key=='d' then
-            moveDir=kb.isDown('left','a') and -1 or 0
+            moveDir=isKeyDown('left','a') and -1 or 0
         end
     end
 end

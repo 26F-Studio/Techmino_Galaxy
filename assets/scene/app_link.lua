@@ -1,5 +1,3 @@
-local ms=love.mouse
-local msIsDown,kbIsDown=ms.isDown,love.keyboard.isDown
 local gc=love.graphics
 local gc_setColor,gc_rectangle,gc_draw=gc.setColor,gc.rectangle,gc.draw
 local setFont,mStr=FONT.set,GC.mStr
@@ -98,7 +96,7 @@ local function resetBoard()
 
     noComboBreak=true
     comboTime=comboTime+2
-    SYSFX.new('rect',2,field.x,field.y,field.w,field.h,.8,.8,.8)
+    SYSFX.rect(.5,field.x,field.y,field.w,field.h,.8,.8,.8)
 end
 local function newGame()
     state=0
@@ -272,7 +270,7 @@ function scene.keyDown(key,isRep)
             newGame()
         end
     elseif key=='z' or key=='x' then
-        love.mousepressed(ms.getPosition())
+        love.mousepressed(love.mouse.getPosition())
     elseif key=='escape' then
         if state~=1 then
             if sureCheck('back') then SCN.back() end
@@ -290,7 +288,7 @@ local function touch(x,y)
     tap(x,y)
 end
 function scene.mouseDown(x,y,k) if k==1 or k==2 or not k then touch(x,y) end end
-function scene.mouseMove(x,y) if (msIsDown(1) or kbIsDown('z','x')) then touch(x,y) end end
+function scene.mouseMove(x,y) if (isMouseDown(1) or isKeyDown('z','x')) then touch(x,y) end end
 function scene.touchDown(x,y) touch(x,y) end
 function scene.touchMove(x,y) touch(x,y) end
 

@@ -1,5 +1,4 @@
 local gc=love.graphics
-local kb=love.keyboard
 
 ---@type Zenitha.Scene
 local scene={}
@@ -23,11 +22,11 @@ end
 
 scene.mouseDown=NULL
 function scene.keyDown(key)
-    if kb.isDown('lshift','rshift') then
+    if isKeyDown('lshift','rshift') then
         if key=='=' then
             scene.keyDown('+')
             return true
-        elseif kb.isDown('lshift','rshift') and key=='8' then
+        elseif isKeyDown('lshift','rshift') and key=='8' then
             scene.keyDown('*')
             return true
         end

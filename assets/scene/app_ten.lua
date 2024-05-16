@@ -77,7 +77,7 @@ local function merge()
         local y,x=c[1],c[2]
         if board[y][x]~=0 then
             board[y][x]=0
-            SYSFX.newShade(2,320+x*128-128,40+y*128-128,128,128)
+            SYSFX.rect(.5,320+x*128-128,40+y*128-128,128,128)
             if x>1 and board[y][x-1]==chosen then ins(connected,{y,x-1}) count=count+1 end
             if x<5 and board[y][x+1]==chosen then ins(connected,{y,x+1}) count=count+1 end
             if y>1 and board[y-1][x]==chosen then ins(connected,{y-1,x}) count=count+1 end
@@ -89,7 +89,7 @@ local function merge()
         local getScore=3^(chosen-1)*math.min(floor(.5+count/2),4)
         score=score+getScore
         TEXT:add(getScore,cx*128+256,cy*128-40,40,'score')
-        SYSFX.newRectRipple(2,320+cx*128-128,40+cy*128-128,128,128)
+        SYSFX.newRectRipple(.5,320+cx*128-128,40+cy*128-128,128,128)
         FMOD.effect('lock')
         if chosen==maxTile then
             maxTile=chosen+1

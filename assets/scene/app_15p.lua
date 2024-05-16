@@ -80,7 +80,7 @@ local function tapBoard(x,y,key)
     if state<2 then
         if not key then
             if pathVis then
-                SYSFX.new('rect',6,x-5,y-5,11,11,1,1,1)
+                SYSFX.rect(.16,x-5,y-5,11,11,1,1,1)
             end
             x,y=floor((x-SCR.w0/2)/160/scale)+3,floor((y-SCR.h0/2)/160/scale)+3
         end
@@ -145,7 +145,7 @@ function scene.keyDown(key,isRep)
         move,push=0,0
     elseif key=='q' then
         if state~=1 then
-            colorSelector:scroll(love.keyboard.isDown('lshift','rshift') and -1 or 1)
+            colorSelector:scroll(isKeyDown('lshift','rshift') and -1 or 1)
         end
     elseif key=='w' then
         if state==0 then

@@ -119,7 +119,7 @@ end
 local function newMergeFX(y,x,tile)
     local r,g,b
     if tile==-2 then r,g,b=1,.6,.3 end
-    SYSFX.newShade(3,player.x+100*x-100,player.y+100*y-100,100,100,r,g,b)
+    SYSFX.rect(.26,player.x+100*x-100,player.y+100*y-100,100,100,r,g,b)
 end
 function player:click(y,x)
     if y==1 and x==1 then

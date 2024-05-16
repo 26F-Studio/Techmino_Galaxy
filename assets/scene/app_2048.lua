@@ -331,7 +331,7 @@ function scene.keyDown(key,isRep)
     elseif key=='r' then reset()
     elseif key=='q' then if state==0 then invis=not invis end
     elseif key=='w' then if state==0 then tapControl=not tapControl end
-    elseif key=='1' or key=='2' then (love.keyboard.isDown('lshift','lctrl','lalt') and playRep or setFocus)(key=='1' and 1 or 2)
+    elseif key=='1' or key=='2' then (isKeyDown('lshift','lctrl','lalt') and playRep or setFocus)(key=='1' and 1 or 2)
     elseif key=='c1' then playRep(1)
     elseif key=='c2' then playRep(2)
     elseif key=='return' then

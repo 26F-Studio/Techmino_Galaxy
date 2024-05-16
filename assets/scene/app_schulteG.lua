@@ -1,7 +1,4 @@
-local gc,ms=love.graphics,love.mouse
-local floor,rnd=math.floor,math.random
-local rem=table.remove
-local setFont,mStr=FONT.set,GC.mStr
+local gc=love.graphics
 
 ---@type Zenitha.Scene
 local scene={}
@@ -12,6 +9,24 @@ local startTime,time
 local state,progress=0
 local tapFX,mistake
 
+local area={
+    x=350,y=50,
+    w=900,h=900,
+}
+local fontSizes={
+    [3]=100,
+    [4]=100,
+    [5]=90,
+    [6]=80,
+}
+
+local function setState(v)
+    state=v
+    scene.widgetList.rank._visible=state==0
+    scene.widgetList.invis._visible=state~=1
+    scene.widgetList.disappear._visible=state~=1
+    scene.widgetList.tapFX._visible=state~=1
+end
 function scene.enter()
     BG.set('space')
     board={}
@@ -23,8 +38,8 @@ function scene.enter()
     startTime=0
     time=0
     mistake=0
-    state=0
     progress=0
+    setState(0)
 end
 
 local function newBoard()
@@ -33,80 +48,75 @@ local function newBoard()
         L[i]=i
     end
     for i=1,rank^2 do
-        board[i]=rem(L,rnd(#L))
+        board[i]=table.remove(L,math.random(#L))
     end
 end
 local function tapBoard(x,y)
-    local R=rank
-    if x>320 and x<960 and y>40 and y<680 then
+    if MATH.between(x,area.x,area.x+area.w) and MATH.between(y,area.y,area.y+area.h) then
         if state==0 then
             newBoard()
-            state=1
+            setState(1)
             startTime=love.timer.getTime()
             progress=0
         elseif state==1 then
-            local X=floor((x-320)/640*R)
-            local Y=floor((y-40)/640*R)
+            local R=rank
+            local X=math.floor((x-area.x)/area.w*R)
+            local Y=math.floor((y-area.y)/area.h*R)
             x=R*Y+X+1
             if board[x]==progress+1 then
                 progress=progress+1
                 if progress<R^2 then
-                    FMOD.effect('lock')
+                    FMOD.effect('touch')
                 else
                     time=love.timer.getTime()-startTime+mistake
-                    state=2
+                    setState(2)
                     FMOD.effect('beep_rise')
                 end
                 if tapFX then
-                    SYSFX.newShade(3,320+640/R*X,40+640/R*Y,640/R,640/R,.6,.8,1)
+                    SYSFX.rect(.26,area.x+area.w/R*X,area.y+area.h/R*Y,area.w/R,area.h/R,.6,.8,1)
                 end
             else
                 mistake=mistake+1
                 if tapFX then
-                    SYSFX.newShade(2,320+640/R*X,40+640/R*Y,640/R,640/R,1,.4,.5)
+                    SYSFX.rect(.5,area.x+area.w/R*X,area.y+area.h/R*Y,area.w/R,area.h/R,1,.4,.5)
                 end
-                FMOD.effect('rotate_failed')
+                FMOD.effect('move_failed')
             end
         end
     end
 end
 
 function scene.mouseDown(x,y)
-    tapBoard(x,y)
+    if state~=0 then tapBoard(x,y) end
 end
 function scene.touchDown(x,y)
-    tapBoard(x,y)
+    if state~=0 then tapBoard(x,y) end
 end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='z' or key=='x' then
-        love.mousepressed(ms.getPosition())
+        local x,y=love.mouse.getPosition()
+        love.mousepressed(x,y,1)
     elseif key=='space' then
         if state>0 then
             board={}
             time=0
             mistake=0
-            state=0
+            setState(0)
             progress=0
-        end
-    elseif key=='q' then
-        if state==0 then
-            invis=not invis
-        end
-    elseif key=='w' then
-        if state==0 then
-            disappear=not disappear
-        end
-    elseif key=='e' then
-        if state==0 then
-            tapFX=not tapFX
-        end
-    elseif key=='3' or key=='4' or key=='5' or key=='6' then
-        if state==0 then
-            rank=tonumber(key)
         end
     elseif key=='escape' then
         if sureCheck('back') then SCN.back() end
+    elseif state==0 then
+        if key=='q' then
+                invis=not invis
+        elseif key=='w' then
+                disappear=not disappear
+        elseif key=='e' then
+                tapFX=not tapFX
+        elseif key=='3' or key=='4' or key=='5' or key=='6' then
+                rank=tonumber(key)
+        end
     end
     return true
 end
@@ -118,16 +128,16 @@ function scene.update()
 end
 
 function scene.draw()
-    setFont(40)
+    FONT.set(40)
     gc.setColor(COLOR.L)
-    gc.print(("%.3f"):format(time),1026,80)
-    gc.print(mistake,1026,150)
+    gc.print(("%.3f"):format(time),1350,80)
+    gc.print(mistake,1350,150)
 
-    setFont(70)
-    mStr(state==1 and progress or state==0 and "Ready" or state==2 and "Win",1130,300)
+    FONT.set(70)
+    GC.mStr(state==1 and progress or state==0 and "Ready" or state==2 and "Win",1400,300)
 
     gc.setColor(COLOR.dX)
-    gc.rectangle('fill',310,30,660,660)
+    gc.rectangle('fill',area.x-10,area.y-10,area.w+20,area.h+20)
     if state==2 then
         gc.setColor(.9,.9,0)-- win
     elseif state==1 then
@@ -136,34 +146,34 @@ function scene.draw()
         gc.setColor(.2,.8,.2)-- ready
     end
     gc.setLineWidth(10)
-    gc.rectangle('line',310,30,660,660)
+    gc.rectangle('line',area.x-10,area.y-10,area.w+20,area.h+20)
 
     -- Draw no-setting area
     if state==2 then
         gc.setColor(1,0,0,.3)
-        gc.rectangle('fill',15,295,285,250)
+        gc.rectangle('fill',35,295,285,250)
     end
 
-    local width=640/rank
+    local width=area.w/rank
     local mono=state==0 or invis and state==1 and progress>0
     gc.setLineWidth(4)
-    local f=180-rank*20
-    setFont(f)
+    local f=fontSizes[rank]
+    FONT.set(f)
     for i=1,rank do
         for j=1,rank do
             local N=board[rank*(i-1)+j]
             if not (state==1 and disappear and N<=progress) then
                 gc.setColor(.4,.5,.6)
-                gc.rectangle('fill',320+(j-1)*width,(i-1)*width+40,width,width)
+                gc.rectangle('fill',area.x+(j-1)*width,area.y+(i-1)*width,width,width)
                 gc.setColor(COLOR.L)
-                gc.rectangle('line',320+(j-1)*width,(i-1)*width+40,width,width)
+                gc.rectangle('line',area.x+(j-1)*width,area.y+(i-1)*width,width,width)
                 if not mono then
-                    local x,y=320+(j-.5)*width,40+(i-.5)*width-f*.67
+                    local x,y=area.x+(j-.5)*width,area.y+(i-.5)*width-f*.67
                     gc.setColor(.1,.1,.1)
-                    mStr(N,x-3,y-1)
-                    mStr(N,x-1,y-3)
+                    GC.mStr(N,x-3,y-1)
+                    GC.mStr(N,x-1,y-3)
                     gc.setColor(COLOR.L)
-                    mStr(N,x,y)
+                    GC.mStr(N,x,y)
                 end
             end
         end
@@ -171,12 +181,12 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',  x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'space',visibleTick=function() return state~=0 end},
-    WIDGET.new{type='slider',  x=130,y=250,widthLimit=105,w=150,axis={3,6,1},valueShow=false,fontSize=40,disp=function() return rank end,code=function(v) rank=v end,visibleTick=function() return state==0 end},
-    WIDGET.new{type='checkBox',x=240,y=330,widthLimit=200,fontSize=40,disp=function() return invis end,code=WIDGET.c_pressKey'q',visibleTick=function() return state~=1 end},
-    WIDGET.new{type='checkBox',x=240,y=420,widthLimit=200,fontSize=40,disp=function() return disappear end,code=WIDGET.c_pressKey'w',visibleTick=function() return state~=1 end},
-    WIDGET.new{type='checkBox',x=240,y=510,widthLimit=200,fontSize=40,disp=function() return tapFX end,code=WIDGET.c_pressKey'e',visibleTick=function() return state~=1 end},
-    WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',                                    x=180,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'space',visibleTick=function() return state~=0 end},
+    WIDGET.new{type='slider'  ,name='rank',     text="Rank",     x=150,y=250,widthLimit=105,w=150,axis={3,6,1},valueShow=false,fontSize=40,disp=function() return rank end,code=function(v) rank=v end},
+    WIDGET.new{type='checkBox',name='invis',    text="Invisible",x=280,y=330,widthLimit=200,fontSize=40,disp=function() return invis     end,code=WIDGET.c_pressKey'q'},
+    WIDGET.new{type='checkBox',name='disappear',text="Disappear",x=280,y=420,widthLimit=200,fontSize=40,disp=function() return disappear end,code=WIDGET.c_pressKey'w'},
+    WIDGET.new{type='checkBox',name='tapFX',    text="TapEffect",x=280,y=510,widthLimit=200,fontSize=40,disp=function() return tapFX     end,code=WIDGET.c_pressKey'e'},
+    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 
 return scene

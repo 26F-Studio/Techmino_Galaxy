@@ -1,5 +1,4 @@
 local gc=love.graphics
-local kb=love.keyboard
 
 local instList={'square_wave','triangle_wave','sine_wave'}
 local keys={
@@ -30,8 +29,8 @@ scene.mouseDown=scene.touchDown
 function scene.keyDown(key,isRep)
     if not isRep and keys[key] then
         local note=keys[key]+offset
-        if kb.isDown('lshift','rshift') then note=note+1 end
-        if kb.isDown('lctrl','rctrl') then note=note-1 end
+        if isShiftPressed() then note=note+1 end
+        if isCtrlPressed() then note=note-1 end
         activeEventMap[key]=FMOD.effect(inst,{
             tune=note-21,
             volume=1,

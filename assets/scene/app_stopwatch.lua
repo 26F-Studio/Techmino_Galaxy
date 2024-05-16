@@ -1,22 +1,25 @@
-local state
-local pressTime
-local releaseTime
+local state ---@type 'stop'|'press'|'release'
+local pressTime,releaseTime
 local time1,time2
+local history={}
 
 local function press()
-    if state==0 then
-        state=1
+    if state=='stop' then
+        if love.timer.getTime()-pressTime<0.26 then return end
+        state='press'
         pressTime=love.timer.getTime()
         releaseTime=false
-        time2=STRING.time(0)
-    elseif state==2 then
-        state=0
+        table.insert(history,1,{time1,time2})
+        history[7]=nil
+        time2=""
+    elseif state=='release' then
+        state='stop'
     end
 end
 
 local function release()
-    if state==1 then
-        state=2
+    if state=='press' then
+        state='release'
         releaseTime=love.timer.getTime()
     end
 end
@@ -25,7 +28,8 @@ end
 local scene={}
 
 function scene.enter()
-    state=0
+    pressTime,releaseTime=0,0
+    state='stop'
     time1=STRING.time(0)
     time2=STRING.time(0)
 end
@@ -58,7 +62,7 @@ function scene.keyUp()
 end
 
 function scene.update()
-    if state~=0 then
+    if state~='stop' then
         time1=STRING.time(love.timer.getTime()-pressTime)
         if releaseTime then
             time2=STRING.time(love.timer.getTime()-releaseTime)
@@ -67,11 +71,17 @@ function scene.update()
 end
 
 function scene.draw()
+    GC.replaceTransform(SCR.xOy_m)
+    GC.translate(0,-126)
+    FONT.set(90)
+    GC.mStr(CHAR.icon.download,-300,-120); GC.mStr(time1,-300,0)
+    GC.mStr(CHAR.icon.upload,   300,-120); GC.mStr(time2, 300,0)
     FONT.set(60)
-    GC.mStr(CHAR.icon.import,340,230)
-    GC.mStr(CHAR.icon.export,940,230)
-    GC.mStr(time1,340,300)
-    GC.mStr(time2,940,300)
+    GC.setColor(.26,.26,.26)
+    for i=1,#history do
+        GC.mStr(history[i][1],-300,62+62*i)
+        GC.mStr(history[i][2], 300,62+62*i)
+    end
 end
 
 scene.widgetList={
