@@ -125,6 +125,13 @@ end
 ---@type {desc:FMOD.Studio.EventDescription?, event:FMOD.Studio.EventInstance?}?
 local playing=nil
 
+---Check if a music name exists
+---@param name string
+---@return boolean
+function M.music.check(name)
+    return musicLib[name]~=nil
+end
+
 ---@param name string
 ---@param args? {instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}
 ---@return FMOD.Studio.EventInstance?
@@ -240,6 +247,13 @@ function M.effect.setVolume(v,instant)
     M.effectVolume=v
     if not studio then return end
     studio:setParameterByName('EffectVolume',M.mainVolume*M.effectVolume,instant==true)
+end
+
+---Check if an effect name exists
+---@param name string
+---@return boolean
+function M.effect.check(name)
+    return effectLib[name]~=nil
 end
 
 ---priority: pitch>tune>fine
