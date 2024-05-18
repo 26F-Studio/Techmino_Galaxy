@@ -50,10 +50,11 @@ function scene.enter()
     cubesX={} for i=1,40 do cubesX[i]=rnd()*16-8 end
     cubesY={} for i=1,40 do cubesY[i]=i/40*9 end
     lastCube=1
-    player,moveDir=0,0
+    player,moveDir,moveSpd=0,0,0
     life,life1,inv=0,0,false
     level,speed=1,1
-    menu,ct,play=false,60,false
+    menu,play=false,false
+    ct=1
     score=0
     sunH,color,rot=0,{.878,.752,0},0
 
@@ -103,7 +104,7 @@ function scene.keyDown(key,isRep)
             moveDir=1
         end
     else
-        if key=='space' and ct==60 then
+        if key=='space' and ct==1 then
             menu=-1
             speed=1
             level=1
@@ -123,20 +124,18 @@ end
 
 function scene.update(dt)
     if dt>.06 then dt=.06 end
-    dt=dt*600
 
     -- Update cubes' position
-    local cy=cubesY
-    local step=speed*dt*.005
+    local step=speed*dt*3
     for i=1,40 do
-        cy[i]=cy[i]+step
-        if cy[i]>10 then
+        cubesY[i]=cubesY[i]+step
+        if cubesY[i]>10 then
             if score%1000<820 then
                 cubesX[i]=rnd()*16-8+player
             else
                 cubesX[i]=player+i%2*6-3
             end
-            cy[i]=cy[i]-9
+            cubesY[i]=cubesY[i]-9
             lastCube=(lastCube-2)%40+1
         end
     end
@@ -159,14 +158,16 @@ function scene.update(dt)
         end
     end
 
+    moveSpd=MATH.linearApproach(moveSpd,moveDir,dt*4.2)
+    player=player+moveSpd*dt*2.6*speed^.8
+
     -- Screen rotation
-    if moveDir~=0 then
-        player=player+moveDir*dt*.003*speed^.8
-        if abs(rot)<.16 or moveDir*rot>0 then
-            rot=rot-moveDir*dt*.0003*speed
+    if moveSpd~=0 then
+        if abs(rot)<.16 or moveSpd*rot>0 then
+            rot=rot-moveSpd*dt*0.18*speed
         end
     elseif rot~=0 then
-        local d=dt*.0002*speed
+        local d=dt*0.12*speed
         if rot>0 then
             rot=max(rot-d,0)
         else
@@ -174,14 +175,14 @@ function scene.update(dt)
         end
     end
 
-    life1=MATH.expApproach(life1,life,dt*16)
+    life1=MATH.expApproach(life1,life,dt*6.26)
 
     if play then
         if inv>0 then
             inv=inv-1
         end
-        score=score+dt*.04+life*.0004
-        life=min(life+dt*.04,1000)
+        score=score+dt*(24+life*0.024)
+        life=min(life+dt*24,1000)
         if score>1000*level then
             if speed<3 then
                 speed=speed+.2
@@ -189,19 +190,19 @@ function scene.update(dt)
             level=level+1
             FMOD.effect('beep_notice')
         end
-        sunH=sunH+.01
+        sunH=sunH+dt*.26
     elseif menu==1 then
-        ct=ct+1
-        if ct==60 then
+        ct=min(ct+dt,1)
+        if ct==1 then
             menu=false
         end
     elseif menu==-1 then
         for i=1,3 do color[i]=near(color[i],cubeColor[1][i]) end
-        for i=1,40 do cubesY[i]=cubesY[i]-(70-ct)*.003 end
+        for i=1,40 do cubesY[i]=cubesY[i]-(70-ct*60)*.26*dt end
         if sunH>0 then
             sunH=max(sunH*.85-1,0)
         end
-        ct=ct-1
+        ct=max(ct-dt,0)
         if ct==0 then
             local t=love.system.getClipboardText()
             if type(t)=='string' then
@@ -220,6 +221,9 @@ local function _sunStencil()
     gc.rectangle('fill',-60,-440,120,120)
 end
 function scene.draw()
+    gc.scale(1600/1280)
+    gc.translate(0,80)
+
     -- Health bar
     if life1>0 then
         gc.setColor(1,0,0)
@@ -276,8 +280,8 @@ function scene.draw()
     -- Draw menu
     if play then
         setFont(60)
-        mStr(floor(score),-300,-800)
-        mStr(floor(score),300,-800)
+        mStr(floor(score),-300,-640)
+        mStr(floor(score),300,-640)
         if score%1000>920 then
             gc.setColor(1,1,1,abs(score%1000-970)*8)
             setFont(70)
@@ -292,20 +296,20 @@ function scene.draw()
         end
     else
         gc.setColor(COLOR.L)
-        gc.rectangle('fill',-20,-20+ct,40,40)
+        gc.rectangle('fill',-20,-20+ct*60,40,40)
 
-        gc.setColor(1,1,1,(1-ct/60)*.1)
+        gc.setColor(1,1,1,(1-ct)*.1)
         gc.polygon('fill',-15,30,0,-440,15,30)
 
-        gc.setColor(1,1,1,ct/60)
+        gc.setColor(1,1,1,ct)
 
         setFont(90)
-        mStr("CubeField",0,-650)
+        mStr("CubeField",0,-670)
 
         setFont(20)
-        gc.print("Original game by Max Abernethy",40,-550)
-        gc.print("Original CX-CAS version by Loïc Pujet",40,-525)
-        gc.print("Ported / Rewritten / Balanced by MrZ",40,-500)
+        gc.print("Original game by Max Abernethy",40,-570)
+        gc.print("Original CX-CAS version by Loïc Pujet",40,-545)
+        gc.print("Ported / Rewritten / Balanced by MrZ",40,-520)
 
         setFont(45)
         if score>0 then
@@ -318,7 +322,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',x=1140,y=80,w=170,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={1,0},x=-120,y=80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 
 return scene
