@@ -16,7 +16,7 @@ local stc_reset,stc_rect,stc_stop=GC.stc_reset,GC.stc_rect,GC.stc_stop
 local max,min=math.max,math.min
 
 local COLOR=COLOR
-local NumColor=NumColor
+local NumColor=CLR9
 
 ---@type Techmino.Skin.Brik
 local S={}

@@ -667,6 +667,8 @@ function GP:gelaDropped() -- Drop & lock gela, and trigger a lot of things
     -- Update field
     self:updField()
 
+    self:triggerEvent('beforeDiscard')
+
     -- Discard hand
     self.hand=false
     if self.finished then return end
@@ -827,7 +829,7 @@ function GP:checkClear()
             local g=self.garbageBuffer[i]
             if not g then break end
             if g._time==g.time then
-                self:dropGarbage(g.power*2)
+                self:dropGarbage(g.power)
                 rem(self.garbageBuffer,i)
                 self.garbageSum=self.garbageSum-g.power
                 i=i-1 -- Avoid index error
@@ -925,7 +927,7 @@ function GP:dropGarbage(count)
             F:setCell({
                 color=555,
                 diggable=true,
-            },table.remove(pos,GP:random(w+1-n)),curGenY)
+            },table.remove(pos,self:random(w+1-n)),curGenY)
         end
     end
 end
@@ -1493,6 +1495,9 @@ function GP.new()
         afterDrop={},
         afterLock={},
         afterClear={},
+        beforeCancel={},
+        beforeSend={},
+        beforeDiscard={},
 
         -- Update
         always={},

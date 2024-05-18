@@ -7,7 +7,7 @@ local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 
 local unpack=unpack
-local NumColor=NumColor
+local NumColor=CLR9
 
 ---@type Techmino.Skin.Brik
 local S={}

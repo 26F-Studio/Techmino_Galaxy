@@ -3,7 +3,7 @@ local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 local gc_setLineWidth=gc.setLineWidth
 
-local NumColor=NumColor
+local NumColor=CLR9
 
 ---@type Techmino.Skin.Gela
 local S={}

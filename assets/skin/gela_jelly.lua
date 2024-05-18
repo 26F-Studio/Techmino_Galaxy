@@ -2,7 +2,7 @@ local gc=love.graphics
 local gc_setColor=gc.setColor
 local gc_rectangle,gc_polygon=gc.rectangle,gc.polygon
 
-local NumColor=NumColor
+local NumColor=CLR9
 
 ---@type Techmino.Skin.Gela
 local S={}

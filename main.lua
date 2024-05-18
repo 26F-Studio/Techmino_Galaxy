@@ -64,7 +64,7 @@ KEYMAP=require'assets.keymap'
 SKIN=require'assets.skin'
 CHAR=require'assets.char'
 SETTINGS=require'assets.settings'
-NumColor=require'assets.numcolor'
+CLR9=require'assets.color9'
 FMOD=require'assets.fmod20221'
 DEBUG.checkLoadTime("Load game modules")
 
@@ -78,7 +78,7 @@ ZENITHA.setMaxFPS(260)
 ZENITHA.setDebugInfo{
     {"Cache", gcinfo},
     {"Tasks", TASK.getCount},
-    {"Mouse", function() return ("%d %d"):format(SCR.xOy:inverseTransformPoint(love.mouse.getPosition())) end},
+    {"Mouse", function() return ("%d, %d"):format(SCR.xOy:inverseTransformPoint(love.mouse.getPosition())) end},
     -- {"FMOD", function() local a,b,c=FMOD.studio:getMemoryUsage() return a..","..b..","..c end}, -- Only available in logging builds Fmod
 }
 
