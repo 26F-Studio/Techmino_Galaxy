@@ -8,8 +8,9 @@ local setFont,mStr=FONT.set,GC.mStr
 ---@type Zenitha.Scene
 local scene={}
 
-local previewX={245,186,129,78,35}
-local previewY={435,442,449,456,463}
+local previewFont={75,65,55,45,35}
+local previewX={225,166,109,58,15}
+local previewY={-15,-8,-1,6,13}
 local tileColor={
     {.39, 1.0, .39},
     {.39, .39, 1.0},
@@ -24,6 +25,11 @@ local tileColor={
     {.78, .55, .04},
     {.12, .12, .51},
 }
+local area={
+    x=350,y=50,
+    w=900,h=900,
+    c=180,
+}
 
 local board,preview,cx,cy
 local failPos
@@ -37,8 +43,15 @@ local nexts
 local invis
 local fast
 
+local function setState(v)
+    state=v
+    scene.widgetList.nexts:setVisible(state~=1)
+    scene.widgetList.invis:setVisible(state~=1)
+    scene.widgetList.fast:setVisible(state~=1)
+end
 local function reset()
-    state,progress=0,{}
+    setState(0)
+    progress={}
     score,time=0,0
     maxTile,maxNew=2,2
     for i=1,5 do
@@ -65,7 +78,7 @@ end
 local function merge()
     if fallingTimer or state==2 or not cx then return end
     if state==0 then
-        state=1
+        setState(1)
         startTime=love.timer.getTime()
     end
     if failPos==cy*10+cx then return end
@@ -77,7 +90,7 @@ local function merge()
         local y,x=c[1],c[2]
         if board[y][x]~=0 then
             board[y][x]=0
-            SYSFX.rect(.5,320+x*128-128,40+y*128-128,128,128)
+            SYSFX.rect(.2,area.x+(x-1)*area.c,area.y+(y-1)*area.c,area.c,area.c)
             if x>1 and board[y][x-1]==chosen then ins(connected,{y,x-1}) count=count+1 end
             if x<5 and board[y][x+1]==chosen then ins(connected,{y,x+1}) count=count+1 end
             if y>1 and board[y-1][x]==chosen then ins(connected,{y-1,x}) count=count+1 end
@@ -88,8 +101,8 @@ local function merge()
         board[cy][cx]=chosen+1
         local getScore=3^(chosen-1)*math.min(floor(.5+count/2),4)
         score=score+getScore
-        TEXT:add(getScore,cx*128+256,cy*128-40,40,'score')
-        SYSFX.newRectRipple(.5,320+cx*128-128,40+cy*128-128,128,128)
+        TEXT:add{text=getScore,x=area.x+area.c*(cx-.5),y=area.y+area.c*(cy-.5)-40,fontSize=60,fontType='bold',style='score'}
+        SYSFX.rectRipple(.5,area.x+(cx-1)*area.c,area.y+(cy-1)*area.c,area.c,area.c)
         FMOD.effect('lock')
         if chosen==maxTile then
             maxTile=chosen+1
@@ -105,14 +118,14 @@ local function merge()
         end
         if chosen>=5 then
             FMOD.effect(
-                chosen>=9 and 'ren_mega' or
+                chosen>=9 and 'spin_4' or
                 chosen>=8 and 'spin_3' or
                 chosen>=7 and 'spin_2' or
                 chosen>=6 and 'spin_1' or
                 'spin_0'
             )
         end
-        fallingTimer=fast and 8 or 12
+        fallingTimer=fast and 0.1 or 0.2
         failPos=false
     else
         board[cy][cx]=chosen
@@ -158,8 +171,8 @@ function scene.keyDown(key,isRep)
     return true
 end
 function scene.mouseMove(x,y)
-    cx,cy=floor((x-192)/128),floor((y+88)/128)
-    if cx<1 or cx>5 or cy<1 or cy>5 then
+    cx,cy=floor((x-area.x)/area.c)+1,floor((y-area.y)/area.c)+1
+    if not (MATH.between(cx,1,5) and MATH.between(cy,1,5)) then
         cx,cy=false
     end
 end
@@ -174,12 +187,12 @@ function scene.touchClick(x,y)
     scene.mouseDown(x,y)
 end
 
-function scene.update()
+function scene.update(dt)
     if state==1 then
         time=love.timer.getTime()-startTime
         if fallingTimer then
-            fallingTimer=fallingTimer-1
-            if fallingTimer==0 then
+            fallingTimer=fallingTimer-dt
+            if fallingTimer<=0 then
                 for i=5,2,-1 do for j=1,5 do
                     if board[i][j]==0 then
                         board[i][j]=board[i-1][j]
@@ -202,10 +215,10 @@ function scene.update()
                     fallingTimer=false
                     for i=1,4 do for j=1,5 do if board[i][j]==board[i+1][j] then return end end end
                     for i=1,5 do for j=1,4 do if board[i][j]==board[i][j+1] then return end end end
-                    state=2
+                    setState(2)
                     FMOD.effect('fail')
                 else
-                    fallingTimer=fast and 4 or 5
+                    fallingTimer=fast and .05 or .1
                     FMOD.effect('touch')
                 end
             end
@@ -222,34 +235,36 @@ end
 function scene.draw()
     setFont(40)
     gc_setColor(COLOR.L)
-    gc.print(("%.3f"):format(time),1026,50)
-    gc.print(score,1026,100)
+    gc.print(("%.3f"):format(time),1300,50)
+    gc.print(score,1300,100)
 
     -- Progress time list
     setFont(25)
     gc_setColor(.7,.7,.7)
     for i=1,#progress do
-        gc.print(progress[i],1000,140+30*i)
+        gc.print(progress[i],1300,140+30*i)
     end
 
     -- Previews
     if nexts then
+        gc.translate(30,450)
         gc.setColor(COLOR.dX)
-        gc_rectangle('fill',20,450,280,75)
+        gc_rectangle('fill',0,0,280,75)
         gc.setLineWidth(6)
         gc_setColor(COLOR.L)
-        gc_rectangle('line',20,450,280,75)
+        gc_rectangle('line',0,0,280,75)
         for i=1,5 do
-            setFont(85-10*i)
+            setFont(previewFont[i])
             gc.setColor(tileColor[preview[i]])
             gc.print(preview[i],previewX[i],previewY[i])
         end
+        gc.translate(-30,-450)
     end
 
     if state==2 then
         -- Draw no-setting area
         gc_setColor(1,0,0,.3)
-        gc_rectangle('fill',15,200,285,210)
+        gc_rectangle('fill',40,200,285,210)
     end
     gc.setLineWidth(10)
     gc_setColor(COLOR[
@@ -257,7 +272,7 @@ function scene.draw()
         state==0 and 'G' or
         state==2 and 'Y'
     ])
-    gc_rectangle('line',315,35,650,650)
+    gc_rectangle('line',area.x-5,area.y-5,area.w+10,area.h+10)
 
     gc.setLineWidth(4)
     setFont(70)
@@ -267,9 +282,9 @@ function scene.draw()
         if N>0 then
             if hide and N>maxNew then
                 gc_setColor(COLOR.lD)
-                gc_rectangle('fill',320+j*128-128,40+i*128-128,128,128)
+                gc_rectangle('fill',area.x+(j-1)*area.c,area.y+(i-1)*area.c,area.c,area.c)
                 gc_setColor(1,1,1,.3)
-                mStr("?",j*128+256,i*128-75)
+                mStr("?",j*area.c+256,i*area.c-75)
             else
                 if N<=12 then
                     gc_setColor(tileColor[N])
@@ -278,27 +293,27 @@ function scene.draw()
                 else
                     gc_setColor(0,0,0,1-math.abs(love.timer.getTime()%.5-.25)*6-.25)
                 end
-                gc_rectangle('fill',320+j*128-128,40+i*128-128,128,128)
+                gc_rectangle('fill',area.x+(j-1)*area.c,area.y+(i-1)*area.c,area.c,area.c)
                 gc_setColor(1,1,1,.9)
-                mStr(N,j*128+256,i*128-75)
+                mStr(N,j*area.c+256,i*area.c-75)
             end
         end
     end end
     if state<2 and cx then
         gc_setColor(1,1,1,.6)
         gc.setLineWidth(10)
-        gc_rectangle('line',325+cx*128-128,45+cy*128-128,118,118)
+        gc_rectangle('line',area.x+(cx-1)*area.c+5,area.y+(cy-1)*area.c+5,area.c-10,area.c-10)
     end
     setFont(50)
     gc_setColor(COLOR.L)
-    mStr("Just Get Ten",160,580)
+    mStr("Just Get Ten",170,580)
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',  x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
-    WIDGET.new{type='checkBox',x=240,y=235,widthLimit=200,fontSize=40,disp=function() return nexts end,code=WIDGET.c_pressKey'q',visibleTick=function() return state~=1 end},
-    WIDGET.new{type='checkBox',x=240,y=305,widthLimit=200,fontSize=40,disp=function() return invis end,code=WIDGET.c_pressKey'w',visibleTick=function() return state~=1 end},
-    WIDGET.new{type='checkBox',x=240,y=375,widthLimit=200,fontSize=30,disp=function() return fast end,code=WIDGET.c_pressKey'e',visibleTick=function() return state~=1 end},
+    WIDGET.new{type='button',                            x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
+    WIDGET.new{type='checkBox',name='nexts',text="Nexts",x=280,y=235,widthLimit=200,fontSize=40,disp=function() return nexts end,code=WIDGET.c_pressKey'q'},
+    WIDGET.new{type='checkBox',name='invis',text="Invis",x=280,y=305,widthLimit=200,fontSize=40,disp=function() return invis end,code=WIDGET.c_pressKey'w'},
+    WIDGET.new{type='checkBox',name='fast', text="Fast", x=280,y=375,widthLimit=200,fontSize=40,disp=function() return fast  end,code=WIDGET.c_pressKey'e'},
     WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 

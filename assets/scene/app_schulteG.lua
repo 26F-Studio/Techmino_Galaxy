@@ -22,10 +22,10 @@ local fontSizes={
 
 local function setState(v)
     state=v
-    scene.widgetList.rank._visible=state==0
-    scene.widgetList.invis._visible=state~=1
-    scene.widgetList.disappear._visible=state~=1
-    scene.widgetList.tapFX._visible=state~=1
+    scene.widgetList.rank:setVisible(state==0)
+    scene.widgetList.invis:setVisible(state~=1)
+    scene.widgetList.disappear:setVisible(state~=1)
+    scene.widgetList.tapFX:setVisible(state~=1)
 end
 function scene.enter()
     BG.set('space')
@@ -42,6 +42,9 @@ function scene.enter()
     setState(0)
 end
 
+local function inBoard(x,y)
+    return MATH.between(x,area.x,area.x+area.w) and MATH.between(y,area.y,area.y+area.h)
+end
 local function newBoard()
     local L={}
     for i=1,rank^2 do
@@ -52,36 +55,29 @@ local function newBoard()
     end
 end
 local function tapBoard(x,y)
-    if MATH.between(x,area.x,area.x+area.w) and MATH.between(y,area.y,area.y+area.h) then
-        if state==0 then
-            newBoard()
-            setState(1)
-            startTime=love.timer.getTime()
-            progress=0
-        elseif state==1 then
-            local R=rank
-            local X=math.floor((x-area.x)/area.w*R)
-            local Y=math.floor((y-area.y)/area.h*R)
-            x=R*Y+X+1
-            if board[x]==progress+1 then
-                progress=progress+1
-                if progress<R^2 then
-                    FMOD.effect('touch')
-                else
-                    time=love.timer.getTime()-startTime+mistake
-                    setState(2)
-                    FMOD.effect('beep_rise')
-                end
-                if tapFX then
-                    SYSFX.rect(.26,area.x+area.w/R*X,area.y+area.h/R*Y,area.w/R,area.h/R,.6,.8,1)
-                end
+    if inBoard(x,y) and state==1 then
+        local R=rank
+        local X=math.floor((x-area.x)/area.w*R)
+        local Y=math.floor((y-area.y)/area.h*R)
+        x=R*Y+X+1
+        if board[x]==progress+1 then
+            progress=progress+1
+            if progress<R^2 then
+                FMOD.effect('touch')
             else
-                mistake=mistake+1
-                if tapFX then
-                    SYSFX.rect(.5,area.x+area.w/R*X,area.y+area.h/R*Y,area.w/R,area.h/R,1,.4,.5)
-                end
-                FMOD.effect('move_failed')
+                time=love.timer.getTime()-startTime+mistake
+                setState(2)
+                FMOD.effect('beep_rise')
             end
+            if tapFX then
+                SYSFX.rect(.26,area.x+area.w/R*X,area.y+area.h/R*Y,area.w/R,area.h/R,.6,.8,1)
+            end
+        else
+            mistake=mistake+1
+            if tapFX then
+                SYSFX.rect(.5,area.x+area.w/R*X,area.y+area.h/R*Y,area.w/R,area.h/R,1,.4,.5)
+            end
+            FMOD.effect('move_failed')
         end
     end
 end
@@ -120,6 +116,21 @@ function scene.keyDown(key,isRep)
     end
     return true
 end
+function scene.mouseUp(x,y)
+    if inBoard(x,y) and state==0 then
+        newBoard()
+        setState(1)
+        startTime=love.timer.getTime()
+        progress=0
+    end
+end
+scene.touchUp=scene.mouseUp
+function scene.keyUp(key)
+    if key=='z' or key=='x' then
+        local x,y=love.mouse.getPosition()
+        love.mousereleased(x,y,1)
+    end
+end
 
 function scene.update()
     if state==1 then
@@ -134,7 +145,7 @@ function scene.draw()
     gc.print(mistake,1350,150)
 
     FONT.set(70)
-    GC.mStr(state==1 and progress or state==0 and "Ready" or state==2 and "Win",1400,300)
+    GC.mStr(state==1 and progress or state==0 and "Ready" or "Win",1400,300)
 
     gc.setColor(COLOR.dX)
     gc.rectangle('fill',area.x-10,area.y-10,area.w+20,area.h+20)
@@ -168,12 +179,7 @@ function scene.draw()
                 gc.setColor(COLOR.L)
                 gc.rectangle('line',area.x+(j-1)*width,area.y+(i-1)*width,width,width)
                 if not mono then
-                    local x,y=area.x+(j-.5)*width,area.y+(i-.5)*width-f*.67
-                    gc.setColor(.1,.1,.1)
-                    GC.mStr(N,x-3,y-1)
-                    GC.mStr(N,x-1,y-3)
-                    gc.setColor(COLOR.L)
-                    GC.mStr(N,x,y)
+                    GC.shadedPrint(N,area.x+(j-.5)*width,area.y+(i-.5)*width-f*.67,'center',3,8,COLOR.D)
                 end
             end
         end
