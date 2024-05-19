@@ -226,7 +226,7 @@ IMG.init{
     --     return L
     -- end)(),
     touhou={
-        ball='assets/image/touhou/orb.png',
+        orb='assets/image/touhou/orb.png',
     },
 }
 
