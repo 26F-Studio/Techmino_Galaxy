@@ -215,6 +215,19 @@ IMG.init{
     },
     title_techmino='assets/image/title_techmino.png',
     logo_fmod='assets/image/logo_fmod.png',
+    -- touhou=(function()
+    --     local path='assets/image/touhou/'
+    --     local L={}
+    --     for _,v in next,love.filesystem.getDirectoryItems(path) do
+    --         if FILE.isSafe(path..v) then
+    --             L[tonumber(v:match("%d+"))]=path..v
+    --         end
+    --     end
+    --     return L
+    -- end)(),
+    touhou={
+        ball='assets/image/touhou/orb.png',
+    },
 }
 
 Text=nil---@type Techmino.I18N
