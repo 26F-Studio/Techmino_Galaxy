@@ -125,10 +125,10 @@ function BP:createRotateCornerEffect(cx,cy)
         end
     end
 end
-function BP:createHandEffect(r,g,b,a)
+function BP:createHandErrorEffect(r,g,b,a)
     local CB,bx,by=self.hand.matrix,self.handX,self.handY
     local dx,dy=self:getSmoothPos()
-    local p=self.particles.tiltRect
+    local p=self.particles.rectTilt
     p:setColors(r,g,b,a or 1,r,g,b,0)
     for y=1,#CB do for x=1,#CB[1] do
         local c=CB[y][x]
@@ -166,20 +166,35 @@ function BP:createHoldEffect(ifInit)
     local p=self.particles.spinArrow
     p:new((cx-.5)*40,-(cy-.5)*40,ifInit)
 end
-function BP:createFrenzyEffect(amount)
-    local p=self.particles.star
-    p:setEmissionArea('uniform',200,400,0,true)
-    p:setParticleLifetime(.626,1.6)
-    p:setPosition(200,-400)
-    p:emit(amount)
-end
-function BP:createLockEffect()
+function BP:createPieceDropEffect()
     local p=self.particles.trail
     p:setPosition(
         (self.handX+#self.hand.matrix[1]/2-1)*40,
         -(self.handY+#self.hand.matrix/2-1)*40
     )
     p:emit(1)
+end
+function BP:createHandLockEffect() -- Basically the same as createHandErrorEffect
+    local CB,bx,by=self.hand.matrix,self.handX,self.handY
+    local dx,dy=self:getSmoothPos()
+    local p=self.particles.rectScale
+    for y=1,#CB do for x=1,#CB[1] do
+        local c=CB[y][x]
+        if c then
+            p:setPosition(
+                (bx+x-1.5)*40+dx,
+                -(by+y-1.5)*40+dy
+            )
+            p:emit(1)
+        end
+    end end
+end
+function BP:createFrenzyEffect(amount)
+    local p=self.particles.star
+    p:setEmissionArea('uniform',200,400,0,true)
+    p:setParticleLifetime(.626,1.6)
+    p:setPosition(200,-400)
+    p:emit(amount)
 end
 function BP:createSuffocateEffect()
 end
@@ -325,7 +340,7 @@ function BP:moveHand(action,A,B,C,D)
                 self:shakeBoard(C=='L' and '-ccw' or C=='R' and '-cw' or '-180')
                 self:playSound('rotate_locked')
                 if SET.particles then
-                    self:createHandEffect(.942,1,1)
+                    self:createHandErrorEffect(.942,1,1)
                 end
             end
             if SET.spin_corners then
@@ -963,7 +978,7 @@ function BP:rotate(dir,ifInit)
             if not ifInit then self:freshDelay('rotate') end
             self:playSound('rotate_failed')
             if self.settings.particles then
-                self:createHandEffect(1,.26,.26)
+                self:createHandErrorEffect(1,.26,.26)
             end
         else
             error("WTF why no state in brikData")
@@ -1078,7 +1093,8 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
     if not self.hand or self.finished then return end
 
     if SET.particles then
-        self:createLockEffect()
+        self:createPieceDropEffect()
+        self:createHandLockEffect()
     end
 
     -- Lock to field
@@ -1106,6 +1122,9 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
         self.lastMovement.clear=fullLines
         self.lastMovement.combo=self.combo
         self:doClear(fullLines)
+        if SET.clearRule=='line' then
+            self:createHandLockEffect(1,1,1,1)
+        end
     else
         self.combo=0
     end
@@ -1659,7 +1678,8 @@ function BP:render()
 
                 gc_setColor(1,1,1)
                 gc_draw(self.particles.rectShade)
-                gc_draw(self.particles.tiltRect)
+                gc_draw(self.particles.rectTilt)
+                gc_draw(self.particles.rectScale)
 
                 if self.hand then
                     local CB=self.hand.matrix

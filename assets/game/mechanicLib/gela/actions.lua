@@ -27,7 +27,7 @@ local function move(P,dir,canBuffer)
             end
             P:playSound('move_failed')
             if P.settings.particles then
-                P:createHandEffect(1,.26,0)
+                P:createHandErrorEffect(1,.26,0)
             end
         end
     else

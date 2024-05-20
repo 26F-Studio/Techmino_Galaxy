@@ -11,7 +11,7 @@ return {
         event={
             playerInit={
                 mechLib.brik.marathon.event_playerInit_auto,
-                "P:setAction('func1',mechLib.stack.switch_auto)",
+                "P:setAction('func1',mechLib.brik.stack.switch_auto)",
             },
             afterClear={
                 mechLib.brik.music.marathon_afterClear,

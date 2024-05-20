@@ -124,7 +124,7 @@ do -- Piece controlling effect
     p:setRotation(-.26,.26)
     p:setSpin(-2.6,2.6)
     p:setParticleLifetime(.26)
-    ps.tiltRect=p
+    ps.rectTilt=p
 end
 
 do -- Harddrop light
@@ -162,6 +162,16 @@ do -- Harddrop light
         1,1,1,0.0
     )
     ps.trail=p
+end
+
+do -- Piece lock effect
+    local p=love.graphics.newParticleSystem(GC.load{1,1,
+        {'clear',1,1,1},
+    },26)
+    p:setSizes(40,40)
+    p:setColors(.926,.926,.926,.42,1,1,1,0)
+    p:setParticleLifetime(.16)
+    ps.rectScale=p
 end
 
 do -- Background light of brik map

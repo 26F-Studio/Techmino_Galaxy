@@ -73,10 +73,10 @@ function GP:createMoveEffect(x1,y1,x2,y2)
         p:emit(1)
     end end
 end
-function GP:createHandEffect(r,g,b,a)
+function GP:createHandErrorEffect(r,g,b,a)
     local CB,bx,by=self.hand.matrix,self.handX,self.handY
     local dx,dy=self:getSmoothPos()
-    local p=self.particles.tiltRect
+    local p=self.particles.rectTilt
     p:setColors(r,g,b,a or 1,r,g,b,0)
     for y=1,#CB do for x=1,#CB[1] do
         local c=CB[y][x]
@@ -91,7 +91,7 @@ function GP:createHandEffect(r,g,b,a)
 end
 function GP:createTuckEffect()
 end
-function GP:createLockEffect()
+function GP:createPieceDropEffect()
     local p=self.particles.trail
     p:setPosition(
         (self.handX+#self.hand.matrix[1]/2-1)*40,
@@ -647,7 +647,7 @@ function GP:gelaDropped() -- Drop & lock gela, and trigger a lot of things
         self:playSound('drop')
     end
     if self.settings.particles then
-        self:createLockEffect()
+        self:createPieceDropEffect()
     end
 
     self:triggerEvent('afterDrop')
