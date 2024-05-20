@@ -1221,7 +1221,7 @@ function BP:riseGarbage(holePos,count)
     local w=self.settings.fieldW
     if not count then count=1 end
 
-    for _=1,#count do
+    for _=1,count do
         local L={}
 
         -- Generate line
