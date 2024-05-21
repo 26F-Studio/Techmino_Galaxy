@@ -22,7 +22,7 @@ function scene.enter()
 end
 
 function scene.touchDown(x,y,k)
-    -- TODO
+    -- TODO: cool piano
 end
 scene.mouseDown=scene.touchDown
 

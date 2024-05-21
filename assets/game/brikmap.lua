@@ -17,9 +17,8 @@ local tau=MATH.tau
 --  Z
 local modes={
     {pos={10,10,0},name='marathon'},
-    {pos={10,25,0},name='techrash_easy'},
     {pos={25,25,0},name='hypersonic_lo'},
-    {pos={25,35,0},name='techrash_hard'},
+    {pos={25,35,0},name='techrash'},
     {pos={35,35,0},name='hypersonic_hi'},
     {pos={55,55,0},name='hypersonic_ti'},
     {pos={35,45,0},name='hypersonic_hd'},
@@ -83,9 +82,8 @@ local modes_str={} for i=1,#modes do modes_str[modes[i].name]=modes[i] end
 
 local bridgeLinks={
     'marathon - dig_practice - sprint_40 - marathon',
-    'marathon - techrash_easy',
     'marathon - hypersonic_lo - hypersonic_hi - hypersonic_ti',
-    'hypersonic_lo - techrash_hard',
+    'hypersonic_lo - techrash',
     'hypersonic_hi - hypersonic_hd',
     'marathon - combo_practice - ac_easy - ac_hard - ac_challenge',
     'combo_practice - tsd_practice - tsd_easy - tsd_hard',

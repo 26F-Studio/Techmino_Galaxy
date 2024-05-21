@@ -256,12 +256,6 @@ do -- sprint_dizzy_40
 end
 
 do -- marathon
-    function progress.marathon_afterClear(P)
-        if not P.isMain then return true end
-        if P.modeData.stat.clears[4]==16 then
-            PROGRESS.setModeState('brik_stdMap','techrash_easy')
-        end
-    end
     function progress.marathon_gameOver(P,reason)
         if not P.isMain then return true end
         if reason=='AC' then
@@ -270,20 +264,11 @@ do -- marathon
     end
 end
 
-do -- techrash_easy
-    function progress.techrash_easy_afterClear(P)
-        if not P.isMain then return true end
-        if P.modeData.stat.clears[4]>=20 then
-            PROGRESS.setModeState('brik_stdMap','techrash_easy',1)
-        end
-    end
-end
-
 do -- hypersonic_lo
     function progress.hypersonic_lo_afterClear(P)
         if not P.isMain then return true end
         if P.modeData.stat.clears[4]==36 then
-            PROGRESS.setModeState('brik_stdMap','techrash_hard')
+            PROGRESS.setModeState('brik_stdMap','techrash')
         end
     end
     function progress.hypersonic_lo_gameOver(P,reason)
@@ -295,11 +280,11 @@ do -- hypersonic_lo
     end
 end
 
-do -- techrash_hard
-    function progress.techrash_hard_afterClear(P)
+do -- techrash
+    function progress.techrash_afterClear(P)
         if not P.isMain then return true end
         if P.modeData.stat.clears[4]>=20 then
-            PROGRESS.setModeState('brik_stdMap','techrash_easy',1)
+            PROGRESS.setModeState('brik_stdMap','techrash',1)
         end
     end
 end

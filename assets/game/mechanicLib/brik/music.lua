@@ -122,17 +122,12 @@ function music.marathon_afterClear(P)
     FMOD.music.setParam('level_marathon_exterior',(md.level or 1)+(md.ascend or 0))
 end
 
-function music.techrash_easy_afterClear(P)
-    if not P.isMain then return true end
-    FMOD.music.setParam('intensity',MATH.icLerp(4,10,P.modeData.techrash))
-end
-
 function music.hypersonic_lo_afterSpawn(P)
     if not P.isMain then return true end
     FMOD.music.setParam('intensity',MATH.icLerp(100,300,P.modeData.point))
 end
 
-function music.techrash_hard_afterClear(P)
+function music.techrash_afterClear(P)
     if not P.isMain then return true end
     FMOD.music.setParam('intensity',MATH.icLerp(4,10,P.modeData.techrash))
 end

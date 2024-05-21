@@ -37,7 +37,7 @@ function sequence.bag7(P,d,init)
     return rem(d.bag,P:random(#d.bag))
 end
 
-function sequence.bag7_p1fromBag7(P,d,init) -- bag8, which the extra piece from another bag
+function sequence.bag7_p1fromBag7(P,d,init) -- bag7 + 1 from another bag7
     if init then
         d.bag={}
         d.extra={}
@@ -125,7 +125,7 @@ function sequence.bag7_sprint(P,d,init) -- bag7, but no early S/Z/O and shufflin
     end
 end
 
-function sequence.bag7_spreadFirstTo3211(P,d,init) -- bag7, but first bag 3+2+1+1-ly splited into next four bags 
+function sequence.bag7_spread1stTo3211(P,d,init) -- bag7, but first bag 3+2+1+1-ly splited into next four bags 
     if init then
         d.bag={}
         d.victim=TABLE.copy(Tetros)

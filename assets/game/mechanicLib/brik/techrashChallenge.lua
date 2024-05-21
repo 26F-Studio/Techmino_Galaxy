@@ -1,83 +1,5 @@
-local gc=love.graphics
-
 ---@type Map<Techmino.Mech.Brik>
 local techrash={}
-
-function techrash.easy_seqType(P,d,init)
-    if init then
-        P.modeData.bagLoop=0
-        d.l1={}
-        d.l2={}
-        return
-    end
-    -- Fill list1 (bag7_p0to4_by_bagLoop_fromBag6_noI)
-    if not d.l1[1] then
-        P.modeData.bagLoop=P.modeData.bagLoop+1
-        for i=1,7 do table.insert(d.l1,i) end
-        for _=1,
-            P.modeData.bagLoop<=10 and 0 or
-            P.modeData.bagLoop<=20 and 1 or
-            P.modeData.bagLoop<=30 and 2 or
-            P.modeData.bagLoop<=40 and 3 or
-            4
-        do
-            -- Fill list2 (bag6_noI)
-            if not d.l2[1] then for i=1,6 do table.insert(d.l2,i) end end
-            table.insert(d.l1,table.remove(d.l2,P:random(#d.l2)))
-        end
-    end
-    return table.remove(d.l1,P:random(#d.l1))
-end
-function techrash.easy_event_playerInit(P)
-    P.modeData.techrash=0
-    P.modeData.minH=0
-end
-function techrash.easy_event_afterLock(P)
-    local minH=P.field:getHeight()
-    for x=1,P.settings.fieldW do
-        for y=P.field:getHeight(),0,-1 do
-            if P.field:getCell(x,y) then
-                if y<minH then minH=y end
-                break
-            end
-        end
-    end
-    P.modeData.minH=minH
-end
-function techrash.easy_event_afterClear(P,clear)
-    P:triggerEvent('afterLock') -- Force refresh
-    if P.hand.name=='I' and clear.line>=4 then
-        P.modeData.techrash=P.modeData.techrash+1
-        if P.modeData.techrash>1 then
-            P:playSound('charge',math.min(math.floor((P.modeData.techrash+2.6)^1.2/5.4),11))
-        end
-        local HC=P.field:getHeight()==0
-        if not HC then
-            HC=true
-            for x=1,P.settings.fieldW do
-                if #P:getConnectedCells(x,1)%4~=0 then
-                    HC=false
-                    break
-                end
-            end
-        end
-        if HC then P:playSound('frenzy') end
-        P.modeData.bagLoop=math.max(P.modeData.bagLoop-(P.lastMovement.combo-1)*2-(HC and 2 or 0),0)
-    else
-        P:finish('PE')
-    end
-end
-function techrash.easy_event_drawInField(P)
-    gc.setColor(1,1,1,.26)
-    for y=P.modeData.minH+4,19,4 do
-        gc.rectangle('fill',0,-y*40-2,P.settings.fieldW*40,4)
-    end
-end
-function techrash.easy_event_drawOnPlayer(P)
-    P:drawInfoPanel(-380,-60,160,120)
-    FONT.set(80) GC.mStr(P.modeData.techrash,-300,-70)
-    FONT.set(30) GC.mStr(Text.target_techrash,-300,15)
-end
 
 local initPower=3
 local initSidePower=0
@@ -90,13 +12,13 @@ local infoMeta={__index=function(self,k)
     self[k]={charge=0,_charge=0}
     return self[k]
 end}
-function techrash.hard_event_playerInit(P)
+function techrash.event_playerInit(P)
     P.modeData.techrash=0
     P.modeData.chargePower=initPower
     P.modeData.sidePower=initSidePower
     P.modeData.techrashInfo=setmetatable({},infoMeta)
 end
-function techrash.hard_event_always(P)
+function techrash.event_always(P)
     for _,v in next,P.modeData.techrashInfo do
         if v._charge~=v.charge then
             if v._charge<v.charge then
@@ -110,7 +32,7 @@ function techrash.hard_event_always(P)
         end
     end
 end
-function techrash.hard_event_afterClear(P,clear)
+function techrash.event_afterClear(P,clear)
     if P.hand.name=='I' and clear.line==4 then
         local list=P.modeData.techrashInfo
         local x=P.handX
@@ -145,7 +67,7 @@ function techrash.hard_event_afterClear(P,clear)
         P:finish('PE')
     end
 end
-function techrash.hard_event_drawBelowMarks(P)
+function techrash.event_drawBelowMarks(P)
     local t=love.timer.getTime()
     for k,v in next,P.modeData.techrashInfo do
         if v._charge>0 or v.dead then
@@ -174,6 +96,10 @@ function techrash.hard_event_drawBelowMarks(P)
         end
     end
 end
-techrash.hard_event_drawOnPlayer=techrash.easy_event_drawOnPlayer
+function techrash.event_drawOnPlayer(P)
+    P:drawInfoPanel(-380,-60,160,120)
+    FONT.set(80) GC.mStr(P.modeData.techrash,-300,-70)
+    FONT.set(30) GC.mStr(Text.target_techrash,-300,15)
+end
 
 return techrash

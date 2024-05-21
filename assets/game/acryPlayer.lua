@@ -783,11 +783,11 @@ end
 -- Other
 
 function AP:decodeScript(line,errMsg)
-    -- TODO
+    -- TODO (script)
     -- error(errMsg.."No string command '"..cmd.."'")
 end
 function AP:checkScriptSyntax(cmd,arg,errMsg)
-    -- TODO
+    -- TODO (script)
 end
 
 --------------------------------------------------------------

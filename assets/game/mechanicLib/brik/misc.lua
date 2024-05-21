@@ -326,7 +326,7 @@ do -- obstacle
     end)
 end
 
-do -- Cascade
+do -- cascade
     local function getSolidMat(P)
         local F=P.field
         local visitedMat={}

@@ -60,6 +60,6 @@ end end
 --------------------------------------------------------------
 -- Multi
 
--- TODO
+-- TODO: complicate shade puyo sets
 
 return sequence

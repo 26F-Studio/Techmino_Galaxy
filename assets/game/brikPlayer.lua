@@ -1902,7 +1902,7 @@ function BP:decodeScript(line,errMsg)
 end
 function BP:checkScriptSyntax(cmd,arg,errMsg)
     if cmd=='setField' then
-        -- TODO
+        -- TODO (script)
     elseif cmd=='switchAction' then
         assert(self._actions[arg],"Invalid action name '"..arg.."'")
     elseif cmd=='clearHold' then
@@ -1911,7 +1911,7 @@ function BP:checkScriptSyntax(cmd,arg,errMsg)
         assert(arg==nil,errMsg.."No arg needed")
     elseif cmd=='pushNext' then
         if type(arg)=='string' then
-            -- TODO
+            -- TODO (script)
         elseif type(arg)=='table' then
             for i=1,#arg do
                 assert(Brik.get(arg[i]),errMsg.."Invalid brik id '"..arg[i].."'")

@@ -15,7 +15,6 @@ return {
             },
             afterClear={
                 mechLib.brik.music.marathon_afterClear,
-                mechLib.brik.progress.marathon_afterClear,
             },
             gameOver=mechLib.brik.progress.marathon_gameOver,
         },

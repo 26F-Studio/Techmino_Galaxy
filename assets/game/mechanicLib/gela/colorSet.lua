@@ -10,7 +10,7 @@ colorSet.dark   ={400,440,014,141,204,144,420,413}
 colorSet.greyscale={111,333,777,999,888,555,444,222}
 
 function colorSet.getRandom(P)
-    -- TODO
+    -- TODO: reasonable random color
 end
 
 return colorSet

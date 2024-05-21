@@ -203,8 +203,7 @@ local L={
     -- Mode name
     exteriorModeInfo={
         marathon=              {"Marathon","Clear 200 lines with acceleration"},
-        techrash_easy=         {"Techrash Easy","Clear as many Techrashes as you can"},
-        techrash_hard=         {"Techrash Hard","Clear as many Techrashes as you can, but not too close together"},
+        techrash=              {"Techrash","Clear as many Techrashes as you can, but not close to previous ones"},
         hypersonic_lo=         {"Hypersonic LO","Hypersonic\nHello World"},
         hypersonic_hi=         {"Hypersonic HI","Hypersonic\nSerious Challange"},
         hypersonic_ti=         {"Hypersonic TI","Hypersonic\nVelocital Trepidation"},

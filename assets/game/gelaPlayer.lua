@@ -1384,11 +1384,11 @@ end
 -- Other
 
 function GP:decodeScript(line,errMsg)
-    -- TODO
+    -- TODO (script)
     -- error(errMsg.."No string command '"..cmd.."'")
 end
 function GP:checkScriptSyntax(cmd,arg,errMsg)
-    -- TODO
+    -- TODO (script)
 end
 
 --------------------------------------------------------------

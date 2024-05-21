@@ -203,8 +203,7 @@ local L={
     -- Mode name
     exteriorModeInfo={
         marathon=              {"马拉松","在逐渐加速下消除200行"},
-        techrash_easy=         {"消四-简单","做出更多的消四"},
-        techrash_hard=         {"消四-困难","做出更多的消四，但不能靠太近"},
+        techrash=              {"消四","做出更多的消四，但位置不能重复"},
         hypersonic_lo=         {"超音速-易","瞬间下落\n新世界"},
         hypersonic_hi=         {"超音速-难","瞬间下落\n严峻挑战"},
         hypersonic_ti=         {"超音速-钛","瞬间下落\n极速恐慌"},
