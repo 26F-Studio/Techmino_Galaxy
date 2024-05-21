@@ -152,7 +152,7 @@ function stack.event_afterLock(P)
             if y>=md.stack_lines+1 then
                 for x=1,#matrix[y] do
                     local C=F:getCell(x,y)
-                    if C then C.color=0 end
+                    if C then C.color=777 end
                 end
                 table.insert(matrix,md.stack_lines+1,table.remove(matrix,y))
                 for x=1,P.settings.fieldW do
