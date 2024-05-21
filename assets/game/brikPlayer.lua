@@ -1121,7 +1121,10 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
         self.combo=self.combo+1
         self.lastMovement.clear=fullLines
         self.lastMovement.combo=self.combo
+
         self:doClear(fullLines)
+        if self.finished then return end
+
         if SET.clearRule=='line' then
             self:createHandLockEffect(1,1,1,1)
         end

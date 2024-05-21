@@ -168,7 +168,7 @@ do -- Piece lock effect
     local p=love.graphics.newParticleSystem(GC.load{1,1,
         {'clear',1,1,1},
     },26)
-    p:setSizes(40,40)
+    p:setSizes(40,30)
     p:setColors(.926,.926,.926,.42,1,1,1,0)
     p:setParticleLifetime(.16)
     ps.rectScale=p
