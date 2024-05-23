@@ -215,15 +215,15 @@ function M.music.seek(time)
     playing.event:setTimelinePosition(time*1000)
 end
 
----@return number?
+---@return number
 function M.music.tell()
-    if not studio or not playing then return end
+    if not studio or not playing then return 0 end
     return (playing.event:getTimelinePosition()/1000)
 end
 
----@return number?
+---@return number
 function M.music.getDuration()
-    if not studio or not playing then return end
+    if not studio or not playing then return 0 end
     return (playing.desc:getLength()/1000)
 end
 
