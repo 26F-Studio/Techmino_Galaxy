@@ -82,7 +82,7 @@ local function place(X,x)
         FMOD.effect('beep_rise')
     else
         if full(board[X]) then
-            FMOD.effect('beep_down')
+            FMOD.effect('beep_drop')
             score[X]=true
             if full(score) then
                 gameover=true

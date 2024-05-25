@@ -26,7 +26,7 @@ function scene.keyDown(key,isRep)
         local L=KEYMAP[mode]:getKeys(act)
         if L then TABLE.clear(L) end
         result=Text.keyset_deleted
-        FMOD.effect('beep_down')
+        FMOD.effect('beep_drop')
     else
         escTimerWTF=false
         result=key

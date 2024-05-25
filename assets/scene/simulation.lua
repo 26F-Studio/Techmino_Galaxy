@@ -12,11 +12,11 @@
 
 ---@type Techmino.simulation[]
 local sims={
-    { -- Brik
+    { -- Exterior 1
         trigger=function()
             DEBUG.yieldUntilNextScene()
             if SCN.cur=='simulation' then
-                SCN.go('mode_brik_stdMap','fadeHeader')
+                SCN.go('mode_exterior_Map','fadeHeader')
             end
         end,
         draw=function()
@@ -35,7 +35,7 @@ local sims={
             )
         end,
     },
-    { -- Gela
+    { -- Exterior 2
         trigger=function()
             DEBUG.yieldUntilNextScene()
             if SCN.cur=='simulation' then
@@ -43,31 +43,31 @@ local sims={
             end
         end,
         draw=function()
-            GC.setColor(COLOR.R)
-            GC.setLineWidth(8)
-            GC.circle('line',-35,-60,70)
-            GC.circle('line',35,60,70)
+            -- GC.setColor(COLOR.R)
+            -- GC.setLineWidth(8)
+            -- GC.circle('line',-35,-60,70)
+            -- GC.circle('line',35,60,70)
         end,
     },
-    { -- Acry
-        trigger=function()
-            DEBUG.yieldUntilNextScene()
-            if SCN.cur=='simulation' then
-                SCN.go('mode_acry','fadeHeader')
-            end
-        end,
-        draw=function()
-            GC.setColor(COLOR.B)
-            GC.setLineWidth(10)
-            GC.polygon('line',
-                0,112,
-                108,-32,
-                50,-100,
-                -50,-100,
-                -108 ,-32
-            )
-        end,
-    },
+    -- { -- Acry
+    --     trigger=function()
+    --         DEBUG.yieldUntilNextScene()
+    --         if SCN.cur=='simulation' then
+    --             SCN.go('mode_acry','fadeHeader')
+    --         end
+    --     end,
+    --     draw=function()
+    --         GC.setColor(COLOR.B)
+    --         GC.setLineWidth(10)
+    --         GC.polygon('line',
+    --             0,112,
+    --             108,-32,
+    --             50,-100,
+    --             -50,-100,
+    --             -108 ,-32
+    --         )
+    --     end,
+    -- },
 }
 
 ---@type integer|false
@@ -85,13 +85,12 @@ function scene.enter()
         s.trigTimer=false
     end
     subjectFocused=false
-    sims[1].valid=PROGRESS.getModeUnlocked('brik_stdMap')
-    sims[2].valid=PROGRESS.getModeUnlocked('gela_wip')
-    sims[3].valid=PROGRESS.getModeUnlocked('acry_wip')
+    sims[1].valid=true
+    sims[2].valid=false
     scene.update(0)
     PROGRESS.setExteriorBG()
     PROGRESS.playExteriorBGM()
-    if SCN.prev=='main_out' and sims[1].valid and not (sims[2].valid or sims[3].valid) then
+    if SCN.prev=='main_out' and sims[1].valid and not sims[2].valid then
         subjectFocused=1
         scene.keyDown('return')
     end

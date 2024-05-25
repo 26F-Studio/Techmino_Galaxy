@@ -4,9 +4,12 @@ local require=simpRequire(function(path) return 'assets/game/mechanicLib/'..path
 ---@class Techmino.Mech
 local mechLib={
     common={
+        -- Tool
         timer=require'common/timer',
-        finish=require'common/finish',
         characterAnim=require'common/characterAnim',
+
+        -- Story
+        exterior=require'common/exterior',
     },
     brik={
         -- Basic
@@ -15,25 +18,18 @@ local mechLib={
         sequence=require'brik/sequence',
         clearRule=require'brik/clearRule',
         attackSys=require'brik/attackSys',
+        stack=require'brik/stack',
+        squeeze=require'brik/squeeze',
         misc=require'brik/misc',
 
         -- Mode
         sprint=require'brik/sprint',
         dig=require'brik/dig',
         survivor=require'brik/survivor',
-        backfire=require'brik/backfire',
         marathon=require'brik/marathon',
-        hypersonic=require'brik/hypersonic',
-        comboPractice=require'brik/comboPractice',
-        tsdChallenge=require'brik/tsdChallenge',
-        techrashChallenge=require'brik/techrashChallenge',
-        acGenerator=require'brik/acGenerator',
-
-        -- Special
-        stack=require'brik/stack',
-        squeeze=require'brik/squeeze',
-        progress=require'brik/progress',
-        music=require'brik/music',
+        chargeLimit=require'brik/chargeLimit',
+        comboGenerator=require'brik/comboGenerator',
+        allclearGenerator=require'brik/allclearGenerator',
     },
     gela={
         -- Basic

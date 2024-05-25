@@ -1,15 +1,15 @@
 ---@alias Techmino.Player.Type 'brik'|'gela'|'acry'
 ---@alias Techmino.Mode.Setting Techmino.Mode.Setting.Brik|Techmino.Mode.Setting.Gela|Techmino.Mode.Setting.Acry
 ---@alias Techmino.EndReason
----|'AC'  Win
----|'WA'  Block out
----|'CE'  Lock out
----|'MLE' Top out
----|'TLE' Time out
----|'OLE' Finesse fault
----|'ILE' Ran out pieces
----|'PE'  Mission failed
----|'UKE' Other reason
+---|'AC'  Win (Accepted)
+---|'WA'  Block out (Wrong Answer)
+---|'CE'  Lock out (Compile Error)
+---|'MLE' Top out (Memory Limit Exceeded)
+---|'TLE' Time out (Time Limit Exceeded)
+---|'OLE' Finesse fault (Output Limit Exceeded)
+---|'ILE' Ran out pieces (Idleness Limit Exceeded)
+---|'PE'  Mission failed (Presentation Error)
+---|'UKE' Other reason (Unknown Error)
 
 ---@alias Techmino.mode.event.basic
 ---|'always'
@@ -26,9 +26,9 @@
 ---|'afterSpawn'
 ---|'afterDrop'
 ---|'afterLock'
----|'afterClear'
----|'beforeCancel'
----|'beforeSend'
+---|'afterClear' called with his
+---|'beforeCancel' called with atk
+---|'beforeSend' called with atk
 ---|'beforeDiscard'
 ---|'whenSuffocate'
 ---|'extraSolidCheck'
@@ -46,6 +46,9 @@
 ---|'afterDrop'
 ---|'afterLock'
 ---|'afterClear'
+---|'beforeCancel' called with atk
+---|'beforeSend' called with atk
+---|'beforeDiscard'
 ---|'whenSuffocate'
 ---|
 ---|'drawBelowField'

@@ -14,18 +14,20 @@ local prgs=setmetatable({
         sprint=0,
         marathon=0,
     },
-    bgmUnlocked={},
-    brik_stdMap={
-        unlocked=true,
-        modeUnlocked={
-            -- 0 = unlocked, 1~5 = rank got
-            sprint_40=0,
-            marathon=0,
-            dig_practice=0,
+    exteriorMap={
+        styles={
+            brik=true,
+            gela=false,
+            acry=false,
+        },
+        modes={
+            sprint={},
+            marathon={},
+            dig={},
         },
     },
-    gela_wip=false,
-    acry_wip=false,
+    bgmUnlocked={},
+    secretFound={},
 },{
     __index=function(_,k)
         LOG("Attempt to read undefined progress data: "..tostring(k))
@@ -126,9 +128,7 @@ function PROGRESS.load()
     end
 end
 function PROGRESS.fix()
-    if prgs.brik_stdMap.modeUnlocked.survivor_b2b then
-        prgs.brik_stdMap.modeUnlocked.survivor_power,prgs.brik_stdMap.modeUnlocked.survivor_b2b=prgs.brik_stdMap.modeUnlocked.survivor_b2b,nil
-    end
+    prgs.brik_stdMap=nil
 end
 
 function PROGRESS.swapMainScene()
@@ -351,8 +351,10 @@ function PROGRESS.getTutorialPassed(n)
 end
 function PROGRESS.getInteriorScore(mode) return prgs.interiorScore[mode] end
 function PROGRESS.getTotalInteriorScore() return prgs.interiorScore.dig+prgs.interiorScore.sprint+prgs.interiorScore.marathon end
-function PROGRESS.getModeUnlocked(mode) return prgs[mode] and prgs[mode].unlocked end
-function PROGRESS.getModeState(style,mode) return prgs[style] and (mode and prgs[style].modeUnlocked[mode] or prgs[style].modeUnlocked) end
+function PROGRESS.getExteriorUnlocked(mode) return prgs.exteriorMap.styles[mode] end
+function PROGRESS.getExteriorAllModeState() return prgs.exteriorMap.modes end
+function PROGRESS.getExteriorModeState(mode) return prgs.exteriorMap.modes[mode] or {} end
+function PROGRESS.getSecret(name) return not not prgs.secretFound[name] end
 
 -- Set
 function PROGRESS.setMain(n)
@@ -388,24 +390,45 @@ function PROGRESS.setInteriorScore(mode,score)
         PROGRESS.save()
     end
 end
-function PROGRESS.setModeUnlocked(style,bool)
-    if not prgs[style] then return end
-    prgs[style].unlocked=bool
-    PROGRESS.save()
+function PROGRESS.setExteriorModeUnlock(mode)
+    if not prgs.exteriorMap.modes[mode] then
+        prgs.exteriorMap.modes[mode]={}
+        if TASK.lock('brikmap_unlockSound_background',2.6) then
+            FMOD.effect('map_unlock_background')
+        end
+    end
 end
-function PROGRESS.setModeState(style,name,state,force)
-    if not prgs[style] then return end
-    if not state then state=0 end
-    local orgState=prgs[style].modeUnlocked[name] or -1
-    if state>orgState or force then
-        prgs[style].modeUnlocked[name]=state
-        PROGRESS.save()
-        if state==0 and state>orgState then
-            if TASK.lock('brikmap_unlockSound_background',2.6) then
-                FMOD.effect('map_unlock_background')
-                MSG.new('check',Text.new_level_unlocked,2.6)
+function PROGRESS.setExteriorModeState(mode,data)
+    prgs.exteriorMap.modes[mode]=data
+end
+---@param sign '>'|'<'
+function PROGRESS.setExteriorModeValue(mode,key,value,sign)
+    local data=prgs.exteriorMap.modes[mode]
+    if not data then
+        prgs.exteriorMap.modes[mode]={}
+        data=prgs.exteriorMap.modes[mode]
+    end
+    if data then
+        if not data[key] then
+            data[key]=value
+            return true
+        elseif sign=='<' then
+            if value<data[key] then
+                data[key]=value
+                return true
+            end
+        else
+            if value>data[key] then
+                data[key]=value
+                return true
             end
         end
+    end
+end
+function PROGRESS.setSecret(name)
+    if not prgs.secretFound[name] then
+        prgs.secretFound[name]=1
+        PROGRESS.save()
     end
 end
 

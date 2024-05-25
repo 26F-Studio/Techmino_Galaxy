@@ -224,7 +224,7 @@ local function skip()
             newTile()
             FMOD.effect('hold')
         else
-            FMOD.effect('beep_down')
+            FMOD.effect('beep_drop')
         end
     end
 end

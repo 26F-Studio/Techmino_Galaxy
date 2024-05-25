@@ -47,8 +47,9 @@ local defaultSoundFunc={
     allClear=    function() FMOD.effect('clear_all')   end,
     suffocate=   function() FMOD.effect('suffocate')   end,
     desuffocate= function() FMOD.effect('desuffocate') end,
-    reach=       function() FMOD.effect('beep_rise')   end,
-    notice=      function() FMOD.effect('beep_notice') end,
+    beep_rise=   function() FMOD.effect('beep_rise')   end,
+    beep_drop=   function() FMOD.effect('beep_drop')   end,
+    beep_notice= function() FMOD.effect('beep_notice') end,
     win=         function() FMOD.effect('win')         end,
     fail=        function() FMOD.effect('fail')        end,
 }

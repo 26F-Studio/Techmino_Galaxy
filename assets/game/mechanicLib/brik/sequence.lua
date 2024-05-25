@@ -1,4 +1,4 @@
-local min=math.min
+local max,min=math.max,math.min
 local ins,rem=table.insert,table.remove
 
 -- Fill list when empty, with source
@@ -129,17 +129,17 @@ function sequence.bag7_spread1stTo3211(P,d,init) -- bag7, but first bag 3+2+1+1-
     if init then
         d.bag={}
         d.victim=TABLE.copy(Tetros)
-        d.wave=1
+        d.bagCount=1
         return
     end
     if supply(d.bag,Tetros) then
-        if d.wave then
+        if d.bagCount then
             for _=1,
-                d.wave==1 and 3 or
-                d.wave==2 and 2 or
+                d.bagCount==1 and 3 or
+                d.bagCount==2 and 2 or
                 1
             do ins(d.bag,rem(d.victim,P:random(#d.victim))) end
-            d.wave=d.wave+1 if #d.victim==0 then d.wave=nil end
+            d.bagCount=d.bagCount+1 if #d.victim==0 then d.bagCount=nil end
         end
     end
     return rem(d.bag,P:random(#d.bag))
@@ -178,6 +178,40 @@ function sequence.bag7p7p7p5_power(P,d,init) -- bag 7+7+7+TTOII
         TABLE.connect(d.bag,{5,5,6,7,7})
     end
     return rem(d.bag,P:random(#d.bag))
+end
+
+function sequence.bag7_luckyT(P,d,init)
+    if init then
+        d.bag={}
+        d.bagCount=1
+        d.tSpikes={P:random(4,6),P:random(10,16)}
+        return
+    end
+    if #d.bag==0 then
+        d.bag={1,2,3,4,6,7}
+        for i=#d.bag,2,-1 do
+            local r=P:random(i)
+            d.bag[i],d.bag[r]=d.bag[r],d.bag[i]
+        end
+
+        local r
+        if d.bagCount==d.tSpikes[1] then
+            -- T Spike Double
+            r=P:random(5,7)
+            rem(d.tSpikes,1)
+        else
+            -- Late 10▔\_20 Early
+            r=P:random(3,7)
+            r=r-P:random(0,math.floor(max(d.bagCount/2.6-4.2,0)))
+            r=r-P:random(0,math.floor(d.bagCount^0.42))
+            if d.bagCount>6.2 then r=r-P:random(1,3) end
+        end
+
+        r=min(max(r,1),7)
+        ins(d.bag,8-r,5)
+        d.bagCount=d.bagCount+1
+    end
+    return rem(d.bag)
 end
 
 function sequence.bag6p6_drought(P,d,init) -- bag7+7 without I piece

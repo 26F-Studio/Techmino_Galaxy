@@ -28,13 +28,14 @@ return {
                 local md=P.modeData
                 while md.stat.line>=md.lineTarget do
                     if md.lineTarget<200 then
-                        if PROGRESS.get('main')>=2 and md.lineTarget<=150 and P.isMain then
+                        if P.isMain and PROGRESS.get('main')>=2 and md.lineTarget<=150 then
                             FMOD.music.setParam('intensity',(md.lineTarget/150)^2)
                         end
                         P.settings.dropDelay=dropSpeed[md.lineTarget/10+1]
                         md.lineTarget=md.lineTarget+10
-                        P:playSound('reach')
+                        P:playSound('beep_rise')
                     else
+                        -- TODO
                         P:finish('AC')
                         return
                     end

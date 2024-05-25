@@ -421,6 +421,7 @@ function GAME.checkFinish()
 end
 
 function GAME.update(dt)
+    if not GAME.playerList then return end
     for _,P in next,GAME.playerList do P:update(dt) end
 
     GAME.camera:update(dt)
@@ -431,6 +432,7 @@ function GAME.update(dt)
 end
 
 function GAME.render()
+    if not GAME.playerList then return end
     gc.setCanvas({ZENITHA.getBigCanvas('player'),stencil=true})
     gc.replaceTransform(SCR.xOy_m)
     gc.applyTransform(GAME.camera.transform)

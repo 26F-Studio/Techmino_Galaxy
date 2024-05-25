@@ -6,17 +6,12 @@ return {
         playBgm('propel_marathon')
     end,
     settings={brik={
-        spawnDelay=130,
-        clearDelay=300,
         event={
-            playerInit={
-                mechLib.brik.marathon.event_playerInit_auto,
-                "P:setAction('func1',mechLib.brik.stack.switch_auto)",
-            },
-            afterClear={
-                mechLib.brik.music.marathon_afterClear,
-            },
-            gameOver=mechLib.brik.progress.marathon_gameOver,
+            playerInit=mechLib.brik.marathon.event_playerInit,
+            afterClear=function(P)
+                if not P.isMain then return true end
+                FMOD.music.setParam('level_marathon_exterior',(P.modeData.level or 1)+(P.modeData.ascend or 0))
+            end,
         },
     }},
     result=function()

@@ -16,11 +16,11 @@ return {
         event={
             afterClear={
                 mechLib.brik.sprint.event_afterClear[40],
-                function(P)
+                {1e62,function(P)
                     if PROGRESS.get('main')>=2 and P.modeData.stat.line>10 and P.isMain then
                         FMOD.music.setParam('intensity',math.min((P.modeData.stat.line-10)/20,1))
                     end
-                end,
+                end},
             },
             drawOnPlayer=mechLib.brik.sprint.event_drawOnPlayer[40],
         },
