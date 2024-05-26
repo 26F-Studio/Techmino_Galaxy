@@ -8,7 +8,7 @@ local function startGame(modeName)
     GAME.load(modeName)
 end
 function scene.enter()
-    PROGRESS.setInteriorBG()
+    PROGRESS.applyInteriorBG()
     if SCN.args[1] then
         startGame(SCN.args[1])
     end

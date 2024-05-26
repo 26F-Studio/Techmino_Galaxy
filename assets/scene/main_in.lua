@@ -6,7 +6,7 @@ local scene={}
 function scene.enter()
     consoleClickCount=0
     settingHint=PROGRESS.get('main')<2 and PROGRESS.get('launchCount')<=3
-    PROGRESS.setEnv('interior')
+    PROGRESS.applyEnv('interior')
     local visibleButtonName=PROGRESS.get('main')==1 and '1' or '2'
     for _,v in next,scene.widgetList do
         if v.name=='1' or v.name=='2' then

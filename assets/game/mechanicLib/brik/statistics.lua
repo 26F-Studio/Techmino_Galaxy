@@ -1,4 +1,4 @@
----@type Map<Techmino.Event|Techmino.Mech.Brik>
+---@type Map<Techmino.Mech.Brik>
 local stat={}
 
 function stat.event_playerInit(P) -- Initially used in brikPlayer.lua

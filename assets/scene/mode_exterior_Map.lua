@@ -74,8 +74,8 @@ function scene.enter()
     exMap:freshUnlocked(modeStates,firstLoad)
     exMap:reset(TABLE.getSize(modeStates)>3)
     panel:setSel(false)
-    PROGRESS.setExteriorBG()
-    PROGRESS.playExteriorBGM()
+    PROGRESS.applyExteriorBG()
+    PROGRESS.applyExteriorBGM()
 end
 
 function scene.mouseMove(x,y,dx,dy)
@@ -125,7 +125,7 @@ local function sysAction(action)
 end
 function scene.keyDown(key,isRep)
     if isRep then return true end
-    -- if key=='z' then brikMap:_printModePos() return true end
+    -- if key=='z' then exMap:_printModePos() return true end
     if key=='`' and isAltPressed() then exMap:_unlockall() end
     sysAction(KEYMAP.sys:getAction(key))
     return true

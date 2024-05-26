@@ -4,7 +4,7 @@ local scene={}
 local pauseText
 
 function scene.enter()
-    PROGRESS.setInteriorBG()
+    PROGRESS.applyInteriorBG()
     pauseText=GC.newText(FONT.get(80,'bold'),Text.pause)
 end
 function scene.leave()

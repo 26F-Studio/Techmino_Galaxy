@@ -67,7 +67,6 @@ function P:movePosition(dx,dy,k,da)
     pos.a=pos.a+(da or 0)
 end
 ---@param method 'init'|'drop'|string
----@vararg any
 function P:atkEvent(method,...)
     local sys=mechLib[self.gameMode].attackSys[self.settings.atkSys]
     assert(sys and sys[method],"Invalid attackSys / method")
@@ -191,7 +190,37 @@ function P:triggerEvent(name,...)
         end
     end
 end
----@param E Techmino.Event|Map<Techmino.Event>|function|string|any
+---@param name
+---| 'beforePress'     -- General(act)
+---| 'afterPress'      -- General(act)
+---| 'beforeRelease'   -- General(act)
+---| 'afterRelease'    -- General(act)
+---| 'playerInit'      -- General
+---| 'gameStart'       -- General
+---| 'gameOver'        -- General(reason)
+---| 'always'          -- General
+---|
+---| 'afterResetPos'   -- Brik, Gela
+---| 'afterSpawn'      -- Brik, Gela
+---| 'afterDrop'       -- Brik, Gela
+---| 'afterLock'       -- Brik, Gela
+---| 'afterClear'      -- Brik(his), Gela
+---| 'beforeCancel'    -- Brik(atk), Gela(atk)
+---| 'beforeSend'      -- Brik(atk), Gela(atk)
+---| 'beforeDiscard'   -- Brik, Gela
+---| 'drawBelowField'  -- Brik, Gela, Acry
+---| 'drawBelowBlock'  -- Brik, Gela, Acry
+---| 'drawBelowMarks'  -- Brik,       Acry
+---| 'drawInField'     -- Brik, Gela, Acry
+---| 'drawOnPlayer'    -- Brik, Gela, Acry
+---|
+---| 'whenSuffocate'   -- Brik, Gela
+---| 'changeSpawnPos'  -- Brik
+---| 'extraSolidCheck' -- Brik
+---|
+---| 'legalMove'       -- Acry(mode)
+---| 'illegalMove'     -- Acry(mode)
+---@param E Techmino.Event<Techmino.Player>|Techmino.Event<Techmino.Player>[]
 function P:addEvent(name,E)
     local L=self.event[name]
     assert(L,"Wrong event key: '"..tostring(name).."'")
@@ -692,11 +721,11 @@ function P.new()
         vx=0,vy=0,vk=0,va=0,
     }
 
-    self.finished=false -- Did game finish
-    self.realTime=0     -- Real time, [float] s
-    self.time=0         -- Inside timer for player, [int] ms
-    self.gameTime=0     -- Game time of player, [int] ms
-    self.timing=false   -- Is gameTime running?
+    self.finished=false
+    self.realTime=0
+    self.time=0
+    self.gameTime=0
+    self.timing=false
 
     self.texts=TEXT.new()
     self.particles=setmetatable({},{__index=function(p,k)

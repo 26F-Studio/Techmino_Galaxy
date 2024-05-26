@@ -676,6 +676,7 @@ function BP:newCell(color,id)
     }
     return c
 end
+---@param shapeData Techmino.Brik|table
 function BP:getBrik(shapeData)
     local shapeID,shapeName,shapeMat,shapeColor
     if type(shapeData)=='table' then
@@ -693,6 +694,7 @@ function BP:getBrik(shapeData)
     self.pieceCount=self.pieceCount+1
 
     -- Generate cell matrix from bool matrix
+    ---@cast shapeMat Mat<Techmino.Cell>
     for y=1,#shapeMat do for x=1,#shapeMat[1] do
         shapeMat[y][x]=shapeMat[y][x] and self:newCell(shapeColor,self.pieceCount)
     end end
@@ -1925,6 +1927,7 @@ end
 -- Builder
 
 ---@class Techmino.Mode.Setting.Brik
+---@field event Map<Map<Techmino.Event<Techmino.Player.Brik>>|Techmino.Event<Techmino.Player.Brik>>
 local baseEnv={
     -- Size
     fieldW=10, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
@@ -1961,7 +1964,7 @@ local baseEnv={
     maxFreshTime=6200,
 
     -- Hidden
-    pieceVisTime=false, -- When enabled, blocks will become transparent after this value
+    pieceVisTime=false, ---@type number|false When enabled, blocks will become transparent after this value
     pieceFadeTime=1000, -- Start fading out below this value
 
     -- Garbage

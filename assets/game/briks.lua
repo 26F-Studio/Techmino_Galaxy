@@ -1,8 +1,8 @@
 local Brik={}
 
----@alias Techmino.Brik.Shape boolean[][]
+---@alias Techmino.Brik.Shape Mat<boolean>
 ---@alias Techmino.Brik.Name 'Z'|'S'|'J'|'L'|'T'|'O'|'I'|'Z5'|'S5'|'P'|'Q'|'F'|'E'|'T5'|'U'|'V'|'W'|'X'|'J5'|'L5'|'R'|'Y'|'N'|'H'|'I5'|'I3'|'C'|'I2'|'O1'|string
----@alias Techmino.Brik.ID 1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|integer
+---@alias Techmino.Brik.ID integer
 
 ---@class Techmino.Brik
 ---@field name Techmino.Brik.Name

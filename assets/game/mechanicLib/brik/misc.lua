@@ -30,14 +30,6 @@ function misc.suffocateLock_event_whenSuffocate(P)
     end
 end
 
-function misc.slowHide_event_gameOver(P)
-    P:showInvis(4,626)
-end
-
-function misc.fastHide_event_gameOver(P)
-    P:showInvis(1,100)
-end
-
 do -- coverField
     function misc.coverField_switch_auto(P)
         local md=P.modeData

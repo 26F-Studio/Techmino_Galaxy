@@ -88,8 +88,8 @@ function scene.enter()
     sims[1].valid=true
     sims[2].valid=false
     scene.update(0)
-    PROGRESS.setExteriorBG()
-    PROGRESS.playExteriorBGM()
+    PROGRESS.applyExteriorBG()
+    PROGRESS.applyExteriorBGM()
     if SCN.prev=='main_out' and sims[1].valid and not sims[2].valid then
         subjectFocused=1
         scene.keyDown('return')

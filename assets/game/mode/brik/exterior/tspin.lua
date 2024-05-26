@@ -51,27 +51,29 @@ return {
                 function(P) -- Progress
                     -- Easy mode finishes after 12 TSs
                     if P.modeData.easyModeFlag then
-                        local secret
+                        local goSecretApp
                         if P.modeData.tspin==4 and P.modeData.stat.line==4 and PROGRESS.getSecret('exterior_tspin_12TSS') then
-                            secret=true
+                            goSecretApp=true
                         elseif P.modeData.tspin>=12 then
+                            PROGRESS.setExteriorScore('tspin','any',P.modeData.tspin)
                             if P.modeData.stat.line==12 then
                                 PROGRESS.setSecret('exterior_tspin_12TSS')
-                                secret=true
+                                goSecretApp=true
                             else
-                                -- TODO: 12 TS result
                                 P:finish('AC')
                             end
                         end
-                        if secret then
+                        if goSecretApp then
                             TASK.new(task_unloadGame)
                             SCN._pop()
                             SCN.go('app_UTTT')
                         end
-                    elseif P.modeData.hardModeFlag then
-                        -- TODO: Hard TSD score
                     else
-                        -- TODO: TSD score
+                        PROGRESS.setExteriorScore('tspin','any',P.modeData.tspin)
+                        PROGRESS.setExteriorScore('tspin','tsd',P.modeData.tspin)
+                        if P.modeData.hardModeFlag then
+                            PROGRESS.setExteriorScore('tspin','tsd_hard',P.modeData.tspin)
+                        end
                     end
                 end,
                 {1e62,function(P)

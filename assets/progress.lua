@@ -106,10 +106,20 @@ end
 function PROGRESS.getHash(t)
     return love.data.encode('string','base64',STRING.digezt(zDump(t)))
 end
-function PROGRESS.save()
-    prgs.rnd=math.random(26,2e6)
-    prgs.hash=PROGRESS.getHash(prgs)
-    FILE.save(prgs,'conf/progress','-json')
+function PROGRESS.save(mode)
+    if mode==nil then
+        -- Wait 1 frame before saving
+        TASK.removeTask_code(PROGRESS.save)
+        TASK.new(PROGRESS.save,'yield')
+    elseif mode=='yield' then
+        -- Do wait
+        coroutine.yield()
+        PROGRESS.save(true)
+    elseif mode==true then
+        prgs.rnd=math.random(26,2e6)
+        prgs.hash=PROGRESS.getHash(prgs)
+        FILE.save(prgs,'conf/progress','-json')
+    end
 end
 function PROGRESS.load()
     local success,res=pcall(FILE.load,'conf/progress','-json -canskip')
@@ -157,14 +167,14 @@ function PROGRESS.applyCoolWaitTemplate()
         end)
     end
 end
-function PROGRESS.setInteriorBG() BG.set('none') end
-function PROGRESS.setExteriorBG() BG.set(prgs.main==3 and 'space' or 'galaxy') end
-function PROGRESS.playInteriorBGM() playBgm('blank',prgs.main~=1) end
-function PROGRESS.playExteriorBGM() playBgm('vacuum',prgs.main~=3) end
-function PROGRESS.setEnv(env)
+function PROGRESS.applyInteriorBG() BG.set('none') end
+function PROGRESS.applyExteriorBG() BG.set(prgs.main==3 and 'space' or 'galaxy') end
+function PROGRESS.applyInteriorBGM() playBgm('blank',prgs.main~=1) end
+function PROGRESS.applyExteriorBGM() playBgm('vacuum',prgs.main~=3) end
+function PROGRESS.applyEnv(env)
     if env=='interior' then
-        PROGRESS.setInteriorBG()
-        PROGRESS.playInteriorBGM()
+        PROGRESS.applyInteriorBG()
+        PROGRESS.applyInteriorBGM()
         ZENITHA.setClickFX(true)
         function ZENITHA.globalEvent.drawCursor(_,x,y)
             if not SETTINGS.system.sysCursor then
@@ -180,8 +190,8 @@ function PROGRESS.setEnv(env)
             end
         end
     elseif env=='exterior' then
-        PROGRESS.setExteriorBG()
-        PROGRESS.playExteriorBGM()
+        PROGRESS.applyExteriorBG()
+        PROGRESS.applyExteriorBGM()
         ZENITHA.setClickFX(function(x,y) SYSFX.glow(.5,x,y,20) end)
         function ZENITHA.globalEvent.drawCursor(_,x,y)
             if not SETTINGS.system.sysCursor then
@@ -390,46 +400,48 @@ function PROGRESS.setInteriorScore(mode,score)
         PROGRESS.save()
     end
 end
-function PROGRESS.setExteriorModeUnlock(mode)
+function PROGRESS.setExteriorUnlock(mode,foreground)
     if not prgs.exteriorMap.modes[mode] then
         prgs.exteriorMap.modes[mode]={}
-        if TASK.lock('brikmap_unlockSound_background',2.6) then
-            FMOD.effect('map_unlock_background')
+        if TASK.lock(foreground and 'exMap_unlockSound' or 'exMap_unlockSound_background',2.6) then
+            FMOD.effect(foreground and 'map_unlock' or 'map_unlock_bg')
         end
     end
 end
 function PROGRESS.setExteriorModeState(mode,data)
     prgs.exteriorMap.modes[mode]=data
 end
----@param sign '>'|'<'
-function PROGRESS.setExteriorModeValue(mode,key,value,sign)
+
+---@param sign? '<'|'>' #`'<'`means smaller=better, default to `'>'`
+---@return boolean success
+function PROGRESS.setExteriorScore(mode,key,value,sign)
+    sign=sign or '>'
     local data=prgs.exteriorMap.modes[mode]
     if not data then
-        prgs.exteriorMap.modes[mode]={}
-        data=prgs.exteriorMap.modes[mode]
+        data={}
+        prgs.exteriorMap.modes[mode]=data
     end
-    if data then
-        if not data[key] then
-            data[key]=value
-            return true
-        elseif sign=='<' then
-            if value<data[key] then
-                data[key]=value
-                return true
-            end
-        else
-            if value>data[key] then
-                data[key]=value
-                return true
-            end
-        end
+    if
+        not data[key] or
+        sign=='>' and value>data[key] or
+        sign=='<' and value<data[key]
+    then
+        data[key]=value
+        PROGRESS.save()
+        return true
     end
+    return false
 end
+
+---@return boolean success
 function PROGRESS.setSecret(name)
     if not prgs.secretFound[name] then
+        FMOD.effect('map_unlock_secret')
         prgs.secretFound[name]=1
         PROGRESS.save()
+        return true
     end
+    return false
 end
 
 return PROGRESS

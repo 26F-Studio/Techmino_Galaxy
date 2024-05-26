@@ -98,7 +98,7 @@ end
 
 local animations={}
 
-local pSys={} for i=1,3 do pSys[i]=require'assets.game.particleSystemTemplate'.brikMapBack:clone() end
+local pSys={} for i=1,3 do pSys[i]=require'assets.game.particleSystemTemplate'.exMapBack:clone() end
 local mapPoly={
     0,0,
     6200,10738.715,
@@ -167,7 +167,7 @@ function map:freshUnlocked(modeList,init)
                     t=0,
                     x=(b.m1.x+b.m2.x)*.5,
                     y=(b.m1.y+b.m2.y)*.5,
-                    sound='map_unlock',
+                    sound=true,
                 }
             end
         end
@@ -297,8 +297,8 @@ function map:update(dt)
             if a.wait<=0 and a.type=='bridge' then
                 cam.x0,cam.y0=-a.x,-a.y
                 cam.k0,cam.a0=1,0
-                if TASK.lock('brikmap_unlockSound',.26) then
-                    FMOD.effect(a.sound)
+                if TASK.lock('exMap_unlockSound',.26) then
+                    FMOD.effect('map_unlock')
                 end
             end
         else

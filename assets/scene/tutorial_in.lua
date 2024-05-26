@@ -37,7 +37,7 @@ function scene.enter()
         L.T6:setVisible(true)
         WIDGET._reset()
     end
-    PROGRESS.playInteriorBGM()
+    PROGRESS.applyInteriorBGM()
 end
 
 function scene.keyDown(key)

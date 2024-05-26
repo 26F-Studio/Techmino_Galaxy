@@ -12,7 +12,7 @@ local floor=math.floor
 local ins,rem=table.insert,table.remove
 
 ---@class Techmino.Player.Acry: Techmino.Player
----@field field (Techmino.Acry.Cell|false)[][]
+---@field field Mat<Techmino.Acry.Cell|false>
 local AP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 ---@class Techmino.Acry.Cell
@@ -797,6 +797,7 @@ end
 -- Builder
 
 ---@class Techmino.Mode.Setting.Acry
+---@field event Map<Techmino.Event<Techmino.Player.Acry>[]|Techmino.Event<Techmino.Player.Acry>>
 local baseEnv={
     -- Size
     fieldSize=8,

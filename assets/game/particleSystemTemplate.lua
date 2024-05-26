@@ -174,7 +174,7 @@ do -- Piece lock effect
     ps.rectScale=p
 end
 
-do -- Background light of brik map
+do -- Background light of exterior map
     local p=love.graphics.newParticleSystem(GC.load{10,10,
         {'setCL',1,1,1,.5},
         {'fRect',0,0,10,10},
@@ -189,7 +189,7 @@ do -- Background light of brik map
     p:setParticleLifetime(5.62,7.26)
     p:setSpeed(620,1260)
     p:setEmissionRate(10)
-    ps.brikMapBack=p
+    ps.exMapBack=p
 end
 
 return ps

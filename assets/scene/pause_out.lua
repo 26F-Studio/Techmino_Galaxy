@@ -7,7 +7,7 @@ local scene={}
 local pauseText,textScale
 
 function scene.enter()
-    PROGRESS.setExteriorBG()
+    PROGRESS.applyExteriorBG()
     pauseText=GC.newText(FONT.get(80,'bold'),Text.pause)
     textScale=math.min(500/pauseText:getWidth(),226/pauseText:getHeight(),2)
 end

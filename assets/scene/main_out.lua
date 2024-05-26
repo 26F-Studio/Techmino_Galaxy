@@ -7,7 +7,7 @@ local terminalName=GC.newText(FONT.get(35))
 
 function scene.enter()
     if MATH.roll(.026) then textOffset=26 end
-    PROGRESS.setEnv('exterior')
+    PROGRESS.applyEnv('exterior')
     versionText:set(VERSION.appVer)
     terminalName:set(("TERM[%s]"):format(SYSTEM:sub(1,3):upper()))
 end

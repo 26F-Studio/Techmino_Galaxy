@@ -11,65 +11,6 @@
 ---|'PE'  Mission failed (Presentation Error)
 ---|'UKE' Other reason (Unknown Error)
 
----@alias Techmino.mode.event.basic
----|'always'
----|'playerInit'
----|'gameStart'
----|'beforePress'
----|'afterPress'
----|'beforeRelease'
----|'afterRelease'
----|'gameOver'
-
----@alias Techmino.mode.event.brik
----|'afterResetPos'
----|'afterSpawn'
----|'afterDrop'
----|'afterLock'
----|'afterClear' called with his
----|'beforeCancel' called with atk
----|'beforeSend' called with atk
----|'beforeDiscard'
----|'whenSuffocate'
----|'extraSolidCheck'
----|'changeSpawnPos'
----
----|'drawBelowField'
----|'drawBelowBlock'
----|'drawBelowMarks'
----|'drawInField'
----|'drawOnPlayer'
-
----@alias Techmino.mode.event.gela
----|'afterSpawn'
----|'afterResetPos'
----|'afterDrop'
----|'afterLock'
----|'afterClear'
----|'beforeCancel' called with atk
----|'beforeSend' called with atk
----|'beforeDiscard'
----|'whenSuffocate'
----|
----|'drawBelowField'
----|'drawBelowBlock'
----|'drawBelowMarks'
----|'drawInField'
----|'drawOnPlayer'
-
----@alias Techmino.mode.event.acry
----|'illegalMove'
----|'legalMove'
----
----|'drawBelowField'
----|'drawInField'
----|'drawOnPlayer'
-
----@alias Techmino.Mech.Basic fun(P:Techmino.Player):any,any
----@alias Techmino.Mech.Brik fun(P:Techmino.Player.Brik):any,any
----@alias Techmino.Mech.Gela fun(P:Techmino.Player.Gela):any,any
----@alias Techmino.Mech.Acry fun(P:Techmino.Player.Acry):any,any
-
 ---@class Techmino.ParticleSystems
 ---@field rectShade love.ParticleSystem
 ---@field rectTilt love.ParticleSystem
@@ -81,16 +22,20 @@
 ---@field hitSparkle love.ParticleSystem
 ---@field cornerCheck love.ParticleSystem
 ---@field trail love.ParticleSystem
----@field brikMapBack love.ParticleSystem
+---@field exMapBack love.ParticleSystem
 
----@alias Techmino.Event {[1]:number, [2]:fun(P:Techmino.Player):any}
+---@alias Techmino.Event<T> string|fun(P:T)|{[1]:number, [2]:fun(P:T)}
+---@alias Techmino.Mech.Basic Techmino.Event<Techmino.Player>
+---@alias Techmino.Mech.Brik Techmino.Event<Techmino.Player.Brik>
+---@alias Techmino.Mech.Gela Techmino.Event<Techmino.Player.Gela>
+---@alias Techmino.Mech.Acry Techmino.Event<Techmino.Player.Acry>
 
 ---@class Techmino.Cell
 ---@field cid string cell's mem pointer string
 ---@field id number ascending piece number
 ---@field color number 0~63
 ---@field alpha? number 0~1
----@field conn table<string, true>
+---@field conn table<string, any>
 ---@field bias {expBack?:number, lineBack?:number, teleBack?:number, x:number, y:number}
 ---@field visTimer? number
 ---@field fadeTime? number
@@ -100,7 +45,7 @@
 ---@field diggable boolean Gela only
 ---@field connClear boolean Gela only
 
----@alias Techmino.RectPiece (Techmino.Cell|false)[][]
+---@alias Techmino.RectPiece Mat<Techmino.Cell|false>
 
 ---@class Techmino.Hand
 ---@field id number
@@ -133,11 +78,11 @@
 ---@field soundTimeHistory table
 ---@field RND love.RandomGenerator
 ---@field pos {x:number, y:number, k:number, a:number, dx:number, dy:number, dk:number, da:number, vx:number, vy:number, vk:number, va:number}
----@field finished Techmino.EndReason|boolean
----@field realTime number
----@field time number
----@field gameTime number
----@field timing boolean
+---@field finished Techmino.EndReason|boolean Did game finish
+---@field realTime number Real time, [float] s
+---@field time number Inside timer for player, [int] ms
+---@field gameTime number Game time of player, [int] ms
+---@field timing boolean Is gameTime running?
 ---@field texts Zenitha.Text
 ---@field particles Techmino.ParticleSystems
 ---
