@@ -14,7 +14,6 @@ local ins,rem=table.insert,table.remove
 local clamp,expApproach=MATH.clamp,MATH.expApproach
 
 ---@class Techmino.Player.Gela: Techmino.Player
----@field field Techmino.RectField
 local GP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 --------------------------------------------------------------
@@ -417,6 +416,17 @@ function GP:freshDelay(reason)
     elseif not mode then
         error("WTF why settings.freshCondition is "..tostring(self.settings.freshCondition))
     end
+end
+function GP:setSequenceGen(seqData,args)
+    if assert(type(args)=='string',"setSequenceGen: 'args' need string") then
+        if args:sArg('-clearData') then self.seqData={} end
+        if args:sArg('-clearNext') then TABLE.clear(self.nextQueue) end
+    end
+
+    self.seqGen=mechLib.gela.sequence[seqData] or seqData
+    assert(self:seqGen(self.seqData,true)==nil,"First call of sequence generator must return nil")
+    self:freshNextQueue()
+    self:decreaseNextColor(self.settings.maxOpeningLength,self.settings.maxOpeningColor)
 end
 function GP:freshNextQueue()
     while #self.nextQueue<max(self.settings.nextSlot,1) do
@@ -1477,7 +1487,6 @@ local soundEventMeta={
 }
 function GP.new()
     local self=setmetatable(require'basePlayer'.new(),{__index=GP,__metatable=true})
-    ---@type Techmino.Mode.Setting.Gela
     self.settings=TABLE.copyAll(baseEnv)
     self.event={
         -- Press & Release
@@ -1516,6 +1525,7 @@ function GP.new()
     }
     self.soundEvent=setmetatable({},soundEventMeta)
 
+    ---@cast self Techmino.Player.Gela
     mechLib.gela.statistics.event_playerInit[2](self)
 
     return self
@@ -1523,6 +1533,7 @@ end
 function GP:initialize()
     require'basePlayer'.initialize(self)
 
+    ---@type any
     local set=self.settings.colorSet
     if set=='random' then
         set=mechLib.gela.colorSet.getRandom(self)
@@ -1549,10 +1560,7 @@ function GP:initialize()
 
     self.nextQueue={}
     self.seqData={}
-    self.seqGen=mechLib.gela.sequence[self.settings.seqType] or self.settings.seqType
-    assert(self:seqGen(self.seqData,true)==nil,"First call of sequence generator must return nil")
-    self:freshNextQueue()
-    self:decreaseNextColor(self.settings.maxOpeningLength,self.settings.maxOpeningColor)
+    self:setSequenceGen(self.settings.seqType)
 
     self.dropTimer=0
     self.lockTimer=0

@@ -1,4 +1,4 @@
----@type Map<Techmino.Mech.Brik|Map<Techmino.Mech.Brik>>
+---@type Map<Techmino.Mech.Brik>
 local comboGenerator={}
 
 local function newMap(P)
@@ -93,35 +93,29 @@ end
 function comboGenerator.event_afterClear(P,clear)
     P.modeData.levelRemain=P.modeData.levelRemain-clear.line
 end
-comboGenerator.event_beforeDiscard=TABLE.newPool(function(self,lineCount)
-    self[lineCount]=function(P)
-        if #P.clearHistory>P.modeData._curHisLen then
-            if not P.modeData.levelStarted then
-                P.modeData.levelStarted=true
-            else
-                P.modeData.comboCount=P.modeData.comboCount+1
-            end
-            if P.modeData.comboCount>=lineCount then
-                P:finish('AC')
-            elseif P.modeData.levelRemain<=0 then
-                P.modeData.cleared=P.modeData.cleared+1
-                newMap(P)
-                P:playSound('beep_rise')
-            end
-        elseif P.modeData.levelStarted then
-            newMap(P)
-            P:playSound('discharge')
+function comboGenerator.event_beforeDiscard(P)
+    if #P.clearHistory>P.modeData._curHisLen then
+        if not P.modeData.levelStarted then
+            P.modeData.levelStarted=true
+        else
+            P.modeData.comboCount=P.modeData.comboCount+1
         end
+        if P.modeData.comboCount>=P.modeData.target.combo then
+            P:finish('AC')
+        elseif P.modeData.levelRemain<=0 then
+            P.modeData.cleared=P.modeData.cleared+1
+            newMap(P)
+            P:playSound('beep_rise')
+        end
+    elseif P.modeData.levelStarted then
+        newMap(P)
+        P:playSound('discharge')
     end
-    return self[lineCount]
-end)
+end
 
-comboGenerator.event_drawOnPlayer=TABLE.newPool(function(self,comboCount)
-    self[comboCount]=function(P)
-        P:drawInfoPanel(-380,-60,160,120)
-        FONT.set(80) GC.mStr(comboCount-P.modeData.comboCount,-300,-55)
-    end
-    return self[comboCount]
-end)
+function comboGenerator.event_drawOnPlayer(P)
+    P:drawInfoPanel(-380,-60,160,120)
+    FONT.set(80) GC.mStr(P.modeData.target.combo-P.modeData.comboCount,-300,-55)
+end
 
 return comboGenerator

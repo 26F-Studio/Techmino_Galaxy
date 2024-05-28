@@ -288,34 +288,28 @@ do -- obstacle
         misc.obstacle_generateField(P)
     end
 
-    misc.obstacle_event_afterClear=TABLE.newPool(function(self,lineCount)
-        self[lineCount]=function(P,clear)
-            local score=math.ceil((clear.line+1)/2)
-            P.modeData.score=math.min(P.modeData.score+score,lineCount)
-            P.texts:add{
-                text="+"..score,
-                fontSize=80,
-                a=.626,
-                duration=.626,
-                inPoint=0,
-                outPoint=1,
-            }
-            if P.modeData.score>=lineCount then
-                P:finish('AC')
-            else
-                misc.obstacle_generateField(P)
-            end
+    function misc.obstacle_event_afterClear(P,clear)
+        local score=math.ceil((clear.line+1)/2)
+        P.modeData.score=math.min(P.modeData.score+score,P.modeData.target.line)
+        P.texts:add{
+            text="+"..score,
+            fontSize=80,
+            a=.626,
+            duration=.626,
+            inPoint=0,
+            outPoint=1,
+        }
+        if P.modeData.score>=P.modeData.target.line then
+            P:finish('AC')
+        else
+            misc.obstacle_generateField(P)
         end
-        return self[lineCount]
-    end)
-    misc.obstacle_event_drawOnPlayer=TABLE.newPool(function(self,lineCount)
-        self[lineCount]=function(P)
-            P:drawInfoPanel(-380,-60,160,120)
-            FONT.set(80) GC.mStr(lineCount-P.modeData.score,-300,-70)
-            FONT.set(30) GC.mStr(Text.target_line,-300,15)
-        end
-        return self[lineCount]
-    end)
+    end
+    function misc.obstacle_event_drawOnPlayer(P)
+        P:drawInfoPanel(-380,-60,160,120)
+        FONT.set(80) GC.mStr(P.modeData.target.line-P.modeData.score,-300,-70)
+        FONT.set(30) GC.mStr(Text.target_line,-300,15)
+    end
 end
 
 do -- cascade

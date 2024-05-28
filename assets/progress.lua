@@ -175,7 +175,7 @@ function PROGRESS.applyEnv(env)
     if env=='interior' then
         PROGRESS.applyInteriorBG()
         PROGRESS.applyInteriorBGM()
-        ZENITHA.setClickFX(true)
+        ZENITHA.globalEvent.clickFX=function(x,y) SYSFX.tap(.26,x,y) end
         function ZENITHA.globalEvent.drawCursor(_,x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)
@@ -192,7 +192,7 @@ function PROGRESS.applyEnv(env)
     elseif env=='exterior' then
         PROGRESS.applyExteriorBG()
         PROGRESS.applyExteriorBGM()
-        ZENITHA.setClickFX(function(x,y) SYSFX.glow(.5,x,y,20) end)
+        ZENITHA.globalEvent.clickFX=function(x,y) SYSFX.glow(.5,x,y,20) end
         function ZENITHA.globalEvent.drawCursor(_,x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)

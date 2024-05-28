@@ -7,7 +7,7 @@ defaultBrikColor=setmetatable({
 },{__index=function() return math.random(64) end})
 require'rotsys_brik'
 local function loadMechFile()
----@type Techmino.Mech
+---@type Techmino.MechLib
 mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
 regFuncLib(mechLib,"mechLib")
 end

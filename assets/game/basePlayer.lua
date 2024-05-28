@@ -190,37 +190,8 @@ function P:triggerEvent(name,...)
         end
     end
 end
----@param name
----| 'beforePress'     -- General(act)
----| 'afterPress'      -- General(act)
----| 'beforeRelease'   -- General(act)
----| 'afterRelease'    -- General(act)
----| 'playerInit'      -- General
----| 'gameStart'       -- General
----| 'gameOver'        -- General(reason)
----| 'always'          -- General
----|
----| 'afterResetPos'   -- Brik, Gela
----| 'afterSpawn'      -- Brik, Gela
----| 'afterDrop'       -- Brik, Gela
----| 'afterLock'       -- Brik, Gela
----| 'afterClear'      -- Brik(his), Gela
----| 'beforeCancel'    -- Brik(atk), Gela(atk)
----| 'beforeSend'      -- Brik(atk), Gela(atk)
----| 'beforeDiscard'   -- Brik, Gela
----| 'drawBelowField'  -- Brik, Gela, Acry
----| 'drawBelowBlock'  -- Brik, Gela, Acry
----| 'drawBelowMarks'  -- Brik,       Acry
----| 'drawInField'     -- Brik, Gela, Acry
----| 'drawOnPlayer'    -- Brik, Gela, Acry
----|
----| 'whenSuffocate'   -- Brik, Gela
----| 'changeSpawnPos'  -- Brik
----| 'extraSolidCheck' -- Brik
----|
----| 'legalMove'       -- Acry(mode)
----| 'illegalMove'     -- Acry(mode)
----@param E Techmino.Event<Techmino.Player>|Techmino.Event<Techmino.Player>[]
+---@param name Techmino.EventName
+---@param E Techmino.Event|Techmino.Event[]
 function P:addEvent(name,E)
     local L=self.event[name]
     assert(L,"Wrong event key: '"..tostring(name).."'")
@@ -236,6 +207,7 @@ function P:addEvent(name,E)
         end
     elseif type(E)=='string' then
         local errMsg
+        ---@type Techmino.Event
         E,errMsg=loadstring('local P=...;'..E)
         if E then
             setSafeEnv(E)
@@ -709,7 +681,7 @@ function P.new()
     self.sound=false
 
     self.buffedKey={}
-    self.modeData={}
+    self.modeData={stat={},target={},music={id='intensity'}}
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 
     self.RND=love.math.newRandomGenerator(GAME.seed+626)

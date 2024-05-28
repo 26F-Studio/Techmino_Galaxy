@@ -149,7 +149,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
         GC.mStr(P.modeData.target,-300,-5)
     end
 
-    do -- hypersonic_lo
+    do -- hypersonic_low
         local levels={
             {lock=1e3,spawn=320,asd=200,asp=36},
             {lock=850,spawn=290,asd=170,asp=33},
@@ -200,7 +200,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
         end
     end
 
-    do -- hypersonic_hi
+    do -- hypersonic_high
         local levels={
             {lock=450,freshT=4400,spawn=150,clear=380,asd=130,asp=29,bumpInterval=false},
             {lock=400,freshT=4200,spawn=140,clear=340,asd=120,asp=28,bumpInterval=false},
@@ -300,7 +300,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
         end
     end
 
-    do -- hypersonic_hd
+    do -- hypersonic_hidden
         local levels={
             {lock=510,freshT=6000,spawn=150,clear=400,asd=130,asp=29,visTime=5000,fadeTime=2600},
             {lock=460,freshT=5800,spawn=140,clear=360,asd=120,asp=28,visTime=4000,fadeTime=2600},
@@ -453,7 +453,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
         end
     end
 
-    do -- hypersonic_ti
+    do -- hypersonic_titanium
         local levels={
             {lock=350,freshT=900,freshC=5,spawn=170,clear=380,asd=98,asp=29},
             {lock=300,freshT=850,freshC=5,spawn=160,clear=340,asd=96,asp=28},

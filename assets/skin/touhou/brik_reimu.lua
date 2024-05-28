@@ -164,6 +164,7 @@ function S.drawNextCell(C,disabled,B,x,y)
 end
 
 function S.drawHoldBorder(mode,slot)
+    if slot<=0 then return end
     gc_setLineWidth(2)
     if mode=='hold' then
         gc_setColor(0,0,0,.26)

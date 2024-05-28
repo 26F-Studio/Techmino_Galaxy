@@ -21,36 +21,34 @@ return {
                 P.modeData.easyModeFlag=false
                 P.modeData.hardModeFlag=true
                 mechLib.brik.chargeLimit.tspin_event_playerInit(P)
+                mechLib.common.music.set(P,{path='.tsd',s=3,e=12},'afterClear')
             end,
             always=mechLib.brik.chargeLimit.tspin_event_always,
             afterClear={
                 mechLib.brik.chargeLimit.tspin_event_afterClear,
-                function(P) -- Enter easy mode when TS not D
+                function(P) -- Switch to easy mode when TS not D
                     if P.modeData.tspin then
-                        P.modeData.easyModeFlag=true
+                        P.modeData.hardModeFlag=false
+                        mechLib.common.music.disable(P)
+                        FMOD.music.setParam('intensity',0)
                         P:delEvent('drawOnPlayer',mechLib.brik.chargeLimit.tspin_event_drawOnPlayer)
                         P:addEvent('drawOnPlayer',degraded_tspin_event_drawOnPlayer)
                         return true
                     end
                 end,
-                function(P) -- Cancel hard mode flag when overcharged
-                    if P.modeData.easyModeFlag or P.modeData.overChargedTimer then
+                function(P) -- Confirm hard mode when >4 TSDs
+                    if P.modeData.tspin or P.modeData.overChargedTimer then
                         P.modeData.hardModeFlag=false
                         return true
-                    end
-                end,
-                function(P) -- Enter hard mode when >4 TSDs
-                    if P.modeData.hardModeFlag and P.modeData.tsd>=4 then
+                    elseif P.modeData.hardModeFlag and P.modeData.tsd>=4 then
                         P:playSound('beep_rise')
                         P:addEvent('drawBelowMarks',mechLib.brik.chargeLimit.tspin_event_drawBelowMarks)
-                        return true
-                    elseif P.modeData.easyModeFlag or not P.modeData.hardModeFlag then
                         return true
                     end
                 end,
                 function(P) -- Progress
                     -- Easy mode finishes after 12 TSs
-                    if P.modeData.easyModeFlag then
+                    if P.modeData.tspin then
                         local goSecretApp
                         if P.modeData.tspin==4 and P.modeData.stat.line==4 and PROGRESS.getSecret('exterior_tspin_12TSS') then
                             goSecretApp=true
@@ -69,17 +67,13 @@ return {
                             SCN.go('app_UTTT')
                         end
                     else
-                        PROGRESS.setExteriorScore('tspin','any',P.modeData.tspin)
-                        PROGRESS.setExteriorScore('tspin','tsd',P.modeData.tspin)
+                        PROGRESS.setExteriorScore('tspin','any',P.modeData.tsd)
+                        PROGRESS.setExteriorScore('tspin','tsd',P.modeData.tsd)
                         if P.modeData.hardModeFlag then
-                            PROGRESS.setExteriorScore('tspin','tsd_hard',P.modeData.tspin)
+                            PROGRESS.setExteriorScore('tspin','tsd_hard',P.modeData.tsd)
                         end
                     end
                 end,
-                {1e62,function(P)
-                    if not P.isMain then return true end
-                    FMOD.music.setParam('intensity',P.modeData.easyModeFlag and 0 or MATH.icLerp(3,12,P.modeData.stat.line))
-                end},
             },
             drawOnPlayer=mechLib.brik.chargeLimit.tspin_event_drawOnPlayer,
         },

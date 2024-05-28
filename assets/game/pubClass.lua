@@ -1,5 +1,4 @@
 ---@alias Techmino.Player.Type 'brik'|'gela'|'acry'
----@alias Techmino.Mode.Setting Techmino.Mode.Setting.Brik|Techmino.Mode.Setting.Gela|Techmino.Mode.Setting.Acry
 ---@alias Techmino.EndReason
 ---|'AC'  Win (Accepted)
 ---|'WA'  Block out (Wrong Answer)
@@ -10,6 +9,37 @@
 ---|'ILE' Ran out pieces (Idleness Limit Exceeded)
 ---|'PE'  Mission failed (Presentation Error)
 ---|'UKE' Other reason (Unknown Error)
+
+---@alias Techmino.EventName
+---| 'beforePress'     -- General(act)
+---| 'afterPress'      -- General(act)
+---| 'beforeRelease'   -- General(act)
+---| 'afterRelease'    -- General(act)
+---| 'playerInit'      -- General
+---| 'gameStart'       -- General
+---| 'gameOver'        -- General(reason)
+---| 'always'          -- General
+---|
+---| 'afterResetPos'   -- Brik, Gela
+---| 'afterSpawn'      -- Brik, Gela
+---| 'afterDrop'       -- Brik, Gela
+---| 'afterLock'       -- Brik, Gela
+---| 'afterClear'      -- Brik(his), Gela
+---| 'beforeCancel'    -- Brik(atk), Gela(atk)
+---| 'beforeSend'      -- Brik(atk), Gela(atk)
+---| 'beforeDiscard'   -- Brik, Gela
+---| 'drawBelowField'  -- Brik, Gela, Acry
+---| 'drawBelowBlock'  -- Brik, Gela, Acry
+---| 'drawBelowMarks'  -- Brik,       Acry
+---| 'drawInField'     -- Brik, Gela, Acry
+---| 'drawOnPlayer'    -- Brik, Gela, Acry
+---|
+---| 'whenSuffocate'   -- Brik, Gela
+---| 'changeSpawnPos'  -- Brik
+---| 'extraSolidCheck' -- Brik
+---|
+---| 'legalMove'       -- Acry(mode)
+---| 'illegalMove'     -- Acry(mode)
 
 ---@class Techmino.ParticleSystems
 ---@field rectShade love.ParticleSystem
@@ -24,7 +54,7 @@
 ---@field trail love.ParticleSystem
 ---@field exMapBack love.ParticleSystem
 
----@alias Techmino.Event<T> string|fun(P:T)|{[1]:number, [2]:fun(P:T)}
+---@alias Techmino.Event<T> string | {[1]:number, [2]:fun(P:T):any} | fun(P:T):any
 ---@alias Techmino.Mech.Basic Techmino.Event<Techmino.Player>
 ---@alias Techmino.Mech.Brik Techmino.Event<Techmino.Player.Brik>
 ---@alias Techmino.Mech.Gela Techmino.Event<Techmino.Player.Gela>
@@ -72,9 +102,9 @@
 ---@field team number Team ID, 0 as No Team
 ---@field isMain boolean
 ---@field sound boolean
----@field settings Techmino.Mode.Setting
+---@field settings Techmino.Mode.Setting.Brik|Techmino.Mode.Setting.Gela|Techmino.Mode.Setting.Acry
 ---@field buffedKey table
----@field modeData table
+---@field modeData Techmino.PlayerModeData
 ---@field soundTimeHistory table
 ---@field RND love.RandomGenerator
 ---@field pos {x:number, y:number, k:number, a:number, dx:number, dy:number, dk:number, da:number, vx:number, vy:number, vk:number, va:number}
@@ -100,3 +130,16 @@
 ---
 ---@field receive function
 ---@field render function
+
+---@class Techmino.PlayerModeData
+---@field subMode string
+---@field stat Techmino.Mech.Basic.StatisticTable
+---@field music Techmino.PlayerModeData.MusicTable
+---@field target {[any]:any}
+---@field [any] any
+
+---@class Techmino.PlayerModeData.MusicTable
+---@field id? string FMOD parameter name, default to 'intensity'
+---@field path string Lerping value path, like 'modeData.stat.line' or '.stat.line' in short
+---@field s? number Lerping start point, leave this empty to use direct value instead of 0~1 lerping
+---@field e? number Lerping end point

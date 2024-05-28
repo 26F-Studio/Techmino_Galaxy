@@ -1,12 +1,12 @@
 local ins,rem=table.insert,table.remove
 
----@class Techmino.Mech.Brik.Clearrule
+---@class Techmino.Mech.Brik.ClearRule
 ---@field getDelay fun(P:Techmino.Player.Brik, lines:number[]): number?
 ---@field isFill fun(P:Techmino.Player.Brik, y:number): boolean
 ---@field getFill fun(P:Techmino.Player.Brik): number[]?
 ---@field clear fun(P:Techmino.Player.Brik, lines:number[])
 
----@type Map<Techmino.Mech.Brik.Clearrule>
+---@type Map<Techmino.Mech.Brik.ClearRule>
 local clearRule={}
 
 local function setBias(P,x,y,dx,dy,moveType,clearDelay)

@@ -10,18 +10,18 @@ return {
         clearDelay=120,
         atkSys='nextgen',
         event={
-            playerInit=mechLib.brik.comboGenerator.event_playerInit,
+            playerInit={
+                mechLib.brik.comboGenerator.event_playerInit,
+                function(P)
+                    P.modeData.target.combo=200
+                    mechLib.common.music.set(P,{path='.comboCount',s=50,e=100},'afterClear')
+                end,
+            },
             afterDrop=mechLib.brik.comboGenerator.event_afterDrop,
             afterLock=mechLib.brik.comboGenerator.event_afterLock,
-            afterClear={
-                mechLib.brik.comboGenerator.event_afterClear,
-                {1e62,function(P)
-                    if not P.isMain then return true end
-                    FMOD.music.setParam('intensity',MATH.icLerp(50,100,P.modeData.comboCount))
-                end},
-            },
-            beforeDiscard=mechLib.brik.comboGenerator.event_beforeDiscard[200],
-            drawOnPlayer=mechLib.brik.comboGenerator.event_drawOnPlayer[200],
+            afterClear=mechLib.brik.comboGenerator.event_afterClear,
+            beforeDiscard=mechLib.brik.comboGenerator.event_beforeDiscard,
+            drawOnPlayer=mechLib.brik.comboGenerator.event_drawOnPlayer,
         },
     }},
 }

@@ -14,15 +14,12 @@ return {
         deathDelay=0,
         soundEvent={countDown=mechLib.brik.misc.interior_soundEvent_countDown},
         event={
-            afterClear={
-                mechLib.brik.sprint.event_afterClear[40],
-                {1e62,function(P)
-                    if PROGRESS.get('main')>=2 and P.modeData.stat.line>10 and P.isMain then
-                        FMOD.music.setParam('intensity',math.min((P.modeData.stat.line-10)/20,1))
-                    end
-                end},
-            },
-            drawOnPlayer=mechLib.brik.sprint.event_drawOnPlayer[40],
+            playerInit=function(P)
+                P.modeData.target.line=40
+                mechLib.common.music.set(P,{path='.stat.line',s=10,e=30},'afterClear')
+            end,
+            afterClear=mechLib.brik.sprint.event_afterClear,
+            drawOnPlayer=mechLib.brik.sprint.event_drawOnPlayer,
         },
     }},
     result=function()

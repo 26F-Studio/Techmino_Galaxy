@@ -38,6 +38,7 @@ function S.drawHandCell(C,_,_,_)
 end
 
 function S.drawNextBorder(slot)
+    if slot<=0 then return end
     gc_setColor(0,0,0,.26)
     gc_rectangle('fill',30,0,100,100*slot)
     gc_setLineWidth(2)

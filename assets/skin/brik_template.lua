@@ -173,6 +173,7 @@ end
 local disabledColor={.6,.6,.6}
 
 function S.drawNextBorder(slot)
+    if slot<=0 then return end
     gc_setColor(0,0,0,.26)
     gc_rectangle('fill',30,0,140,100*slot)
     gc_setLineWidth(2)
@@ -186,6 +187,7 @@ function S.drawNextCell(C,disabled,_,_,_)
 end
 
 function S.drawHoldBorder(mode,slot)
+    if slot<=0 then return end
     gc_setLineWidth(2)
     if mode=='hold' then
         gc_setColor(0,0,0,.26)

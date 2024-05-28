@@ -823,6 +823,10 @@ local baseEnv={
     twistR=false,twistL=false,twistF=false,
     twistForce=false,
 
+    -- Control
+    asd=122,
+    asp=26,
+
     -- Other
     script=false,
 
@@ -837,7 +841,6 @@ local soundEventMeta={
 }
 function AP.new()
     local self=setmetatable(require'basePlayer'.new(),{__index=AP,__metatable=true})
-    ---@type Techmino.Mode.Setting.Acry
     self.settings=TABLE.copyAll(baseEnv)
     self.event={
         -- Press & Release

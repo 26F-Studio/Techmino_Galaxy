@@ -13,7 +13,6 @@ local ins,rem=table.insert,table.remove
 local clamp,expApproach=MATH.clamp,MATH.expApproach
 
 ---@class Techmino.Player.Brik: Techmino.Player
----@field field Techmino.RectField
 local BP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 --------------------------------------------------------------
@@ -226,7 +225,7 @@ function BP:showInvis(visStep,visMax)
     end
 end
 function BP:getSmoothPos()
-    if self.deathTimer then
+    if not self.hand or self.deathTimer then
         return 0,0
     else
         return
@@ -579,6 +578,17 @@ function BP:freshDelay(reason)
         error("WTF why settings.freshCondition is "..tostring(self.settings.freshCondition))
     end
 end
+---@param seqData string|Techmino.Mech.Brik.Sequence|fun(P:Techmino.Player.Brik, d:table, init:boolean):Techmino.Brik.ID?
+---@param args? string Can include '-clearData' and '-clearNext'
+function BP:setSequenceGen(seqData,args)
+    if type(args)~='string' then args='' end
+    if args:sArg('-clearData') then self.seqData={} end
+    if args:sArg('-clearNext') then TABLE.clear(self.nextQueue) end
+
+    self.seqGen=mechLib.brik.sequence[seqData] or seqData
+    assert(self:seqGen(self.seqData,true)==nil,"First call of sequence generator must return nil")
+    self:freshNextQueue()
+end
 function BP:freshNextQueue()
     while #self.nextQueue<max(self.settings.nextSlot,1) do
         local shape=self:seqGen(self.seqData)
@@ -668,13 +678,12 @@ end
 ---@return Techmino.Cell
 function BP:newCell(color,id)
     self.totalCellCount=self.totalCellCount+1
-    local c={
+    return {
         cid='_'..STRING.toHex(self.totalCellCount),
         id=id,
         color=color or 0,
         conn={},
     }
-    return c
 end
 ---@param shapeData Techmino.Brik|table
 function BP:getBrik(shapeData)
@@ -1314,7 +1323,7 @@ function BP:setField(arg)
     for y=1,#arg do
         f[y]={}
         for x=1,w do
-            local c=arg[y][x]
+            local c=arg[y][x] ---@type number|false
             if type(c)=='number' then
                 if color=='template' then
                     if c%1==0 and c>=1 and c<=7 then
@@ -1368,7 +1377,7 @@ function BP:changeFieldWidth(w,origPos)
         if not origPos then origPos=1 end
         local w0=self.settings.fieldW
         for y=1,#self.field:getHeight() do
-            local L=TABLE.new(false,w)
+            local L=TABLE.new(false,w) ---@type Techmino.Cell[]
             for x=1,w0 do
                 local newX=origPos+x-1
                 if newX>=1 and newX<=w then
@@ -1927,6 +1936,7 @@ end
 -- Builder
 
 ---@class Techmino.Mode.Setting.Brik
+---@field seqType string|Techmino.Mech.Brik.Sequence|fun(P:Techmino.Player.Brik, d:table, init:boolean):Techmino.Brik.ID?
 ---@field event Map<Map<Techmino.Event<Techmino.Player.Brik>>|Techmino.Event<Techmino.Player.Brik>>
 local baseEnv={
     -- Size
@@ -2025,7 +2035,6 @@ local soundEventMeta={
 }
 function BP.new()
     local self=setmetatable(require'basePlayer'.new(),{__index=BP,__metatable=true})
-    ---@type Techmino.Mode.Setting.Brik
     self.settings=TABLE.copyAll(baseEnv)
     self.event={
         -- Press & Release
@@ -2068,6 +2077,7 @@ function BP.new()
     }
     self.soundEvent=setmetatable({},soundEventMeta)
 
+    ---@cast self Techmino.Player.Brik
     mechLib.brik.statistics.event_playerInit[2](self)
 
     return self
@@ -2090,9 +2100,7 @@ function BP:initialize()
     self.totalCellCount=0
     self.nextQueue={}
     self.seqData={}
-    self.seqGen=mechLib.brik.sequence[self.settings.seqType] or self.settings.seqType
-    assert(self:seqGen(self.seqData,true)==nil,"First call of sequence generator must return nil")
-    self:freshNextQueue()
+    self:setSequenceGen(self.settings.seqType)
 
     self.holdQueue={}
     self.holdTime=0

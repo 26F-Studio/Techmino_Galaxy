@@ -1,11 +1,12 @@
 -- Fake require function, only do string manipulation, real require when needed
 local require=simpRequire(function(path) return 'assets/game/mechanicLib/'..path..'.lua' end)
 
----@class Techmino.Mech
+---@class Techmino.MechLib
 local mechLib={
     common={
         -- Tool
         timer=require'common/timer',
+        music=require'common/music',
         characterAnim=require'common/characterAnim',
 
         -- Story
