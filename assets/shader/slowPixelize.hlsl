@@ -3,7 +3,7 @@
 #define BORDER_LINE;
 // #define BORDER_ROUND;
 
-uniform float tileSize = 0.01;
+extern float tileSize; // 0.01
 
 const float smpCount = 4.0;
 const float borderSize = 0.002;

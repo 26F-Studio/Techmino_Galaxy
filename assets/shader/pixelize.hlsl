@@ -1,6 +1,6 @@
 // Original by: @la4 from Shadertoy
 
-uniform vec2 size = vec2(100, 100);
+extern vec2 size; // 100,100
 
 vec4 effect(vec4 color, sampler2D tex, vec2 texCoord, vec2 scrCoord)
 {

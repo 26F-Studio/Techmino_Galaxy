@@ -797,7 +797,7 @@ end
 -- Builder
 
 ---@class Techmino.Mode.Setting.Acry
----@field event Map<Techmino.Event<Techmino.Player.Acry>[]|Techmino.Event<Techmino.Player.Acry>>
+---@field event table<Techmino.EventName,Techmino.Event<Techmino.Player.Acry>[]|Techmino.Event<Techmino.Player.Acry>>
 local baseEnv={
     -- Size
     fieldSize=8,

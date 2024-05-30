@@ -1,10 +1,9 @@
 // Original by: @bytewave from Shadertoy
 
-// uniform float smpCount = 26;
-uniform float radius = 0.026;
+extern float smpCount; // 10
+extern float radius; // 0.026
 
 vec4 effect(vec4 color, sampler2D tex, vec2 texCoord, vec2 scrCoord) {
-    float smpCount = min(400 * radius, 40);
     vec4 res = vec4(0.0, 0.0, 0.0, 0.0);
     float weightSum = 0.0;
 

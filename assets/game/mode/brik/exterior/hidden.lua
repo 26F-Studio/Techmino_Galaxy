@@ -16,7 +16,7 @@ return {
                 mechLib.common.music.set(P,{path='.stat.line',s=50,e=100},'afterClear')
             end,
             afterClear={
-                mechLib.brik.sprint.event_afterClear,
+                mechLib.brik.misc.lineClear_event_afterClear,
                 function(P,clear)
                     if clear.line<4 then
                         P.modeData.simplicity=P.modeData.simplicity+(5-clear.line)
@@ -29,21 +29,20 @@ return {
                     P.settings.pieceFadeTime=math.floor(MATH.cLerp(260,1e3,P.modeData.simplicity/62))
                 end,
             },
-            drawInField=mechLib.brik.sprint.event_drawInField,
-            drawOnPlayer=mechLib.brik.sprint.event_drawOnPlayer,
+            drawInField=mechLib.brik.misc.lineClear_event_drawInField,
+            drawOnPlayer=mechLib.brik.misc.lineClear_event_drawOnPlayer,
             gameOver=function(P)
-                if P.modeData.stat.line<100 then
-                    PROGRESS.setExteriorScore('hidden','line',P.modeData.stat.line)
-                else
-                    if P.modeData.stat.line==100 and P.modeData.stat.clears[1]+P.modeData.stat.clears[2]+P.modeData.stat.clears[3]==0 then
-                        PROGRESS.setSecret('exterior_hidden_superBrain')
-                    end
+                PROGRESS.setExteriorScore('hidden','line',math.min(P.modeData.stat.line,100))
+                if P.finished=='AC' then
                     PROGRESS.setExteriorScore('hidden','easy',P.gameTime,'<')
                     if P.modeData.maxSimplicity<=12 then
                         PROGRESS.setExteriorScore('hidden','hard',P.gameTime,'<')
                         P:showInvis(1,P.settings.pieceFadeTime/2)
                     else
                         P:showInvis(2,P.settings.pieceFadeTime)
+                    end
+                    if P.modeData.stat.clears[1]+P.modeData.stat.clears[2]+P.modeData.stat.clears[3]==0 then
+                        PROGRESS.setSecret('exterior_hidden_superBrain')
                     end
                 end
             end,

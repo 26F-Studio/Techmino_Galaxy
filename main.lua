@@ -416,10 +416,31 @@ SHADER={}
 for _,v in next,love.filesystem.getDirectoryItems('assets/shader') do
     if FILE.isSafe('assets/shader/'..v) then
         local name=v:sub(1,-6)
-        local suc,res=pcall(love.graphics.newShader,'assets/shader/'..name..'.glsl')
+        local suc,res=pcall(love.graphics.newShader,'assets/shader/'..name..'.hlsl')
         SHADER[name]=suc and res or error("Error in Shader '"..name.."': "..res)
     end
 end
+-- Initialize shader parameters
+for k,v in next,{
+    aura={{'alpha',1.0}},
+    gaussianBlur={
+        {'smpCount',10}, -- min(400 * radius, 40)
+        {'radius',0.026},
+    },
+    gaussianSharp={
+        {'smpCount',10}, -- min(400 * radius, 40)
+        {'radius',0.026},
+        {'intensity',1},
+    },
+    pixelize={{'size',{100,100}}},
+    rgb={{'alpha',1.0}},
+    ripple={
+        {'wave',{0.01,0.01}},
+        {'freq',{12,16}},
+        {'phase',{0,0}},
+    },
+    slowPixelize={{'tileSize',0.01}},
+} do for i=1,#v do SHADER[k]:send(unpack(v[i])) end end
 for _,v in next,love.filesystem.getDirectoryItems('assets/background') do
     if FILE.isSafe('assets/background/'..v) and v:sub(-3)=='lua' then
         local name=v:sub(1,-5)

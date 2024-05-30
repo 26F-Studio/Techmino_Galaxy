@@ -1,6 +1,6 @@
 // Original by: @bytewave from Shadertoy
 
-uniform highp float time;
+extern highp float time;
 
 float rand2d(vec2 co, float seed)
 {

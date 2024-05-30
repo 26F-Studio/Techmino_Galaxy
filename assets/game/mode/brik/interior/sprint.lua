@@ -18,8 +18,8 @@ return {
                 P.modeData.target.line=40
                 mechLib.common.music.set(P,{path='.stat.line',s=10,e=30},'afterClear')
             end,
-            afterClear=mechLib.brik.sprint.event_afterClear,
-            drawOnPlayer=mechLib.brik.sprint.event_drawOnPlayer,
+            afterClear=mechLib.brik.misc.lineClear_event_afterClear,
+            drawOnPlayer=mechLib.brik.misc.lineClear_event_drawOnPlayer,
         },
     }},
     result=function()

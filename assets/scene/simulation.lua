@@ -16,7 +16,7 @@ local sims={
         trigger=function()
             DEBUG.yieldUntilNextScene()
             if SCN.cur=='simulation' then
-                SCN.go('mode_exterior_Map','fadeHeader')
+                SCN.go('mode_exterior','fadeHeader')
             end
         end,
         draw=function()

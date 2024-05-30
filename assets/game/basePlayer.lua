@@ -190,6 +190,9 @@ function P:triggerEvent(name,...)
         end
     end
 end
+---- Statistic: -1e99
+---- Music: 1e62
+---- Default: 0
 ---@param name Techmino.EventName
 ---@param E Techmino.Event|Techmino.Event[]
 function P:addEvent(name,E)

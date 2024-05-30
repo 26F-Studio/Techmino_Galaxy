@@ -7,15 +7,42 @@ return {
     end,
     settings={brik={
         event={
-            playerInit=mechLib.brik.marathon.event_playerInit,
-            afterClear=function(P)
-                if not P.isMain then return true end
-                FMOD.music.setParam('level_marathon_exterior',(P.modeData.level or 1)+(P.modeData.ascend or 0))
+            playerInit={
+                mechLib.brik.marathon.event_playerInit,
+                function(P)
+                    mechLib.common.music.set(P,{id='level_marathon_exterior',path='.level'},'afterClear')
+                    if not PROGRESS.getExteriorModeState('combo') then
+                        P.settings.combo_sound=true
+                    end
+                end,
+            },
+            afterClear={
+                function(P)
+                    if PROGRESS.getExteriorModeState('allclear') then return true end
+                    if P.modeData.stat.allclear>0 then
+                        PROGRESS.setExteriorUnlock('allclear')
+                        return true
+                    end
+                end,
+                function(P)
+                    if PROGRESS.getExteriorModeState('combo') then return true end
+                    if P.combo==10 then
+                        PROGRESS.setExteriorUnlock('combo')
+                        return true
+                    end
+                end,
+            },
+            gameOver=function(P)
+                if P.finished=='AC' then
+                    PROGRESS.setExteriorScore('marathon','pass',1)
+                    PROGRESS.setExteriorUnlock('hypersonic')
+                end
             end,
         },
     }},
     result=function()
         local P=GAME.mainPlayer
+        ---@cast P Techmino.Player.Brik
         if not P then return end
         if P.modeData.stat.line<40 then return end
 
@@ -35,6 +62,7 @@ return {
     end,
     resultPage=function(time)
         local P=GAME.mainPlayer
+        ---@cast P Techmino.Player.Brik
         if not P then return end
         if not P.modeData.finalTime then
             FONT.set(100)

@@ -52,7 +52,7 @@ do -- marathon
         P.modeData.lineTarget=10
 
         P.modeData.level=1
-        P.modeData.ascend=0
+        P.modeData.dispLevel=1
         P.modeData.levelStartTime=0
         P.modeData.levelPieces=0
         P:addEvent('afterLock',marathon.event_afterLock)
@@ -84,9 +84,10 @@ do -- marathon
                     P.settings.dropDelay=levels[md.level].drop
                     P.settings.lockDelay=levels[md.level].lock
                     P.settings.spawnDelay=levels[md.level].spawn
+                    md.dispLevel=md.level
                 else
-                    md.ascend=md.ascend+1
-                    if md.ascend>=4 then
+                    md.level=md.level+1
+                    if md.level>=4 then
                         P.settings.lockDelay=max(P.settings.lockDelay-40,200)
                         P.settings.spawnDelay=max(P.settings.spawnDelay-25,0)
                     end
@@ -104,13 +105,14 @@ do -- marathon
     function marathon.event_drawOnPlayer(P)
         P:drawInfoPanel(-380,-85,160,200)
 
+        local md=P.modeData
         FONT.set(70)
-        GC.mStr(min(P.modeData.stat.line,200),-300,-90)
+        GC.mStr(min(md.stat.line,200),-300,-90)
         gc.rectangle('fill',-375,-2,150,4)
-        GC.mStr(P.modeData.lineTarget,-300,-5)
+        GC.mStr(md.lineTarget,-300,-5)
         FONT.set(30,'bold')
-        gc.setColor(P.modeData.level<=10 and COLOR.G or P.modeData.level<=20 and COLOR.Y or COLOR.R)
-        GC.mStr(P.modeData.level,-300,70)
+        gc.setColor(md.level<=10 and COLOR.G or md.level<=20 and COLOR.Y or COLOR.R)
+        GC.mStr(md.dispLevel,-300,70)
     end
 end
 
@@ -118,7 +120,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
     function marathon.hypersonic_event_playerInit(P)
         P.modeData.point=0
         P.modeData.level=1
-        P.modeData.target=100
+        P.modeData.target.point=100
         P.modeData.maxHold=0
         P.modeData.storedAsd=P.settings.asd
         P.modeData.storedAsp=P.settings.asp
@@ -131,12 +133,12 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
         local md=P.modeData
         if md.maxHold<#P.holdQueue then
             md.maxHold=#P.holdQueue
-        else
-            if md.point<md.target-1 then
-                md.point=md.point+1
-                if md.point==md.target-1 then
-                    P:playSound('beep_notice')
-                end
+            return
+        end
+        if md.point<md.target.point-1 then
+            md.point=md.point+1
+            if md.point==md.target.point-1 then
+                P:playSound('beep_notice')
             end
         end
     end
@@ -146,7 +148,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
         FONT.set(70)
         GC.mStr(P.modeData.point,-300,-90)
         gc.rectangle('fill',-375,-2,150,4)
-        GC.mStr(P.modeData.target,-300,-5)
+        GC.mStr(P.modeData.target.point,-300,-5)
     end
 
     do -- hypersonic_low
@@ -177,21 +179,21 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
             local dScore=floor((clear.line+1)^2/4) -- 1,2,4,6
             if dScore==0 then return end
             md.point=md.point+dScore
-            if md.point==md.target-1 then
+            if md.point==md.target.point-1 then
                 P:playSound('beep_notice')
             else
-                while md.point>=md.target do
+                while md.point>=md.target.point do
                     if md.level<5 then
                         P:playSound('beep_rise')
                         md.level=md.level+1
-                        md.target=100*md.level
+                        md.target.point=100*md.level
 
                         P.settings.asd=max(md.storedAsd,levels[md.level].asd)
                         P.settings.asp=max(md.storedAsp,levels[md.level].asp)
                         P.settings.lockDelay=levels[md.level].lock
                         P.settings.spawnDelay=levels[md.level].spawn
                     else
-                        md.point=md.target
+                        md.point=md.target.point
                         P:finish('AC')
                         return
                     end
@@ -270,14 +272,14 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
             local dScore=floor((clear.line+1)^2/4) -- 1,2,4,6
             if dScore==0 then return end
             md.point=md.point+dScore
-            if md.point==md.target-1 then
+            if md.point==md.target.point-1 then
                 P:playSound('beep_notice')
             else
-                while md.point>=md.target do
+                while md.point>=md.target.point do
                     if md.level<10 then
                         P:playSound('beep_rise')
                         md.level=md.level+1
-                        md.target=100*md.level
+                        md.target.point=100*md.level
 
                         P.settings.asd=max(md.storedAsd,levels[md.level].asd)
                         P.settings.asp=max(md.storedAsp,levels[md.level].asp)
@@ -291,7 +293,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
                             md.bumpTimer=md.bumpDelay
                         end
                     else
-                        md.point=md.target
+                        md.point=md.target.point
                         P:finish('AC')
                         return
                     end
@@ -416,14 +418,14 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
             local dScore=floor(clear.line^2/2) -- 0,2,4,8
             if dScore==0 then return end
             md.point=md.point+dScore
-            if md.point==md.target-1 then
+            if md.point==md.target.point-1 then
                 P:playSound('beep_notice')
             else
-                while md.point>=md.target do
+                while md.point>=md.target.point do
                     if md.level<10 then
                         P:playSound('beep_rise')
                         md.level=md.level+1
-                        md.target=100*md.level
+                        md.target.point=100*md.level
 
                         P.settings.asd=max(md.storedAsd,levels[md.level].asd)
                         P.settings.asp=max(md.storedAsp,levels[md.level].asp)
@@ -434,7 +436,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
                         P.settings.pieceVisTime=levels[md.level].visTime
                         P.settings.pieceFadeTime=levels[md.level].fadeTime
                     else
-                        md.point=md.target
+                        md.point=md.target.point
                         P:finish('AC')
                         return
                     end
@@ -447,7 +449,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
             FONT.set(70)
             GC.mStr(P.modeData.point,-300,-90)
             gc.rectangle('fill',-375,-2,150,4)
-            GC.mStr(P.modeData.target,-300,-5)
+            GC.mStr(P.modeData.target.point,-300,-5)
             GC.setAlpha(.7023)
             GC.mStr(P.modeData.point,-300+10*math.sin(P.time),-90)
         end
@@ -487,14 +489,14 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
             local dScore=floor(clear.line^2/3+2) -- 2,3,5,7
             if dScore==0 then return end
             md.point=md.point+dScore
-            if md.point==md.target-1 then
+            if md.point==md.target.point-1 then
                 P:playSound('beep_notice')
             else
-                while md.point>=md.target do
+                while md.point>=md.target.point do
                     if md.level<10 then
                         P:playSound('beep_rise')
                         md.level=md.level+1
-                        md.target=100*md.level
+                        md.target.point=100*md.level
 
                         P.settings.asd=max(md.storedAsd,levels[md.level].asd)
                         P.settings.asp=max(md.storedAsp,levels[md.level].asp)
@@ -504,7 +506,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
                         P.settings.maxFreshTime=levels[md.level].freshT
                         P.settings.maxFreshChance=levels[md.level].freshC
                     else
-                        md.point=md.target
+                        md.point=md.target.point
                         P:finish('AC')
                         return
                     end
@@ -516,7 +518,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
             FONT.set(70)
             GC.mStr(P.modeData.point,-300,-90)
             gc.rectangle('fill',-375,-2,150,4)
-            GC.mStr(P.modeData.target,-300,-5)
+            GC.mStr(P.modeData.target.point,-300,-5)
             FONT.set(85)
             GC.setAlpha(.42+.162*math.sin(P.time/126))
             GC.mStr(P.modeData.point,-300,-100)

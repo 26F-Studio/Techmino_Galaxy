@@ -1,4 +1,4 @@
-uniform vec4 hitWaves[8];
+extern vec4 hitWaves[8];
 // [0]= float x (0~1),
 // [1]= float y (0~1),
 // [2]= float power 1,

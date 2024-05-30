@@ -37,6 +37,7 @@ atkSys.modern={
         P.atkSysData.charge=0
         P.settings.spin_immobile=true
         P.settings.spin_corners=3
+        P.settings.combo_sound=true
     end,
     drop=function(P)
         ---@type Techmino.Game.Attack
@@ -153,9 +154,6 @@ atkSys.modern={
                         fontSize=15+min(combo,15)*5,
                     }
                 end
-
-                -- Combo sound
-                P:playSound('combo',combo)
             end
         elseif spin then
             P.texts:add{
@@ -177,6 +175,7 @@ atkSys.nextgen={
     init=function(P)
         P.settings.tuck=true
         P.settings.spin_immobile=true
+        P.settings.combo_sound=true
     end,
     drop=function(P)
         local text=''
@@ -253,8 +252,6 @@ atkSys.nextgen={
                 }
                 P:playSound('halfClear')
             end
-
-            P:playSound('combo',combo)
 
             -- Calculate attack
             local pwr

@@ -24,7 +24,6 @@ local mechLib={
         misc=require'brik/misc',
 
         -- Mode
-        sprint=require'brik/sprint',
         dig=require'brik/dig',
         survivor=require'brik/survivor',
         marathon=require'brik/marathon',

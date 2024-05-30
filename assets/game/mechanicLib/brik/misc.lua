@@ -30,6 +30,23 @@ function misc.suffocateLock_event_whenSuffocate(P)
     end
 end
 
+do -- Line Clear
+    function misc.lineClear_event_afterClear(P)
+        if P.modeData.stat.line>=P.modeData.target.line then
+            P:finish('AC')
+        end
+    end
+    function misc.lineClear_event_drawInField(P)
+        gc.setColor(1,1,1,.26)
+        gc.rectangle('fill',0,(P.modeData.stat.line-P.modeData.target.line)*40-2,P.settings.fieldW*40,4)
+    end
+    function misc.lineClear_event_drawOnPlayer(P)
+        P:drawInfoPanel(-380,-60,160,120)
+        FONT.set(80) GC.mStr(P.modeData.target.line-P.modeData.stat.line,-300,-70)
+        FONT.set(30) GC.mStr(Text.target_line,-300,15)
+    end
+end
+
 do -- coverField
     function misc.coverField_switch_auto(P)
         local md=P.modeData
@@ -62,18 +79,19 @@ do -- coverField
     end
 end
 
-function misc.noRotate_event_playerInit(P)
-    P:switchAction('rotateCW',false)
-    P:switchAction('rotateCCW',false)
-    P:switchAction('rotate180',false)
+do -- Control Limit
+    function misc.noRotate_event_playerInit(P)
+        P:switchAction('rotateCW',false)
+        P:switchAction('rotateCCW',false)
+        P:switchAction('rotate180',false)
+    end
+    function misc.noMove_event_playerInit(P)
+        P:switchAction('moveLeft',false)
+        P:switchAction('moveRight',false)
+    end
 end
 
-function misc.noMove_event_playerInit(P)
-    P:switchAction('moveLeft',false)
-    P:switchAction('moveRight',false)
-end
-
-do -- swapDirection
+do -- Swap Direction
     function misc.swapDirection_event_playerInit(P)
         P.modeData.flip=false
     end
@@ -90,52 +108,54 @@ do -- swapDirection
     end
 end
 
-function misc.flipBoardLR(P)
-    local matrix=P.field._matrix
-    local width=P.settings.fieldW
-    for y=1,P.field:getHeight() do
-        TABLE.reverse(matrix[y])
-        for x=1,width do
-            P:setCellBias(x,y,{x=width+1-2*x,expBack=.026})
-        end
-    end
-    P:freshGhost()
-end
-function misc.flipBoardUD(P)
-    TABLE.reverse(P.field._matrix)
-    local height=P.field:getHeight()
-    for y=1,height do
-        for x=1,P.settings.fieldW do
-            P:setCellBias(x,y,{y=height+1-2*y,expBack=.026})
-        end
-    end
-    P:freshGhost()
-end
-function misc.invertBoard(P,fromH,toH)
-    local F=P.field
-    local mat=F._matrix
-    for y=fromH or 1,toH or F:getHeight() do
-        for x=1,P.settings.fieldW do
-            mat[y][x]=not mat[y][x] and {color=0}
-        end
-    end
-end
-function misc.spinBoard(P,dx)
-    if dx==0 then return end
-    dx=dx and dx%P.settings.fieldW or P:random(1,P.settings.fieldW-1)
-    if dx>=P.settings.fieldW/2 then dx=dx-P.settings.fieldW end
-    local ip=dx>0 and 1 or P.settings.fieldW
-    local rp=dx>0 and P.settings.fieldW or 1
-    for _=1,math.abs(dx) do
+do -- Board Transition
+    function misc.flipBoardLR(P)
+        local matrix=P.field._matrix
+        local width=P.settings.fieldW
         for y=1,P.field:getHeight() do
-            local line=P.field._matrix[y]
-            ins(line,ip,rem(line,rp))
+            TABLE.reverse(matrix[y])
+            for x=1,width do
+                P:setCellBias(x,y,{x=width+1-2*x,expBack=.026})
+            end
+        end
+        P:freshGhost()
+    end
+    function misc.flipBoardUD(P)
+        TABLE.reverse(P.field._matrix)
+        local height=P.field:getHeight()
+        for y=1,height do
+            for x=1,P.settings.fieldW do
+                P:setCellBias(x,y,{y=height+1-2*y,expBack=.026})
+            end
+        end
+        P:freshGhost()
+    end
+    function misc.invertBoard(P,fromH,toH)
+        local F=P.field
+        local mat=F._matrix
+        for y=fromH or 1,toH or F:getHeight() do
+            for x=1,P.settings.fieldW do
+                mat[y][x]=not mat[y][x] and {color=0}
+            end
         end
     end
-    P:freshGhost()
+    function misc.spinBoard(P,dx)
+        if dx==0 then return end
+        dx=dx and dx%P.settings.fieldW or P:random(1,P.settings.fieldW-1)
+        if dx>=P.settings.fieldW/2 then dx=dx-P.settings.fieldW end
+        local ip=dx>0 and 1 or P.settings.fieldW
+        local rp=dx>0 and P.settings.fieldW or 1
+        for _=1,math.abs(dx) do
+            for y=1,P.field:getHeight() do
+                local line=P.field._matrix[y]
+                ins(line,ip,rem(line,rp))
+            end
+        end
+        P:freshGhost()
+    end
 end
 
-do -- randomPress
+do -- Random Press
     local decreaseLimit,decreaseAmount=260,120
     local minInterval,maxInterval=1620,2600
     function misc.randomPress_event_playerInit(P)
@@ -167,7 +187,7 @@ do -- randomPress
     end
 end
 
-do -- symmetery
+do -- Symmetery
     function misc.symmetery_event_afterLock(P)
         local currentPos={}
 
@@ -193,7 +213,7 @@ do -- symmetery
     end
 end
 
-do -- wind
+do -- Wind
     function misc.wind_switch_auto(P)
         local md=P.modeData
         if md.wind_enabled then
@@ -250,7 +270,7 @@ do -- wind
     end
 end
 
-do -- obstacle
+do -- Obstacle
     local minDist=3
     local maxHeight=3
     local extraCount=3
@@ -312,7 +332,7 @@ do -- obstacle
     end
 end
 
-do -- cascade
+do -- Cascade
     local function getSolidMat(P)
         local F=P.field
         local visitedMat={}
@@ -342,6 +362,7 @@ do -- cascade
         end
         return visitedMat
     end
+    ---Check floating blocks
     function misc.cascade_check(P)
         local F=P.field
         local solidMat=getSolidMat(P)
@@ -372,35 +393,34 @@ do -- cascade
         end
         F:fresh()
     end
-    function misc.cascade_autoEvent_always(P) -- Auto added, no need to manually add it
-        if P.modeData.cascading then
-            P.modeData.cascadeTimer=P.modeData.cascadeTimer-1
-            if P.modeData.cascadeTimer<=0 then
-                if misc.cascade_check(P) then
-                    misc.cascade_fall(P)
-                    P.modeData.cascadeTimer=P.modeData.cascadeDelay
-                else
-                    local fullLines=mechLib.brik.clearRule[P.settings.clearRule].getFill(P)
-                    if fullLines then
-                        P:doClear(fullLines)
-                    else
-                        P.settings.clearDelay=P.modeData.storedClearDelay
-                        if not P.finished then
-                            P.spawnTimer=P.settings.spawnDelay
-                        end
+    ---Will be automatically added
+    function misc.cascade_autoEvent_always(P)
+        P.modeData.cascadeTimer=P.modeData.cascadeTimer-1
+        if P.modeData.cascadeTimer>0 then return end
 
-                        P.modeData.cascading=false
-                        P.modeData.cascadeTimer=false
-                        P.modeData.cascadeDelay=false
-                        P.modeData.storedClearDelay=nil
-                    end
-                end
-            end
+        if misc.cascade_check(P) then
+            misc.cascade_fall(P)
+            P.modeData.cascadeTimer=P.modeData.cascadeDelay
         else
-            P:delEvent('always',misc.cascade_autoEvent_always)
+            local fullLines=mechLib.brik.clearRule[P.settings.clearRule].getFill(P)
+            if fullLines then
+                P:doClear(fullLines)
+            else
+                P.settings.clearDelay=P.modeData.storedClearDelay
+                if not P.finished then
+                    P.spawnTimer=P.settings.spawnDelay
+                end
+
+                P.modeData.cascading=false
+                P.modeData.cascadeTimer=false
+                P.modeData.cascadeDelay=false
+                P.modeData.storedClearDelay=nil
+                return true
+            end
         end
     end
-    function misc.cascade_event_afterClear(P) -- Just addresses this to enabled cascade, and need clearRule='line_float'
+    ---Add this to enabled cascade, clearRule='line_float' needed
+    function misc.cascade_event_afterClear(P)
         if misc.cascade_check(P) and not P.modeData.cascading then
             P.modeData.cascading=true
             P.modeData.cascadeDelay=math.max(math.floor(P.settings.clearDelay^.9),62)
@@ -412,7 +432,7 @@ do -- cascade
     end
 end
 
-do -- variabalNext
+do -- Variabal Next
     function misc.variabalNext_stackHigh_event_afterLock(P)
         if not P.modeData.storedNextSlot then
             P.modeData.storedNextSlot=P.settings.nextSlot

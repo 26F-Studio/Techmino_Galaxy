@@ -11,6 +11,22 @@ local expAppr=MATH.expApproach
 local dist=MATH.distance
 local tau=MATH.tau
 
+---@alias Techmino.ModeName
+---| 'sprint'
+---| 'sequence'
+---| 'hidden'
+---| 'tspin'
+---| 'marathon'
+---| 'allclear'
+---| 'combo'
+---| 'hypersonic'
+---| 'dig'
+---| 'excavate'
+---| 'drill'
+---| 'survivor'
+---| 'backfire'
+---| 'chain'
+---| 'action'
 
 -- Y   X
 --   *
@@ -414,8 +430,8 @@ function map:draw()
     gc_rotate(tau/3)  gc_setColor(1,0,0,.01) gc_polygon('fill',mapPoly) gc_scale(.5) gc_setColor(0,0,0,.0626) gc_polygon('fill',mapPoly) gc_scale(2)
     if full then
         gc_rotate(tau/3) gc_setColor(.62,.26,1) gc_draw(pSys[1])
-        gc_rotate(tau/3) gc_setColor(.42,.42,1) gc_draw(pSys[2])
-        gc_rotate(tau/3) gc_setColor(1,.26,.26) gc_draw(pSys[3])
+        if PROGRESS.getStyleUnlock('acry') then gc_rotate(tau/3) gc_setColor(.42,.42,1) gc_draw(pSys[2]) end
+        if PROGRESS.getStyleUnlock('gela') then gc_rotate(tau/3) gc_setColor(1,.26,.26) gc_draw(pSys[3]) end
     end
 
     -- Keyboard cursor

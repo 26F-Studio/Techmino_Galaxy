@@ -14,12 +14,12 @@ local prgs=setmetatable({
         sprint=0,
         marathon=0,
     },
+    styles={
+        brik=true,
+        gela=false,
+        acry=false,
+    },
     exteriorMap={
-        styles={
-            brik=true,
-            gela=false,
-            acry=false,
-        },
         modes={
             sprint={},
             marathon={},
@@ -86,9 +86,6 @@ local function sysInfoFunc()
         end
     end
 end
-
-local PROGRESS={}
-
 local function zDump(t)
     local list={}
     for k,v in next,t do
@@ -103,21 +100,28 @@ local function zDump(t)
     table.sort(list)
     return table.concat(list)
 end
-function PROGRESS.getHash(t)
+local function getHash(t)
     return love.data.encode('string','base64',STRING.digezt(zDump(t)))
 end
-function PROGRESS.save(mode)
-    if mode==nil then
+
+local PROGRESS={}
+
+--------------------------------------------------------------
+-- Save & Load
+
+---@param step nil
+function PROGRESS.save(step)
+    if step==nil then
         -- Wait 1 frame before saving
         TASK.removeTask_code(PROGRESS.save)
         TASK.new(PROGRESS.save,'yield')
-    elseif mode=='yield' then
+    elseif step=='yield' then
         -- Do wait
         coroutine.yield()
-        PROGRESS.save(true)
-    elseif mode==true then
+        PROGRESS.save('save')
+    elseif step=='save' then
         prgs.rnd=math.random(26,2e6)
-        prgs.hash=PROGRESS.getHash(prgs)
+        prgs.hash=getHash(prgs)
         FILE.save(prgs,'conf/progress','-json')
     end
 end
@@ -126,7 +130,7 @@ function PROGRESS.load()
     if success then
         if res then
             TABLE.update(prgs,res)
-            -- if res.hash==PROGRESS.getHash(res) then
+            -- if res.hash==getHash(res) then
             --     TABLE.update(prgs,res)
             -- else
             --     MSG.new('info',"Hash not match")
@@ -140,6 +144,9 @@ end
 function PROGRESS.fix()
     prgs.brik_stdMap=nil
 end
+
+--------------------------------------------------------------
+-- Function
 
 function PROGRESS.swapMainScene()
     if prgs.main<=2 then
@@ -349,9 +356,12 @@ function PROGRESS.drawExteriorHeader(h)
     GC.rectangle('fill',0,y,SCR.w,1)
 end
 
+--------------------------------------------------------------
 -- Get
+
 function PROGRESS.get(k) return prgs[k] end
 function PROGRESS.getBgmUnlocked(name) return prgs.bgmUnlocked[name] end
+function PROGRESS.getStyleUnlock(style) return prgs.styles[style] end
 function PROGRESS.getTutorialPassed(n)
     if n then
         return prgs.tutorial:sub(n,n)=='1'
@@ -361,12 +371,13 @@ function PROGRESS.getTutorialPassed(n)
 end
 function PROGRESS.getInteriorScore(mode) return prgs.interiorScore[mode] end
 function PROGRESS.getTotalInteriorScore() return prgs.interiorScore.dig+prgs.interiorScore.sprint+prgs.interiorScore.marathon end
-function PROGRESS.getExteriorUnlocked(mode) return prgs.exteriorMap.styles[mode] end
 function PROGRESS.getExteriorAllModeState() return prgs.exteriorMap.modes end
-function PROGRESS.getExteriorModeState(mode) return prgs.exteriorMap.modes[mode] or {} end
-function PROGRESS.getSecret(name) return not not prgs.secretFound[name] end
+function PROGRESS.getExteriorModeState(mode) return prgs.exteriorMap.modes[mode] end ---@param mode Techmino.ModeName
+function PROGRESS.getSecret(id) return not not prgs.secretFound[id] end
 
+--------------------------------------------------------------
 -- Set
+
 function PROGRESS.setMain(n)
     if n>prgs.main then
         while prgs.main<n do
@@ -387,6 +398,12 @@ function PROGRESS.setBgmUnlocked(name,state)
         PROGRESS.save()
     end
 end
+function PROGRESS.setStyleUnlock(style)
+    if not prgs.styles[style] then
+        prgs.styles[style]=true
+        PROGRESS.save()
+    end
+end
 function PROGRESS.setTutorialPassed(n)
     if prgs.tutorial:sub(n,n)=='0' then
         prgs.tutorial=prgs.tutorial:sub(1,n-1)..'1'..prgs.tutorial:sub(n+1)
@@ -400,18 +417,26 @@ function PROGRESS.setInteriorScore(mode,score)
         PROGRESS.save()
     end
 end
-function PROGRESS.setExteriorUnlock(mode,foreground)
+---@param mode Techmino.ModeName
+---@param outsideGame? true
+function PROGRESS.setExteriorUnlock(mode,outsideGame)
     if not prgs.exteriorMap.modes[mode] then
-        prgs.exteriorMap.modes[mode]={}
-        if TASK.lock(foreground and 'exMap_unlockSound' or 'exMap_unlockSound_background',2.6) then
-            FMOD.effect(foreground and 'map_unlock' or 'map_unlock_bg')
+        if TASK.lock(outsideGame and 'exMap_unlockSound' or 'exMap_unlockSound_background',2.6) then
+            FMOD.effect(outsideGame and 'map_unlock' or 'map_unlock_bg')
         end
+        prgs.exteriorMap.modes[mode]={}
+        PROGRESS.save()
     end
 end
+---@param mode Techmino.ModeName
+---@param data table
 function PROGRESS.setExteriorModeState(mode,data)
     prgs.exteriorMap.modes[mode]=data
 end
 
+---@param mode Techmino.ModeName
+---@param key string
+---@param value number
 ---@param sign? '<'|'>' #`'<'`means smaller=better, default to `'>'`
 ---@return boolean success
 function PROGRESS.setExteriorScore(mode,key,value,sign)
@@ -434,10 +459,10 @@ function PROGRESS.setExteriorScore(mode,key,value,sign)
 end
 
 ---@return boolean success
-function PROGRESS.setSecret(name)
-    if not prgs.secretFound[name] then
+function PROGRESS.setSecret(id)
+    if not prgs.secretFound[id] then
         FMOD.effect('map_unlock_secret')
-        prgs.secretFound[name]=1
+        prgs.secretFound[id]=1
         PROGRESS.save()
         return true
     end

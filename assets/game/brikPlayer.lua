@@ -13,6 +13,8 @@ local ins,rem=table.insert,table.remove
 local clamp,expApproach=MATH.clamp,MATH.expApproach
 
 ---@class Techmino.Player.Brik: Techmino.Player
+---@field dropHistory {id:integer, x:integer, y:integer, direction:integer, time:integer}[]
+---@field clearHistory {combo:integer, line:integer, linePos:integer[], time:integer}[]
 local BP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 --------------------------------------------------------------
@@ -1113,9 +1115,9 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
     self:lock()
     ins(self.dropHistory,{
         id=self.hand.id,
-        direction=self.hand.direction,
         x=self.handX,
         y=self.handY,
+        direction=self.hand.direction,
         time=self.time,
     })
     if self.handY+#self.hand.matrix-1>SET.deathH then
@@ -1131,15 +1133,17 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
     local fullLines=mechLib.brik.clearRule[SET.clearRule].getFill(self)
     if fullLines then
         self.combo=self.combo+1
+        if self.settings.combo_sound then
+            self:playSound('combo',self.combo)
+        end
         self.lastMovement.clear=fullLines
         self.lastMovement.combo=self.combo
 
         self:doClear(fullLines)
         if self.finished then return end
 
-        if SET.clearRule=='line' then
-            self:createHandLockEffect(1,1,1,1)
-        end
+        -- ?
+        -- if SET.clearRule=='line' then end
     else
         self.combo=0
     end
@@ -1937,7 +1941,7 @@ end
 
 ---@class Techmino.Mode.Setting.Brik
 ---@field seqType string|Techmino.Mech.Brik.Sequence|fun(P:Techmino.Player.Brik, d:table, init:boolean):Techmino.Brik.ID?
----@field event Map<Map<Techmino.Event<Techmino.Player.Brik>>|Techmino.Event<Techmino.Player.Brik>>
+---@field event table<Techmino.EventName,Map<Techmino.Event<Techmino.Player.Brik>>|Techmino.Event<Techmino.Player.Brik>>
 local baseEnv={
     -- Size
     fieldW=10, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
@@ -1989,6 +1993,7 @@ local baseEnv={
     tuck=false,
     spin_immobile=false,
     spin_corners=false, ---@type false|number
+    combo_sound=false,
     atkSys='none',
     allowCancel=true,
     allowBlock=true,
@@ -2136,21 +2141,8 @@ function BP:initialize()
         hold=false,
         hardDrop=false,
     }
-    self.dropHistory={
-        --[[
-            int id,
-            int x,y,direction,
-            int time,
-        ]]
-    }
-    self.clearHistory={
-        --[[
-            int combo,
-            int line,
-            int[] lines,
-            int time,
-        ]]
-    }
+    self.dropHistory={}
+    self.clearHistory={}
 
     self:loadScript(self.settings.script)
 end

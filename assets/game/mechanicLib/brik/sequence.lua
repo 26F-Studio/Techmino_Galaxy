@@ -131,9 +131,10 @@ bag7_sprint=function(P,d,init) -- bag7, but no early S/Z/O and shuffling range s
         -- First bag, try to prevent early S/Z/O
         mixture=TABLE.copy(Tetros)
         for i=7,2,-1 do ins(mixture,rem(mixture,P:random(1,i))) end
+        local szo={[1]=0,[2]=0,[6]=0}
         for _=1,2 do
-            if mixture[1]==1 or mixture[1]==2 or mixture[1]==6 then
-                ins(mixture,P:random(3,7),rem(mixture,1))
+            if szo[mixture[1]] then
+                ins(mixture,P:random(2,7),rem(mixture,1))
             end
         end
         TABLE.connect(d.start,mixture)

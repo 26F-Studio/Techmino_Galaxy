@@ -1,6 +1,6 @@
 // Original by: @bytewave from Shadertoy
 
-uniform highp float time;
+extern highp float time;
 
 vec3 hsv2rgb(in vec3 c)
 {

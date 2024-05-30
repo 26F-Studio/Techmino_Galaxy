@@ -131,11 +131,11 @@ return {
                         else
                             P.timing=true
                         end
-                        P:addEvent('drawOnPlayer',mechLib.brik.sprint.event_drawOnPlayer)
+                        P:addEvent('drawOnPlayer',mechLib.brik.misc.lineClear_event_drawOnPlayer)
                         return true
                     end
                 end,
-                mechLib.brik.sprint.event_afterClear,
+                mechLib.brik.misc.lineClear_event_afterClear,
                 {1,function(P)
                     if P.finished=='AC' then
                         PROGRESS.setExteriorScore('sequence',P.modeData.subMode,P.gameTime,'<')
