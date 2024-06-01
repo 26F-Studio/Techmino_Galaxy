@@ -2,7 +2,7 @@ local gc=love.graphics
 local floor=math.floor
 local min,max=math.min,math.max
 
----@type Map<Techmino.Mech.Brik>
+---@type Map<Techmino.Event.Brik>
 local marathon={}
 
 do -- marathon

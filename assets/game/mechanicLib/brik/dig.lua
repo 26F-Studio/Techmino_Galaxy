@@ -1,4 +1,4 @@
----@type Map<Techmino.Mech.Brik|Map<Techmino.Mech.Brik>>
+---@type Map<Techmino.Event.Brik|Map<Techmino.Event.Brik>>
 local dig={}
 
 function dig.sprint_event_playerInit(P)

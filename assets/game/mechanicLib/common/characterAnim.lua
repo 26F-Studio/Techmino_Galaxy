@@ -1,4 +1,4 @@
----@type Map<Techmino.Mech.Basic>
+---@type Map<Techmino.Event>
 local anim={}
 
 local introTime,outroTime=260,600

@@ -367,5 +367,5 @@ for variant,data in next,{
     end
 end
 
----@cast sequence Map<Techmino.Mech.Brik|Map<Techmino.Mech.Brik>>
+---@cast sequence Map<Techmino.Event.Brik|Map<Techmino.Event.Brik>>
 return sequence

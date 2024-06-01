@@ -1941,7 +1941,7 @@ end
 
 ---@class Techmino.Mode.Setting.Brik
 ---@field seqType string|Techmino.Mech.Brik.Sequence|fun(P:Techmino.Player.Brik, d:table, init:boolean):Techmino.Brik.ID?
----@field event table<Techmino.EventName,Map<Techmino.Event<Techmino.Player.Brik>>|Techmino.Event<Techmino.Player.Brik>>
+---@field event table<Techmino.EventName,Map<Techmino.Event.Brik>|Techmino.Event.Brik>
 local baseEnv={
     -- Size
     fieldW=10, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'

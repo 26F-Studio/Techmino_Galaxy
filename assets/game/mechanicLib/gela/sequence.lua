@@ -12,7 +12,7 @@ local function supply(list,src,rep)
     return false
 end
 
----@type Map<Techmino.Mech.Gela>
+---@type MapTechmino.Event.Gela
 local sequence={}
 
 ---@param P Techmino.Player.Gela

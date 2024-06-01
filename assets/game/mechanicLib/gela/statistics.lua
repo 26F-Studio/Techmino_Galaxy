@@ -1,4 +1,4 @@
----@type Map<Techmino.Event|Techmino.Mech.Gela>
+---@type Map<Techmino.Event|Techmino.Event.Gela>
 local stat={}
 
 function stat.event_playerInit(P) -- Directly called in gelaPlayer.lua

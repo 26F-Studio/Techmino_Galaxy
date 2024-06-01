@@ -1,4 +1,4 @@
----@type Map<Techmino.Mech.Acry>
+---@type Map<Techmino.Event.Acry>
 local mergeSys={}
 
 function mergeSys.modern(P,g,maxLen,lineCount)

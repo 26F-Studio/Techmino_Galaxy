@@ -1,6 +1,6 @@
 local floor,clamp=math.floor,MATH.clamp
 
----@type Map<Techmino.Mech.Brik>
+---@type Map<Techmino.Event.Brik>
 local squeeze={}
 
 ---@param width? number

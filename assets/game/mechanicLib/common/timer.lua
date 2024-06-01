@@ -27,7 +27,7 @@ local timer_drawFunc={
     end,
 }
 
----@type Map<Techmino.Mech.Basic>
+---@type Map<Techmino.Event>
 local timer={}
 
 ---@param time number milliseconds

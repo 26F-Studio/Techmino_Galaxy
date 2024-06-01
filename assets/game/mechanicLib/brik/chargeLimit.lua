@@ -1,6 +1,6 @@
 local gc=love.graphics
 
----@type Map<Techmino.Mech.Brik>
+---@type Map<Techmino.Event.Brik>
 local chargeLimit={}
 
 do -- tspin

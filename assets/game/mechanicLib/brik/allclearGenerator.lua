@@ -1,4 +1,4 @@
----@type Map<Techmino.Mech.Brik>
+---@type Map<Techmino.Event.Brik>
 local allclearGenerator={}
 
 local pieceShapes do

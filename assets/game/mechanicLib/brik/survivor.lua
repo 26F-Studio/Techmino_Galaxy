@@ -2,7 +2,7 @@ local floor,ceil=math.floor,math.ceil
 local max,min=math.max,math.min
 local gc=love.graphics
 
----@type Map<Techmino.Mech.Brik>
+---@type Map<Techmino.Event.Brik>
 local survivor={}
 
 function survivor.event_playerInit(P)

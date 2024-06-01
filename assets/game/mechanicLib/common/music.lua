@@ -1,4 +1,4 @@
----@type Map<Techmino.Mech.Basic>
+---@type Map<Techmino.Event>
 local music={}
 
 ---Setup music-param-updating-event for FMOD music (Auto removing old event)

@@ -1406,7 +1406,7 @@ end
 -- Builder
 
 ---@class Techmino.Mode.Setting.Gela
----@field event table<Techmino.EventName,Techmino.Event<Techmino.Player.Gela>[]|Techmino.Event<Techmino.Player.Gela>>
+---@field event table<Techmino.EventName,Techmino.Event.Gela[]|Techmino.Event.Gela>
 local baseEnv={
     -- Size
     fieldW=6, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
