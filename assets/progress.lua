@@ -287,6 +287,8 @@ function PROGRESS.transcendTo(n)
                 GC.rectangle('fill',0,0,SCR.w,SCR.h)
             end,
         }
+    elseif n==4 then
+        -- TODO
     else
         error("?")
     end
@@ -401,6 +403,9 @@ end
 function PROGRESS.setStyleUnlock(style)
     if not prgs.styles[style] then
         prgs.styles[style]=true
+        if TABLE.countAll(prgs.styles,true)>=2 then
+            PROGRESS.setMain(4)
+        end
         PROGRESS.save()
     end
 end

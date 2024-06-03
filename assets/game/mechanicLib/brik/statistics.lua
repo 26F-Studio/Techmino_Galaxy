@@ -11,6 +11,7 @@ function stat.event_playerInit(P) -- Directly called in brikPlayer.lua
         clearTime=0,
         clears={0,0,0,0},
         allclear=0,
+
         atk=0,
         sent=0,
     }

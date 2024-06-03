@@ -43,13 +43,14 @@ local modes={
     {pos={60,45,00},name='hypersonic'},
 
     {pos={35,25,00},name='dig'},
-    {pos={50,25,15},name='excavate'},
-    {pos={50,25,00},name='drill'},
-    {pos={65,25,15},name='survivor'},
-    {pos={65,25,00},name='backfire'},
+    {pos={50,25,00},name='excavate'},
+    {pos={35,10,00},name='drill'},
+    {pos={65,25,00},name='survivor'},
+    {pos={50,10,00},name='backfire'},
 
-    {pos={00,45,10},name='chain'},
-    {pos={45,00,10},name='action'},
+    {pos={00,35,10},name='chain'},
+
+    {pos={35,00,10},name='action'},
 }
 -- Initialize modes' graphic values
 for _,m in next,modes do
@@ -75,7 +76,7 @@ local bridgeLinks={
     'dig - excavate - survivor',
     'dig - drill - backfire',
     'tspin - chain',
-    'excavate - action',
+    'drill - action',
 }
 local bridges={}
 local function _newBridge(m1,m2)
@@ -135,7 +136,7 @@ local cam=GC.newCamera()
 cam.y0,cam.y=950,620
 cam.k0,cam.k=.9,2
 cam.swing=.00626
-cam.maxDist=2600--[[4000]]
+cam.maxDist=2600
 cam.minK,cam.maxK=.4--[[.2]],1.26
 
 ---@type table|false
@@ -425,13 +426,13 @@ function map:draw()
     end
 
     -- Back and particles
-    gc_rotate(-tau/4) gc_setColor(.626,0,1,.01) gc_polygon('fill',mapPoly) gc_scale(.5) gc_setColor(0,0,0,.0626) gc_polygon('fill',mapPoly) gc_scale(2)
-    gc_rotate(tau/3)  gc_setColor(.1,.1,1,.01) gc_polygon('fill',mapPoly) gc_scale(.5) gc_setColor(0,0,0,.0626) gc_polygon('fill',mapPoly) gc_scale(2)
-    gc_rotate(tau/3)  gc_setColor(1,0,0,.01) gc_polygon('fill',mapPoly) gc_scale(.5) gc_setColor(0,0,0,.0626) gc_polygon('fill',mapPoly) gc_scale(2)
+    gc_rotate(-tau/4) gc_setColor(.6,0.,1.,.02) gc_polygon('fill',mapPoly) gc_scale(.5) gc_setColor(0,0,0,.0626) gc_polygon('fill',mapPoly) gc_scale(2)
+    gc_rotate(tau/3)  gc_setColor(.1,.1,1.,.02) gc_polygon('fill',mapPoly) gc_scale(.5) gc_setColor(0,0,0,.0626) gc_polygon('fill',mapPoly) gc_scale(2)
+    gc_rotate(tau/3)  gc_setColor(1.,0.,0.,.02) gc_polygon('fill',mapPoly) gc_scale(.5) gc_setColor(0,0,0,.0626) gc_polygon('fill',mapPoly) gc_scale(2)
     if full then
-        gc_rotate(tau/3) gc_setColor(.62,.26,1) gc_draw(pSys[1])
-        if PROGRESS.getStyleUnlock('acry') then gc_rotate(tau/3) gc_setColor(.42,.42,1) gc_draw(pSys[2]) end
-        if PROGRESS.getStyleUnlock('gela') then gc_rotate(tau/3) gc_setColor(1,.26,.26) gc_draw(pSys[3]) end
+        gc_rotate(tau/3) if PROGRESS.getStyleUnlock('brik') then gc_setColor(.62,.26,1) gc_draw(pSys[1]) end
+        gc_rotate(tau/3) if PROGRESS.getStyleUnlock('acry') then gc_setColor(.42,.42,1) gc_draw(pSys[2]) end
+        gc_rotate(tau/3) if PROGRESS.getStyleUnlock('gela') then gc_setColor(1,.26,.26) gc_draw(pSys[3]) end
     end
 
     -- Keyboard cursor

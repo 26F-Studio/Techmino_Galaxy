@@ -34,7 +34,7 @@ return {
             },
             gameOver=function(P)
                 if P.finished=='AC' then
-                    PROGRESS.setExteriorScore('marathon','pass',1)
+                    PROGRESS.setExteriorScore('marathon','main',P.gameTime,'<')
                     PROGRESS.setExteriorUnlock('hypersonic')
                 end
             end,

@@ -73,6 +73,12 @@ return {
                             PROGRESS.setExteriorScore('tspin','tsd_hard',P.modeData.tsd)
                         end
                     end
+
+                    -- TODO: balance
+                    if (PROGRESS.getExteriorModeState('tspin').tsd_hard or 0)+(PROGRESS.getExteriorModeState('tspin').tsd or 0)>=26 then
+                        PROGRESS.setStyleUnlock('gela')
+                        PROGRESS.setExteriorUnlock('chain')
+                    end
                 end,
             },
             drawOnPlayer=mechLib.brik.chargeLimit.tspin_event_drawOnPlayer,

@@ -27,11 +27,11 @@ atkSys.basic={
     end,
 }
 
--- 1~3 attack 0~2, CHARGE-6
--- 4+ attack 4+, CHARGE+1
--- T-Spin attack=line*2, CHARGE+1, (WIP: Both 3-corner or immobile count as T-Spin)
+-- 1~3 attack 0~2, charge-6
+-- 4+ attack 4+, charge+1
+-- T-Spin attack=line*2, charge+1, (WIP: Both 3-corner or immobile count as T-Spin)
 -- Combo attack 0,0,1,1,1,2,2,2,3+
--- CHARGE give 0.25*CHG (round+) more attack, up to 2 for T-Spin, 4 for Techrash(+), [Discharged count]/2 (round-) otherwise
+-- Charge give 0.25*CHG (round+) more attack, up to 2 for T-Spin, 4 for Techrash(+), [Discharged count]/2 (round-) otherwise
 atkSys.modern={
     init=function(P)
         P.atkSysData.charge=0
@@ -112,8 +112,8 @@ atkSys.modern={
                         P:playSound('charge',newCharge)
                     end
                 elseif oldCharge-newCharge>=2 then
-                        t=t..Text.charge.." "
-                        P:playSound('discharge')
+                    t=t..Text.charge.." "
+                    P:playSound('discharge')
                 end
 
                 -- Add spin text & sound
@@ -171,8 +171,10 @@ atkSys.modern={
 -- Continous 4+ get frenzy bonus (+1 attack)
 -- Combo attack 0,0,1,1,1,2,2,2,3+
 -- All and only `immobile` placement are spin, attack=line*2
+-- TODO: long-term charging for spin
 atkSys.nextgen={
     init=function(P)
+        P.atkSysData.charge=0
         P.settings.tuck=true
         P.settings.spin_immobile=true
         P.settings.combo_sound=true

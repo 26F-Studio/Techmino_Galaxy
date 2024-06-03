@@ -108,12 +108,9 @@ function F:getCell(x,y)
 end
 function F:setCell(cell,x,y)
     if not self._matrix[y] then
-        if y<=1260 then
-            for i=#self._matrix+1,y do
-                self._matrix[i]=TABLE.new(false,self._width)
-            end
-        else
-            return -- Too high, do nothing
+        if y>1260 then return end -- Too high, do nothing
+        for i=#self._matrix+1,y do
+            self._matrix[i]=TABLE.new(false,self._width)
         end
     end
     self._matrix[y][x]=cell

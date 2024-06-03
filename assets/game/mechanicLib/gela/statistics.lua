@@ -10,6 +10,7 @@ function stat.event_playerInit(P) -- Directly called in gelaPlayer.lua
         line=0,
         clearTime=0,
         allclear=0,
+
         atk=0,
         sent=0,
     }

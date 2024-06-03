@@ -14,8 +14,14 @@ return {
         deathDelay=0,
         soundEvent={countDown=mechLib.brik.misc.interior_soundEvent_countDown},
         event={
-            playerInit=mechLib.brik.dig.practice_event_playerInit[12],
-            afterClear=mechLib.brik.dig.practice_event_afterClear,
+            playerInit=function(P)
+                P.modeData.digMode='line'
+                P.modeData.target.lineDig=12
+                P.modeData.lineStay=12
+                mechLib.brik.dig.event_playerInit(P)
+                P.fieldDived=0
+            end,
+            afterClear=mechLib.brik.dig.event_afterClear,
         },
     }},
     result=function()

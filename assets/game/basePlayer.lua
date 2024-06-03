@@ -129,7 +129,7 @@ end
 --------------------------------------------------------------
 -- Game methods
 
----Random Int
+---Random Int or 0~1
 function P:random(a,b)
     return self.RND:random(a,b)
 end
