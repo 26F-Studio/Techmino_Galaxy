@@ -1,17 +1,17 @@
 local max,min=math.max,math.min
 local floor,ceil=math.floor,math.ceil
 
----@type Map<Map<fun(P:Techmino.Player.Brik):any>>
-local atkSys={}
+---@enum (key) Techmino.Mech.Brik.AttackSysName
+local atkSys={
 
 -- No attack
-atkSys.none={
+none={
     init=NULL,
     drop=NULL,
-}
+},
 
 -- N attack N
-atkSys.basic={
+basic={
     drop=function(P)
         if P.lastMovement.clear then
             local lines=#P.lastMovement.clear
@@ -25,14 +25,14 @@ atkSys.basic={
             return {power=lines,time=lines}
         end
     end,
-}
+},
 
 -- 1~3 attack 0~2, charge-6
 -- 4+ attack 4+, charge+1
 -- T-Spin attack=line*2, charge+1, (WIP: Both 3-corner or immobile count as T-Spin)
 -- Combo attack 0,0,1,1,1,2,2,2,3+
 -- Charge give 0.25*CHG (round+) more attack, up to 2 for T-Spin, 4 for Techrash(+), [Discharged count]/2 (round-) otherwise
-atkSys.modern={
+modern={
     init=function(P)
         P.atkSysData.charge=0
         P.settings.spin_immobile=true
@@ -43,13 +43,13 @@ atkSys.modern={
         ---@type Techmino.Game.Attack
         local atk
         local M=P.lastMovement
-        local spin=P.hand.name=='T' and M.action=='rotate' and (M.corners or M.immobile)
+        local tspin=P.hand.name=='T' and M.action=='rotate' and (M.corners or M.immobile)
         if M.clear then
             local lines,combo=#P.lastMovement.clear,P.lastMovement.combo
 
             local oldCharge=P.atkSysData.charge
             local newCharge=
-                spin and min(oldCharge+1,26) or
+                tspin and min(oldCharge+1,26) or
                 lines>=4 and min(oldCharge+1,26) or
                 max(oldCharge-6,0)
             P.atkSysData.charge=newCharge
@@ -62,7 +62,7 @@ atkSys.modern={
                 local fatal=30
 
                 -- Clearing type
-                if spin then
+                if tspin then
                     power=2*lines
                     power=power+min(ceil(oldCharge/4),2)
                     time=300
@@ -117,7 +117,7 @@ atkSys.modern={
                 end
 
                 -- Add spin text & sound
-                if spin then
+                if tspin then
                     t=t..Text.spin:repD(M.brik.name).." "
                     P:playSound('spin',lines)
                 end
@@ -136,9 +136,9 @@ atkSys.modern={
                     P.texts:add{
                         text=t..(Text.clearName[lines] or ('['..lines..']')),
                         a=.626,
-                        fontSize=min(30+lines*10,60)+(spin and 0 or 10),
-                        style=lines>=4 and 'stretch' or spin and 'spin' or 'appear',
-                        duration=lines/3+(spin and .6 or 0),
+                        fontSize=min(30+lines*10,60)+(tspin and 0 or 10),
+                        style=lines>=4 and 'stretch' or tspin and 'spin' or 'appear',
+                        duration=lines/3+(tspin and .6 or 0),
                     }
                 end
 
@@ -155,7 +155,7 @@ atkSys.modern={
                     }
                 end
             end
-        elseif spin then
+        elseif tspin then
             P.texts:add{
                 text=Text.spin:repD(M.brik.name),
                 a=.4,
@@ -165,14 +165,14 @@ atkSys.modern={
         end
         return atk
     end,
-}
+},
 
 -- 1~3 attack 0~2, 4+ attack 4+
 -- Continous 4+ get frenzy bonus (+1 attack)
 -- Combo attack 0,0,1,1,1,2,2,2,3+
 -- All and only `immobile` placement are spin, attack=line*2
 -- TODO: long-term charging for spin
-atkSys.nextgen={
+nextgen={
     init=function(P)
         P.atkSysData.charge=0
         P.settings.tuck=true
@@ -299,10 +299,13 @@ atkSys.nextgen={
             end
         end
     end,
+},
+
 }
 
 for _,sys in next,atkSys do
     setmetatable(sys,{__index=atkSys.none})
 end
 
+---@cast atkSys Map<Map<Techmino.Event.Brik>>
 return atkSys

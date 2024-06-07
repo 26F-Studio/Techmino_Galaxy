@@ -27,34 +27,6 @@ function survivor.event_drawOnPlayer(P)
     gc.circle('line',-300,130,48)
 end
 
-function survivor.power_event_always(P)
-    if not P.timing then return end
-    local md=P.modeData
-    if md.waveTimer>0 then
-        md.waveTimer=min(md.waveTimer-1,(P.field:getHeight()+3*P.garbageSum)*260)
-    end
-    if md.waveTimer==0 and P.garbageSum<=max(20-P.field:getHeight(),12) then
-        md.wave=md.wave+1
-
-        local wave=md.wave
-        md.curWaveTime=math.floor(
-            wave<=40 and MATH.interpolate(0,6000,40,4000,wave) or
-            wave<=80 and MATH.interpolate(40,4000,80,1500,wave) or
-            max(MATH.interpolate(80,1500,150,800,wave),800)
-        )
-        md.waveTimer=md.curWaveTime
-        GAME.send(false,GAME.initAtk{
-            target=GAME.mainID,
-            power=4+P:random(0,MATH.clamp(math.floor(wave/30-P.field:getHeight()/10),0,3)),
-            mode=0,
-            time=
-                (wave<50 and 100e3/(100+2*wave)+500 or 1000)+
-                MATH.clamp(400-wave,150,350)*max(P.field:getHeight()+P.garbageSum-8,0),
-            fatal=math.floor(min(30+wave/2,50)),
-            -- speed=?,
-        })
-    end
-end
 function survivor.cheese_event_always(P)
     if not P.timing then return end
     local md=P.modeData
@@ -85,6 +57,34 @@ function survivor.cheese_event_always(P)
                 )+math.floor((P:random()*2-1)*min(wave,100)/5),
                 0,100
             ),
+            -- speed=?,
+        })
+    end
+end
+function survivor.power_event_always(P)
+    if not P.timing then return end
+    local md=P.modeData
+    if md.waveTimer>0 then
+        md.waveTimer=min(md.waveTimer-1,(P.field:getHeight()+3*P.garbageSum)*260)
+    end
+    if md.waveTimer==0 and P.garbageSum<=max(20-P.field:getHeight(),12) then
+        md.wave=md.wave+1
+
+        local wave=md.wave
+        md.curWaveTime=math.floor(
+            wave<=40 and MATH.interpolate(0,6000,40,4000,wave) or
+            wave<=80 and MATH.interpolate(40,4000,80,1500,wave) or
+            max(MATH.interpolate(80,1500,150,800,wave),800)
+        )
+        md.waveTimer=md.curWaveTime
+        GAME.send(false,GAME.initAtk{
+            target=GAME.mainID,
+            power=4+P:random(0,MATH.clamp(math.floor(wave/30-P.field:getHeight()/10),0,3)),
+            mode=0,
+            time=
+                (wave<50 and 100e3/(100+2*wave)+500 or 1000)+
+                MATH.clamp(400-wave,150,350)*max(P.field:getHeight()+P.garbageSum-8,0),
+            fatal=math.floor(min(30+wave/2,50)),
             -- speed=?,
         })
     end

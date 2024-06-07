@@ -111,6 +111,18 @@ function brikRotSys._reflect(m) -- Only available for 4/2/1 state briks
     return m2
 end
 
+---@alias Techmino.Mech.Brik.RotationSysName
+---| 'None'
+---| 'TRS'
+---| 'SRS'
+---| 'BiRS'
+---| 'C2_plus'
+---| 'Classic'
+---| 'ASC_plus'
+---| 'ARS_plus'
+---| 'DRS_weak'
+---| 'Physical'
+
 love.graphics.setDefaultFilter('nearest','nearest')
 local require=simpRequire('assets.game.')
 brikRotSys.None=     require'rotsys_brik.none'

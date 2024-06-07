@@ -580,7 +580,7 @@ function BP:freshDelay(reason)
         error("WTF why settings.freshCondition is "..tostring(self.settings.freshCondition))
     end
 end
----@param seqData string|Techmino.Mech.Brik.Sequence|fun(P:Techmino.Player.Brik, d:table, init:boolean):Techmino.Brik.ID?
+---@param seqData string|Techmino.Mech.Brik.SequenceName|fun(P:Techmino.Player.Brik, d:table, init:boolean):Techmino.Brik.ID?
 ---@param args? string Can include '-clearData' and '-clearNext'
 function BP:setSequenceGen(seqData,args)
     if type(args)~='string' then args='' end
@@ -590,6 +590,16 @@ function BP:setSequenceGen(seqData,args)
     self.seqGen=mechLib.brik.sequence[seqData] or seqData
     assert(self:seqGen(self.seqData,true)==nil,"First call of sequence generator must return nil")
     self:freshNextQueue()
+end
+---@param atkSys string|Techmino.Mech.Brik.AttackSysName
+function BP:setAttackSystem(atkSys)
+    self.atkSysData={}
+    self.settings.tuck=false
+    self.settings.spin_immobile=false
+    self.settings.spin_corners=false
+    self.settings.combo_sound=false
+    self.settings.atkSys=atkSys
+    self:atkEvent('init')
 end
 function BP:freshNextQueue()
     while #self.nextQueue<max(self.settings.nextSlot,1) do
@@ -1940,7 +1950,7 @@ end
 -- Builder
 
 ---@class Techmino.Mode.Setting.Brik
----@field seqType string|Techmino.Mech.Brik.Sequence|fun(P:Techmino.Player.Brik, d:table, init:boolean):Techmino.Brik.ID?
+---@field seqType string|Techmino.Mech.Brik.SequenceName|fun(P:Techmino.Player.Brik, d:table, init:boolean):Techmino.Brik.ID?
 ---@field event table<Techmino.EventName,Map<Techmino.Event.Brik>|Techmino.Event.Brik>
 local baseEnv={
     -- Size
@@ -1957,7 +1967,7 @@ local baseEnv={
     clearMovement='lineBack',
 
     -- Sequence
-    seqType='bag7',
+    seqType='bag7', ---@type Techmino.Mech.Brik.SequenceName
     nextSlot=6,
     holdSlot=1,
     infHold=false,
@@ -1989,14 +1999,14 @@ local baseEnv={
     minRisingSpeed=1,
 
     -- Attack
-    rotSys='TRS',
-    tuck=false,
-    spin_immobile=false,
+    rotSys='TRS', ---@type Techmino.Mech.Brik.RotationSysName
+    tuck=false, ---@type boolean
+    spin_immobile=false, ---@type boolean
     spin_corners=false, ---@type false|number
-    combo_sound=false,
-    atkSys='none',
-    allowCancel=true,
-    allowBlock=true,
+    combo_sound=false, ---@type boolean
+    atkSys='none', ---@type Techmino.Mech.Brik.AttackSysName
+    allowCancel=true, ---@type boolean
+    allowBlock=true, ---@type boolean
 
     -- Control
     asd=122, -- *Auto shift delay
@@ -2097,8 +2107,7 @@ function BP:initialize()
     self.pieceCount=0
     self.combo=0
 
-    self.atkSysData={}
-    self:atkEvent('init')
+    self:setAttackSystem(self.settings.atkSys)
     self.garbageBuffer={}
     self.garbageSum=0
 

@@ -30,7 +30,7 @@ local Pentos={8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}
 local easyPentos={10,11,14,19,20,23,24,25} -- P Q T5 J5 L5 N H I5
 local hardPentos={8,9,12,13,15,16,17,18,21,22} -- Z5 S5 F E U V W X R Y
 
----@enum (key) Techmino.Mech.Brik.Sequence
+---@enum (key) Techmino.Mech.Brik.SequenceName
 local sequence={
 
 -- Bag +/-

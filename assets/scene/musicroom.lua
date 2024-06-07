@@ -36,6 +36,12 @@ local bigTitle=setmetatable({},{
         return self[name]
     end
 })
+---@alias Techmino.MusicName
+---| Techmino.PubMusicName
+---| 'secret7th_hidden'
+---| 'propel_marathon'
+
+---@enum (key) Techmino.PubMusicName
 local bgmList={
     ['8-bit happiness']       ={author="MrZ"},
     ['8-bit sadness']         ={author="MrZ"},

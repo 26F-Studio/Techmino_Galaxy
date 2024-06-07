@@ -8,9 +8,6 @@ local mechLib={
         timer=require'common/timer',
         music=require'common/music',
         characterAnim=require'common/characterAnim',
-
-        -- Story
-        exterior=require'common/exterior',
     },
     brik={
         -- Basic

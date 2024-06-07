@@ -7,6 +7,7 @@ function sureCheck(event)
 end
 
 local _bgmPlaying ---@type string?
+---@param name Techmino.MusicName
 ---@param full? boolean
 ---@param noProgress? boolean
 function playBgm(name,full,noProgress)
