@@ -19,103 +19,6 @@ local noResponseTimer=6.26
 ---@type Zenitha.Scene
 local scene={}
 
-local bigTitle=setmetatable({},{
-    __index=function(self,name)
-        local up=true
-        local s=''
-        for c in name:gmatch'.' do
-            if up then
-                c=c:upper()
-                up=false
-            else
-                up=c:match'%s'
-            end
-            s=s..c
-        end
-        self[name]=s
-        return self[name]
-    end
-})
----@alias Techmino.MusicName
----| Techmino.PubMusicName
----| 'secret7th_hidden'
----| 'propel_marathon'
-
----@enum (key) Techmino.PubMusicName
-local bgmList={
-    ['8-bit happiness']       ={author="MrZ"},
-    ['8-bit sadness']         ={author="MrZ"},
-    ['antispace']             ={author="MrZ",message="Blank remix remix"},
-    ['battle']                ={author="Aether & MrZ"},
-    ['blank']                 ={author="MrZ",message="The beginning"},
-    ['blox']                  ={author="MrZ",message="Old song remix"},
-    ['distortion']            ={author="MrZ",message="Someone said that 'rectification' is too flat"},
-    ['down']                  ={author="MrZ"},
-    ['dream']                 ={author="MrZ"},
-    ['echo']                  ={author="MrZ",message="Canon experiment"},
-    ['exploration']           ={author="MrZ",message="Let's explore the universe"},
-    ['far']                   ={author="MrZ"},
-    ['hope']                  ={author="MrZ"},
-    ['infinite']              ={author="MrZ"},
-    ['lounge']                ={author="Hailey (cudsys) & MrZ",message="Welcome to Space Café"},
-    ['minoes']                ={author="MrZ",message="Old song remix"},
-    ['moonbeam']              ={author="Beethoven & MrZ"},
-    ['new era']               ={author="MrZ"},
-    ['overzero']              ={author="MrZ",message="Blank remix"},
-    ['oxygen']                ={author="MrZ"},
-    ['peak']                  ={author="MrZ",message="3D pinball is fun!"},
-    ['pressure']              ={author="MrZ"},
-    ['push']                  ={author="MrZ"},
-    ['race']                  ={author="MrZ"},
-    ['reason']                ={author="MrZ"},
-    ['rectification']         ={author="MrZ",message="Someone said that 'Distortion' is too noisy"},
-    ['reminiscence']          ={author="MrZ",message="Nitrome games are fun!"},
-    ['secret7th']             ={author="MrZ",message="The 7th secret"},
-    ['secret8th']             ={author="MrZ",message="The 8th secret"},
-    ['shining terminal']      ={author="MrZ"},
-    ['sine']                  ={author="MrZ",message="~~~~~~"},
-    ['space']                 ={author="MrZ",message="Blank remix"},
-    ['spring festival']       ={author="MrZ",message="Happy New Year!"},
-    ['storm']                 ={author="MrZ",message="Remake of a milestone"},
-    ['sugar fairy']           ={author="Tchaikovsky & MrZ",message="A little dark remix"},
-    ['subspace']              ={author="MrZ",message="Blank remix"},
-    ['supercritical']         ={author="MrZ"},
-    ['truth']                 ={author="MrZ",message="Firefly in a Fairytale Remix"},
-    ['vapor']                 ={author="MrZ",message="Here is my water!"},
-    ['venus']                 ={author="MrZ"},
-    ['warped']                ={author="MrZ"},
-    ['waterfall']             ={author="MrZ"},
-    ['way']                   ={author="MrZ"},
-    ['xmas']                  ={author="MrZ",message="Merry Christmas!"},
-    ['empty']                 ={author="ERM",message="Blank remix from community (1st)"},
-    ['none']                  ={author="MrZ",message="Blank remix"},
-    ['nil']                   ={author="MrZ",message="Blank remix"},
-    ['null']                  ={author="MrZ",message="Blank remix"},
-    ['vacuum']                ={author="MrZ",message="Blank remix"},
-    ['blank orchestra']       ={author="T0722",message="A cool blank remix"},
-    ['jazz nihilism']         ={author="Trebor",message="A cool blank remix"},
-    ['beat5th']               ={author="MrZ",message="5/4 experiment"},
-    ['super7th']              ={author="MrZ",message="FL experiment"},
-    ['secret8th remix']       ={author="MrZ"},
-    ['shift']                 ={author="MrZ"},
-    ['here']                  ={author="MrZ"},
-    ['there']                 ={author="MrZ"},
-    ['1980s']                 ={author="C₂₉H₂₅N₃O₅",message="Old song remix"},
-    ['sakura']                ={author="ZUN & C₂₉H₂₅N₃O₅",plain=true},
-    ['malate']                ={author="ZUN & C₂₉H₂₅N₃O₅"},
-    ['shibamata']             ={author="C₂₉H₂₅N₃O₅",message="Nice song, Nice remix"},
-    ['race remix']            ={author="柒栎流星",plain=true},
-    ['secret7th remix']       ={author="柒栎流星",plain=true},
-    ['propel']                ={author="TetraCepra",message="A cool push remix"},
-    ['gallery']               ={author="MrZ",message="A venus remix"},
-    ['subzero']               ={author="TetraCepra",message="A cool blank remix"},
-    ['infinitesimal']         ={author="TetraCepra",message="A cool blank remix"},
-    ['vanifish']              ={author="Trebor & MrZ",message="A cool blank remix"},
-    ['gelly']                 ={author="MrZ",message="Old song remix"},
-    ['humanity']              ={author="MrZ"},
-    ['space retro']           ={author="LR & MrZ"},
-}
-
 local musicListBox do
     musicListBox={
         type='listBox',pos={.5,.5},x=0,y=-320,w=700,h=500,
@@ -132,9 +35,9 @@ local musicListBox do
         end
         setFont(60)
         gc_setColor(name==selected and COLOR.L or COLOR.LD)
-        gc_print(bigTitle[name],20,4)
+        gc_print(SONGBOOK[name].title,20,4)
         setFont(20)
-        gc_printf(bgmList[name].author,0,45,685,'right')
+        gc_printf(SONGBOOK[name].author,0,45,685,'right')
         if sel and name~=selected then
             setFont(100)
             gc_setColor(COLOR.L)
@@ -144,7 +47,7 @@ local musicListBox do
     function musicListBox.code()
         if selected~=musicListBox:getItem() then
             selected=musicListBox:getItem()
-            local fullBandMode=not bgmList[selected].plain and (noProgress or PROGRESS.getBgmUnlocked(selected)==2)
+            local fullBandMode=not SONGBOOK[selected].plain and (noProgress or PROGRESS.getBgmUnlocked(selected)==2)
             scene.widgetList.fullband:setVisible(fullBandMode)
             if fullBandMode then
                 fullband=fullband==true
@@ -178,14 +81,14 @@ function scene.enter()
     searchStr,searchTimer="",0
     if not selected then selected='blank' end
     local l={}
-    for k in next,bgmList do
+    for k in next,SONGBOOK do
         if noProgress or PROGRESS.getBgmUnlocked(k) then
             table.insert(l,k)
         end
     end
     table.sort(l)
     collectCount=#l
-    totalBgmCount=totalBgmCount or TABLE.getSize(bgmList)
+    totalBgmCount=totalBgmCount or TABLE.getSize(SONGBOOK)
     musicListBox:setList(l)
     musicListBox:select(TABLE.find(musicListBox:getList(),selected))
     musicListBox.code()
@@ -322,9 +225,9 @@ function scene.draw()
     gc.replaceTransform(SCR.xOy_m)
 
     -- Song title
-    if objText~=bigTitle[selected] then
-        objText=bigTitle[selected]
-        titleTextObj:set(bigTitle[selected])
+    if objText~=SONGBOOK[selected].title then
+        objText=SONGBOOK[selected].title
+        titleTextObj:set(SONGBOOK[selected].title)
     end
     local t=love.timer.getTime()
     gc_setColor(sin(t*.5)*.2+.8,sin(t*.7)*.2+.8,sin(t)*.2+.8)
@@ -333,11 +236,11 @@ function scene.draw()
     -- Author and message
     setFont(50)
     gc_setColor(COLOR.L)
-    gc_printf(bgmList[selected].author,-800,-90,700,'right')
-    if bgmList[selected].message then
+    gc_printf(SONGBOOK[selected].author,-800,-90,700,'right')
+    if SONGBOOK[selected].message then
         setFont(30)
         gc_setColor(COLOR.LD)
-        gc_printf(bgmList[selected].message,-800,0,700,'right')
+        gc_printf(SONGBOOK[selected].message,-800,0,700,'right')
     end
 
     -- Time

@@ -64,6 +64,7 @@ KEYMAP=require'assets.keymap'
 SKIN=require'assets.skin'
 CHAR=require'assets.char'
 SETTINGS=require'assets.settings'
+SONGBOOK=require'assets.songbook'
 CLR9=require'assets.color9'
 FMOD=require'assets.fmod20221'
 DEBUG.checkLoadTime("Load game modules")

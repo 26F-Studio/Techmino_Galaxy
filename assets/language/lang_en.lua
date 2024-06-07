@@ -12,6 +12,7 @@ local L={
     interior_crash="Sandbox exited due to performance rate overflow",
     booting_changed="Booting application changed",
     musicroom_lowVolume="Please increase BGM volume (bottom right)",
+    bgm_collected="BGM collected: $1",
     autoGC="[Auto GC] Low Memory",
 
     -- In-Game

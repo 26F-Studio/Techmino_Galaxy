@@ -407,6 +407,9 @@ function PROGRESS.setBgmUnlocked(name,state)
     local newState=math.max(prgs.bgmUnlocked[name] or 0,state)
     if newState>(prgs.bgmUnlocked[name] or 0) then
         prgs.bgmUnlocked[name]=newState
+        if prgs.main>=3 then
+            MSG.new('check',Text.bgm_collected:repD(SONGBOOK[name].title))
+        end
         PROGRESS.save()
     end
 end
