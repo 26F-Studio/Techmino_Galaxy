@@ -315,7 +315,7 @@ function P:draw()
         gc.translate(self.x,self.y)
 
         -- Board background
-        gc_setColor(COLOR.dX)
+        gc_setColor(COLOR.dT)
         gc_rectangle('fill',0,0,self.w,self.h)
 
         -- Hold slot

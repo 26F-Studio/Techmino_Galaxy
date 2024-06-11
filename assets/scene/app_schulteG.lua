@@ -147,7 +147,7 @@ function scene.draw()
     FONT.set(70)
     GC.mStr(state==1 and progress or state==0 and "Ready" or "Win",1400,300)
 
-    gc.setColor(COLOR.dX)
+    gc.setColor(COLOR.dT)
     gc.rectangle('fill',area.x-10,area.y-10,area.w+20,area.h+20)
     if state==2 then
         gc.setColor(.9,.9,0)-- win

@@ -124,7 +124,7 @@ local color2map={
 }
 function S.drawLockDelayIndicator(freshCondition,freshChance,timeRem)
     if timeRem>0 then
-        gc_setColor(COLOR.hsv(timeRem/2.6,.4,.9,.62))
+        gc_setColor(COLOR.HSV(timeRem/2.6,.4,.9,.62))
         gc_rectangle('fill',-200,415,400*timeRem,22)
     end
     if freshChance>0 then
@@ -133,7 +133,7 @@ function S.drawLockDelayIndicator(freshCondition,freshChance,timeRem)
 
         stc_reset()
         stc_rect(-200,415,400*timeRem,22)
-        SHADER.dualColor:send('color1',COLOR.hsv((freshChance-1)/14/2.6,.6,.8))
+        SHADER.dualColor:send('color1',COLOR.HSV((freshChance-1)/14/2.6,.6,.8))
         SHADER.dualColor:send('color2',unpack(color2map[freshCondition]))
         gc_setShader(SHADER.dualColor)
         batch:setDrawRange(1,freshChance)

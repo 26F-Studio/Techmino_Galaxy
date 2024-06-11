@@ -300,7 +300,7 @@ function scene.draw()
             end
         end
     end
-    gc.setColor(COLOR.dX)
+    gc.setColor(COLOR.dT)
     gc.setLineWidth(10)
     gc.rectangle('line',cx*160-467,cy*160-467,134,134,50)
 

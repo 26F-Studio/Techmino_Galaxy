@@ -315,7 +315,7 @@ function scene.draw()
         gc.scale(field.w/field.c,field.h/field.r)
 
         -- Background
-        gc.setColor(COLOR.dX)
+        gc.setColor(COLOR.dT)
         gc.rectangle('fill',0,0,field.w,field.h)
 
         -- Matrix

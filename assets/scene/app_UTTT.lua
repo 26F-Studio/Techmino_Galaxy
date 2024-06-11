@@ -148,7 +148,7 @@ function scene.draw()
     gc.translate(area.x,area.y)
 
     -- Draw board
-    gc.setColor(COLOR.dX)
+    gc.setColor(COLOR.dT)
     gc.rectangle('fill',0,0,area.w,area.h)
 
     -- Draw target area
@@ -205,7 +205,7 @@ function scene.draw()
 
     gc.translate(120,80)
     -- Draw current round mark
-    gc.setColor(COLOR.X)
+    gc.setColor(COLOR.T)
     gc.rectangle('fill',0,0,160,160)
     gc.setColor(COLOR.L)
     gc.setLineWidth(6)

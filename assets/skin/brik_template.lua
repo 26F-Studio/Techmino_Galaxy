@@ -132,7 +132,7 @@ end
 
 function S.drawLockDelayIndicator(freshCondition,freshChance,timeRem)
     if timeRem>0 then
-        gc_setColor(COLOR.hsv(timeRem/2.6,.4,.9,.62))
+        gc_setColor(COLOR.HSV(timeRem/2.6,.4,.9,.62))
         gc_rectangle('fill',-200,415,400*timeRem,14)
     end
     if freshChance>0 then
@@ -141,15 +141,15 @@ function S.drawLockDelayIndicator(freshCondition,freshChance,timeRem)
             freshCondition=='any' and COLOR.dL or
             freshCondition=='fall' and COLOR.R or
             freshCondition=='none' and COLOR.D or
-            COLOR.random(4)
+            COLOR.rainbow(4)
         )
         stc_reset()
         stc_rect(-200,415,400*timeRem,14)
         for i=1,freshChance do gc_rectangle('fill',-218+26*i-1,420-1,20+2,5+2) end
-        gc_setColor(COLOR.hsv(freshChance/(14*2.6),.4,.9))
+        gc_setColor(COLOR.HSV(freshChance/(14*2.6),.4,.9))
         for i=1,freshChance do gc_rectangle('fill',-218+26*i,420,20,5) end
         stc_stop()
-        gc_setColor(COLOR.hsv(freshChance/(14*2.6),.4,.9,.62))
+        gc_setColor(COLOR.HSV(freshChance/(14*2.6),.4,.9,.62))
         for i=1,freshChance do gc_rectangle('fill',-218+26*i,420,20,5) end
     end
 end

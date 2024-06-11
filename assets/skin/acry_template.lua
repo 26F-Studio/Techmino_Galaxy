@@ -54,7 +54,7 @@ end
 
 local acryShapes={
     { -- Red Square
-        color={COLOR.hsv(.97,.9,1,.5)},
+        color={COLOR.HSV(.97,.9,1,.5)},
         coords={
             -16,-10,
             -10,-16,
@@ -67,7 +67,7 @@ local acryShapes={
         },
     },
     { -- Orange Hexagon
-        color={COLOR.hsv(.1,.9,1,.5)},
+        color={COLOR.HSV(.1,.9,1,.5)},
         coords=(function()
             local l={}
                 for i=0,5 do
@@ -78,7 +78,7 @@ local acryShapes={
         end)()
     },
     { -- Yellow Rhombus
-        color={COLOR.hsv(.18,.9,1,.5)},
+        color={COLOR.HSV(.18,.9,1,.5)},
         coords=(function()
             local l={}
                 for i=0,3 do
@@ -89,7 +89,7 @@ local acryShapes={
         end)()
     },
     { -- Green Octagon
-        color={COLOR.hsv(.33,.85,.9,.5)},
+        color={COLOR.HSV(.33,.85,.9,.5)},
         coords=(function()
             local l={}
                 for i=0,5 do
@@ -100,7 +100,7 @@ local acryShapes={
         end)()
     },
     { -- Blue Diamond
-        color={COLOR.hsv(.58,1,1,.5)},
+        color={COLOR.HSV(.58,1,1,.5)},
         coords={
             0,18,
             17,-5,
@@ -110,7 +110,7 @@ local acryShapes={
         },
     },
     { -- Magenta Triangle
-        color={COLOR.hsv(.86,.9,1,.5)},
+        color={COLOR.HSV(.86,.9,1,.5)},
         coords={
             0,-15,
             16,15,
@@ -118,7 +118,7 @@ local acryShapes={
         },
     },
     { -- White Circle
-        color={COLOR.hsv(0,0,1,.5)},
+        color={COLOR.HSV(0,0,1,.5)},
         coords=(function()
             local l={}
                 for i=0,15 do

@@ -248,7 +248,7 @@ function scene.draw()
     -- Previews
     if nexts then
         gc.translate(30,450)
-        gc.setColor(COLOR.dX)
+        gc.setColor(COLOR.dT)
         gc_rectangle('fill',0,0,280,75)
         gc.setLineWidth(6)
         gc_setColor(COLOR.L)
