@@ -64,7 +64,7 @@ do -- marathon
     end
     function marathon.event_afterClear(P)
         local md=P.modeData
-        while md.stat.line>=md.lineTarget do
+        while P.stat.line>=md.lineTarget do
             if md.lineTarget<200 then
                 if md.level<30 then
                     local autoLevel=md.level
@@ -107,7 +107,7 @@ do -- marathon
 
         local md=P.modeData
         FONT.set(70)
-        GC.mStr(min(md.stat.line,200),-300,-90)
+        GC.mStr(min(P.stat.line,200),-300,-90)
         gc.rectangle('fill',-375,-2,150,4)
         GC.mStr(md.lineTarget,-300,-5)
         FONT.set(30,'bold')

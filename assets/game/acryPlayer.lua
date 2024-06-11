@@ -12,6 +12,7 @@ local floor=math.floor
 local ins,rem=table.insert,table.remove
 
 ---@class Techmino.Player.Acry: Techmino.Player
+---@field stat Techmino.PlayerStatTable.Acry
 ---@field field Mat<Techmino.Acry.Cell|false>
 local AP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
@@ -869,6 +870,19 @@ function AP.new()
         drawOnPlayer={},
     }
     self.soundEvent=setmetatable({},soundEventMeta)
+
+    ---@class Techmino.PlayerStatTable.Acry: Techmino.PlayerStatTable
+    self.stat={
+        key=0,
+        spawn=0,
+        piece=0,
+        line=0,
+        clearTime=0,
+        allclear=0,
+
+        atk=0,
+        sent=0,
+    }
 
     return self
 end

@@ -50,11 +50,11 @@ return {
                     -- Easy mode finishes after 12 TSs
                     if P.modeData.tspin then
                         local goSecretApp
-                        if P.modeData.tspin==4 and P.modeData.stat.line==4 and PROGRESS.getSecret('exterior_tspin_12TSS') then
+                        if P.modeData.tspin==4 and P.stat.line==4 and PROGRESS.getSecret('exterior_tspin_12TSS') then
                             goSecretApp=true
                         elseif P.modeData.tspin>=12 then
                             PROGRESS.setExteriorScore('tspin','any',P.modeData.tspin)
-                            if P.modeData.stat.line==12 then
+                            if P.stat.line==12 then
                                 PROGRESS.setSecret('exterior_tspin_12TSS')
                                 goSecretApp=true
                             else
@@ -74,12 +74,15 @@ return {
                         end
                     end
 
-                    -- TODO: balance
-                    if (PROGRESS.getExteriorModeState('tspin').tsd_hard or 0)+(PROGRESS.getExteriorModeState('tspin').tsd or 0)>=26 then
+                    -- Unlock Gela
+                    if
+                        not (PROGRESS.getStyleUnlock('gela') and PROGRESS.getExteriorModeState('chain')) and
+                        (PROGRESS.getExteriorModeState('tspin').tsd_hard or 0)+(PROGRESS.getExteriorModeState('tspin').tsd or 0)>=26
+                    then
                         PROGRESS.setStyleUnlock('gela')
                         PROGRESS.setExteriorUnlock('chain')
                     end
-                end,
+                end
             },
             drawOnPlayer=mechLib.brik.chargeLimit.tspin_event_drawOnPlayer,
         },

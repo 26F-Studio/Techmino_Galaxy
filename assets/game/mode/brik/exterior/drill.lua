@@ -62,8 +62,8 @@ return {
                     end
                 end,
             },
-            gameOver=function(P)
-                if P.finished=='AC' then
+            gameOver=function(P,reason)
+                if reason=='AC' then
                     if P.modeData.digMode=='checker' then
                         PROGRESS.setExteriorScore('dig','checker',P.gameTime,'<')
                     elseif P.modeData.digMode=='shale' then
@@ -73,6 +73,7 @@ return {
                     end
 
                     -- TODO: balance
+                    -- Unlock Acry
                     if (PROGRESS.getExteriorModeState('dig').shale or 1e99)+(PROGRESS.getExteriorModeState('dig').volcanics or 1e99)<=260e3 then
                         PROGRESS.setExteriorUnlock('backfire')
                     end

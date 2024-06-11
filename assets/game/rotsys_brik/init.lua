@@ -170,8 +170,8 @@ for name,rs in next,brikRotSys do
             if type(shapeID)=='number' then
                 assert(type(brikData)=='table',"brikData must be table")
                 if brikData.rotate then
-                    assert(type(brikData.rotate)=='function',"brikData.rotate must be function if exist")
-                    assert(brikData.center==nil or type(brikData.center)=='function',"brikData.center must be function if exist")
+                    assert(type(brikData.rotate)=='function',"brikData.rotate must be function if exists")
+                    assert(brikData.center==nil or type(brikData.center)=='function',"brikData.center must be function if exists")
                 end
                 for dir in next,brikData do
                     if type(dir)=='number' then

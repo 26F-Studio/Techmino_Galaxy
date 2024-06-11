@@ -15,7 +15,7 @@ return {
         event={
             playerInit=function(P)
                 P.modeData.target.line=100
-                mechLib.common.music.set(P,{path='.stat.line',s=40,e=75},'afterClear')
+                mechLib.common.music.set(P,{path='stat.line',s=40,e=75},'afterClear')
             end,
             gameStart=function(P) P.timing=false end,
             afterClear=function(P,clear)
@@ -53,7 +53,7 @@ return {
                 end
         end,
             gameOver=function(P)
-                if P.modeData.subMode and P.modeData.stat.line>=100 then
+                if P.modeData.subMode and P.stat.line>=100 then
                     PROGRESS.setExteriorScore('backfire',P.modeData.subMode,P.gameTime,'<')
                 end
             end,

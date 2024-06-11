@@ -1,3 +1,5 @@
+local ins,rem=table.insert,table.remove
+
 ---@type Techmino.Mode
 return {
     initialize=function()
@@ -6,9 +8,12 @@ return {
         playBgm('race')
     end,
     settings={brik={
+        -- clearRule='float',
         seqType='bag7_sprint',
         event={
             playerInit=function(P)
+                P.modeData.infSprint_dropCheckPos=1
+                P.modeData.infSprint_clears={}
                 P.modeData.target.line=40
                 P.modeData.keyCount={}
                 P.modeData.curKeyCount=0
@@ -30,12 +35,65 @@ return {
                 table.insert(P.modeData.keyCount,P.modeData.curKeyCount)
                 P.modeData.curKeyCount=0
             end,
+            beforeClear=function(P,lines) -- Infinite Sprint Core
+                local CLEAR=P.modeData.infSprint_clears
+                ---@type Techmino.Cell[][]
+                local mat=P.field._matrix
+                for i=1,#lines do
+                    local l={[0]=P.time}
+                    for x=1,P.settings.fieldW do
+                        local c=mat[lines[i]][x]
+                        l[c.did]=(l[c.did] or 0)+1
+                    end
+                    ins(CLEAR,l)
+                end
+
+                local dropCheckPos=P.modeData.infSprint_dropCheckPos
+                while true do
+                    local count=0
+
+                    local lClearBound
+                    for i=1,#CLEAR do
+                        if CLEAR[i][dropCheckPos] then
+                            lClearBound=i
+                            break
+                        end
+                    end
+                    if not lClearBound then break end
+
+                    local rClearBound
+                    for j=lClearBound,#CLEAR do
+                        for id,num in next,CLEAR[j] do
+                            if id>=dropCheckPos then
+                                count=count+num
+                                if count>=400 then
+                                    rClearBound=j
+                                    break
+                                end
+                            end
+                        end
+                    end
+                    if not rClearBound then break end
+
+                    local time=CLEAR[rClearBound][0]-P.dropHistory[dropCheckPos].time
+                    PROGRESS.setExteriorScore('sprint','40l',time,'<')
+                    -- print(("Time=%.2f"):format(time/1000))
+                    -- print(dropCheckPos,lClearBound,rClearBound)
+                    dropCheckPos=dropCheckPos+1
+                    P.modeData.infSprint_dropCheckPos=dropCheckPos
+                end
+            end,
             afterClear={
                 -- mechLib.brik.misc.cascade_event_afterClear,
-                mechLib.brik.misc.lineClear_event_afterClear,
+                function(P)
+                    if P.stat.line>=40 then
+                        P:delEvent('drawOnPlayer',mechLib.brik.misc.lineClear_event_drawOnPlayer)
+                        return true
+                    end
+                end,
                 function(P)
                     if PROGRESS.getExteriorModeState('allclear') then return true end
-                    if P.modeData.stat.allclear>0 then
+                    if P.stat.allclear>0 then
                         PROGRESS.setExteriorUnlock('allclear')
                         return true
                     end
@@ -48,8 +106,8 @@ return {
                     end
                 end,
             },
-            gameOver=function(P)
-                if P.finished=='AC' and P.modeData.stat.clears[1]+P.modeData.stat.clears[2]+P.modeData.stat.clears[3]==0 then
+            gameOver=function(P,reason)
+                if reason=='AC' and P.stat.clears[1]+P.stat.clears[2]+P.stat.clears[3]==0 then
                     PROGRESS.setExteriorUnlock('hidden')
                     return true
                 end
@@ -63,13 +121,13 @@ return {
         local P=GAME.mainPlayer
         ---@cast P Techmino.Player.Brik
         if not P then return end
-        if P.modeData.stat.line<10 then return end
+        if P.stat.line<10 then return end
 
         local dropInfo={}
         local clearInfo={}
 
         local finalTime=P.gameTime
-        local finRate=P.modeData.stat.line/P.modeData.target.line
+        local finRate=P.stat.line/P.modeData.target.line
         local averageTime=finalTime/#P.dropHistory
 
         local lastPieceTime=0
@@ -103,7 +161,7 @@ return {
         if not P.modeData.finalTime then
             FONT.set(100)
             GC.setColor(1,1,1,math.min(time*2.6,1))
-            GC.mStr(P.modeData.stat.line.." / "..P.modeData.target.line,800,400)
+            GC.mStr(P.stat.line.." / "..P.modeData.target.line,800,400)
             return
         end
 
@@ -117,7 +175,7 @@ return {
         -- Reference line
         GC.setLineWidth(6)
         GC.setColor(1,1,.626,.5)
-        if P.modeData.stat.line==P.modeData.target.line then
+        if P.stat.line==P.modeData.target.line then
             GC.line(0,0,800*t,(100/#P.dropHistory)*600*t)
         else
             GC.line(0,0,800*t,600*t)

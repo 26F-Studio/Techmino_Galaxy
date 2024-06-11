@@ -46,8 +46,8 @@ return {
             afterClear=mechLib.brik.misc.lineClear_event_afterClear,
             beforeCancel=function(P)
                 -- TODO: balance
-                if P.modeData.stat.atk>=8 then
-                    local eff=P.modeData.stat.atk/P.modeData.stat.line
+                if P.stat.atk>=8 then
+                    local eff=P.stat.atk/P.stat.line
                     if eff<1 then
                         P.modeData.subMode='cheese'
                         P.settings.dropDelay=1000

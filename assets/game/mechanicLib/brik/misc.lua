@@ -32,17 +32,17 @@ end
 
 do -- Line Clear
     function misc.lineClear_event_afterClear(P)
-        if P.modeData.stat.line>=P.modeData.target.line then
+        if P.stat.line>=P.modeData.target.line then
             P:finish('AC')
         end
     end
     function misc.lineClear_event_drawInField(P)
         gc.setColor(1,1,1,.26)
-        gc.rectangle('fill',0,(P.modeData.stat.line-P.modeData.target.line)*40-2,P.settings.fieldW*40,4)
+        gc.rectangle('fill',0,(P.stat.line-P.modeData.target.line)*40-2,P.settings.fieldW*40,4)
     end
     function misc.lineClear_event_drawOnPlayer(P)
         P:drawInfoPanel(-380,-60,160,120)
-        FONT.set(80) GC.mStr(P.modeData.target.line-P.modeData.stat.line,-300,-70)
+        FONT.set(80) GC.mStr(P.modeData.target.line-P.stat.line,-300,-70)
         FONT.set(30) GC.mStr(Text.target_line,-300,15)
     end
 end
@@ -253,8 +253,8 @@ do -- Wind
     end
     function misc.wind_event_afterClear(P)
         local md=P.modeData
-        if #md.invertPoints>0 and md.stat.line>md.invertPoints[1] then
-            while #md.invertPoints>0 and md.stat.line>md.invertPoints[1] do
+        if #md.invertPoints>0 and P.stat.line>md.invertPoints[1] then
+            while #md.invertPoints>0 and P.stat.line>md.invertPoints[1] do
                 rem(md.invertPoints,1)
             end
             md.windStrength=-MATH.sign(md.windStrength)*P:random(1260,1600)

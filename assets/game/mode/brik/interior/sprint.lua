@@ -16,7 +16,7 @@ return {
         event={
             playerInit=function(P)
                 P.modeData.target.line=40
-                mechLib.common.music.set(P,{path='.stat.line',s=10,e=30},'afterClear')
+                mechLib.common.music.set(P,{path='stat.line',s=10,e=30},'afterClear')
             end,
             afterClear=mechLib.brik.misc.lineClear_event_afterClear,
             drawOnPlayer=mechLib.brik.misc.lineClear_event_drawOnPlayer,
@@ -35,15 +35,15 @@ return {
                 40
             )
         else
-            PROGRESS.setInteriorScore('marathon',P.modeData.stat.line*0.75)
-            PROGRESS.setInteriorScore('sprint',P.modeData.stat.line)
+            PROGRESS.setInteriorScore('marathon',P.stat.line*0.75)
+            PROGRESS.setInteriorScore('sprint',P.stat.line)
         end
     end,
     resultPage=function(time)
         local P=GAME.mainPlayer
         if not P then return end
 
-        local line=math.min(P.modeData.stat.line,math.floor(math.max(time-.26,0)*62))
+        local line=math.min(P.stat.line,math.floor(math.max(time-.26,0)*62))
 
         -- XX/40
         FONT.set(100)

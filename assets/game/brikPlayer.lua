@@ -13,6 +13,7 @@ local ins,rem=table.insert,table.remove
 local clamp,expApproach=MATH.clamp,MATH.expApproach
 
 ---@class Techmino.Player.Brik: Techmino.Player
+---@field stat Techmino.PlayerStatTable.Brik
 ---@field dropHistory {id:integer, x:integer, y:integer, direction:integer, time:integer}[]
 ---@field clearHistory {combo:integer, line:integer, linePos:integer[], time:integer}[]
 local BP=setmetatable({},{__index=require'basePlayer',__metatable=true})
@@ -397,6 +398,8 @@ function BP:resetPos() -- Move hand piece to the normal spawn position
     self.minY=self.handY
     self.ghostY=false
     self:resetPosCheck()
+
+    self.stat.spawn=self.stat.spawn+1
 
     self:triggerEvent('afterResetPos')
 
@@ -1080,7 +1083,11 @@ function BP:hold_float()
         self:popNext(true)
     end
 end
+---@param fullLines integer[] (ascending)
 function BP:doClear(fullLines)
+
+    self:triggerEvent('beforeClear',fullLines)
+
     mechLib.brik.clearRule[self.settings.clearRule].clear(self,fullLines)
     local n=#fullLines
     local his={
@@ -1094,6 +1101,17 @@ function BP:doClear(fullLines)
     self:playSound('clear',n)
     if self.settings.particles then
         self:createFrenzyEffect(min(n^2*6,260))
+    end
+
+    local S=self.stat
+    local line=his.line
+    S.clearTime=S.clearTime+1
+    S.line=S.line+line
+    if line%1==0 and line>0 then
+        S.clears[line]=(S.clears[line] or 0)+1
+    end
+    if self.field:getHeight()==0 then
+        S.allclear=S.allclear+1
     end
 
     self:triggerEvent('afterClear',his)
@@ -1136,6 +1154,8 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
     end
     self:playSound('lock')
 
+    self.stat.piece=self.stat.piece+1
+
     self:triggerEvent('afterLock')
     if self.finished then return end
 
@@ -1164,6 +1184,8 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
         atk=GAME.initAtk(atk)
         atk.srcMode=self.gameMode
 
+        self.stat.atk=self.stat.atk+atk.power
+
         self:triggerEvent('beforeCancel',atk)
 
         if SET.allowCancel then
@@ -1191,6 +1213,8 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
         end
         if atk and atk.power>=.5 then
             atk.power=floor(atk.power+.5)
+
+            self.stat.sent=self.stat.sent+atk.power
 
             self:triggerEvent('beforeSend',atk)
 
@@ -1247,6 +1271,7 @@ function BP:lock() -- Put hand into field
     for y=1,#CB do for x=1,#CB[1] do
         local c=CB[y][x]
         if c then
+            c.did=self.stat.piece+1
             if self.settings.pieceVisTime then
                 if self.settings.pieceVisTime==0 then
                     c.alpha=0
@@ -1999,40 +2024,40 @@ local baseEnv={
     minRisingSpeed=1,
 
     -- Attack
-    rotSys='TRS', ---@type Techmino.Mech.Brik.RotationSysName
-    tuck=false, ---@type boolean
-    spin_immobile=false, ---@type boolean
-    spin_corners=false, ---@type false|number
-    combo_sound=false, ---@type boolean
-    atkSys='none', ---@type Techmino.Mech.Brik.AttackSysName
-    allowCancel=true, ---@type boolean
-    allowBlock=true, ---@type boolean
+    rotSys='TRS',             ---@type Techmino.Mech.Brik.RotationSysName
+    tuck=false,               ---@type boolean
+    spin_immobile=false,      ---@type boolean
+    spin_corners=false,       ---@type false|number
+    combo_sound=false,        ---@type boolean
+    atkSys='none',            ---@type Techmino.Mech.Brik.AttackSysName
+    allowCancel=true,         ---@type boolean
+    allowBlock=true,          ---@type boolean
 
     -- Control
-    asd=122, -- *Auto shift delay
-    asp=26, -- *Auto shift period
-    ash=26, -- *Auto Shift Halt, discharge asd when piece spawn
-    softdropSkipAsd=true, -- *Skip asd when softdrop
-    entryChrg='on', -- on/off/full/cancel charge when move before spawn
-    wallChrg='on', -- on/off/full/cancel charge when move towards wall
-    stopMoveWhenSpawn=false, -- Stop moving when piece spawn
-    stopMoveWhenRotate=false, -- Stop moving when rotate
-    stopMoveWhenHold=false, -- Stop moving when hold
-    dblMoveCover=true, -- Use second dir (Press 2)
-    dblMoveChrg='reset', -- reset/keep/raw/full charge (Press 2)
-    dblMoveStep=true, -- Move (Press 2)
-    dblMoveRelChrg='raw', -- reset/keep/raw/full charge (Release 1)
-    dblMoveRelStep=false, -- Move (Release 1)
-    dblMoveRelInvChrg='reset', -- reset/keep/raw/full charge (Release 2)
-    dblMoveRelInvStep=true, -- Move (Release 2)
-    dblMoveRelInvRedir=true, -- Change direction (Release 2)
-    initMove='buffer', -- buffer/hold to do initial move
-    initRotate='buffer', -- buffer/hold to do initial rotate
-    initHold='buffer', -- buffer/hold to do initial hold
-    aHdLock=60, -- Auto harddrop lock
-    mHdLock=40, -- Manual harddrop lock
-    freshLockInASD=true, -- Fresh lockDelay in auto shift delay
-    freshLockInASP=true, -- Fresh lockDelay in auto shift period
+    asd=122,                      -- *Auto shift delay
+    asp=26,                       -- *Auto shift period
+    ash=26,                       -- *Auto Shift Halt, discharge asd when piece spawn
+    softdropSkipAsd=true,         -- *Skip asd when softdrop
+    entryChrg='on',               -- on/off/full/cancel charge when move before spawn
+    wallChrg='on',                -- on/off/full/cancel charge when move towards wall
+    stopMoveWhenSpawn=false,      -- Stop moving when piece spawn
+    stopMoveWhenRotate=false,     -- Stop moving when rotate
+    stopMoveWhenHold=false,       -- Stop moving when hold
+    dblMoveCover=true,            -- Use second dir (Press 2)
+    dblMoveChrg='reset',          -- reset/keep/raw/full charge (Press 2)
+    dblMoveStep=true,             -- Move (Press 2)
+    dblMoveRelChrg='raw',         -- reset/keep/raw/full charge (Release 1)
+    dblMoveRelStep=false,         -- Move (Release 1)
+    dblMoveRelInvChrg='reset',    -- reset/keep/raw/full charge (Release 2)
+    dblMoveRelInvStep=true,       -- Move (Release 2)
+    dblMoveRelInvRedir=true,      -- Change direction (Release 2)
+    initMove='buffer',            -- buffer/hold to do initial move
+    initRotate='buffer',          -- buffer/hold to do initial rotate
+    initHold='buffer',            -- buffer/hold to do initial hold
+    aHdLock=60,                   -- Auto harddrop lock
+    mHdLock=40,                   -- Manual harddrop lock
+    freshLockInASD=true,          -- Fresh lockDelay in auto shift delay
+    freshLockInASP=true,          -- Fresh lockDelay in auto shift period
 
     -- Other
     IRSpushUp=true, -- Use bottom-align when IRS or suffocate
@@ -2068,6 +2093,7 @@ function BP.new()
         afterSpawn={},
         afterDrop={},
         afterLock={},
+        beforeClear={},
         afterClear={},
         beforeCancel={},
         beforeSend={},
@@ -2092,8 +2118,19 @@ function BP.new()
     }
     self.soundEvent=setmetatable({},soundEventMeta)
 
-    ---@cast self Techmino.Player.Brik
-    mechLib.brik.statistics.event_playerInit[2](self)
+    ---@class Techmino.PlayerStatTable.Brik: Techmino.PlayerStatTable
+    self.stat={
+        key=0,
+        spawn=0,
+        piece=0,
+        line=0,
+        clearTime=0,
+        clears={0,0,0,0},
+        allclear=0,
+
+        atk=0,
+        sent=0,
+    }
 
     return self
 end

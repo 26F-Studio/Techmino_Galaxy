@@ -43,7 +43,7 @@ return {
                         mechLib.common.music.set(P,{path='.point',s=100,e=500},'afterSpawn')
                     end
 
-                elseif P.modeData.stat.line>=4 then
+                elseif P.stat.line>=4 then
                     -- Low: 4 Lines
                     P.modeData.subMode='low'
                     initFunc=mechLib.brik.marathon.hypersonic_low_event_playerInit

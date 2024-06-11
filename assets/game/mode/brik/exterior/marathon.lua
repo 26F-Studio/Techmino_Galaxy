@@ -19,7 +19,7 @@ return {
             afterClear={
                 function(P)
                     if PROGRESS.getExteriorModeState('allclear') then return true end
-                    if P.modeData.stat.allclear>0 then
+                    if P.stat.allclear>0 then
                         PROGRESS.setExteriorUnlock('allclear')
                         return true
                     end
@@ -32,8 +32,8 @@ return {
                     end
                 end,
             },
-            gameOver=function(P)
-                if P.finished=='AC' then
+            gameOver=function(P,reason)
+                if reason=='AC' then
                     PROGRESS.setExteriorScore('marathon','main',P.gameTime,'<')
                     PROGRESS.setExteriorUnlock('hypersonic')
                 end
@@ -44,7 +44,7 @@ return {
         local P=GAME.mainPlayer
         ---@cast P Techmino.Player.Brik
         if not P then return end
-        if P.modeData.stat.line<40 then return end
+        if P.stat.line<40 then return end
 
         local dropInfo={}
 
@@ -67,7 +67,7 @@ return {
         if not P.modeData.finalTime then
             FONT.set(100)
             GC.setColor(1,1,1,math.min(time*2.6,1))
-            GC.mStr(P.modeData.stat.line.." / 200",800,400)
+            GC.mStr(P.stat.line.." / 200",800,400)
             return
         end
 

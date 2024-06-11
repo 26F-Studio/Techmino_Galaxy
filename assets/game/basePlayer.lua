@@ -6,6 +6,39 @@ local ins,rem=table.insert,table.remove
 local sign,expApproach=MATH.sign,MATH.expApproach
 
 ---@class Techmino.Player
+---@field gameMode Techmino.Player.Type
+---@field id number limited to 1~1000
+---@field team number Team ID, 0 as No Team
+---@field isMain boolean
+---@field sound boolean
+---@field settings Techmino.Mode.Setting.Brik|Techmino.Mode.Setting.Gela|Techmino.Mode.Setting.Acry
+---@field buffedKey table
+---@field modeData Techmino.PlayerModeData
+---@field soundTimeHistory table
+---@field RND love.RandomGenerator
+---@field pos {x:number, y:number, k:number, a:number, dx:number, dy:number, dk:number, da:number, vx:number, vy:number, vk:number, va:number}
+---@field finished Techmino.EndReason|boolean Did game finish
+---@field realTime number Real time, [float] s
+---@field time number Inside timer for player, [int] ms
+---@field gameTime number Game time of player, [int] ms
+---@field timing boolean Is gameTime running?
+---@field texts Zenitha.Text
+---@field particles Techmino.ParticleSystems
+---
+---@field updateFrame function
+---@field scriptCmd function
+---@field decodeScript function
+---@field checkScriptSyntax function
+---
+---@field hand Techmino.Hand|false Current controlling piece object
+---@field handX number
+---@field handY number
+---@field event table<string, Techmino.Event[]>
+---@field soundEvent table
+---@field _actions table<string, {press:fun(P:Techmino.Player), release:fun(P:Techmino.Player)}>
+---
+---@field receive function
+---@field render function
 local P={}
 
 --------------------------------------------------------------
@@ -284,6 +317,8 @@ function P:press(act)
         ins(self.actionHistory,{0,self.time,act})
         self.actions[act].press(self)
     end
+
+    self.stat.key=self.stat.key+1
 
     self:triggerEvent('afterPress',act)
 end
@@ -684,7 +719,7 @@ function P.new()
     self.sound=false
 
     self.buffedKey={}
-    self.modeData={stat={},target={},music={id='intensity'}}
+    self.modeData={target={},music={id='intensity'}}
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 
     self.RND=love.math.newRandomGenerator(GAME.seed+626)
@@ -696,6 +731,8 @@ function P.new()
         vx=0,vy=0,vk=0,va=0,
     }
 
+    ---@class Techmino.PlayerStatTable
+    self.stat={key=0}
     self.finished=false
     self.realTime=0
     self.time=0

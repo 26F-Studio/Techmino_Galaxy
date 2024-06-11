@@ -19,8 +19,8 @@ return {
                 P.fieldDived=0
             end,
             afterClear=mechLib.brik.dig.event_afterClear,
-            gameOver=function(P)
-                if P.finished=='AC' then
+            gameOver=function(P,reason)
+                if reason=='AC' then
                     PROGRESS.setExteriorScore('excavate','main',P.gameTime,'<')
 
                     -- TODO: balance

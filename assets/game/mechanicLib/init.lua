@@ -12,7 +12,6 @@ local mechLib={
     brik={
         -- Basic
         actions=require'brik/actions',
-        statistics=require'brik/statistics',
         sequence=require'brik/sequence',
         clearRule=require'brik/clearRule',
         attackSys=require'brik/attackSys',
@@ -31,7 +30,6 @@ local mechLib={
     gela={
         -- Basic
         actions=require'gela/actions',
-        statistics=require'gela/statistics',
         sequence=require'gela/sequence',
         colorSet=require'gela/colorSet',
         attackSys=require'gela/attackSys',

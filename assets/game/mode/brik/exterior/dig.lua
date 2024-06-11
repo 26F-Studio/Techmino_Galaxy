@@ -19,13 +19,13 @@ return {
                 P.fieldDived=0
             end,
             afterClear=mechLib.brik.dig.event_afterClear,
-            gameOver=function(P)
-                if P.finished=='AC' then
+            gameOver=function(P,reason)
+                if reason=='AC' then
                     PROGRESS.setExteriorScore('dig','main',P.gameTime,'<')
 
                     -- TODO: balance
                     if P.gameTime<=120e3 then PROGRESS.setExteriorUnlock('excavate') end
-                    if P.modeData.stat.piece<=260 then PROGRESS.setExteriorUnlock('drill') end
+                    if P.stat.piece<=260 then PROGRESS.setExteriorUnlock('drill') end
                 end
             end,
             drawOnPlayer=mechLib.brik.dig.event_drawOnPlayer,

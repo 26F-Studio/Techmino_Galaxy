@@ -10,7 +10,7 @@
 ---|'PE'  Mission failed (Presentation Error)
 ---|'UKE' Other reason (Unknown Error)
 
----@alias Techmino.EventName
+---@alias Techmino.EventName -- All event function will be called with format `Event(P[,see below])`
 ---| 'beforePress'     -- General(act)
 ---| 'afterPress'      -- General(act)
 ---| 'beforeRelease'   -- General(act)
@@ -24,7 +24,8 @@
 ---| 'afterSpawn'      -- Brik, Gela
 ---| 'afterDrop'       -- Brik, Gela
 ---| 'afterLock'       -- Brik, Gela
----| 'afterClear'      -- Brik(his), Gela
+---| 'beforeClear'     -- Brik(lines)
+---| 'afterClear'      -- Brik(clear), Gela
 ---| 'beforeCancel'    -- Brik(atk), Gela(atk)
 ---| 'beforeSend'      -- Brik(atk), Gela(atk)
 ---| 'beforeDiscard'   -- Brik, Gela
@@ -60,8 +61,9 @@
 ---@alias Techmino.Event.Acry string | {[1]:number, [2]:fun(P:Techmino.Player.Acry):...} | fun(P:Techmino.Player.Acry):...
 
 ---@class Techmino.Cell
----@field cid string cell's mem pointer string
----@field id number ascending piece number
+---@field id number piece id
+---@field did number drop id (exist when hand piece locks)
+---@field cid string cell id (unique) (already exist when piece display in next queue)
 ---@field color number 0~63
 ---@field alpha? number 0~1
 ---@field conn table<string, any>
@@ -95,50 +97,14 @@
 ---@field resultPage fun(time:number) Drawing the result page
 ---@field name string Mode name, for debug use
 
----@class Techmino.Player
----@field gameMode Techmino.Player.Type
----@field id number limited to 1~1000
----@field team number Team ID, 0 as No Team
----@field isMain boolean
----@field sound boolean
----@field settings Techmino.Mode.Setting.Brik|Techmino.Mode.Setting.Gela|Techmino.Mode.Setting.Acry
----@field buffedKey table
----@field modeData Techmino.PlayerModeData
----@field soundTimeHistory table
----@field RND love.RandomGenerator
----@field pos {x:number, y:number, k:number, a:number, dx:number, dy:number, dk:number, da:number, vx:number, vy:number, vk:number, va:number}
----@field finished Techmino.EndReason|boolean Did game finish
----@field realTime number Real time, [float] s
----@field time number Inside timer for player, [int] ms
----@field gameTime number Game time of player, [int] ms
----@field timing boolean Is gameTime running?
----@field texts Zenitha.Text
----@field particles Techmino.ParticleSystems
----
----@field updateFrame function
----@field scriptCmd function
----@field decodeScript function
----@field checkScriptSyntax function
----
----@field hand Techmino.Hand|false Current controlling piece object
----@field handX number
----@field handY number
----@field event table<string, Techmino.Event[]>
----@field soundEvent table
----@field _actions table<string, {press:fun(P:Techmino.Player), release:fun(P:Techmino.Player)}>
----
----@field receive function
----@field render function
-
 ---@class Techmino.PlayerModeData
 ---@field subMode string
----@field stat Techmino.Mech.Basic.StatisticTable
 ---@field music Techmino.PlayerModeData.MusicTable
 ---@field target {[any]:any}
 ---@field [any] any
 
 ---@class Techmino.PlayerModeData.MusicTable
 ---@field id? string FMOD parameter name, default to 'intensity'
----@field path string Lerping value path, like 'modeData.stat.line' or '.stat.line' in short
+---@field path string Lerping value path, like 'modeData.xxx.yyy' or '.xxx.yyy' in short
 ---@field s? number Lerping start point, leave this empty to use direct value instead of 0~1 lerping
 ---@field e? number Lerping end point

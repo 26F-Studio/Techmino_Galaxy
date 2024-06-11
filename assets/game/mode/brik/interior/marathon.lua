@@ -26,7 +26,7 @@ return {
             end,
             afterClear=function(P)
                 local md=P.modeData
-                while md.stat.line>=md.lineTarget do
+                while P.stat.line>=md.lineTarget do
                     if md.lineTarget<200 then
                         if P.isMain and PROGRESS.get('main')>=2 and md.lineTarget<=150 then
                             FMOD.music.setParam('intensity',(md.lineTarget/150)^2)
@@ -44,7 +44,7 @@ return {
             drawOnPlayer=function(P)
                 gc.setColor(COLOR.L)
                 FONT.set(70)
-                GC.mStr(P.modeData.stat.line,-300,-90)
+                GC.mStr(P.stat.line,-300,-90)
                 gc.rectangle('fill',-375,-2,150,4)
                 GC.mStr(P.modeData.lineTarget,-300,-5)
             end,
@@ -53,20 +53,20 @@ return {
     result=function()
         local P=GAME.mainPlayer
         if not P then return end
-        PROGRESS.setInteriorScore('sprint',math.min(P.modeData.stat.line*4/3,40))
+        PROGRESS.setInteriorScore('sprint',math.min(P.stat.line*4/3,40))
         PROGRESS.setInteriorScore('marathon',
-            P.modeData.stat.line>=200 and 160 or
-            P.modeData.stat.line>=130 and MATH.interpolate(130,120,200,160,P.modeData.stat.line) or
-            P.modeData.stat.line>=80  and MATH.interpolate(80,90,130,120,P.modeData.stat.line) or
-            P.modeData.stat.line>=40  and MATH.interpolate(40,40,80,90,P.modeData.stat.line) or
-            MATH.interpolate(0,0,40,40,P.modeData.stat.line)
+            P.stat.line>=200 and 160 or
+            P.stat.line>=130 and MATH.interpolate(130,120,200,160,P.stat.line) or
+            P.stat.line>=80  and MATH.interpolate(80,90,130,120,P.stat.line) or
+            P.stat.line>=40  and MATH.interpolate(40,40,80,90,P.stat.line) or
+            MATH.interpolate(0,0,40,40,P.stat.line)
         )
     end,
     resultPage=function(time)
         local P=GAME.mainPlayer
         if not P then return end
 
-        local line=math.min(P.modeData.stat.line,math.floor(math.max(time-.26,0)*162))
+        local line=math.min(P.stat.line,math.floor(math.max(time-.26,0)*162))
 
         -- XX/200
         FONT.set(100)

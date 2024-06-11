@@ -1,7 +1,7 @@
 local function newQuestion(P)
     mechLib.brik.allclearGenerator.newQuestion(P,{
         debugging=false,
-        pieceCount=3+math.floor(P.modeData.stat.allclear^.6),
+        pieceCount=3+math.floor(P.stat.allclear^.6),
         holdUsed=true,
     })
 end

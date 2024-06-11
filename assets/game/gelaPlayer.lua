@@ -14,6 +14,7 @@ local ins,rem=table.insert,table.remove
 local clamp,expApproach=MATH.clamp,MATH.expApproach
 
 ---@class Techmino.Player.Gela: Techmino.Player
+---@field stat Techmino.PlayerStatTable.Gela
 local GP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 --------------------------------------------------------------
@@ -239,6 +240,8 @@ function GP:resetPos() -- Move hand piece to the normal spawn position
     self.minY=self.handY
     self.ghostY=self.handY
     self:resetPosCheck()
+
+    self.stat.spawn=self.stat.spawn+1
 
     self:triggerEvent('afterResetPos')
 
@@ -668,6 +671,8 @@ function GP:gelaDropped() -- Drop & lock gela, and trigger a lot of things
     self:lock()
     self:playSound('lock')
 
+    self.stat.piece=self.stat.piece+1
+
     self:triggerEvent('afterLock')
 
     -- Lockout check
@@ -865,6 +870,8 @@ function GP:doClear()
         atk=GAME.initAtk(atk)
         atk.srcMode=self.gameMode
 
+        self.stat.atk=self.stat.atk+atk.power
+
         self:triggerEvent('beforeCancel',atk)
 
         if self.settings.allowCancel then
@@ -892,6 +899,8 @@ function GP:doClear()
         end
         if atk and atk.power>=.5 then
             atk.power=floor(atk.power+.5)
+
+            self.stat.sent=self.stat.sent+atk.power
 
             self:triggerEvent('beforeSend',atk)
 
@@ -1096,6 +1105,12 @@ function GP:updateFrame()
                 if self.clearTimer<=0 then
                     self:doClear()
                     self:updField()
+
+                    local S=self.stat
+                    S.clearTime=S.clearTime+1
+                    if self.field:getHeight()==0 then
+                        S.allclear=S.allclear+1
+                    end
 
                     self:triggerEvent('afterClear')
 
@@ -1453,7 +1468,7 @@ local baseEnv={
     asd=122,
     asp=26,
     ash=26,
-    softdropSkipAsd=true, -- *Skip asd when softdrop
+    softdropSkipAsd=true,
     entryChrg='on',
     wallChrg='on',
     stopMoveWhenSpawn=false,
@@ -1525,8 +1540,18 @@ function GP.new()
     }
     self.soundEvent=setmetatable({},soundEventMeta)
 
-    ---@cast self Techmino.Player.Gela
-    mechLib.gela.statistics.event_playerInit[2](self)
+    ---@class Techmino.PlayerStatTable.Gela: Techmino.PlayerStatTable
+    self.stat={
+        key=0,
+        spawn=0,
+        piece=0,
+        line=0,
+        clearTime=0,
+        allclear=0,
+
+        atk=0,
+        sent=0,
+    }
 
     return self
 end

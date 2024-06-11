@@ -77,7 +77,7 @@ return {
             afterClear={
                 function(P)
                     -- MPH
-                    if P.modeData.stat.piece<=4 then
+                    if P.stat.piece<=4 then
                         P.modeData.subMode='mph'
                         playBgm('blox')
                         P:setSequenceGen('messy','-clearData')
@@ -120,10 +120,10 @@ return {
                             P.modeData.target.line=100
                             P.modeData.music.s,P.modeData.music.e=40,70
                         end
-                        P.modeData.stat.line=0
+                        P.stat.line=0
                         P.settings.dropDelay=1000
                         P.settings.lockDelay=1000
-                        mechLib.common.music.set(P,{path='.stat.line',s=10,e=30},'afterClear')
+                        mechLib.common.music.set(P,{path='stat.line',s=10,e=30},'afterClear')
                         if #P.field._matrix>3 then
                             P.modeData.initTimer=1260
                             P.settings.spawnDelay=1e99
@@ -136,12 +136,12 @@ return {
                     end
                 end,
                 mechLib.brik.misc.lineClear_event_afterClear,
-                {1,function(P)
-                    if P.finished=='AC' then
-                        PROGRESS.setExteriorScore('sequence',P.modeData.subMode,P.gameTime,'<')
-                    end
-                end},
-            }
+            },
+            gameOver=function(P,reason)
+                if reason=='AC' then
+                    PROGRESS.setExteriorScore('sequence',P.modeData.subMode,P.gameTime,'<')
+                end
+            end
         },
     }},
 }

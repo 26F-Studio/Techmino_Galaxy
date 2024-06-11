@@ -344,9 +344,8 @@ local atkTemplate={
     speed=30,
 }
 
----@param atk Techmino.Game.Attack?
+---@param atk Techmino.Game.Attack
 function GAME.initAtk(atk) -- Normalize the attack object
-    if not atk then return end
     assert(type(atk)=='table',"GAME.initAtk: need table")
 
     TABLE.updateMissing(atk,atkTemplate)
