@@ -50,7 +50,7 @@ function dig.event_playerInit(P)
     P.modeData.garbageRised=0
     P.modeData.lineDig=0
     P.modeData.lineExist=P.modeData.lineStay
-    for _=1,P.modeData.lineStay-P.field:getHeight() do
+    for _=1,P.modeData.lineStay do
         garbageTypes[P.modeData.digMode](P)
     end
 end

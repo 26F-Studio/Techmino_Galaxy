@@ -204,7 +204,7 @@ local L={
 
     -- Mode name
     exteriorModeInfo={
-        sprint=           {"Sprint","Keep running fast"},
+        sprint=           {"Sprint","Speed ​​is all we need"},
         sequence=         {"Sequence","Face strange piece sequences"},
         hidden=           {"Hidden","Pieces are invisible after falling"},
         tspin=            {"T-Spin","Build special terrains"},

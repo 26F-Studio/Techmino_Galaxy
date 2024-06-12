@@ -7,9 +7,9 @@ defaultBrikColor=setmetatable({
 },{__index=function() return math.random(64) end})
 require'rotsys_brik'
 local function loadMechFile()
----@type Techmino.MechLib
-mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
-regFuncLib(mechLib,"mechLib")
+    ---@type Techmino.MechLib
+    mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
+    regFuncLib(mechLib,"mechLib")
 end
 loadMechFile()
 
@@ -184,7 +184,7 @@ function GAME.getMode(name)
     if love.keyboard.isDown('f5') then
         loadMechFile()
     end
-    if modeLib[name] then
+    if modeLib[name] and not love.keyboard.isDown('f5') then
         return modeLib[name]
     else
         local path='assets/game/mode/'..name..'.lua'

@@ -204,7 +204,7 @@ local L={
 
     -- Mode name
     exteriorModeInfo={
-        sprint=           {"竞速","保持高速运转"},
+        sprint=           {"竞速","速度即一切"},
         sequence=         {"序列","面对令人诧异的方块序列"},
         hidden=           {"隐形","方块在落下后会不可见"},
         tspin=            {"T旋","构建特殊的地形"},

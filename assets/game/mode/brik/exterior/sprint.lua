@@ -1,5 +1,3 @@
-local ins,rem=table.insert,table.remove
-
 ---@type Techmino.Mode
 return {
     initialize=function()
@@ -45,7 +43,7 @@ return {
                         local c=mat[lines[i]][x]
                         l[c.did]=(l[c.did] or 0)+1
                     end
-                    ins(CLEAR,l)
+                    table.insert(CLEAR,l)
                 end
 
                 local dropCheckPos=P.modeData.infSprint_dropCheckPos
@@ -75,7 +73,8 @@ return {
                     end
                     if not rClearBound then break end
 
-                    local time=CLEAR[rClearBound][0]-P.dropHistory[dropCheckPos].time
+                    local drop=P.dropHistory[dropCheckPos-1]
+                    local time=CLEAR[rClearBound][0]-(drop and drop.time or 0)
                     PROGRESS.setExteriorScore('sprint','40l',time,'<')
                     -- print(("Time=%.2f"):format(time/1000))
                     -- print(dropCheckPos,lClearBound,rClearBound)
@@ -86,8 +85,9 @@ return {
             afterClear={
                 -- mechLib.brik.misc.cascade_event_afterClear,
                 function(P)
-                    if P.stat.line>=40 then
-                        P:delEvent('drawOnPlayer',mechLib.brik.misc.lineClear_event_drawOnPlayer)
+                    if P.stat.line>=P.modeData.target.line then
+                        P:delEvent('drawInField',mechLib.brik.misc.lineClear_event_drawInField)
+                        -- P:delEvent('drawOnPlayer',mechLib.brik.misc.lineClear_event_drawOnPlayer)
                         return true
                     end
                 end,
@@ -113,7 +113,7 @@ return {
                 end
             end,
             drawInField=mechLib.brik.misc.lineClear_event_drawInField,
-            drawOnPlayer=mechLib.brik.misc.lineClear_event_drawOnPlayer,
+            -- drawOnPlayer=mechLib.brik.misc.lineClear_event_drawOnPlayer,
             -- whenSuffocate=mechLib.brik.misc.suffocateLock_event_whenSuffocate,
         },
     }},
