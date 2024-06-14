@@ -125,6 +125,8 @@ function scene.keyDown(key,isRep)
             local dur=FMOD.music.getDuration()
             FMOD.music.seek(key=='left' and max(now-5,0) or (now+5)%dur)
         end
+    elseif key=='backspace' or key=='delete' then
+        searchStr=""
     elseif #key==1 and key:find'[0-9a-z]' then
         if searchTimer==0 then
             searchStr=""

@@ -65,7 +65,6 @@ SKIN=require'assets.skin'
 CHAR=require'assets.char'
 SETTINGS=require'assets.settings'
 SONGBOOK=require'assets.songbook'
-CLR9=require'assets.color9'
 FMOD=require'assets.fmod20221'
 DEBUG.checkLoadTime("Load game modules")
 
@@ -547,7 +546,7 @@ for _,v in next,{
         SKIN.add(v,require('assets/skin/'..v))
     end
 end
-SCN.addSwap('fadeHeader',{
+SCN.addSwapStyle('fadeHeader',{
     duration=.5,
     timeChange=.25,
     draw=function(t)
@@ -561,7 +560,7 @@ SCN.addSwap('fadeHeader',{
         GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
     end,
 })
-SCN.addSwap('fastFadeHeader',{
+SCN.addSwapStyle('fastFadeHeader',{
     duration=.2,
     timeChange=.1,
     draw=function(t)

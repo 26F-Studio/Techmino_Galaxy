@@ -182,7 +182,8 @@ function PROGRESS.applyEnv(env)
     if env=='interior' then
         PROGRESS.applyInteriorBG()
         PROGRESS.applyInteriorBGM()
-        ZENITHA.globalEvent.clickFX=function(x,y) SYSFX.tap(.26,x,y) end
+        ZENITHA.globalEvent.touchClick=NULL
+        ZENITHA.globalEvent.mouseDown=function(x,y) SYSFX.rectRipple(.26,x-10,y-10,20,20) end
         function ZENITHA.globalEvent.drawCursor(_,x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)
@@ -199,15 +200,12 @@ function PROGRESS.applyEnv(env)
     elseif env=='exterior' then
         PROGRESS.applyExteriorBG()
         PROGRESS.applyExteriorBGM()
-        ZENITHA.globalEvent.clickFX=function(x,y,k)
-            if k==1 then
-                SYSFX.ripple(.26,x,y,26,.62,.62,1)
-            elseif k==2 then
-                SYSFX.ripple(.26,x,y,26,1,1,.62)
-            elseif k==3 then
-                SYSFX.ripple(.26,x,y,26,1,.62,.62)
-            else
-                SYSFX.ripple(.26,x,y,26,.62,1,1)
+        ZENITHA.globalEvent.touchClick=function(x,y) SYSFX.tap(.26,x,y) end
+        ZENITHA.globalEvent.mouseDown=function(x,y,k)
+            if k==1 then     SYSFX.ripple(.26,x,y,26,.62,.62,1)
+            elseif k==2 then SYSFX.ripple(.26,x,y,26,1,1,.62)
+            elseif k==3 then SYSFX.ripple(.26,x,y,26,1,.62,.62)
+            else             SYSFX.ripple(.26,x,y,26,.62,1,1)
             end
         end
         function ZENITHA.globalEvent.drawCursor(_,x,y)

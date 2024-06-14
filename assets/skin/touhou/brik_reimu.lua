@@ -14,6 +14,7 @@ local stc_reset,stc_rect,stc_stop=GC.stc_reset,GC.stc_rect,GC.stc_stop
 local max,min=math.max,math.min
 
 local COLOR=COLOR
+local RGB9=RGB9
 
 ---@type Techmino.Skin.Brik
 local S={}
@@ -81,7 +82,7 @@ local function getCID(F,y,x)
     return line and line[x] and line[x].cid or false
 end
 function S.drawFieldCell(C,F,x,y)
-    local r,g,b=unpack(CLR9[C.color])
+    local r,g,b=unpack(RGB9[C.color])
     local a=C.alpha or 1
     gc_setColor(r,g,b,a)
     gc_rectangle('fill',0,0,40,40)
@@ -144,12 +145,12 @@ function S.drawLockDelayIndicator(freshCondition,freshChance,timeRem)
 end
 
 function S.drawGhostCell(C,B,x,y)
-    local r,g,b=unpack(CLR9[C.color])
+    local r,g,b=unpack(RGB9[C.color])
     drawCell(B,x,y,r,g,b,.26)
 end
 
 function S.drawHandCell(C,B,x,y)
-    local r,g,b=unpack(CLR9[C.color])
+    local r,g,b=unpack(RGB9[C.color])
     drawCell(B,x,y,r,g,b,1)
 end
 
@@ -159,7 +160,7 @@ local disabledColor={.6,.6,.6}
 --     TODO
 -- end
 function S.drawNextCell(C,disabled,B,x,y)
-    local r,g,b=unpack(disabled and disabledColor or CLR9[C.color])
+    local r,g,b=unpack(disabled and disabledColor or RGB9[C.color])
     drawCell(B,x,y,r,g,b,1)
 end
 
@@ -179,7 +180,7 @@ function S.drawHoldBorder(mode,slot)
     end
 end
 function S.drawHoldCell(C,disabled,B,x,y)
-    local r,g,b=unpack(disabled and disabledColor or CLR9[C.color])
+    local r,g,b=unpack(disabled and disabledColor or RGB9[C.color])
     drawCell(B,x,y,r,g,b,1)
 end
 -- function S.drawTime(time)

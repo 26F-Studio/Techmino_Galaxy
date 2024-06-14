@@ -2,7 +2,7 @@ local gc=love.graphics
 local gc_setColor=gc.setColor
 local gc_rectangle,gc_polygon=gc.rectangle,gc.polygon
 
-local NumColor=CLR9
+local RGB9=RGB9
 
 ---@type Techmino.Skin.Gela
 local S={}
@@ -21,7 +21,7 @@ end
 
 function S.drawFieldCell(C,F,x,y,connH)
     if not C.clearing or S.getTime()%100<=50 then
-        gc_setColor(NumColor[C.color])
+        gc_setColor(RGB9[C.color])
         gc_rectangle('fill',2,2,36,36,15)
         drawSide(F,x,y,connH)
     end
@@ -34,13 +34,13 @@ function S.drawHandCellStroke(_,_,_,_)
 end
 
 function S.drawHandCell(C,B,x,y)
-    gc_setColor(NumColor[C.color])
+    gc_setColor(RGB9[C.color])
     gc_rectangle('fill',2,2,36,36,15)
     drawSide(B,x,y)
 end
 
 function S.drawNextCell(C,_,B,x,y)
-    gc_setColor(NumColor[C.color])
+    gc_setColor(RGB9[C.color])
     gc_rectangle('fill',2,2,36,36,15)
     drawSide(B,x,y)
 end
