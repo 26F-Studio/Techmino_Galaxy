@@ -47,7 +47,6 @@ local L={
 
     charge="CHG",
     spin='$1-spin',
-    tuck='Tuck',
 
     allClear='ALL CLEAR',
     halfClear='Half Clear',

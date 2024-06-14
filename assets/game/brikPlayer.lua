@@ -243,7 +243,7 @@ end
 ---@param action 'moveX'|'moveY'|'drop'|'rotate'|'reset'
 function BP:moveHand(action,A,B,C,D)
     --[[
-        moveX:  dx,noShade
+        moveX:  dx,noShade,byAutoShift
         moveY:  dy,noShade
         drop:   dy,noShade
         rotate: x,y,dir,ifInit
@@ -319,11 +319,11 @@ function BP:moveHand(action,A,B,C,D)
     if action=='moveX' then
         if
             not self.ghostState and
-            SET.tuck and
+            C and
+            (self.lastMovement.action=='moveY' or self.lastMovement.action=='drop') and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) and
             self:ifoverlap(self.hand.matrix,self.handX,self.handY+1)
         then
-            movement.tuck=true
             self:playSound('tuck')
             if SET.particles then
                 self:createTuckEffect()
@@ -597,7 +597,6 @@ end
 ---@param atkSys string|Techmino.Mech.Brik.AttackSysName
 function BP:setAttackSystem(atkSys)
     self.atkSysData={}
-    self.settings.tuck=false
     self.settings.spin_immobile=false
     self.settings.spin_corners=false
     self.settings.combo_sound=false
@@ -1476,7 +1475,7 @@ function BP:updateFrame()
                 if dist>0 then
                     local ox=self.handX
                     while dist>0 and not self:ifoverlap(self.hand.matrix,self.handX+self.moveDir,self.handY) do
-                        self:moveHand('moveX',self.moveDir)
+                        self:moveHand('moveX',self.moveDir,false,true)
                         self:freshGhost()
                         dist=dist-1
                     end
@@ -2025,7 +2024,6 @@ local baseEnv={
 
     -- Attack
     rotSys='TRS',             ---@type Techmino.Mech.Brik.RotationSysName
-    tuck=false,               ---@type boolean
     spin_immobile=false,      ---@type boolean
     spin_corners=false,       ---@type false|number
     combo_sound=false,        ---@type boolean
@@ -2170,7 +2168,7 @@ function BP:initialize()
     self.hand=false
     self.handX=false
     self.handY=false
-    self.lastMovement=false -- Table contain last movement info of brik, for spin/tuck/... checking
+    self.lastMovement=false -- Table contain last movement info of brik, for spin/... checking
     self.ghostY=false
     self.minY=false
 

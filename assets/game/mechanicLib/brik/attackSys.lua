@@ -175,7 +175,6 @@ modern={
 nextgen={
     init=function(P)
         P.atkSysData.charge=0
-        P.settings.tuck=true
         P.settings.spin_immobile=true
         P.settings.combo_sound=true
     end,
