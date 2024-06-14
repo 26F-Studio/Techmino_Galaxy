@@ -228,6 +228,17 @@ WIDGET.setDefaultOption{
         sound_clear='inputbox_clear',
     },
 }
+MSG.addCategory('achievement',
+    {COLOR.HEX'FFF0C2'},
+    {COLOR.HEX'262626'},
+    GC.load{40,40,
+        {'setCL',COLOR.HEX'262626'},
+        {'setLW',3},
+        {'dRect',1,1,38,38},
+        {'fRect',17,6,6,28},
+        {'fRect',6,17,28,6},
+    }
+)
 
 IMG.init{
     actionIcons={

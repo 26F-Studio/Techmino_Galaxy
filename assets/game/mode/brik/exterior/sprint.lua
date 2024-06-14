@@ -48,18 +48,31 @@ return {
 
                 local dropCheckPos=P.modeData.infSprint_dropCheckPos
                 while true do
-                    local count=0
-
                     local lClearBound
-                    for i=1,#CLEAR do
+                    local i=1
+                    while i<=#CLEAR do
                         if CLEAR[i][dropCheckPos] then
                             lClearBound=i
                             break
+                        else
+                            local keep
+                            for id in next,CLEAR[i] do
+                                if id>=dropCheckPos then
+                                    keep=true
+                                    break
+                                end
+                            end
+                            if keep then
+                                i=i+1
+                            else
+                                table.remove(CLEAR,i)
+                            end
                         end
                     end
                     if not lClearBound then break end
 
                     local rClearBound
+                    local count=0
                     for j=lClearBound,#CLEAR do
                         for id,num in next,CLEAR[j] do
                             if id>=dropCheckPos then
@@ -71,15 +84,17 @@ return {
                             end
                         end
                     end
-                    if not rClearBound then break end
-
-                    local drop=P.dropHistory[dropCheckPos-1]
-                    local time=CLEAR[rClearBound][0]-(drop and drop.time or 0)
-                    PROGRESS.setExteriorScore('sprint','40l',time,'<')
-                    -- print(("Time=%.2f"):format(time/1000))
-                    -- print(dropCheckPos,lClearBound,rClearBound)
-                    dropCheckPos=dropCheckPos+1
-                    P.modeData.infSprint_dropCheckPos=dropCheckPos
+                    if rClearBound then
+                        local drop=P.dropHistory[dropCheckPos-1]
+                        local time=CLEAR[rClearBound][0]-(drop and drop.time or 0)
+                        PROGRESS.setExteriorScore('sprint','line40',time,'<')
+                        -- print(("Time=%.2f"):format(time/1000))
+                        -- print(dropCheckPos,lClearBound,rClearBound)
+                        dropCheckPos=dropCheckPos+1
+                        P.modeData.infSprint_dropCheckPos=dropCheckPos
+                    else
+                        -- TODO: calculate approximate time
+                    end
                 end
             end,
             afterClear={

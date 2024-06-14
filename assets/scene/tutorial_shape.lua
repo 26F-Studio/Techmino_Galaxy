@@ -224,7 +224,7 @@ function scene.draw()
         GC.line(-len*30,y,len*30,y)
     end
     -- Field
-    GC.setColor(CLR9[-1])
+    GC.setColor(CLR9[777])
     for i=1,len do
         GC.rectangle('fill',60*(i-1-len/2),380,60,-60*quest[i])
     end

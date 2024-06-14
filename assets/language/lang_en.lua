@@ -71,7 +71,7 @@ local L={
     button_back="Back",
 
     simulation_title="Simulations",
-    graph_brik_title="M-Graph", -- Traslation warning: from "Knowledge Graph" (AI domain)
+    graph_brik_title="M-Graph", -- TRASLATING NOTE: from "Knowledge Graph" (AI domain)
     settings_title="Settings",
 
     setting_asd="ASD",
@@ -203,23 +203,28 @@ local L={
     about_peopleLost="You lost $1 !",
 
     -- Mode name
-    exteriorModeInfo={
+    exteriorModeInfo={ -- TRASLATING NOTE: Unnecessary to be accurate, try to quote some short proverbs in your language
         sprint=           {"Sprint","Speed ​​is all we need"},
         sequence=         {"Sequence","Face strange piece sequences"},
         hidden=           {"Hidden","Pieces are invisible after falling"},
         tspin=            {"T-Spin","Build special terrains"},
         marathon=         {"Marathon","Fight against increasing gravity"},
         allclear=         {"All Clear","Controllable All-Clear is possible"},
-        combo=            {"Combo","No one can resist combo"},
+        combo=            {"Combo","Everyone loves combo"},
         hypersonic=       {"Hypersonic","Break the limit of gravity"},
         dig=              {"Dig","Deal with neat garbage lines"},
         excavate=         {"Excavate","Deal with standard garbage lines"},
         drill=            {"Drill","Deal with complex garbage lines"},
         survivor=         {"Survivor","Survive under pressure"},
-        backfire=         {"Backfire","Use garbage resources"},
+        backfire=         {"Backfire","Attacks out, garbages in"},
 
         chain=            {"Chain","Connect same color to clear"},
         action=           {"Action","Use both keyboard & mouse"},
+    },
+
+    -- Achievement
+    achievementMessage={
+        -- TODO
     },
 
     -- Level

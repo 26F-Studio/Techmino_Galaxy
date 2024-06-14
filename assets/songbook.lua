@@ -83,6 +83,7 @@ local songbook={
     ['gelly']                 ={message="Old song remix"},
     ['humanity']              ={},
     ['space retro']           ={author="LR & MrZ"},
+    ['flare']                 ={},
 }
 
 for name,data in next,songbook do

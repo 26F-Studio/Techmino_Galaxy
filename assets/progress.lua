@@ -481,6 +481,9 @@ function PROGRESS.setSecret(id)
     if not prgs.secretFound[id] then
         FMOD.effect('map_unlock_secret')
         prgs.secretFound[id]=1
+        if rawget(Text.achievementMessage,id) then
+            MSG.new('achievement',Text.achievementMessage[id])
+        end
         PROGRESS.save()
         return true
     end

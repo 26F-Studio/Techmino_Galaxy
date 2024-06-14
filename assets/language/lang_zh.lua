@@ -205,21 +205,26 @@ local L={
     -- Mode name
     exteriorModeInfo={
         sprint=           {"竞速","速度即一切"},
-        sequence=         {"序列","面对令人诧异的方块序列"},
-        hidden=           {"隐形","方块在落下后会不可见"},
+        sequence=         {"序列","面对奇异的方块序列"},
+        hidden=           {"隐形","方块落下后将不可见"},
         tspin=            {"T旋","构建特殊的地形"},
         marathon=         {"马拉松","对抗逐渐增加的重力"},
         allclear=         {"全消","可控的全消并非不可能"},
-        combo=            {"连击","没有人能拒绝连击"},
+        combo=            {"连击","开局送楼连到爽"},
         hypersonic=       {"超音速","打破重力的极限"},
-        dig=              {"挖掘","处理整齐的垃圾行"},
-        excavate=         {"发掘","处理标准的垃圾行"},
-        drill=            {"钻掘","处理复杂的垃圾行"},
+        dig=              {"挖掘","快速处理整齐的垃圾行"},
+        excavate=         {"发掘","漂亮地处理标准垃圾行"},
+        drill=            {"钻掘","解决复杂的垃圾行"},
         survivor=         {"生存","在压力下生存"},
         backfire=         {"反效","自给自足"},
 
         chain=            {"连锁","同一个颜色才能消"},
         action=           {"动作","键鼠搭配更佳"},
+    },
+
+    -- Achievement
+    achievementMessage={
+        -- TODO
     },
 
     -- Level
