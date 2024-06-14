@@ -18,25 +18,13 @@ return {
                 mechLib.common.music.set(P,{path='stat.line',s=40,e=75},'afterClear')
             end,
             gameStart=function(P) P.timing=false end,
-            afterClear=function(P,clear)
+            beforeSend=function(P,atk)
+                if P.modeData.subMode then return true end
+                P:receive(atk)
+            end,
+            beforeDiscard=function(P)
                 -- TODO: balance
-                if clear.line==1 then
-                    P.modeData.subMode='cheese'
-                    P.settings.dropDelay=1000
-                    P.settings.maxFreshChance=15
-                    P.settings.maxFreshTime=6200
-                    P:addEvent('beforeCancel',mechLib.brik.survivor.backfire_storePower_event_beforeCancel)
-                    P:addEvent('beforeSend',mechLib.brik.survivor.backfire_break_event_beforeSend)
-                    playBgm('shift')
-                elseif clear.line<=3 then
-                    P.modeData.subMode='normal'
-                    P.settings.dropDelay=620
-                    P.settings.maxFreshChance=12
-                    P.settings.maxFreshTime=4200
-                    P:addEvent('beforeCancel',mechLib.brik.survivor.backfire_storePower_event_beforeCancel)
-                    P:addEvent('beforeSend',mechLib.brik.survivor.backfire_normal_event_beforeSend)
-                    playBgm('storm')
-                else
+                if P.stat.atk>=8 and P.stat.line<=4 then
                     P.modeData.subMode='amplify'
                     P.settings.dropDelay=260
                     P.settings.maxFreshChance=10
@@ -44,20 +32,36 @@ return {
                     P:addEvent('beforeCancel',mechLib.brik.survivor.backfire_triplePower_event_beforeCancel)
                     P:addEvent('beforeSend',mechLib.brik.survivor.backfire_easy_event_beforeSend)
                     playBgm('supercritical')
+                elseif P.stat.atk>=7 and P.stat.line<=6 then
+                    P.modeData.subMode='normal'
+                    P.settings.dropDelay=620
+                    P.settings.maxFreshChance=12
+                    P.settings.maxFreshTime=4200
+                    P:addEvent('beforeCancel',mechLib.brik.survivor.backfire_storePower_event_beforeCancel)
+                    P:addEvent('beforeSend',mechLib.brik.survivor.backfire_normal_event_beforeSend)
+                    playBgm('storm')
+                elseif P.stat.line>=8 then
+                    P.modeData.subMode='cheese'
+                    P.settings.dropDelay=1000
+                    P.settings.maxFreshChance=15
+                    P.settings.maxFreshTime=6200
+                    P:addEvent('beforeCancel',mechLib.brik.survivor.backfire_storePower_event_beforeCancel)
+                    P:addEvent('beforeSend',mechLib.brik.survivor.backfire_break_event_beforeSend)
+                    playBgm('shift')
                 end
 
                 if P.modeData.subMode then
                     P.timing=true
                     P:addEvent('afterClear',mechLib.brik.misc.lineClear_event_afterClear)
+                    P:addEvent('drawOnPlayer',mechLib.brik.misc.lineClear_event_drawOnPlayer)
                     return true
                 end
-        end,
+            end,
             gameOver=function(P)
                 if P.modeData.subMode and P.stat.line>=100 then
                     PROGRESS.setExteriorScore('backfire',P.modeData.subMode,P.gameTime,'<')
                 end
             end,
-            drawOnPlayer=mechLib.brik.misc.lineClear_event_drawOnPlayer,
         },
     }},
 }
