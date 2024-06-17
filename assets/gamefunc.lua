@@ -162,6 +162,7 @@ function saveSettings()
         game_gela=SETTINGS.game_gela,
         game_acry=SETTINGS.game_acry,
     },'conf/settings','-json')
+    showSaveIcon(CHAR.icon.settings..CHAR.icon.save)
 end
 function saveKey()
     FILE.save({
@@ -170,9 +171,14 @@ function saveKey()
         acry=KEYMAP.acry:export(),
         sys=KEYMAP.sys:export(),
     },'conf/keymap','-json')
+    showSaveIcon(CHAR.icon.settings..CHAR.icon.save)
 end
 function saveTouch()
     FILE.save(VCTRL.exportSettings(),'conf/touch','-json')
+    showSaveIcon(CHAR.icon.settings..CHAR.icon.save)
+end
+function showSaveIcon(str)
+    TEXT:add{text=str,x=SCR.w0-15,y=SCR.h0+5,align='bottomright',a=.26,duration=.62,fontSize=70}
 end
 
 function backText()

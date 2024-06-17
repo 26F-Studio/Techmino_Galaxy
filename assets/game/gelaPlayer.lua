@@ -1622,6 +1622,7 @@ function GP:initialize()
 
     self:loadScript(self.settings.script)
 end
+
 --------------------------------------------------------------
 
 return GP

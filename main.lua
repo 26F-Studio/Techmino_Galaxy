@@ -174,6 +174,9 @@ function ZENITHA.globalEvent.lowMemory()
         MSG.new('check',Text.autoGC..('.'):rep(4-autoGCcount))
     end
 end
+function ZENITHA.globalEvent.quit()
+    PROGRESS.save('save')
+end
 
 FONT.setDefaultFallback('symbols')
 FONT.setDefaultFont('norm')

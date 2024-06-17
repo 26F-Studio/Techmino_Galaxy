@@ -28,6 +28,9 @@ local prgs=setmetatable({
     },
     bgmUnlocked={},
     secretFound={},
+
+    -- Utility
+    musicTime=0,
 },{
     __index=function(_,k)
         LOG("Attempt to read undefined progress data: "..tostring(k))
@@ -123,6 +126,7 @@ function PROGRESS.save(step)
         prgs.rnd=math.random(26,2e6)
         prgs.hash=getHash(prgs)
         FILE.save(prgs,'conf/progress','-json')
+        showSaveIcon(CHAR.icon.save)
     end
 end
 function PROGRESS.load()
@@ -388,6 +392,10 @@ function PROGRESS.getSecret(id) return not not prgs.secretFound[id] end
 --------------------------------------------------------------
 -- Set
 
+-- function PROGRESS.set(k,v)
+--     prgs[k]=v
+--     PROGRESS.save()
+-- end
 function PROGRESS.setMain(n)
     if n>prgs.main then
         while prgs.main<n do
@@ -433,6 +441,7 @@ function PROGRESS.setInteriorScore(mode,score)
         PROGRESS.save()
     end
 end
+
 ---@param mode Techmino.ModeName
 ---@param outsideGame? true
 function PROGRESS.setExteriorUnlock(mode,outsideGame)
@@ -444,6 +453,7 @@ function PROGRESS.setExteriorUnlock(mode,outsideGame)
         PROGRESS.save()
     end
 end
+
 ---@param mode Techmino.ModeName
 ---@param data table
 function PROGRESS.setExteriorModeState(mode,data)
@@ -474,6 +484,7 @@ function PROGRESS.setExteriorScore(mode,key,value,sign)
     return false
 end
 
+---@param id string
 ---@return boolean success
 function PROGRESS.setSecret(id)
     if not prgs.secretFound[id] then
@@ -486,6 +497,11 @@ function PROGRESS.setSecret(id)
         return true
     end
     return false
+end
+
+---@param dt number
+function PROGRESS.updateMusicTime(dt)
+    prgs.musicTime=prgs.musicTime+dt
 end
 
 return PROGRESS

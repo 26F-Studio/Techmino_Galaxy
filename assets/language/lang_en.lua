@@ -212,8 +212,8 @@ local L={
         combo=            {"Combo","Everyone loves combo"},
         hypersonic=       {"Hypersonic","Break the limit of gravity"},
         dig=              {"Dig","Deal with neat garbage lines"},
-        excavate=         {"Excavate","Deal with standard garbage lines"},
-        drill=            {"Drill","Deal with complex garbage lines"},
+        drill=            {"Drill","Deal with standard garbage lines"},
+        excavate=         {"Excavate","Deal with complex garbage lines"},
         survivor=         {"Survivor","Survive under pressure"},
         backfire=         {"Backfire","Attacks out, garbages in"},
 

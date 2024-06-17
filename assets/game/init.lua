@@ -227,7 +227,7 @@ function GAME.load(mode,seed)
         MSG.new('warn',"No players created in this mode")
     else
         if GAME.mainPlayer then
-            local conf=SETTINGS["game_"..GAME.mainPlayer.gameMode]
+            local conf=SETTINGS['game_'..GAME.mainPlayer.gameMode]
             if conf then GAME.mainPlayer:loadSettings(conf) end
         end
         if GAME.mode.settings then

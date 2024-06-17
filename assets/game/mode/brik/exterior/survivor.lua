@@ -48,24 +48,7 @@ return {
                 -- TODO: balance
                 if P.stat.atk>=8 then
                     local eff=P.stat.atk/P.stat.line
-                    if eff<1 then
-                        P.modeData.subMode='cheese'
-                        P.settings.dropDelay=1000
-                        P.settings.maxFreshChance=15
-                        P.settings.maxFreshTime=6200
-                        P:setAttackSystem('classic')
-                        P:addEvent('always',mechLib.brik.survivor.cheese_event_always)
-                        playBgm('shift')
-                        mechLib.common.music.set(P,{path='.wave',s=30,e=80},'afterClear')
-                    elseif eff<2 then
-                        P.modeData.subMode='power'
-                        P.settings.dropDelay=620
-                        P.settings.maxFreshChance=12
-                        P.settings.maxFreshTime=4200
-                        P:addEvent('always',mechLib.brik.survivor.power_event_always)
-                        playBgm('here')
-                        mechLib.common.music.set(P,{path='.wave',s=20,e=50},'afterClear')
-                    else
+                    if eff>=2 then
                         P.modeData.subMode='spike'
                         P.settings.dropDelay=260
                         P.settings.maxFreshChance=10
@@ -74,6 +57,23 @@ return {
                         P:addEvent('always',mechLib.brik.survivor.spike_event_always)
                         playBgm('there')
                         mechLib.common.music.set(P,{path='.wave',s=10,e=30},'afterClear')
+                    elseif eff>=1 then
+                        P.modeData.subMode='power'
+                        P.settings.dropDelay=620
+                        P.settings.maxFreshChance=12
+                        P.settings.maxFreshTime=4200
+                        P:addEvent('always',mechLib.brik.survivor.power_event_always)
+                        playBgm('here')
+                        mechLib.common.music.set(P,{path='.wave',s=20,e=50},'afterClear')
+                    else
+                        P.modeData.subMode='cheese'
+                        P.settings.dropDelay=1000
+                        P.settings.maxFreshChance=15
+                        P.settings.maxFreshTime=6200
+                        P:setAttackSystem('classic')
+                        P:addEvent('always',mechLib.brik.survivor.cheese_event_always)
+                        playBgm('shift')
+                        mechLib.common.music.set(P,{path='.wave',s=30,e=80},'afterClear')
                     end
                     if P.modeData.subMode then
                         P.timing=true

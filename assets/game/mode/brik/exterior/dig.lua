@@ -28,9 +28,13 @@ return {
                         PROGRESS.setExteriorScore('dig','line20',CLEAR[81]-CLEAR[61],'<')
                         PROGRESS.setExteriorScore('dig','line40',CLEAR[81]-CLEAR[41],'<')
                         PROGRESS.setExteriorScore('dig','line80',CLEAR[81]-CLEAR[1],'<')
+
+                        local lps20=(CLEAR[81]-CLEAR[61])/20
+                        local lps40=(CLEAR[81]-CLEAR[41])/40
+                        local lps80=(CLEAR[81]-CLEAR[1])/80
                         -- TODO: balance
-                        if P.gameTime<=120e3 then PROGRESS.setExteriorUnlock('excavate') end
-                        if P.stat.piece<=260 then PROGRESS.setExteriorUnlock('drill') end
+                        if false then PROGRESS.setExteriorUnlock('drill') end
+                        if false then PROGRESS.setExteriorUnlock('excavate') end
 
                         table.remove(CLEAR,1)
                     end

@@ -992,7 +992,10 @@ function BP:rotate(dir,ifInit)
 
             for n=1,#kick.test do
                 local ix,iy=self.handX+baseX+kick.test[n][1],self.handY+baseY+kick.test[n][2]
-                if not self:ifoverlap(icb,ix,iy) then
+                if
+                    not self:ifoverlap(icb,ix,iy) and
+                    (self.freshTime>0 and self.freshChance>0 or kick.test[n][2]<=0)
+                then
                     self.hand.matrix=icb
                     self.hand.direction=kick.target
                     self:moveHand('rotate',ix,iy,dir,ifInit)
@@ -2142,7 +2145,7 @@ function BP:initialize()
     self.pieceCount=0
     self.combo=0
 
-    self:setAttackSystem(self.settings.atkSys)
+    if self.settings.atkSys~='none' then self:setAttackSystem(self.settings.atkSys) end
     self.garbageBuffer={}
     self.garbageSum=0
 
@@ -2199,6 +2202,7 @@ function BP:unserialize_custom()
 
     self.soundEvent=setmetatable({},soundEventMeta)
 end
+
 --------------------------------------------------------------
 
 return BP

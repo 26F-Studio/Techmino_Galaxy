@@ -16,6 +16,8 @@ local fakeProgress=0
 local searchStr,searchTimer
 local noResponseTimer=6.26
 
+local _glitchProtect=false
+
 ---@type Zenitha.Scene
 local scene={}
 
@@ -67,6 +69,7 @@ local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1
     code=function(v,mode)
         fakeProgress=v
         if mode=='release' then
+            _glitchProtect=true
             FMOD.music.seek(v*FMOD.music.getDuration())
         end
     end,
@@ -129,6 +132,9 @@ function scene.keyDown(key,isRep)
         searchStr=""
     elseif #key==1 and key:find'[0-9a-z]' then
         if searchTimer==0 then
+            if searchStr:sub(6)=='recoll' then
+                PROGRESS.setSecret('musicroom_recollection')
+            end
             searchStr=""
         end
         if #searchStr<26 then
@@ -187,6 +193,7 @@ function scene.focus(f) -- Reduce carbon footprint for music lovers
 end
 
 function scene.update(dt)
+    PROGRESS.updateMusicTime(dt)
     if noResponseTimer>0 then
         noResponseTimer=noResponseTimer-dt
         if noResponseTimer<=0 then
@@ -215,8 +222,16 @@ function scene.update(dt)
             end
         end
     end
-    if not love.mouse.isDown(1,2,3) and FMOD.music.getPlaying() then
-        fakeProgress=FMOD.music.tell()/FMOD.music.getDuration()%1
+    if WIDGET.sel~=progressBar or not love.mouse.isDown(1,2,3) and FMOD.music.getPlaying() then
+        local v=FMOD.music.tell()/FMOD.music.getDuration()%1
+        if _glitchProtect then
+            if math.abs(fakeProgress-v)<.0026 then
+                fakeProgress=v
+                _glitchProtect=false
+            end
+        else
+            fakeProgress=v
+        end
     end
 end
 

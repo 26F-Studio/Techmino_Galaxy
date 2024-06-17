@@ -913,6 +913,7 @@ function AP:initialize()
 
     self:loadScript(self.settings.script)
 end
+
 --------------------------------------------------------------
 
 return AP

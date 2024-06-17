@@ -17,7 +17,7 @@ atkSys.classic={
         for i=1,#P.clearingGroups do
             sizes[i]=TABLE.getSize(P.clearingGroups[i])
         end
-        local chip,mult=TABLE.sum(sizes)*10,0
+        local chip,mult=MATH.sum(sizes)*10,0
 
         -- Chain Score
         -- 0,8,16,32,64,96,128,160,192,224,256,288,320,352,384,416,448,480,512,...

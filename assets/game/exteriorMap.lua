@@ -21,8 +21,8 @@ local tau=MATH.tau
 ---| 'combo'
 ---| 'hypersonic'
 ---| 'dig'
----| 'excavate'
 ---| 'drill'
+---| 'excavate'
 ---| 'survivor'
 ---| 'backfire'
 ---| 'chain'
@@ -45,8 +45,8 @@ local modes={
     {pos={35,25,00},name='dig'},
     {pos={50,25,00},name='excavate'},
     {pos={35,10,00},name='drill'},
-    {pos={65,25,00},name='survivor'},
-    {pos={50,10,00},name='backfire'},
+    {pos={50,10,00},name='survivor'},
+    {pos={65,25,00},name='backfire'},
 
     {pos={00,35,10},name='chain'},
 
@@ -73,8 +73,8 @@ local bridgeLinks={
     'marathon - hypersonic',
     'marathon - combo',
     'marathon - allclear',
-    'dig - excavate - survivor',
-    'dig - drill - backfire',
+    'dig - excavate - backfire',
+    'dig - drill - survivor',
     'tspin - chain',
     'drill - action',
 }

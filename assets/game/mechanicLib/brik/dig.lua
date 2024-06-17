@@ -15,7 +15,7 @@ local garbageTypes={
         P.modeData.risePosition=P.modeData.risePosition+P.modeData.riseDirection
         P.modeData.garbageRised=P.modeData.garbageRised+1
     end,
-    excavate=function(P)
+    drill=function(P)
         P:riseGarbage()
     end,
     solid=function(P)
