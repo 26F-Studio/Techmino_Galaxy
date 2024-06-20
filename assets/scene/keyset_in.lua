@@ -13,7 +13,7 @@ sysKeyInfo.back=sysKeyInfo[2]
 sysKeyInfo.quit=sysKeyInfo[3]
 local keyButtons={}
 
-function scene.enter()
+function scene.load()
     BG.set('none')
 
     TABLE.clear(keyButtons)
@@ -31,7 +31,7 @@ function scene.enter()
         end
     end
 end
-function scene.leave()
+function scene.unload()
     saveKey()
 end
 

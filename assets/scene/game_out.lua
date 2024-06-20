@@ -9,8 +9,9 @@ local repMode=false
 local function startGame(modeName)
     GAME.unload()
     GAME.load(modeName)
+    GAME.camera.k0=1
 end
-function scene.enter()
+function scene.load()
     PROGRESS.applyExteriorBG()
     if SCN.args[1] then
         startGame(SCN.args[1])
@@ -19,14 +20,12 @@ function scene.enter()
     scene.widgetList.pause.text=canPause() and CHAR.icon.pause or CHAR.icon.back
     WIDGET._reset()
 end
-function scene.leave()
-    TASK.new(task_unloadGame)
-end
 
 local function sysAction(action)
     if action=='restart' then
         startGame(GAME.mode.name)
     elseif action=='view' then
+        -- TODO: more camera modes
         if GAME.camera.k0>.8 then
             GAME.camera:scale(3/5)
         else

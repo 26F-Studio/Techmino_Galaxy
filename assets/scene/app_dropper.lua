@@ -42,7 +42,7 @@ local function restart()
     color2=COLOR.random(3)
 end
 
-function scene.enter()
+function scene.load()
     restart()
     state='menu'
     BG.set('space')

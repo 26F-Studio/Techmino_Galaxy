@@ -30,7 +30,7 @@ local function _reset()
     freshLevel()
 end
 
-function scene.enter()
+function scene.load()
     state=1
     timeUsed=0
     level=0

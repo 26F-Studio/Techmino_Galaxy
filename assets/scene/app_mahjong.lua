@@ -106,7 +106,7 @@ end
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     BG.set('fixColor')
     BG.send('fixColor',.26,.62,.26)
     _newGame()

@@ -113,13 +113,13 @@ local function endGame(passLevel)
     autoQuitInterior()
 end
 
-function scene.enter()
+function scene.load()
     texts=TEXT.new()
     reset()
     playBgm('space')
 end
 
-function scene.leave()
+function scene.unload()
     texts=nil
 end
 

@@ -7,7 +7,7 @@ local function startGame(modeName)
     GAME.unload()
     GAME.load(modeName)
 end
-function scene.enter()
+function scene.load()
     PROGRESS.applyInteriorBG()
     if SCN.args[1] then
         startGame(SCN.args[1])
@@ -16,8 +16,8 @@ function scene.enter()
     scene.widgetList.pause.text=canPause() and CHAR.icon.pause or CHAR.icon.back
     WIDGET._reset()
 end
-function scene.leave()
-    TASK.new(task_unloadGame)
+function scene.unload()
+    GAME.unload()
 end
 
 local function sysAction(action)

@@ -258,7 +258,7 @@ end
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     invis=false
     newGame()
 end

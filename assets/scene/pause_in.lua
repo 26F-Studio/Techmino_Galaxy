@@ -3,18 +3,27 @@ local scene={}
 
 local pauseText
 
-function scene.enter()
+local function fuse()
+    repeat DEBUG.yieldT(6.26) until SCN.cur~='pause_out'
+    FMOD.effect.keyOff('music_pause')
+end
+
+function scene.load()
     PROGRESS.applyInteriorBG()
     pauseText=GC.newText(FONT.get(80,'bold'),Text.pause)
+    TASK.removeTask_code(fuse)
+    TASK.new(fuse)
 end
-function scene.leave()
-    SCN.scenes['game_in'].leave()
+function scene.unload()
+    FMOD.effect.keyOff('music_pause')
+    SCN.scenes['game_in'].unload()
 end
 
 local function sysAction(action)
     if action=='quit' then
         SCN.back('none')
     elseif action=='back' then
+        FMOD.effect.keyOff('music_pause')
         SCN.swapTo('game_in','none')
     elseif action=='restart' then
         SCN.swapTo('game_in','none',GAME.mode.name)

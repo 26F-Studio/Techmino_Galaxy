@@ -46,7 +46,7 @@ end
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     cubesX={} for i=1,40 do cubesX[i]=rnd()*16-8 end
     cubesY={} for i=1,40 do cubesY[i]=i/40*9 end
     lastCube=1

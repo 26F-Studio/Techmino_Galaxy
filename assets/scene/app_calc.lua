@@ -15,7 +15,7 @@ local function _autoReturn()
     end
 end
 
-function scene.enter()
+function scene.load()
     BG.set('none')
     reg,val,sym=false,"0",false
 end

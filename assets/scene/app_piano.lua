@@ -16,7 +16,7 @@ local offset
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     inst='square_wave'
     offset=0
 end

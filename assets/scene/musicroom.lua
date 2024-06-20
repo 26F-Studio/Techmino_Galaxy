@@ -76,7 +76,7 @@ local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1
     visibleTick=function() return FMOD.music.getPlaying() end,
 }
 
-function scene.enter()
+function scene.load()
     noResponseTimer=-1
     scene.focus(true)
     selected=getBgm()
@@ -100,7 +100,7 @@ function scene.enter()
         MSG.new('warn',Text.musicroom_lowVolume)
     end
 end
-function scene.leave()
+function scene.unload()
     scene.focus(true)
 end
 
@@ -158,7 +158,7 @@ function scene.keyDown(key,isRep)
             end
         elseif key=='`' and isAltPressed() then
             noProgress=true
-            scene.enter()
+            scene.load()
         elseif key=='return' then
             if selected~=musicListBox:getItem() then
                 musicListBox.code()
@@ -326,7 +326,7 @@ scene.widgetList={
                 FMOD.music.setParam('intensity',fullband and 1 or 0)
             elseif SETTINGS.system.bgmVol==0 and MATH.roll(0.1) then
                 noProgress=true
-                scene.enter()
+                scene.load()
             end
         end,
         visibleTick=function()

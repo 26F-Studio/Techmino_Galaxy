@@ -1,12 +1,12 @@
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     resetVirtualKeyMode('brik')
     updateWidgetVisible(scene.widgetList)
 end
 
-function scene.leave()
+function scene.unload()
     saveTouch()
 end
 

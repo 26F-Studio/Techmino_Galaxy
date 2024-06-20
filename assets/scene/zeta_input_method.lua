@@ -140,7 +140,7 @@ local function freshResult()
     end
 end
 
-function scene.enter()
+function scene.load()
     prevScene=SCN.scenes[SCN.stack[#SCN.stack-1]] or NONE
     time,quiting=0,false
     writing=false

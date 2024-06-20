@@ -30,7 +30,7 @@ local startTime,time
 local state,progress=0
 local frameKeyCount,mistake
 
-function scene.enter()
+function scene.load()
     BG.set('space')
     levelName="A_Z"
     targetString=levels.A_Z

@@ -19,10 +19,10 @@ local curLang=1
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     BG.set('none')
 end
-function scene.leave()
+function scene.unload()
     saveSettings()
 end
 

@@ -64,7 +64,7 @@ local function reset()
     fallingTimer=false
     failPos=false
 end
-function scene.enter()
+function scene.load()
     BG.set('space')
     preview={}
     board={{},{},{},{},{}}

@@ -206,6 +206,7 @@ function GAME.getMode(name)
 end
 
 function GAME.load(mode,seed)
+    -- print("Game Loaded: "..mode.."-"..seed)
     if GAME.mode then
         MSG.new('warn',"Game is running")
         return
@@ -249,6 +250,7 @@ function GAME.load(mode,seed)
 end
 
 function GAME.unload()
+    -- print("Game Unloaded")
     GAME.playing=false
     GAME.playerList=false
     GAME.playerMap=false

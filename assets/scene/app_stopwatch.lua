@@ -27,7 +27,7 @@ end
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     pressTime,releaseTime=0,0
     state='stop'
     time1=STRING.time(0)

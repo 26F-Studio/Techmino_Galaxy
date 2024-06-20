@@ -1,12 +1,12 @@
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     resetVirtualKeyMode('brik')
     updateWidgetVisible(scene.widgetList)
 end
 
-function scene.leave(...)     SCN.scenes['keyset_touch_in'].leave(...)     end
+function scene.unload(...)     SCN.scenes['keyset_touch_in'].unload(...)     end
 function scene.keyDown(...)   SCN.scenes['keyset_touch_in'].keyDown(...)   end
 
 function scene.touchDown(x,y,id)

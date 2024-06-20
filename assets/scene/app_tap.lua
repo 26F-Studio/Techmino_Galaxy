@@ -9,7 +9,7 @@ local scene={}
 local lastKey,keyTime
 local speed,maxSpeed=0,260
 
-function scene.enter()
+function scene.load()
     lastKey=nil
     speed=0
     keyTime={} for i=1,40 do keyTime[i]=-1e99 end

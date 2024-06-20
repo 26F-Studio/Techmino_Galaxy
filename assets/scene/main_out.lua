@@ -5,7 +5,7 @@ local textOffset=6
 local versionText=GC.newText(FONT.get(35,'bold'))
 local terminalName=GC.newText(FONT.get(35))
 
-function scene.enter()
+function scene.load()
     if MATH.roll(.026) then textOffset=26 end
     PROGRESS.applyEnv('exterior')
     versionText:set(VERSION.appVer)

@@ -93,6 +93,7 @@ return {
                         dropCheckPos=dropCheckPos+1
                         P.modeData.infSprint_dropCheckPos=dropCheckPos
                     else
+                        break
                         -- TODO: calculate approximate time
                     end
                 end

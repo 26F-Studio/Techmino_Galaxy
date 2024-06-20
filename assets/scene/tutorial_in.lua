@@ -14,7 +14,7 @@ local function B(t)
     return WIDGET.new(w)
 end
 
-function scene.enter()
+function scene.load()
     local L=scene.widgetList
     for _,v in next,scene.widgetList do
         if v.name then

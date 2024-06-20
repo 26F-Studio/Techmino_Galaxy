@@ -101,7 +101,7 @@ end
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     restart()
     BG.set('space')
 end

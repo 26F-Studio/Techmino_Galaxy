@@ -27,7 +27,7 @@ end
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     state=0
     ang,pos=0,-tau/4
     zooming=50

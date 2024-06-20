@@ -27,7 +27,7 @@ local function setState(v)
     scene.widgetList.disappear:setVisible(state~=1)
     scene.widgetList.tapFX:setVisible(state~=1)
 end
-function scene.enter()
+function scene.load()
     BG.set('space')
     board={}
     rank=3

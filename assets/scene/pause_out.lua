@@ -6,13 +6,21 @@ local scene={}
 
 local pauseText,textScale
 
-function scene.enter()
+local function fuse()
+    repeat DEBUG.yieldT(6.26) until SCN.cur~='pause_out'
+    FMOD.effect.keyOff('music_pause')
+end
+
+function scene.load()
+    FMOD.effect.play('music_pause')
     PROGRESS.applyExteriorBG()
     pauseText=GC.newText(FONT.get(80,'bold'),Text.pause)
     textScale=math.min(500/pauseText:getWidth(),226/pauseText:getHeight(),2)
+    TASK.removeTask_code(fuse)
+    TASK.new(fuse)
 end
-function scene.leave()
-    SCN.scenes['game_out'].leave()
+function scene.unload()
+    FMOD.effect.keyOff('music_pause')
 end
 
 local function sysAction(action)
@@ -20,6 +28,7 @@ local function sysAction(action)
         FMOD.effect('pause_quit')
         SCN.back()
     elseif action=='back' then
+        FMOD.effect.keyOff('music_pause')
         FMOD.effect('unpause')
         SCN.swapTo('game_out','none')
     elseif action=='restart' then
@@ -31,6 +40,7 @@ local function sysAction(action)
     end
 end
 function scene.keyDown(key,isRep)
+    FMOD.effect.keyOff('music_pause')
     if isRep then return true end
     sysAction(KEYMAP.sys:getAction(key))
     return true

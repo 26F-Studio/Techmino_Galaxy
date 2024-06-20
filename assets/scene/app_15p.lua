@@ -16,7 +16,7 @@ local slide,pathVis,revKB
 local function notGaming( ) return state~=1 end
 local colorSelector=WIDGET.new{type='selector',pos={0,0},x=150,y=240,w=200,text="Color",labelPos='top',labelDistance=20,list={'color1','rainbow','color2','gray','black'},disp=function() return color end,code=function(v) if state~=1 then color=v end end,visibleTick=notGaming}
 
-function scene.enter()
+function scene.load()
     BG.set('space')
     board={{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,16}}
     cx,cy=4,4

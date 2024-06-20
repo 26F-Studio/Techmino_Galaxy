@@ -229,7 +229,7 @@ local function skip()
     end
 end
 
-function scene.enter()
+function scene.load()
     for i=1,#tileName do
         tileText[i]=gc.newText(FONT.get(80,'_norm'),tileName[i])
     end

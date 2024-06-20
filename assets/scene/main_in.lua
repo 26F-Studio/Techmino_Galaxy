@@ -3,7 +3,7 @@ local settingHint
 
 ---@type Zenitha.Scene
 local scene={}
-function scene.enter()
+function scene.load()
     consoleClickCount=0
     settingHint=PROGRESS.get('main')<2 and PROGRESS.get('launchCount')<=3
     PROGRESS.applyEnv('interior')

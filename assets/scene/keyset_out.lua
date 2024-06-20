@@ -7,10 +7,9 @@ local keyMode='sys'
 local keyMap
 local keyButtons={}
 
-function scene.enter(mode)
+function scene.enter()
     BG.set('none')
 
-    keyMode=mode or keyMode
     keyMap=KEYMAP[keyMode]
 
     TABLE.clear(keyButtons)
@@ -30,7 +29,7 @@ function scene.enter(mode)
     end
     WIDGET._reset()
 end
-function scene.leave()
+function scene.unload()
     saveKey()
 end
 
@@ -133,10 +132,10 @@ scene.widgetList={
     {type='button',name='sys', x=900,y=390,w=200,h=60,text=LANG"keyset_sys_down",        fontSize=20, color='lC',code=selAct('sys', 'down'   )},
     {type='button',name='sys', x=900,y=460,w=200,h=60,text=LANG"keyset_sys_select",      fontSize=20, color='lC',code=selAct('sys', 'select' )},
 
-    {type='button_invis',name='Sacry',pos={1,0},x=-800,y=60,w=150,h=100,cornerR=20,fontSize=60,text="G",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='acry' then scene.enter('acry') end end,visibleFunc=function() return PROGRESS.getStyleUnlock('acry') end},
-    {type='button_invis',name='Sgela',pos={1,0},x=-600,y=60,w=150,h=100,cornerR=20,fontSize=60,text="P",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='gela' then scene.enter('gela') end end,visibleFunc=function() return PROGRESS.getStyleUnlock('gela') end},
-    {type='button_invis',name='Sbrik',pos={1,0},x=-400,y=60,w=150,h=100,cornerR=20,fontSize=60,text="M",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='brik' then scene.enter('brik') end end,visibleFunc=function() return PROGRESS.getStyleUnlock('brik') end},
-    {type='button_invis',name='Ssys', pos={1,0},x=-200,y=60,w=150,h=100,cornerR=20,fontSize=60,text="S",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='sys'  then scene.enter('sys')  end end},
+    {type='button_invis',name='Sacry',pos={1,0},x=-800,y=60,w=150,h=100,cornerR=20,fontSize=60,text="G",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='acry' then keyMode='acry'; scene.enter() end end,visibleFunc=function() return PROGRESS.getStyleUnlock('acry') end},
+    {type='button_invis',name='Sgela',pos={1,0},x=-600,y=60,w=150,h=100,cornerR=20,fontSize=60,text="P",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='gela' then keyMode='gela'; scene.enter() end end,visibleFunc=function() return PROGRESS.getStyleUnlock('gela') end},
+    {type='button_invis',name='Sbrik',pos={1,0},x=-400,y=60,w=150,h=100,cornerR=20,fontSize=60,text="M",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='brik' then keyMode='brik'; scene.enter() end end,visibleFunc=function() return PROGRESS.getStyleUnlock('brik') end},
+    {type='button_invis',name='Ssys', pos={1,0},x=-200,y=60,w=150,h=100,cornerR=20,fontSize=60,text="S",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='sys'  then keyMode='sys';  scene.enter() end end},
 
     {type='button',pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG"setting_test",fontSize=40,code=playExterior('brik/exterior/test'),visibleFunc=function() return not GAME.mode end},
     {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'settings_title'},

@@ -3,7 +3,7 @@ local scene={}
 
 local time
 
-function scene.enter()
+function scene.load()
     time=0
 end
 

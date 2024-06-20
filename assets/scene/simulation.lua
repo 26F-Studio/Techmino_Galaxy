@@ -76,7 +76,7 @@ local subjectFocused=false
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     for _,s in next,sims do
         s.valid=false
         s.active=0

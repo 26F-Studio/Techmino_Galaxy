@@ -8,7 +8,7 @@ local page
     4 = Gameplay
 ]]
 
-function scene.enter()
+function scene.load()
     page=tostring(SCN.args[1] or 1)
     for _,v in next,scene.widgetList do
         if v.name and #v.name<=2 then
@@ -26,7 +26,7 @@ function scene.enter()
     WIDGET._reset()
     BG.set('none')
 end
-function scene.leave()
+function scene.unload()
     saveSettings()
 end
 

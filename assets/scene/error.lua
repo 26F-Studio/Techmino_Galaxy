@@ -14,7 +14,7 @@ local texts={
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     FMOD.destroy()
     time=0
     err=ZENITHA.getErr('#') or {

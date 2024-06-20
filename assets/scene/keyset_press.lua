@@ -7,7 +7,7 @@ local result
 local quitTimer
 local escTimerWTF
 
-function scene.enter()
+function scene.load()
     mode=SCN.args[1]
     act=SCN.args[2]
     keyLangStr='keyset_'..mode..'_'..act

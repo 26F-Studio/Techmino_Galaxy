@@ -3,10 +3,10 @@ local settingHint
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     settingHint=PROGRESS.get('main')<2 and PROGRESS.get('launchCount')<=3
 end
-function scene.leave()
+function scene.unload()
     saveSettings()
 end
 

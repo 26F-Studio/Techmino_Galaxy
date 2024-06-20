@@ -64,7 +64,7 @@ local panel={
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     local firstLoad
     if not exMap then
         exMap=require'assets.game.exteriorMap'

@@ -242,7 +242,7 @@ function PROGRESS.transcendTo(n)
             update=function(_,t)
                 if WAIT.state=='wait' and t>=2.6 then
                     PROGRESS.setMain(2)
-                    SCN.scenes['main_in'].enter()
+                    SCN.scenes['main_in'].load()
                     WAIT.interrupt()
                 end
             end,

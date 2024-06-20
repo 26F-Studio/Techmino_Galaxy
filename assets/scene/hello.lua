@@ -4,7 +4,7 @@ local t
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     t=0
     ZENITHA.globalEvent.clickFX=NULL
     ZENITHA.globalEvent.drawCursor=NULL
