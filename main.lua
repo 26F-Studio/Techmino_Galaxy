@@ -147,6 +147,24 @@ ZENITHA.addConsoleCommand('regurl',{
         "Usage: regurl <on|off>",
     },
 })
+ZENITHA.addConsoleCommand('supernova',{
+    code=function()
+        if not PROGRESS.getStyleUnlock('acry') then
+            PROGRESS.setStyleUnlock('acry')
+            PROGRESS.setExteriorUnlock('action')
+            _CL("Extraordinary!")
+        end
+    end,
+},true)
+ZENITHA.addConsoleCommand('chain',{
+    code=function()
+        if not PROGRESS.getStyleUnlock('gela') then
+            PROGRESS.setStyleUnlock('gela')
+            PROGRESS.setExteriorUnlock('chain')
+            _CL("Ice storm!")
+        end
+    end,
+},true)
 
 local _keyDown_orig=ZENITHA.globalEvent.keyDown
 function ZENITHA.globalEvent.keyDown(key,isRep)
