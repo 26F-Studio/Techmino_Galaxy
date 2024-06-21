@@ -14,42 +14,53 @@ return {
             playerInit=function(P)
                 P.modeData.digMode='drill'
                 P.modeData.target.lineDig=1e99
-                P.modeData.infDig_clears=TABLE.new(-1e99,80)
+                P.modeData.infDig_clears={}
+                for i=1,100 do P.modeData.infDig_clears[i]={-1e99,-1e99} end
                 P.modeData.lineStay=8
                 mechLib.brik.dig.event_playerInit(P)
                 P.fieldDived=0
             end,
             beforeClear={
                 function(P,lines)
-                    local CLEAR=P.modeData.infDig_clears
+                    local CLEARS=P.modeData.infDig_clears
                     for i=1,#lines do
                         if lines[i]<=P.modeData.lineStay then
-                            table.insert(CLEAR,P.stat.piece)
+                            table.insert(CLEARS,1,{P.time/1e3,P.stat.piece})
 
-                            PROGRESS.setExteriorScore('drill','line20',CLEAR[81]-CLEAR[61],'<')
-                            PROGRESS.setExteriorScore('drill','line40',CLEAR[81]-CLEAR[41],'<')
-                            PROGRESS.setExteriorScore('drill','line80',CLEAR[81]-CLEAR[1],'<')
+                            PROGRESS.setExteriorScore('drill','spl10',(CLEARS[1][1]-CLEARS[11][1])/10,'<')
+                            PROGRESS.setExteriorScore('drill','spl20',(CLEARS[1][1]-CLEARS[21][1])/20,'<')
+                            PROGRESS.setExteriorScore('drill','spl40',(CLEARS[1][1]-CLEARS[41][1])/40,'<')
+                            PROGRESS.setExteriorScore('drill','spl100',(CLEARS[1][1]-CLEARS[101][1])/100,'<')
+                            PROGRESS.setExteriorScore('drill','ppl10',(CLEARS[1][2]-CLEARS[11][2])/10,'<')
+                            PROGRESS.setExteriorScore('drill','ppl20',(CLEARS[1][2]-CLEARS[21][2])/20,'<')
+                            PROGRESS.setExteriorScore('drill','ppl40',(CLEARS[1][2]-CLEARS[41][2])/40,'<')
+                            PROGRESS.setExteriorScore('drill','ppl100',(CLEARS[1][2]-CLEARS[101][2])/100,'<')
 
-                            local lpp20=(CLEAR[81]-CLEAR[61])/20
-                            local lpp40=(CLEAR[81]-CLEAR[41])/40
-                            local lpp80=(CLEAR[81]-CLEAR[1])/80
-                            -- TODO: balance
-                            if false then PROGRESS.setExteriorUnlock('survivor') end
-                            -- Unlock Acry
-                            if false then
-                                PROGRESS.setStyleUnlock('acry')
-                                PROGRESS.setExteriorUnlock('action')
-                            end
-
-                            table.remove(CLEAR,1)
+                            table.remove(CLEARS)
                         end
                     end
                 end,
-                function(P)
-                    if P.modeData.digMode or PROGRESS.getSecret('exterior_drill_notDig') then return true end
-                    if P.stat.line>=10 then
-                        PROGRESS.setSecret('exterior_drill_notDig')
-                        return true
+                function()
+                    if PROGRESS.getExteriorModeState('survivor') then return true end
+                    if
+                        0.3/PROGRESS.getExteriorModeState('drill').spl10+
+                        0.3/PROGRESS.getExteriorModeState('drill').spl20+
+                        0.2/PROGRESS.getExteriorModeState('drill').spl40+
+                        0.4/PROGRESS.getExteriorModeState('drill').spl100
+                        >=0.355 -- lps, ≈2.82 spl
+                    then PROGRESS.setExteriorUnlock('survivor') end
+                end,
+                function()
+                    if PROGRESS.getStyleUnlock('acry') then return true end
+                    if
+                        0.3/PROGRESS.getExteriorModeState('drill').ppl10+
+                        0.3/PROGRESS.getExteriorModeState('drill').ppl20+
+                        0.2/PROGRESS.getExteriorModeState('drill').ppl40+
+                        0.4/PROGRESS.getExteriorModeState('drill').ppl100
+                        >=0.495 -- lpp, ≈2.02 ppl
+                    then
+                        PROGRESS.setStyleUnlock('acry')
+                        PROGRESS.setExteriorUnlock('action')
                     end
                 end,
             },

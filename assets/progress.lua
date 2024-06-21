@@ -20,11 +20,9 @@ local prgs=setmetatable({
         acry=false,
     },
     exteriorMap={
-        modes={
-            sprint={},
-            marathon={},
-            dig={},
-        },
+        sprint={},
+        marathon={},
+        dig={},
     },
     bgmUnlocked={},
     secretFound={},
@@ -385,8 +383,8 @@ function PROGRESS.getTutorialPassed(n)
 end
 function PROGRESS.getInteriorScore(mode) return prgs.interiorScore[mode] end
 function PROGRESS.getTotalInteriorScore() return prgs.interiorScore.dig+prgs.interiorScore.sprint+prgs.interiorScore.marathon end
-function PROGRESS.getExteriorAllModeState() return prgs.exteriorMap.modes end
-function PROGRESS.getExteriorModeState(mode) return prgs.exteriorMap.modes[mode] end ---@param mode Techmino.ModeName
+function PROGRESS.getExteriorMapState() return prgs.exteriorMap end
+function PROGRESS.getExteriorModeState(mode) return prgs.exteriorMap[mode] end ---@param mode Techmino.ModeName
 function PROGRESS.getSecret(id) return not not prgs.secretFound[id] end
 
 --------------------------------------------------------------
@@ -445,11 +443,11 @@ end
 ---@param mode Techmino.ModeName
 ---@param outsideGame? true
 function PROGRESS.setExteriorUnlock(mode,outsideGame)
-    if not prgs.exteriorMap.modes[mode] then
+    if not prgs.exteriorMap[mode] then
         if TASK.lock(outsideGame and 'exMap_unlockSound' or 'exMap_unlockSound_background',2.6) then
             FMOD.effect(outsideGame and 'map_unlock' or 'map_unlock_bg')
         end
-        prgs.exteriorMap.modes[mode]={}
+        prgs.exteriorMap[mode]={}
         PROGRESS.save()
     end
 end
@@ -457,7 +455,7 @@ end
 ---@param mode Techmino.ModeName
 ---@param data table
 function PROGRESS.setExteriorModeState(mode,data)
-    prgs.exteriorMap.modes[mode]=data
+    prgs.exteriorMap[mode]=data
 end
 
 ---@param mode Techmino.ModeName
@@ -467,10 +465,11 @@ end
 ---@return boolean success
 function PROGRESS.setExteriorScore(mode,key,value,sign)
     sign=sign or '>'
-    local data=prgs.exteriorMap.modes[mode]
+    local data=prgs.exteriorMap[mode]
     if not data then
         data={}
-        prgs.exteriorMap.modes[mode]=data
+        prgs.exteriorMap[mode]=data
+        PROGRESS.save()
     end
     if
         not data[key] or

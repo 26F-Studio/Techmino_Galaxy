@@ -61,6 +61,13 @@ return {
                         return true
                     end
                 end,
+                function(P)
+                    if P.modeData.digMode or PROGRESS.getSecret('exterior_excavate_notDig') then return true end
+                    if P.stat.line>=10 then
+                        PROGRESS.setSecret('exterior_excavate_notDig')
+                        return true
+                    end
+                end,
             },
             gameOver=function(P,reason)
                 if reason=='AC' then

@@ -70,7 +70,7 @@ function scene.load()
         exMap=require'assets.game.exteriorMap'
         firstLoad=true
     end
-    local modeStates=PROGRESS.getExteriorAllModeState()
+    local modeStates=PROGRESS.getExteriorMapState()
     exMap:freshUnlocked(modeStates,firstLoad)
     exMap:reset(TABLE.getSize(modeStates)>3)
     panel:setSel(false)

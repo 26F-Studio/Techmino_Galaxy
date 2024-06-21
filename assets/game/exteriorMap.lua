@@ -21,10 +21,10 @@ local tau=MATH.tau
 ---| 'combo'
 ---| 'hypersonic'
 ---| 'dig'
----| 'drill'
 ---| 'excavate'
----| 'survivor'
 ---| 'backfire'
+---| 'drill'
+---| 'survivor'
 ---| 'chain'
 ---| 'action'
 
@@ -44,9 +44,9 @@ local modes={
 
     {pos={35,25,00},name='dig'},
     {pos={50,25,00},name='excavate'},
+    {pos={65,25,00},name='backfire'},
     {pos={35,10,00},name='drill'},
     {pos={50,10,00},name='survivor'},
-    {pos={65,25,00},name='backfire'},
 
     {pos={00,35,10},name='chain'},
 
