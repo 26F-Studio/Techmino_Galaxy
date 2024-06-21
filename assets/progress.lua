@@ -352,7 +352,7 @@ function PROGRESS.quit()
                 GC.shear(-.26,0)
                 FONT.set(100)
                 GC.setColor(1,1,1,(1-t)/.26)
-                GC.mStr('Bye',0,-70)
+                GC.mStr("Bye",0,-70)
             end,
         }
     else
@@ -472,7 +472,7 @@ end
 ---@param mode Techmino.ModeName
 ---@param key string
 ---@param value number
----@param sign? '<'|'>' #`'<'`means smaller=better, default to `'>'`
+---@param sign? '<'|'>' #default to `'>'` bigger=better, `'<'` smaller=better
 ---@return boolean success
 function PROGRESS.setExteriorScore(mode,key,value,sign)
     sign=sign or '>'

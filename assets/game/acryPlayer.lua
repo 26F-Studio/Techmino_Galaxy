@@ -90,7 +90,7 @@ for k,v in next,mechLib.acry.actions do AP._actions[k]=AP:_getActionObj(v) end
 
 function AP:printField() -- For debugging
     local F=self.field
-    print('----------')
+    print("----------")
     for y=self.settings.fieldSize,1,-1 do
         local s="|"
         for x=1,self.settings.fieldSize do

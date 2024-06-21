@@ -46,10 +46,10 @@ function scene.draw()
     FONT.set(190,'galaxy_thin')
     GC.setColor(.08,.08,.084)
     for a=0,MATH.tau,MATH.tau/20 do
-        GC.print('GALAXY',455+7*math.cos(a)+textOffset,60+7*math.sin(a))
+        GC.print("GALAXY",455+7*math.cos(a)+textOffset,60+7*math.sin(a))
     end
     GC.setColor(1,1,1)
-    GC.print('GALAXY',455+textOffset,60)
+    GC.print("GALAXY",455+textOffset,60)
 end
 
 scene.widgetList={

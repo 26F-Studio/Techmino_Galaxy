@@ -26,7 +26,7 @@ function scene.draw()
         GC.clear(0,0,0)
         if t<1 and t%.26>.13 then
             FONT.set(50)
-            GC.print('_',40,20)
+            GC.print("_",40,20)
         end
     elseif PROGRESS.get('main')<=4 then
         GC.replaceTransform(SCR.xOy_m)

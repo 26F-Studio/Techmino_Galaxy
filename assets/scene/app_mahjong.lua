@@ -159,7 +159,7 @@ end
 function scene.draw()
     FONT.set(60)
     gc_setColor(COLOR.D)
-    gc_print('余 '..#deck,1300,60)
+    gc_print("余 "..#deck,1300,60)
 
     gc_setLineWidth(4)
     FONT.set(100)
