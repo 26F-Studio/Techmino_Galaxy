@@ -45,7 +45,6 @@ return {
             end,
             afterClear=mechLib.brik.misc.lineClear_event_afterClear,
             beforeCancel=function(P)
-                -- TODO: balance
                 if P.stat.atk>=8 then
                     local eff=P.stat.atk/P.stat.line
                     if eff>=2 then

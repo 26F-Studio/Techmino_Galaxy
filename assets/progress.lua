@@ -369,6 +369,17 @@ function PROGRESS.drawExteriorHeader(h)
 end
 
 --------------------------------------------------------------
+-- Lock
+
+local lock=false
+function PROGRESS.lock()
+    lock=true
+end
+function PROGRESS.unlock()
+    lock=false
+end
+
+--------------------------------------------------------------
 -- Get
 
 function PROGRESS.get(k) return prgs[k] end
@@ -501,6 +512,18 @@ end
 ---@param dt number
 function PROGRESS.updateMusicTime(dt)
     prgs.musicTime=prgs.musicTime+dt
+end
+
+--------------------------------------------------------------
+-- Make all 'set' functions lockable
+for k,f in next,PROGRESS do
+    if k:sub(1,3)=='set' then
+        PROGRESS[k]=function(...)
+            if not lock then
+                f(...)
+            end
+        end
+    end
 end
 
 return PROGRESS

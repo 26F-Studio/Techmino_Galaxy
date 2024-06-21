@@ -23,7 +23,6 @@ return {
                 P:receive(atk)
             end,
             beforeDiscard=function(P)
-                -- TODO: balance
                 if P.stat.atk>=8 and P.stat.line<=4 then
                     P.modeData.subMode='amplify'
                     P.settings.dropDelay=260

@@ -79,10 +79,16 @@ return {
                         PROGRESS.setExteriorScore('dig','volcanics',P.gameTime,'<')
                     end
 
-                    -- TODO: balance
-                    if (PROGRESS.getExteriorModeState('dig').shale or 1e99)+(PROGRESS.getExteriorModeState('dig').volcanics or 1e99)<=260e3 then
+                    local playCount=PROGRESS.getExteriorMapState('dig').playCount or 0
+                    if
+                        (PROGRESS.getExteriorModeState('dig').shale     or 1e99)<=100e3+10e3*playCount or
+                        (PROGRESS.getExteriorModeState('dig').volcanics or 1e99)<=100e3+10e3*playCount or
+                        (PROGRESS.getExteriorModeState('dig').checker   or 1e99)<=60e3+5e3*playCount
+                    then
                         PROGRESS.setExteriorUnlock('backfire')
                     end
+
+                    PROGRESS.setExteriorScore('dig','playCount',playCount+1)
                 end
             end,
         },
