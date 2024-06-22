@@ -12,7 +12,7 @@ local function fuse()
 end
 
 function scene.load()
-    FMOD.effect.play('music_pause')
+    FMOD.effect('music_pause')
     PROGRESS.applyExteriorBG()
     pauseText=GC.newText(FONT.get(80,'bold'),Text.pause)
     textScale=math.min(500/pauseText:getWidth(),226/pauseText:getHeight(),2)

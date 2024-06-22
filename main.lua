@@ -368,6 +368,8 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
                     if path then
                         local name=path:match("/([^/]+)$"):lower()
                         L[name]=path
+                        if not SONGBOOK[name] then SONGBOOK(name) end
+                        -- print(name,path)
                     end
                 end
             end
@@ -394,6 +396,7 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
             if path then
                 local name=path:match("/([^/]+)$"):lower()
                 L[name]=path
+                -- print(name,path)
             end
         end
         -- print("--------------------------")
@@ -407,6 +410,10 @@ TASK.new(function() -- Don't initialize studio at first frame, may cause some we
     DEBUG.yieldT(0.26)
     FMODLoadFunc()
     FMOD.setMainVolume(SETTINGS.system.mainVol,true)
+    for name,data in next,SONGBOOK do
+        data.intensity=FMOD.music.getParamDesc(name,'intensity')~=nil
+        data.section=FMOD.music.getParamDesc(name,'section')~=nil
+    end
 end)
 -- Hijack the original SFX module, use FMOD instead
 SFX[('play')]=function(name,vol,pos,tune)

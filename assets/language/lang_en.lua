@@ -194,6 +194,7 @@ local L={
 
     musicroom_title="Musicroom",
     musicroom_fullband="Full Band",
+    musicroom_section='Chorus',
     musicroom_autoplay="Auto Change",
 
     about_title="About",

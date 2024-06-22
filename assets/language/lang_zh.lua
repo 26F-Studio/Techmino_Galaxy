@@ -194,6 +194,7 @@ local L={
 
     musicroom_title="音乐室",
     musicroom_fullband='全频带',
+    musicroom_section='副歌',
     musicroom_autoplay="自动切换",
 
     about_title="关于",

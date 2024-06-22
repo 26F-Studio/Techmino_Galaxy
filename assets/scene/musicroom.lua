@@ -8,7 +8,7 @@ local sin=math.sin
 
 local totalBgmCount
 
-local selected,fullband
+local selected,fullband,section
 local collectCount=0
 local noProgress=false
 local autoplay=false ---@type number|false
@@ -49,13 +49,12 @@ local musicListBox do
     function musicListBox.code()
         if selected~=musicListBox:getItem() then
             selected=musicListBox:getItem()
-            local fullBandMode=not SONGBOOK[selected].plain and (noProgress or PROGRESS.getBgmUnlocked(selected)==2)
-            scene.widgetList.fullband:setVisible(fullBandMode)
-            if fullBandMode then
-                fullband=fullband==true
-            else
-                fullband=nil
-            end
+            local fullbandMode=SONGBOOK[selected].intensity and (noProgress or PROGRESS.getBgmUnlocked(selected)==2)
+            local sectionMode=SONGBOOK[selected].section and (noProgress or PROGRESS.getBgmUnlocked(selected)==2)
+            scene.widgetList.fullband:setVisible(fullbandMode)
+            scene.widgetList.section:setVisible(sectionMode)
+            if fullbandMode then fullband=fullband==true else fullband=nil end
+            if sectionMode then section=section==true else section=nil end
             playBgm(selected,fullband,noProgress)
         end
     end
@@ -69,7 +68,7 @@ local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1
     code=function(v,mode)
         fakeProgress=v
         if mode=='release' then
-            _glitchProtect=true
+            _glitchProtect=0.26
             FMOD.music.seek(v*FMOD.music.getDuration())
         end
     end,
@@ -91,7 +90,14 @@ function scene.load()
     end
     table.sort(l)
     collectCount=#l
-    totalBgmCount=totalBgmCount or TABLE.getSize(SONGBOOK)
+    if not totalBgmCount then
+        totalBgmCount=0
+        for _,data in next,SONGBOOK do
+            if not data.inside then
+                totalBgmCount=totalBgmCount+1
+            end
+        end
+    end
     musicListBox:setList(l)
     musicListBox:select(TABLE.find(musicListBox:getList(),selected))
     musicListBox.code()
@@ -153,6 +159,8 @@ function scene.keyDown(key,isRep)
         elseif key=='tab' then
             if isCtrlPressed() then
                 scene.widgetList.autoplay.code()
+            elseif isShiftPressed() then
+                scene.widgetList.section.code()
             else
                 scene.widgetList.fullband.code()
             end
@@ -228,6 +236,12 @@ function scene.update(dt)
             if math.abs(fakeProgress-v)<.0026 then
                 fakeProgress=v
                 _glitchProtect=false
+            else
+                _glitchProtect=_glitchProtect-dt
+                if _glitchProtect<=0 then
+                    fakeProgress=v
+                    _glitchProtect=false
+                end
             end
         else
             fakeProgress=v
@@ -331,6 +345,22 @@ scene.widgetList={
         end,
         visibleTick=function()
             return fullband~=nil
+        end,
+    },
+
+    -- Section Switch
+    {type='switch',pos={.5,.5},x=-650,y=430,h=50,widthLimit=260,labelPos='right',disp=function() return section end,
+        name='section',text=LANG'musicroom_section',
+        sound_on=false,sound_off=false,
+        code=function()
+            if section==nil then return end
+            section=not section
+            if FMOD.music.getPlaying() then
+                FMOD.music.setParam('section',section and 1 or 0)
+            end
+        end,
+        visibleTick=function()
+            return section~=nil
         end,
     },
 

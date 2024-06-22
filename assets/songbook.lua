@@ -9,6 +9,11 @@
 ---| 'secret7th remix_loop'
 ---| 'shibamata_noloop'
 ---| 'caprice'
+---| 'fruit dance_ex'
+---| 'fruit dance_mix'
+---| 'vacc'
+---| 'secret7th_overdrive'
+---| 'secret7th_old'
 
 ---@enum (key) Techmino.PubMusicName
 local songbook={
@@ -70,11 +75,11 @@ local songbook={
     ['here']                  ={},
     ['there']                 ={},
     ['1980s']                 ={author="C₂₉H₂₅N₃O₅",message="Recollection remix"},
-    ['sakura']                ={author="ZUN & C₂₉H₂₅N₃O₅",plain=true},
+    ['sakura']                ={author="ZUN & C₂₉H₂₅N₃O₅"},
     ['malate']                ={author="ZUN & C₂₉H₂₅N₃O₅"},
     ['shibamata']             ={author="C₂₉H₂₅N₃O₅",message="Nice song, Nice remix"},
-    ['race remix']            ={author="柒栎流星",plain=true},
-    ['secret7th remix']       ={author="柒栎流星",plain=true},
+    ['race remix']            ={author="柒栎流星"},
+    ['secret7th remix']       ={author="柒栎流星"},
     ['propel']                ={author="TetraCepra",message="A cool push remix"},
     ['gallery']               ={message="A venus remix"},
     ['subzero']               ={author="TetraCepra",message="A cool blank remix"},
@@ -95,5 +100,14 @@ for name,data in next,songbook do
     end
     data.title=table.concat(words,' ')
 end
+
+setmetatable(songbook,{__call=function(t,name)
+    t[name]={
+        title='['..name..']',
+        author='',
+        message='',
+        inside=true,
+    }
+end})
 
 return songbook

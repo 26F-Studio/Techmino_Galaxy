@@ -12,7 +12,7 @@ local _bgmPlaying ---@type string?
 ---@param noProgress? boolean
 function playBgm(name,full,noProgress)
     if name==_bgmPlaying then return end
-    if not noProgress then PROGRESS.setBgmUnlocked(name,full and 2 or 1) end
+    if not noProgress and not SONGBOOK[name].inside then PROGRESS.setBgmUnlocked(name,full and 2 or 1) end
     if full then
         FMOD.music(name)
     else
