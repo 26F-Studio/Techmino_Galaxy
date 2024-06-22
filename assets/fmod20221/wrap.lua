@@ -2677,6 +2677,7 @@ function studio.System:getSoundInfo(i1)
     return o1[0],result
 end
 
+---@param i1 string
 ---@return any,FMOD.Result
 function studio.System:getParameterDescriptionByName(i1)
     local o1=ffi.new("FMOD_STUDIO_PARAMETER_DESCRIPTION[1]")
@@ -2735,6 +2736,7 @@ function studio.System:setParametersByIDs(i1,i2,i3,i4)
     return result
 end
 
+---@param i1 string
 ---@return number,number,FMOD.Result
 function studio.System:getParameterByName(i1)
     local o1=ffi.new("float[1]")
@@ -2989,6 +2991,7 @@ function studio.EventDescription:getParameterDescriptionCount()
     return o1[0],result
 end
 
+---@param i1 number
 ---@return any,FMOD.Result
 function studio.EventDescription:getParameterDescriptionByIndex(i1)
     local o1=ffi.new("FMOD_STUDIO_PARAMETER_DESCRIPTION[1]")
@@ -2996,6 +2999,7 @@ function studio.EventDescription:getParameterDescriptionByIndex(i1)
     return o1[0],result
 end
 
+---@param i1 string
 ---@return any,FMOD.Result
 function studio.EventDescription:getParameterDescriptionByName(i1)
     local o1=ffi.new("FMOD_STUDIO_PARAMETER_DESCRIPTION[1]")
@@ -3044,6 +3048,7 @@ function studio.EventDescription:getUserPropertyCount()
     return o1[0],result
 end
 
+---@param i1 number
 ---@return any,FMOD.Result
 function studio.EventDescription:getUserPropertyByIndex(i1)
     local o1=ffi.new("FMOD_STUDIO_USER_PROPERTY[1]")
@@ -3354,6 +3359,7 @@ function studio.EventInstance:isVirtual()
     return o1[0],result
 end
 
+---@param i1 string
 ---@return number,number,FMOD.Result
 function studio.EventInstance:getParameterByName(i1)
     local o1=ffi.new("float[1]")

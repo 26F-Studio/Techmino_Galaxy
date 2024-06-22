@@ -125,11 +125,24 @@ end
 ---@type {desc:FMOD.Studio.EventDescription?, event:FMOD.Studio.EventInstance?}?
 local playing=nil
 
----Check if a music name exists
+---Get event description by name, to check if a music exists
 ---@param name string
----@return boolean
-function M.music.check(name)
-    return musicLib[name]~=nil
+---@return FMOD.Studio.EventDescription
+function M.music.getDesc(name)
+    return musicLib[name]
+end
+
+---Get event param description by name, to check if a param exists
+---@param name string
+---@param param string
+---@return FMOD.Studio.ParamDescription?
+function M.music.getParamDesc(name,param)
+    local desc=musicLib[name]
+    if not desc then return end
+    local paraDesc,result=musicLib[name]:getParameterDescriptionByName(param)
+    if result==M.FMOD_OK then
+        return paraDesc
+    end
 end
 
 ---@param name string
@@ -201,12 +214,19 @@ function M.music.stop(instant)
     playing=nil
 end
 
----@param name string
+---@param param string
+---@return number?
+function M.music.getParam(param)
+    if not studio or not playing then return end
+    return playing.event:getParameterByName(param)
+end
+
+---@param param string
 ---@param value number
 ---@param instant? boolean only `true` take effect
-function M.music.setParam(name,value,instant)
+function M.music.setParam(param,value,instant)
     if not studio or not playing then return end
-    playing.event:setParameterByName(name,value,instant==true)
+    playing.event:setParameterByName(param,value,instant==true)
 end
 
 ---@param time number seconds
@@ -249,11 +269,11 @@ function M.effect.setVolume(v,instant)
     studio:setParameterByName('EffectVolume',M.mainVolume*M.effectVolume,instant==true)
 end
 
----Check if an effect name exists
+---Get event description by name, to check if a music exists
 ---@param name string
----@return boolean
-function M.effect.check(name)
-    return effectLib[name]~=nil
+---@return FMOD.Studio.EventDescription
+function M.effect.getDesc(name)
+    return effectLib[name]
 end
 
 ---priority: pitch>tune>fine
@@ -311,17 +331,17 @@ function M.effect.play(name,args)
     return event
 end
 
----@param event string
 ---@param name string
+---@param param string
 ---@param value number
 ---@param instant? boolean only `true` take effect
-function M.effect.setParam(event,name,value,instant)
+function M.effect.setParam(name,param,value,instant)
     if not studio then return end
-    local desc=effectLib[event]
+    local desc=effectLib[name]
     if not desc then return end
     local l,c=desc:getInstanceList(desc:getInstanceCount())
     for i=1,c do
-        l[i-1]:setParameterByName(name,value,instant==true)
+        l[i-1]:setParameterByName(param,value,instant==true)
     end
 end
 
