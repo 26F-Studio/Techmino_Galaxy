@@ -248,6 +248,16 @@ WIDGET.setDefaultOption{
         sound_clear='inputbox_clear',
     },
 }
+MSG.addCategory('collect',
+    {COLOR.HEX'90FFC7'},
+    {COLOR.HEX'262626'},
+    GC.load{40,40,
+        {'setCL',COLOR.HEX'262626'},
+        {'setLW',3},
+        {'fRect',17,6,6,28},
+        {'fRect',6,17,28,6},
+    }
+)
 MSG.addCategory('achievement',
     {COLOR.HEX'FFF0C2'},
     {COLOR.HEX'262626'},
@@ -259,7 +269,8 @@ MSG.addCategory('achievement',
         {'fRect',6,17,28,6},
     }
 )
-
+MSG.new('collect',"123")
+MSG.new('achievement',"123")
 IMG.init{
     actionIcons={
         texture='assets/image/action_icon.png',

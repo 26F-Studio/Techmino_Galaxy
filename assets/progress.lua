@@ -429,7 +429,7 @@ function PROGRESS.setBgmUnlocked(name,state)
     if newState>(prgs.bgmUnlocked[name] or 0) then
         prgs.bgmUnlocked[name]=newState
         if prgs.main>=3 then
-            MSG.new('check',Text.bgm_collected:repD(SONGBOOK[name].title))
+            MSG.new('collect',Text.bgm_collected:repD(SONGBOOK[name].title))
         end
         PROGRESS.save()
     end
@@ -500,7 +500,7 @@ function PROGRESS.setExteriorScore(mode,key,value,sign)
     return false
 end
 
----@param id string
+---@param id Techmino.Text.Achievement
 ---@return boolean success
 function PROGRESS.setSecret(id)
     if not prgs.secretFound[id] then

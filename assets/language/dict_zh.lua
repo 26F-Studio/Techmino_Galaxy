@@ -26,11 +26,6 @@ return [[
 @ title 关于本词典
 帮助你了解这里的一切。
 
-# aboutDict_hidden
-@ title 关于本词典?
-帮助你了解这里的一切。
-哇，你用快捷键打开了词典！
-
 # setting_out
 @ title 设置
 设置菜单

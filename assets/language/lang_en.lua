@@ -223,8 +223,15 @@ local L={
     },
 
     -- Achievement
+    ---@enum (key) Techmino.Text.Achievement
     achievementMessage={
-        -- TODO
+        dict_shortcut="Hotkey Expert",
+        exterior_excavate_notDig="What are you doing?",
+        exterior_hidden_superBrain="COOL",
+        exterior_sprint_SZOpen="Really want to start with SZO?",
+        exterior_tspin_12TSS="What's this?",
+        interior_console="What's this?",
+        musicroom_recollection="Recollection is not a song",
     },
 
     -- Level

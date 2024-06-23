@@ -224,7 +224,13 @@ local L={
 
     -- Achievement
     achievementMessage={
-        -- TODO
+        dict_shortcut="快捷键高手",
+        exterior_excavate_notDig="你在干什么？",
+        exterior_hidden_superBrain="COOL",
+        exterior_sprint_SZOpen="真的要用SZO开局吗",
+        exterior_tspin_12TSS="这是什么？",
+        interior_console="这是什么？",
+        musicroom_recollection="Recollection不是一首曲子",
     },
 
     -- Level

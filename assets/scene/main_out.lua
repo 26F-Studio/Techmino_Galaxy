@@ -14,7 +14,8 @@ end
 
 local function sysAction(action)
     if action=='help' then
-        callDict('aboutDict_hidden')
+        callDict('aboutDict')
+        PROGRESS.setSecret('dict_shortcut')
     elseif action=='setting' then
         SCN.go('setting_out','fadeHeader')
     elseif action=='back' then

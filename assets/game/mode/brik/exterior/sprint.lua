@@ -22,7 +22,7 @@ return {
             gameStart=function(P)
                 local set={S=0,Z=0,O=0}
                 if set[P.nextQueue[1].name] and set[P.nextQueue[2].name] then
-                    PROGRESS.setSecret('exterior_sprint_tolerant')
+                    PROGRESS.setSecret('exterior_sprint_SZOpen')
                 end
                 return true
             end,

@@ -26,11 +26,6 @@ return [[
 @ title About This
 Help you learn everything around here.
 
-# aboutDict_hidden
-@ title About This?
-Help you learn everything around here.
-Wow, you opened dictionary with shortcut key!
-
 # setting_out
 @ title Setting
 The setting page.

@@ -1,6 +1,5 @@
 local baseDict={
     {'intro: aboutDict'},
-    {'intro: aboutDict_hidden',hidden=true},
     {'intro: setting_out',hidden=true},
     {'guide: noobGuide'},
     {'guide: keybinding'},
