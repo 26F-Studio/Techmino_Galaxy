@@ -100,6 +100,7 @@ scene.widgetList={
             FMOD.effect('suffocate',{tune=consoleClickCount-6.26})
             if consoleClickCount==6 then
                 consoleClickCount=0
+                PROGRESS.setSecret('interior_console')
                 SCN.go('_console')
             end
         end
