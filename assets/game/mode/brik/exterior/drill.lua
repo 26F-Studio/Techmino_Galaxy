@@ -48,7 +48,7 @@ return {
                         0.2/PROGRESS.getExteriorModeState('drill').spl40+
                         0.4/PROGRESS.getExteriorModeState('drill').spl100
                         >=0.355 -- lps, ≈2.82 spl
-                    then PROGRESS.setExteriorUnlock('survivor') end
+                    then PROGRESS.setExteriorUnlock('survivor') return true end
                 end,
                 function()
                     if PROGRESS.getStyleUnlock('acry') then return true end
@@ -61,6 +61,7 @@ return {
                     then
                         PROGRESS.setStyleUnlock('acry')
                         PROGRESS.setExteriorUnlock('action')
+                        return true
                     end
                 end,
             },

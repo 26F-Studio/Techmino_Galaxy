@@ -7,6 +7,8 @@ return {
     end,
     settings={brik={
         -- clearRule='float',
+        spin_immobile=true,
+        spin_corners=3,
         seqType='bag7_sprint',
         event={
             playerInit=function(P)
@@ -17,6 +19,10 @@ return {
                 P.modeData.curKeyCount=0
                 if not PROGRESS.getExteriorModeState('combo') then
                     P.settings.combo_sound=true
+                end
+                if PROGRESS.getExteriorModeState('tspin') then
+                    P.settings.spin_immobile=false
+                    P.settings.spin_corners=false
                 end
             end,
             gameStart=function(P)
@@ -33,71 +39,83 @@ return {
                 table.insert(P.modeData.keyCount,P.modeData.curKeyCount)
                 P.modeData.curKeyCount=0
             end,
-            beforeClear=function(P,lines) -- Infinite Sprint Core
-                local CLEAR=P.modeData.infSprint_clears
-                ---@type Techmino.Cell[][]
-                local mat=P.field._matrix
-                for i=1,#lines do
-                    local l={[0]=P.time}
-                    for x=1,P.settings.fieldW do
-                        local c=mat[lines[i]][x]
-                        l[c.did]=(l[c.did] or 0)+1
-                    end
-                    table.insert(CLEAR,l)
-                end
-
-                local dropCheckPos=P.modeData.infSprint_dropCheckPos
-                while true do
-                    local lClearBound
-                    local i=1
-                    while i<=#CLEAR do
-                        if CLEAR[i][dropCheckPos] then
-                            lClearBound=i
-                            break
-                        else
-                            local keep
-                            for id in next,CLEAR[i] do
-                                if id>=dropCheckPos then
-                                    keep=true
-                                    break
-                                end
-                            end
-                            if keep then
-                                i=i+1
-                            else
-                                table.remove(CLEAR,i)
-                            end
-                        end
-                    end
-                    if not lClearBound then break end
-
-                    local rClearBound
-                    local count=0
-                    for j=lClearBound,#CLEAR do
-                        for id,num in next,CLEAR[j] do
-                            if id>=dropCheckPos then
-                                count=count+num
-                                if count>=400 then
-                                    rClearBound=j
-                                    break
-                                end
-                            end
-                        end
-                    end
-                    if rClearBound then
-                        local drop=P.dropHistory[dropCheckPos-1]
-                        local time=CLEAR[rClearBound][0]-(drop and drop.time or 0)
-                        PROGRESS.setExteriorScore('sprint','line40',time,'<')
-                        -- print(("Time=%.2f"):format(time/1000))
-                        -- print(dropCheckPos,lClearBound,rClearBound)
-                        dropCheckPos=dropCheckPos+1
-                        P.modeData.infSprint_dropCheckPos=dropCheckPos
-                    else
-                        break
-                        -- TODO: calculate approximate time
-                    end
+            afterPress=function(P)
+                if PROGRESS.getExteriorModeState('tspin') then return true end
+                local move=P.lastMovement
+                if move and (move.immobile or move.corners) then
+                    PROGRESS.setExteriorUnlock('tspin')
+                    P.settings.spin_immobile=false
+                    P.settings.spin_corners=false
+                    return true
                 end
             end,
+            beforeClear={
+                function(P,lines) -- Infinite Sprint Core
+                    local CLEAR=P.modeData.infSprint_clears
+                    ---@type Techmino.Cell[][]
+                    local mat=P.field._matrix
+                    for i=1,#lines do
+                        local l={[0]=P.time}
+                        for x=1,P.settings.fieldW do
+                            local c=mat[lines[i]][x]
+                            l[c.did]=(l[c.did] or 0)+1
+                        end
+                        table.insert(CLEAR,l)
+                    end
+
+                    local dropCheckPos=P.modeData.infSprint_dropCheckPos
+                    while true do
+                        local lClearBound
+                        local i=1
+                        while i<=#CLEAR do
+                            if CLEAR[i][dropCheckPos] then
+                                lClearBound=i
+                                break
+                            else
+                                local keep
+                                for id in next,CLEAR[i] do
+                                    if id>=dropCheckPos then
+                                        keep=true
+                                        break
+                                    end
+                                end
+                                if keep then
+                                    i=i+1
+                                else
+                                    table.remove(CLEAR,i)
+                                end
+                            end
+                        end
+                        if not lClearBound then break end
+
+                        local rClearBound
+                        local count=0
+                        for j=lClearBound,#CLEAR do
+                            for id,num in next,CLEAR[j] do
+                                if id>=dropCheckPos then
+                                    count=count+num
+                                    if count>=400 then
+                                        rClearBound=j
+                                        break
+                                    end
+                                end
+                            end
+                        end
+                        if rClearBound then
+                            local drop=P.dropHistory[dropCheckPos-1]
+                            local time=CLEAR[rClearBound][0]-(drop and drop.time or 0)
+                            PROGRESS.setExteriorScore('sprint','line40',time,'<')
+                            -- print(("Time=%.2f"):format(time/1000))
+                            -- print(dropCheckPos,lClearBound,rClearBound)
+                            dropCheckPos=dropCheckPos+1
+                            P.modeData.infSprint_dropCheckPos=dropCheckPos
+                        else
+                            break
+                            -- TODO: calculate approximate time
+                        end
+                    end
+                end,
+            },
             afterClear={
                 -- mechLib.brik.misc.cascade_event_afterClear,
                 function(P)
@@ -121,13 +139,16 @@ return {
                         return true
                     end
                 end,
+                function(P)
+                    if PROGRESS.getExteriorMapState('hidden') then return true end
+                    if P.stat.line>=40 then
+                        if P.stat.clears[1]+P.stat.clears[2]+P.stat.clears[3]==0 then
+                            PROGRESS.setExteriorUnlock('hidden')
+                        end
+                        return true
+                    end
+                end,
             },
-            gameOver=function(P,reason)
-                if reason=='AC' and P.stat.clears[1]+P.stat.clears[2]+P.stat.clears[3]==0 then
-                    PROGRESS.setExteriorUnlock('hidden')
-                    return true
-                end
-            end,
             drawInField=mechLib.brik.misc.lineClear_event_drawInField,
             -- drawOnPlayer=mechLib.brik.misc.lineClear_event_drawOnPlayer,
             -- whenSuffocate=mechLib.brik.misc.suffocateLock_event_whenSuffocate,

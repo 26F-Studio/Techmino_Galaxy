@@ -86,6 +86,7 @@ return {
                         (PROGRESS.getExteriorModeState('dig').checker   or 1e99)<=60e3+5e3*playCount
                     then
                         PROGRESS.setExteriorUnlock('backfire')
+                        return true
                     end
 
                     PROGRESS.setExteriorScore('dig','playCount',playCount+1)

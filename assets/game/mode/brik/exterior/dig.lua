@@ -48,7 +48,7 @@ return {
                         0.2/PROGRESS.getExteriorModeState('dig').spl40+
                         0.3/PROGRESS.getExteriorModeState('dig').spl100
                         >=0.26 -- lps, ≈3.85 spl
-                    then PROGRESS.setExteriorUnlock('excavate') end
+                    then PROGRESS.setExteriorUnlock('excavate') return true end
                 end,
                 function()
                     if PROGRESS.getExteriorModeState('drill') then return true end
@@ -58,7 +58,7 @@ return {
                         0.2/PROGRESS.getExteriorModeState('dig').ppl40+
                         0.3/PROGRESS.getExteriorModeState('dig').ppl100
                         >=0.42 -- lpp, ≈2.38 ppl
-                    then PROGRESS.setExteriorUnlock('drill') end
+                    then PROGRESS.setExteriorUnlock('drill') return true end
                 end,
             },
             afterClear=mechLib.brik.dig.event_afterClear,
