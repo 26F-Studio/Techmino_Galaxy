@@ -183,7 +183,10 @@ function PROGRESS.applyExteriorBGM()
     if prgs.main==3 then
         playBgm('vacuum')
     else
-        playBgm('singularity')
+        if love.timer.getTime()>3.55 then
+            playBgm('singularity')
+            FMOD.music.seek(5.25)
+        end
     end
 end
 function PROGRESS.applyEnv(env)

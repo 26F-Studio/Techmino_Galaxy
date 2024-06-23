@@ -99,7 +99,7 @@ function scene.load()
         end
     end
     musicListBox:setList(l)
-    musicListBox:select(TABLE.find(musicListBox:getList(),selected))
+    musicListBox:select(TABLE.find(l,selected) or 1)
     musicListBox.code()
 
     if SETTINGS.system.bgmVol<.0626 then
