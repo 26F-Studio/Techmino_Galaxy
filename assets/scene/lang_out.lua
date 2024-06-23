@@ -15,15 +15,19 @@ local languages={
     "Langue  Язык  Spache",
 }
 local curLang=1
+local changed
 
 ---@type Zenitha.Scene
 local scene={}
 
 function scene.load()
     BG.set('none')
+    changed=false
 end
 function scene.unload()
-    saveSettings()
+    if changed then
+        saveSettings()
+    end
 end
 
 function scene.keyDown(key)
@@ -52,7 +56,6 @@ function scene.draw()
 end
 
 local function _setLang(lid)
-    SETTINGS.system.locale=lid
     TEXT:clear()
     TEXT:add{
         text=langList[lid],
@@ -61,7 +64,11 @@ local function _setLang(lid)
         style='zoomout',
         duration=1.26,
     }
-    WIDGET._reset()
+    if SETTINGS.system.locale~=lid then
+        SETTINGS.system.locale=lid
+        changed=true
+        WIDGET._reset()
+    end
 end
 
 scene.widgetList={
