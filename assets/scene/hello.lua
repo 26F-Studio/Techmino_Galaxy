@@ -8,7 +8,17 @@ function scene.load()
     t=0
     ZENITHA.globalEvent.clickFX=NULL
     ZENITHA.globalEvent.drawCursor=NULL
-    if PROGRESS.get('main')>=3 then PROGRESS.applyCoolWaitTemplate() end
+    if PROGRESS.get('main')>=3 then
+        PROGRESS.applyCoolWaitTemplate()
+        if PROGRESS.get('main')>=4 then
+            TASK.new(function()
+                repeat
+                    coroutine.yield()
+                until FMOD.studio
+                playBgm('singularity')
+            end)
+        end
+    end
 end
 
 function scene.update(dt)

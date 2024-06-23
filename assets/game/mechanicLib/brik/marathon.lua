@@ -496,6 +496,13 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
                     if md.level<10 then
                         P:playSound('beep_rise')
                         md.level=md.level+1
+                        if md.level>9 then
+                            FMOD.music.setParam('section',3)
+                        elseif md.level>5 then
+                            FMOD.music.setParam('section',2)
+                        elseif md.level>2 then
+                            FMOD.music.setParam('section',1)
+                        end
                         md.target.point=100*md.level
 
                         P.settings.asd=max(md.storedAsd,levels[md.level].asd)

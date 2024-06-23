@@ -40,7 +40,6 @@ local function sysAction(action)
     end
 end
 function scene.keyDown(key,isRep)
-    FMOD.effect.keyOff('music_pause')
     if isRep then return true end
     sysAction(KEYMAP.sys:getAction(key))
     return true

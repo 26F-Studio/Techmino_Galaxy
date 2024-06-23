@@ -35,39 +35,23 @@ local sims={
             )
         end,
     },
-    { -- Exterior 2
-        trigger=function()
-            DEBUG.yieldUntilNextScene()
-            if SCN.cur=='simulation' then
-                SCN.go('mode_gela','fadeHeader')
-            end
-        end,
-        draw=function()
-            -- GC.setColor(COLOR.R)
-            -- GC.setLineWidth(8)
-            -- GC.circle('line',-35,-60,70)
-            -- GC.circle('line',35,60,70)
-        end,
-    },
-    -- { -- Acry
-    --     trigger=function()
-    --         DEBUG.yieldUntilNextScene()
-    --         if SCN.cur=='simulation' then
-    --             SCN.go('mode_acry','fadeHeader')
-    --         end
-    --     end,
-    --     draw=function()
-    --         GC.setColor(COLOR.B)
-    --         GC.setLineWidth(10)
-    --         GC.polygon('line',
-    --             0,112,
-    --             108,-32,
-    --             50,-100,
-    --             -50,-100,
-    --             -108 ,-32
-    --         )
-    --     end,
-    -- },
+    -- draw=function() -- Gela
+        -- GC.setColor(COLOR.R)
+        -- GC.setLineWidth(8)
+        -- GC.circle('line',-35,-60,70)
+        -- GC.circle('line',35,60,70)
+    -- end,
+    -- draw=function() -- Acry
+    --     GC.setColor(COLOR.B)
+    --     GC.setLineWidth(10)
+    --     GC.polygon('line',
+    --         0,112,
+    --         108,-32,
+    --         50,-100,
+    --         -50,-100,
+    --         -108 ,-32
+    --     )
+    -- end,
 }
 
 ---@type integer|false
@@ -85,12 +69,17 @@ function scene.load()
         s.trigTimer=false
     end
     subjectFocused=false
-    sims[1].valid=true
-    sims[2].valid=false
+    sims[1].valid=true -- TODO
+    -- sims[2].valid=false -- TODO
     scene.update(0)
     PROGRESS.applyExteriorBG()
     PROGRESS.applyExteriorBGM()
-    if SCN.prev=='main_out' and sims[1].valid and not sims[2].valid then
+    if SCN.prev=='main_out' then
+        for i=2,#sims do
+            if sims[i].valid then
+                return
+            end
+        end
         subjectFocused=1
         scene.keyDown('return')
     end

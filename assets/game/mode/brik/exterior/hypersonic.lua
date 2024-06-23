@@ -24,8 +24,7 @@ return {
                         -- Titanium: Techrash in 8s without hold
                         P.modeData.subMode='titanium'
                         initFunc=mechLib.brik.marathon.hypersonic_titanium_event_playerInit
-                        playBgm('distortion')
-                        mechLib.common.music.set(P,{path='.point',s=200,e=600},'afterSpawn')
+                        playBgm('secret7th remix_titanium')
 
                     elseif P.gameTime<=6e3 then
                         -- Hidden: Techrash in 6s

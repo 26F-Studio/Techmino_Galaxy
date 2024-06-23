@@ -1,21 +1,4 @@
----@alias Techmino.MusicName
----| Techmino.PubMusicName
----| 'secret7th_hidden'
----| 'propel_marathon'
----
----| 'race remix_mix'
----| 'race_old'
----| 'sakura_noloop'
----| 'secret7th remix_loop'
----| 'shibamata_noloop'
----| 'caprice'
----| 'fruit dance_ex'
----| 'fruit dance_mix'
----| 'vacc'
----| 'secret7th_overdrive'
----| 'secret7th_old'
-
----@enum (key) Techmino.PubMusicName
+---@enum (key) Techmino.MusicName
 local songbook={
     ['8-bit happiness']       ={},
     ['8-bit sadness']         ={},
@@ -90,6 +73,24 @@ local songbook={
     ['space retro']           ={author="LR & MrZ"},
     ['flare']                 ={},
     ['fruit dance']           ={message="Recollection? remix"},
+    ['singularity']           ={author="T0722",message="A cool blank remix"},
+    ['pressure orchestra']    ={author="T0722",message="A cool pressure remix"},
+    ['secret7th_old']         ={message="The -7th secret"},
+    ['secret7th overdrive remix']={author="Yunokawa"},
+
+    ['secret7th overdrive remix_mix']         ={inside=true,author="Yunokawa",redirect='secret7th overdrive remix'},
+    ['secret7th remix_titanium']              ={inside=true,author="柒栎流星",redirect='secret7th remix'},
+    ['jazz nihilism_layered']                 ={inside=true,author="Trebor",redirect='jazz nihilism'},
+    ['accelerator']                           ={inside=true,author="Trebor",},
+    ['caprice']                               ={inside=true,redirect='rectification'},
+    ['fruit dance_ex']                        ={inside=true,redirect='dance'},
+    ['fruit dance_mix']                       ={inside=true,redirect='dance'},
+    ['propel_marathon']                       ={inside=true,redirect='propel'},
+    ['race remix_mix']                        ={inside=true,redirect='race remix'},
+    ['race_old']                              ={inside=true,redirect='race'},
+    ['sakura_noloop']                         ={inside=true,redirect='sakura'},
+    ['secret7th_hidden']                      ={inside=true,redirect='secret7th'},
+    ['shibamata_noloop']                      ={inside=true,redirect='shibamata'},
 }
 
 for name,data in next,songbook do
@@ -102,6 +103,7 @@ for name,data in next,songbook do
 end
 
 setmetatable(songbook,{__call=function(t,name)
+    MSG.new('warn',"Unlisted song: "..name)
     t[name]={
         title='['..name..']',
         author='',

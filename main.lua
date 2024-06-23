@@ -406,13 +406,15 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
     end)())
 end
 TASK.new(function() -- Don't initialize studio at first frame, may cause some weird problem
-    DEBUG.yieldN(6)
     DEBUG.yieldT(0.26)
     FMODLoadFunc()
     FMOD.setMainVolume(SETTINGS.system.mainVol,true)
     for name,data in next,SONGBOOK do
         data.intensity=FMOD.music.getParamDesc(name,'intensity')~=nil
         data.section=FMOD.music.getParamDesc(name,'section')~=nil
+        if not FMOD.music.getParamDesc(name,'fade') then
+            MSG.new('warn',"Missing fade parameter in music '"..name.."'")
+        end
     end
 end)
 -- Hijack the original SFX module, use FMOD instead

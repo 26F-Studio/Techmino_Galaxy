@@ -179,7 +179,13 @@ end
 function PROGRESS.applyInteriorBG() BG.set('none') end
 function PROGRESS.applyExteriorBG() BG.set(prgs.main==3 and 'space' or 'galaxy') end
 function PROGRESS.applyInteriorBGM() playBgm('blank',prgs.main~=1) end
-function PROGRESS.applyExteriorBGM() playBgm('vacuum',prgs.main~=3) end
+function PROGRESS.applyExteriorBGM()
+    if prgs.main==3 then
+        playBgm('vacuum')
+    else
+        playBgm('singularity')
+    end
+end
 function PROGRESS.applyEnv(env)
     if env=='interior' then
         PROGRESS.applyInteriorBG()
