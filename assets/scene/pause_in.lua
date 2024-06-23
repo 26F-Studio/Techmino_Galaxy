@@ -16,7 +16,6 @@ function scene.load()
 end
 function scene.unload()
     FMOD.effect.keyOff('music_pause')
-    SCN.scenes['game_in'].unload()
 end
 
 local function sysAction(action)

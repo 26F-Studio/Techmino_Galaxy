@@ -269,8 +269,7 @@ MSG.addCategory('achievement',
         {'fRect',6,17,28,6},
     }
 )
-MSG.new('collect',"123")
-MSG.new('achievement',"123")
+
 IMG.init{
     actionIcons={
         texture='assets/image/action_icon.png',
