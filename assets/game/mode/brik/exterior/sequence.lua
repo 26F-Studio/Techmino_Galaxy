@@ -103,7 +103,7 @@ return {
 
                     -- ?
                     elseif P.hand.name=='I' then
-                        P.modeData.subMode='sea'
+                        P.modeData.subMode='rain'
                         playBgm('race')
                         P:setSequenceGen('bag3_sea','-clearData')
 
