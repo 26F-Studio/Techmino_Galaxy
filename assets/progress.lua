@@ -428,6 +428,12 @@ function PROGRESS.setMain(n)
     end
 end
 function PROGRESS.setBgmUnlocked(name,state)
+    if type(name)=='table' then
+        for _,v in next,name do
+            PROGRESS.setBgmUnlocked(v,state)
+        end
+        return
+    end
     local newState=math.max(prgs.bgmUnlocked[name] or 0,state)
     if newState>(prgs.bgmUnlocked[name] or 0) then
         prgs.bgmUnlocked[name]=newState

@@ -24,14 +24,14 @@ return {
                         -- Titanium: Techrash in 8s without hold
                         P.modeData.subMode='titanium'
                         initFunc=mechLib.brik.marathon.hypersonic_titanium_event_playerInit
-                        playBgm('secret7th remix_titanium')
+                        playBgm('secret7th remix_hypersonic_titanium')
 
                     elseif P.gameTime<=6e3 then
                         -- Hidden: Techrash in 6s
                         P.modeData.subMode='hidden'
                         initFunc=mechLib.brik.marathon.hypersonic_hidden_event_playerInit
-                        playBgm('secret7th_hidden')
-                        mechLib.common.music.set(P,{id='level_hypersonic_exterior',path='.level',s=100,e=300},'afterSpawn')
+                        playBgm('secret7th_hypersonic_hidden')
+                        mechLib.common.music.set(P,{id='point_hypersonic_hidden',path='.point'},'afterSpawn')
                         FMOD.music.seek(MATH.roundUnit(FMOD.music.tell(),60/130))
 
                     else

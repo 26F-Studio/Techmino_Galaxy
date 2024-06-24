@@ -114,7 +114,7 @@ local function addPoint(list,x,y)
         list[l+2]=y
     end
 end
-local function checkLink(x1,y1,x2,y2)-- Most important function!
+local function checkLink(x1,y1,x2,y2) -- Most important function!
     -- Y-X-Y Check
     local bestLen,bestLine=1e99,false
     do
