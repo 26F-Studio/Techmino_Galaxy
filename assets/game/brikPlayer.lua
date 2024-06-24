@@ -645,6 +645,7 @@ function BP:pushNext(piece)
     end
 end
 function BP:popNext(ifHold)
+    -- TODO: IHS can make hold slot empty
     if self.nextQueue[1] then -- Normally there area pieces in next queue
         self.hand=rem(self.nextQueue,1)
         self:freshNextQueue()
