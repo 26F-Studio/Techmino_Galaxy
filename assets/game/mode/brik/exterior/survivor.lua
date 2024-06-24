@@ -43,7 +43,6 @@ return {
                     end
                 end
             end,
-            afterClear=mechLib.brik.misc.lineClear_event_afterClear,
             beforeCancel=function(P)
                 if P.stat.atk>=8 then
                     local eff=P.stat.atk/P.stat.line
