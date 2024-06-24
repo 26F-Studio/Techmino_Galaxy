@@ -261,7 +261,11 @@ function scene.draw()
         titleTextObj:set(SONGBOOK[selected].title)
     end
     local t=love.timer.getTime()
-    gc_setColor(sin(t*.5)*.2+.8,sin(t*.7)*.2+.8,sin(t)*.2+.8)
+    if SONGBOOK[selected].inside then
+        gc_setColor(1,1,1,MATH.roundUnit(.5+sin(6.2*t)*.26,.26))
+    else
+        gc_setColor(sin(t*.5)*.2+.8,sin(t*.7)*.2+.8,sin(t)*.2+.8)
+    end
     gc.draw(titleTextObj,-100,-100,0,min(1,650/titleTextObj:getWidth()),nil,titleTextObj:getWidth(),titleTextObj:getHeight())
 
     -- Author and message

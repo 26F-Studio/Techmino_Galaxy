@@ -77,6 +77,8 @@ local songbook={
     ['pressure orchestra']       ={author="事渔之人",message="A cool pressure remix"},
     ['secret7th_old']            ={message="The -7th secret"},
     ['secret7th overdrive remix']={author="Yunokawa"},
+    ['infinite remix']           ={author="TetraCepra"},
+    ['reason remix']             ={author="TetraCepra"},
 
     ['caprice']                               ={inside=true,redirect='rectification'},
     ['fruit dance_ex']                        ={inside=true,redirect='fruit dance'},
@@ -89,6 +91,8 @@ local songbook={
     ['secret7th remix_hypersonic_titanium']   ={inside=true,author="柒栎流星",redirect='secret7th remix'},
     ['race remix_mix']                        ={inside=true,author="柒栎流星",redirect='race remix'},
     ['propel_marathon']                       ={inside=true,author="TetraCepra",redirect='propel'},
+    ['infinite remix_mix']                    ={inside=true,author="TetraCepra",redirect='infinite remix'},
+    ['reason remix_mix']                      ={inside=true,author="TetraCepra",redirect='reason remix'},
     ['sakura_noloop']                         ={inside=true,author="C₂₉H₂₅N₃O₅",redirect='sakura'},
     ['shibamata_noloop']                      ={inside=true,author="C₂₉H₂₅N₃O₅",redirect='shibamata'},
 }
