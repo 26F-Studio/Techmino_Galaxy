@@ -44,7 +44,15 @@ scene.widgetList={
     {type='slider',   pos={1,.5},x=-550, y=-210,w=400,fontSize=40,text=LANG'setting_sfx',    widthLimit=260,disp=TABLE.func_getVal(SETTINGS.system,'sfxVol'), code=TABLE.func_setVal(SETTINGS.system,'sfxVol')},
     {type='slider',   pos={1,.5},x=-550, y=-130,w=400,fontSize=40,text=LANG'setting_vib',    widthLimit=260,disp=TABLE.func_getVal(SETTINGS.system,'vibVol'), code=TABLE.func_setVal(SETTINGS.system,'vibVol')},
 
-    {type='slider',   name='asd',  pos={1,.5},x=-852.3,y=250,w=702.3,text=LANG'setting_asd',  widthLimit=260,axis={20,260,10},disp=TABLE.func_getVal(SETTINGS.game_brik,'asd'),  valueShow=sliderShow_time, code=function(v) SETTINGS.game_brik.asd=v; SETTINGS.game_brik.asp=math.min(SETTINGS.game_brik.asp,SETTINGS.game_brik.asd) end},
-    {type='slider',   name='asp',  pos={1,.5},x=-852.3,y=350,w=702.3,text=LANG'setting_asp',  widthLimit=260,axis={0,120,10}, disp=TABLE.func_getVal(SETTINGS.game_brik,'asp'),  valueShow=sliderShow_time, code=function(v) SETTINGS.game_brik.asp=v; SETTINGS.game_brik.asd=math.max(SETTINGS.game_brik.asd,SETTINGS.game_brik.asp) end},
+    {type='slider',   name='asd',  pos={1,.5},x=-852.3,y=250,w=702.3,text=LANG'setting_asd',  widthLimit=260,axis={20,260,10},disp=TABLE.func_getVal(SETTINGS.game_brik,'asd'),  valueShow=sliderShow_time, code=function(v)
+        scene.widgetList.asd.fillColor={COLOR.HSL(0,1,.5+.5*MATH.icLerp(20,100,v))}
+        SETTINGS.game_brik.asd=v
+        SETTINGS.game_brik.asp=math.min(SETTINGS.game_brik.asp,SETTINGS.game_brik.asd)
+    end},
+    {type='slider',   name='asp',  pos={1,.5},x=-852.3,y=350,w=702.3,text=LANG'setting_asp',  widthLimit=260,axis={0,120,10}, disp=TABLE.func_getVal(SETTINGS.game_brik,'asp'),  valueShow=sliderShow_time, code=function(v)
+        scene.widgetList.asp.fillColor={COLOR.HSL(0,1,.5+.5*MATH.icLerp(-10,5,v))}
+        SETTINGS.game_brik.asp=v
+        SETTINGS.game_brik.asd=math.max(SETTINGS.game_brik.asd,SETTINGS.game_brik.asp)
+    end},
 }
 return scene
