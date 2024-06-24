@@ -78,19 +78,19 @@ local songbook={
     ['secret7th_old']         ={message="The -7th secret"},
     ['secret7th overdrive remix']={author="Yunokawa"},
 
-    ['secret7th overdrive remix_mix']         ={inside=true,author="Yunokawa",redirect='secret7th overdrive remix'},
-    ['secret7th remix_titanium']              ={inside=true,author="柒栎流星",redirect='secret7th remix'},
-    ['jazz nihilism_layered']                 ={inside=true,author="Trebor",redirect='jazz nihilism'},
-    ['accelerator']                           ={inside=true,author="Trebor",},
     ['caprice']                               ={inside=true,redirect='rectification'},
     ['fruit dance_ex']                        ={inside=true,redirect='dance'},
     ['fruit dance_mix']                       ={inside=true,redirect='dance'},
-    ['propel_marathon']                       ={inside=true,redirect='propel'},
-    ['race remix_mix']                        ={inside=true,redirect='race remix'},
     ['race_old']                              ={inside=true,redirect='race'},
-    ['sakura_noloop']                         ={inside=true,redirect='sakura'},
     ['secret7th_hidden']                      ={inside=true,redirect='secret7th'},
-    ['shibamata_noloop']                      ={inside=true,redirect='shibamata'},
+    ['jazz nihilism_layered']                 ={inside=true,author="Trebor",redirect='jazz nihilism'},
+    ['accelerator']                           ={inside=true,author="Trebor",},
+    ['secret7th overdrive remix_mix']         ={inside=true,author="Yunokawa",redirect='secret7th overdrive remix'},
+    ['secret7th remix_titanium']              ={inside=true,author="柒栎流星",redirect='secret7th remix'},
+    ['race remix_mix']                        ={inside=true,author="柒栎流星",redirect='race remix'},
+    ['propel_marathon']                       ={inside=true,author="TetraCepra",redirect='propel'},
+    ['sakura_noloop']                         ={inside=true,author="C₂₉H₂₅N₃O₅",redirect='sakura'},
+    ['shibamata_noloop']                      ={inside=true,author="C₂₉H₂₅N₃O₅",redirect='shibamata'},
 }
 
 for name,data in next,songbook do
