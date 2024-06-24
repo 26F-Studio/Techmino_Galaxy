@@ -65,10 +65,10 @@ function dig.event_afterClear(P,clear)
     end
     if digLine>0 or md.lineExist<md.lineStay then
         md.lineDig=md.lineDig+digLine
+        md.lineExist=md.lineExist-digLine
         if md.lineDig>=md.target.lineDig then
             P:finish('AC')
         else
-            md.lineExist=md.lineExist-digLine
             -- print(md.target.lineDig-md.lineDig,md.lineStay)
             local add=math.min(md.target.lineDig-md.lineDig,md.lineStay)-md.lineExist
             if add>0 then
