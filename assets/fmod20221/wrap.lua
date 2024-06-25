@@ -1,4 +1,4 @@
-local ffi=require("ffi")
+local ffi=require'ffi'
 local require=simpRequire(((...):gsub("[^%.]*$", "")))
 
 ---@alias FMOD.GUID FMOD.GUID
@@ -7,7 +7,7 @@ local require=simpRequire(((...):gsub("[^%.]*$", "")))
 ---@alias FMOD.Enum FMOD.Enum
 
 ---@class FMOD.Master
-local M=require("master")
+local M=require'master'
 local C=M.C
 local C2=M.C2
 

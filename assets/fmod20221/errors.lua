@@ -1,7 +1,7 @@
 local require=simpRequire(((...):gsub("[^%.]*$", "")))
 
 ---@class FMOD.Master
-local M=require("master")
+local M=require'master'
 
 M.errorString=setmetatable({
     [M.FMOD_OK]="No errors.",

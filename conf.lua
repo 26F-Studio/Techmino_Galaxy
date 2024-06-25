@@ -51,7 +51,7 @@ function love.conf(t)
         W.width,W.height=1440,900
         W.minwidth,W.minheight=288,180
     end
-    W.title=require"version".appName.."  "..require"version".appVer
+    W.title=require'version'.appName..'  '..require'version'.appVer
 
     if fs.getInfo('assets/image/icon.png') then
         W.icon='assets/image/icon.png'

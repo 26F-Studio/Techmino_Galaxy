@@ -25,7 +25,7 @@
 -------------------------------------------------------------
 -- Load Zenitha
 
-require("Zenitha")
+require'Zenitha'
 DEBUG.checkLoadTime("Load Zenitha")
 -- DEBUG.runVarMonitor()
 -- DEBUG.setCollectGarvageVisible()
@@ -37,7 +37,7 @@ STRING.install()
 math.randomseed(os.time()*626)
 love.setDeprecationOutput(false)
 love.keyboard.setTextInput(false)
-VERSION=require"version"
+VERSION=require'version'
 
 --------------------------------------------------------------
 -- Create directories
@@ -420,10 +420,15 @@ TASK.new(function() -- Don't initialize studio at first frame, may cause some we
     FMODLoadFunc()
     FMOD.setMainVolume(SETTINGS.system.mainVol,true)
     for name,data in next,SONGBOOK do
-        data.intensity=FMOD.music.getParamDesc(name,'intensity')~=nil
-        data.section=FMOD.music.getParamDesc(name,'section')~=nil
-        if not FMOD.music.getParamDesc(name,'fade') then
-            MSG.new('warn',"Missing fade parameter in music '"..name.."'")
+        if FMOD.music.getDesc(name) then
+            data.intensity=FMOD.music.getParamDesc(name,'intensity')~=nil
+            data.section=FMOD.music.getParamDesc(name,'section')~=nil
+            if not FMOD.music.getParamDesc(name,'fade') then
+                MSG.new('warn',"Missing 'fade' parameter in music '"..name.."'")
+            end
+        else
+            data.notFound=true
+            MSG.new('warn',"Music '"..name.."' not found in FMOD")
         end
     end
 end)

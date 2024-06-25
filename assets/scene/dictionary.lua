@@ -31,7 +31,7 @@ local contents={
 }
 -- Base dict data, not formatted
 local baseDict do
-    baseDict=require('assets/dict_base')
+    baseDict=require'assets/dict_base'
     local dictObjMeta={__index=function(obj,k)
         if k=='titleText' then
             obj.titleText=GC.newText(FONT.get(obj.titleSize,'bold'),obj.titleFull)

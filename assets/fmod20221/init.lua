@@ -1,28 +1,29 @@
-local ffi=require("ffi")
+local ffi=require'ffi'
 local require=simpRequire(((...):gsub(".init$","").."."))
 
-require("cdef")
+require'cdef'
 
 ---@class FMOD.Master
-local M=require("master")
+local M=require'master'
 
--- search for fmod shared libraries in package.cpath
-local fmodPath=package.searchpath("fmod",package.cpath)
-local fmodstudioPath=package.searchpath("fmodstudio",package.cpath)
+-- (Old method) search for fmod shared libraries in package.cpath
+-- local fmodPath=package.searchpath('fmod',package.cpath)
+-- local fmodstudioPath=package.searchpath('fmodstudio',package.cpath)
+-- -- pretend to load libfmod through Lua (it's going to fail but not raise any errors) so that its location is known when loading libfmodstudio through ffi
+-- -- package.loadlib(fmodPath,"")
+-- M.C=ffi.load(fmodPath)
+-- M.C2=ffi.load(fmodstudioPath)
 
-if fmodPath and fmodstudioPath then
-    -- pretend to load libfmod through Lua (it's going to fail but not raise any errors) so that its location is known when loading libfmodstudio through ffi
-    -- package.loadlib(fmodPath,"")
-    M.C=ffi.load(fmodPath)
-    M.C2=ffi.load(fmodstudioPath)
-    require("enums")
-    require("constants")
-    require("wrap")
-    require("errors")
-else
-    MSG.new('error',"FMOD shared libraries not found!")
-end
+M.C=ffi.load('fmod')
+if not M.C then MSG.new('error',"FMOD library not found") end
 
+M.C2=ffi.load('fmodstudio')
+if not M.C2 then MSG.new('error',"FMODstudio library not found") end
+
+require'enums'
+require'constants'
+require'wrap'
+require'errors'
 
 --------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-require("ffi").cdef[[
+require'ffi'.cdef[[
 typedef int FMOD_BOOL;
 typedef struct FMOD_SYSTEM FMOD_SYSTEM;
 typedef struct FMOD_SOUND FMOD_SOUND;

@@ -46,6 +46,7 @@ function playSample(...)
                 volume=vol,
                 param={'release',rel*1.0594630943592953^(note-33)},
             })
+            if not event then return end
             TASK.new(function()
                 DEBUG.yieldT(len/1000)
                 event:stop(FMOD.FMOD_STUDIO_STOP_ALLOWFADEOUT)

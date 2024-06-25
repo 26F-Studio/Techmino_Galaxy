@@ -1,7 +1,7 @@
 local require=simpRequire(((...):gsub("[^%.]*$", "")))
 
 ---@class FMOD.Master
-local M=require("master")
+local M=require'master'
 local C=M.C
 
 M.FMOD_THREAD_TYPE_MIXER=C.FMOD_THREAD_TYPE_MIXER

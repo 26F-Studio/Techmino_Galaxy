@@ -1,3 +1,11 @@
+---@class Techmino.MusicMeta
+---@field message string
+---@field author string
+---@field title string
+---@field inside? boolean
+---@field redirect? string|table<string>
+---@field notFound? boolean
+
 ---@enum (key) Techmino.MusicName
 local songbook={
     ['8-bit happiness']          ={},
@@ -116,4 +124,5 @@ setmetatable(songbook,{__call=function(t,name)
     }
 end})
 
+---@cast songbook table<Techmino.MusicName,Techmino.MusicMeta>
 return songbook
