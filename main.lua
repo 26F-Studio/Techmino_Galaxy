@@ -346,6 +346,7 @@ LANG.add{
 LANG.setDefault('en')
 
 function FMODLoadFunc() -- Will be called again when applying advanced options
+    local bankPath='soundbank/'
     if FMOD.C then
         FMOD.init{
             maxChannel=math.min(SETTINGS.system.fmod_maxChannel,256),
@@ -355,20 +356,20 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
             coreFlag=FMOD.FMOD_INIT_NORMAL,
         }
     end
-    if not FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Master.strings.bank") then
+    if not FMOD.loadBank2(bankPath..'Master.strings.bank') then
         MSG.new('warn',"Strings bank file load failed")
     end
-    if not FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Master.bank") then
+    if not FMOD.loadBank2(bankPath..'Master.bank') then
         MSG.new('warn',"Master bank file load failed")
     end
     FMOD.registerMusic((function()
-        if not love.filesystem.getInfo("soundbank/Master.bank") then
+        if not love.filesystem.getInfo(bankPath..'Master.bank') then
             MSG.new('warn',"Music bank not found")
             return {}
         end
         local L={}
-        for _,bankName in next,{"Music_Beepbox","Music_FL","Music_Community","Music_Extra"} do
-            local bankMusic=FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/"..bankName..".bank")
+        for _,bankName in next,{'Music_Beepbox','Music_FL','Music_Community','Music_Extra'} do
+            local bankMusic=FMOD.loadBank2(bankPath..bankName..'.bank')
             if not bankMusic then
                 MSG.new('warn',"bank "..bankName.." load failed")
             else
@@ -376,7 +377,7 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
                 for i=1,c do
                     local path=l[i-1]:getPath()
                     if path then
-                        local name=path:match("/([^/]+)$"):lower()
+                        local name=path:match('/([^/]+)$'):lower()
                         L[name]=path
                         if not SONGBOOK[name] then SONGBOOK(name) end
                         -- print(name,path)
@@ -390,11 +391,11 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
         return L
     end)())
     FMOD.registerEffect((function()
-        if not love.filesystem.getInfo("soundbank/Effect.bank") then
+        if not love.filesystem.getInfo(bankPath..'Effect.bank') then
             MSG.new('warn',"Effect bank not found")
             return {}
         end
-        local bankEffect=FMOD.loadBank(love.filesystem.getSaveDirectory().."/soundbank/Effect.bank")
+        local bankEffect=FMOD.loadBank2(bankPath..'Effect.bank')
         if not bankEffect then
             MSG.new('warn',"Effect bank file load failed")
             return {}
@@ -404,7 +405,7 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
         for i=1,c do
             local path=l[i-1]:getPath()
             if path then
-                local name=path:match("/([^/]+)$"):lower()
+                local name=path:match('/([^/]+)$'):lower()
                 L[name]=path
                 -- print(name,path)
             end

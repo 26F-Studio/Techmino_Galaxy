@@ -60,12 +60,28 @@ function M.destroy()
     studio=nil
 end
 
----@param bankPath string
+---This method can only load files visible to fmod
+---@param path string
 ---@param flag? FMOD.Const
-function M.loadBank(bankPath,flag)
+function M.loadBank(path,flag)
     if not studio then return end
-    flag=flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL
-    local bank=studio:loadBankFile(bankPath,flag)
+    local bank,res=studio:loadBankFile(path,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
+    if res~=M.FMOD_OK then return nil,M.errorString[res] end
+    return bank
+end
+
+---This method uses 'loadBankMemory' instead of 'loadBankFile', which makes all files visible to love2d's filesystem can be loaded
+---@param path string
+---@param flag? FMOD.Const
+---@return FMOD.Studio.Bank?
+function M.loadBank2(path,flag)
+    if not studio then return end
+    assert(love.filesystem.getInfo(path),"File not found")
+    local file=love.filesystem.newFile(path)
+    local data,size=file:read('data')
+    local bank,res=studio:loadBankMemory(data:getPointer(),size,0,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
+    file:close(); file:release(); data:release()
+    assert(res==M.FMOD_OK,M.errorString[res])
     return bank
 end
 
