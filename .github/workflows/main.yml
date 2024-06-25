@@ -64,10 +64,17 @@ jobs:
           import re
           with open(os.getenv('GITHUB_OUTPUT'), 'a') as f:
             f.write('product-name=' + re.sub(r'[^A-Za-z0-9]+', '_', '${{ needs.get-info.outputs.app-name }}') + '\n')
+      - name: Download soundbank
+        run: |
+          mkdir -p soundbank
+          cd soundbank/
+          curl --output Master.strings.bank "https://drive.usercontent.google.com/download?id=1-nQq5nDVdgKXxMVeai8edEQvX_AjoHZE&export=download&authuser=0"
+          curl --output Master.bank         "https://drive.usercontent.google.com/download?id=1-oCw_l1RwvemRufYpsWiWe9dMEib2IxA&export=download&authuser=0"
+          curl --output Effect.bank         "https://drive.usercontent.google.com/download?id=1-R4WCIlNrzaueCd5si8NXr3cs8kjfyrP&export=download&authuser=0"
       - name: Build core love package
         uses: 26F-Studio/love-actions-core@v1
         with:
-          build-list: ./assets/ ./Zenitha/ ./conf.lua ./main.lua ./version.lua
+          build-list: ./Zenitha/ ./assets/ ./soundbank ./conf.lua ./main.lua ./version.lua
           package-path: ${{ env.CORE_LOVE_PACKAGE_PATH }}
       - name: Upload core love package
         uses: actions/upload-artifact@v3
