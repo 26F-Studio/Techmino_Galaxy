@@ -5,6 +5,7 @@ require'cdef'
 
 ---@class FMOD.Master
 local M=require'master'
+M.banks={}
 
 -- (Old method) search for fmod shared libraries in package.cpath
 -- local fmodPath=package.searchpath('fmod',package.cpath)
@@ -67,6 +68,7 @@ function M.loadBank(path,flag)
     if not studio then return end
     local bank,res=studio:loadBankFile(path,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
     if res~=M.FMOD_OK then return nil,M.errorString[res] end
+    M.banks[path]=bank
     return bank
 end
 
@@ -82,6 +84,7 @@ function M.loadBank2(path,flag)
     local bank,res=studio:loadBankMemory(data:getPointer(),size,0,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
     file:close(); file:release(); data:release()
     assert(res==M.FMOD_OK,M.errorString[res])
+    M.banks[path]=bank
     return bank
 end
 

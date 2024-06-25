@@ -3683,6 +3683,7 @@ end
 
 ---@return table<number, FMOD.Studio.EventDescription>,number,FMOD.Result
 function studio.Bank:getEventList(i1)
+    if not i1 then i1=self:getEventCount() end
     local o1=ffi.new("FMOD_STUDIO_EVENTDESCRIPTION*[?]", i1)
     local o2=ffi.new("int[1]")
     local result=C2.FMOD_Studio_Bank_GetEventList(self,o1,i1,o2)

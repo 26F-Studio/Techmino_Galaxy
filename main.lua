@@ -346,41 +346,47 @@ LANG.add{
 LANG.setDefault('en')
 
 function FMODLoadFunc() -- Will be called again when applying advanced options
-    local bankPath='soundbank/'
-    if FMOD.C then
-        FMOD.init{
-            maxChannel=math.min(SETTINGS.system.fmod_maxChannel,256),
-            DSPBufferCount=math.min(SETTINGS.system.fmod_DSPBufferCount,16),
-            DSPBufferLength=math.min(SETTINGS.system.fmod_DSPBufferLength,65536),
-            studioFlag=bit.bxor(FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,FMOD.FMOD_INIT_STREAM_FROM_UPDATE,FMOD.FMOD_INIT_MIX_FROM_UPDATE),
-            coreFlag=FMOD.FMOD_INIT_NORMAL,
-        }
+    if not (FMOD.C and FMOD.C2) then
+        MSG.new('error',"FMOD Studio initialization failed")
+        return
     end
-    if not FMOD.loadBank2(bankPath..'Master.strings.bank') then
+
+    FMOD.init{
+        maxChannel=math.min(SETTINGS.system.fmod_maxChannel,256),
+        DSPBufferCount=math.min(SETTINGS.system.fmod_DSPBufferCount,16),
+        DSPBufferLength=math.min(SETTINGS.system.fmod_DSPBufferLength,65536),
+        studioFlag=bit.bxor(FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,FMOD.FMOD_INIT_STREAM_FROM_UPDATE,FMOD.FMOD_INIT_MIX_FROM_UPDATE),
+        coreFlag=FMOD.FMOD_INIT_NORMAL,
+    }
+    if not FMOD.loadBank2('soundbank/Master.strings.bank') then
         MSG.new('warn',"Strings bank file load failed")
     end
-    if not FMOD.loadBank2(bankPath..'Master.bank') then
+    if not FMOD.loadBank2('soundbank/Master.bank') then
         MSG.new('warn',"Master bank file load failed")
     end
     FMOD.registerMusic((function()
-        if not love.filesystem.getInfo(bankPath..'Master.bank') then
+        if not love.filesystem.getInfo('soundbank/Master.bank') then
             MSG.new('warn',"Music bank not found")
             return {}
         end
         local L={}
         for _,bankName in next,{'Music_Beepbox','Music_FL','Music_Community','Music_Extra'} do
-            local bankMusic=FMOD.loadBank2(bankPath..bankName..'.bank')
-            if not bankMusic then
-                MSG.new('warn',"bank "..bankName.." load failed")
+            if not love.filesystem.getInfo('soundbank/'..bankName..'.bank') then
+                MSG.new('warn',bankName.." bank file not found")
             else
-                local l,c=bankMusic:getEventList(bankMusic:getEventCount())
-                for i=1,c do
-                    local path=l[i-1]:getPath()
-                    if path then
-                        local name=path:match('/([^/]+)$'):lower()
-                        L[name]=path
-                        if not SONGBOOK[name] then SONGBOOK(name) end
-                        -- print(name,path)
+                local bankMusic=FMOD.loadBank2('soundbank/'..bankName..'.bank')
+                if not bankMusic then
+                    MSG.new('warn',"bank "..bankName.." load failed")
+                else
+                    local l,c=bankMusic:getEventList()
+                    for i=1,c do
+                        local path=l[i-1]:getPath()
+                        if path then
+                            local name=path:match('/([^/]+)$'):lower()
+                            L[name]=path
+                            if not SONGBOOK[name] then SONGBOOK(name) end
+                            -- print(name,path)
+                        end
                     end
                 end
             end
@@ -391,17 +397,17 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
         return L
     end)())
     FMOD.registerEffect((function()
-        if not love.filesystem.getInfo(bankPath..'Effect.bank') then
+        if not love.filesystem.getInfo('soundbank/Effect.bank') then
             MSG.new('warn',"Effect bank not found")
             return {}
         end
-        local bankEffect=FMOD.loadBank2(bankPath..'Effect.bank')
+        local bankEffect=FMOD.loadBank2('soundbank/Effect.bank')
         if not bankEffect then
             MSG.new('warn',"Effect bank file load failed")
             return {}
         end
         local L={}
-        local l,c=bankEffect:getEventList(bankEffect:getEventCount())
+        local l,c=bankEffect:getEventList()
         for i=1,c do
             local path=l[i-1]:getPath()
             if path then
@@ -416,23 +422,6 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
         return L
     end)())
 end
-TASK.new(function() -- Don't initialize studio at first frame, may cause some weird problem
-    DEBUG.yieldT(0.26)
-    FMODLoadFunc()
-    FMOD.setMainVolume(SETTINGS.system.mainVol,true)
-    for name,data in next,SONGBOOK do
-        if FMOD.music.getDesc(name) then
-            data.intensity=FMOD.music.getParamDesc(name,'intensity')~=nil
-            data.section=FMOD.music.getParamDesc(name,'section')~=nil
-            if not FMOD.music.getParamDesc(name,'fade') then
-                MSG.new('warn',"Missing 'fade' parameter in music '"..name.."'")
-            end
-        else
-            data.notFound=true
-            MSG.new('warn',"Music '"..name.."' not found in FMOD")
-        end
-    end
-end)
 -- Hijack the original SFX module, use FMOD instead
 SFX[('play')]=function(name,vol,pos,tune)
     FMOD.effect(name,{
@@ -564,18 +553,21 @@ for k,v in next,{
     },
     slowPixelize={{'tileSize',0.01}},
 } do for i=1,#v do SHADER[k]:send(unpack(v[i])) end end
+
 for _,v in next,love.filesystem.getDirectoryItems('assets/background') do
     if FILE.isSafe('assets/background/'..v) and v:sub(-3)=='lua' then
         local name=v:sub(1,-5)
         BG.add(name,require('assets/background/'..name))
     end
 end
+
 for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
     if FILE.isSafe('assets/scene/'..v) then
         local sceneName=v:sub(1,-5)
         SCN.add(sceneName,require('assets/scene/'..sceneName))
     end
 end
+
 for _,v in next,{
     'brik_template', -- Shouldn't be used
     'brik_plastic',
@@ -592,6 +584,7 @@ for _,v in next,{
         SKIN.add(v,require('assets/skin/'..v))
     end
 end
+
 SCN.addSwapStyle('fadeHeader',{
     duration=.5,
     timeChange=.25,
@@ -620,6 +613,26 @@ SCN.addSwapStyle('fastFadeHeader',{
         GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
     end,
 })
+
+FMODLoadFunc()
+if tostring(FMOD.studio):find('NULL') or TABLE.getSize(FMOD.banks)==0 then
+    MSG.new('error',"FMOD Studio initialization failed")
+else
+    FMOD.setMainVolume(SETTINGS.system.mainVol,true)
+    for name,data in next,SONGBOOK do
+        if FMOD.music.getDesc(name) then
+            data.intensity=FMOD.music.getParamDesc(name,'intensity')~=nil
+            data.section=FMOD.music.getParamDesc(name,'section')~=nil
+            if not FMOD.music.getParamDesc(name,'fade') then
+                MSG.new('warn',"Missing 'fade' parameter in music '"..name.."'")
+            end
+        else
+            data.notFound=true
+            MSG.new('warn',"Music '"..name.."' not found in FMOD")
+        end
+    end
+end
+
 DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins")
 
 --------------------------------------------------------------
