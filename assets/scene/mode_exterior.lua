@@ -74,6 +74,7 @@ function scene.load()
     exMap:freshUnlocked(modeStates,firstLoad)
     exMap:reset(TABLE.getSize(modeStates)>3)
     panel:setSel(false)
+    panel.timer=1
     PROGRESS.applyExteriorBG()
     PROGRESS.applyExteriorBGM()
 end
