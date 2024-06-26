@@ -299,7 +299,7 @@ jobs:
           version-string: ${{ needs.get-info.outputs.version-string }}
           icon-path: ./.github/build/linux/${{ env.BUILD_TYPE }}/icon.png
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
-          lib-path: ./.github/build/libFMOD/Linux/x86_64
+          lib-path: ./.github/build/libFMOD/Linux
           product-name: ${{ steps.process-app-name.outputs.product-name }}
           output-folder: ${{ env.OUTPUT_FOLDER }}
       - name: Upload AppImage artifact
