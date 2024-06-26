@@ -70,7 +70,8 @@ jobs:
           cd soundbank/
           curl --output Master.strings.bank  "https://drive.usercontent.google.com/download?id=1-nQq5nDVdgKXxMVeai8edEQvX_AjoHZE&export=download&authuser=0"
           curl --output Master.bank          "https://drive.usercontent.google.com/download?id=1-oCw_l1RwvemRufYpsWiWe9dMEib2IxA&export=download&authuser=0"
-          curl --output Effect.bank          "https://drive.usercontent.google.com/download?id=1-R4WCIlNrzaueCd5si8NXr3cs8kjfyrP&export=download&authuser=0"
+  # TODO: Google Drive may block the download with "may have virus" message
+  #        curl --output Effect.bank          "https://drive.usercontent.google.com/download?id=1-R4WCIlNrzaueCd5si8NXr3cs8kjfyrP&export=download&authuser=0"
   #        curl --output Music_FL.bank        "https://drive.usercontent.google.com/download?id=1-RrNwooNnWoFQb-vLWoqvH4RFob3dNp9&export=download&authuser=0"
   #        curl --output Music_Extra.bank     "https://drive.usercontent.google.com/download?id=1-jqmjTfJNK9re7C95NQ1Hy9JXiL77PEb&export=download&authuser=0"
   #        curl --output Music_Community.bank "https://drive.usercontent.google.com/download?id=1-LBH6DLHCNwT7imZi6K3XWYeGDG8rE8x&export=download&authuser=0"
@@ -567,14 +568,14 @@ jobs:
     needs:
       [
         get-info,
-        auto-test,
         build-core,
+        auto-test,
+        build-windows,
         build-android,
-        # build-ios,
         build-linux,
+        # build-ios,
         # build-macos-appstore,
         # build-macos-portable,
-        build-windows,
       ]
     env:
       ACTION_TYPE: ${{ fromJSON('[["Development", "Pre-release"], ["Release", "Release"]]')[startsWith(github.ref, 'refs/tags/v')][startsWith(github.ref, 'refs/tags/pre')] }}
