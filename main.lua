@@ -29,6 +29,7 @@ require'Zenitha'
 DEBUG.checkLoadTime("Load Zenitha")
 -- DEBUG.runVarMonitor()
 -- DEBUG.setCollectGarvageVisible()
+-- if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then require("lldebugger").start() end
 
 --------------------------------------------------------------
 -- System setting
