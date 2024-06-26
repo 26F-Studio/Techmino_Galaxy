@@ -28,7 +28,7 @@ function love.conf(t)
     local M=t.modules
     M.window,M.system,M.event,M.thread=true,true,true,true
     M.timer,M.math,M.data=true,true,true
-    M.video,M.audio,M.sound=true,true,true
+    M.video,M.audio,M.sound=true,false,false
     M.graphics,M.font,M.image=true,true,true
     M.mouse,M.touch,M.keyboard,M.joystick=true,true,true,true
     M.physics=false
