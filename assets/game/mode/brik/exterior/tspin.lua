@@ -1,7 +1,7 @@
 local function degraded_tspin_event_drawOnPlayer(P)
     P:drawInfoPanel(-380,-60,160,120)
     FONT.set(80) GC.mStr(P.modeData.tspin,-300,-70)
-    FONT.set(30) GC.mStr(Text.target_tspin,-300,15)
+    FONT.set(30) GC.mStr(Text[P.modeData.tspinText],-300,15)
 end
 
 ---@type Techmino.Mode
@@ -47,16 +47,36 @@ return {
                     end
                 end,
                 function(P) -- Progress
-                    -- Easy mode finishes after 12 TSs
+                    -- Easy mode finishes after 10 TSs
                     if P.modeData.tspin then
+                        P.modeData.tspinText=nil
+                        for k,v in next,P.stat.clears do
+                            if v~=0 then
+                                if P.modeData.tspinText then
+                                    P.modeData.tspinText='target_tspin'
+                                    break
+                                else
+                                    P.modeData.tspinText=
+                                        k==1 and 'target_tss' or
+                                        k==2 and 'target_tsd' or
+                                        k==3 and 'target_tst' or
+                                        'target_tsq'
+                                end
+                            end
+                        end
                         local goSecretApp
-                        if P.modeData.tspin==4 and P.stat.line==4 and PROGRESS.getSecret('exterior_tspin_12TSS') then
-                            goSecretApp=true
-                        elseif P.modeData.tspin>=12 then
+                        if P.modeData.tspin==4 and P.modeData.tspinText=='target_tss' and PROGRESS.getSecret('exterior_tspin_10TSS') then
+                            goSecretApp='app_polyforge'
+                        elseif P.modeData.tspin==3 and P.modeData.tspinText=='target_tst' and PROGRESS.getSecret('exterior_tspin_10TST') then
+                            goSecretApp='app_UTTT'
+                        elseif P.modeData.tspin>=10 then
                             PROGRESS.setExteriorScore('tspin','any',P.modeData.tspin)
-                            if P.stat.line==12 then
-                                PROGRESS.setSecret('exterior_tspin_12TSS')
-                                goSecretApp=true
+                            if P.modeData.tspinText=='target_tss' then
+                                PROGRESS.setSecret('exterior_tspin_10TSS')
+                                goSecretApp='app_polyforge'
+                            elseif P.modeData.tspinText=='target_tst' then
+                                PROGRESS.setSecret('exterior_tspin_10TST')
+                                goSecretApp='app_UTTT'
                             else
                                 P:finish('AC')
                             end
@@ -64,7 +84,7 @@ return {
                         if goSecretApp then
                             TASK.new(task_unloadGame)
                             SCN._pop()
-                            SCN.go('app_UTTT')
+                            SCN.go(goSecretApp)
                         end
                     else
                         PROGRESS.setExteriorScore('tspin','any',P.modeData.tsd)
