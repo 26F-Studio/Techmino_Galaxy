@@ -348,7 +348,7 @@ LANG.setDefault('en')
 
 function FMODLoadFunc() -- Will be called again when applying advanced options
     if not (FMOD.C and FMOD.C2) then
-        MSG.new('error',"FMOD Studio initialization failed")
+        MSG.new('error',"FMOD library loaded failed")
         return
     end
 
@@ -359,6 +359,7 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
         studioFlag=bit.bxor(FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,FMOD.FMOD_INIT_STREAM_FROM_UPDATE,FMOD.FMOD_INIT_MIX_FROM_UPDATE),
         coreFlag=FMOD.FMOD_INIT_NORMAL,
     }
+
     if not FMOD.loadBank2('soundbank/Master.strings.bank') then
         MSG.new('warn',"Strings bank file load failed")
     end
@@ -617,7 +618,7 @@ SCN.addSwapStyle('fastFadeHeader',{
 
 FMODLoadFunc()
 if tostring(FMOD.studio):find('NULL') or TABLE.getSize(FMOD.banks)==0 then
-    MSG.new('error',"FMOD Studio initialization failed")
+    MSG.new('error',"FMOD initialization failed")
 else
     FMOD.setMainVolume(SETTINGS.system.mainVol,true)
     for name,data in next,SONGBOOK do
@@ -625,11 +626,11 @@ else
             data.intensity=FMOD.music.getParamDesc(name,'intensity')~=nil
             data.section=FMOD.music.getParamDesc(name,'section')~=nil
             if not FMOD.music.getParamDesc(name,'fade') then
-                MSG.new('warn',"Missing 'fade' parameter in music '"..name.."'")
+                MSG.new('warn',"Missing 'fade' parameter in music '"..name.."'",0)
             end
         else
             data.notFound=true
-            MSG.new('warn',"Music '"..name.."' not found in FMOD")
+            MSG.new('warn',"Music '"..name.."' not found in FMOD",0)
         end
     end
 end
