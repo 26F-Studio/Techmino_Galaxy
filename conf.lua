@@ -16,7 +16,7 @@ function love.conf(t)
 
     t.identity='Techmino_Galaxy' -- Saving folder
     t.externalstorage=true -- Use external storage on Android
-    t.version="11.4"
+    t.version="11.5"
     t.gammacorrect=false
     t.appendidentity=true -- Search files in source then in save directory
     t.accelerometerjoystick=false -- Accelerometer=joystick on ios/android
