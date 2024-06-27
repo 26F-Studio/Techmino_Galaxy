@@ -78,7 +78,10 @@ end
 ---@return FMOD.Studio.Bank?
 function M.loadBank2(path,flag)
     if not studio then return end
-    assert(love.filesystem.getInfo(path),"File not found")
+    if not love.filesystem.getInfo(path) then
+        MSG.new('warn',"Bank file not found: "..path)
+        return
+    end
     local file=love.filesystem.newFile(path)
     local data,size=file:read('data')
     local bank,res=studio:loadBankMemory(data:getPointer(),size,0,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
