@@ -68,7 +68,7 @@ return {
                         P.settings.dropDelay=1000
                         P.settings.maxFreshChance=15
                         P.settings.maxFreshTime=6200
-                        P:setAttackSystem('classic')
+                        P:setAttackSystem('basic')
                         P:addEvent('always',mechLib.brik.survivor.cheese_event_always)
                         playBgm('shift')
                         mechLib.common.music.set(P,{path='.wave',s=30,e=80},'afterClear')
