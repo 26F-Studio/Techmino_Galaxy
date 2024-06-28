@@ -68,9 +68,14 @@ jobs:
         run: |
           mkdir -p soundbank
           cd soundbank/
-          curl --output Master.strings.bank "https://drive.usercontent.google.com/download?id=1-nQq5nDVdgKXxMVeai8edEQvX_AjoHZE&export=download&authuser=0"
-          curl --output Master.bank         "https://drive.usercontent.google.com/download?id=1-oCw_l1RwvemRufYpsWiWe9dMEib2IxA&export=download&authuser=0"
-          curl --output Effect.bank         "https://drive.usercontent.google.com/download?id=1-R4WCIlNrzaueCd5si8NXr3cs8kjfyrP&export=download&authuser=0"
+          curl --output Master.strings.bank  "https://26f.xn--dtra.com/d/Master.strings.bank"
+          curl --output Master.bank          "https://26f.xn--dtra.com/d/Master.bank"
+          curl --output Effect.bank          "https://26f.xn--dtra.com/d/Effect.bank"
+  # Need to be enabled for release only
+  #        curl --output Music_Beepbox.bank   "https://26f.xn--dtra.com/d/Music_Beepbox.bank"
+  #        curl --output Music_FL.bank        "https://26f.xn--dtra.com/d/Music_FL.bank"
+  #        curl --output Music_Community.bank "https://26f.xn--dtra.com/d/Music_Community.bank"
+  #        curl --output Music_Extra.bank     "https://26f.xn--dtra.com/d/Music_Extra.bank"
       - name: Build core love package
         uses: 26F-Studio/love-actions-core@v1
         with:
@@ -123,6 +128,77 @@ jobs:
           font-path: ./assets/fonts/RHDisplayGalaxy-Medium.otf
           language-folder: ./assets/language
 
+  build-windows:
+    runs-on: windows-latest
+    needs: [get-info, build-core, auto-test]
+    env:
+      OUTPUT_FOLDER: ./build
+      RELEASE_FOLDER: ./release
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Process app name
+        id: process-app-name
+        shell: python3 {0}
+        run: |
+          import os
+          import re
+          with open(os.getenv('GITHUB_OUTPUT'), 'a') as f:
+            f.write('product-name=' + re.sub(r'[^A-Za-z0-9]+', '_', '${{ needs.get-info.outputs.app-name }}') + '\n')
+      - name: Download core love package
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
+      - name: Build Windows packages
+        id: build-packages
+        uses: 26F-Studio/love-actions-windows@v1
+        with:
+          icon-path: ./.github/build/windows/${{ env.BUILD_TYPE }}/icon.ico
+          rc-path: ./.github/build/windows/${{ env.BUILD_TYPE }}/template.rc
+          extra-assets-x64: ./.github/build/libFMOD/Windows/x64/fmod.dll ./.github/build/libFMOD/Windows/x64/fmodstudio.dll
+          extra-assets-x86: ./.github/build/libFMOD/Windows/x86/fmod.dll ./.github/build/libFMOD/Windows/x86/fmodstudio.dll
+          love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
+          product-name: ${{ steps.process-app-name.outputs.product-name }}
+          app-id: ${{ secrets.WINDOWS_APP_ID }}
+          project-website: https://www.studio26f.org/
+          installer-languages: ChineseSimplified.isl ChineseTraditional.isl English.isl Spanish.isl French.isl Indonesian.isl Japanese.isl Portuguese.isl
+          output-folder: ${{ env.OUTPUT_FOLDER }}
+      - name: Upload 32-bit artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_Windows_x86
+          path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x86.zip
+      - name: Upload 64-bit artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_Windows_x64
+          path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x64.zip
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_Windows_installer
+          path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_installer.exe
+      - name: Prepare for release
+        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
+        shell: bash
+        run: |
+          mkdir -p ${{ env.RELEASE_FOLDER }}
+          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x86.zip ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_x86.zip
+          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x64.zip ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_x64.zip
+          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_installer.exe ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_installer.exe
+      - name: Upload release
+        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: |
+            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_x86.zip
+            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_x64.zip
+            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_installer.exe
+          body: ${{ github.event.head_commit.message }}
+          prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
+
   build-android:
     runs-on: ubuntu-latest
     needs: [get-info, build-core, auto-test]
@@ -147,6 +223,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
+      # - name: Download fmod lib
+      # Two .so files are in .github/build/libFMOD/Android/
+      # Need to put them into the love package, besides the liblove.so (for each architecture)
+      # TODO: ??????????????????????????
+      # TODO: ??????????????????????????
       - name: Build Android packages
         id: build-packages
         uses: 26F-Studio/love-actions-android@v1
@@ -181,6 +262,77 @@ jobs:
         with:
           allowUpdates: true
           artifacts: ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Android.apk
+          body: ${{ github.event.head_commit.message }}
+          prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
+
+  build-linux:
+    runs-on: ubuntu-latest
+    needs: [get-info, build-core, auto-test]
+    env:
+      OUTPUT_FOLDER: ./build
+      RELEASE_FOLDER: ./release
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Process app name
+        id: process-app-name
+        shell: python3 {0}
+        run: |
+          import os
+          import re
+
+          product_name = re.sub(r'[^A-Za-z0-9]+', '-', '${{ needs.get-info.outputs.app-name }}').strip('-').lower()
+          with open(os.getenv('GITHUB_OUTPUT'), 'a') as f:
+            f.write('bundle-id=org.26f-studio.' + product_name + '\n')
+            f.write('product-name=' + product_name + '\n')
+      - name: Download core love package
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
+      - name: Add icon to love package
+        run: |
+          cp ./.github/build/linux/${{ env.BUILD_TYPE }}/icon.png assets/image/icon.png
+          zip -u ${{ env.CORE_LOVE_PACKAGE_PATH }} assets/image/icon.png
+          rm assets/image/icon.png
+      - name: Build Linux packages
+        id: build-packages
+        uses: 26F-Studio/love-actions-linux@v1
+        with:
+          app-name: ${{ needs.get-info.outputs.app-name }}
+          bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
+          description: Techmino Galaxy is awesome!
+          version-string: ${{ needs.get-info.outputs.version-string }}
+          icon-path: ./.github/build/linux/${{ env.BUILD_TYPE }}/icon.png
+          love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
+          lib-path: ./.github/build/libFMOD/Linux
+          product-name: ${{ steps.process-app-name.outputs.product-name }}
+          output-folder: ${{ env.OUTPUT_FOLDER }}
+      - name: Upload AppImage artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_Linux_AppImage
+          path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.AppImage
+      - name: Upload Debian artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_Linux_Debian
+          path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.deb
+      - name: Prepare for release
+        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
+        shell: bash
+        run: |
+          mkdir -p ${{ env.RELEASE_FOLDER }}
+          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.AppImage ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Linux.AppImage
+          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.deb ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Linux.deb
+      - name: Upload release
+        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: |
+            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Linux.AppImage
+            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Linux.deb
           body: ${{ github.event.head_commit.message }}
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
 
@@ -256,76 +408,6 @@ jobs:
   #         artifacts: ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_iOS.ipa
   #         body: ${{ github.event.head_commit.message }}
   #         prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
-
-  build-linux:
-    runs-on: ubuntu-latest
-    needs: [get-info, build-core, auto-test]
-    env:
-      OUTPUT_FOLDER: ./build
-      RELEASE_FOLDER: ./release
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-      - name: Process app name
-        id: process-app-name
-        shell: python3 {0}
-        run: |
-          import os
-          import re
-
-          product_name = re.sub(r'[^A-Za-z0-9]+', '-', '${{ needs.get-info.outputs.app-name }}').strip('-').lower()
-          with open(os.getenv('GITHUB_OUTPUT'), 'a') as f:
-            f.write('bundle-id=org.26f-studio.' + product_name + '\n')
-            f.write('product-name=' + product_name + '\n')
-      - name: Download core love package
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
-      - name: Add icon to love package
-        run: |
-          cp ./.github/build/linux/${{ env.BUILD_TYPE }}/icon.png assets/image/icon.png
-          zip -u ${{ env.CORE_LOVE_PACKAGE_PATH }} assets/image/icon.png
-          rm assets/image/icon.png
-      - name: Build Linux packages
-        id: build-packages
-        uses: 26F-Studio/love-actions-linux@v1
-        with:
-          app-name: ${{ needs.get-info.outputs.app-name }}
-          bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
-          description: Techmino Galaxy is awesome!
-          version-string: ${{ needs.get-info.outputs.version-string }}
-          icon-path: ./.github/build/linux/${{ env.BUILD_TYPE }}/icon.png
-          love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
-          product-name: ${{ steps.process-app-name.outputs.product-name }}
-          output-folder: ${{ env.OUTPUT_FOLDER }}
-      - name: Upload AppImage artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ needs.get-info.outputs.base-name }}_Linux_AppImage
-          path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.AppImage
-      - name: Upload Debian artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ needs.get-info.outputs.base-name }}_Linux_Debian
-          path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.deb
-      - name: Prepare for release
-        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
-        shell: bash
-        run: |
-          mkdir -p ${{ env.RELEASE_FOLDER }}
-          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.AppImage ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Linux.AppImage
-          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.deb ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Linux.deb
-      - name: Upload release
-        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          artifacts: |
-            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Linux.AppImage
-            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Linux.deb
-          body: ${{ github.event.head_commit.message }}
-          prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
 
   # build-macos-appstore:
   #   runs-on: macos-latest
@@ -485,89 +567,20 @@ jobs:
   #         body: ${{ github.event.head_commit.message }}
   #         prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
 
-  build-windows:
-    runs-on: windows-latest
-    needs: [get-info, build-core, auto-test]
-    env:
-      OUTPUT_FOLDER: ./build
-      RELEASE_FOLDER: ./release
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-      - name: Process app name
-        id: process-app-name
-        shell: python3 {0}
-        run: |
-          import os
-          import re
-          with open(os.getenv('GITHUB_OUTPUT'), 'a') as f:
-            f.write('product-name=' + re.sub(r'[^A-Za-z0-9]+', '_', '${{ needs.get-info.outputs.app-name }}') + '\n')
-      - name: Download core love package
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
-      - name: Build Windows packages
-        id: build-packages
-        uses: 26F-Studio/love-actions-windows@v1
-        with:
-          icon-path: ./.github/build/windows/${{ env.BUILD_TYPE }}/icon.ico
-          rc-path: ./.github/build/windows/${{ env.BUILD_TYPE }}/template.rc
-          love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
-          product-name: ${{ steps.process-app-name.outputs.product-name }}
-          app-id: ${{ secrets.WINDOWS_APP_ID }}
-          project-website: https://www.studio26f.org/
-          installer-languages: ChineseSimplified.isl ChineseTraditional.isl English.isl Spanish.isl French.isl Indonesian.isl Japanese.isl Portuguese.isl
-          output-folder: ${{ env.OUTPUT_FOLDER }}
-      - name: Upload 32-bit artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ needs.get-info.outputs.base-name }}_Windows_x86
-          path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x86.zip
-      - name: Upload 64-bit artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ needs.get-info.outputs.base-name }}_Windows_x64
-          path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x64.zip
-      - name: Upload installer artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ needs.get-info.outputs.base-name }}_Windows_installer
-          path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_installer.exe
-      - name: Prepare for release
-        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
-        shell: bash
-        run: |
-          mkdir -p ${{ env.RELEASE_FOLDER }}
-          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x86.zip ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_x86.zip
-          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x64.zip ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_x64.zip
-          cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_installer.exe ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_installer.exe
-      - name: Upload release
-        if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          artifacts: |
-            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_x86.zip
-            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_x64.zip
-            ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_Windows_installer.exe
-          body: ${{ github.event.head_commit.message }}
-          prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
-
   post-build:
     runs-on: ubuntu-latest
     if: ${{ always() }}
     needs:
       [
         get-info,
-        auto-test,
         build-core,
-        build-android,
-        # build-ios,
-        build-linux,
-        # build-macos-appstore,
-        # build-macos-portable,
+        auto-test,
         build-windows,
+        build-android,
+        build-linux,
+        # build-ios, # Dear [censored],
+        # build-macos-appstore, # Thank you for your appreciation.
+        # build-macos-portable, # Sincerely, [International Tetris Community]
       ]
     env:
       ACTION_TYPE: ${{ fromJSON('[["Development", "Pre-release"], ["Release", "Release"]]')[startsWith(github.ref, 'refs/tags/v')][startsWith(github.ref, 'refs/tags/pre')] }}
