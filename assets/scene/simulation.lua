@@ -60,7 +60,7 @@ local subjectFocused=false
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.load()
+function scene.load(prev)
     for _,s in next,sims do
         s.valid=false
         s.active=0
@@ -74,7 +74,7 @@ function scene.load()
     scene.update(0)
     PROGRESS.applyExteriorBG()
     PROGRESS.applyExteriorBGM()
-    if SCN.prev=='main_out' then
+    if prev=='main_out' then
         for i=2,#sims do
             if sims[i].valid then
                 return

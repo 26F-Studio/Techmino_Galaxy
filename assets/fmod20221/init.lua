@@ -67,7 +67,11 @@ end
 function M.loadBank(path,flag)
     if not studio then return end
     local bank,res=studio:loadBankFile(path,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
-    if res~=M.FMOD_OK then return nil,M.errorString[res] end
+    if res~=M.FMOD_OK then
+        LOG("FMOD loadBankMemory error: "..M.errorString[res])
+        MSG.new('warn',"FMOD loadBankMemory error: "..M.errorString[res])
+        return
+    end
     M.banks[path]=bank
     return bank
 end
@@ -87,6 +91,7 @@ function M.loadBank2(path,flag)
     local bank,res=studio:loadBankMemory(data:getPointer(),size,0,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
     file:close(); file:release(); data:release()
     if res~=M.FMOD_OK then
+        LOG("FMOD loadBankMemory error: "..M.errorString[res])
         MSG.new('warn',"FMOD loadBankMemory error: "..M.errorString[res])
         return
     end
@@ -145,7 +150,8 @@ M.music={}
 function M.music.setVolume(v,instant)
     M.musicVolume=v
     if not studio then return end
-    studio:setParameterByName('MusicVolume',M.mainVolume*M.musicVolume,instant==true)
+    local res=studio:setParameterByName('MusicVolume',M.mainVolume*M.musicVolume,instant==true)
+    assert(res==M.FMOD_OK,M.errorString[res])
 end
 
 ---@type {desc:FMOD.Studio.EventDescription?, event:FMOD.Studio.EventInstance?}?
@@ -165,10 +171,9 @@ end
 function M.music.getParamDesc(name,param)
     local desc=musicLib[name]
     if not desc then return end
-    local paraDesc,result=musicLib[name]:getParameterDescriptionByName(param)
-    if result==M.FMOD_OK then
-        return paraDesc
-    end
+    local paraDesc,res=musicLib[name]:getParameterDescriptionByName(param)
+    assert(res==M.FMOD_OK,M.errorString[res])
+    return paraDesc
 end
 
 ---@param name string
@@ -240,11 +245,14 @@ function M.music.stop(instant)
     playing=nil
 end
 
+---Get music's param value (and final value) by name
 ---@param param string
----@return number?
+---@return number?,number?
 function M.music.getParam(param)
     if not studio or not playing then return end
-    return playing.event:getParameterByName(param)
+    local v,fv,res=playing.event:getParameterByName(param)
+    assert(res==M.FMOD_OK,M.errorString[res])
+    return v,fv
 end
 
 ---@param param string
@@ -252,13 +260,15 @@ end
 ---@param instant? boolean only `true` take effect
 function M.music.setParam(param,value,instant)
     if not studio or not playing then return end
-    playing.event:setParameterByName(param,value,instant==true)
+    local res=playing.event:setParameterByName(param,value,instant==true)
+    assert(res==M.FMOD_OK,M.errorString[res])
 end
 
 ---@param time number seconds
 function M.music.seek(time)
     if not studio or not playing then return end
-    playing.event:setTimelinePosition(time*1000)
+    local res=playing.event:setTimelinePosition(time*1000)
+    assert(res==M.FMOD_OK,M.errorString[res])
 end
 
 ---@return number
@@ -292,7 +302,8 @@ M.effect={}
 function M.effect.setVolume(v,instant)
     M.effectVolume=v
     if not studio then return end
-    studio:setParameterByName('EffectVolume',M.mainVolume*M.effectVolume,instant==true)
+    local res=studio:setParameterByName('EffectVolume',M.mainVolume*M.effectVolume,instant==true)
+    assert(res==M.FMOD_OK,M.errorString[res])
 end
 
 ---Get event description by name, to check if a music exists
@@ -406,7 +417,8 @@ M.vocal={}
 function M.vocal.setVolume(v,instant)
     M.vocalVolume=v
     if not studio then return end
-    studio:setParameterByName('VocalVolume',M.mainVolume*M.vocalVolume,instant==true)
+    local res=studio:setParameterByName('VocalVolume',M.mainVolume*M.vocalVolume,instant==true)
+    assert(res==M.FMOD_OK,M.errorString[res])
 end
 
 --------------------------------------------------------------

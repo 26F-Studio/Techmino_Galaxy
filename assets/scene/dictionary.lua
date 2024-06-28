@@ -250,9 +250,9 @@ local function parseDict(data)
     return result
 end
 
-function scene.load()
+function scene.load(prev)
     listBox._scrollPos1=listBox._scrollPos
-    if SCN.prev=='zeta_input_method' and SCN.args[1] then
+    if prev=='zeta_input_method' and SCN.args[1] then
         inputBox:addText(SCN.args[1])
         return
     end

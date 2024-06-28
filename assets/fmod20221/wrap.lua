@@ -44,26 +44,45 @@ end
 
 ---@class FMOD.Core
 local core={}
-core.System={} ---@class FMOD.Core.System
-core.Sound={} ---@class FMOD.Core.Sound
-core.ChannelControl={} ---@class FMOD.Core.ChannelControl
-core.Channel={} ---@class FMOD.Core.Channel
-core.ChannelGroup={} ---@class FMOD.Core.ChannelGroup
-core.SoundGroup={} ---@class FMOD.Core.SoundGroup
-core.DSP={} ---@class FMOD.Core.DSP
-core.DSPConnection={} ---@class FMOD.Core.DSPConnection
-core.Geometry={} ---@class FMOD.Core.Geometry
-core.Reverb3D={} ---@class FMOD.Core.Reverb3D
+---@class FMOD.Core.System
+core.System={}
+---@class FMOD.Core.Sound
+core.Sound={}
+---@class FMOD.Core.ChannelControl
+core.ChannelControl={}
+---@class FMOD.Core.Channel
+core.Channel={}
+---@class FMOD.Core.ChannelGroup
+core.ChannelGroup={}
+---@class FMOD.Core.SoundGroup
+core.SoundGroup={}
+---@class FMOD.Core.DSP
+core.DSP={}
+---@class FMOD.Core.DSPConnection
+core.DSPConnection={}
+---@class FMOD.Core.Geometry
+core.Geometry={}
+---@class FMOD.Core.Reverb3D
+core.Reverb3D={}
 
 ---@class FMOD.Studio
 local studio={}
-studio.System={} ---@class FMOD.Studio.System
-studio.EventDescription={} ---@class FMOD.Studio.EventDescription
-studio.EventInstance={} ---@class FMOD.Studio.EventInstance
-studio.Bus={} ---@class FMOD.Studio.Bus
-studio.VCA={} ---@class FMOD.Studio.VCA
-studio.Bank={} ---@class FMOD.Studio.Bank
-studio.CommandReplay={} ---@class FMOD.Studio.CommandReplay
+---@class FMOD.Studio.System
+studio.System={}
+---@class FMOD.Studio.EventDescription
+studio.EventDescription={}
+---@class FMOD.Studio.EventInstance
+studio.EventInstance={}
+---@class FMOD.Studio.Bus
+studio.Bus={}
+---@class FMOD.Studio.VCA
+studio.VCA={}
+---@class FMOD.Studio.Bank
+studio.Bank={}
+---@class FMOD.Studio.CommandReplay
+studio.CommandReplay={}
+
+---@class FMOD.Studio.ParamDescription
 
 ---@return FMOD.Result
 function core.System:release()
@@ -2678,7 +2697,7 @@ function studio.System:getSoundInfo(i1)
 end
 
 ---@param i1 string
----@return any,FMOD.Result
+---@return FMOD.Studio.ParamDescription,FMOD.Result
 function studio.System:getParameterDescriptionByName(i1)
     local o1=ffi.new("FMOD_STUDIO_PARAMETER_DESCRIPTION[1]")
     local result=C2.FMOD_Studio_System_GetParameterDescriptionByName(self,i1,o1)
