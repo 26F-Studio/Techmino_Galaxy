@@ -86,7 +86,10 @@ function M.loadBank2(path,flag)
     local data,size=file:read('data')
     local bank,res=studio:loadBankMemory(data:getPointer(),size,0,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
     file:close(); file:release(); data:release()
-    assert(res==M.FMOD_OK,M.errorString[res])
+    if res~=M.FMOD_OK then
+        MSG.new('warn',"FMOD loadBankMemory error: "..M.errorString[res])
+        return
+    end
     M.banks[path]=bank
     return bank
 end
