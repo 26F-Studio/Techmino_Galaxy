@@ -150,8 +150,7 @@ M.music={}
 function M.music.setVolume(v,instant)
     M.musicVolume=v
     if not studio then return end
-    local res=studio:setParameterByName('MusicVolume',M.mainVolume*M.musicVolume,instant==true)
-    assert(res==M.FMOD_OK,M.errorString[res])
+    studio:setParameterByName('MusicVolume',M.mainVolume*M.musicVolume,instant==true)
 end
 
 ---@type {desc:FMOD.Studio.EventDescription?, event:FMOD.Studio.EventInstance?}?
@@ -171,9 +170,7 @@ end
 function M.music.getParamDesc(name,param)
     local desc=musicLib[name]
     if not desc then return end
-    local paraDesc,res=musicLib[name]:getParameterDescriptionByName(param)
-    assert(res==M.FMOD_OK,M.errorString[res])
-    return paraDesc
+    return (musicLib[name]:getParameterDescriptionByName(param))
 end
 
 ---@param name string
@@ -250,8 +247,7 @@ end
 ---@return number?,number?
 function M.music.getParam(param)
     if not studio or not playing then return end
-    local v,fv,res=playing.event:getParameterByName(param)
-    assert(res==M.FMOD_OK,M.errorString[res])
+    local v,fv=playing.event:getParameterByName(param)
     return v,fv
 end
 
@@ -260,15 +256,13 @@ end
 ---@param instant? boolean only `true` take effect
 function M.music.setParam(param,value,instant)
     if not studio or not playing then return end
-    local res=playing.event:setParameterByName(param,value,instant==true)
-    assert(res==M.FMOD_OK,M.errorString[res])
+    return playing.event:setParameterByName(param,value,instant==true)
 end
 
 ---@param time number seconds
 function M.music.seek(time)
     if not studio or not playing then return end
-    local res=playing.event:setTimelinePosition(time*1000)
-    assert(res==M.FMOD_OK,M.errorString[res])
+    return playing.event:setTimelinePosition(time*1000)
 end
 
 ---@return number
@@ -302,8 +296,7 @@ M.effect={}
 function M.effect.setVolume(v,instant)
     M.effectVolume=v
     if not studio then return end
-    local res=studio:setParameterByName('EffectVolume',M.mainVolume*M.effectVolume,instant==true)
-    assert(res==M.FMOD_OK,M.errorString[res])
+    return studio:setParameterByName('EffectVolume',M.mainVolume*M.effectVolume,instant==true)
 end
 
 ---Get event description by name, to check if a music exists
@@ -329,7 +322,10 @@ function M.effect.play(name,args)
         return
     end
     local event,res=desc:createInstance()
-    assert(res==M.FMOD_OK,M.errorString[res])
+    if res~=M.FMOD_OK then
+        MSG.new('warn',"Play SE '"..name.."' failed: "..M.errorString[res])
+        return
+    end
 
     if args then
         assert(type(args)=='table',"args must be table")
@@ -417,8 +413,7 @@ M.vocal={}
 function M.vocal.setVolume(v,instant)
     M.vocalVolume=v
     if not studio then return end
-    local res=studio:setParameterByName('VocalVolume',M.mainVolume*M.vocalVolume,instant==true)
-    assert(res==M.FMOD_OK,M.errorString[res])
+    return studio:setParameterByName('VocalVolume',M.mainVolume*M.vocalVolume,instant==true)
 end
 
 --------------------------------------------------------------
