@@ -233,6 +233,7 @@ local L={
         exterior_sprint_SZOpen="真的要用SZO开局吗",
         exterior_tspin_10TSS="这是什么？",
         exterior_tspin_10TST="轻松。",
+        exterior_hypersonic_titanium_holdless="你可以暂存的",
         interior_console="这是什么？",
         musicroom_recollection="Recollection不是一首曲子",
     },

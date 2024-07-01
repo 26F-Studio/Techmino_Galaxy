@@ -234,6 +234,7 @@ local L={
         exterior_sprint_SZOpen="Really want to start with SZO?",
         exterior_tspin_10TSS="What's this?",
         exterior_tspin_10TST="EZ.",
+        exterior_hypersonic_titanium_holdless="You can hold",
         interior_console="What's this?",
         musicroom_recollection="Recollection is not a song",
     },

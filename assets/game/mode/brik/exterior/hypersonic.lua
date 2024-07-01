@@ -57,6 +57,17 @@ return {
                     return true
                 end
             end,
+            afterLock=function(P)
+                if not P.modeData.subMode then return end
+                if P.modeData.subMode~='titanium' then return true end
+                if P.modeData.point>=200 then
+                    if #P.holdQueue==0 then
+                        table.insert(P.holdQueue,P:getBrik('I5'))
+                        PROGRESS.setSecret('exterior_hypersonic_titanium_holdless')
+                    end
+                    return true
+                end
+            end,
             gameOver=function(P,reason)
                 if reason=='AC' then
                     PROGRESS.setExteriorScore('hypersonic',P.modeData.subMode,(PROGRESS.getExteriorModeState('hypersonic')[P.modeData.subMode] or 0)+1)
