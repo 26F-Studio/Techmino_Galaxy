@@ -700,7 +700,7 @@ function BP:newCell(color,id)
         conn={},
     }
 end
----@param shapeData Techmino.Brik|table
+---@param shapeData Techmino.Brik|Techmino.Brik.Name|Techmino.Brik.ID
 function BP:getBrik(shapeData)
     local shapeID,shapeName,shapeMat,shapeColor
     if type(shapeData)=='table' then
@@ -709,10 +709,12 @@ function BP:getBrik(shapeData)
         shapeMat=TABLE.copy(shapeData.shape)
         shapeColor=shapeData.color or defaultBrikColor[shapeID] or self:random(64)
     else
-        shapeID=shapeData
-        assert(type(shapeID)=='number',"shapeID must be number")
-        shapeName=Brik.getName(shapeID)
-        shapeMat=TABLE.copy(Brik.getShape(shapeID))
+        ---@cast shapeData Techmino.Brik.Name|Techmino.Brik.ID
+        local brik=Brik.get(shapeData)
+        if not brik then errorf("invalid shapeData %s",tostring(shapeData)) end
+        shapeID=brik.id
+        shapeName=brik.name
+        shapeMat=TABLE.copy(brik.shape)
         shapeColor=defaultBrikColor[shapeID]
     end
     self.pieceCount=self.pieceCount+1

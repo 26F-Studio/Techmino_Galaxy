@@ -8,6 +8,7 @@ local Brik={}
 ---@field name Techmino.Brik.Name
 ---@field id Techmino.Brik.ID
 ---@field shape Techmino.Brik.Shape
+---@field color? number RGB9
 
 ---@type Map<Techmino.Brik>
 local briks={}
@@ -66,11 +67,11 @@ end
 ---@param id Techmino.Brik.ID|Techmino.Brik.Name
 ---@return Techmino.Brik
 function Brik.get(id) return assert(briks[id],("Brik '$1' not found"):repD(id)) end
----@param id number|string
+---@param id Techmino.Brik.Name|Techmino.Brik.ID
 function Brik.getName(id) return Brik.get(id).name end
----@param id number|string
+---@param id Techmino.Brik.Name|Techmino.Brik.ID
 function Brik.getID(id) return Brik.get(id).id end
----@param id number|string
+---@param id Techmino.Brik.Name|Techmino.Brik.ID
 function Brik.getShape(id) return Brik.get(id).shape end
 
 ---@param shape Techmino.Brik.Shape
