@@ -207,7 +207,7 @@ local L={
 
     -- Mode name
     exteriorModeInfo={ -- TRASLATING NOTE: Unnecessary to be accurate, try to quote some short proverbs in your language
-        sprint=           {"Sprint","Speed ​​is all we need"},
+        sprint=           {"Sprint","Speed is all we need"},
         sequence=         {"Sequence","Face strange piece sequences"},
         hidden=           {"Hidden","Pieces are invisible after falling"},
         tspin=            {"T-Spin","Build special terrains"},
