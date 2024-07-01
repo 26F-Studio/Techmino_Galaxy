@@ -59,7 +59,7 @@ return {
             end,
             gameOver=function(P,reason)
                 if reason=='AC' then
-                    PROGRESS.setExteriorScore('hypersonic',P.modeData.subMode,(PROGRESS.getExteriorMapState('hypersonic')[P.modeData.subMode] or 0)+1)
+                    PROGRESS.setExteriorScore('hypersonic',P.modeData.subMode,(PROGRESS.getExteriorModeState('hypersonic')[P.modeData.subMode] or 0)+1)
                 end
             end,
         },
