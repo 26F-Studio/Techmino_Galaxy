@@ -624,11 +624,27 @@ else
     for name,data in next,SONGBOOK do
         local ED=FMOD.music.getDesc(name)
         if ED then
-            data.intensity=select(2,ED:getParameterDescriptionByName('intensity'))==FMOD.FMOD_OK
-            data.section=select(2,ED:getParameterDescriptionByName('section'))==FMOD.FMOD_OK
             if select(2,ED:getParameterDescriptionByName('fade'))~=FMOD.FMOD_OK then
                 MSG.new('warn',"Missing 'fade' parameter in music '"..name.."'")
             end
+            data.intensity=select(2,ED:getParameterDescriptionByName('intensity'))==FMOD.FMOD_OK
+            data.section=select(2,ED:getParameterDescriptionByName('section'))==FMOD.FMOD_OK
+            data.multitrack=select(2,ED:getUserProperty('multitrack'))==FMOD.FMOD_OK
+            data.looppoint=select(2,ED:getUserProperty('looppoint'))==FMOD.FMOD_OK
+            if data.section then
+                local param,res=ED:getUserProperty('maxsection')
+                if res==FMOD.FMOD_OK then
+                    ---@cast param FMOD.Studio.UserProperty
+                    data.maxsection=param.intvalue
+                else
+                    MSG.new('warn',"Missing 'maxsection' property in music '"..name.."'")
+                end
+            end
+            -- print(name..":")
+            -- print('itst',data.intensity)
+            -- print('sect',data.section)
+            -- print('mult',data.multitrack)
+            -- print('loop',data.looppoint)
         else
             data.notFound=true
             MSG.new('warn',"Music '"..name.."' not found in FMOD",0)

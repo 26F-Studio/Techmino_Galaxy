@@ -24,6 +24,7 @@ local scene={}
 local musicListBox do
     musicListBox={
         type='listBox',pos={.5,.5},x=0,y=-320,w=700,h=500,
+        name='musicList',
         lineHeight=80,
         scrollBarWidth=5,
         scrollBarDist=4,
@@ -53,6 +54,7 @@ local musicListBox do
             local sectionMode=SONGBOOK[selected].section and (noProgress or PROGRESS.getBgmUnlocked(selected)==2)
             scene.widgetList.fullband:setVisible(fullbandMode)
             scene.widgetList.section:setVisible(sectionMode)
+            scene.widgetList.progressBar.fillColor=SONGBOOK[selected].looppoint and COLOR.LD or COLOR.L
             if fullbandMode then fullband=fullband==true else fullband=nil end
             if sectionMode then section=section==true else section=nil end
             playBgm(selected,fullband,noProgress)
@@ -64,6 +66,7 @@ end
 
 ---@type Zenitha.Widget.slider_progress
 local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1400,
+    name='progressBar',text='',
     disp=function() return fakeProgress end,
     code=function(v,mode)
         fakeProgress=v

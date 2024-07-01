@@ -8,6 +8,9 @@
 ---@field notFound? boolean
 ---@field intensity? boolean
 ---@field section? boolean
+---@field maxsection? integer
+---@field multitrack? boolean
+---@field looppoint? boolean
 
 ---@enum (key) Techmino.MusicName
 local songbook={

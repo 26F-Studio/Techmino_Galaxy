@@ -2712,11 +2712,11 @@ function studio.System:getSoundInfo(i1)
     return o1[0],result
 end
 
----@param i1 string
+---@param name string
 ---@return FMOD.Studio.ParamDescription,FMOD.Result
-function studio.System:getParameterDescriptionByName(i1)
+function studio.System:getParameterDescriptionByName(name)
     local o1=ffi.new("FMOD_STUDIO_PARAMETER_DESCRIPTION[1]")
-    local result=C2.FMOD_Studio_System_GetParameterDescriptionByName(self,i1,o1)
+    local result=C2.FMOD_Studio_System_GetParameterDescriptionByName(self,name,o1)
     return o1[0],result
 end
 
@@ -2771,12 +2771,12 @@ function studio.System:setParametersByIDs(i1,i2,i3,i4)
     return result
 end
 
----@param i1 string
+---@param name string
 ---@return number,number,FMOD.Result
-function studio.System:getParameterByName(i1)
+function studio.System:getParameterByName(name)
     local o1=ffi.new("float[1]")
     local o2=ffi.new("float[1]")
-    local result=C2.FMOD_Studio_System_GetParameterByName(self,i1,o1,o2)
+    local result=C2.FMOD_Studio_System_GetParameterByName(self,name,o1,o2)
     return o1[0],o2[0],result
 end
 
@@ -3034,11 +3034,11 @@ function studio.EventDescription:getParameterDescriptionByIndex(i1)
     return o1[0],result
 end
 
----@param i1 string
+---@param name string
 ---@return FMOD.Studio.ParamDescription,FMOD.Result
-function studio.EventDescription:getParameterDescriptionByName(i1)
+function studio.EventDescription:getParameterDescriptionByName(name)
     local o1=ffi.new("FMOD_STUDIO_PARAMETER_DESCRIPTION[1]")
-    local result=C2.FMOD_Studio_EventDescription_GetParameterDescriptionByName(self,i1,o1)
+    local result=C2.FMOD_Studio_EventDescription_GetParameterDescriptionByName(self,name,o1)
     return o1[0],result
 end
 
@@ -3083,18 +3083,19 @@ function studio.EventDescription:getUserPropertyCount()
     return o1[0],result
 end
 
----@param i1 number
+---@param index number
 ---@return FMOD.Studio.UserProperty?,FMOD.Result
-function studio.EventDescription:getUserPropertyByIndex(i1)
+function studio.EventDescription:getUserPropertyByIndex(index)
     local o1=ffi.new("FMOD_STUDIO_USER_PROPERTY[1]")
-    local result=C2.FMOD_Studio_EventDescription_GetUserPropertyByIndex(self,i1,o1)
+    local result=C2.FMOD_Studio_EventDescription_GetUserPropertyByIndex(self,index,o1)
     return o1[0],result
 end
 
+---@param name string
 ---@return FMOD.Studio.UserProperty?,FMOD.Result
-function studio.EventDescription:getUserProperty(i1)
+function studio.EventDescription:getUserProperty(name)
     local o1=ffi.new("FMOD_STUDIO_USER_PROPERTY[1]")
-    local result=C2.FMOD_Studio_EventDescription_GetUserProperty(self,i1,o1)
+    local result=C2.FMOD_Studio_EventDescription_GetUserProperty(self,name,o1)
     return o1[0],result
 end
 
@@ -3394,12 +3395,12 @@ function studio.EventInstance:isVirtual()
     return o1[0],result
 end
 
----@param i1 string
+---@param name string
 ---@return number,number,FMOD.Result
-function studio.EventInstance:getParameterByName(i1)
+function studio.EventInstance:getParameterByName(name)
     local o1=ffi.new("float[1]")
     local o2=ffi.new("float[1]")
-    local result=C2.FMOD_Studio_EventInstance_GetParameterByName(self,i1,o1,o2)
+    local result=C2.FMOD_Studio_EventInstance_GetParameterByName(self,name,o1,o2)
     return o1[0],o2[0],result
 end
 
