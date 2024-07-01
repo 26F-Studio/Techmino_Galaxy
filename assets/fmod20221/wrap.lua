@@ -83,6 +83,22 @@ studio.Bank={}
 studio.CommandReplay={}
 
 ---@class FMOD.Studio.ParamDescription
+---@field name string
+---@field id unknown
+---@field minimum number
+---@field maximum number
+---@field defaultvalue number
+---@field type unknown
+---@field flags unknown
+---@field guid FMOD.GUID
+
+---@class FMOD.Studio.UserProperty
+---@field name string
+---@field type 0|1|2|3 int, bool, float, string
+---@field intvalue integer
+---@field boolvalue 0|1
+---@field floatvalue number
+---@field stringvalue string
 
 ---@return FMOD.Result
 function core.System:release()
@@ -2704,7 +2720,7 @@ function studio.System:getParameterDescriptionByName(i1)
     return o1[0],result
 end
 
----@return any,FMOD.Result
+---@return FMOD.Studio.ParamDescription,FMOD.Result
 function studio.System:getParameterDescriptionByID(i1)
     local o1=ffi.new("FMOD_STUDIO_PARAMETER_DESCRIPTION[1]")
     local result=C2.FMOD_Studio_System_GetParameterDescriptionByID(self,i1,o1)
@@ -2924,7 +2940,7 @@ function studio.System:getParameterDescriptionCount()
     return o1[0],result
 end
 
----@return any,number,FMOD.Result
+---@return FMOD.Studio.ParamDescription[],number,FMOD.Result
 function studio.System:getParameterDescriptionList(i1)
     local o1=ffi.new("FMOD_STUDIO_PARAMETER_DESCRIPTION[?]", i1)
     local o2=ffi.new("int[1]")
@@ -3011,7 +3027,7 @@ function studio.EventDescription:getParameterDescriptionCount()
 end
 
 ---@param i1 number
----@return any,FMOD.Result
+---@return FMOD.Studio.ParamDescription,FMOD.Result
 function studio.EventDescription:getParameterDescriptionByIndex(i1)
     local o1=ffi.new("FMOD_STUDIO_PARAMETER_DESCRIPTION[1]")
     local result=C2.FMOD_Studio_EventDescription_GetParameterDescriptionByIndex(self,i1,o1)
@@ -3019,14 +3035,14 @@ function studio.EventDescription:getParameterDescriptionByIndex(i1)
 end
 
 ---@param i1 string
----@return any,FMOD.Result
+---@return FMOD.Studio.ParamDescription,FMOD.Result
 function studio.EventDescription:getParameterDescriptionByName(i1)
     local o1=ffi.new("FMOD_STUDIO_PARAMETER_DESCRIPTION[1]")
     local result=C2.FMOD_Studio_EventDescription_GetParameterDescriptionByName(self,i1,o1)
     return o1[0],result
 end
 
----@return any,FMOD.Result
+---@return FMOD.Studio.ParamDescription,FMOD.Result
 function studio.EventDescription:getParameterDescriptionByID(i1)
     local o1=ffi.new("FMOD_STUDIO_PARAMETER_DESCRIPTION[1]")
     local result=C2.FMOD_Studio_EventDescription_GetParameterDescriptionByID(self,i1,o1)
@@ -3068,14 +3084,14 @@ function studio.EventDescription:getUserPropertyCount()
 end
 
 ---@param i1 number
----@return any,FMOD.Result
+---@return FMOD.Studio.UserProperty?,FMOD.Result
 function studio.EventDescription:getUserPropertyByIndex(i1)
     local o1=ffi.new("FMOD_STUDIO_USER_PROPERTY[1]")
     local result=C2.FMOD_Studio_EventDescription_GetUserPropertyByIndex(self,i1,o1)
     return o1[0],result
 end
 
----@return any,FMOD.Result
+---@return FMOD.Studio.UserProperty?,FMOD.Result
 function studio.EventDescription:getUserProperty(i1)
     local o1=ffi.new("FMOD_STUDIO_USER_PROPERTY[1]")
     local result=C2.FMOD_Studio_EventDescription_GetUserProperty(self,i1,o1)

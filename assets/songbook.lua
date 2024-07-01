@@ -4,7 +4,10 @@
 ---@field title string
 ---@field inside? boolean
 ---@field redirect? string|table<string>
+---
 ---@field notFound? boolean
+---@field intensity? boolean
+---@field section? boolean
 
 ---@enum (key) Techmino.MusicName
 local songbook={

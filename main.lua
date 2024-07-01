@@ -622,11 +622,12 @@ if tostring(FMOD.studio):find('NULL') or TABLE.getSize(FMOD.banks)==0 then
 else
     FMOD.setMainVolume(SETTINGS.system.mainVol,true)
     for name,data in next,SONGBOOK do
-        if FMOD.music.getDesc(name) then
-            data.intensity=FMOD.music.getParamDesc(name,'intensity')~=nil
-            data.section=FMOD.music.getParamDesc(name,'section')~=nil
-            if not FMOD.music.getParamDesc(name,'fade') then
-                MSG.new('warn',"Missing 'fade' parameter in music '"..name.."'",0)
+        local ED=FMOD.music.getDesc(name)
+        if ED then
+            data.intensity=select(2,ED:getParameterDescriptionByName('intensity'))==FMOD.FMOD_OK
+            data.section=select(2,ED:getParameterDescriptionByName('section'))==FMOD.FMOD_OK
+            if select(2,ED:getParameterDescriptionByName('fade'))~=FMOD.FMOD_OK then
+                MSG.new('warn',"Missing 'fade' parameter in music '"..name.."'")
             end
         else
             data.notFound=true

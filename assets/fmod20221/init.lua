@@ -142,7 +142,8 @@ end
 
 --------------------------
 
----@type table | fun(name:string, args?:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}):FMOD.Studio.EventInstance?
+---@class FMOD._Music
+---@overload fun(name:string, args?:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}):FMOD.Studio.EventInstance?
 M.music={}
 
 ---@param v number
@@ -161,16 +162,6 @@ local playing=nil
 ---@return FMOD.Studio.EventDescription
 function M.music.getDesc(name)
     return musicLib[name]
-end
-
----Get event param description by name, to check if a param exists
----@param name string
----@param param string
----@return FMOD.Studio.ParamDescription?
-function M.music.getParamDesc(name,param)
-    local desc=musicLib[name]
-    if not desc then return end
-    return (musicLib[name]:getParameterDescriptionByName(param))
 end
 
 ---@param name string
@@ -283,12 +274,12 @@ function M.music.getPlaying()
     return playing.event
 end
 
-local playMusic=M.music.play
-setmetatable(M.music,{__call=function(_,...) return playMusic(...) end})
+setmetatable(M.music,{__call=function(_,...) return M.music.play(...) end})
 
 --------------------------
 
----@type table | fun(name:string, args?:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}):FMOD.Studio.EventInstance?
+---@class FMOD._Effect
+---@overload fun(name:string, args?:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}):FMOD.Studio.EventInstance?
 M.effect={}
 
 ---@param v number
@@ -401,8 +392,7 @@ function M.effect.stop(name,instant)
     end
 end
 
-local playEffect=M.effect.play
-setmetatable(M.effect,{__call=function(_,...) return playEffect(...) end})
+setmetatable(M.effect,{__call=function(_,...) return M.effect.play(...) end})
 
 --------------------------
 
