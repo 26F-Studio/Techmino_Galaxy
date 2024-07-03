@@ -44,14 +44,8 @@ function scene.keyDown(key,isRep)
     if isRep then return true end
 
     -- Debug
-    if key=='f6' then
-        GAME.playerList[1]:unserialize(love.system.getClipboardText())
-        MSG.new('info',"Player data exported")
-        return true
-    elseif key=='f7' then
-        love.system.setClipboardText(GAME.playerList[1]:serialize())
-        MSG.new('info',"Player data imported")
-        return true
+    if key=='f6' then love.system.setClipboardText(GAME.playerList[1]:serialize()) MSG.new('info',"Exported") return true
+    elseif key=='f7' then GAME.playerList[1]:unserialize(love.system.getClipboardText()) MSG.new('info',"Imported") return true
     end
 
     local action
