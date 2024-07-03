@@ -6,14 +6,23 @@ defaultBrikColor=setmetatable({
     478,748,854,484,
 },{__index=function() return math.random(64) end})
 require'rotsys_brik'
-local function loadMechFile()
-    ---@type Techmino.MechLib
-    mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
-    regFuncLib(mechLib,"mechLib")
-end
-loadMechFile()
 
 local gc=love.graphics
+
+---@type Techmino.MechLib
+mechLib={}
+local modeLib={}
+local modeMeta={
+    __index={
+        initialize=NULL,
+        settings={},
+        layout='default',
+        checkFinish=function() return true end,
+        result=NULL,
+        resultPage=NULL,
+    },
+    __metatable=true,
+}
 
 local layoutFuncs={}
 do -- function layoutFuncs.default():
@@ -125,19 +134,6 @@ do -- function layoutFuncs.default():
     end
 end
 
-local modeLib={}
-local modeMeta={
-    __index={
-        initialize=NULL,
-        settings={},
-        layout='default',
-        checkFinish=function() return true end,
-        result=NULL,
-        resultPage=NULL,
-    },
-    __metatable=true,
-}
-
 local function task_switchToResult()
     if SCN.cur=='game_in' then
         SCN.swapTo('result_in','none')
@@ -179,12 +175,15 @@ local GAME={
 
 GAME.camera.moveSpeed=12
 
+function GAME._refresh()
+    mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
+    regFuncLib(mechLib,'mechLib')
+end
+GAME._refresh()
+
 ---@return Techmino.Mode
 function GAME.getMode(name)
-    if love.keyboard.isDown('f5') then
-        loadMechFile()
-    end
-    if modeLib[name] and not love.keyboard.isDown('f5') then
+    if modeLib[name] then
         return modeLib[name]
     else
         local path='assets/game/mode/'..name..'.lua'
