@@ -343,6 +343,7 @@ Text=nil---@type Techmino.I18N
 LANG.add{
     en='assets/language/lang_en.lua',
     zh='assets/language/lang_zh.lua',
+    vi='assets/language/lang_vi.lua'
 }
 LANG.setDefault('en')
 
