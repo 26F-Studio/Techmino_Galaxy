@@ -1,3 +1,4 @@
+---@type Zenitha.Scene
 local scene={}
 
 local mode,act
@@ -6,7 +7,7 @@ local result
 local quitTimer
 local escTimerWTF
 
-function scene.enter()
+function scene.load()
     mode=SCN.args[1]
     act=SCN.args[2]
     keyLangStr='keyset_'..mode..'_'..act
@@ -17,22 +18,23 @@ function scene.enter()
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
-    if result then return end
+    if isRep then return true end
+    if result then return true end
     if key=='escape' and not escTimerWTF then
         escTimerWTF=.626
     elseif key=='backspace' then
         local L=KEYMAP[mode]:getKeys(act)
-        if L then TABLE.cut(L) end
+        if L then TABLE.clear(L) end
         result=Text.keyset_deleted
-        SFX.play('beep_down')
+        FMOD.effect('beep_drop')
     else
         escTimerWTF=false
         result=key
         KEYMAP[mode]:remKey(key)
         KEYMAP[mode]:addKey(act,key)
-        SFX.play('beep_rise')
+        FMOD.effect('beep_rise')
     end
+    return true
 end
 
 function scene.touchDown(x,y,id)
@@ -82,8 +84,8 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={1,0},x=-300,y=80,w=160,h=80,sound_trigger=false,fontSize=60,text=CHAR.key.backspace,code=WIDGET.c_pressKey('backspace')},
-    WIDGET.new{type='button',pos={1,0},x=-120,y=80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=function() SCN.back('none',SCN.args[1]) end},
+    {type='button',pos={1,0},x=-300,y=80,w=160,h=80,sound_trigger=false,fontSize=60,text=CHAR.key.backspace,code=WIDGET.c_pressKey('backspace')},
+    {type='button',pos={1,0},x=-120,y=80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=function() SCN.back('none',SCN.args[1]) end},
 }
 
 return scene

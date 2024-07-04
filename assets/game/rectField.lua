@@ -1,18 +1,13 @@
 local gc=love.graphics
 
---- @class Techmino.Cell
---- @field id number ascending piece number
---- @field color number 0~63
---- @field conn table<Techmino.Cell,true>
---- @field bias {expBack:number?, lineBack:number?, teleBack:number?, x:number, y:number}
-
---- @class Techmino.RectField
---- @field _width number
---- @field _matrix (Techmino.Cell|false|any)[][]
+---@class Techmino.RectField
+---@field _width number
+---@field _matrix Mat<Techmino.Cell|false>
 local F={}
 
 --------------------------------------------------------------
 -- Methods
+
 function F:removeLine(h)
     table.remove(self._matrix,h)
 end
@@ -91,7 +86,7 @@ function F:drawThumbnail_color(step,size)
         for x=1,self._width do
             local c=f[y][x]
             if c then
-                gc.setColor(ColorTable[c.color])
+                gc.setColor(RGB9[c.color])
                 gc.rectangle('fill',(x-1)*step,-y*step,size,size)
             end
         end
@@ -104,7 +99,7 @@ function F:getHeight()
 end
 
 local wallCell=setmetatable({},{__newIndex=NULL,__metatable=true})
---- @return Techmino.Cell|false
+---@return Techmino.Cell|false
 function F:getCell(x,y)
     if x<=0 or x>self._width or y<=0 then return wallCell end
     if y>#self._matrix then return false end
@@ -113,29 +108,25 @@ function F:getCell(x,y)
 end
 function F:setCell(cell,x,y)
     if not self._matrix[y] then
-        if y<=1260 then
-            for i=#self._matrix+1,y do
-                self._matrix[i]=TABLE.new(false,self._width)
-            end
-        else
-            return-- Too high, do nothing
+        if y>1260 then return end -- Too high, do nothing
+        for i=#self._matrix+1,y do
+            self._matrix[i]=TABLE.new(false,self._width)
         end
     end
     self._matrix[y][x]=cell
 end
+
 --------------------------------------------------------------
 -- Builder
+
 function F.new(width)
-    assert(type(width)=='number','[Field].new(width): width must be number')
-    local f={
-        _width=width,
-        _matrix={},
-    }
-    f._matrix=f
-    setmetatable(f,{__index=F,__metatable=true})
+    assert(type(width)=='number',"[Field].new(width): Need number")
+    local f=setmetatable({_width=width},{__index=F,__metatable=true})
+    f._matrix={}
 
     return f
 end
+
 --------------------------------------------------------------
 
 return F

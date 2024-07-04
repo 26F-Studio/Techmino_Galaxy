@@ -40,6 +40,7 @@ end
 
 local rnd=math.random
 
+---@type Zenitha.Scene
 local scene={}
 
 local function flipPiece(name)
@@ -56,7 +57,7 @@ local function newQuestion()
     if TABLE.find(q,3) then q=questList[rnd(#questList)] end
     local flip=MATH.roll()
 
-    quest=TABLE.shift(q.quest)
+    quest=TABLE.copy(q.quest)
     if flip then TABLE.reverse(quest) end
 
     local c1=q.good[rnd(#q.good)]
@@ -65,11 +66,10 @@ local function newQuestion()
 
     choices={c1,c2}
     for i=1,#choices do
-        local name=choices[i]
-        local piece=Minoes[name]
+        local piece=Brik.get(choices[i])
         choices[i]={
-            shape=TABLE.shift(piece.shape),
-            color=ColorTable[defaultMinoColor[piece.id]],
+            shape=TABLE.copy(piece.shape),
+            color=RGB9[defaultBrikColor[piece.id]],
             correct=i==1,
         }
         if level==2 then
@@ -135,44 +135,44 @@ local function answer(option)
                 if time>parTime[1] then
                     -- Just pass
                     endGame(1)
-                    SFX.play('win')
+                    FMOD.effect('win')
                 else
                     level=2
                     time=parTime[2]
-                    SFX.play('beep_notice')
+                    FMOD.effect('beep_notice')
                 end
                 PROGRESS.setTutorialPassed(3)
             elseif level==2 then
                 -- Cleared
                 endGame(2)
-                SFX.play('win')
+                FMOD.effect('win')
             end
         else
             -- Correct
-            SFX.play('beep_rise')
+            FMOD.effect('beep_rise')
         end
     else
-        SFX.play('fail')
+        FMOD.effect('fail')
     end
     newQuestion()
 end
 
-function scene.enter()
+function scene.load()
     texts=TEXT.new()
     reset()
-    playBgm('space','simp')
+    playBgm('space')
 end
-function scene.leave()
+function scene.unload()
     texts=nil
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     local action
-    action=KEYMAP.mino:getAction(key)
+    action=KEYMAP.brik:getAction(key)
     if action=='moveLeft' or action=='moveRight' then
         answer(action=='moveLeft' and 1 or 2)
-        return
+        return true
     end
     action=KEYMAP.sys:getAction(key)
     if action=='restart' then
@@ -180,6 +180,7 @@ function scene.keyDown(key,isRep)
     elseif action=='back' then
         if sureCheck('back') then SCN.back('none') end
     end
+    return true
 end
 
 function scene.update(dt)
@@ -189,10 +190,10 @@ function scene.update(dt)
         if time==0 then
             if level==1 then
                 endGame(0)
-                SFX.play('fail')
+                FMOD.effect('fail')
             else
                 endGame(1)
-                SFX.play('win')
+                FMOD.effect('win')
             end
         end
     end
@@ -223,7 +224,7 @@ function scene.draw()
         GC.line(-len*30,y,len*30,y)
     end
     -- Field
-    GC.setColor(ColorTable[0])
+    GC.setColor(RGB9[777])
     for i=1,len do
         GC.rectangle('fill',60*(i-1-len/2),380,60,-60*quest[i])
     end
@@ -272,8 +273,8 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={.5,.5},x=-300,y=0,w=260,h=260,sound_trigger=false,code=function() answer(1) end},
-    WIDGET.new{type='button',pos={.5,.5},x=300,y=0,w=260,h=260,sound_trigger=false,code=function() answer(2) end},
-    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
+    {type='button',pos={.5,.5},x=-300,y=0,w=260,h=260,sound_trigger=false,code=function() answer(1) end},
+    {type='button',pos={.5,.5},x=300,y=0,w=260,h=260,sound_trigger=false,code=function() answer(2) end},
+    {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
 }
 return scene

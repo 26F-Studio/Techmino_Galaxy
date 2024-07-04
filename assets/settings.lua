@@ -1,5 +1,5 @@
 local settings={
-    _system={-- We just save values here, do not change them directly.
+    _system={ -- We just save values here, do not change them directly.
         -- Audio
         autoMute=false,
         mainVol=1,
@@ -7,6 +7,9 @@ local settings={
         sfxVol=1,
         vocVol=0,
         vibVol=1,
+        fmod_maxChannel=32,
+        fmod_DSPBufferCount=4,
+        fmod_DSPBufferLength=8,
 
         -- Video
         hitWavePower=.6,
@@ -27,56 +30,53 @@ local settings={
         clean=false,
         locale='en',
     },
-    game_mino={
+    game_brik={
         -- Handling
-        das=120,
-        arr=20,
-        sdarr=20,
-        dasHalt=26,
-        hdLockA=200,
-        hdLockM=62,
+        asd=120,
+        asp=20,
+        ash=26,
+        softdropSkipAsd=true,
 
         -- Video
         shakeness=.6,
     },
-    game_puyo={
+    game_gela={
         -- Handling
-        das=120,
-        arr=20,
-        sdarr=20,
-        dasHalt=26,
-        hdLockA=200,
-        hdLockM=62,
+        asd=120,
+        asp=20,
+        ash=26,
+        aHdLock=200,
+        mHdLock=62,
 
         -- Video
         shakeness=.6,
     },
-    game_gem={
+    game_acry={
         -- Handling
-        das=150,
-        arr=40,
+        asd=150,
+        asp=40,
 
         -- Video
         shakeness=.6,
     },
 }
-local settingTriggers={-- Changing values in SETTINGS.system will trigger these functions (if exist).
+local settingTriggers={ -- Changing values in SETTINGS.system will trigger these functions (if exist).
     -- Audio
-    mainVol=        function(v) love.audio.setVolume(v) end,
-    bgmVol=         function(v) BGM.setVol(v) end,
-    sfxVol=         function(v) SFX.setVol(v) end,
-    vocVol=         function(v) VOC.setVol(v) end,
+    mainVol=        function(v) FMOD.setMainVolume(v,true) end,
+    bgmVol=         function(v) FMOD.music.setVolume(v,true) end,
+    sfxVol=         function(v) FMOD.effect.setVolume(v,true) end,
+    vocVol=         function(v) FMOD.vocal.setVolume(v,true) end,
 
     -- Video
     fullscreen=     function(v) love.window.setFullscreen(v); love.resize(love.graphics.getWidth(),love.graphics.getHeight()) end,
-    maxFPS=         function(v) Zenitha.setMaxFPS(v) end,
-    updRate=        function(v) Zenitha.setUpdateFreq(v) end,
-    drawRate=       function(v) Zenitha.setDrawFreq(v) end,
+    maxFPS=         function(v) ZENITHA.setMaxFPS(v) end,
+    updRate=        function(v) ZENITHA.setUpdateFreq(v) end,
+    drawRate=       function(v) ZENITHA.setDrawFreq(v) end,
     sysCursor=      function(v) love.mouse.setVisible(v) end,
-    clean=          function(v) Zenitha.setCleanCanvas(v) end,
+    clean=          function(v) ZENITHA.setCleanCanvas(v) end,
 
     -- Other
-    locale=         function(v) Text=LANG.get(v) LANG.setTextFuncSrc(Text) end,
+    locale=         function(v) Text=LANG.set(v) end,
 }
 settings.system=setmetatable({},{
     __index=settings._system,

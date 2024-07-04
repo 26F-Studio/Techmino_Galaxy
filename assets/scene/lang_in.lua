@@ -16,17 +16,24 @@ local languages={
     "Langue  Язык  Spache",
 }
 local curLang=1
+local changed
 
+---@type Zenitha.Scene
 local scene={}
 
-function scene.leave()
-    saveSettings()
+function scene.load()
+    changed=false
+end
+
+function scene.unload()
+    if changed then
+        saveSettings()
+    end
 end
 
 function scene.keyDown(key)
     if KEYMAP.sys:getAction(key)=='back' then
         SCN.back('none')
-    else
         return true
     end
 end
@@ -45,7 +52,6 @@ function scene.draw()
 end
 
 local function _setLang(lid)
-    SETTINGS.system.locale=lid
     TEXT:clear()
     TEXT:add{
         text=langList[lid],
@@ -54,26 +60,30 @@ local function _setLang(lid)
         style='appear',
         duration=1,inPoint=0,outPoint=0,
     }
-    WIDGET._reset()
+    if SETTINGS.system.locale~=lid then
+        SETTINGS.system.locale=lid
+        changed=true
+        WIDGET._reset()
+    end
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
+    {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
 
-    WIDGET.new{type='button',         x=350,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.en, color='R', sound_trigger='check_on',code=function() _setLang('en') end},
-    WIDGET.new{type='button_fill',    x=350,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='F'},
-    WIDGET.new{type='button_fill',    x=350,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=35, text='',          color='K'},
-    WIDGET.new{type='button_fill',    x=350,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=35, text='',          color='G'},
+    {type='button',         x=350,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.en, color='R', sound_trigger='check_on',code=function() _setLang('en') end},
+    {type='button_fill',    x=350,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='F'},
+    {type='button_fill',    x=350,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=35, text='',          color='K'},
+    {type='button_fill',    x=350,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=35, text='',          color='G'},
 
-    WIDGET.new{type='button',         x=800,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.vi, color='O', sound_trigger='check_on',code=function() _setLang('vi') end},
-    WIDGET.new{type='button_fill',    x=800,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='A'},
-    WIDGET.new{type='button_fill',    x=800,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='J'},
-    WIDGET.new{type='button_fill',    x=800,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='P'},
+    {type='button',         x=800,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.vi, color='O', sound_trigger='check_on',code=function() _setLang('vi') end},
+    {type='button_fill',    x=800,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='A'},
+    {type='button_fill',    x=800,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='J'},
+    {type='button_fill',    x=800,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='P'},
 
-    WIDGET.new{type='button',         x=1250,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text=langList.zh, color='Y', sound_trigger='check_on',code=function() _setLang('zh') end},
-    WIDGET.new{type='button_fill',    x=1250,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text='',          color='I'},
-    WIDGET.new{type='button_fill',    x=1250,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text='',          color='B'},
-    WIDGET.new{type='button_fill',    x=1250,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text='',          color='V'},
+    {type='button',         x=1250,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text=langList.zh, color='Y', sound_trigger='check_on',code=function() _setLang('zh') end},
+    {type='button_fill',    x=1250,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text='',          color='I'},
+    {type='button_fill',    x=1250,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text='',          color='B'},
+    {type='button_fill',    x=1250,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text='',          color='V'},
 }
 
 return scene

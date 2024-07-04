@@ -5,14 +5,15 @@ local gc_translate,gc_replaceTransform=GC.translate,GC.replaceTransform
 
 local ins=table.insert
 local kbIsDown=love.keyboard.isDown
+---@type Zenitha.Scene
 local scene={}
 
 local categoryColor={
-    intro= {index=COLOR.F, content=COLOR.lF},-- Instruction for current scene
-    guide= {index=COLOR.Y, content=COLOR.lY},-- Practice methods
-    term=  {index=COLOR.lB,content=COLOR.LB},-- Concept in game
-    tech=  {index=COLOR.G, content=COLOR.lG},-- General technics
-    other= {index=COLOR.M, content=COLOR.lM},-- Other
+    intro= {index=COLOR.F, content=COLOR.lF}, -- Instruction for current scene
+    guide= {index=COLOR.Y, content=COLOR.lY}, -- Practice methods
+    term=  {index=COLOR.lB,content=COLOR.LB}, -- Concept in game
+    tech=  {index=COLOR.G, content=COLOR.lG}, -- General technics
+    other= {index=COLOR.M, content=COLOR.lM}, -- Other
 }
 local mainW,mainH=900,700
 local mainX=100-mainW/2
@@ -30,7 +31,7 @@ local contents={
 }
 -- Base dict data, not formatted
 local baseDict do
-    baseDict=require('assets/basedictionary')
+    baseDict=require'assets/dict_base'
     local dictObjMeta={__index=function(obj,k)
         if k=='titleText' then
             obj.titleText=GC.newText(FONT.get(obj.titleSize,'bold'),obj.titleFull)
@@ -54,10 +55,12 @@ local currentDict={locale=false}
 -- Dict data of English
 local enDict=FILE.load('assets/language/dict_en.lua','-lua -canskip')
 
-local listBox,inputBox,linkButton,copyButton
+local listBox ---@type Zenitha.Widget.listBox
+local inputBox ---@type Zenitha.Widget.inputBox
+local linkButton,copyButton
 local function close()
     quiting=true
-    SFX.play('dict_close')
+    FMOD.effect('dict_close')
 end
 local function selectItem(item)
     selected=item
@@ -95,12 +98,12 @@ end
 local function openLink()
     if selected.link then
         love.system.openURL(selected.link)
-        SFX.play('dict_link')
+        FMOD.effect('dict_link')
     end
 end
 local function copyText()
     love.system.setClipboardText(("%s:\n%s\n==Techmino Dict==\n"):format(selected.titleFull,selected.content))
-    SFX.play('dict_copy')
+    FMOD.effect('dict_copy')
     copyButton:setVisible(false)
 end
 local function freshWidgetPos()
@@ -117,7 +120,7 @@ local function search(str)
     if str=='' then
         listBox:setList(dispDict)
     else
-        TABLE.cut(filteredDict)
+        TABLE.clear(filteredDict)
         for i=1,#dispDict do
             local obj=dispDict[i]
             obj._priority=
@@ -135,7 +138,7 @@ local function search(str)
         end
     end
 end
-do-- Widgets
+do -- Widgets
     listBox={
         type='listBox',pos={.5,.5},x=mainX-listW,y=-listH/2,w=listW-10,h=listH,
         lineHeight=40,
@@ -163,8 +166,10 @@ do-- Widgets
             selectItem(listBox:getItem())
         end
     end
+    ---@type Zenitha.Widget.listBox
     listBox=WIDGET.new(listBox)
 
+    ---@type Zenitha.Widget.inputBox
     inputBox=WIDGET.new{
         type='inputBox',pos={.5,.5},x=mainX,y=280,w=mainW,h=searchH-10,
         frameColor={0,0,0,0},
@@ -184,7 +189,7 @@ do-- Widgets
 end
 
 local function assertObj(cond,message,obj)
-    assert(cond,('Dict parse error: %s\nLine %d: %s'):format(message,obj._line,obj._id))
+    assertf(cond,"Dict parse error: %s\nLine %d: %s",message,obj._line,obj._id)
 end
 local function parseDict(data)
     data=data:split('\n')
@@ -245,9 +250,9 @@ local function parseDict(data)
     return result
 end
 
-function scene.enter()
+function scene.load(prev)
     listBox._scrollPos1=listBox._scrollPos
-    if SCN.prev=='zeta_input_method' and SCN.args[1] then
+    if prev=='zeta_input_method' and SCN.args[1] then
         inputBox:addText(SCN.args[1])
         return
     end
@@ -258,7 +263,7 @@ function scene.enter()
     aboveScene=SCN.scenes[SCN.stack[#SCN.stack-1]] or NONE
     searchTimer,lastSearchText=0,''
     inputBox._value=''
-    SFX.play('dict_open')
+    FMOD.effect('dict_open')
     freshWidgetPos()
 
     selectItem(false)
@@ -273,6 +278,7 @@ function scene.enter()
                 currentDict=data
             else
                 currentDict=nil
+                ---@cast data string
                 MSG.new('error',data,10)
             end
         end
@@ -282,7 +288,7 @@ function scene.enter()
 
     -- Refresh items
     local selectedNum
-    TABLE.cut(dispDict)
+    TABLE.clear(dispDict)
     for _,obj in next,baseDict do
         if not obj.hidden or type(obj.hidden)=='function' and obj.hidden() or target==obj.id then
             local curObj=currentDict[obj.id] or NONE
@@ -316,7 +322,7 @@ function scene.enter()
             obj.contentSize=5*math.floor(obj.contentSize/5+.5)
             obj.titleFull=curObj.titleFull or obj.title or enObj.titleFull or enObj.title
             obj.link=curObj.link or false
-            obj.titleText=nil-- Generate when needed (__index at basedictionary.lua)
+            obj.titleText=nil -- Generate when needed (__index at dict_base.lua)
 
             ins(dispDict,obj)
             dispDict[obj.id]=obj
@@ -329,19 +335,19 @@ function scene.enter()
 
     if not selected then selectItem(dispDict[1]) end
     listBox:setList(dispDict)
-    if selectedNum then listBox:select(selectedNum or 1)end
+    if selectedNum then listBox:select(selectedNum or 1) end
     collectgarbage()
 end
 
 function scene.keyDown(key,isRep)
-    if WIDGET.isFocus(inputBox) and #key==1 then return end
+    if WIDGET.isFocus(inputBox) and #key==1 then return true end
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
         if not (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
             local sel=listBox:getItem()
             listBox:arrowKey(key)
             if listBox:getItem()~=sel then
-                SFX.play(listBox.sound_select)
+                FMOD.effect(listBox.sound_select)
             end
         end
     elseif act=='help' or act=='back' then
@@ -364,7 +370,7 @@ function scene.keyDown(key,isRep)
         if act=='select' then
             if selected~=listBox:getItem() and listBox:getItem() then
                 listBox.code()
-                SFX.play(listBox.sound_click)
+                FMOD.effect(listBox.sound_click)
             end
         elseif key=='home' then
             listBox:scroll(-1e99)
@@ -372,6 +378,7 @@ function scene.keyDown(key,isRep)
             listBox:scroll(1e99)
         end
     end
+    return true
 end
 
 local function inScreen(x,y)
@@ -398,10 +405,9 @@ function scene.touchMove(x,y,_,dy)
     end
 end
 
-function scene.wheelMoved(_,y)
-    if not WIDGET.isFocus(listBox)then
+function scene.wheelMove(_,y)
+    if not WIDGET.isFocus(listBox) then
         scroll(y*62)
-    else
         return true
     end
 end
@@ -508,9 +514,9 @@ scene.widgetList={
     inputBox,
     copyButton,
     linkButton,
-    WIDGET.new{type='button',pos={.5,.5},x=mainX+mainW+70,y=-310,w=80,h=80,sound_trigger=false,lineWidth=4,fontSize=60,text=CHAR.icon.cross_big,code=close},
-    WIDGET.new{
-        type='button',pos={.5,.5},x=mainX+mainW+70,y=320,w=80,h=80,sound_trigger='move',lineWidth=4,fontSize=50,text="写",
+    {type='button',pos={.5,.5},x=mainX+mainW+70,y=-310,w=80,h=80,sound_trigger=false,lineWidth=4,fontSize=60,text=CHAR.icon.cross_big,code=close},
+    {
+        type='button',pos={.5,.5},x=mainX+mainW+70,y=320,w=80,h=80,sound_trigger='button_soft',lineWidth=4,fontSize=50,text="写",
         code=WIDGET.c_goScn('zeta_input_method','none'),
         visibleFunc=function() return SETTINGS._system.locale=='zh' end,
     },

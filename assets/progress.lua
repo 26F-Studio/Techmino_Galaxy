@@ -5,7 +5,8 @@ local gc=love.graphics
         Sum>=100 → II
         Single>=200 or Sum>=350 → III
 ]]
-local prgs={
+local prgs=setmetatable({
+    launchCount=0,
     main=1,
     tutorial='000000',
     interiorScore={
@@ -13,17 +14,26 @@ local prgs={
         sprint=0,
         marathon=0,
     },
-    bgmUnlocked={},
-    mino_stdMap={
-        unlocked=true,
-        modeUnlocked={
-            -- 0 = unlocked, 1~5 = rank got
-            sprint_40=0,
-            marathon=0,
-            dig_practice=0,
-        },
+    styles={
+        brik=true,
+        gela=false,
+        acry=false,
     },
-}
+    exteriorMap={
+        sprint={},
+        marathon={},
+        dig={},
+    },
+    bgmUnlocked={},
+    secretFound={},
+
+    -- Utility
+    musicTime=0,
+},{
+    __index=function(_,k)
+        LOG("Attempt to read undefined progress data: "..tostring(k))
+    end,
+})
 
 local function sysInfoFunc()
     if not SETTINGS.system.powerInfo then return end
@@ -71,15 +81,12 @@ local function sysInfoFunc()
             gc.setColor(COLOR.lG)
             for i=1,math.ceil(pow/x) do
                 local a=6.2*math.sin(-love.timer.getTime()*5+i*.626)
-                gc.rectangle('fill',3*i-2,9-1.5+a,3,3)
-                gc.rectangle('fill',3*i-2,9-1.5-a,3,3)
+                GC.mRect('fill',3*i-.5,9+a,3,3)
+                GC.mRect('fill',3*i-.5,9-a,3,3)
             end
         end
     end
 end
-
-local PROGRESS={}
-
 local function zDump(t)
     local list={}
     for k,v in next,t do
@@ -94,33 +101,58 @@ local function zDump(t)
     table.sort(list)
     return table.concat(list)
 end
-function PROGRESS.getHash(t)
+local function getHash(t)
     return love.data.encode('string','base64',STRING.digezt(zDump(t)))
 end
-function PROGRESS.save()
-    prgs.rnd=math.random(26,2e6)
-    prgs.hash=PROGRESS.getHash(prgs)
-    FILE.save(prgs,'conf/progress','-json')
+
+local PROGRESS={}
+
+--------------------------------------------------------------
+-- Save & Load
+
+---@param step nil
+function PROGRESS.save(step)
+    if step==nil then
+        -- Wait 1 frame before saving
+        TASK.removeTask_code(PROGRESS.save)
+        TASK.new(PROGRESS.save,'yield')
+    elseif step=='yield' then
+        -- Do wait
+        coroutine.yield()
+        PROGRESS.save('save')
+    elseif step=='save' then
+        prgs.rnd=math.random(26,2e6)
+        prgs.hash=getHash(prgs)
+        FILE.save(prgs,'conf/progress','-json')
+        showSaveIcon(CHAR.icon.save)
+    end
 end
 function PROGRESS.load()
     local success,res=pcall(FILE.load,'conf/progress','-json -canskip')
     if success then
         if res then
-            TABLE.coverR(res,prgs)
-            -- if res.hash==PROGRESS.getHash(res) then
-            --     TABLE.coverR(res,prgs)
+            TABLE.update(prgs,res)
+            -- if res.hash==getHash(res) then
+            --     TABLE.update(prgs,res)
             -- else
             --     MSG.new('info',"Hash not match")
             -- end
         end
+        prgs.launchCount=prgs.launchCount+1
     else
         MSG.new('info',"Load progress failed: "..res)
     end
 end
+function PROGRESS.fix()
+    prgs.brik_stdMap=nil
+end
+
+--------------------------------------------------------------
+-- Function
 
 function PROGRESS.swapMainScene()
     if prgs.main<=2 then
-        SCN.swapTo('main_in','fastFade')
+        SCN.swapTo('main_in','none')
     elseif prgs.main<=4 then
         SCN.swapTo('main_out')
     else
@@ -137,55 +169,72 @@ function PROGRESS.applyCoolWaitTemplate()
             GC.setColor(1,1,1,a)
             GC.applyTransform(SCR.xOy_dr)
             GC.mDrawL(z,
-                math.min(math.floor(t*60)%62,52)%52+1,-- floor(t*60)%62 → 0~61; min(ans) → 0~52~52; ans%52+1 → 1~52,1~1
+                math.min(math.floor(t*60)%62,52)%52+1, -- floor(t*60)%62 → 0~61; min(ans) → 0~52~52; ans%52+1 → 1~52,1~1
                 -160,-150,nil,1.5*(1-(1-a)^2.6)
             )
             GC.setBlendMode('alpha')
         end)
     end
 end
-function PROGRESS.setInteriorBG() BG.set('none') end
-function PROGRESS.setExteriorBG() BG.set(prgs.main==3 and 'space' or 'galaxy') end
-function PROGRESS.playInteriorBGM() playBgm('blank',prgs.main==1 and 'simp' or 'full') end
-function PROGRESS.playExteriorBGM() playBgm('vacuum',prgs.main==3 and 'simp' or 'full') end
-function PROGRESS.setEnv(env)
+function PROGRESS.applyInteriorBG() BG.set('none') end
+function PROGRESS.applyExteriorBG() BG.set(prgs.main==3 and 'space' or 'galaxy') end
+function PROGRESS.applyInteriorBGM() playBgm('blank',prgs.main~=1) end
+function PROGRESS.applyExteriorBGM()
+    if prgs.main==3 then
+        playBgm('vacuum')
+    else
+        if love.timer.getTime()>3.55 and getBgm()~='singularity' then
+            playBgm('singularity')
+            FMOD.music.seek(5.25)
+        end
+    end
+end
+function PROGRESS.applyEnv(env)
     if env=='interior' then
-        PROGRESS.setInteriorBG()
-        PROGRESS.playInteriorBGM()
-        Zenitha.setClickFX(true)
-        Zenitha.setDrawCursor(function(_,x,y)
+        PROGRESS.applyInteriorBG()
+        PROGRESS.applyInteriorBGM()
+        ZENITHA.globalEvent.touchClick=NULL
+        ZENITHA.globalEvent.mouseDown=function(x,y) SYSFX.rectRipple(.26,x-10,y-10,20,20) end
+        function ZENITHA.globalEvent.drawCursor(_,x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)
                 gc.setLineWidth(2)
                 gc.translate(x,y)
-                if love.mouse.isDown(1) then gc.rectangle('fill',-5,-5,10,10) end
-                if love.mouse.isDown(2) then gc.rectangle('line',-8,-8,16,16) end
+                if love.mouse.isDown(1) then GC.mRect('fill',0,0,10,10) end
+                if love.mouse.isDown(2) then GC.mRect('line',0,0,16,16) end
                 gc.setColor(1,1,1,.626)
                 gc.setLineWidth(4)
                 gc.line(0,-15,0,15)
                 gc.line(-15,0,15,0)
             end
-        end)
+        end
     elseif env=='exterior' then
-        PROGRESS.setExteriorBG()
-        PROGRESS.playExteriorBGM()
-        Zenitha.setClickFX(function(x,y) SYSFX.new('glow',2,x,y,20) end)
-        Zenitha.setDrawCursor(function(_,x,y)
+        PROGRESS.applyExteriorBG()
+        PROGRESS.applyExteriorBGM()
+        ZENITHA.globalEvent.touchClick=function(x,y) SYSFX.tap(.26,x,y) end
+        ZENITHA.globalEvent.mouseDown=function(x,y,k)
+            if k==1 then     SYSFX.ripple(.26,x,y,26,.62,.62,1)
+            elseif k==2 then SYSFX.ripple(.26,x,y,26,1,1,.62)
+            elseif k==3 then SYSFX.ripple(.26,x,y,26,1,.62,.62)
+            else             SYSFX.ripple(.26,x,y,26,.62,1,1)
+            end
+        end
+        function ZENITHA.globalEvent.drawCursor(_,x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)
                 gc.setLineWidth(2)
                 gc.translate(x,y)
                 gc.rotate(love.timer.getTime()%MATH.tau)
-                gc.rectangle('line',-10,-10,20,20)
-                if love.mouse.isDown(1) then gc.rectangle('fill',-4,-4,8,8) end
-                if love.mouse.isDown(2) then gc.rectangle('line',-6,-6,12,12) end
+                GC.mRect('line',0,0,20,20)
+                if love.mouse.isDown(1) then GC.mRect('fill',0,0,8,8) end
+                if love.mouse.isDown(2) then GC.mRect('line',0,0,12,12) end
                 if love.mouse.isDown(3) then gc.line(-8,-8,8,8) gc.line(-8,8,8,-8) end
                 gc.setColor(1,1,1,.626)
                 gc.line(0,-20,0,20)
                 gc.line(-20,0,20,0)
             end
-        end)
-        Zenitha.setDrawSysInfo(sysInfoFunc)
+        end
+        ZENITHA.globalEvent.drawSysInfo=sysInfoFunc
     else
         error("?")
     end
@@ -196,13 +245,11 @@ function PROGRESS.transcendTo(n)
         WAIT{
             coverAlpha=0,
             noDefaultDraw=true,
-            init=function()
-                BGM.stop()
-            end,
+            init=stopBgm,
             update=function(_,t)
                 if WAIT.state=='wait' and t>=2.6 then
                     PROGRESS.setMain(2)
-                    SCN.scenes['main_in'].enter()
+                    SCN.scenes['main_in'].load()
                     WAIT.interrupt()
                 end
             end,
@@ -217,23 +264,23 @@ function PROGRESS.transcendTo(n)
             end,
         }
     elseif n==3 then
-        PROGRESS.setBgmUnlocked('blank',2)-- Or it can be skiped if sub 60 in 40L at first play
+        PROGRESS.setBgmUnlocked('blank',2) -- Or it can be skiped if sub 60 in 40L at first play
         local sumT=0
         WAIT{
             coverAlpha=0,
             noDefaultDraw=true,
             init=function()
-                Zenitha.setDrawCursor(NULL)
+                ZENITHA.globalEvent.drawCursor=NULL
             end,
             update=function(dt,t)
                 if t<1.626 then
                     sumT=sumT+dt
                     if sumT>=.1 then
-                        BGM.set('all','seek',BGM.tell()-.1)
+                        FMOD.music.seek(FMOD.music.tell()-.1)
                         sumT=sumT-.1
                     end
-                elseif t<2 and BGM.isPlaying() then
-                    BGM.stop(0)
+                elseif t<2 and getBgm() then
+                    stopBgm(true)
                 end
                 if WAIT.state=='wait' and t>=2.6 then
                     PROGRESS.setMain(3)
@@ -259,6 +306,8 @@ function PROGRESS.transcendTo(n)
                 GC.rectangle('fill',0,0,SCR.w,SCR.h)
             end,
         }
+    elseif n==4 then
+        -- TODO
     else
         error("?")
     end
@@ -282,6 +331,7 @@ function PROGRESS.quit()
             end,
         }
     elseif prgs.main<=4 then
+        stopBgm()
         local t=1
         WAIT.setDefaultDraw(NULL)
         WAIT{
@@ -311,7 +361,7 @@ function PROGRESS.quit()
                 GC.shear(-.26,0)
                 FONT.set(100)
                 GC.setColor(1,1,1,(1-t)/.26)
-                GC.mStr('Bye',0,-70)
+                GC.mStr("Bye",0,-70)
             end,
         }
     else
@@ -327,9 +377,23 @@ function PROGRESS.drawExteriorHeader(h)
     GC.rectangle('fill',0,y,SCR.w,1)
 end
 
+--------------------------------------------------------------
+-- Lock
+
+local lock=false
+function PROGRESS.lock()
+    lock=true
+end
+function PROGRESS.unlock()
+    lock=false
+end
+
+--------------------------------------------------------------
 -- Get
-function PROGRESS.getMain() return prgs.main end
+
+function PROGRESS.get(k) return prgs[k] end
 function PROGRESS.getBgmUnlocked(name) return prgs.bgmUnlocked[name] end
+function PROGRESS.getStyleUnlock(style) return prgs.styles[style] end
 function PROGRESS.getTutorialPassed(n)
     if n then
         return prgs.tutorial:sub(n,n)=='1'
@@ -339,10 +403,17 @@ function PROGRESS.getTutorialPassed(n)
 end
 function PROGRESS.getInteriorScore(mode) return prgs.interiorScore[mode] end
 function PROGRESS.getTotalInteriorScore() return prgs.interiorScore.dig+prgs.interiorScore.sprint+prgs.interiorScore.marathon end
-function PROGRESS.getModeUnlocked(mode) return prgs[mode] and prgs[mode].unlocked end
-function PROGRESS.getModeState(style,mode) return prgs[style] and (mode and prgs[style].modeUnlocked[mode] or prgs[style].modeUnlocked) end
+function PROGRESS.getExteriorMapState() return prgs.exteriorMap end
+function PROGRESS.getExteriorModeState(mode) return prgs.exteriorMap[mode] end ---@param mode Techmino.ModeName
+function PROGRESS.getSecret(id) return not not prgs.secretFound[id] end
 
+--------------------------------------------------------------
 -- Set
+
+-- function PROGRESS.set(k,v)
+--     prgs[k]=v
+--     PROGRESS.save()
+-- end
 function PROGRESS.setMain(n)
     if n>prgs.main then
         while prgs.main<n do
@@ -357,9 +428,27 @@ function PROGRESS.setMain(n)
     end
 end
 function PROGRESS.setBgmUnlocked(name,state)
-    local l=math.max(prgs.bgmUnlocked[name] or 0,state)
-    if l>(prgs.bgmUnlocked[name] or 0) then
-        prgs.bgmUnlocked[name]=l
+    if type(name)=='table' then
+        for _,v in next,name do
+            PROGRESS.setBgmUnlocked(v,state)
+        end
+        return
+    end
+    local newState=math.max(prgs.bgmUnlocked[name] or 0,state)
+    if newState>(prgs.bgmUnlocked[name] or 0) then
+        prgs.bgmUnlocked[name]=newState
+        if prgs.main>=3 then
+            MSG.new('collect',Text.bgm_collected:repD(SONGBOOK[name].title))
+        end
+        PROGRESS.save()
+    end
+end
+function PROGRESS.setStyleUnlock(style)
+    if not prgs.styles[style] then
+        prgs.styles[style]=true
+        if TABLE.countAll(prgs.styles,true)>=2 then
+            PROGRESS.setMain(4)
+        end
         PROGRESS.save()
     end
 end
@@ -376,22 +465,77 @@ function PROGRESS.setInteriorScore(mode,score)
         PROGRESS.save()
     end
 end
-function PROGRESS.setModeUnlocked(style,bool)
-    if not prgs[style] then return end
-    prgs[style].unlocked=bool
-    PROGRESS.save()
-end
-function PROGRESS.setModeState(style,name,state,force)
-    if not prgs[style] then return end
-    if not state then state=0 end
-    local orgState=prgs[style].modeUnlocked[name] or -1
-    if state>orgState or force then
-        prgs[style].modeUnlocked[name]=state
+
+---@param mode Techmino.ModeName
+---@param outsideGame? true
+function PROGRESS.setExteriorUnlock(mode,outsideGame)
+    if not prgs.exteriorMap[mode] then
+        if TASK.lock(outsideGame and 'exMap_unlockSound' or 'exMap_unlockSound_background',2.6) then
+            FMOD.effect(outsideGame and 'map_unlock' or 'map_unlock_bg')
+        end
+        prgs.exteriorMap[mode]={}
         PROGRESS.save()
-        if state==0 and state>orgState then
-            if TASK.lock('minomap_unlockSound_background',2.6) then
-                SFX.play('map_unlock_background')
-                MSG.new('check',Text.new_level_unlocked,2.6)
+    end
+end
+
+---@param mode Techmino.ModeName
+---@param data table
+function PROGRESS.setExteriorModeState(mode,data)
+    prgs.exteriorMap[mode]=data
+end
+
+---@param mode Techmino.ModeName
+---@param key string
+---@param value number
+---@param sign? '<'|'>' #default to `'>'` bigger=better, `'<'` smaller=better
+---@return boolean success
+function PROGRESS.setExteriorScore(mode,key,value,sign)
+    sign=sign or '>'
+    local data=prgs.exteriorMap[mode]
+    if not data then
+        data={}
+        prgs.exteriorMap[mode]=data
+        PROGRESS.save()
+    end
+    if
+        not data[key] or
+        sign=='>' and value>data[key] or
+        sign=='<' and value<data[key]
+    then
+        data[key]=value
+        PROGRESS.save()
+        return true
+    end
+    return false
+end
+
+---@param id Techmino.Text.Achievement
+---@return boolean success
+function PROGRESS.setSecret(id)
+    if not prgs.secretFound[id] then
+        FMOD.effect('map_unlock_secret')
+        prgs.secretFound[id]=1
+        if rawget(Text.achievementMessage,id) then
+            MSG.new('achievement',Text.achievementMessage[id])
+        end
+        PROGRESS.save()
+        return true
+    end
+    return false
+end
+
+---@param dt number
+function PROGRESS.updateMusicTime(dt)
+    prgs.musicTime=prgs.musicTime+dt
+end
+
+--------------------------------------------------------------
+-- Make all 'set' functions lockable
+for k,f in next,PROGRESS do
+    if k:sub(1,3)=='set' then
+        PROGRESS[k]=function(...)
+            if not lock then
+                f(...)
             end
         end
     end

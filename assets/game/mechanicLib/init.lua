@@ -1,43 +1,45 @@
---- @alias Techmino.Mech.base table<string, table|fun(P:Techmino.Player|any):any>
---- @alias Techmino.Mech.mino table<string, table|fun(P:Techmino.Player.mino|any):any>
---- @alias Techmino.Mech.puyo table<string, table|fun(P:Techmino.Player.puyo|any):any>
---- @alias Techmino.Mech.gem table<string, table|fun(P:Techmino.Player.gem|any):any>
+-- Fake require function, only do string manipulation, real require when needed
+local require=simpRequire(function(path) return 'assets/game/mechanicLib/'..path..'.lua' end)
 
-return {
+---@class Techmino.MechLib
+local mechLib={
     common={
-        timer=require'assets.game.mechanicLib.common.timer',
-        finish=require'assets.game.mechanicLib.common.finish',
+        -- Tool
+        timer=require'common/timer',
+        music=require'common/music',
+        characterAnim=require'common/characterAnim',
     },
-    mino={
+    brik={
         -- Basic
-        statistics=require'assets.game.mechanicLib.mino.statistics',
-        sequence=require'assets.game.mechanicLib.mino.sequence',
-        clearRule=require'assets.game.mechanicLib.mino.clearRule',
-        attackSys=require'assets.game.mechanicLib.mino.attackSys',
-        misc=require'assets.game.mechanicLib.mino.misc',
+        actions=require'brik/actions',
+        sequence=require'brik/sequence',
+        clearRule=require'brik/clearRule',
+        attackSys=require'brik/attackSys',
+        stack=require'brik/stack',
+        squeeze=require'brik/squeeze',
+        misc=require'brik/misc',
 
         -- Mode
-        sprint=require'assets.game.mechanicLib.mino.sprint',
-        dig=require'assets.game.mechanicLib.mino.dig',
-        survivor=require'assets.game.mechanicLib.mino.survivor',
-        backfire=require'assets.game.mechanicLib.mino.backfire',
-        marathon=require'assets.game.mechanicLib.mino.marathon',
-        hypersonic=require'assets.game.mechanicLib.mino.hypersonic',
-        comboPractice=require'assets.game.mechanicLib.mino.comboPractice',
-        tsdChallenge=require'assets.game.mechanicLib.mino.tsdChallenge',
-        techrashChallenge=require'assets.game.mechanicLib.mino.techrashChallenge',
-
-        -- Special
-        stack=require'assets.game.mechanicLib.mino.stack',
-        squeeze=require'assets.game.mechanicLib.mino.squeeze',
-        progress=require'assets.game.mechanicLib.mino.progress',
+        dig=require'brik/dig',
+        survivor=require'brik/survivor',
+        marathon=require'brik/marathon',
+        chargeLimit=require'brik/chargeLimit',
+        comboGenerator=require'brik/comboGenerator',
+        allclearGenerator=require'brik/allclearGenerator',
     },
-    puyo={
+    gela={
         -- Basic
-        statistics=require'assets.game.mechanicLib.puyo.statistics',
-        sequence=require'assets.game.mechanicLib.puyo.sequence',
-        attackSys=require'assets.game.mechanicLib.puyo.attackSys',
-        misc=require'assets.game.mechanicLib.puyo.misc',
+        actions=require'gela/actions',
+        sequence=require'gela/sequence',
+        colorSet=require'gela/colorSet',
+        attackSys=require'gela/attackSys',
+        misc=require'gela/misc',
     },
-    gem={},
+    acry={
+        -- Basic
+        actions=require'acry/actions',
+        mergeSys=require'acry/mergeSys',
+        attackSys=require'acry/attackSys',
+    },
 }
+return mechLib

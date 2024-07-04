@@ -1,16 +1,7 @@
---- @class Techmino.particleSystems
---- @field rectShade love.ParticleSystem
---- @field spinArrow table
---- @field star love.ParticleSystem
---- @field line love.ParticleSystem
---- @field hitSparkle love.ParticleSystem
---- @field cornerCheck love.ParticleSystem
---- @field tiltRect love.ParticleSystem
---- @field trail love.ParticleSystem
---- @field minoMapBack love.ParticleSystem
+---@type Techmino.ParticleSystems
 local ps={}
 
-do-- Moving
+do -- Moving
     local p=love.graphics.newParticleSystem(GC.load{1,1,
         {'clear',1,1,1,1},
     },260)
@@ -22,7 +13,7 @@ do-- Moving
     ps.rectShade=p
 end
 
-do-- Hold
+do -- Hold
     local texture=GC.newText(FONT.get(80,'symbols'),CHAR.key.mac_pgdn_alt)
     local p={}
     function p:clone()
@@ -61,20 +52,35 @@ do-- Hold
     ps.spinArrow=p
 end
 
-do-- Clearing
+do -- Clearing
     local p=love.graphics.newParticleSystem(GC.load{7,7,
         {'setLW',1},
         {'line',0,3.5,6.5,3.5},
         {'line',3.5,0,3.5,6.5},
         {'fRect',2,2,3,3},
-    },2600)
-    p:setSizes(.26,1,.8,.6,.4,.2,0)
+    },2260)
     p:setSpread(MATH.tau)
+    p:setSizes(.26,1,.8,.6,.4,.2,0)
     p:setSpeed(0,20)
     ps.star=p
 end
 
-do-- Rotate
+do -- Fever State
+    local p=love.graphics.newParticleSystem(GC.load{1,1,
+        {'clear',1,1,1},
+    },2600)
+    p:setSpread(.26)
+    p:setPosition(200,-400)
+    p:setEmissionArea('borderrectangle',200,400,0,true)
+    p:setParticleLifetime(.42,1)
+    p:setSizes(8,5,3,2,0)
+    p:setSpeed(26,126)
+    p:setEmissionRate(620)
+    p:pause()
+    ps.boardSmoke=p
+end
+
+do -- Rotate
     local p=love.graphics.newParticleSystem(GC.load{10,3,
         {'clear',1,1,1,1},
     },2600)
@@ -84,7 +90,7 @@ do-- Rotate
     ps.line=p
 end
 
-do-- Touching spark
+do -- Touching spark
     local p=love.graphics.newParticleSystem(GC.load{4,4,
         {'clear',1,1,1,1},
     },260)
@@ -98,7 +104,7 @@ do-- Touching spark
     ps.hitSparkle=p
 end
 
-do-- Rotating corner check
+do -- Rotating corner check
     local p=love.graphics.newParticleSystem(GC.load{1,1,
         {'clear',1,1,1,1},
     },26)
@@ -110,7 +116,7 @@ do-- Rotating corner check
     ps.cornerCheck=p
 end
 
-do-- Piece controlling effect
+do -- Piece controlling effect
     local p=love.graphics.newParticleSystem(GC.load{1,1,
         {'clear',1,1,1},
     },26)
@@ -118,10 +124,10 @@ do-- Piece controlling effect
     p:setRotation(-.26,.26)
     p:setSpin(-2.6,2.6)
     p:setParticleLifetime(.26)
-    ps.tiltRect=p
+    ps.rectTilt=p
 end
 
-do-- Harddrop light
+do -- Harddrop light
     local width=80
     local height=240
     local fadeLength=40
@@ -158,7 +164,17 @@ do-- Harddrop light
     ps.trail=p
 end
 
-do-- Background light of mino map
+do -- Piece lock effect
+    local p=love.graphics.newParticleSystem(GC.load{1,1,
+        {'clear',1,1,1},
+    },26)
+    p:setSizes(40,30)
+    p:setColors(.926,.926,.926,.42,1,1,1,0)
+    p:setParticleLifetime(.16)
+    ps.rectScale=p
+end
+
+do -- Background light of exterior map
     local p=love.graphics.newParticleSystem(GC.load{10,10,
         {'setCL',1,1,1,.5},
         {'fRect',0,0,10,10},
@@ -173,7 +189,7 @@ do-- Background light of mino map
     p:setParticleLifetime(5.62,7.26)
     p:setSpeed(620,1260)
     p:setEmissionRate(10)
-    ps.minoMapBack=p
+    ps.exMapBack=p
 end
 
 return ps

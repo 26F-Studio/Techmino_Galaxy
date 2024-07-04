@@ -1,7 +1,7 @@
 local controlCD
 local level,score
 local time,totalTime
-local protect-- Prevent punishment 90 when need 180 for one time
+local protect -- Prevent punishment 90 when need 180 for one time
 local handID,handMat,targetMat
 local texts
 
@@ -18,36 +18,37 @@ local shapes do
     local O,_=true,false
     shapes={
         -- Tetromino
-        {matrix={{O,O,_},{_,O,O},{_,_,_}},no180=true},-- Z
-        {matrix={{_,O,O},{O,O,_},{_,_,_}},no180=true},-- S
-        {matrix={{O,_,_},{O,O,O},{_,_,_}}},-- J
-        {matrix={{_,_,O},{O,O,O},{_,_,_}}},-- L
-        {matrix={{_,O,_},{O,O,O},{_,_,_}}},-- T
-        {unuse=true,matrix={{O,O},{O,O}}},-- O
-        {matrix={{_,_,_,_},{O,O,O,O},{_,_,_,_},{_,_,_,_}},no180=true},-- I
+        {matrix={{O,O,_},{_,O,O},{_,_,_}},no180=true}, -- Z
+        {matrix={{_,O,O},{O,O,_},{_,_,_}},no180=true}, -- S
+        {matrix={{O,_,_},{O,O,O},{_,_,_}}}, -- J
+        {matrix={{_,_,O},{O,O,O},{_,_,_}}}, -- L
+        {matrix={{_,O,_},{O,O,O},{_,_,_}}}, -- T
+        {unuse=true,matrix={{O,O},{O,O}}}, -- O
+        {matrix={{_,_,_,_},{O,O,O,O},{_,_,_,_},{_,_,_,_}},no180=true}, -- I
 
         -- Pentomino
-        {unuse=true,matrix={{O,O,_},{_,O,_},{_,O,O}}},-- Z5
-        {unuse=true,matrix={{_,O,O},{_,O,_},{O,O,_}}},-- S5
-        {matrix={{O,O,_},{O,O,O},{_,_,_}}},-- P
-        {matrix={{_,O,O},{O,O,O},{_,_,_}}},-- Q
-        {matrix={{O,_,_},{O,O,O},{_,O,_}}},-- F
-        {matrix={{_,_,O},{O,O,O},{_,O,_}}},-- E
-        {matrix={{_,O,_},{_,O,_},{O,O,O}}},-- T5
-        {matrix={{O,_,O},{O,O,O},{_,_,_}}},-- U
-        {matrix={{_,_,O,_},{_,_,O,O},{O,O,O,_},{_,_,_,_}}},-- V
-        {matrix={{O,_,_},{O,O,_},{_,O,O}}},-- W
-        {unuse=true,matrix={{_,O,_},{O,O,O},{_,O,_}}},-- X
-        {matrix={{_,_,_,_},{O,_,_,_},{O,O,O,O},{_,_,_,_}}},-- J5
-        {matrix={{_,_,_,_},{_,_,_,O},{O,O,O,O},{_,_,_,_}}},-- L5
-        {matrix={{_,_,_,_},{_,O,_,_},{O,O,O,O},{_,_,_,_}}},-- R
-        {matrix={{_,_,_,_},{_,_,O,_},{O,O,O,O},{_,_,_,_}}},-- Y
-        {matrix={{_,_,_,_},{O,O,_,_},{_,O,O,O},{_,_,_,_}}},-- N
-        {matrix={{_,_,_,_},{_,_,O,O},{O,O,O,_},{_,_,_,_}}},-- H
-        {unuse=true,matrix={{_,_,_,_,_},{_,_,_,_,_},{O,O,O,O,O},{_,_,_,_,_},{_,_,_,_,_}}},-- I5
+        {unuse=true,matrix={{O,O,_},{_,O,_},{_,O,O}}}, -- Z5
+        {unuse=true,matrix={{_,O,O},{_,O,_},{O,O,_}}}, -- S5
+        {matrix={{O,O,_},{O,O,O},{_,_,_}}}, -- P
+        {matrix={{_,O,O},{O,O,O},{_,_,_}}}, -- Q
+        {matrix={{O,_,_},{O,O,O},{_,O,_}}}, -- F
+        {matrix={{_,_,O},{O,O,O},{_,O,_}}}, -- E
+        {matrix={{_,O,_},{_,O,_},{O,O,O}}}, -- T5
+        {matrix={{O,_,O},{O,O,O},{_,_,_}}}, -- U
+        {matrix={{_,_,O,_},{_,_,O,O},{O,O,O,_},{_,_,_,_}}}, -- V
+        {matrix={{O,_,_},{O,O,_},{_,O,O}}}, -- W
+        {unuse=true,matrix={{_,O,_},{O,O,O},{_,O,_}}}, -- X
+        {matrix={{_,_,_,_},{O,_,_,_},{O,O,O,O},{_,_,_,_}}}, -- J5
+        {matrix={{_,_,_,_},{_,_,_,O},{O,O,O,O},{_,_,_,_}}}, -- L5
+        {matrix={{_,_,_,_},{_,O,_,_},{O,O,O,O},{_,_,_,_}}}, -- R
+        {matrix={{_,_,_,_},{_,_,O,_},{O,O,O,O},{_,_,_,_}}}, -- Y
+        {matrix={{_,_,_,_},{O,O,_,_},{_,O,O,O},{_,_,_,_}}}, -- N
+        {matrix={{_,_,_,_},{_,_,O,O},{O,O,O,_},{_,_,_,_}}}, -- H
+        {unuse=true,matrix={{_,_,_,_,_},{_,_,_,_,_},{O,O,O,O,O},{_,_,_,_,_},{_,_,_,_,_}}}, -- I5
     }
 end
 
+---@type Zenitha.Scene
 local scene={}
 
 local function newQuestion()
@@ -61,12 +62,12 @@ local function newQuestion()
         end
     until not shapes[handID].unuse
 
-    handMat=TABLE.shift(shapes[handID].matrix)
+    handMat=TABLE.copy(shapes[handID].matrix)
     if level==2 or level==4 then handMat=TABLE.rotate(handMat,({'R','L','F'})[math.random(3)]) end
 
     local answer=({'R','L','F'})[math.random((not shapes[handID].no180 and score>=20) and 3 or 2)]
     protect=answer=='F'
-    targetMat=TABLE.rotate(TABLE.shift(handMat),answer)
+    targetMat=TABLE.rotate(TABLE.copy(handMat),answer)
 end
 
 local function reset()
@@ -108,28 +109,28 @@ local function endGame(passLevel)
         inPoint=.1,
         outPoint=0,
     }
-    if passLevel>0 then SFX.play('win') end
+    if passLevel>0 then FMOD.effect('win') end
     autoQuitInterior()
 end
 
-function scene.enter()
+function scene.load()
     texts=TEXT.new()
     reset()
-    playBgm('space','simp')
+    playBgm('space')
 end
 
-function scene.leave()
+function scene.unload()
     texts=nil
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
 
     local action
     if not controlCD then
-        action=KEYMAP.mino:getAction(key)
+        action=KEYMAP.brik:getAction(key)
         if action and action:find('rotate')==1 then
-            SFX.play('rotate')
+            FMOD.effect('rotate')
 
             if action=='rotateCW' then
                 handMat=TABLE.rotate(handMat,'L')
@@ -141,7 +142,7 @@ function scene.keyDown(key,isRep)
 
             local same=true
             for i=1,#handMat do
-                if not TABLE.compare(handMat[i],targetMat[i]) then
+                if not TABLE.equal(handMat[i],targetMat[i]) then
                     same=false
                     break
                 end
@@ -165,11 +166,11 @@ function scene.keyDown(key,isRep)
                         end
                         level=level+1
                         time=parTime[level]
-                        SFX.play('beep_notice')
+                        FMOD.effect('beep_notice')
                     end
                 else
                     -- Correct
-                    SFX.play('beep_rise')
+                    FMOD.effect('beep_rise')
                 end
             else
                 -- Punishment
@@ -180,7 +181,7 @@ function scene.keyDown(key,isRep)
                     totalTime=totalTime+1.26
                 end
             end
-            return
+            return true
         end
     end
 
@@ -190,6 +191,7 @@ function scene.keyDown(key,isRep)
     elseif action=='back' then
         if sureCheck('back') then SCN.back('none') end
     end
+    return true
 end
 
 function scene.touchDown(x,y,id)
@@ -217,7 +219,7 @@ function scene.update(dt)
                 PROGRESS.setTutorialPassed(6)
             end
         elseif totalTime>passTime then
-            SFX.play('fail')
+            FMOD.effect('fail')
             endGame(0)
         end
     end
@@ -236,7 +238,7 @@ end
 local size=60
 function scene.draw()
     GC.replaceTransform(SCR.xOy_m)
-    GC.setColor(ColorTable[defaultMinoColor[handID]])
+    GC.setColor(RGB9[defaultBrikColor[handID]])
 
     -- Hand shape
     GC.translate(-#handMat*size/2,-#handMat*size/2-250)
@@ -294,6 +296,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
+    {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
 }
 return scene

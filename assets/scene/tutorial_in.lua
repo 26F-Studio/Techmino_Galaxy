@@ -1,3 +1,4 @@
+---@type Zenitha.Scene
 local scene={}
 
 local function B(t)
@@ -9,11 +10,11 @@ local function B(t)
         fontSize=50,
         cornerR=0,
     }
-    TABLE.cover(t,w)
+    TABLE.update(w,t)
     return WIDGET.new(w)
 end
 
-function scene.enter()
+function scene.load()
     local L=scene.widgetList
     for _,v in next,scene.widgetList do
         if v.name then
@@ -36,19 +37,18 @@ function scene.enter()
         L.T6:setVisible(true)
         WIDGET._reset()
     end
-    PROGRESS.playInteriorBGM()
+    PROGRESS.applyInteriorBGM()
 end
 
 function scene.keyDown(key)
     if KEYMAP.sys:getAction(key)=='back' then
         SCN.back('none')
-    else
         return true
     end
 end
 
 function scene.draw()
-    if PROGRESS.getMain()>1 then
+    if PROGRESS.get('main')>1 then
         GC.replaceTransform(SCR.xOy_m)
         GC.setColor(1,1,1,.42)
         GC.rectangle('fill',-7,-250,4,540)
@@ -56,14 +56,14 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
+    {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
 
-    B{name='T1',x=nil, y=-200,text=LANG'tutorial_basic',          code=playInterior'mino/interior/tutorial/1.basic'},
-    B{name='T2',x=nil, y= 0,  text=LANG'tutorial_sequence',       code=playInterior'mino/interior/tutorial/2.sequence'},
+    B{name='T1',x=nil, y=-200,text=LANG'tutorial_basic',          code=playInterior'brik/interior/tutorial/1.basic'},
+    B{name='T2',x=nil, y= 0,  text=LANG'tutorial_sequence',       code=playInterior'brik/interior/tutorial/2.sequence'},
     B{name='T3',x=nil, y= 200,text=LANG'tutorial_piece',          code=WIDGET.c_goScn('tutorial_shape','none')},
 
-    B{name='T4',x=nil, y=-200,text=LANG'tutorial_stackBasic',     code=playInterior'mino/interior/tutorial/4.stackBasic'},
-    B{name='T5',x=nil, y= 0,  text=LANG'tutorial_twoRotatingKey', code=playInterior'mino/interior/tutorial/5.twoRotatingKey'},
+    B{name='T4',x=nil, y=-200,text=LANG'tutorial_stackBasic',     code=playInterior'brik/interior/tutorial/4.stackBasic'},
+    B{name='T5',x=nil, y= 0,  text=LANG'tutorial_twoRotatingKey', code=playInterior'brik/interior/tutorial/5.twoRotatingKey'},
     B{name='T6',x=nil, y= 200,text=LANG'tutorial_rotating',       code=WIDGET.c_goScn('tutorial_rotate','none')},
 }
 return scene

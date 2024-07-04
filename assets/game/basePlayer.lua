@@ -5,60 +5,52 @@ local ins,rem=table.insert,table.remove
 
 local sign,expApproach=MATH.sign,MATH.expApproach
 
---- @alias Techmino.EndReason
----| 'AC'  Win
----| 'WA'  Block out
----| 'CE'  Lock out
----| 'MLE' Top out
----| 'TLE' Time out
----| 'OLE' Finesse fault
----| 'ILE' Ran out pieces
----| 'PE'  Mission failed
----| 'UKE' Other reason
-
---- @class Techmino.Player
---- @field gameMode Techmino.mode.playerType
---- @field id number limited to 1~1000
---- @field group number
---- @field isMain boolean
---- @field sound boolean
---- @field settings table
---- @field buffedKey table
---- @field modeData table
---- @field soundTimeHistory table
---- @field RND love.RandomGenerator
---- @field pos {x:number, y:number, k:number, a:number, dx:number, dy:number, dk:number, da:number, vx:number, vy:number, vk:number, va:number}
---- @field finished Techmino.EndReason|boolean
---- @field realTime number
---- @field time number
---- @field gameTime number
---- @field timing boolean
---- @field texts Zenitha.Text
---- @field particles Techmino.particleSystems
+---@class Techmino.Player
+---@field gameMode Techmino.Player.Type
+---@field id number limited to 1~1000
+---@field team number Team ID, 0 as No Team
+---@field isMain boolean
+---@field sound boolean
+---@field settings Techmino.Mode.Setting.Brik|Techmino.Mode.Setting.Gela|Techmino.Mode.Setting.Acry
+---@field buffedKey table
+---@field modeData Techmino.PlayerModeData
+---@field soundTimeHistory table
+---@field RND love.RandomGenerator
+---@field pos {x:number, y:number, k:number, a:number, dx:number, dy:number, dk:number, da:number, vx:number, vy:number, vk:number, va:number}
+---@field finished Techmino.EndReason|boolean Did game finish
+---@field realTime number Real time, [float] s
+---@field time number Inside timer for player, [int] ms
+---@field gameTime number Game time of player, [int] ms
+---@field timing boolean Is gameTime running?
+---@field texts Zenitha.Text
+---@field particles Techmino.ParticleSystems
 ---
---- @field updateFrame function
---- @field scriptCmd function
---- @field decodeScript function
---- @field checkScriptSyntax function
+---@field updateFrame function
+---@field scriptCmd function
+---@field decodeScript function
+---@field checkScriptSyntax function
 ---
---- @field hand table|false @Piece object
---- @field handX number
---- @field handY number
---- @field event table
---- @field soundEvent table
---- @field _actions table<string, {press:fun(P:Techmino.Player), release:fun(P:Techmino.Player)}>
+---@field hand Techmino.Hand|false Current controlling piece object
+---@field handX number
+---@field handY number
+---@field event table<string, Techmino.Event[]>
+---@field soundEvent table
+---@field _actions table<string, {press:fun(P:Techmino.Player), release:fun(P:Techmino.Player)}>
 ---
---- @field receive function
---- @field render function
+---@field receive function
+---@field render function
 local P={}
 
 --------------------------------------------------------------
 -- Tools
+
 function P:drawInfoPanel(x,y,w,h)
     return SKIN.get(self.settings.skin).drawInfoPanel(x,y,w,h)
 end
+
 --------------------------------------------------------------
 -- Effects
+
 function P:shakeBoard(args,v)
     local shake=self.settings.shakeness
     local pos=self.pos
@@ -106,6 +98,12 @@ function P:movePosition(dx,dy,k,da)
     pos.y=pos.y+(dy or 0)
     pos.k=pos.k*(k  or 1)
     pos.a=pos.a+(da or 0)
+end
+---@param method 'init'|'drop'|string
+function P:atkEvent(method,...)
+    local sys=mechLib[self.gameMode].attackSys[self.settings.atkSys]
+    assert(sys and sys[method],"Invalid attackSys / method")
+    return sys[method](self,...)
 end
 local function parseTime(str)
     local num,unit=str:cutUnit()
@@ -160,10 +158,17 @@ function P:say(arg)
         a=arg.c and arg.c[4] or 1,
     }
 end
+
 --------------------------------------------------------------
 -- Game methods
+
+---Random Int or 0~1
 function P:random(a,b)
     return self.RND:random(a,b)
+end
+---Random Float
+function P:rand(a,b)
+    return a+self.RND:random()*(b-a)
 end
 function P:_getActionObj(a)
     if type(a)=='string' then
@@ -209,48 +214,65 @@ function P:setAction(act,data)
 end
 function P:triggerEvent(name,...)
     -- if name~='always' and name:sub(1,4)~='draw' then print(name) end
-    local L=self.event[name]
-    if L then
-        local i=1
-        while L[i] do
-            if L[i](self,...) then
-                rem(L,i)
-            else
-                i=i+1
-            end
+    local L,i=self.event[name],1
+    while L[i] do
+        if L[i][2](self,...) then
+            rem(L,i)
+        else
+            i=i+1
         end
     end
 end
-function P:addEvent(name,F,pos)
-    assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
-    if not pos then pos=#self.event[name]+1 end
-    if type(F)=='table' then
-        for i=1,#F do
-            self:addEvent(name,F[i],pos+i-1)
-        end
-    elseif type(F)=='string' then
-        local errMsg
-        F,errMsg=loadstring('local P=...\n'..F)
-        if F then
-            setSafeEnv(F)
-            self:addEvent(name,F,pos)
+---- Statistic: -1e99
+---- Music: 1e62
+---- Default: 0
+---@param name Techmino.EventName
+---@param E Techmino.Event|Techmino.Event[]
+function P:addEvent(name,E)
+    local L=self.event[name]
+    assert(L,"Wrong event key: '"..tostring(name).."'")
+    if type(E)=='table' then
+        if type(E[1])=='number' and type(E[2])=='function' then
+            local i=1
+            while i<=#L and L[i][1]<=E[1] do i=i+1 end
+            ins(L,i,E)
         else
-            error('Error in code string: '..errMsg)
+            for i=1,#E do
+                self:addEvent(name,E[i])
+            end
         end
-    elseif type(F)=='function' then
-        ins(self.event[name],pos,F)
+    elseif type(E)=='string' then
+        local errMsg
+        ---@type Techmino.Event
+        E,errMsg=loadstring('local P=...;'..E)
+        if E then
+            setSafeEnv(E)
+            self:addEvent(name,E)
+        else
+            error("Error in code string: "..errMsg)
+        end
+    elseif type(E)=='function' then
+        self:addEvent(name,{0,E})
     else
-        error('event must be function or table of functions')
+        error("Wrong Event format")
     end
 end
 local function _scrap() return true end
-function P:delEvent(name,F)
-    assert(self.event[name],"Wrong event key: '"..tostring(name).."'")
-    assert(type(F)=='function','event must be function')
-    local pos=TABLE.find(self.event[name],F)
-    if pos then self.event[name][pos]=_scrap end
+---@param E number|function|Techmino.Event
+function P:delEvent(name,E)
+    local L=self.event[name]
+    assert(L,"Wrong event key: '"..tostring(name).."'")
+    local pos
+    if type(E)=='number' then
+        for i=1,#L do if L[i][1]==E then pos=i break end end
+    elseif type(E)=='function' then
+        for i=1,#L do if L[i][2]==E then pos=i break end end
+    else
+        for i=1,#L do if L[i]==E then pos=i break end end
+    end
+    if pos then L[pos][2]=_scrap end
 end
---- @param reason Techmino.EndReason
+---@param reason Techmino.EndReason
 function P:finish(reason)
     if self.finished then return end
     self.timing=false
@@ -259,6 +281,8 @@ function P:finish(reason)
     self.spawnTimer=1e99
 
     self:triggerEvent('gameOver',reason)
+    if not self.finished then return end
+
     GAME.checkFinish()
 
     -- TODO: Just for temporary use
@@ -267,8 +291,10 @@ function P:finish(reason)
         self:playSound(reason=='AC' and 'win' or 'fail')
     end
 end
+
 --------------------------------------------------------------
 -- Press & Release & Update & Render
+
 function P:pressKey(act)
     if self.settings.inputDelay<=0 then
         self:press(act)
@@ -292,6 +318,8 @@ function P:press(act)
         self.actions[act].press(self)
     end
 
+    self.stat.key=self.stat.key+1
+
     self:triggerEvent('afterPress',act)
 end
 function P:release(act)
@@ -311,23 +339,23 @@ local _jmpOP={
     jeq=2,jne=2,jge=2,jle=2,jg=2,jl=2,
 }
 local baseScriptCmds={
-    setc=function(self,arg)-- Set constant
+    setc=function(self,arg) -- Set constant
         self.modeData[arg.v]=arg.c
     end,
-    setd=function(self,arg)-- Set data
+    setd=function(self,arg) -- Set data
         self.modeData[arg.v]=self.modeData[arg.d]
     end,
-    setm=function(self,arg)-- Set mode value
+    setm=function(self,arg) -- Set mode value
         self.modeData[arg.v]=self:getScriptValue(arg)
     end,
-    wait=function(self,arg)-- Wait until modeData value(s) all not 0 (by keep cursor to current line)
+    wait=function(self,arg) -- Wait until modeData value(s) all not 0 (by keep cursor to current line)
         for i=1,#arg do
             if self.modeData[arg[i]]==nil then
                 return self.scriptLine
             end
         end
     end,
-    say=function(self,arg)-- Show text
+    say=function(self,arg) -- Show text
         self:say(arg)
     end,
     sfx=function(_,arg)
@@ -337,11 +365,11 @@ local baseScriptCmds={
         self:finish(arg)
     end,
 }
-function P:runScript(cmd,arg)-- Run single lua-table assembly command
+function P:runScript(cmd,arg) -- Run single lua-table assembly command
     if type(cmd)=='string' then
         if baseScriptCmds[cmd] then
             return baseScriptCmds[cmd](self,arg)
-        elseif _jmpOP[cmd] then-- Sorry cannot move these jumps into `baseScriptCmds`
+        elseif _jmpOP[cmd] then -- Sorry cannot move these jumps into `baseScriptCmds`
             local v1=arg.v  if v1~=nil then v1=self.modeData[v1] end
             local v2=arg.v2 if v2==nil then v2=arg.c end
             if
@@ -394,7 +422,7 @@ function P:update(dt)
             local minLoopLineNum,maxLoopLineNum
             while true do
                 local l=self.script[self.scriptLine]
-                if not l then break end-- EOF
+                if not l then break end -- EOF
 
                 if self.scriptWait<=0 then
                     -- Execute command
@@ -461,8 +489,10 @@ function P:update(dt)
     for _,v in next,self.particles do v:update(dt) end
     self.texts:update(dt)
 end
+
 --------------------------------------------------------------
 -- Builder
+
 function P:addSoundEvent(name,F)
     assert(self.soundEvent[name],"Wrong soundEvent key: '"..tostring(name).."'")
     assert(type(F)=='function',"soundEvent must be function")
@@ -472,7 +502,7 @@ function P:delSoundEvent(name)
     assert(self.soundEvent[name],"Wrong soundEvent key: '"..tostring(name).."'")
     self.soundEvent[name]=nil
 end
-function P:loadSettings(settings)-- Load data & events from mode settings
+function P:loadSettings(settings) -- Load data & events from mode settings
     for k,v in next,settings do
         if k=='event' then
             for name,F in next,v do
@@ -484,14 +514,14 @@ function P:loadSettings(settings)-- Load data & events from mode settings
             end
         else
             if type(v)=='table' then
-                self.settings[k]=TABLE.copy(v)
+                self.settings[k]=TABLE.copyAll(v)
             elseif v~=nil then
                 self.settings[k]=v
             end
         end
     end
 end
-local function decodeScript(str,errMsg)-- Translate some string commands to lua-table assembly command
+local function decodeScript(str,errMsg) -- Translate some string commands to lua-table assembly command
     str=str:trim()
     local line={}
     if str:find('[_0-9A-Za-z]*:')==1 then
@@ -559,7 +589,7 @@ local function decodeScript(str,errMsg)-- Translate some string commands to lua-
     end
     return line
 end
-function P:loadScript(script)-- Parse time stamps and labels, check syntax of lua-table assembly commands
+function P:loadScript(script) -- Parse time stamps and labels, check syntax of lua-table assembly commands
     if not script then return end
     assert(type(script)=='table',"script must be table")
     self.script=script
@@ -682,14 +712,14 @@ local soundTimeMeta={
     __index=function(self,k) rawset(self,k,0) return -1e99 end,
     __metatable=true,
 }
---- @return Techmino.Player
+---@return Techmino.Player
 function P.new()
     local self={}
     self.isMain=false
     self.sound=false
 
     self.buffedKey={}
-    self.modeData={}
+    self.modeData={target={},music={id='intensity'}}
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
 
     self.RND=love.math.newRandomGenerator(GAME.seed+626)
@@ -701,11 +731,13 @@ function P.new()
         vx=0,vy=0,vk=0,va=0,
     }
 
-    self.finished=false -- Did game finish
-    self.realTime=0     -- Real time, [float] s
-    self.time=0         -- Inside timer for player, [int] ms
-    self.gameTime=0     -- Game time of player, [int] ms
-    self.timing=false   -- Is gameTime running?
+    ---@class Techmino.PlayerStatTable
+    self.stat={key=0}
+    self.finished=false
+    self.realTime=0
+    self.time=0
+    self.gameTime=0
+    self.timing=false
 
     self.texts=TEXT.new()
     self.particles=setmetatable({},{__index=function(p,k)
@@ -716,13 +748,145 @@ function P.new()
     return self
 end
 function P:initialize()
-    self.actions=TABLE.copy(self._actions,0)
+    self.actions=TABLE.copyAll(self._actions,0)
     self.actionHistory={}
     self.keyState={}
     for k in next,self.actions do
         self.keyState[k]=false
     end
 end
+local dumpIgnore={
+    'P.soundTimeHistory',
+    'P.soundEvent',
+    'P.particles',
+    'P.texts',
+}
+for _,v in next,dumpIgnore do
+    dumpIgnore[v]=true
+end
+TABLE.clear(dumpIgnore)
+local function dump(self,L,t,path)
+    local s='{'
+    local count=1
+    for k,v in next,L do
+        local nPath=path..'.'..tostring(k)
+        if not dumpIgnore[nPath] then
+            -- print(nPath,k,v)
+
+            local T=type(k)
+            if T=='number' then
+                if k==count then
+                    -- List part, no brackets needed
+                    k=''
+                    count=count+1
+                else
+                    k='['..k..']='
+                end
+            elseif T=='string' then
+                -- if k is legal variable name
+                if k:match('^[_a-zA-Z][_a-zA-Z0-9]*$') then
+                    k=k..'='
+                else
+                    k='["'..k:gsub('["\\]','\\%1')..'"]='
+                end
+            elseif T=='boolean' then
+                k='['..k..']='
+            elseif T=='function' then
+                k='["FUNC:'..regFuncToStr[k]..'"]='
+            else
+                k='["*'..tostring(k)..'"]='
+                LOG("Wrong key type: "..T..", "..nPath)
+            end
+
+            T=type(v)
+            if T=='number' or T=='boolean' then
+                v=tostring(v)
+            elseif T=='string' then
+                v='"'..v:gsub('"','\\"')..'"'
+            elseif T=='table' then
+                v=t<10 and dump(self,v,t+1,nPath)
+            elseif T=='function' then
+                v='"FUNC:'..(regFuncToStr[v] or LOG("UNKNOWN_FUNCTION: "..nPath) or "unknown")..'"'
+            elseif T=='userdata' then
+                T=v:type()
+                if T=='RandomGenerator' then
+                    v=dump(self,{__type=T,state=v:getState()},t+1,nPath)
+                elseif T=='ParticleSystem' then
+                    v=nil -- Skip
+                else
+                    LOG("Un-handled type:"..T..", "..nPath)
+                end
+            else
+                v='["*'..tostring(v)..'"]='
+                LOG("Wrong value type: "..T..", "..nPath)
+            end
+
+            if v~=nil then
+                s=s..(s=='{' and k or ','..k)..v
+            end
+        else
+            LOG("Filtered: "..nPath)
+        end
+    end
+    return s..'}'
+end
+function P:serialize()
+    return dump(self,self,0,"P")
+end
+local function undump(self,L,t)
+    for k,v in next,L do
+        local T=type(k)
+        if T=='number' or T=='boolean' then
+        elseif T=='string' then
+            if k:sub(1,5)=='FUNC:' then
+                k=regStrToFunc[k:sub(6)] or LOG("UNKNOWN_FUNCTION: "..k)
+            end
+        else
+            LOG("Abnormal key type: "..T)
+        end
+
+        T=type(v)
+        if T=='table' then
+            if v.__type then
+                if v.__type=='RandomGenerator' then
+                    self[k]=love.math.newRandomGenerator()
+                    self[k]:setState(v.state)
+                else
+                    LOG("Un-handled type:"..v.__type)
+                end
+            elseif t<=10 then
+                self[k]={}
+                undump(self[k],v,t+1)
+            else
+                LOG("WARNING: table depth over 10, skipped")
+            end
+        else
+            if T=='string' then
+                if v:sub(1,5)=='FUNC:' then
+                    v=regStrToFunc[v:sub(6)] or LOG("UNKNOWN_FUNCTION: "..v)
+                end
+            end
+            self[k]=v
+        end
+    end
+end
+function P:unserialize(data)
+    local f='return'..data
+    f=loadstring(f)
+    if type(f)~='function' then return LOG("Cannot parse data as luaon") end
+    setfenv(f,{})
+    local res=f()
+    if type(res)~='table' then return LOG("Cannot parse data as luaon") end
+    undump(self,res,0)
+
+    self.soundTimeHistory=setmetatable({},soundTimeMeta)
+
+    self:unserialize_custom()
+end
+function P:unserialize_custom()
+    -- Flandre kawaii
+end
+
 --------------------------------------------------------------
 
 return P

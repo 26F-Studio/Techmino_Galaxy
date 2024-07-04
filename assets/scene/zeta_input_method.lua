@@ -6,6 +6,7 @@ local pi=math.pi
 
 local areaX,areaY,areaR=800,400,300
 
+---@type Zenitha.Scene
 local scene={}
 
 local widgetList_ui
@@ -39,7 +40,7 @@ local function freshWidgetPos()
     end
 end
 
-local function parseStroke(input)-- 横 竖 撇 捺 折
+local function parseStroke(input) -- 横 竖 撇 捺 折
     local w=input.weight
     local s=input.stroke
 
@@ -60,8 +61,8 @@ local function parseStroke(input)-- 横 竖 撇 捺 折
     if s[1]<areaX-areaR and s[#s-1]<areaX-areaR or s[1]>areaX+areaR and s[#s-1]>areaX+areaR then return end
     if s[2]<areaY-areaR and s[#s]<areaY-areaR or s[2]>areaY+areaR and s[#s]>areaY+areaR then return end
 
-    w[1]=-w[5]+min(MATH.interpolate(width/height,1/2.6,0,2.6,1),1)
-    w[2]=-w[5]+min(MATH.interpolate(height/width,1.6,0,2.6,1),1)
+    w[1]=-w[5]+min(MATH.interpolate(1/2.6,0,2.6,1,width/height),1)
+    w[2]=-w[5]+min(MATH.interpolate(1.6,0,2.6,1,height/width),1)
     w[3]=-w[5]*.62+1-abs(dir/pi-.8)*3
     w[4]=-w[5]*.62+1-abs(dir/pi-.4)
 
@@ -139,7 +140,7 @@ local function freshResult()
     end
 end
 
-function scene.enter()
+function scene.load()
     prevScene=SCN.scenes[SCN.stack[#SCN.stack-1]] or NONE
     time,quiting=0,false
     writing=false
@@ -180,7 +181,7 @@ end
 function scene.mouseDown(x,y,k)
     if k==1 and not writing then
         ins(inputs,{stroke={x,y},weight={0,0,0,0,0}})
-        writing=k
+        writing=1
     elseif k==2 then
         writing=false
         scene.keyDown('z')
@@ -224,28 +225,28 @@ function scene.touchUp(_,_,id)
 end
 
 function scene.keyDown(k)
-    if k=='z' then-- Undo stroke
+    if k=='z' then -- Undo stroke
         rem(inputs)
         cheat=false
         for i=1,#inputs do if inputs[i].cheat then cheat=true break end end
         freshResult()
-    elseif k=='x' then-- Clear strokes
+    elseif k=='x' then -- Clear strokes
         inputs,cheat={},false
         freshResult()
-    elseif k=='backspace' then-- Delete a char
+    elseif k=='backspace' then -- Delete a char
         rem(charQueue)
-    elseif k=='delete' then-- Clear chars
+    elseif k=='delete' then -- Clear chars
         charQueue={}
-    elseif k=='return' then-- Confirm text
+    elseif k=='return' then -- Confirm text
         quiting=charQueue
-    elseif k=='space' then-- Select first char
+    elseif k=='space' then -- Select first char
         selChar(1)
-    elseif k=='escape' then-- Quit
+    elseif k=='escape' then -- Quit
         quiting=true
     elseif #k==1 then
-        if k:match("[0-9]") then-- Select char
+        if k:match("[0-9]") then -- Select char
             selChar((k-1)%10+1)
-        elseif strokeKeys[k] then-- Manual input stroke
+        elseif strokeKeys[k] then -- Manual input stroke
             local input={stroke={},weight={0,0,0,0,0},cheat=true}
             input.weight[strokeKeys[k]]=1
             ins(inputs,input)
@@ -253,6 +254,7 @@ function scene.keyDown(k)
             freshResult()
         end
     end
+    return true
 end
 
 function scene.update(dt)
@@ -349,19 +351,19 @@ end
 scene.widgetList={}
 
 widgetList_ui={
-    WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-250,w=100, sound_trigger='move',fontSize=80,color='LY',text=CHAR.key.backspace,code=WIDGET.c_pressKey'backspace'},
-    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-250,w=100,sound_trigger='move',fontSize=80,color='LY',text=CHAR.key.mac_clear,code=WIDGET.c_pressKey'delete'},
-    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-250,w=100,sound_trigger='move',fontSize=80,color='LY',text=CHAR.icon.check_circ,code=WIDGET.c_pressKey'return'},
-    WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-50,w=100,  sound_trigger='move',fontSize=80,text=CHAR.icon.back,code=WIDGET.c_pressKey'z'},
-    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-50,w=100, sound_trigger='move',fontSize=80,text=CHAR.icon.delete,code=WIDGET.c_pressKey'x'},
-    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-50,w=100, sound_trigger='move',fontSize=80,text=CHAR.icon.cross_big,code=WIDGET.c_pressKey'escape'},
+    WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-250,w=100, sound_trigger='button_soft',fontSize=80,color='LY',text=CHAR.key.backspace,code=WIDGET.c_pressKey'backspace'},
+    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-250,w=100,sound_trigger='button_soft',fontSize=80,color='LY',text=CHAR.key.mac_clear,code=WIDGET.c_pressKey'delete'},
+    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-250,w=100,sound_trigger='button_soft',fontSize=80,color='LY',text=CHAR.icon.check_circ,code=WIDGET.c_pressKey'return'},
+    WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-50,w=100,  sound_trigger='button_soft',fontSize=80,text=CHAR.icon.back,code=WIDGET.c_pressKey'z'},
+    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-50,w=100, sound_trigger='button_soft',fontSize=80,text=CHAR.icon.delete,code=WIDGET.c_pressKey'x'},
+    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-50,w=100, sound_trigger='button_soft',fontSize=80,text=CHAR.icon.cross_big,code=WIDGET.c_pressKey'escape'},
 }
 local strokeSymbol={'一','丨','丿','丶','乚'}
 for i=1,#strokeSymbol do
     local w=WIDGET.new{
         type='button',
         x=areaX-areaR+30-90*(#strokeSymbol-i+1),
-        y=areaY+areaR-40,w=80,sound_trigger='move',
+        y=areaY+areaR-40,w=80,sound_trigger='button_soft',
         fontSize=70,color='LB',
         text=strokeSymbol[i],
         code=WIDGET.c_pressKey(('qwert'):sub(i,i))
@@ -382,7 +384,7 @@ for i=1,#fwSymbols do
             type='button',
             x=areaX-areaR+25-75*(#fwSymbols[i]-j+1),
             y=areaY+areaR-400+75*i,
-            w=70,sound_trigger='move',
+            w=70,sound_trigger='button_soft',
             fontSize=60,color='LR',
             text=fwSymbols[i][j],
             code=function() ins(charQueue,fwSymbols[i][j]) end
@@ -393,7 +395,7 @@ end
 for i=1,15 do
     local w=WIDGET.new{
         type='button',
-        x=-2600,y=790,w=80,sound_trigger='move',
+        x=-2600,y=790,w=80,sound_trigger='button_soft',
         fontSize=80,code=function() selChar(i) end
     }
     ins(scene.widgetList,w)

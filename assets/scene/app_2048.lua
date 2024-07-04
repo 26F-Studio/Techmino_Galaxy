@@ -1,9 +1,10 @@
 local gc=love.graphics
-local setColor,rectangle=gc.setColor,gc.rectangle
+local gc_setColor,gc_rectangle=gc.setColor,gc.rectangle
 
 local floor,abs=math.floor,math.abs
 local rnd,min=math.random,math.min
 
+---@type Zenitha.Scene
 local scene={}
 
 local invis,tapControl
@@ -119,14 +120,14 @@ local function newTile()
 
     -- Die.
     state=2
-    SFX.play(maxTile>=10 and 'win' or 'fail')
+    FMOD.effect(maxTile>=10 and 'win' or 'fail')
 end
 local function freshMaxTile()
     maxTile=maxTile+1
     if maxTile==12 then
         skipper.cd=0
     end
-    SFX.play('reach')
+    FMOD.effect('beep_notice')
     table.insert(progress,("%s - %.3fs"):format(tileName[maxTile],love.timer.getTime()-startTime))
 end
 local function squash(L)
@@ -144,10 +145,10 @@ local function squash(L)
                 p1=p1+1
             end
         else
-            if not L[p1] then-- air←2
+            if not L[p1] then -- air←2
                 L[p1],L[p2]=L[p2],false
                 moved=true
-            elseif L[p1]==L[p2] then-- 2←2
+            elseif L[p1]==L[p2] then -- 2←2
                 L[p1],L[p2]=L[p1]+1,false
                 if L[p1]>maxTile then
                     freshMaxTile()
@@ -155,11 +156,11 @@ local function squash(L)
                 L[p2]=false
                 p1=p1+1
                 moved=true
-            elseif p1+1~=p2 then-- 2←4
+            elseif p1+1~=p2 then -- 2←4
                 L[p1+1],L[p2]=L[p2],false
                 p1=p1+1
                 moved=true
-            else-- 2,4
+            else -- 2,4
                 p1=p1+1
             end
         end
@@ -221,18 +222,18 @@ local function skip()
             skipper.cd=1024
             skipper.used=true
             newTile()
-            SFX.play('hold')
+            FMOD.effect('hold')
         else
-            SFX.play('finesseError')
+            FMOD.effect('beep_drop')
         end
     end
 end
 
-function scene.enter()
+function scene.load()
     for i=1,#tileName do
         tileText[i]=gc.newText(FONT.get(80,'_norm'),tileName[i])
     end
-    BG.set('cubes')
+    BG.set('space')
 
     invis=false
     tapControl=false
@@ -293,7 +294,7 @@ local function playRep(n)
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='up' or key=='down' or key=='left' or key=='right' then
         if repeater.focus then
             local f=repeater.focus
@@ -309,7 +310,7 @@ function scene.keyDown(key,isRep)
                 if skipper.cd and skipper.cd>0 then
                     skipper.cd=skipper.cd-1
                     if skipper.cd==0 then
-                        SFX.play('spin_0')
+                        FMOD.effect('spin_0')
                     end
                 end
                 newTile()
@@ -322,7 +323,7 @@ function scene.keyDown(key,isRep)
                 }
                 move=move+1
                 if not autoPressing then
-                    SFX.play('touch')
+                    FMOD.effect('touch')
                 end
             end
         end
@@ -330,7 +331,7 @@ function scene.keyDown(key,isRep)
     elseif key=='r' then reset()
     elseif key=='q' then if state==0 then invis=not invis end
     elseif key=='w' then if state==0 then tapControl=not tapControl end
-    elseif key=='1' or key=='2' then (love.keyboard.isDown('lshift','lctrl','lalt') and playRep or setFocus)(key=='1' and 1 or 2)
+    elseif key=='1' or key=='2' then (isKeyDown('lshift','lctrl','lalt') and playRep or setFocus)(key=='1' and 1 or 2)
     elseif key=='c1' then playRep(1)
     elseif key=='c2' then playRep(2)
     elseif key=='return' then
@@ -344,6 +345,7 @@ function scene.keyDown(key,isRep)
             if sureCheck('back') then SCN.back() end
         end
     end
+    return true
 end
 
 function scene.update(dt)
@@ -359,13 +361,13 @@ function scene.draw()
     -- Field
     gc.setLineWidth(10)
     if state==2 then
-        setColor(.9,.9,0)-- win
+        gc_setColor(.9,.9,0)-- win
     elseif state==1 then
-        setColor(.9,.9,.9)-- game
+        gc_setColor(.9,.9,.9)-- game
     elseif state==0 then
-        setColor(.2,.8,.2)-- ready
+        gc_setColor(.2,.8,.2)-- ready
     end
-    rectangle('line',field.x-10,field.y-10,field.w+20,field.w+20,25)
+    gc_rectangle('line',field.x-10,field.y-10,field.w+20,field.w+20,25)
 
     for i=1,16 do
         if field[i] then
@@ -375,22 +377,22 @@ function scene.draw()
             local textScale=min(field.r/tileText[N]:getWidth(),field.r/tileText[N]:getHeight())/1.26
             if i~=prevPos or prevSpawnTime==1 then
                 if not invis or i==prevPos then
-                    setColor(tileColor[N] or COLOR.D)
-                    rectangle('fill',x,y,r-6,r-6,15)
+                    gc_setColor(tileColor[N] or COLOR.D)
+                    gc_rectangle('fill',x,y,r-6,r-6,15)
                     if N>=0 then
-                        setColor(N<3 and COLOR.D or COLOR.L)
+                        gc_setColor(N<3 and COLOR.D or COLOR.L)
                         GC.mDraw(tileText[N],x+r/2,y+r/2,nil,textScale)
                     end
                 else
-                    setColor(COLOR.DL)
-                    rectangle('fill',x,y,r-6,r-6,15)
+                    gc_setColor(COLOR.DL)
+                    gc_rectangle('fill',x,y,r-6,r-6,15)
                 end
             else
                 local c=tileColor[N]
-                setColor(c[1],c[2],c[3],prevSpawnTime)
-                rectangle('fill',x,y,r-6,r-6,15)
+                gc_setColor(c[1],c[2],c[3],prevSpawnTime)
+                gc_rectangle('fill',x,y,r-6,r-6,15)
                 c=N<3 and 0 or 1
-                setColor(c,c,c,prevSpawnTime)
+                gc_setColor(c,c,c,prevSpawnTime)
                 GC.mDraw(tileText[N],x+r/2,y+r/2,nil,textScale)
             end
         end
@@ -399,38 +401,38 @@ function scene.draw()
     -- New tile position
     local x,y=1+(prevPos-1)%4,floor((prevPos+3)/4)
     gc.setLineWidth(8)
-    setColor(.2,.8,0,prevSpawnTime)
+    gc_setColor(.2,.8,0,prevSpawnTime)
     local d=25-prevSpawnTime*25
-    rectangle('line',field.x+field.r*(x-1)+3-d,field.y+field.r*(y-1)+3-d,field.r-6+2*d,field.r-6+2*d,15)
+    gc_rectangle('line',field.x+field.r*(x-1)+3-d,field.y+field.r*(y-1)+3-d,field.r-6+2*d,field.r-6+2*d,15)
 
     -- Time and moves
     FONT.set(50)
-    setColor(1,1,1)
+    gc_setColor(COLOR.L)
     gc.print(("%.3f"):format(time),1300,10)
     gc.print(move,1300,60)
 
     -- Progress time list
     FONT.set(20)
-    setColor(.6,.6,.6)
+    gc_setColor(.6,.6,.6)
     for i=1,#progress do
         gc.print(progress[i],1300,120+20*i)
     end
 
     -- Score
     FONT.set(40)
-    setColor(1,.7,.7)
+    gc_setColor(1,.7,.7)
     GC.mStr(score,field.x+field.w+180,700)
 
     -- Touch control border line
     if tapControl then
         gc.setLineWidth(6)
-        setColor(1,1,1,.2)
+        gc_setColor(1,1,1,.2)
         local r=field.w*.4
         gc.line(field.x,field.y,field.x+r,field.y+r)
         gc.line(field.x+field.w,field.y,field.x+field.w-r,field.y+r)
         gc.line(field.x,field.y+field.w,field.x+r,field.y+field.w-r)
         gc.line(field.x+field.w,field.y+field.w,field.x+field.w-r,field.y+field.w-r)
-        rectangle('line',field.x+r,field.y+r,field.w*.2,field.w*.2,10)
+        gc_rectangle('line',field.x+r,field.y+r,field.w*.2,field.w*.2,10)
     end
 
     -- Skip mark
@@ -440,7 +442,7 @@ function scene.draw()
 
     -- Skip cooldown
     gc.replaceTransform(SCR.xOy_dl)
-    setColor(1,1,.5)
+    gc_setColor(1,1,.5)
     if skipper.cd and skipper.cd>0 then
         FONT.set(50)
         GC.mStr(skipper.cd,180,-420)
@@ -451,57 +453,58 @@ function scene.draw()
     gc.setLineWidth(6)
     FONT.set(30)
     for i=1,2 do
-        setColor(COLOR[
+        gc_setColor(
             repeater.focus==i and (
                 love.timer.getTime()%.5>.25 and
-                'R' or 'Y'
+                COLOR.R or COLOR.Y
             ) or (
                 repeater.seq[i]==repeater.last[i] and
-                'DL' or 'L'
+                COLOR.DL or COLOR.L
             )
-        ])
-        rectangle('line',-265,-115+60*i,250,50,5)
+        )
+        gc_rectangle('line',-265,-115+60*i,250,50,5)
         gc.print(repeater.seq[i],-260,-150+100*i)
     end
 
     -- Next & Next indicator
     gc.replaceTransform(SCR.xOy_l)
     FONT.set(60)
+    gc_setColor(COLOR.L)
     gc.print("Next",50,-35)
-    if nextTile>1 then setColor(1,.5,.4) end
+    if nextTile>1 then gc_setColor(1,.5,.4) end
     FONT.set(100)
     GC.mStr(tileName[nextTile],270,-65)
 
     if nextCD<=12 then
-        setColor(1,1,1)
+        gc_setColor(COLOR.L)
         for i=1,nextCD do
-            rectangle('fill',130+i*20-nextCD*8,-70,16,16)
+            gc_rectangle('fill',130+i*20-nextCD*8,-70,16,16)
         end
     end
 
     -- Draw no-setting area
     gc.replaceTransform(SCR.xOy_ul)
     if state==2 then
-        setColor(1,0,0,.3)
-        rectangle('fill',30,190,300,140)
+        gc_setColor(1,0,0,.3)
+        gc_rectangle('fill',30,190,300,140)
     end
 end
 
 local function visFunc1() return not tapControl end
 scene.widgetList={
-    WIDGET.new{type='button',  pos={0,0},x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
-    WIDGET.new{type='checkBox',pos={0,0},x=300,y=220,text="Invis",widthLimit=270,fontSize=40,disp=function() return invis end,code=WIDGET.c_pressKey'q',visibleTick=function() return state~=1 end},
-    WIDGET.new{type='checkBox',pos={0,0},x=300,y=300,text="Tap",widthLimit=270,fontSize=40,disp=function() return tapControl end,code=WIDGET.c_pressKey'w',visibleTick=function() return state~=1 end},
+    WIDGET.new{type='button',  pos={0,0}, x=160, y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
+    WIDGET.new{type='checkBox',pos={0,0}, x=300, y=220,text="Invis",widthLimit=270,fontSize=40,disp=function() return invis end,     code=WIDGET.c_pressKey'q',visibleTick=function() return state~=1 end},
+    WIDGET.new{type='checkBox',pos={0,0}, x=300, y=300,text="Tap",  widthLimit=270,fontSize=40,disp=function() return tapControl end,code=WIDGET.c_pressKey'w',visibleTick=function() return state~=1 end},
 
-    WIDGET.new{type='button',  pos={0,1},x=180,y=-280,w=100,text="↑",fontSize=50,color='Y',code=WIDGET.c_pressKey'up',   visibleTick=visFunc1},
-    WIDGET.new{type='button',  pos={0,1},x=180,y=-80, w=100,text="↓",fontSize=50,color='Y',code=WIDGET.c_pressKey'down', visibleTick=visFunc1},
-    WIDGET.new{type='button',  pos={0,1},x=80, y=-180,w=100,text="←",fontSize=50,color='Y',code=WIDGET.c_pressKey'left', visibleTick=visFunc1},
-    WIDGET.new{type='button',  pos={0,1},x=280,y=-180,w=100,text="→",fontSize=50,color='Y',code=WIDGET.c_pressKey'right',visibleTick=visFunc1},
-    WIDGET.new{type='button',  pos={0,1},x=180,y=-390,w=100,text="S",fontSize=50,color='Y',code=WIDGET.c_pressKey'space',visibleTick=function() return state==1 and skipper.cd==0 end},
-    WIDGET.new{type='button',  pos={1,.5},x=-140,y=-30,w=250,h=50,               color='lX',code=WIDGET.c_pressKey'1',   visibleTick=function() return state~=2 end},
-    WIDGET.new{type='button',  pos={1,.5},x=-140,y=30,w=250,h=50,                color='lX',code=WIDGET.c_pressKey'2',   visibleTick=function() return state~=2 end},
-    WIDGET.new{type='button',  pos={1,.5},x=-300,y=-30,w=50,text=">",fontSize=50,color='R',code=WIDGET.c_pressKey'c1',   visibleTick=function() return state~=2 and #repeater.seq[1]~=0 end},
-    WIDGET.new{type='button',  pos={1,.5},x=-300,y=30,w=50, text=">",fontSize=50,color='R',code=WIDGET.c_pressKey'c2',   visibleTick=function() return state~=2 and #repeater.seq[2]~=0 end},
-    WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',  pos={0,1}, x=180, y=-280,w=100,     sound_trigger=false,text="↑",fontSize=50,color='Y', code=WIDGET.c_pressKey'up',   visibleTick=visFunc1},
+    WIDGET.new{type='button',  pos={0,1}, x=180, y=-80, w=100,     sound_trigger=false,text="↓",fontSize=50,color='Y', code=WIDGET.c_pressKey'down', visibleTick=visFunc1},
+    WIDGET.new{type='button',  pos={0,1}, x=80,  y=-180,w=100,     sound_trigger=false,text="←",fontSize=50,color='Y', code=WIDGET.c_pressKey'left', visibleTick=visFunc1},
+    WIDGET.new{type='button',  pos={0,1}, x=280, y=-180,w=100,     sound_trigger=false,text="→",fontSize=50,color='Y', code=WIDGET.c_pressKey'right',visibleTick=visFunc1},
+    WIDGET.new{type='button',  pos={0,1}, x=180, y=-390,w=100,     sound_trigger=false,text="S",fontSize=50,color='Y', code=WIDGET.c_pressKey'space',visibleTick=function() return state==1 and skipper.cd==0 end},
+    WIDGET.new{type='button',  pos={1,.5},x=-140,y=-30, w=250,h=50,sound_trigger=false,                     color='lT',code=WIDGET.c_pressKey'1',    visibleTick=function() return state~=2 end},
+    WIDGET.new{type='button',  pos={1,.5},x=-140,y=30,  w=250,h=50,sound_trigger=false,                     color='lT',code=WIDGET.c_pressKey'2',    visibleTick=function() return state~=2 end},
+    WIDGET.new{type='button',  pos={1,.5},x=-300,y=-30, w=50,      sound_trigger=false,text=">",fontSize=50,color='R', code=WIDGET.c_pressKey'c1',   visibleTick=function() return state~=2 and #repeater.seq[1]~=0 end},
+    WIDGET.new{type='button',  pos={1,.5},x=-300,y=30,  w=50,      sound_trigger=false,text=">",fontSize=50,color='R', code=WIDGET.c_pressKey'c2',   visibleTick=function() return state~=2 and #repeater.seq[2]~=0 end},
+    WIDGET.new{type='button',  pos={1,1}, x=-120,y=-80, w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 return scene

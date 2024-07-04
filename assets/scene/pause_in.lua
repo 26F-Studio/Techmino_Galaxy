@@ -1,19 +1,28 @@
+---@type Zenitha.Scene
 local scene={}
 
 local pauseText
 
-function scene.enter()
-    PROGRESS.setInteriorBG()
-    pauseText=GC.newText(FONT.get(80,'bold'),Text.pause)
+local function fuse()
+    repeat DEBUG.yieldT(6.26) until SCN.cur~='pause_out'
+    FMOD.effect.keyOff('music_pause')
 end
-function scene.leave()
-    SCN.scenes['game_in'].leave()
+
+function scene.load()
+    PROGRESS.applyInteriorBG()
+    pauseText=GC.newText(FONT.get(80,'bold'),Text.pause)
+    TASK.removeTask_code(fuse)
+    TASK.new(fuse)
+end
+function scene.unload()
+    FMOD.effect.keyOff('music_pause')
 end
 
 local function sysAction(action)
     if action=='quit' then
-        SCN.back()
+        SCN.back('none')
     elseif action=='back' then
+        FMOD.effect.keyOff('music_pause')
         SCN.swapTo('game_in','none')
     elseif action=='restart' then
         SCN.swapTo('game_in','none',GAME.mode.name)
@@ -22,8 +31,9 @@ local function sysAction(action)
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     sysAction(KEYMAP.sys:getAction(key))
+    return true
 end
 
 function scene.touchDown(x,y,id) if SETTINGS.system.touchControl then VCTRL.press(x,y,id) end end
@@ -51,9 +61,18 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
-    WIDGET.new{type='button',pos={.5,.5},x=300*-1,y=-160,w=260,h=100,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.play,    code=function() sysAction('back') end},
-    WIDGET.new{type='button',pos={.5,.5},x=300*0,y=-160,w=260,h=100,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.retry,    code=function() sysAction('restart') end},
-    WIDGET.new{type='button',pos={.5,.5},x=300*1,y=-160,w=260,h=100,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.settings, code=function() sysAction('setting') end},
+    {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
+    {type='button',pos={.5,.5},x=300*-1,y=-160,w=260,h=100,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.play,    code=function() sysAction('back') end},
+    {type='button',pos={.5,.5},x=300*0,y=-160,w=260,h=100,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.retry,    code=function() sysAction('restart') end},
+    {type='button',pos={.5,.5},x=300*1,y=-160,w=260,h=100,lineWidth=4,cornerR=0,fontSize=60,text=CHAR.icon.settings,
+        code=function()
+            if PROGRESS.get('main')<=2 or isCtrlPressed() then
+                sysAction('setting')
+            else
+                FMOD.effect('move_failed')
+                FMOD.effect('suffocate',{tune=MATH.rand(-6,2)})
+            end
+        end,
+    },
 }
 return scene

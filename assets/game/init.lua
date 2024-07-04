@@ -1,31 +1,31 @@
---- @alias Techmino.mode.playerType 'mino'|'puyo'|'gem'
-
---- @class Techmino.mode
---- @field initialize function Called when initializing the mode
---- @field settings table<Techmino.mode.playerType, table>
---- @field layout 'default' Layout mode
---- @field checkFinish function Return if the game should end when a player finishes
---- @field result function Called when the game ends
---- @field resultPage fun(time:number) Drawing the result page
---- @field name string Mode name, for debug use
-
-local floor=math.floor
-
-Minoes=require'assets.game.minoes'
-ColorTable=require'assets.game.colorTable'
-defaultMinoColor=setmetatable({
-    2,22,42,6,52,12,32,
-    2,22,62,26,38,4,52,16,32,56,12,42,6,38,4,60,28,12,
-    36,52,4,24,
+local require=simpRequire('assets.game.')
+Brik=require'briks'
+defaultBrikColor=setmetatable({
+    844,484,448,864,748,884,488,
+    844,484,845,485,468,854,748,684,488,847,884,448,864,468,854,846,486,884,
+    478,748,854,484,
 },{__index=function() return math.random(64) end})
-defaultPuyoColor=setmetatable({2,12,42,22,52},{__index=function() return math.random(64) end})
-mechLib=require'assets.game.mechanicLib'
-require'assets.game.rotsys_mino'
+require'rotsys_brik'
 
 local gc=love.graphics
 
+---@type Techmino.MechLib
+mechLib={}
+local modeLib={}
+local modeMeta={
+    __index={
+        initialize=NULL,
+        settings={},
+        layout='default',
+        checkFinish=function() return true end,
+        result=NULL,
+        resultPage=NULL,
+    },
+    __metatable=true,
+}
+
 local layoutFuncs={}
-do-- function layoutFuncs.default():
+do -- function layoutFuncs.default():
     local defaultPosList={
         alive={
             [1]={main={0,0}},
@@ -134,19 +134,6 @@ do-- function layoutFuncs.default():
     end
 end
 
-local modeLib={}
-local modeMeta={
-    __index={
-        initialize=NULL,
-        settings={},
-        layout='default',
-        checkFinish=function() return true end,
-        result=NULL,
-        resultPage=NULL,
-    },
-    __metatable=true,
-}
-
 local function task_switchToResult()
     if SCN.cur=='game_in' then
         SCN.swapTo('result_in','none')
@@ -160,16 +147,16 @@ local function task_switchToResult()
     end
 end
 
---- @class Techmino.game
---- @field playing boolean
---- @field playerList table<number, Techmino.Player>|false
---- @field playerMap table<number, Techmino.Player>|false
---- @field camera Zenitha.Camera
---- @field hitWaves table
---- @field seed number|false
---- @field mode Techmino.mode|false
---- @field mainID number|false
---- @field mainPlayer Techmino.Player|false
+---@class Techmino.Game
+---@field playing boolean
+---@field playerList Techmino.Player[]|false
+---@field playerMap Map<Techmino.Player>|false
+---@field camera Zenitha.Camera
+---@field hitWaves table
+---@field seed number|false
+---@field mode Techmino.Mode|false
+---@field mainID number|false
+---@field mainPlayer Techmino.Player|false
 local GAME={
     playing=false,
 
@@ -188,14 +175,21 @@ local GAME={
 
 GAME.camera.moveSpeed=12
 
+function GAME._refresh()
+    mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
+    regFuncLib(mechLib,'mechLib')
+end
+GAME._refresh()
+
+---@return Techmino.Mode
 function GAME.getMode(name)
-    if modeLib[name] and not love.keyboard.isDown('f5') then
+    if modeLib[name] then
         return modeLib[name]
     else
         local path='assets/game/mode/'..name..'.lua'
         assert(love.filesystem.getInfo(path) and FILE.isSafe(path),"No mode named "..tostring(name))
         local M=FILE.load(path,'-lua -canskip')
-        assert(type(M)=='table','WTF')
+        assert(type(M)=='table',"WTF")
         setmetatable(M,modeMeta)
         assert(type(M.initialize)         =='function',"[mode].initialize must be function")
         assert(type(M.settings)           =='table',   "[mode].settings must be table")
@@ -211,6 +205,7 @@ function GAME.getMode(name)
 end
 
 function GAME.load(mode,seed)
+    -- print("Game Loaded: "..mode.."-"..seed)
     if GAME.mode then
         MSG.new('warn',"Game is running")
         return
@@ -232,7 +227,7 @@ function GAME.load(mode,seed)
         MSG.new('warn',"No players created in this mode")
     else
         if GAME.mainPlayer then
-            local conf=SETTINGS["game_"..GAME.mainPlayer.gameMode]
+            local conf=SETTINGS['game_'..GAME.mainPlayer.gameMode]
             if conf then GAME.mainPlayer:loadSettings(conf) end
         end
         if GAME.mode.settings then
@@ -254,6 +249,7 @@ function GAME.load(mode,seed)
 end
 
 function GAME.unload()
+    -- print("Game Unloaded")
     GAME.playing=false
     GAME.playerList=false
     GAME.playerMap=false
@@ -268,18 +264,18 @@ function GAME.unload()
 end
 
 function GAME.newPlayer(id,pType)
-    if not (type(id)=='number' and floor(id)==id and id>=1 and id<=1000) then
+    if not (type(id)=='number' and math.floor(id)==id and id>=1 and id<=1000) then
         MSG.new('error',"player id must be 1~1000 integer")
         return
     end
 
     local P
-    if pType=='mino' then
-        P=require'assets.game.minoPlayer'.new(GAME.mode)
-    elseif pType=='puyo' then
-        P=require'assets.game.puyoPlayer'.new(GAME.mode)
-    elseif pType=='gem' then
-        P=require'assets.game.gemPlayer'.new(GAME.mode)
+    if pType=='brik' then
+        P=require'brikPlayer'.new(GAME.mode)
+    elseif pType=='gela' then
+        P=require'gelaPlayer'.new(GAME.mode)
+    elseif pType=='acry' then
+        P=require'acryPlayer'.new(GAME.mode)
     else
         MSG.new('error',"invalid player type :'"..tostring(pType).."'")
         return
@@ -287,7 +283,7 @@ function GAME.newPlayer(id,pType)
 
     P.gameMode=pType
     P.id=id
-    P.group=0
+    P.team=0
     GAME.playerMap[id]=P
     table.insert(GAME.playerList,P)
 end
@@ -306,10 +302,10 @@ function GAME.setMain(id)
     end
 end
 
-function GAME.setGroup(id,gid)
-    assert(type(gid)=='number' and gid>=0 and gid%1==gid,"Invalid group id")
+function GAME.setTeam(id,teamID)
+    assert(type(teamID)=='number' and teamID>=0 and teamID%1==teamID,"Invalid team id")
     if GAME.playerMap[id] then
-        GAME.playerMap[id].group=gid
+        GAME.playerMap[id].team=teamID
     end
 end
 
@@ -329,76 +325,88 @@ function GAME.release(action,id)
     end
 end
 
---[[ data:
-    power      (0~∞,  no default)
-    cancelRate (0~∞,  default to 1)
-    defendRate (0~∞,  default to 1)
-    mode       (0~1,   default to 0, 0: trigger by time, 1:trigger by step)
-    time       (0~∞,  default to 0, ms / step)
-    fatal      (0~100, default to 30, percentage)
-    speed      (0~100, default to 30, percentage)
-]]
-function GAME.initAtk(atk)-- Normalize the attack object
-    if not atk then return end
-    assert(type(atk)=='table',"data not table")
-    assert(type(atk.power)=='number' and atk.power>0,"wrong power value")
-    if atk.cancelRate==nil then atk.cancelRate=1 else
-        assert(type(atk.cancelRate)=='number' and atk.cancelRate>=0,"cancelRate not non-negative number")
-    end
+---@class Techmino.Game.Attack
+---@field srcMode Techmino.Player.Type
+---@field power number -∞~∞, no default
+---@field sharpness number 0~∞, default to 1, how strong the attack can cancel the others
+---@field hardness number 0~∞, default to 1, how strong the attack can defend the others
+---@field mode number 0|1, default to 0, 0: trigger by time, 1:trigger by step
+---@field time number 0~∞, default to 0, ms / step
+---@field fatal number 0~100, default to 30, percentage
+---@field speed number 0~100, default to 30, percentage
+---@field target number|Techmino.Player|nil default to nil
 
-    if atk.defendRate==nil then atk.defendRate=1 else
-        assert(type(atk.defendRate)=='number' and atk.defendRate>=0,"defendRate not non-negative number")
-    end
+local atkTemplate={
+    sharpness=1,
+    hardness=1,
+    mode=0,
+    time=0,
+    fatal=30,
+    speed=30,
+}
 
-    if atk.mode==nil then atk.mode=0 end
+---@param atk Techmino.Game.Attack
+function GAME.initAtk(atk) -- Normalize the attack object
+    assert(type(atk)=='table',"GAME.initAtk: need table")
+
+    TABLE.updateMissing(atk,atkTemplate)
+
+    assert(type(atk.power)=='number',"GAME.initAtk: .power need number")
+    assert(type(atk.sharpness)=='number' and atk.sharpness>=0,"GAME.initAtk: .sharpness need non-negative number")
+    assert(type(atk.hardness)=='number' and atk.hardness>=0,"GAME.initAtk: .hardness need non-negative number")
     assert(atk.mode==0 or atk.mode==1,"mode not 0 or 1")
-    if atk.time==nil then atk.time=0 else
-        assert(type(atk.time)=='number' and atk.time>=0,"time not non-negative number")
-        if atk.mode==1 then atk.time=floor(atk.time+.5) end
-    end
-    if atk.fatal==nil then atk.fatal=30 else
-        assert(type(atk.fatal)=='number',"fatal not number")
-        atk.fatal=MATH.clamp(floor(atk.fatal+.5),0,100)
-    end
-    if atk.speed==nil then atk.speed=30 else
-        assert(type(atk.speed)=='number',"speed not number")
-        atk.speed=MATH.clamp(floor(atk.speed+.5),0,100)
-    end
+    assert(type(atk.time)=='number' and atk.time>=0,"GAME.initAtk: .time need non-negative number")
+    assert(type(atk.fatal)=='number',"GAME.initAtk: .fatal need number")
+    assert(type(atk.speed)=='number',"GAME.initAtk: .speed need number")
+    if atk.mode==1 then atk.time=math.floor(atk.time+.5) end
+    atk.fatal=MATH.clamp(math.floor(atk.fatal+.5),0,100)
+    atk.speed=MATH.clamp(math.floor(atk.speed+.5),0,100)
+
     return atk
 end
-function GAME.send(source,data)
+
+---@param sender Techmino.Player|number|false
+---@param atk Techmino.Game.Attack?
+function GAME.send(sender,atk)
+    if not atk then return end
+
+    ---@type Techmino.Player
+    local target
+
     -- Find target
-    if data.target==nil then
+    if atk.target==nil then
+        ---@type Techmino.Player[]
         local l=GAME.playerList
-        local sourceGroup=source and source.group or 0
+        local sourceTeam=sender and sender.team or 0 -- 0 means no team, not Team 0
         if #l>1 then
             local count=0
             for i=1,#l do
-                if sourceGroup==0 and l[i]~=source or sourceGroup~=l[i].group then
+                if sourceTeam==0 and l[i]~=sender or sourceTeam~=l[i].team then
                     count=count+1
                 end
             end
             if count>0 then
                 count=math.random(count)
                 for i=1,#l do
-                    if sourceGroup==0 and l[i]~=source or sourceGroup~=l[i].group then
+                    if sourceTeam==0 and l[i]~=sender or sourceTeam~=l[i].team then
                         count=count-1
                         if count==0 then
-                            data.target=l[i]
+                            target=l[i]
                             break
                         end
                     end
                 end
             end
         end
+    elseif type(atk.target)=='number' then
+        target=GAME.playerMap[atk.target]
     else
-        assert(type(data.target)=='number',"target not number")
-        data.target=GAME.playerMap[data.target]
+        error("GAME.send: invalid target type")
     end
 
     -- Sending airmail
-    if data.target then
-        data.target:receive(data)
+    if target then
+        target:receive(atk)
     end
 end
 
@@ -413,6 +421,7 @@ function GAME.checkFinish()
 end
 
 function GAME.update(dt)
+    if not GAME.playerList then return end
     for _,P in next,GAME.playerList do P:update(dt) end
 
     GAME.camera:update(dt)
@@ -423,7 +432,8 @@ function GAME.update(dt)
 end
 
 function GAME.render()
-    gc.setCanvas({Zenitha.getBigCanvas('player'),stencil=true})
+    if not GAME.playerList then return end
+    gc.setCanvas({ZENITHA.getBigCanvas('player'),stencil=true})
     gc.replaceTransform(SCR.xOy_m)
     gc.applyTransform(GAME.camera.transform)
     gc.clear(0,0,0,0)
@@ -445,9 +455,9 @@ function GAME.render()
         SHADER.warp:send('hitWaves',unpack(L))
         gc.setShader(SHADER.warp)
     else
-        gc.setShader(SHADER.none)-- Directly draw the content, don't consider color, for better performance(?)
+        gc.setShader(SHADER.none) -- Directly draw the content, don't consider color, for better performance(?)
     end
-    gc.draw(Zenitha.getBigCanvas('player'))
+    gc.draw(ZENITHA.getBigCanvas('player'))
     gc.setShader()
 end
 
@@ -464,7 +474,7 @@ function GAME._addHitWave(x,y,power)
     end
     table.insert(GAME.hitWaves,{
         x,y,
-        nil,nil,-- power1 & power2, calculated before sending uniform
+        nil,nil, -- power1 & power2, calculated before sending uniform
         time=0,
         power=power*SETTINGS.system.hitWavePower,
     })

@@ -149,7 +149,7 @@ local L={
         next            ='E092',
         back_chevron    ='E093',
     },
-    mino={
+    brik={
         Z='E100',
         S='E101',
         J='E102',
@@ -278,7 +278,7 @@ local L={
     },
     zchan={
         mrz         ='E200',
-        mino        ='E201',
+        brik        ='E201',
         happy       ='E202',
         grinning    ='E203',
         frowning    ='E204',

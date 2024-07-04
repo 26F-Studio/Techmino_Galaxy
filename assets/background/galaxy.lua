@@ -3,7 +3,9 @@ local ins=table.insert
 local rnd=math.random
 local circle=GC.circle
 local stars={}
-local camX,camY=0,0
+
+local t=0
+local camX,camY,camZ=0,0,0
 
 local back={}
 
@@ -15,9 +17,10 @@ function back.init()
         })
     end
 end
-function back.update()
-    camX=.026*math.sin(love.timer.getTime()*.12)
-    camY=.012*math.sin(love.timer.getTime()*.26)
+function back.update(dt)
+    t=t+dt
+    camX=.026*math.sin(t*.12)
+    camY=.012*math.sin(t*.26)
 end
 function back.draw()
     GC.clear(.06,.06,.06)
@@ -28,7 +31,7 @@ function back.draw()
         local s=stars[i]
         local x=(s.x-camX)/(1+s.z)
         local y=(s.y-camY)/(1+s.z)
-        local r=s.r/(1+s.z)
+        local r=s.r/(1+s.z-camZ)
         circle('fill',x*w,y*h,r)
     end
 end

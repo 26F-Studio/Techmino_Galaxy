@@ -1,22 +1,20 @@
 local gc=love.graphics
 
+---@type Zenitha.Scene
 local scene={}
 
 local function startGame(modeName)
     GAME.unload()
     GAME.load(modeName)
 end
-function scene.enter()
-    PROGRESS.setInteriorBG()
+function scene.load()
+    PROGRESS.applyInteriorBG()
     if SCN.args[1] then
         startGame(SCN.args[1])
     end
     resetVirtualKeyMode(GAME.mainPlayer and GAME.mainPlayer.gameMode)
     scene.widgetList.pause.text=canPause() and CHAR.icon.pause or CHAR.icon.back
     WIDGET._reset()
-end
-function scene.leave()
-    TASK.new(task_unloadGame)
 end
 
 local function sysAction(action)
@@ -31,7 +29,7 @@ local function sysAction(action)
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     local action
 
     local p=GAME.mainPlayer
@@ -39,11 +37,13 @@ function scene.keyDown(key,isRep)
         action=KEYMAP[p.gameMode]:getAction(key)
         if action then
             GAME.press(action)
-            return
+            return true
         end
     end
 
     sysAction(KEYMAP.sys:getAction(key))
+
+    return true
 end
 
 function scene.keyUp(key)
@@ -61,27 +61,27 @@ end
 
 function scene.touchDown(x,y,id)
     if GAME.mainPlayer then
-        if GAME.mainPlayer.gameMode=='mino' or GAME.mainPlayer.gameMode=='puyo' then
+        if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
             if SETTINGS.system.touchControl then VCTRL.press(x,y,id) end
-        elseif GAME.mainPlayer.gameMode=='gem' then
+        elseif GAME.mainPlayer.gameMode=='acry' then
             GAME.mainPlayer:mouseDown(x,y,id)
         end
     end
 end
 function scene.touchMove(x,y,dx,dy,id)
     if GAME.mainPlayer then
-        if GAME.mainPlayer.gameMode=='mino' or GAME.mainPlayer.gameMode=='puyo' then
+        if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
             if SETTINGS.system.touchControl then VCTRL.move(x,y,id) end
-        elseif GAME.mainPlayer.gameMode=='gem' then
+        elseif GAME.mainPlayer.gameMode=='acry' then
             GAME.mainPlayer:mouseMove(x,y,dx,dy,id)
         end
     end
 end
 function scene.touchUp(x,y,id)
     if GAME.mainPlayer then
-        if GAME.mainPlayer.gameMode=='mino' or GAME.mainPlayer.gameMode=='puyo' then
+        if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
             if SETTINGS.system.touchControl then VCTRL.release(id) end
-        elseif GAME.mainPlayer.gameMode=='gem' then
+        elseif GAME.mainPlayer.gameMode=='acry' then
             GAME.mainPlayer:mouseUp(x,y,id)
         end
     end
@@ -105,6 +105,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{name='pause',type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
+    {name='pause',type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
 }
 return scene

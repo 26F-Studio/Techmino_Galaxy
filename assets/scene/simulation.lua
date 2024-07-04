@@ -12,11 +12,11 @@
 
 ---@type Techmino.simulation[]
 local sims={
-    {-- Mino
+    { -- Exterior 1
         trigger=function()
             DEBUG.yieldUntilNextScene()
             if SCN.cur=='simulation' then
-                SCN.go('mode_mino_stdMap','fadeHeader')
+                SCN.go('mode_exterior','fadeHeader')
             end
         end,
         draw=function()
@@ -35,47 +35,32 @@ local sims={
             )
         end,
     },
-    {-- Puyo
-        trigger=function()
-            DEBUG.yieldUntilNextScene()
-            if SCN.cur=='simulation' then
-                SCN.go('mode_puyo','fadeHeader')
-            end
-        end,
-        draw=function()
-            GC.setColor(COLOR.R)
-            GC.setLineWidth(8)
-            GC.circle('line',-35,-60,70)
-            GC.circle('line',35,60,70)
-        end,
-    },
-    {-- Gem
-        trigger=function()
-            DEBUG.yieldUntilNextScene()
-            if SCN.cur=='simulation' then
-                SCN.go('mode_gem','fadeHeader')
-            end
-        end,
-        draw=function()
-            GC.setColor(COLOR.B)
-            GC.setLineWidth(10)
-            GC.polygon('line',
-                0,112,
-                108,-32,
-                50,-100,
-                -50,-100,
-                -108 ,-32
-            )
-        end,
-    },
+    -- draw=function() -- Gela
+        -- GC.setColor(COLOR.R)
+        -- GC.setLineWidth(8)
+        -- GC.circle('line',-35,-60,70)
+        -- GC.circle('line',35,60,70)
+    -- end,
+    -- draw=function() -- Acry
+    --     GC.setColor(COLOR.B)
+    --     GC.setLineWidth(10)
+    --     GC.polygon('line',
+    --         0,112,
+    --         108,-32,
+    --         50,-100,
+    --         -50,-100,
+    --         -108 ,-32
+    --     )
+    -- end,
 }
 
---- @type integer|false
+---@type integer|false
 local subjectFocused=false
 
+---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load(prev)
     for _,s in next,sims do
         s.valid=false
         s.active=0
@@ -84,13 +69,17 @@ function scene.enter()
         s.trigTimer=false
     end
     subjectFocused=false
-    sims[1].valid=PROGRESS.getModeUnlocked('mino_stdMap')
-    sims[2].valid=PROGRESS.getModeUnlocked('puyo_wip')
-    sims[3].valid=PROGRESS.getModeUnlocked('gem_wip')
+    sims[1].valid=true -- TODO
+    -- sims[2].valid=false -- TODO
     scene.update(0)
-    PROGRESS.setExteriorBG()
-    PROGRESS.playExteriorBGM()
-    if SCN.prev=='main_out' and sims[1].valid and not (sims[2].valid or sims[3].valid) then
+    PROGRESS.applyExteriorBG()
+    PROGRESS.applyExteriorBGM()
+    if prev=='main_out' then
+        for i=2,#sims do
+            if sims[i].valid then
+                return
+            end
+        end
         subjectFocused=1
         scene.keyDown('return')
     end
@@ -127,7 +116,7 @@ function scene.touchClick(x,y)
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='left' or key=='right' then
         if not subjectFocused then
             for i,s in next,sims do
@@ -145,7 +134,7 @@ function scene.keyDown(key,isRep)
         if subjectFocused then
             if not sims[subjectFocused].trigTimer then
                 sims[subjectFocused].trigTimer=0
-                SFX.play('simulation_select')
+                FMOD.effect('simulation_select')
             end
         end
     elseif KEYMAP.sys:getAction(key)=='back' then
@@ -154,6 +143,7 @@ function scene.keyDown(key,isRep)
         end
         SCN.back('fadeHeader')
     end
+    return true
 end
 
 function scene.update(dt)
@@ -192,11 +182,11 @@ function scene.draw()
             GC.translate(s.x+s.size/2,s.y+s.size/2)
             GC.scale(1+120/390*s.active)
             GC.setColor(.26,.26,.26,.26)
-            GC.rectangle('fill',-190,-190,380,380,26)
+            GC.mRect('fill',0,0,380,380,26)
             if s.trigTimer then
                 GC.setColor(1,1,1,(s.trigTimer%.12<.06 or s.trigTimer>.36) and math.max(1-s.trigTimer,.626) or .26)
                 GC.setLineWidth(20)
-                GC.rectangle('line',-190+10,-190+10,380-20,380-20,16)
+                GC.mRect('line',0,0,380-20,380-20,16)
                 end
             s.draw()
             GC.pop()
@@ -205,7 +195,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
-    WIDGET.new{type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'simulation_title'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'simulation_title'},
 }
 return scene

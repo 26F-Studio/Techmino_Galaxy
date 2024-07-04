@@ -1,17 +1,23 @@
+---@type Zenitha.Scene
+---@type Zenitha.Scene
 local scene={}
 
 local modules={
+    {"LÖVE","LÖVE Team"},
     {"Zenitha framework","MrZ"},
     {"json.lua","rxi"},
     {"profile.lua","itraykov"},
     {"sha2.lua","Egor Skriptunoff"},
+    {"FMOD Studio","Firelight Technologies Pty Ltd"},
 }
 local toolchain={
     "VS Code",
     "BeepBox",
+    "GFIE",
+    "FL Studio",
     "FL Mobile",
     "GoldWave",
-    "GFIE",
+    "FMOD Studio",
 }
 
 local timer,score
@@ -26,8 +32,8 @@ end
 
 local obj={}
 
-function scene.enter()
-    TABLE.cut(obj)
+function scene.load()
+    TABLE.clear(obj)
     timer,score=12.6,0
 end
 
@@ -58,10 +64,10 @@ function scene.update(dt)
             vx=math.random(-200,200),vy=math.random(926,1260),
             r=math.random(25,45),
             a=math.random()*MATH.tau,va=10*math.random()-5,
-            mino=CHAR.mino[Minoes[math.random(#Minoes)].name],
-            minoColor=math.random()*MATH.tau,
+            brik=MATH.randFrom(CHAR.brik),
+            brikColor=math.random()*MATH.tau,
         }
-        if MATH.roll(.026) then
+        if o.x*o.vx<0 and MATH.roll(.062) then
             setName(o)
         end
         table.insert(obj,o)
@@ -108,47 +114,33 @@ function scene.draw()
         else
             -- GC.setColor(.6,.6,.6,.26)
             -- GC.rectangle('line',o.x-o.r,-o.y-o.r,2*o.r,2*o.r)
-            GC.setColor(COLOR.rainbow(o.minoColor))
+            GC.setColor(COLOR.rainbow(o.brikColor))
             FONT.set(60)
-            GC.printf(o.mino,o.x,-o.y,100,'center',o.a,o.r/16,nil,50,41)
+            GC.printf(o.brik,o.x,-o.y,100,'center',o.a,o.r/16,nil,50,41)
         end
     end
 
     PROGRESS.drawExteriorHeader()
     GC.replaceTransform(SCR.xOy)
 
-    -- Powered by Love2D
-    GC.push('transform')
-        GC.translate(330,220)
-        GC.setColor(COLOR.L)
-        FONT.set(60)
-        GC.shadedPrint(Text.about_love,45,-35,nil,2,4)
-
-        GC.rotate(-.785398+t*4.2-math.sin(t*4.2))
-        GC.setLineWidth(4)
-        GC.setColor(COLOR.D) GC.circle('fill',0,0,32)
-        GC.setColor(COLOR.lW) GC.circle('fill',0,0,30)
-        GC.setColor(COLOR.lS) GC.arc('fill','closed',0,0,30,0,3.141593)
-        GC.translate(-2,2)
-        GC.setColor(COLOR.L)
-        GC.rectangle('fill',-10,-10,20,20)
-        GC.circle('fill',0,-10,10)
-        GC.circle('fill',10,0,10)
-    GC.pop()
+    GC.mDraw(love_logo,160,300,-.785398+t*4.2-math.sin(t*4.2),.7033)
 
     FONT.set(35)
-    GC.shadedPrint(Text.about_module,200,350,nil,2,4)
-    GC.shadedPrint(Text.about_toolchain,1000,350,nil,2,4)
-    FONT.set(50)
+    GC.shadedPrint(Text.about_module,300,230,'left',2,4)
     local m=modules[math.floor(t)%#modules+1]
-    GC.shadedPrint(m[1],200,390,nil,2,4)
-    GC.shadedPrint(toolchain[math.floor(t)%#toolchain+1],1000,390,nil,2,4)
+    FONT.set(50)
+    GC.shadedPrint(m[1],300,270,'left',2,4)
     FONT.set(30)
-    GC.shadedPrint(m[2],200,450,nil,2,4)
+    GC.shadedPrint(m[2],300,330,'left',2,4)
+
+    FONT.set(35)
+    GC.shadedPrint(Text.about_toolchain,942,230,'left',2,4)
+    FONT.set(50)
+    GC.shadedPrint(toolchain[math.floor(t)%#toolchain+1],942,270,'left',2,4)
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
-    WIDGET.new{type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'about_title'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'about_title'},
 }
 return scene

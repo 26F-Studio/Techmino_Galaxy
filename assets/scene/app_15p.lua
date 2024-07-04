@@ -2,6 +2,7 @@ local gc=love.graphics
 
 local floor,rnd=math.floor,math.random
 
+---@type Zenitha.Scene
 local scene={}
 
 local scale=1.4
@@ -12,11 +13,11 @@ local move,push,state
 local color,invis='color1'
 local slide,pathVis,revKB
 
-local function notGaming()return state~=1 end
-local colorSelector=WIDGET.new{type='selector',pos={0,0},x=150,y=240,w=200,text="Color",labelPos='up',labelDistance=20,list={'color1','rainbow','color2','gray','black'},disp=function() return color end,code=function(v) if state~=1 then color=v end end,visibleTick=notGaming}
+local function notGaming( ) return state~=1 end
+local colorSelector=WIDGET.new{type='selector',pos={0,0},x=150,y=240,w=200,text="Color",labelPos='top',labelDistance=20,list={'color1','rainbow','color2','gray','black'},disp=function() return color end,code=function(v) if state~=1 then color=v end end,visibleTick=notGaming}
 
-function scene.enter()
-    BG.set('rainbow2')
+function scene.load()
+    BG.set('space')
     board={{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,16}}
     cx,cy=4,4
     startTime=0
@@ -79,7 +80,7 @@ local function tapBoard(x,y,key)
     if state<2 then
         if not key then
             if pathVis then
-                SYSFX.new('rect',6,x-5,y-5,11,11,1,1,1)
+                SYSFX.rect(.16,x-5,y-5,11,11,1,1,1)
             end
             x,y=floor((x-SCR.w0/2)/160/scale)+3,floor((y-SCR.h0/2)/160/scale)+3
         end
@@ -120,15 +121,15 @@ local function tapBoard(x,y,key)
             if checkBoard(b) then
                 state=2
                 time=love.timer.getTime()-startTime
-                SFX.play('win')
+                FMOD.effect('win')
                 return
             end
-            SFX.play('touch')
+            FMOD.effect('touch')
         end
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='up' then
         tapBoard(cx,cy-(revKB and 1 or -1),true)
     elseif key=='down' then
@@ -144,7 +145,7 @@ function scene.keyDown(key,isRep)
         move,push=0,0
     elseif key=='q' then
         if state~=1 then
-            colorSelector:scroll(love.keyboard.isDown('lshift','rshift') and -1 or 1)
+            colorSelector:scroll(isKeyDown('lshift','rshift') and -1 or 1)
         end
     elseif key=='w' then
         if state==0 then
@@ -166,8 +167,9 @@ function scene.keyDown(key,isRep)
             revKB=not revKB
         end
     elseif key=='escape' then
-        SCN.back()
+        if sureCheck('back') then SCN.back() end
     end
+    return true
 end
 function scene.mouseDown(x,y)
     tapBoard(x,y)
@@ -198,31 +200,31 @@ local frontColor={
         COLOR.lG,COLOR.lB,COLOR.lB,COLOR.lB,
         COLOR.lG,COLOR.lY,COLOR.lV,COLOR.lV,
         COLOR.lG,COLOR.lY,COLOR.lV,COLOR.lV,
-    },-- Colored(rank)
+    }, -- Colored(rank)
     rainbow={
         COLOR.lR,COLOR.lR,COLOR.lR,COLOR.lR,
         COLOR.lO,COLOR.lY,COLOR.lY,COLOR.lY,
         COLOR.lO,COLOR.lG,COLOR.lB,COLOR.lB,
         COLOR.lO,COLOR.lG,COLOR.lB,COLOR.lB,
-    },-- Rainbow(rank)
+    }, -- Rainbow(rank)
     color2={
         COLOR.lR,COLOR.lR,COLOR.lR,COLOR.lR,
         COLOR.lB,COLOR.lB,COLOR.lB,COLOR.lB,
         COLOR.lG,COLOR.lY,COLOR.lV,COLOR.lV,
         COLOR.lG,COLOR.lY,COLOR.lV,COLOR.lV,
-    },-- Colored(row)
+    }, -- Colored(row)
     gray={
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
-    },-- Gray
+    }, -- Gray
     black={
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
         COLOR.L,COLOR.L,COLOR.L,COLOR.L,
-    },-- Black
+    }, -- Black
 }
 local backColor={
     color1={
@@ -230,31 +232,31 @@ local backColor={
         COLOR.dG,COLOR.dB,COLOR.dB,COLOR.dB,
         COLOR.dG,COLOR.dY,COLOR.dP,COLOR.dP,
         COLOR.dG,COLOR.dY,COLOR.dP,COLOR.dP,
-    },-- Colored(rank)
+    }, -- Colored(rank)
     rainbow={
         COLOR.dR,COLOR.dR,COLOR.dR,COLOR.dR,
         COLOR.dO,COLOR.dY,COLOR.dY,COLOR.dY,
         COLOR.dO,COLOR.dG,COLOR.dB,COLOR.dB,
         COLOR.dO,COLOR.dG,COLOR.dB,COLOR.dB,
-    },-- Rainbow(rank)
+    }, -- Rainbow(rank)
     color2={
         COLOR.dR,COLOR.dR,COLOR.dR,COLOR.dR,
         COLOR.dB,COLOR.dB,COLOR.dB,COLOR.dB,
         COLOR.dG,COLOR.dY,COLOR.dP,COLOR.dP,
         COLOR.dG,COLOR.dY,COLOR.dP,COLOR.dP,
-    },-- Colored(row)
+    }, -- Colored(row)
     gray={
         COLOR.dL,COLOR.dL,COLOR.dL,COLOR.dL,
         COLOR.dL,COLOR.dL,COLOR.dL,COLOR.dL,
         COLOR.dL,COLOR.dL,COLOR.dL,COLOR.dL,
         COLOR.dL,COLOR.dL,COLOR.dL,COLOR.dL,
-    },-- Gray
+    }, -- Gray
     black={
         COLOR.D,COLOR.D,COLOR.D,COLOR.D,
         COLOR.D,COLOR.D,COLOR.D,COLOR.D,
         COLOR.D,COLOR.D,COLOR.D,COLOR.D,
         COLOR.D,COLOR.D,COLOR.D,COLOR.D,
-    },-- Black
+    }, -- Black
 }
 function scene.draw()
     gc.replaceTransform(SCR.xOy_l)
@@ -298,7 +300,7 @@ function scene.draw()
             end
         end
     end
-    gc.setColor(COLOR.dX)
+    gc.setColor(COLOR.dT)
     gc.setLineWidth(10)
     gc.rectangle('line',cx*160-467,cy*160-467,134,134,50)
 
@@ -310,13 +312,13 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',  pos={0,0},x=160, y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'space'},
+    WIDGET.new{type='button_fill',pos={0,0},x=160, y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'space'},
     colorSelector,
-    WIDGET.new{type='checkBox',pos={0,.5},x=240, y=-150,text="Invis",widthLimit=200,fontSize=40,disp=function() return invis end,  code=WIDGET.c_pressKey'w',visibleTick=notGaming},
-    WIDGET.new{type='checkBox',pos={0,.5},x=240, y=-50, text="Slide",widthLimit=200,fontSize=40,disp=function() return slide end,  code=WIDGET.c_pressKey'e',visibleTick=notGaming},
-    WIDGET.new{type='checkBox',pos={0,.5},x=240, y=50,  text="Path", widthLimit=200,fontSize=40,disp=function() return pathVis end,code=WIDGET.c_pressKey'r',visibleTick=function() return state~=1 and slide end},
-    WIDGET.new{type='checkBox',pos={0,.5},x=240, y=150, text="RevKB",widthLimit=200,fontSize=40,disp=function() return revKB end,  code=WIDGET.c_pressKey't',visibleTick=notGaming},
-    WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='checkBox',   pos={0,.5},x=240, y=-150,text="Invis",widthLimit=200,fontSize=40,disp=function() return invis end,  code=WIDGET.c_pressKey'w',visibleTick=notGaming},
+    WIDGET.new{type='checkBox',   pos={0,.5},x=240, y=-50, text="Slide",widthLimit=200,fontSize=40,disp=function() return slide end,  code=WIDGET.c_pressKey'e',visibleTick=notGaming},
+    WIDGET.new{type='checkBox',   pos={0,.5},x=240, y=50,  text="Path", widthLimit=200,fontSize=40,disp=function() return pathVis end,code=WIDGET.c_pressKey'r',visibleTick=function() return state~=1 and slide end},
+    WIDGET.new{type='checkBox',   pos={0,.5},x=240, y=150, text="RevKB",widthLimit=200,fontSize=40,disp=function() return revKB end,  code=WIDGET.c_pressKey't',visibleTick=notGaming},
+    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 
 return scene

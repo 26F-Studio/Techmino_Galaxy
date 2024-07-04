@@ -108,7 +108,7 @@ function stick2way:new(data)
         available=data.available or data.available==nil,
         x=data.x or 300,
         y=data.y or 800,
-        len=data.len or 320,-- Not include semicircle
+        len=data.len or 320, -- Not include semicircle
         h=data.h or 160,
         iconSize=data.iconSize or 80,
 
@@ -279,7 +279,7 @@ end
 function stick4way:draw(setting)
     gc_setLineWidth(4)
     gc_setColor(1,1,1,.2)
-    local bigR=self.r*(1+self.ball)+5-- Real radius (with ball and extra +5)
+    local bigR=self.r*(1+self.ball)+5 -- Real radius (with ball and extra +5)
     local ballR=self.r*self.ball
     gc_line(self.x-bigR/2^.5,self.y-bigR/2^.5,self.x+bigR/2^.5,self.y+bigR/2^.5)
     gc_line(self.x-bigR/2^.5,self.y+bigR/2^.5,self.x+bigR/2^.5,self.y-bigR/2^.5)
@@ -303,7 +303,7 @@ function stick4way:draw(setting)
         for i=1,4 do if quad[i] then
             local d=(bigR+ballR)*.5
             local angle=i*tau/4
-            local _,_,w,h=quad:getViewport()
+            local _,_,w,h=quad[i]:getViewport()
             mDrawQ(IMG.actionIcons.texture,quad[i],self.x+d*cos(angle),self.y+d*sin(angle),0,self.iconSize/100*min((bigR-ballR)/w,(bigR-ballR)/h))
         end end
     end
@@ -433,7 +433,7 @@ end
 
 function VCTRL.importSettings(data)
     if not data then return end
-    TABLE.cut(VCTRL)
+    TABLE.clear(VCTRL)
     for i=1,#data do
         local w=data[i]
         VCTRL[i]=(

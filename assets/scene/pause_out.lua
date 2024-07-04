@@ -1,36 +1,48 @@
 local sin=math.sin
 local floor=math.floor
 
+---@type Zenitha.Scene
 local scene={}
 
-local pauseText
+local pauseText,textScale
 
-function scene.enter()
-    PROGRESS.setExteriorBG()
-    pauseText=GC.newText(FONT.get(80,'bold'),Text.pause)
+local function fuse()
+    repeat DEBUG.yieldT(6.26) until SCN.cur~='pause_out'
+    FMOD.effect.keyOff('music_pause')
 end
-function scene.leave()
-    SCN.scenes['game_out'].leave()
+
+function scene.load()
+    FMOD.effect('music_pause')
+    PROGRESS.applyExteriorBG()
+    pauseText=GC.newText(FONT.get(80,'bold'),Text.pause)
+    textScale=math.min(500/pauseText:getWidth(),226/pauseText:getHeight(),2)
+    TASK.removeTask_code(fuse)
+    TASK.new(fuse)
+end
+function scene.unload()
+    FMOD.effect.keyOff('music_pause')
 end
 
 local function sysAction(action)
     if action=='quit' then
-        SFX.play('pause_quit')
+        FMOD.effect('pause_quit')
         SCN.back()
     elseif action=='back' then
-        SFX.play('unpause')
+        FMOD.effect.keyOff('music_pause')
+        FMOD.effect('unpause')
         SCN.swapTo('game_out','none')
     elseif action=='restart' then
-        SFX.play('pause_restart')
+        FMOD.effect('pause_restart')
         SCN.swapTo('game_out',nil,GAME.mode.name)
     elseif action=='setting' then
-        SFX.play('pause_setting')
+        FMOD.effect('pause_setting')
         SCN.go('setting_out')
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     sysAction(KEYMAP.sys:getAction(key))
+    return true
 end
 
 function scene.touchDown(x,y,id) if SETTINGS.system.touchControl then VCTRL.press(x,y,id) end end
@@ -52,7 +64,7 @@ function scene.draw()
     if SETTINGS.system.touchControl then VCTRL.draw() end
 
     GC.replaceTransform(SCR.xOy_m)
-    GC.scale(2)
+    GC.scale(textScale)
     GC.setColor(COLOR.L)
 
     local t=love.timer.getTime()
@@ -66,9 +78,9 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,0},  x= 120,y= 80, w=160,h=80,fontSize=60,sound_trigger=false,text=CHAR.icon.back,     code=function() sysAction('quit') end},
-    WIDGET.new{type='button',pos={.5,.5},x= 0,  y=-160,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.retry,    code=function() sysAction('restart') end},
-    WIDGET.new{type='button',pos={.5,.5},x=-110,y= 170,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.play,     code=function() sysAction('back') end},
-    WIDGET.new{type='button',pos={.5,.5},x= 110,y= 170,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.settings, code=function() sysAction('setting') end},
+    {type='button',pos={0,0},  x= 120,y= 80, w=160,h=80,fontSize=60,sound_trigger=false,text=CHAR.icon.back,     code=function() sysAction('quit') end},
+    {type='button',pos={.5,.5},x= 0,  y=-160,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.retry,    code=function() sysAction('restart') end},
+    {type='button',pos={.5,.5},x=-110,y= 170,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.play,     code=function() sysAction('back') end},
+    {type='button',pos={.5,.5},x= 110,y= 170,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.settings, code=function() sysAction('setting') end},
 }
 return scene

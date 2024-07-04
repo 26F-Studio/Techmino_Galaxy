@@ -1,9 +1,9 @@
 local ins,rem=table.insert,table.remove
 local gc=love.graphics
 
-local floatMixList={.3,.7,.9,.7,.6,.5,.42,.36,.3}-- Alpha curve of 'float' timer text, right-to-left
+local floatMixList={.3,.7,.9,.7,.6,.5,.42,.36,.3} -- Alpha curve of 'float' timer text, right-to-left
 
---- @alias mechLib.common.timer.style 'info'|'float'
+---@alias mechLib.common.timer.style 'info'|'float'
 local timer_drawFunc={
     info=function(P,time,time0)
         P:drawInfoPanel(-380,-60,160,120)
@@ -18,7 +18,7 @@ local timer_drawFunc={
     float=function(_,time,time0)
         FONT.set(100,'bold')
         local text=("%.1f"):format(time/1000)
-        local alpha=MATH.listMix(floatMixList,time/time0)
+        local alpha=MATH.listLerp(floatMixList,time/time0)
         gc.setColor(0,0,0,alpha)
         GC.mStr(text,-2,-69,'center')
         GC.mStr(text,-1,-68,'center')
@@ -27,11 +27,11 @@ local timer_drawFunc={
     end,
 }
 
---- @type Techmino.Mech.base
+---@type Map<Techmino.Event>
 local timer={}
 
---- @param time number @milliseconds
---- @param prop {timeUp:function, draw?:mechLib.common.timer.style|function, cancel?:(fun():boolean), alwaysTiming:boolean}
+---@param time number milliseconds
+---@param prop {timeUp:function, draw?:mechLib.common.timer.style|function, cancel?:(fun():boolean), alwaysTiming:boolean}
 function timer.new(P,time,prop)
     if not P.modeData.timerList then
         P.modeData.timerList={}

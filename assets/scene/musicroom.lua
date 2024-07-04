@@ -6,33 +6,25 @@ local setFont=FONT.set
 local max,min=math.max,math.min
 local sin=math.sin
 
-local selected,fullband
+local totalBgmCount
+
+local selected,fullband,section
 local collectCount=0
 local noProgress=false
-local autoplay=false
+local autoplay=false ---@type number|false
 local fakeProgress=0
+local searchStr,searchTimer
+local noResponseTimer=6.26
 
-local bigTitle=setmetatable({},{
-    __index=function(self,name)
-        local up=true
-        local s=''
-        for c in name:gmatch'.' do
-            if up then
-                c=c:upper()
-                up=false
-            else
-                up=c:match'%s'
-            end
-            s=s..c
-        end
-        self[name]=s
-        return self[name]
-    end
-})
+local _glitchProtect=false
+
+---@type Zenitha.Scene
+local scene={}
 
 local musicListBox do
     musicListBox={
         type='listBox',pos={.5,.5},x=0,y=-320,w=700,h=500,
+        name='musicList',
         lineHeight=80,
         scrollBarWidth=5,
         scrollBarDist=4,
@@ -46,9 +38,9 @@ local musicListBox do
         end
         setFont(60)
         gc_setColor(name==selected and COLOR.L or COLOR.LD)
-        gc_print(bigTitle[name],20,4)
+        gc_print(SONGBOOK[name].title,20,4)
         setFont(20)
-        gc_printf(bgmList[name].author,0,45,685,'right')
+        gc_printf(SONGBOOK[name].author,0,45,685,'right')
         if sel and name~=selected then
             setFont(100)
             gc_setColor(COLOR.L)
@@ -58,107 +50,175 @@ local musicListBox do
     function musicListBox.code()
         if selected~=musicListBox:getItem() then
             selected=musicListBox:getItem()
-            if noProgress or PROGRESS.getBgmUnlocked(selected)==2 then
-                fullband=fullband==true
-            else
-                fullband=nil
-            end
-            playBgm(selected,fullband==nil and 'simp' or fullband and 'full' or 'base',noProgress and '-noProgress' or '')
+            local fullbandMode=SONGBOOK[selected].intensity and (noProgress or PROGRESS.getBgmUnlocked(selected)==2)
+            local sectionMode=SONGBOOK[selected].section and (noProgress or PROGRESS.getBgmUnlocked(selected)==2)
+            scene.widgetList.fullband:setVisible(fullbandMode)
+            scene.widgetList.section:setVisible(sectionMode)
+            scene.widgetList.progressBar.fillColor=SONGBOOK[selected].looppoint and COLOR.LD or COLOR.L
+            if fullbandMode then fullband=fullband==true else fullband=nil end
+            if sectionMode then section=section==true else section=nil end
+            playBgm(selected,fullband,noProgress)
         end
     end
+    ---@type Zenitha.Widget.listBox
     musicListBox=WIDGET.new(musicListBox)
 end
+
+---@type Zenitha.Widget.slider_progress
 local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1400,
+    name='progressBar',text='',
     disp=function() return fakeProgress end,
     code=function(v,mode)
         fakeProgress=v
         if mode=='release' then
-            BGM.set('all','seek',v*BGM.getDuration())
+            _glitchProtect=0.26
+            FMOD.music.seek(v*FMOD.music.getDuration())
         end
     end,
-    visibleTick=function() return BGM.isPlaying() end,
+    visibleTick=function() return FMOD.music.getPlaying() end,
 }
 
-
-local scene={}
-
-function scene.enter()
-    selected,fullband=getBgm()
+function scene.load()
+    noResponseTimer=-1
+    scene.focus(true)
+    selected=getBgm()
     fakeProgress=0
+    searchStr,searchTimer="",0
     if not selected then selected='blank' end
-    if PROGRESS.getBgmUnlocked(selected)==2 then
-        fullband=fullband=='full'
-    else
-        fullband=nil
-    end
     local l={}
-    for k in next,bgmList do
+    for k in next,SONGBOOK do
         if noProgress or PROGRESS.getBgmUnlocked(k) then
             table.insert(l,k)
         end
     end
     table.sort(l)
     collectCount=#l
+    if not totalBgmCount then
+        totalBgmCount=0
+        for _,data in next,SONGBOOK do
+            if not data.inside then
+                totalBgmCount=totalBgmCount+1
+            end
+        end
+    end
     musicListBox:setList(l)
-    musicListBox:select(TABLE.find(musicListBox:getList(),selected))
+    musicListBox:select(TABLE.find(l,selected) or 1)
+    musicListBox.code()
 
     if SETTINGS.system.bgmVol<.0626 then
         MSG.new('warn',Text.musicroom_lowVolume)
     end
 end
+function scene.unload()
+    scene.focus(true)
+end
 
+local function searchMusic(str)
+    local bestID,bestDist=-1,999
+    local list=musicListBox:getList()
+    for i=1,#list do
+        local dist=list[i]:find(str)
+        if dist and dist<bestDist then
+            bestID,bestDist=i,dist
+        end
+    end
+    if bestID>0 then
+        musicListBox:select(bestID)
+    end
+end
 function scene.keyDown(key,isRep)
+    scene.focus(true)
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
         musicListBox:arrowKey(key)
     elseif act=='left' or act=='right' then
-        if BGM.isPlaying() then
-            BGM.set('all','seek',key=='left' and max(BGM.tell()-5,0) or (BGM.tell()+5)%BGM.getDuration())
+        if FMOD.music.getPlaying() then
+            local now=FMOD.music.tell()
+            local dur=FMOD.music.getDuration()
+            FMOD.music.seek(key=='left' and max(now-5,0) or (now+5)%dur)
         end
+    elseif key=='backspace' or key=='delete' then
+        searchStr=""
     elseif #key==1 and key:find'[0-9a-z]' then
-        local list=musicListBox:getList()
-        local sel=musicListBox:getSelect()
-        for _=1,#list do
-            sel=(sel-1+(isShiftPressed() and -1 or 1))%#list+1
-            if list[sel]:sub(1,1)==key then
-                musicListBox:select(sel)
-                break
+        if searchTimer==0 then
+            if searchStr:sub(6)=='recoll' then
+                PROGRESS.setSecret('musicroom_recollection')
             end
+            searchStr=""
+        end
+        if #searchStr<26 then
+            searchStr=searchStr..key
+            searchTimer=1.26
+            searchMusic(searchStr)
         end
     elseif not isRep then
         if key=='space' then
-            if BGM.isPlaying() then
-                BGM.stop(.26)
+            if FMOD.music.getPlaying() then
+                stopBgm()
             else
-                playBgm(selected,fullband and 'full' or 'base',noProgress and '-noProgress' or '')
+                playBgm(selected,fullband,noProgress)
             end
             progressBar:reset()
         elseif key=='tab' then
-            local w=scene.widgetList[isCtrlPressed() and 'autoplay' or 'fullband']
-            if w._visible then
-                w.code()
+            if isCtrlPressed() then
+                scene.widgetList.autoplay.code()
+            elseif isShiftPressed() then
+                scene.widgetList.section.code()
+            else
+                scene.widgetList.fullband.code()
             end
+        elseif key=='`' and isAltPressed() then
+            noProgress=true
+            scene.load()
         elseif key=='return' then
             if selected~=musicListBox:getItem() then
                 musicListBox.code()
             end
         elseif key=='home' then
-            BGM.set('all','seek',0)
-        elseif key=='`' and isAltPressed() then
-            noProgress=true
-            scene.enter()
+            FMOD.music.seek(0)
         elseif act=='back' then
             SCN.back('fadeHeader')
         end
     end
+    return true
+end
+function scene.mouseMove() scene.focus(true) end
+function scene.mouseDown() scene.focus(true) end
+function scene.wheelMove() scene.focus(true) end
+function scene.touchDown() scene.focus(true) end
+function scene.focus(f) -- Reduce carbon footprint for music lovers
+    if f then
+        if noResponseTimer<=0 then
+            ZENITHA.setMaxFPS(SETTINGS.system.maxFPS)
+            ZENITHA.setUpdateFreq(SETTINGS.system.updRate)
+            ZENITHA.setDrawFreq(SETTINGS.system.drawRate)
+        end
+        noResponseTimer=6.26
+    else
+        ZENITHA.hideCursor()
+        noResponseTimer=-1
+        ZENITHA.setMaxFPS(26)
+        ZENITHA.setUpdateFreq(26)
+        ZENITHA.setDrawFreq(26)
+    end
 end
 
 function scene.update(dt)
-    if autoplay and BGM.isPlaying() then
+    PROGRESS.updateMusicTime(dt)
+    if noResponseTimer>0 then
+        noResponseTimer=noResponseTimer-dt
+        if noResponseTimer<=0 then
+            scene.focus(false)
+        end
+    end
+    if searchTimer>0 then
+        searchTimer=max(searchTimer-dt,0)
+    end
+    if autoplay and FMOD.music.getPlaying() then
         if autoplay>0 then
             autoplay=max(autoplay-dt,0)
         else
-            if BGM.getDuration()-BGM.tell()<.26 then
+            if FMOD.music.getDuration()-FMOD.music.tell()<.26 then
                 autoplay=math.random(42,120)
                 fullband=MATH.roll(.42)
 
@@ -173,8 +233,22 @@ function scene.update(dt)
             end
         end
     end
-    if not love.mouse.isDown(1,2,3) and BGM.isPlaying() then
-        fakeProgress=BGM.tell()/BGM.getDuration()%1
+    if WIDGET.sel~=progressBar or not love.mouse.isDown(1,2,3) and FMOD.music.getPlaying() then
+        local v=FMOD.music.tell()/FMOD.music.getDuration()%1
+        if _glitchProtect then
+            if math.abs(fakeProgress-v)<.0026 then
+                fakeProgress=v
+                _glitchProtect=false
+            else
+                _glitchProtect=_glitchProtect-dt
+                if _glitchProtect<=0 then
+                    fakeProgress=v
+                    _glitchProtect=false
+                end
+            end
+        else
+            fakeProgress=v
+        end
     end
 end
 
@@ -185,30 +259,41 @@ function scene.draw()
     gc.replaceTransform(SCR.xOy_m)
 
     -- Song title
-    if objText~=bigTitle[selected] then
-        objText=bigTitle[selected]
-        titleTextObj:set(bigTitle[selected])
+    if objText~=SONGBOOK[selected].title then
+        objText=SONGBOOK[selected].title
+        titleTextObj:set(SONGBOOK[selected].title)
     end
     local t=love.timer.getTime()
-    gc_setColor(sin(t*.5)*.2+.8,sin(t*.7)*.2+.8,sin(t)*.2+.8)
+    if SONGBOOK[selected].inside then
+        gc_setColor(1,1,1,MATH.roundUnit(.5+sin(6.2*t)*.26,.26))
+    else
+        gc_setColor(sin(t*.5)*.2+.8,sin(t*.7)*.2+.8,sin(t)*.2+.8)
+    end
     gc.draw(titleTextObj,-100,-100,0,min(1,650/titleTextObj:getWidth()),nil,titleTextObj:getWidth(),titleTextObj:getHeight())
 
     -- Author and message
     setFont(50)
     gc_setColor(COLOR.L)
-    gc_printf(bgmList[selected].author,-800,-90,700,'right')
-    if bgmList[selected].message then
+    gc_printf(SONGBOOK[selected].author,-800,-90,700,'right')
+    if SONGBOOK[selected].message then
         setFont(30)
         gc_setColor(COLOR.LD)
-        gc_printf(bgmList[selected].message,-800,0,700,'right')
+        gc_printf(SONGBOOK[selected].message,-800,0,700,'right')
     end
 
     -- Time
-    if BGM.tell() then
+    if FMOD.music.getPlaying() then
         setFont(30)
         gc_setColor(COLOR.L)
-        gc_printf(STRING.time_simp(BGM.tell()%BGM.getDuration()),-700,260,626,'left')
-        gc_printf(STRING.time_simp(BGM.getDuration()),700-626,260,626,'right')
+        gc_printf(STRING.time_simp(FMOD.music.tell()%FMOD.music.getDuration()),-700,260,626,'left')
+        gc_printf(STRING.time_simp(FMOD.music.getDuration()),700-626,260,626,'right')
+    end
+
+    -- Searching
+    if searchTimer>0 then
+        gc_setColor(1,1,1,searchTimer*1.26)
+        setFont(30)
+        gc_print(searchStr,0,-360)
     end
 
     -- Collecting progress
@@ -216,7 +301,7 @@ function scene.draw()
     gc.setLineWidth(2)
     gc.line(701,-320,701,-365,565,-365,545,-320)
     setFont(30)
-    gc_printf(collectCount.."/"..bgmCount,695-626,-362,626,'right')
+    gc_printf(collectCount.."/"..totalBgmCount,695-626,-362,626,'right')
 
     -- Autoswitch timer
     if autoplay then
@@ -229,35 +314,18 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
-    WIDGET.new{type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'musicroom_title'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'musicroom_title'},
 
     musicListBox,
     progressBar,
 
     -- Play/Stop
-    WIDGET.new{type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return not BGM.isPlaying() end},
-    WIDGET.new{type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return BGM.isPlaying() end},
+    {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return not FMOD.music.getPlaying() end},
+    {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return FMOD.music.getPlaying() end},
 
-    -- Fullband Switch
-    WIDGET.new{type='switch',pos={.5,.5},x=-650,y=360,h=50,widthLimit=260,labelPos='right',disp=function() return fullband end,
-        name='fullband',text=LANG'musicroom_fullband',
-        sound_on=false,sound_off=false,
-        code=function()
-            fullband=not fullband
-            if BGM.isPlaying() then
-                BGM.set(bgmList[selected].add,'volume',fullband and 1 or 0,.26)
-            elseif SETTINGS.system.bgmVol==0 and MATH.roll(0.1) then
-                noProgress=true
-                scene.enter()
-            end
-        end,
-        visibleTick=function()
-            return fullband~=nil and bgmList[selected].base
-        end,
-    },
     -- Auto Switching Switch
-    WIDGET.new{type='switch',pos={.5,.5},x=-650,y=150,h=50,widthLimit=260,labelPos='right',disp=function() return autoplay end,
+    {type='switch',pos={.5,.5},x=-650,y=150,h=50,widthLimit=260,labelPos='right',disp=function() return autoplay end,
         name='autoplay',text=LANG'musicroom_autoplay',
         sound_on=false,sound_off=false,
         code=function()
@@ -269,8 +337,42 @@ scene.widgetList={
         end,
     },
 
+    -- Fullband Switch
+    {type='switch',pos={.5,.5},x=-650,y=360,h=50,widthLimit=260,labelPos='right',disp=function() return fullband end,
+        name='fullband',text=LANG'musicroom_fullband',
+        sound_on=false,sound_off=false,
+        code=function()
+            fullband=not fullband
+            if FMOD.music.getPlaying() then
+                FMOD.music.setParam('intensity',fullband and 1 or 0)
+            elseif SETTINGS.system.bgmVol==0 and MATH.roll(0.1) then
+                noProgress=true
+                scene.load()
+            end
+        end,
+        visibleTick=function()
+            return fullband~=nil
+        end,
+    },
+
+    -- Section Switch
+    {type='switch',pos={.5,.5},x=-650,y=430,h=50,widthLimit=260,labelPos='right',disp=function() return section end,
+        name='section',text=LANG'musicroom_section',
+        sound_on=false,sound_off=false,
+        code=function()
+            if section==nil then return end
+            section=not section
+            if FMOD.music.getPlaying() then
+                FMOD.music.setParam('section',section and 1 or 0)
+            end
+        end,
+        visibleTick=function()
+            return section~=nil
+        end,
+    },
+
     -- Volume slider
-    WIDGET.new{type='slider_progress',pos={.5,.5},x=450,y=360,w=250,text=CHAR.icon.volUp,fontSize=60,disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
+    {type='slider_progress',pos={.5,.5},x=450,y=360,w=250,text=CHAR.icon.volUp,fontSize=60,disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
 }
 
 return scene
