@@ -26,6 +26,7 @@ return {
         local P=GAME.mainPlayer
         if not P then return end
         if P.finished=='AC' then
+            P.stat.line=40
             PROGRESS.setInteriorScore('marathon',30)
             PROGRESS.setInteriorScore('sprint',
                 P.gameTime<60e3  and 200 or
@@ -43,7 +44,7 @@ return {
         local P=GAME.mainPlayer
         if not P then return end
 
-        local line=math.min(P.stat.line,math.floor(math.max(time-.26,0)*62))
+        local line=math.min(P.stat.line,math.floor(math.max(time-.26,0)*62),40)
 
         -- XX/40
         FONT.set(100)
@@ -55,7 +56,7 @@ return {
         GC.rectangle('line',800-300-15,550-50-15,600+30,100+30)
 
         -- Filling bar
-        if line==40 then
+        if line>=40 then
             GC.setColor(.2,1,.4,.626)
         else
             GC.setColor(1,1,1,.626)
@@ -63,7 +64,7 @@ return {
         GC.rectangle('fill',800-300,550-50,math.floor(line/4)*4/40*600,100)
 
         -- Timer
-        if line==40 and time>1.26 then
+        if line>=40 and time>1.26 then
             FONT.set(60)
             GC.setColor(COLOR.L)
             GC.mStr(STRING.time(P.gameTime/1000),800,510)

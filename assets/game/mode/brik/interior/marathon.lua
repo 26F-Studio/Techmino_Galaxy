@@ -36,6 +36,7 @@ return {
                         P:playSound('beep_rise')
                     else
                         -- TODO
+                        P.stat.line=200
                         P:finish('AC')
                         return
                     end
@@ -66,7 +67,7 @@ return {
         local P=GAME.mainPlayer
         if not P then return end
 
-        local line=math.min(P.stat.line,math.floor(math.max(time-.26,0)*162))
+        local line=math.min(P.stat.line,math.floor(math.max(time-.26,0)*162),200)
 
         -- XX/200
         FONT.set(100)
