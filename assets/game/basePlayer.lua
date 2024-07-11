@@ -150,6 +150,7 @@ function P:say(arg)
         fontType=arg.type or 'norm',
         x=arg.x or 0,
         y=arg.y or 0,
+        k=arg.k or 1,
         inPoint=(arg.i or 0.2)/D,
         outPoint=(arg.o or 0.5)/D,
         r=arg.c and arg.c[1] or 1,
@@ -640,7 +641,7 @@ function P:loadScript(script) -- Parse time stamps and labels, check syntax of l
                         elseif k=='size'     then if not (type(v)=='number' and v>0 and v%5==0 and v<=120) then error(errMsg.."Wrong arg 'size', need 5, 10, 15,... 120") end
                         elseif k=='type' or k=='style' then if type(v)~='string' then error(errMsg.."Wrong arg 'type', need string") end
                         elseif k=='style'    then if type(v)~='string' then error(errMsg.."Wrong arg 'style', need string") end
-                        elseif k=='i' or k=='o' or k=='x' or k=='y' then if type(v)~='number' then error(errMsg.."Wrong arg '"..k.."', need number") end
+                        elseif k=='i' or k=='o' or k=='x' or k=='y' or k=='k' then if type(v)~='number' then error(errMsg.."Wrong arg '"..k.."', need number") end
                         elseif k=='c'        then if type(v)~='table'  then error(errMsg.."Wrong arg 'c', need table") end
                         else error(errMsg.."Wrong arg name '"..k.."'")
                         end

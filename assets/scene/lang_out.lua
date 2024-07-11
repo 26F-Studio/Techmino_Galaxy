@@ -59,8 +59,8 @@ local function _setLang(lid)
     TEXT:clear()
     TEXT:add{
         text=langList[lid],
-        x=800,y=500,a=.626,
-        fontSize=100,
+        x=800,y=500,a=.626,k=2,
+        fontSize=50,
         style='zoomout',
         duration=1.26,
     }

@@ -317,7 +317,8 @@ function scene.keyDown(key,isRep)
                 TEXT:add{
                     text=arrows[key],
                     x=field.mx,y=field.my,
-                    fontSize=100,
+                    fontSize=50,
+                    k=2,
                     style='beat',
                     duration=.26,
                 }

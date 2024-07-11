@@ -189,7 +189,7 @@ return {
             "wait signal",
 
             "sfx win",
-            {cmd='say',arg={duration='6.26s',text="@tutorial_pass",size=120,type='bold',style='beat',c=COLOR.lG,y=-30}},
+            {cmd='say',arg={duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}},
             {cmd=function(P) if P.isMain then PROGRESS.setTutorialPassed(5) end end},
             "finish AC",
         },
