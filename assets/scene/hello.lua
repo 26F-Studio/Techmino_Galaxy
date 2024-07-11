@@ -41,7 +41,7 @@ function scene.draw()
             end
         else
             GC.setColor(.62,.62,.62)
-            FONT.set(25)
+            FONT.set(25,'codepixel')
             GC.print("Initiating Boot Protocol...",40,40)
         end
     elseif PROGRESS.get('main')<=4 then

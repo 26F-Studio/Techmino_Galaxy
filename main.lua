@@ -197,19 +197,22 @@ function ZENITHA.globalEvent.quit()
     PROGRESS.save('save')
 end
 
-FONT.setDefaultFallback('symbols')
-FONT.setDefaultFont('norm')
 FONT.load{
     norm='assets/fonts/RHDisplayGalaxy-Medium.otf',
     bold='assets/fonts/RHDisplayGalaxy-ExtraBold.otf',
 
     number='assets/fonts/RHTextInktrap-Regular.otf',
+    codepixel='assets/fonts/codePixel-Regular.ttf',
+    vonwaon='assets/fonts/VonwaonBitmap-12px.ttf',
     symbols='assets/fonts/symbols.otf',
 
     galaxy_bold="assets/fonts/26FGalaxySans-Bold.otf",
     galaxy_norm="assets/fonts/26FGalaxySans-Regular.otf",
     galaxy_thin="assets/fonts/26FGalaxySans-Thin.otf",
 }
+FONT.setDefaultFallback('symbols')
+FONT.setDefaultFont('norm')
+FONT.setFallback('codepixel','vonwaon')
 SCR.setSize(1600,1000)
 WIDGET.setDefaultOption{
     base={
@@ -624,6 +627,8 @@ SCN.addSwapStyle('fastFadeHeader',{
         GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
     end,
 })
+SCN.scenes._console.widgetList.output.fontType='codepixel'
+SCN.scenes._console.widgetList.input.fontType='codepixel'
 
 FMODLoadFunc()
 if tostring(FMOD.studio):find('NULL') then
