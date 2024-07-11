@@ -34,9 +34,15 @@ function scene.draw()
     TASK.lock('drawBegin')
     if PROGRESS.get('main')<=2 then
         GC.clear(0,0,0)
-        if t<1 and t%.26>.13 then
-            FONT.set(50)
-            GC.print("_",40,20)
+        if t<.42 then
+            if t%.26<.13 then
+                FONT.set(40)
+                GC.print("_",40,20)
+            end
+        else
+            GC.setColor(.62,.62,.62)
+            FONT.set(25)
+            GC.print("Initiating Boot Protocol...",40,40)
         end
     elseif PROGRESS.get('main')<=4 then
         GC.replaceTransform(SCR.xOy_m)
