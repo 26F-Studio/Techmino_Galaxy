@@ -77,9 +77,9 @@ ZENITHA.setVersionText(VERSION.appVer)
 ZENITHA.setFirstScene('hello')
 ZENITHA.setMaxFPS(260)
 ZENITHA.setDebugInfo{
-    {"Cache", gcinfo},
-    {"Tasks", TASK.getCount},
-    {"Mouse", function() return ("%d, %d"):format(SCR.xOy:inverseTransformPoint(love.mouse.getPosition())) end},
+    {"Cache",gcinfo},
+    {"Tasks",TASK.getCount},
+    {"Mouse",function() return ("%d, %d"):format(SCR.xOy:inverseTransformPoint(love.mouse.getPosition())) end},
     -- {"FMOD", function() local a,b,c=FMOD.studio:getMemoryUsage() return a..","..b..","..c end}, -- Only available in logging builds Fmod
 }
 ZENITHA.addConsoleCommand('regurl',{
@@ -339,7 +339,7 @@ IMG.init{
     },
 }
 
-Text=nil---@type Techmino.I18N
+Text=nil ---@type Techmino.I18N
 LANG.add{
     en='assets/language/lang_en.lua',
     zh='assets/language/lang_zh.lua',
@@ -347,6 +347,15 @@ LANG.add{
 LANG.setDefault('en')
 
 function FMODLoadFunc() -- Will be called again when applying advanced options
+    local memLoad=true
+    local function loadBank(path)
+        if memLoad then
+            local bank=FMOD.loadBank2(path)
+            if bank then return bank end
+            memLoad=false
+        end
+        return FMOD.loadBank(love.filesystem.getSaveDirectory()..'/'..path)
+    end
     if not (FMOD.C and FMOD.C2) then
         MSG.new('error',"FMOD library loaded failed")
         return
@@ -360,10 +369,10 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
         coreFlag=FMOD.FMOD_INIT_NORMAL,
     }
 
-    if not FMOD.loadBank2('soundbank/Master.strings.bank') then
+    if not loadBank('soundbank/Master.strings.bank') then
         MSG.new('warn',"Strings bank file load failed")
     end
-    if not FMOD.loadBank2('soundbank/Master.bank') then
+    if not loadBank('soundbank/Master.bank') then
         MSG.new('warn',"Master bank file load failed")
     end
     FMOD.registerMusic((function()
@@ -376,7 +385,7 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
             if not love.filesystem.getInfo('soundbank/'..bankName..'.bank') then
                 MSG.new('warn',bankName.." bank file not found")
             else
-                local bankMusic=FMOD.loadBank2('soundbank/'..bankName..'.bank')
+                local bankMusic=loadBank('soundbank/'..bankName..'.bank')
                 if not bankMusic then
                     MSG.new('warn',"bank "..bankName.." load failed")
                 else
@@ -403,7 +412,7 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
             MSG.new('warn',"Effect bank not found")
             return {}
         end
-        local bankEffect=FMOD.loadBank2('soundbank/Effect.bank')
+        local bankEffect=loadBank('soundbank/Effect.bank')
         if not bankEffect then
             MSG.new('warn',"Effect bank file load failed")
             return {}
@@ -617,8 +626,10 @@ SCN.addSwapStyle('fastFadeHeader',{
 })
 
 FMODLoadFunc()
-if tostring(FMOD.studio):find('NULL') or TABLE.getSize(FMOD.banks)==0 then
+if tostring(FMOD.studio):find('NULL') then
     MSG.new('error',"FMOD initialization failed")
+elseif TABLE.getSize(FMOD.banks)==0 then
+    MSG.new('error',"no FMOD bank files found")
 else
     FMOD.setMainVolume(SETTINGS.system.mainVol,true)
     for name,data in next,SONGBOOK do

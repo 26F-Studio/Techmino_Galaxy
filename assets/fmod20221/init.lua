@@ -76,7 +76,7 @@ function M.loadBank(path,flag)
     return bank
 end
 
----This method uses 'loadBankMemory' instead of 'loadBankFile', which makes all files visible to love2d's filesystem can be loaded
+---This method uses 'loadBankMemory' instead of 'loadBankFile', which makes files visible to love2d's filesystem can be loaded
 ---@param path string
 ---@param flag? FMOD.Const
 ---@return FMOD.Studio.Bank?
