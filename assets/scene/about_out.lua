@@ -126,17 +126,17 @@ function scene.draw()
     GC.mDraw(love_logo,160,300,-.785398+t*4.2-math.sin(t*4.2),.7033)
 
     FONT.set(35)
-    GC.shadedPrint(Text.about_module,300,230,'left',2,4)
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,Text.about_module,300,230,'left')
     local m=modules[math.floor(t)%#modules+1]
     FONT.set(50)
-    GC.shadedPrint(m[1],300,270,'left',2,4)
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,m[1],300,270,'left')
     FONT.set(30)
-    GC.shadedPrint(m[2],300,330,'left',2,4)
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,m[2],300,330,'left')
 
     FONT.set(35)
-    GC.shadedPrint(Text.about_toolchain,942,230,'left',2,4)
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,Text.about_toolchain,942,230,'left')
     FONT.set(50)
-    GC.shadedPrint(toolchain[math.floor(t)%#toolchain+1],942,270,'left',2,4)
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,toolchain[math.floor(t)%#toolchain+1],942,270,'left')
 end
 
 scene.widgetList={

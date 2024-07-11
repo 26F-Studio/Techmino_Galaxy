@@ -405,7 +405,7 @@ function map:draw()
             FONT.set(30)
             gc_setColor(COLOR.L)
             local modeInfo=Text.exteriorModeInfo[m.name]
-            GC.shadedPrint(modeInfo and modeInfo[1] or m.name,0,-21,'center',2,4)
+            GC.strokePrint('side',2,COLOR.D,COLOR.L,modeInfo and modeInfo[1] or m.name,0,-21,'center')
 
             -- Selecting frame
             if m==selected or m.active>.001 then

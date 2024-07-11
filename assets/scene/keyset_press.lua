@@ -75,9 +75,9 @@ function scene.draw()
     end
 
     GC.replaceTransform(SCR.xOy_m)
-    FONT.set(100) GC.shadedPrint(Text[keyLangStr],0,-200,'center',4,8)
-    FONT.set(60)  GC.shadedPrint(result or Text.keyset_pressKey,0,-40,'center',2,8)
-    FONT.set(35)  GC.shadedPrint(Text.keyset_info,0,80,'center',2,8)
+    FONT.set(100) GC.strokePrint('full',4,COLOR.D,COLOR.L,Text[keyLangStr],0,-200,'center')
+    FONT.set(60)  GC.strokePrint('full',2,COLOR.D,COLOR.L,result or Text.keyset_pressKey,0,-40,'center')
+    FONT.set(35)  GC.strokePrint('full',2,COLOR.D,COLOR.L,Text.keyset_info,0,80,'center')
 
     GC.replaceTransform(SCR.xOy)
     if SETTINGS.system.touchControl then VCTRL.draw() end

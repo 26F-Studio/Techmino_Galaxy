@@ -266,10 +266,18 @@ function scene.draw()
     local t=love.timer.getTime()
     if SONGBOOK[selected].inside then
         gc_setColor(1,1,1,MATH.roundUnit(.5+sin(6.2*t)*.26,.26))
+        gc.draw(titleTextObj,-100,-100,0,min(1,650/titleTextObj:getWidth()),nil,titleTextObj:getWidth(),titleTextObj:getHeight())
     else
-        gc_setColor(sin(t*.5)*.2+.8,sin(t*.7)*.2+.8,sin(t)*.2+.8)
+        local ox,oy=titleTextObj:getWidth(),titleTextObj:getHeight()
+        local sx=min(1,650/ox)
+        local r,g,b=sin(t*.5)*.2+.8,sin(t*.7)*.2+.8,sin(t)*.2+.8
+        gc_setColor(r*.2,g*.2,b*.2)
+        GC.strokeDraw('full',4,titleTextObj,-100,-100,0,sx,nil,ox,oy)
+        gc_setColor(r*.4,g*.4,b*.4)
+        GC.strokeDraw('side',2,titleTextObj,-100,-100,0,sx,nil,ox,oy)
+        gc_setColor(r,g,b)
+        gc.draw(titleTextObj,-100,-100,0,sx,nil,ox,oy)
     end
-    gc.draw(titleTextObj,-100,-100,0,min(1,650/titleTextObj:getWidth()),nil,titleTextObj:getWidth(),titleTextObj:getHeight())
 
     -- Author and message
     setFont(50)
