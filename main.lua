@@ -581,6 +581,12 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
         SCN.add(sceneName,require('assets/scene/'..sceneName))
     end
 end
+for _,v in next,love.filesystem.getDirectoryItems('assets/scene_app') do
+    if FILE.isSafe('assets/scene_app/'..v) then
+        local sceneName=v:sub(1,-5)
+        SCN.add(sceneName,require('assets/scene_app/'..sceneName))
+    end
+end
 
 for _,v in next,{
     'brik_template', -- Shouldn't be used
