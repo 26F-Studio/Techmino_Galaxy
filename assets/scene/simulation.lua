@@ -106,6 +106,8 @@ function scene.mouseDown(x,y,k)
                 subjectFocused=s
             end
         end
+    elseif k==2 then
+        SCN.back('fadeHeader')
     end
 end
 

@@ -35,6 +35,7 @@ function scene.unload()
     saveKey()
 end
 
+function scene.mouseDown(_,_,k) if k==2 then SCN.back('none') end end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if KEYMAP.sys:getAction(key)=='back' then

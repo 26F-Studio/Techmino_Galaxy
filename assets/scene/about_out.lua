@@ -37,21 +37,25 @@ function scene.load()
     timer,score=12.6,0
 end
 
-function scene.mouseDown(x,y)
-    x,y=SCR.xOy:transformPoint(x,y)
-    x,y=SCR.xOy_d:inverseTransformPoint(x,y)
-    for i=1,#obj do
-        local o=obj[i]
-        if math.abs(x-o.x)<=o.r and math.abs(y+o.y)<=o.r then
-            if not o.name then
-                setName(o)
+function scene.mouseDown(x,y,k)
+    if k==1 then
+        x,y=SCR.xOy:transformPoint(x,y)
+        x,y=SCR.xOy_d:inverseTransformPoint(x,y)
+        for i=1,#obj do
+            local o=obj[i]
+            if math.abs(x-o.x)<=o.r and math.abs(y+o.y)<=o.r then
+                if not o.name then
+                    setName(o)
+                end
+                o.vx=(o.vx+(o.x-x)*6.26)*.626
+                o.vy=math.min((o.vy+math.random(620,1260))*.8,600)
+                o.va=o.va+(o.x-x)/26*(.8+.4*math.random())
+                score=score+o.score+(60-o.r/1.62)+math.random(2,6)
+                break
             end
-            o.vx=(o.vx+(o.x-x)*6.26)*.626
-            o.vy=math.min((o.vy+math.random(620,1260))*.8,600)
-            o.va=o.va+(o.x-x)/26*(.8+.4*math.random())
-            score=score+o.score+(60-o.r/1.62)+math.random(2,6)
-            break
         end
+    elseif k==2 then
+        SCN.back('fadeHeader')
     end
 end
 
