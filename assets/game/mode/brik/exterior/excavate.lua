@@ -79,7 +79,7 @@ return {
                         PROGRESS.setExteriorScore('dig','volcanics',P.gameTime,'<')
                     end
 
-                    local playCount=PROGRESS.getExteriorMapState('dig').playCount or 0
+                    local playCount=PROGRESS.getExteriorModeState('dig').playCount or 0
                     if
                         (PROGRESS.getExteriorModeState('dig').shale     or 1e99)<=100e3+10e3*playCount or
                         (PROGRESS.getExteriorModeState('dig').volcanics or 1e99)<=100e3+10e3*playCount or
