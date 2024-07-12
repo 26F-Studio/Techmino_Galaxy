@@ -68,14 +68,14 @@ jobs:
         run: |
           mkdir -p soundbank
           cd soundbank/
-          curl --output Master.strings.bank  "https://26f.xn--dtra.com/d/Master.strings.bank"
-          curl --output Master.bank          "https://26f.xn--dtra.com/d/Master.bank"
-          curl --output Effect.bank          "https://26f.xn--dtra.com/d/Effect.bank"
+          curl --output Master.strings.bank  "https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx?UniqueId=499108f8%2D5f08%2D45a9%2D84e6%2De6a75616dc3f"
+          curl --output Master.bank          "https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx?UniqueId=bdd4a636%2Df72f%2D469f%2Db1b9%2D65078a7e383f"
+          curl --output Effect.bank          "https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx?UniqueId=52f3f937%2D985b%2D40d6%2Da443%2Ded0152b9465b"
   # Need to be enabled for release only
-  #        curl --output Music_Beepbox.bank   "https://26f.xn--dtra.com/d/Music_Beepbox.bank"
-  #        curl --output Music_FL.bank        "https://26f.xn--dtra.com/d/Music_FL.bank"
-  #        curl --output Music_Community.bank "https://26f.xn--dtra.com/d/Music_Community.bank"
-  #        curl --output Music_Extra.bank     "https://26f.xn--dtra.com/d/Music_Extra.bank"
+  #        curl --output Music_Beepbox.bank   "https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx?UniqueId=40e4520f%2D2f26%2D4024%2D8d72%2Dc4fc544de6ea"
+  #        curl --output Music_Community.bank "https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx?UniqueId=3ef03599%2D8b6c%2D4253%2Db79b%2Df76dc07fdffb"
+  #        curl --output Music_Extra.bank     "https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx?UniqueId=e9fc37f1%2D6be5%2D4027%2Da735%2Db26682839df9"
+  #        curl --output Music_FL.bank        "https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx?UniqueId=cf8caef4%2D3698%2D447a%2Da4ce%2D37cbf44f1206"
       - name: Build core love package
         uses: 26F-Studio/love-actions-core@v1
         with:
