@@ -7,6 +7,7 @@ local settings={
         sfxVol=1,
         vocVol=0,
         vibVol=1,
+        fmod_loadMemory=true,
         fmod_maxChannel=32,
         fmod_DSPBufferCount=4,
         fmod_DSPBufferLength=8,

@@ -350,12 +350,14 @@ LANG.add{
 LANG.setDefault('en')
 
 function FMODLoadFunc() -- Will be called again when applying advanced options
-    local memLoad=true
+    local memLoad=SETTINGS.system.fmod_loadMemory
     local function loadBank(path)
         if memLoad then
             local bank=FMOD.loadBank2(path)
             if bank then return bank end
             memLoad=false
+            SETTINGS.system.fmod_loadMemory=false
+            MSG.new('other',"Switched to another bank loading mode")
         end
         return FMOD.loadBank(love.filesystem.getSaveDirectory()..'/'..path)
     end

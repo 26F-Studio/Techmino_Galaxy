@@ -68,8 +68,8 @@ function M.loadBank(path,flag)
     if not studio then return end
     local bank,res=studio:loadBankFile(path,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
     if res~=M.FMOD_OK then
-        LOG("FMOD loadBankMemory error: "..M.errorString[res])
-        MSG.new('warn',"FMOD loadBankMemory error: "..M.errorString[res])
+        LOG("FMOD loadBank error: "..M.errorString[res])
+        MSG.new('warn',"FMOD loadBank error: "..M.errorString[res])
         return
     end
     M.banks[path]=bank
