@@ -4,7 +4,7 @@ local scene={}
 local pauseText
 
 local function fuse()
-    repeat DEBUG.yieldT(6.26) until SCN.cur~='pause_out'
+    repeat DEBUG.yieldT(6.26) until SCN.cur~='pause_in'
     FMOD.effect.keyOff('music_pause')
 end
 
@@ -16,6 +16,9 @@ function scene.load()
 end
 function scene.unload()
     FMOD.effect.keyOff('music_pause')
+    if not (SCN.state.target=='setting_in' or SCN.state.target=='game_in') then
+        GAME.unload()
+    end
 end
 
 local function sysAction(action)
