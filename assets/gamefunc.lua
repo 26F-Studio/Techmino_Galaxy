@@ -158,14 +158,21 @@ function autoQuitInterior(disable)
     end
 end
 
-function saveSettings()
+local function _saveSettings()
+    DEBUG.yieldT(.626)
     FILE.save({
         system=SETTINGS._system,
         game_brik=SETTINGS.game_brik,
         game_gela=SETTINGS.game_gela,
         game_acry=SETTINGS.game_acry,
     },'conf/settings','-json')
-    showSaveIcon(CHAR.icon.settings..CHAR.icon.save)
+    if PROGRESS.get('main')>=3 then
+        showSaveIcon(CHAR.icon.settings..CHAR.icon.save)
+    end
+end
+function saveSettings()
+    TASK.removeTask_code(_saveSettings)
+    TASK.new(_saveSettings)
 end
 function saveKey()
     FILE.save({

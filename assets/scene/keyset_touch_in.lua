@@ -7,7 +7,9 @@ function scene.load()
 end
 
 function scene.unload()
-    saveTouch()
+    if SCN.stackChange<0 then
+        saveTouch()
+    end
 end
 
 function scene.keyDown(key,isRep)

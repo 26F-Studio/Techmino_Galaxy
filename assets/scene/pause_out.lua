@@ -20,7 +20,7 @@ function scene.load()
 end
 function scene.unload()
     FMOD.effect.keyOff('music_pause')
-    if not (SCN.state.target=='setting_out' or SCN.state.target=='game_out') then
+    if SCN.stackChange<0 then
         GAME.unload()
     end
 end

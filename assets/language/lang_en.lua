@@ -225,6 +225,24 @@ local L={
         action=           {"Action","Use both keyboard & mouse"},
     },
 
+    -- Mode Task Texts
+    exteriorModeTasks={
+        sequence_mph_title="MPH",
+        sequence_mph_desc="Any clear in 4 pieces",
+        sequence_flood_title="Flood",
+        sequence_flood_desc="Clear with S or Z",
+        sequence_drought_title="Drought",
+        sequence_drought_desc="Clear with J or L",
+        sequence_saw_title="Saw",
+        sequence_saw_desc="Clear with T",
+        sequence_rect_title="Rect",
+        sequence_rect_desc="Clear with O",
+        sequence_rain_title="Rain",
+        sequence_rain_desc="Clear with I",
+        sequence_pento_title="Pento",
+        sequence_pento_desc="Clear with a Pento",
+    },
+
     -- Achievement
     ---@enum (key) Techmino.Text.Achievement
     achievementMessage={

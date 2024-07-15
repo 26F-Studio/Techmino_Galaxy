@@ -25,7 +25,7 @@ function scene.load()
     changed=false
 end
 function scene.unload()
-    if changed then
+    if changed and SCN.stackChange<0 then
         saveSettings()
     end
 end

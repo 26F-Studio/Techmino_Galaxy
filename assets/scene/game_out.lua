@@ -21,7 +21,7 @@ function scene.load()
     WIDGET._reset()
 end
 function scene.unload()
-    if SCN.state.target~='pause_out' then
+    if SCN.stackChange<0 then
         GAME.unload()
     end
 end

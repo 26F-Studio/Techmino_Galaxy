@@ -225,6 +225,24 @@ local L={
         action=           {"动作","键鼠搭配更佳"},
     },
 
+    -- Mode Task Texts
+    exteriorModeTasks={
+        sequence_mph_title="MPH",
+        sequence_mph_desc="4块内消除",
+        sequence_flood_title="Flood",
+        sequence_flood_desc="用S/Z消除",
+        sequence_drought_title="Drought",
+        sequence_drought_desc="用J/L消除",
+        sequence_saw_title="Saw",
+        sequence_saw_desc="用T消除",
+        sequence_rect_title="Rect",
+        sequence_rect_desc="用O消除",
+        sequence_rain_title="Rain",
+        sequence_rain_desc="用I消除",
+        sequence_pento_title="Pento",
+        sequence_pento_desc="用五连块消除",
+    },
+
     -- Achievement
     achievementMessage={
         dict_shortcut="快捷键高手",

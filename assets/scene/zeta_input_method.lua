@@ -177,6 +177,11 @@ function scene.load()
     freshWidgetPos()
     freshResult()
 end
+function scene.unload()
+    inputs=nil
+    results=nil
+    charQueue=nil
+end
 
 function scene.mouseDown(x,y,k)
     if k==1 and not writing then
