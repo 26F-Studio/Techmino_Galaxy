@@ -183,7 +183,7 @@ function scene.keyDown(key,isRep)
     return true
 end
 function scene.mouseMove() scene.focus(true) end
-function scene.mouseDown(_,_,k) scene.focus(true) if k==2 then SCN.back('fadeHeader') end end
+function scene.mouseDown(_,_,k) scene.focus(true) end
 function scene.wheelMove() scene.focus(true) end
 function scene.touchDown() scene.focus(true) end
 function scene.focus(f) -- Reduce carbon footprint for music lovers
