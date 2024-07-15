@@ -35,7 +35,7 @@ local shapes do
         {matrix={{_,_,O},{O,O,O},{_,O,_}}}, -- E
         {matrix={{_,O,_},{_,O,_},{O,O,O}}}, -- T5
         {matrix={{O,_,O},{O,O,O},{_,_,_}}}, -- U
-        {matrix={{_,_,O,_},{_,_,O,O},{O,O,O,_},{_,_,_,_}}}, -- V
+        {matrix={{_,_,O,_},{_,_,O,_},{O,O,O,_},{_,_,_,_}}}, -- V
         {matrix={{O,_,_},{O,O,_},{_,O,O}}}, -- W
         {unuse=true,matrix={{_,O,_},{O,O,O},{_,O,_}}}, -- X
         {matrix={{_,_,_,_},{O,_,_,_},{O,O,O,O},{_,_,_,_}}}, -- J5
