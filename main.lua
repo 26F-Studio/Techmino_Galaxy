@@ -202,8 +202,7 @@ FONT.load{
     bold='assets/fonts/RHDisplayGalaxy-ExtraBold.otf',
 
     number='assets/fonts/RHTextInktrap-Regular.otf',
-    codepixel='assets/fonts/codePixel-Regular.ttf',
-    vonwaon='assets/fonts/VonwaonBitmap-12px.ttf',
+    codepixel='assets/fonts/codePixel_cjk-Regular.ttf',
     symbols='assets/fonts/symbols.otf',
 
     galaxy_bold="assets/fonts/26FGalaxySans-Bold.otf",
@@ -212,7 +211,6 @@ FONT.load{
 }
 FONT.setDefaultFallback('symbols')
 FONT.setDefaultFont('norm')
-FONT.setFallback('codepixel','vonwaon')
 SCR.setSize(1600,1000)
 WIDGET.setDefaultOption{
     base={
