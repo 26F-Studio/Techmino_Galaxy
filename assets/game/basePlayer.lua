@@ -13,7 +13,7 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 ---@field sound boolean
 ---@field settings Techmino.Mode.Setting.Brik|Techmino.Mode.Setting.Gela|Techmino.Mode.Setting.Acry
 ---@field buffedKey table
----@field modeData Techmino.PlayerModeData
+---@field modeData Techmino.PlayerModeData Warning: may contain anything, choose variable name carefully, suggested to be >=6 characters in total & multiple words (eg. `tspinCount`)
 ---@field soundTimeHistory table
 ---@field RND love.RandomGenerator
 ---@field pos {x:number, y:number, k:number, a:number, dx:number, dy:number, dk:number, da:number, vx:number, vy:number, vk:number, va:number}

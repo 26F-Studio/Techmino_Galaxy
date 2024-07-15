@@ -4,7 +4,7 @@ local comboGenerator={}
 local function newMap(P)
     local F=P.field
     local w=P.settings.fieldW
-    local difficulty=MATH.clamp(P.modeData.cleared+1+P:random(-1,1),1,10)
+    local difficulty=MATH.clamp(P.modeData.levelsCleared+1+P:random(-1,1),1,10)
     local height=10+math.floor((difficulty+1)/2)+P:random(-2,2)
     local wellWidth=MATH.clamp(2+math.floor(difficulty/4),2,4)
     local widthExpandCounter=math.floor(15-difficulty)+P:random(-2,2)
@@ -73,7 +73,7 @@ function comboGenerator.event_playerInit(P)
 
     P.modeData.comboCount=0
     P.modeData.levelRemain=0
-    P.modeData.cleared=0
+    P.modeData.levelsCleared=0
     P.modeData._curHisLen=false
     newMap(P)
 end
@@ -103,7 +103,7 @@ function comboGenerator.event_beforeDiscard(P)
         if P.modeData.comboCount>=P.modeData.target.combo then
             P:finish('AC')
         elseif P.modeData.levelRemain<=0 then
-            P.modeData.cleared=P.modeData.cleared+1
+            P.modeData.levelsCleared=P.modeData.levelsCleared+1
             newMap(P)
             P:playSound('beep_rise')
         end
