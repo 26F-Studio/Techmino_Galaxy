@@ -595,7 +595,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Cleanup
-        uses: geekyeggo/delete-artifact@v2
+        uses: geekyeggo/delete-artifact@v5
         with:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Send Discord message
