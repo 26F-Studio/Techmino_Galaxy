@@ -93,9 +93,9 @@ do -- tspin
                 if not P.modeData.tspin then
                     P.modeData.tspin=P.modeData.tsd
                     P.modeData.tsd=nil
+                    P:playSound('beep_drop')
                 end
                 P.modeData.tspin=P.modeData.tspin+1
-                P:playSound('beep_drop')
             else
                 P:finish('PE')
             end
