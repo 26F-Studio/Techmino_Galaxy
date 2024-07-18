@@ -18,12 +18,13 @@ local lineFont={
     95,95, -- 24,25
     100, -- 26+
 }
-local function outStackState(P)
-    return not P.modeData.stack_enabled
-end
 
 ---@type Map<Techmino.Event.Brik>
 local stack={}
+
+function stack._outStackState(P)
+    return not P.modeData.stack_enabled
+end
 
 ---@param fall? boolean
 ---@param timeLimit? number Automatically quit when time up (if given)
@@ -50,7 +51,7 @@ function stack.switch_auto(P,fall,timeLimit)
     setEvent(P,'afterLock',fall and stack.event_afterLock or stack.event_afterLock_noFall)
     setEvent(P,'drawOnPlayer',stack.event_drawOnPlayer)
     setEvent(P,'whenSuffocate',stack.event_whenSuffocate)
-    if P.modeData.stack_enabled and timeLimit then mechLib.common.timer.new(P,timeLimit,{timeUp=stack.event_whenSuffocate,draw='float',cancel=outStackState}) end
+    if P.modeData.stack_enabled and timeLimit then mechLib.common.timer.new(P,timeLimit,{timeUp=stack.event_whenSuffocate,draw='float',cancel=stack._outStackState}) end
 end
 function stack.switch(P)
     local md=P.modeData
