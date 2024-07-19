@@ -12,6 +12,7 @@ local selected,fullband,section
 local collectCount=0
 local noProgress=false
 local autoplay=false ---@type number|false
+local autoplayLastRec
 local fakeProgress=0
 local searchStr,searchTimer
 local noResponseTimer=6.26
@@ -73,6 +74,10 @@ local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1
         if mode=='release' then
             _glitchProtect=0.26
             FMOD.music.seek(v*FMOD.music.getDuration())
+            if autoplay then
+                autoplay=0.626
+                autoplayLastRec=false
+            end
         end
     end,
     visibleTick=function() return FMOD.music.getPlaying() end,
@@ -167,9 +172,6 @@ function scene.keyDown(key,isRep)
             else
                 scene.widgetList.fullband.code()
             end
-        elseif key=='`' and isAltPressed() then
-            noProgress=true
-            scene.load()
         elseif key=='return' then
             if selected~=musicListBox:getItem() then
                 musicListBox.code()
@@ -178,6 +180,9 @@ function scene.keyDown(key,isRep)
             FMOD.music.seek(0)
         elseif act=='back' then
             SCN.back('fadeHeader')
+        elseif key=='`' and isAltPressed() then
+            noProgress=true
+            scene.load()
         end
     end
     return true
@@ -218,18 +223,23 @@ function scene.update(dt)
         if autoplay>0 then
             autoplay=max(autoplay-dt,0)
         else
-            if FMOD.music.getDuration()-FMOD.music.tell()<.26 then
-                autoplay=math.random(42,120)
-                fullband=MATH.roll(.42)
+            if autoplayLastRec then
+                if math.abs(FMOD.music.tell()-autoplayLastRec)>2.6 then
+                    autoplay=math.random(42,126)
+                    fullband=MATH.roll(.62)
 
-                local list,r=musicListBox:getList()
-                repeat
-                    r=math.random(#list)
-                until list[r]~=musicListBox:getItem()
-                musicListBox:select(r)
-                musicListBox.code()
+                    local list,r=musicListBox:getList()
+                    repeat
+                        r=math.random(#list)
+                    until list[r]~=musicListBox:getItem()
+                    musicListBox:select(r)
+                    musicListBox.code()
+                else
+                    autoplay=.26
+                    autoplayLastRec=FMOD.music.tell()
+                end
             else
-                autoplay=.0626
+                autoplayLastRec=FMOD.music.tell()
             end
         end
     end
@@ -317,7 +327,7 @@ function scene.draw()
         gc.setLineWidth(2)
         gc.circle('line',-670,95,20)
         gc_setColor(1,1,1,.26)
-        gc.arc('fill','pie',-670,95,20,-MATH.pi/2,-MATH.pi/2+autoplay/120*MATH.tau)
+        gc.arc('fill','pie',-670,95,20,-MATH.pi/2,-MATH.pi/2+autoplay/126*MATH.tau)
     end
 end
 
@@ -340,7 +350,8 @@ scene.widgetList={
             if autoplay then
                 autoplay=false
             else
-                autoplay=math.random(42,120)
+                autoplay=math.random(42,126)
+                autoplayLastRec=false
             end
         end,
     },
