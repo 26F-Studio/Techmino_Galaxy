@@ -5,6 +5,7 @@ local require=simpRequire(function(path) return 'assets/game/mechanicLib/'..path
 local mechLib={
     common={
         -- Tool
+        task=require'common/task',
         timer=require'common/timer',
         music=require'common/music',
         characterAnim=require'common/characterAnim',

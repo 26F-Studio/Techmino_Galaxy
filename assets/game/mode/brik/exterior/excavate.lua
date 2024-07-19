@@ -16,6 +16,11 @@ return {
                 P.modeData.lineStay=0
                 mechLib.brik.dig.event_playerInit(P)
                 P:riseGarbage(math.floor(P.settings.fieldW*.5+1+P:rand(-2,2)))
+                local T=mechLib.common.task
+                T.install(P)
+                T.add(P,'excavate_shale',     'modeTask_excavate_shale_title',     'modeTask_excavate_shale_desc')
+                T.add(P,'excavate_volcanics', 'modeTask_excavate_volcanics_title', 'modeTask_excavate_volcanics_desc')
+                T.add(P,'excavate_checker',   'modeTask_excavate_checker_title',   'modeTask_excavate_checker_desc')
             end,
             gameStart=function(P) P.timing=false end,
             afterClear={
@@ -31,17 +36,21 @@ return {
                                 end
                             end
                         end
+                        local T=mechLib.common.task
                         if split then
+                            T.set(P,'excavate_checker',true)
                             P.modeData.digMode='checker'
                             P.modeData.target.lineDig=8
                             P.modeData.lineStay=8
                             mechLib.common.music.set(P,{path='.lineDig',s=2,e=6},'afterClear')
                         elseif clear.line<=2 then
+                            T.set(P,'excavate_shale',true)
                             P.modeData.digMode='shale'
                             P.modeData.target.lineDig=40
                             P.modeData.lineStay=6
                             mechLib.common.music.set(P,{path='.lineDig',s=10,e=30},'afterClear')
                         else
+                            T.set(P,'excavate_volcanics',true)
                             P.modeData.digMode='volcanics'
                             P.modeData.target.lineDig=20
                             P.modeData.lineStay=5

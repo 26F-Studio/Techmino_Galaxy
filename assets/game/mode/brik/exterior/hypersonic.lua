@@ -15,19 +15,31 @@ return {
                 P.settings.dropDelay=0
                 P.settings.lockDelay=1e99
                 P.settings.spawnDelay=260
+                local T=mechLib.common.task
+                T.install(P)
+                T.add(P,'hypersonic_low','modeTask_hypersonic_low_title','modeTask_hypersonic_low_desc','(0/4)')
+                T.add(P,'hypersonic_high','modeTask_hypersonic_high_title','modeTask_hypersonic_high_desc')
+                T.add(P,'hypersonic_hidden','modeTask_hypersonic_hidden_title','modeTask_hypersonic_hidden_desc')
+                T.add(P,'hypersonic_titanium','modeTask_hypersonic_titanium_title','modeTask_hypersonic_titanium_desc')
             end,
             afterClear=function(P,clear)
                 local initFunc
+                local T=mechLib.common.task
+                if P.stat.line<4 then
+                    T.set(P,'hypersonic_low',P.stat.line/4,('($1/4)'):repD(P.stat.line))
+                end
                 if clear.line>=4 then
 
                     if #P.holdQueue==0 and P.gameTime<=8e3 then
                         -- Titanium: Techrash in 8s without hold
+                        T.set(P,'hypersonic_titanium',true)
                         P.modeData.subMode='titanium'
                         initFunc=mechLib.brik.marathon.hypersonic_titanium_event_playerInit
                         playBgm('secret7th remix_hypersonic_titanium')
 
                     elseif P.gameTime<=6e3 then
                         -- Hidden: Techrash in 6s
+                        T.set(P,'hypersonic_hidden',true)
                         P.modeData.subMode='hidden'
                         initFunc=mechLib.brik.marathon.hypersonic_hidden_event_playerInit
                         playBgm('secret7th_hypersonic_hidden')
@@ -36,6 +48,7 @@ return {
 
                     else
                         -- High: Techrash
+                        T.set(P,'hypersonic_high',true)
                         P.modeData.subMode='high'
                         initFunc=mechLib.brik.marathon.hypersonic_high_event_playerInit
                         playBgm('secret7th')
@@ -45,6 +58,7 @@ return {
                 elseif P.stat.line>=4 then
                     -- Low: 4 Lines
                     P.modeData.subMode='low'
+                    T.set(P,'hypersonic_low',true,'(4/4)')
                     initFunc=mechLib.brik.marathon.hypersonic_low_event_playerInit
                     playBgm('secret8th')
                     mechLib.common.music.set(P,{path='.point',s=100,e=300},'afterSpawn')
