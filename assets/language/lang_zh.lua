@@ -225,6 +225,55 @@ local L={
         action=           {"动作","键鼠搭配更佳"},
     },
 
+    -- Submode Task Texts
+    modeTask_question_title="???",
+    modeTask_question_desc="??????",
+
+    modeTask_sequence_mph_title="MPH",
+    modeTask_sequence_mph_desc="4块内消除",
+    modeTask_sequence_flood_title="Flood",
+    modeTask_sequence_flood_desc="用S/Z消除",
+    modeTask_sequence_drought_title="Drought",
+    modeTask_sequence_drought_desc="用J/L消除",
+    modeTask_sequence_saw_title="Saw",
+    modeTask_sequence_saw_desc="用T消除",
+    modeTask_sequence_rect_title="Rect",
+    modeTask_sequence_rect_desc="用O消除",
+    modeTask_sequence_rain_title="Rain",
+    modeTask_sequence_rain_desc="用I消除",
+    modeTask_sequence_pento_title="Pento",
+    modeTask_sequence_pento_desc="用五连块消除",
+
+    modeTask_hypersonic_low_title="Low",
+    modeTask_hypersonic_low_desc="消除四行",
+    modeTask_hypersonic_high_title="High",
+    modeTask_hypersonic_high_desc="消四",
+    modeTask_hypersonic_hidden_title="Hidden",
+    modeTask_hypersonic_hidden_desc="6秒内消四",
+    modeTask_hypersonic_titanium_title="Titanium",
+    modeTask_hypersonic_titanium_desc="8秒内消四 且 不使用暂存",
+
+    modeTask_excavate_shale_title="Shale",
+    modeTask_excavate_shale_desc="挖掘",
+    modeTask_excavate_volcanics_title="Volcanics",
+    modeTask_excavate_volcanics_desc="用消三+挖掘",
+    modeTask_excavate_checker_title="Checker",
+    modeTask_excavate_checker_desc="用隔断消除挖掘",
+
+    modeTask_backfire_cheese_title="Cheese",
+    modeTask_backfire_cheese_desc="消除8行",
+    modeTask_backfire_normal_title="Normal",
+    modeTask_backfire_normal_desc="在消除6行内打出7行攻击",
+    modeTask_backfire_amplify_title="Amplify",
+    modeTask_backfire_amplify_desc="在消除4行内打出8行攻击",
+
+    modeTask_survivor_cheese_title="Cheese",
+    modeTask_survivor_cheese_desc="打出8行攻击",
+    modeTask_survivor_power_title="Power",
+    modeTask_survivor_power_desc="打出8行攻击 且 效率达到1",
+    modeTask_survivor_spike_title="Spike",
+    modeTask_survivor_spike_desc="打出8行攻击 且 效率达到2",
+
     -- Achievement
     achievementMessage={
         dict_shortcut="快捷键高手",

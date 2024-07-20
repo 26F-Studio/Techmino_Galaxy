@@ -225,6 +225,55 @@ local L={
         action=           {"Action","Use both keyboard & mouse"},
     },
 
+    -- Submode Task Texts
+    modeTask_question_title="???",
+    modeTask_question_desc="??????",
+
+    modeTask_sequence_mph_title="MPH",
+    modeTask_sequence_mph_desc="Any clear in 4 pieces",
+    modeTask_sequence_flood_title="Flood",
+    modeTask_sequence_flood_desc="Clear with S or Z",
+    modeTask_sequence_drought_title="Drought",
+    modeTask_sequence_drought_desc="Clear with J or L",
+    modeTask_sequence_saw_title="Saw",
+    modeTask_sequence_saw_desc="Clear with T",
+    modeTask_sequence_rect_title="Rect",
+    modeTask_sequence_rect_desc="Clear with O",
+    modeTask_sequence_rain_title="Rain",
+    modeTask_sequence_rain_desc="Clear with I",
+    modeTask_sequence_pento_title="Pento",
+    modeTask_sequence_pento_desc="Clear with a Pento",
+
+    modeTask_hypersonic_low_title="Low",
+    modeTask_hypersonic_low_desc="Clear 4 lines",
+    modeTask_hypersonic_high_title="High",
+    modeTask_hypersonic_high_desc="Clear a Techrash",
+    modeTask_hypersonic_hidden_title="Hidden",
+    modeTask_hypersonic_hidden_desc="Techrash in 6s",
+    modeTask_hypersonic_titanium_title="Titanium",
+    modeTask_hypersonic_titanium_desc="no-hold Techrash in 8s ",
+
+    modeTask_excavate_shale_title="Shale",
+    modeTask_excavate_shale_desc="Dig with Triple-",
+    modeTask_excavate_volcanics_title="Volcanics",
+    modeTask_excavate_volcanics_desc="Dig with Triple+",
+    modeTask_excavate_checker_title="Checker",
+    modeTask_excavate_checker_desc="Dig with Split",
+
+    modeTask_backfire_cheese_title="Cheese",
+    modeTask_backfire_cheese_desc="Clear 8 lines",
+    modeTask_backfire_normal_title="Normal",
+    modeTask_backfire_normal_desc="Send 7 lines in 6 lines",
+    modeTask_backfire_amplify_title="Amplify",
+    modeTask_backfire_amplify_desc="Send 8 lines in 4 lines",
+
+    modeTask_survivor_cheese_title="Cheese",
+    modeTask_survivor_cheese_desc="Send 8 lines",
+    modeTask_survivor_power_title="Power",
+    modeTask_survivor_power_desc="Send 8 lines with 1 Eff",
+    modeTask_survivor_spike_title="Spike",
+    modeTask_survivor_spike_desc="Send 8 lines with 2 Eff",
+
     -- Achievement
     ---@enum (key) Techmino.Text.Achievement
     achievementMessage={

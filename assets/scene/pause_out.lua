@@ -1,5 +1,4 @@
 local sin=math.sin
-local floor=math.floor
 
 ---@type Zenitha.Scene
 local scene={}
@@ -21,6 +20,9 @@ function scene.load()
 end
 function scene.unload()
     FMOD.effect.keyOff('music_pause')
+    if SCN.stackChange<0 then
+        GAME.unload()
+    end
 end
 
 local function sysAction(action)
@@ -69,11 +71,11 @@ function scene.draw()
 
     local t=love.timer.getTime()
     GC.setColorMask(true,false,false,true)
-    GC.mDraw(pauseText,floor(sin(3*t)*2)/1.2,floor(sin(5*t)*2)/1.2)
+    GC.mDraw(pauseText,(sin(3*t)*2)*textScale/2.6,(sin(5*t)*2)*textScale/2.6)
     GC.setColorMask(false,true,false,true)
-    GC.mDraw(pauseText,floor(sin(6.5*t)*2)/1.2,floor(sin(2*t)*2)/1.2)
+    GC.mDraw(pauseText,(sin(6.5*t)*2)*textScale/2.6,(sin(2*t)*2)*textScale/2.6)
     GC.setColorMask(false,false,true,true)
-    GC.mDraw(pauseText,floor(sin(3.5*t)*2)/1.2,floor(sin(5.5*t)*2)/1.2)
+    GC.mDraw(pauseText,(sin(3.5*t)*2)*textScale/2.6,(sin(5.5*t)*2)*textScale/2.6)
     GC.setColorMask()
 end
 

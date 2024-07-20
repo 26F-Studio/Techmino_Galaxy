@@ -124,6 +124,7 @@ local function sysAction(action)
         SCN.back('fadeHeader')
     end
 end
+function scene.mouseDown(_,_,k) if k==2 then sysAction('back') end end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='f6' then exMap:_printModePos() return true end

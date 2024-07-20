@@ -21,7 +21,7 @@ jobs:
       commit-hash: ${{ steps.git-info.outputs.commit-hash }}
       base-name: ${{ steps.assemble-base-name.outputs.base-name }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install lua
         run: |
           sudo apt-get install lua5.3 -y
@@ -53,7 +53,7 @@ jobs:
       OUTPUT_FOLDER: ./build
       RELEASE_FOLDER: ./release
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Process app name
@@ -68,35 +68,30 @@ jobs:
         run: |
           mkdir -p soundbank
           cd soundbank/
-          curl --output Master.strings.bank  "https://26f.xn--dtra.com/d/Master.strings.bank"
-          curl --output Master.bank          "https://26f.xn--dtra.com/d/Master.bank"
-          curl --output Effect.bank          "https://26f.xn--dtra.com/d/Effect.bank"
+          curl --output Master.strings.bank  "https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx?UniqueId=499108f8%2D5f08%2D45a9%2D84e6%2De6a75616dc3f"
+          curl --output Master.bank          "https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx?UniqueId=bdd4a636%2Df72f%2D469f%2Db1b9%2D65078a7e383f"
+          curl --output Effect.bank          "https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx?UniqueId=52f3f937%2D985b%2D40d6%2Da443%2Ded0152b9465b"
   # Need to be enabled for release only
-  #        curl --output Music_Beepbox.bank   "https://26f.xn--dtra.com/d/Music_Beepbox.bank"
-  #        curl --output Music_FL.bank        "https://26f.xn--dtra.com/d/Music_FL.bank"
-  #        curl --output Music_Community.bank "https://26f.xn--dtra.com/d/Music_Community.bank"
-  #        curl --output Music_Extra.bank     "https://26f.xn--dtra.com/d/Music_Extra.bank"
+  #        curl --output Music_Beepbox.bank   "https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx?UniqueId=40e4520f%2D2f26%2D4024%2D8d72%2Dc4fc544de6ea"
+  #        curl --output Music_Community.bank "https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx?UniqueId=3ef03599%2D8b6c%2D4253%2Db79b%2Df76dc07fdffb"
+  #        curl --output Music_Extra.bank     "https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx?UniqueId=e9fc37f1%2D6be5%2D4027%2Da735%2Db26682839df9"
+  #        curl --output Music_FL.bank        "https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx?UniqueId=cf8caef4%2D3698%2D447a%2Da4ce%2D37cbf44f1206"
       - name: Build core love package
         uses: 26F-Studio/love-actions-core@v1
         with:
           build-list: ./Zenitha/ ./assets/ ./soundbank ./conf.lua ./main.lua ./version.lua
           package-path: ${{ env.CORE_LOVE_PACKAGE_PATH }}
       - name: Upload core love package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
           path: ${{ env.CORE_LOVE_PACKAGE_PATH }}
-      - name: Add icon to love package
-        run: |
-          cp ./.github/build/linux/${{ env.BUILD_TYPE }}/icon.png assets/image/icon.png
-          zip -u ${{ env.CORE_LOVE_PACKAGE_PATH }} assets/image/icon.png
-          rm assets/image/icon.png
       - name: Rename love package
         run: |
           mkdir -p ${{ env.OUTPUT_FOLDER }}
           mv ${{ env.CORE_LOVE_PACKAGE_PATH }} ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.love
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ needs.get-info.outputs.base-name }}_Core
           path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.love
@@ -119,7 +114,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-core
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Love actions for testing
@@ -135,7 +130,7 @@ jobs:
       OUTPUT_FOLDER: ./build
       RELEASE_FOLDER: ./release
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Process app name
@@ -147,9 +142,22 @@ jobs:
           with open(os.getenv('GITHUB_OUTPUT'), 'a') as f:
             f.write('product-name=' + re.sub(r'[^A-Za-z0-9]+', '_', '${{ needs.get-info.outputs.app-name }}') + '\n')
       - name: Download core love package
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
+      - name: Update Windows template
+        shell: python3 {0}
+        run: |
+          version_string = "${{ needs.get-info.outputs.version-string }}"
+          file_version = (f"{version_string.replace('.', ',')},0")
+          with open("./.github/build/windows/${{ env.BUILD_TYPE }}/template.rc", "r+", encoding="utf8") as file:
+            data = file.read()
+            data = data\
+              .replace("@Version", version_string)\
+              .replace("@FileVersion", file_version)
+            file.seek(0)
+            file.truncate()
+            file.write(data)
       - name: Build Windows packages
         id: build-packages
         uses: 26F-Studio/love-actions-windows@v1
@@ -165,17 +173,17 @@ jobs:
           installer-languages: ChineseSimplified.isl ChineseTraditional.isl English.isl Spanish.isl French.isl Indonesian.isl Japanese.isl Portuguese.isl
           output-folder: ${{ env.OUTPUT_FOLDER }}
       - name: Upload 32-bit artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ needs.get-info.outputs.base-name }}_Windows_x86
           path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x86.zip
       - name: Upload 64-bit artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ needs.get-info.outputs.base-name }}_Windows_x64
           path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_x64.zip
       - name: Upload installer artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ needs.get-info.outputs.base-name }}_Windows_installer
           path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_installer.exe
@@ -207,7 +215,7 @@ jobs:
       OUTPUT_FOLDER: ./build
       RELEASE_FOLDER: ./release
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Process app name
@@ -220,7 +228,7 @@ jobs:
             f.write('bundle-id=org.f26_studio.' + re.sub(r'[^A-Za-z0-9]+', '_', '${{ needs.get-info.outputs.app-name }}') + '\n')
             f.write('product-name=' + re.sub(r'[^A-Za-z0-9]+', '-', '${{ needs.get-info.outputs.app-name }}') + '\n')
       - name: Download core love package
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       # - name: Download fmod lib
@@ -246,7 +254,7 @@ jobs:
           version-code: ${{ needs.get-info.outputs.version-code }}
           output-folder: ${{ env.OUTPUT_FOLDER }}
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ needs.get-info.outputs.base-name }}_Android_release
           path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}-release.apk
@@ -272,7 +280,7 @@ jobs:
       OUTPUT_FOLDER: ./build
       RELEASE_FOLDER: ./release
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Process app name
@@ -287,7 +295,7 @@ jobs:
             f.write('bundle-id=org.26f-studio.' + product_name + '\n')
             f.write('product-name=' + product_name + '\n')
       - name: Download core love package
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Add icon to love package
@@ -309,12 +317,12 @@ jobs:
           product-name: ${{ steps.process-app-name.outputs.product-name }}
           output-folder: ${{ env.OUTPUT_FOLDER }}
       - name: Upload AppImage artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ needs.get-info.outputs.base-name }}_Linux_AppImage
           path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.AppImage
       - name: Upload Debian artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ needs.get-info.outputs.base-name }}_Linux_Debian
           path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.deb
@@ -344,7 +352,7 @@ jobs:
   #     OUTPUT_FOLDER: ./build
   #     RELEASE_FOLDER: ./release
   #   steps:
-  #     - uses: actions/checkout@v3
+  #     - uses: actions/checkout@v4
   #       with:
   #         submodules: recursive
   #     - name: Process app name
@@ -357,7 +365,7 @@ jobs:
   #           f.write('bundle-id=org.26f-studio.' + re.sub(r"[^A-Za-z0-9]+", "-", "${{ needs.get-info.outputs.app-name }}") + '\n')
   #           f.write('product-name=' + re.sub(r'[^A-Za-z0-9]+', '_', '${{ needs.get-info.outputs.app-name }}') + '\n')
   #     - name: Download core love package
-  #       uses: actions/download-artifact@v3
+  #       uses: actions/download-artifact@v4
   #       with:
   #         name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
   #     - name: Build iOS packages
@@ -382,7 +390,7 @@ jobs:
   #         external-test: ${{ startsWith(github.ref, 'refs/tags/pre') }}
   #         store-release: ${{ startsWith(github.ref, 'refs/tags/v') }}
   #     - name: Upload logs artifact
-  #       uses: actions/upload-artifact@v3
+  #       uses: actions/upload-artifact@v4
   #       with:
   #         name: ${{ needs.get-info.outputs.base-name }}_iOS_logs
   #         path: |
@@ -390,7 +398,7 @@ jobs:
   #           ${{ env.OUTPUT_FOLDER }}/ExportOptions.plist
   #           ${{ env.OUTPUT_FOLDER }}/Packaging.log
   #     - name: Upload ipa artifact
-  #       uses: actions/upload-artifact@v3
+  #       uses: actions/upload-artifact@v4
   #       with:
   #         name: ${{ needs.get-info.outputs.base-name }}_iOS_ipa
   #         path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.ipa
@@ -417,7 +425,7 @@ jobs:
   #     OUTPUT_FOLDER: ./build
   #     RELEASE_FOLDER: ./release
   #   steps:
-  #     - uses: actions/checkout@v3
+  #     - uses: actions/checkout@v4
   #       with:
   #         submodules: recursive
   #     - name: Process app name
@@ -430,7 +438,7 @@ jobs:
   #           f.write('bundle-id=org.26f-studio.' + re.sub(r"[^A-Za-z0-9]+", "-", "${{ needs.get-info.outputs.app-name }}") + '\n')
   #           f.write('product-name=' + re.sub(r'[^A-Za-z0-9]+', '_', '${{ needs.get-info.outputs.app-name }}') + '\n')
   #     - name: Download core love package
-  #       uses: actions/download-artifact@v3
+  #       uses: actions/download-artifact@v4
   #       with:
   #         name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
   #     - name: Build macOS packages
@@ -455,7 +463,7 @@ jobs:
   #         external-test: ${{ startsWith(github.ref, 'refs/tags/pre') }}
   #         store-release: ${{ startsWith(github.ref, 'refs/tags/v') }}
   #     - name: Upload logs artifact
-  #       uses: actions/upload-artifact@v3
+  #       uses: actions/upload-artifact@v4
   #       with:
   #         name: ${{ needs.get-info.outputs.base-name }}_macOS_appstore_logs
   #         path: |
@@ -463,7 +471,7 @@ jobs:
   #           ${{ env.OUTPUT_FOLDER }}/ExportOptions.plist
   #           ${{ env.OUTPUT_FOLDER }}/Packaging.log
   #     - name: Upload pkg artifact
-  #       uses: actions/upload-artifact@v3
+  #       uses: actions/upload-artifact@v4
   #       with:
   #         name: ${{ needs.get-info.outputs.base-name }}_macOS_appstore_pkg
   #         path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.pkg
@@ -490,7 +498,7 @@ jobs:
   #     OUTPUT_FOLDER: ./build
   #     RELEASE_FOLDER: ./release
   #   steps:
-  #     - uses: actions/checkout@v3
+  #     - uses: actions/checkout@v4
   #       with:
   #         submodules: recursive
   #     - name: Process app name
@@ -503,7 +511,7 @@ jobs:
   #           f.write('bundle-id=org.26f-studio.' + re.sub(r"[^A-Za-z0-9]+", "-", "${{ needs.get-info.outputs.app-name }}") + '\n')
   #           f.write('product-name=' + re.sub(r'[^A-Za-z0-9]+', '_', '${{ needs.get-info.outputs.app-name }}') + '\n')
   #     - name: Download core love package
-  #       uses: actions/download-artifact@v3
+  #       uses: actions/download-artifact@v4
   #       with:
   #         name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
   #     - name: Build macOS packages
@@ -535,17 +543,17 @@ jobs:
   #         dmg-window-position: "200 120"
   #         dmg-window-size: "1024 604"
   #     - name: Upload pkg artifact
-  #       uses: actions/upload-artifact@v3
+  #       uses: actions/upload-artifact@v4
   #       with:
   #         name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_pkg
   #         path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.pkg
   #     - name: Upload dmg artifact
-  #       uses: actions/upload-artifact@v3
+  #       uses: actions/upload-artifact@v4
   #       with:
   #         name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_dmg
   #         path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.dmg
   #     - name: Upload bare artifact
-  #       uses: actions/upload-artifact@v3
+  #       uses: actions/upload-artifact@v4
   #       with:
   #         name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_bare
   #         path: ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.zip
@@ -585,9 +593,9 @@ jobs:
     env:
       ACTION_TYPE: ${{ fromJSON('[["Development", "Pre-release"], ["Release", "Release"]]')[startsWith(github.ref, 'refs/tags/v')][startsWith(github.ref, 'refs/tags/pre')] }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Cleanup
-        uses: geekyeggo/delete-artifact@v2
+        uses: geekyeggo/delete-artifact@v5
         with:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Send Discord message

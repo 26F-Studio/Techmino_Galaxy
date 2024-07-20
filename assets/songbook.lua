@@ -93,6 +93,7 @@ local songbook={
     ['secret7th overdrive remix']={author="Yunokawa"},
     ['infinite remix']           ={author="TetraCepra"},
     ['reason remix']             ={author="TetraCepra"},
+    ['seeking star']             ={},
 
     ['caprice']                               ={inside=true,redirect='rectification'},
     ['fruit dance_ex']                        ={inside=true,redirect='fruit dance'},

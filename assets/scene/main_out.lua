@@ -4,12 +4,11 @@ local scene={}
 local textOffset=6
 local versionText=GC.newText(FONT.get(35,'bold'))
 local terminalName=GC.newText(FONT.get(35))
+versionText:set(VERSION.appVer)
+terminalName:set(("TERM[%s]"):format(SYSTEM:sub(1,3):upper()))
 
 function scene.load()
-    if MATH.roll(.026) then textOffset=26 end
     PROGRESS.applyEnv('exterior')
-    versionText:set(VERSION.appVer)
-    terminalName:set(("TERM[%s]"):format(SYSTEM:sub(1,3):upper()))
 end
 
 local function sysAction(action)

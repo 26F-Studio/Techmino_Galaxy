@@ -7,7 +7,9 @@ function scene.load()
 end
 
 function scene.unload()
-    saveTouch()
+    if SCN.stackChange<0 then
+        saveTouch()
+    end
 end
 
 function scene.keyDown(key,isRep)
@@ -41,7 +43,7 @@ end
 function scene.touchMove(_,_,dx,dy,id) VCTRL.drag(dx,dy,id) end
 function scene.touchUp(_,_,id) VCTRL.release(id) end
 
-function scene.mouseDown(x,y,k) if k==1 then scene.touchDown(x,y,1) end end
+function scene.mouseDown(x,y,k) if k==1 then scene.touchDown(x,y,1) elseif k==2 then SCN.back(SCN.cur=='keyset_touch_in' and 'none' or nil) end end
 function scene.mouseMove(x,y,dx,dy) scene.touchMove(x,y,dx,dy,1) end
 function scene.mouseUp(x,y,k) if k==1 then scene.touchUp(x,y,1) end end
 

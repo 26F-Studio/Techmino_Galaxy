@@ -77,9 +77,9 @@ ZENITHA.setVersionText(VERSION.appVer)
 ZENITHA.setFirstScene('hello')
 ZENITHA.setMaxFPS(260)
 ZENITHA.setDebugInfo{
-    {"Cache", gcinfo},
-    {"Tasks", TASK.getCount},
-    {"Mouse", function() return ("%d, %d"):format(SCR.xOy:inverseTransformPoint(love.mouse.getPosition())) end},
+    {"Cache",gcinfo},
+    {"Tasks",TASK.getCount},
+    {"Mouse",function() return ("%d, %d"):format(SCR.xOy:inverseTransformPoint(love.mouse.getPosition())) end},
     -- {"FMOD", function() local a,b,c=FMOD.studio:getMemoryUsage() return a..","..b..","..c end}, -- Only available in logging builds Fmod
 }
 ZENITHA.addConsoleCommand('regurl',{
@@ -197,19 +197,20 @@ function ZENITHA.globalEvent.quit()
     PROGRESS.save('save')
 end
 
-FONT.setDefaultFallback('symbols')
-FONT.setDefaultFont('norm')
 FONT.load{
     norm='assets/fonts/RHDisplayGalaxy-Medium.otf',
     bold='assets/fonts/RHDisplayGalaxy-ExtraBold.otf',
 
     number='assets/fonts/RHTextInktrap-Regular.otf',
+    codepixel='assets/fonts/codePixel_cjk-Regular.ttf',
     symbols='assets/fonts/symbols.otf',
 
     galaxy_bold="assets/fonts/26FGalaxySans-Bold.otf",
     galaxy_norm="assets/fonts/26FGalaxySans-Regular.otf",
     galaxy_thin="assets/fonts/26FGalaxySans-Thin.otf",
 }
+FONT.setDefaultFallback('symbols')
+FONT.setDefaultFont('norm')
 SCR.setSize(1600,1000)
 WIDGET.setDefaultOption{
     base={
@@ -339,7 +340,7 @@ IMG.init{
     },
 }
 
-Text=nil---@type Techmino.I18N
+Text=nil ---@type Techmino.I18N
 LANG.add{
     en='assets/language/lang_en.lua',
     zh='assets/language/lang_zh.lua',
@@ -348,6 +349,17 @@ LANG.add{
 LANG.setDefault('en')
 
 function FMODLoadFunc() -- Will be called again when applying advanced options
+    local memLoad=SETTINGS.system.fmod_loadMemory
+    local function loadBank(path)
+        if memLoad then
+            local bank=FMOD.loadBank2(path)
+            if bank then return bank end
+            memLoad=false
+            SETTINGS.system.fmod_loadMemory=false
+            MSG.new('other',"Switched to another bank loading mode")
+        end
+        return FMOD.loadBank(love.filesystem.getSaveDirectory()..'/'..path)
+    end
     if not (FMOD.C and FMOD.C2) then
         MSG.new('error',"FMOD library loaded failed")
         return
@@ -361,10 +373,10 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
         coreFlag=FMOD.FMOD_INIT_NORMAL,
     }
 
-    if not FMOD.loadBank2('soundbank/Master.strings.bank') then
+    if not loadBank('soundbank/Master.strings.bank') then
         MSG.new('warn',"Strings bank file load failed")
     end
-    if not FMOD.loadBank2('soundbank/Master.bank') then
+    if not loadBank('soundbank/Master.bank') then
         MSG.new('warn',"Master bank file load failed")
     end
     FMOD.registerMusic((function()
@@ -377,7 +389,7 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
             if not love.filesystem.getInfo('soundbank/'..bankName..'.bank') then
                 MSG.new('warn',bankName.." bank file not found")
             else
-                local bankMusic=FMOD.loadBank2('soundbank/'..bankName..'.bank')
+                local bankMusic=loadBank('soundbank/'..bankName..'.bank')
                 if not bankMusic then
                     MSG.new('warn',"bank "..bankName.." load failed")
                 else
@@ -404,7 +416,7 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
             MSG.new('warn',"Effect bank not found")
             return {}
         end
-        local bankEffect=FMOD.loadBank2('soundbank/Effect.bank')
+        local bankEffect=loadBank('soundbank/Effect.bank')
         if not bankEffect then
             MSG.new('warn',"Effect bank file load failed")
             return {}
@@ -482,17 +494,17 @@ KEYMAP.gela=KEYMAP.new{
     {act='func5',    keys={'e'}},
 }
 KEYMAP.acry=KEYMAP.new{
-    {act='swapLeft', keys={'left'}},
-    {act='swapRight',keys={'right'}},
-    {act='swapUp',   keys={'up'}},
-    {act='swapDown', keys={'down'}},
+    {act='swapLeft', keys={'a'}},
+    {act='swapRight',keys={'d'}},
+    {act='swapUp',   keys={'w'}},
+    {act='swapDown', keys={'s'}},
     {act='twistCW',  keys={'e'}},
     {act='twistCCW', keys={'q'}},
     {act='twist180', keys={'z'}},
-    {act='moveLeft', keys={'a'}},
-    {act='moveRight',keys={'d'}},
-    {act='moveUp',   keys={'w'}},
-    {act='moveDown', keys={'s'}},
+    {act='moveLeft', keys={'left'}},
+    {act='moveRight',keys={'right'}},
+    {act='moveUp',   keys={'up'}},
+    {act='moveDown', keys={'down'}},
     {act='skip',     keys={'space'}},
     {act='func1',    keys={'r'}},
     {act='func2',    keys={'f'}},
@@ -570,6 +582,12 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
         SCN.add(sceneName,require('assets/scene/'..sceneName))
     end
 end
+for _,v in next,love.filesystem.getDirectoryItems('assets/scene_app') do
+    if FILE.isSafe('assets/scene_app/'..v) then
+        local sceneName=v:sub(1,-5)
+        SCN.add(sceneName,require('assets/scene_app/'..sceneName))
+    end
+end
 
 for _,v in next,{
     'brik_template', -- Shouldn't be used
@@ -616,10 +634,14 @@ SCN.addSwapStyle('fastFadeHeader',{
         GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
     end,
 })
+SCN.scenes._console.widgetList.output.fontType='codepixel'
+SCN.scenes._console.widgetList.input.fontType='codepixel'
 
 FMODLoadFunc()
-if tostring(FMOD.studio):find('NULL') or TABLE.getSize(FMOD.banks)==0 then
+if tostring(FMOD.studio):find('NULL') then
     MSG.new('error',"FMOD initialization failed")
+elseif TABLE.getSize(FMOD.banks)==0 then
+    MSG.new('error',"no FMOD bank files found")
 else
     FMOD.setMainVolume(SETTINGS.system.mainVol,true)
     for name,data in next,SONGBOOK do

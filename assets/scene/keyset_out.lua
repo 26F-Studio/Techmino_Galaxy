@@ -30,9 +30,12 @@ function scene.load()
     WIDGET._reset()
 end
 function scene.unload()
-    saveKey()
+    if SCN.stackChange<0 then
+        saveKey()
+    end
 end
 
+function scene.mouseDown(_,_,k) if k==2 then SCN.back('fadeHeader') end end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='`' and isAltPressed then

@@ -3,7 +3,7 @@ local level,score
 local time,totalTime
 local protect -- Prevent punishment 90 when need 180 for one time
 local handID,handMat,targetMat
-local texts
+local texts ---@type Zenitha.Text
 
 --[[ Levels
     1~40:    R/L(+F after 20)
@@ -35,7 +35,7 @@ local shapes do
         {matrix={{_,_,O},{O,O,O},{_,O,_}}}, -- E
         {matrix={{_,O,_},{_,O,_},{O,O,O}}}, -- T5
         {matrix={{O,_,O},{O,O,O},{_,_,_}}}, -- U
-        {matrix={{_,_,O,_},{_,_,O,O},{O,O,O,_},{_,_,_,_}}}, -- V
+        {matrix={{_,_,O,_},{_,_,O,_},{O,O,O,_},{_,_,_,_}}}, -- V
         {matrix={{O,_,_},{O,O,_},{_,O,O}}}, -- W
         {unuse=true,matrix={{_,O,_},{O,O,O},{_,O,_}}}, -- X
         {matrix={{_,_,_,_},{O,_,_,_},{O,O,O,O},{_,_,_,_}}}, -- J5
@@ -101,7 +101,8 @@ local function endGame(passLevel)
     texts:add{
         text=passLevel==0 and Text.tutorial_notpass or Text.tutorial_pass,
         color=({[0]=COLOR.lR,COLOR.lG,COLOR.lB,COLOR.lY})[passLevel],
-        fontSize=80,
+        fontSize=40,
+        k=1.5,
         fontType='bold',
         style='beat',
         styleArg=1,

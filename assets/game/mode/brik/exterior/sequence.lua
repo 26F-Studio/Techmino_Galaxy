@@ -72,12 +72,26 @@ return {
         holdSlot=0,
         seqType=sequence_weird,
         event={
-            playerInit=function(P) P.modeData.target.line=40 end,
+            playerInit=function(P)
+                P.modeData.target.line=40
+                local T=mechLib.common.task
+                T.install(P)
+                T.add(P,'sequence_mph',     'modeTask_sequence_mph_title',     'modeTask_sequence_mph_desc')
+                T.add(P,'sequence_flood',   'modeTask_sequence_flood_title',   'modeTask_sequence_flood_desc')
+                T.add(P,'sequence_drought', 'modeTask_sequence_drought_title', 'modeTask_sequence_drought_desc')
+                T.add(P,'sequence_saw',     'modeTask_sequence_saw_title',     'modeTask_sequence_saw_desc')
+                T.add(P,'sequence_rect',    'modeTask_sequence_rect_title',    'modeTask_sequence_rect_desc')
+                T.add(P,'sequence_rain',    'modeTask_sequence_rain_title',    'modeTask_sequence_rain_desc')
+                T.add(P,'sequence_pento',   'modeTask_sequence_pento_title',   'modeTask_sequence_pento_desc')
+            end,
             gameStart=function(P) P.timing=false end,
             afterClear={
                 function(P)
+                    local T=mechLib.common.task
+
                     -- MPH
                     if P.stat.piece<=4 then
+                        T.set(P,'sequence_mph',true)
                         P.modeData.subMode='mph'
                         playBgm('blox')
                         P:setSequenceGen('messy','-clearData')
@@ -85,30 +99,36 @@ return {
 
                     -- Bag
                     elseif P.hand.name=='S' or P.hand.name=='Z' then
+                        T.set(P,'sequence_flood',true)
                         P.modeData.subMode='flood'
                         playBgm('reason')
                         P:setSequenceGen('bag7p6_flood','-clearData')
                     elseif P.hand.name=='J' or P.hand.name=='L' then
+                        T.set(P,'sequence_drought',true)
                         P.modeData.subMode='drought'
                         playBgm('reason')
                         P:setSequenceGen('bag7p7m2_drought','-clearData')
                     elseif P.hand.name=='T' then
+                        T.set(P,'sequence_saw',true)
                         P.modeData.subMode='saw'
                         playBgm('reason')
                         P:setSequenceGen('bag3_saw','-clearData')
                     elseif P.hand.name=='O' then
+                        T.set(P,'sequence_rect',true)
                         P.modeData.subMode='rect'
                         playBgm('reason')
                         P:setSequenceGen('bag4_rect','-clearData')
 
                     -- ?
                     elseif P.hand.name=='I' then
+                        T.set(P,'sequence_rain',true)
                         P.modeData.subMode='rain'
                         playBgm('race')
                         P:setSequenceGen('bag3_sea','-clearData')
 
                     -- Pento
                     elseif MATH.between(P.hand.id,8,25) then
+                        T.set(P,'sequence_pento',true)
                         P.modeData.subMode='pento'
                         playBgm('beat5th')
                         P:setSequenceGen(sequence_pento_arc,'-clearData -clearNext')

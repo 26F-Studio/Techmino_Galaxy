@@ -16,6 +16,11 @@ function scene.load()
     scene.widgetList.pause.text=canPause() and CHAR.icon.pause or CHAR.icon.back
     WIDGET._reset()
 end
+function scene.unload()
+    if SCN.stackChange<0 then
+        GAME.unload()
+    end
+end
 
 local function sysAction(action)
     if action=='restart' then

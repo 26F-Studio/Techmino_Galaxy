@@ -12,6 +12,7 @@ local selected,fullband,section
 local collectCount=0
 local noProgress=false
 local autoplay=false ---@type number|false
+local autoplayLastRec
 local fakeProgress=0
 local searchStr,searchTimer
 local noResponseTimer=6.26
@@ -73,6 +74,10 @@ local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1
         if mode=='release' then
             _glitchProtect=0.26
             FMOD.music.seek(v*FMOD.music.getDuration())
+            if autoplay then
+                autoplay=0.626
+                autoplayLastRec=false
+            end
         end
     end,
     visibleTick=function() return FMOD.music.getPlaying() end,
@@ -167,9 +172,6 @@ function scene.keyDown(key,isRep)
             else
                 scene.widgetList.fullband.code()
             end
-        elseif key=='`' and isAltPressed() then
-            noProgress=true
-            scene.load()
         elseif key=='return' then
             if selected~=musicListBox:getItem() then
                 musicListBox.code()
@@ -178,12 +180,15 @@ function scene.keyDown(key,isRep)
             FMOD.music.seek(0)
         elseif act=='back' then
             SCN.back('fadeHeader')
+        elseif key=='`' and isAltPressed() then
+            noProgress=true
+            scene.load()
         end
     end
     return true
 end
 function scene.mouseMove() scene.focus(true) end
-function scene.mouseDown() scene.focus(true) end
+function scene.mouseDown(_,_,k) scene.focus(true) end
 function scene.wheelMove() scene.focus(true) end
 function scene.touchDown() scene.focus(true) end
 function scene.focus(f) -- Reduce carbon footprint for music lovers
@@ -218,18 +223,23 @@ function scene.update(dt)
         if autoplay>0 then
             autoplay=max(autoplay-dt,0)
         else
-            if FMOD.music.getDuration()-FMOD.music.tell()<.26 then
-                autoplay=math.random(42,120)
-                fullband=MATH.roll(.42)
+            if autoplayLastRec then
+                if math.abs(FMOD.music.tell()-autoplayLastRec)>2.6 then
+                    autoplay=math.random(42,126)
+                    fullband=MATH.roll(.62)
 
-                local list,r=musicListBox:getList()
-                repeat
-                    r=math.random(#list)
-                until list[r]~=musicListBox:getItem()
-                musicListBox:select(r)
-                musicListBox.code()
+                    local list,r=musicListBox:getList()
+                    repeat
+                        r=math.random(#list)
+                    until list[r]~=musicListBox:getItem()
+                    musicListBox:select(r)
+                    musicListBox.code()
+                else
+                    autoplay=.26
+                    autoplayLastRec=FMOD.music.tell()
+                end
             else
-                autoplay=.0626
+                autoplayLastRec=FMOD.music.tell()
             end
         end
     end
@@ -266,10 +276,18 @@ function scene.draw()
     local t=love.timer.getTime()
     if SONGBOOK[selected].inside then
         gc_setColor(1,1,1,MATH.roundUnit(.5+sin(6.2*t)*.26,.26))
+        gc.draw(titleTextObj,-100,-100,0,min(1,650/titleTextObj:getWidth()),nil,titleTextObj:getWidth(),titleTextObj:getHeight())
     else
-        gc_setColor(sin(t*.5)*.2+.8,sin(t*.7)*.2+.8,sin(t)*.2+.8)
+        local ox,oy=titleTextObj:getWidth(),titleTextObj:getHeight()
+        local sx=min(1,650/ox)
+        local r,g,b=sin(t*.5)*.2+.8,sin(t*.7)*.2+.8,sin(t)*.2+.8
+        gc_setColor(r*.2,g*.2,b*.2)
+        GC.strokeDraw('full',4,titleTextObj,-100,-100,0,sx,nil,ox,oy)
+        gc_setColor(r*.4,g*.4,b*.4)
+        GC.strokeDraw('side',2,titleTextObj,-100,-100,0,sx,nil,ox,oy)
+        gc_setColor(r,g,b)
+        gc.draw(titleTextObj,-100,-100,0,sx,nil,ox,oy)
     end
-    gc.draw(titleTextObj,-100,-100,0,min(1,650/titleTextObj:getWidth()),nil,titleTextObj:getWidth(),titleTextObj:getHeight())
 
     -- Author and message
     setFont(50)
@@ -309,7 +327,7 @@ function scene.draw()
         gc.setLineWidth(2)
         gc.circle('line',-670,95,20)
         gc_setColor(1,1,1,.26)
-        gc.arc('fill','pie',-670,95,20,-MATH.pi/2,-MATH.pi/2+autoplay/120*MATH.tau)
+        gc.arc('fill','pie',-670,95,20,-MATH.pi/2,-MATH.pi/2+autoplay/126*MATH.tau)
     end
 end
 
@@ -332,7 +350,8 @@ scene.widgetList={
             if autoplay then
                 autoplay=false
             else
-                autoplay=math.random(42,120)
+                autoplay=math.random(42,126)
+                autoplayLastRec=false
             end
         end,
     },

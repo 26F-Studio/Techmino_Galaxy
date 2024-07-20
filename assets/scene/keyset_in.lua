@@ -32,9 +32,12 @@ function scene.load()
     end
 end
 function scene.unload()
-    saveKey()
+    if SCN.stackChange<0 then
+        saveKey()
+    end
 end
 
+function scene.mouseDown(_,_,k) if k==2 then SCN.back('none') end end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if KEYMAP.sys:getAction(key)=='back' then

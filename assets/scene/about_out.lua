@@ -37,21 +37,25 @@ function scene.load()
     timer,score=12.6,0
 end
 
-function scene.mouseDown(x,y)
-    x,y=SCR.xOy:transformPoint(x,y)
-    x,y=SCR.xOy_d:inverseTransformPoint(x,y)
-    for i=1,#obj do
-        local o=obj[i]
-        if math.abs(x-o.x)<=o.r and math.abs(y+o.y)<=o.r then
-            if not o.name then
-                setName(o)
+function scene.mouseDown(x,y,k)
+    if k==1 then
+        x,y=SCR.xOy:transformPoint(x,y)
+        x,y=SCR.xOy_d:inverseTransformPoint(x,y)
+        for i=1,#obj do
+            local o=obj[i]
+            if math.abs(x-o.x)<=o.r and math.abs(y+o.y)<=o.r then
+                if not o.name then
+                    setName(o)
+                end
+                o.vx=(o.vx+(o.x-x)*6.26)*.626
+                o.vy=math.min((o.vy+math.random(620,1260))*.8,600)
+                o.va=o.va+(o.x-x)/26*(.8+.4*math.random())
+                score=score+o.score+(60-o.r/1.62)+math.random(2,6)
+                break
             end
-            o.vx=(o.vx+(o.x-x)*6.26)*.626
-            o.vy=math.min((o.vy+math.random(620,1260))*.8,600)
-            o.va=o.va+(o.x-x)/26*(.8+.4*math.random())
-            score=score+o.score+(60-o.r/1.62)+math.random(2,6)
-            break
         end
+    elseif k==2 then
+        SCN.back('fadeHeader')
     end
 end
 
@@ -126,17 +130,17 @@ function scene.draw()
     GC.mDraw(love_logo,160,300,-.785398+t*4.2-math.sin(t*4.2),.7033)
 
     FONT.set(35)
-    GC.shadedPrint(Text.about_module,300,230,'left',2,4)
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,Text.about_module,300,230,'left')
     local m=modules[math.floor(t)%#modules+1]
     FONT.set(50)
-    GC.shadedPrint(m[1],300,270,'left',2,4)
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,m[1],300,270,'left')
     FONT.set(30)
-    GC.shadedPrint(m[2],300,330,'left',2,4)
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,m[2],300,330,'left')
 
     FONT.set(35)
-    GC.shadedPrint(Text.about_toolchain,942,230,'left',2,4)
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,Text.about_toolchain,942,230,'left')
     FONT.set(50)
-    GC.shadedPrint(toolchain[math.floor(t)%#toolchain+1],942,270,'left',2,4)
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,toolchain[math.floor(t)%#toolchain+1],942,270,'left')
 end
 
 scene.widgetList={

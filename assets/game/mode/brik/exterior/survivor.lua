@@ -26,11 +26,16 @@ return {
         atkSys='modern',
         event={
             playerInit={
+                mechLib.brik.survivor.event_playerInit,
                 function(P)
                     P.modeData.idleTime=0
                     P.modeData.lastPieceWave={-1,-1,-1,-1}
+                    local T=mechLib.common.task
+                    T.install(P)
+                    T.add(P,'survivor_cheese','modeTask_survivor_cheese_title','modeTask_survivor_cheese_desc')
+                    T.add(P,'survivor_power','modeTask_survivor_power_title','modeTask_survivor_power_desc')
+                    T.add(P,'survivor_spike','modeTask_survivor_spike_title','modeTask_survivor_spike_desc')
                 end,
-                mechLib.brik.survivor.event_playerInit,
             },
             gameStart=function(P) P.timing=false end,
             afterLock=function(P)
@@ -44,9 +49,14 @@ return {
                 end
             end,
             beforeCancel=function(P)
+                local T=mechLib.common.task
+                T.set(P,'survivor_cheese',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
+                T.set(P,'survivor_power',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
+                T.set(P,'survivor_spike',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
                 if P.stat.atk>=8 then
                     local eff=P.stat.atk/P.stat.line
                     if eff>=2 then
+                        T.set(P,'survivor_spike',true)
                         P.modeData.subMode='spike'
                         P.settings.dropDelay=260
                         P.settings.maxFreshChance=10
@@ -56,6 +66,7 @@ return {
                         playBgm('there')
                         mechLib.common.music.set(P,{path='.wave',s=10,e=30},'afterClear')
                     elseif eff>=1 then
+                        T.set(P,'survivor_power',true)
                         P.modeData.subMode='power'
                         P.settings.dropDelay=620
                         P.settings.maxFreshChance=12
@@ -64,6 +75,7 @@ return {
                         playBgm('here')
                         mechLib.common.music.set(P,{path='.wave',s=20,e=50},'afterClear')
                     else
+                        T.set(P,'survivor_cheese',true)
                         P.modeData.subMode='cheese'
                         P.settings.dropDelay=1000
                         P.settings.maxFreshChance=15

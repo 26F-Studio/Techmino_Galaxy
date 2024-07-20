@@ -240,7 +240,7 @@ function P:click(x,y)
             repeat
                 cur=self.board[y][x]
                 if cur==0 then -- Possible when merging Statue lv3
-                    TEXT:add{text=CHAR.zchan.mrz,x=P.x+(self.selectX-.5)*self.c,y=P.y+(self.selectY-.4)*self.c,fontSize=100,style='score',duration=6.26}
+                    TEXT:add{text=CHAR.zchan.mrz,x=P.x+(self.selectX-.5)*self.c,y=P.y+(self.selectY-.4)*self.c,fontSize=50,k=2,style='score',duration=6.26}
                     break
                 end
                 local b1,mergedTiles=TABLE.copy(self.board),{}

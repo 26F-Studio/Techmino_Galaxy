@@ -68,15 +68,15 @@ function M.loadBank(path,flag)
     if not studio then return end
     local bank,res=studio:loadBankFile(path,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
     if res~=M.FMOD_OK then
-        LOG("FMOD loadBankMemory error: "..M.errorString[res])
-        MSG.new('warn',"FMOD loadBankMemory error: "..M.errorString[res])
+        LOG("FMOD loadBank error: "..M.errorString[res])
+        MSG.new('warn',"FMOD loadBank error: "..M.errorString[res])
         return
     end
     M.banks[path]=bank
     return bank
 end
 
----This method uses 'loadBankMemory' instead of 'loadBankFile', which makes all files visible to love2d's filesystem can be loaded
+---This method uses 'loadBankMemory' instead of 'loadBankFile', which makes files visible to love2d's filesystem can be loaded
 ---@param path string
 ---@param flag? FMOD.Const
 ---@return FMOD.Studio.Bank?

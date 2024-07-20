@@ -199,7 +199,7 @@ local function tap(x,y)
                 if field.remain==0 then
                     FMOD.effect('frenzy',{volume=.8})
                     if noComboBreak then
-                        TEXT:add{text="FULL COMBO",x=800,y=500,fontSize=100,style='beat',styleArg=.626}
+                        TEXT:add{text="FULL COMBO",x=800,y=500,fontSize=50,k=2,style='beat',styleArg=.626}
                         comboTime=comboTime+3
                         score=floor(score*1.1)
                         FMOD.effect(

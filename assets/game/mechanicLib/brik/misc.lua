@@ -93,16 +93,16 @@ end
 
 do -- Swap Direction
     function misc.swapDirection_event_playerInit(P)
-        P.modeData.flip=false
+        P.modeData.flipControlFlag=false
     end
     function misc.swapDirection_event_key(P)
-        if P.modeData.flip then
+        if P.modeData.flipControlFlag then
             P.keyState.rotateCW,P.keyState.rotateCCW=P.keyState.rotateCCW,P.keyState.rotateCW
             P.keyState.moveLeft,P.keyState.moveRight=P.keyState.moveRight,P.keyState.moveLeft
         end
     end
     function misc.swapDirection_event_afterLock(P)
-        P.modeData.flip=not P.modeData.flip
+        P.modeData.flipControlFlag=not P.modeData.flipControlFlag
         P.actions.rotateCW,P.actions.rotateCCW=P.actions.rotateCCW,P.actions.rotateCW
         P.actions.moveLeft,P.actions.moveRight=P.actions.moveRight,P.actions.moveLeft
     end

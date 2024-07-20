@@ -2,7 +2,7 @@ local level,score
 local time,totalTime
 local noControl
 local quest,choices
-local texts
+local texts ---@type Zenitha.Text
 
 --[[ Levels
     1~40:    R/L(+F after 20)
@@ -114,7 +114,8 @@ local function endGame(passLevel)
     texts:add{
         text=passLevel==0 and Text.tutorial_notpass or Text.tutorial_pass,
         color=({[0]=COLOR.lR,COLOR.lG,COLOR.lY})[passLevel],
-        fontSize=80,
+        fontSize=40,
+        k=1.5,
         fontType='bold',
         style='beat',
         styleArg=1,

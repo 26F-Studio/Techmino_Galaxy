@@ -26,11 +26,12 @@ function scene.load()
     changed=false
 end
 function scene.unload()
-    if changed then
+    if changed and SCN.stackChange<0 then
         saveSettings()
     end
 end
 
+function scene.mouseDown(_,_,k) if k==2 then SCN.back('fadeHeader') end end
 function scene.keyDown(key)
     if KEYMAP.sys:getAction(key)=='back' then
         SCN.back()
@@ -60,8 +61,8 @@ local function _setLang(lid)
     TEXT:clear()
     TEXT:add{
         text=langList[lid],
-        x=800,y=500,a=.626,
-        fontSize=100,
+        x=800,y=500,a=.626,k=2,
+        fontSize=50,
         style='zoomout',
         duration=1.26,
     }
