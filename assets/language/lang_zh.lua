@@ -226,11 +226,9 @@ local L={
     },
 
     -- Submode Task Texts
-    modeTask_question_title="???",
-    modeTask_question_desc="??????",
+    modeTask_unknown_title="???",
+    modeTask_unknown_desc="??????",
 
-    modeTask_sequence_mph_title="MPH",
-    modeTask_sequence_mph_desc="4块内消除",
     modeTask_sequence_flood_title="Flood",
     modeTask_sequence_flood_desc="用S/Z消除",
     modeTask_sequence_drought_title="Drought",
@@ -241,8 +239,11 @@ local L={
     modeTask_sequence_rect_desc="用O消除",
     modeTask_sequence_rain_title="Rain",
     modeTask_sequence_rain_desc="用I消除",
+    modeTask_sequence_mph_title="MPH",
+    modeTask_sequence_mph_desc="4块内消除",
     modeTask_sequence_pento_title="Pento",
     modeTask_sequence_pento_desc="用五连块消除",
+    modeTask_sequence_unknown_desc="用？？？消除",
 
     modeTask_hypersonic_low_title="Low",
     modeTask_hypersonic_low_desc="消除四行",
@@ -254,11 +255,12 @@ local L={
     modeTask_hypersonic_titanium_desc="8秒内消四 且 不使用暂存",
 
     modeTask_excavate_shale_title="Shale",
-    modeTask_excavate_shale_desc="挖掘",
+    modeTask_excavate_shale_desc="用消二-挖掘",
     modeTask_excavate_volcanics_title="Volcanics",
     modeTask_excavate_volcanics_desc="用消三+挖掘",
     modeTask_excavate_checker_title="Checker",
     modeTask_excavate_checker_desc="用隔断消除挖掘",
+    modeTask_excavate_unknown_desc="用???挖掘",
 
     modeTask_backfire_cheese_title="Cheese",
     modeTask_backfire_cheese_desc="消除8行",

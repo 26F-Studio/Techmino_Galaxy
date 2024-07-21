@@ -74,6 +74,24 @@ function task.set(P,id,value,progress)
     end
 end
 
+---@param P Techmino.Player
+---@param id string
+---@param title? string
+---@param desc? string
+function task.setTitle(P,id,title,desc)
+    ---@type Techmino.PlayerModeData.TaskObj
+    local opt
+    for _,o in next,P.modeData.task do
+        if o.id==id then
+            opt=o
+            break
+        end
+    end
+    if not opt then return end
+    opt.title=title or opt.title
+    opt.desc=desc or opt.desc
+end
+
 ---@type Techmino.Event
 function task.event_always(P)
     local L=P.modeData.task

@@ -20,7 +20,16 @@ return {
                 T.install(P)
                 T.add(P,'excavate_shale',     'modeTask_excavate_shale_title',     'modeTask_excavate_shale_desc')
                 T.add(P,'excavate_volcanics', 'modeTask_excavate_volcanics_title', 'modeTask_excavate_volcanics_desc')
-                T.add(P,'excavate_checker',   'modeTask_excavate_checker_title',   'modeTask_excavate_checker_desc')
+
+                local S=PROGRESS.getExteriorModeState('excavate')
+                if S.shale and S.volcanics then
+                    PROGRESS.setExteriorScore('excavate','showChecker',1)
+                end
+                if S.showChecker then
+                    T.add(P,'excavate_checker','modeTask_excavate_checker_title','modeTask_excavate_checker_desc')
+                else
+                    T.add(P,'excavate_checker','modeTask_unknown_title','modeTask_excavate_unknown_desc')
+                end
             end,
             gameStart=function(P) P.timing=false end,
             afterClear={
@@ -39,6 +48,8 @@ return {
                         local T=mechLib.common.task
                         if split then
                             T.set(P,'excavate_checker',true)
+                            T.setTitle(P,'excavate_checker','modeTask_excavate_checker_title','modeTask_excavate_checker_desc')
+                            PROGRESS.setExteriorScore('excavate','showChecker',1)
                             P.modeData.digMode='checker'
                             P.modeData.target.lineDig=8
                             P.modeData.lineStay=8

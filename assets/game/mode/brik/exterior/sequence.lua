@@ -76,13 +76,27 @@ return {
                 P.modeData.target.line=40
                 local T=mechLib.common.task
                 T.install(P)
-                T.add(P,'sequence_mph',     'modeTask_sequence_mph_title',     'modeTask_sequence_mph_desc')
                 T.add(P,'sequence_flood',   'modeTask_sequence_flood_title',   'modeTask_sequence_flood_desc')
                 T.add(P,'sequence_drought', 'modeTask_sequence_drought_title', 'modeTask_sequence_drought_desc')
                 T.add(P,'sequence_saw',     'modeTask_sequence_saw_title',     'modeTask_sequence_saw_desc')
                 T.add(P,'sequence_rect',    'modeTask_sequence_rect_title',    'modeTask_sequence_rect_desc')
                 T.add(P,'sequence_rain',    'modeTask_sequence_rain_title',    'modeTask_sequence_rain_desc')
-                T.add(P,'sequence_pento',   'modeTask_sequence_pento_title',   'modeTask_sequence_pento_desc')
+
+                local S=PROGRESS.getExteriorModeState('sequence')
+                local count=0
+                for _,v in next,{'mph','flood','drought','saw','rect','rain','pento'} do
+                    if S[v] then count=count+1 end
+                end
+                if count>=6 then PROGRESS.setExteriorScore('sequence','showPento',1) end
+
+                if S.showPento then
+                    T.add(P,'sequence_pento','modeTask_sequence_pento_title','modeTask_sequence_pento_desc')
+                else
+                    T.add(P,'sequence_pento','modeTask_unknown_title','modeTask_sequence_unknown_desc')
+                end
+                if S.showMPH then
+                    T.add(P,'sequence_mph','modeTask_sequence_mph_title','modeTask_sequence_mph_desc')
+                end
             end,
             gameStart=function(P) P.timing=false end,
             afterClear={
@@ -91,7 +105,11 @@ return {
 
                     -- MPH
                     if P.stat.piece<=4 then
+                        if not PROGRESS.getExteriorModeState('sequence').showMPH then
+                            T.add(P,'sequence_mph','modeTask_sequence_mph_title','modeTask_sequence_mph_desc')
+                        end
                         T.set(P,'sequence_mph',true)
+                        PROGRESS.setExteriorScore('sequence','showMPH',1)
                         P.modeData.subMode='mph'
                         playBgm('blox')
                         P:setSequenceGen('messy','-clearData')
@@ -118,8 +136,6 @@ return {
                         P.modeData.subMode='rect'
                         playBgm('reason')
                         P:setSequenceGen('bag4_rect','-clearData')
-
-                    -- ?
                     elseif P.hand.name=='I' then
                         T.set(P,'sequence_rain',true)
                         P.modeData.subMode='rain'
@@ -127,8 +143,10 @@ return {
                         P:setSequenceGen('bag3_sea','-clearData')
 
                     -- Pento
-                    elseif MATH.between(P.hand.id,8,25) then
+                    elseif MATH.between(P.hand.shape,8,25) then
                         T.set(P,'sequence_pento',true)
+                        T.setTitle(P,'sequence_pento','modeTask_sequence_pento_title','modeTask_sequence_pento_desc')
+                        PROGRESS.setExteriorScore('sequence','showPento',1)
                         P.modeData.subMode='pento'
                         playBgm('beat5th')
                         P:setSequenceGen(sequence_pento_arc,'-clearData -clearNext')
