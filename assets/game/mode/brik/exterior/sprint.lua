@@ -17,10 +17,10 @@ return {
                 P.modeData.target.line=40
                 P.modeData.keyCount={}
                 P.modeData.curKeyCount=0
-                if not PROGRESS.getExteriorModeState('combo') then
+                if not PROGRESS.getExteriorUnlock('combo') then
                     P.settings.combo_sound=true
                 end
-                if PROGRESS.getExteriorModeState('tspin') then
+                if PROGRESS.getExteriorUnlock('tspin') then
                     P.settings.spin_immobile=false
                     P.settings.spin_corners=false
                 end
@@ -40,7 +40,7 @@ return {
                 P.modeData.curKeyCount=0
             end,
             afterPress=function(P)
-                if PROGRESS.getExteriorModeState('tspin') then return true end
+                if PROGRESS.getExteriorUnlock('tspin') then return true end
                 local move=P.lastMovement
                 if move and (move.immobile or move.corners) then
                     PROGRESS.setExteriorUnlock('tspin')
@@ -126,21 +126,21 @@ return {
                     end
                 end,
                 function(P)
-                    if PROGRESS.getExteriorModeState('allclear') then return true end
+                    if PROGRESS.getExteriorUnlock('allclear') then return true end
                     if P.stat.allclear>0 then
                         PROGRESS.setExteriorUnlock('allclear')
                         return true
                     end
                 end,
                 function(P)
-                    if PROGRESS.getExteriorModeState('combo') then return true end
+                    if PROGRESS.getExteriorUnlock('combo') then return true end
                     if P.combo==10 then
                         PROGRESS.setExteriorUnlock('combo')
                         return true
                     end
                 end,
                 function(P)
-                    if PROGRESS.getExteriorModeState('hidden') then return true end
+                    if PROGRESS.getExteriorUnlock('hidden') then return true end
                     if P.stat.line>=40 then
                         if P.stat.piece<102.6 then
                             PROGRESS.setExteriorUnlock('sequence')

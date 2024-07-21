@@ -21,11 +21,10 @@ return {
                 T.add(P,'excavate_shale',     'modeTask_excavate_shale_title',     'modeTask_excavate_shale_desc')
                 T.add(P,'excavate_volcanics', 'modeTask_excavate_volcanics_title', 'modeTask_excavate_volcanics_desc')
 
-                local S=PROGRESS.getExteriorModeState('excavate') or NONE
-                if S.shale and S.volcanics then
+                if PROGRESS.getExteriorModeScore('excavate','shale') and PROGRESS.getExteriorModeScore('excavate','volcanics') then
                     PROGRESS.setExteriorScore('excavate','showChecker',1)
                 end
-                if S.showChecker then
+                if PROGRESS.getExteriorModeScore('excavate','showChecker') then
                     T.add(P,'excavate_checker','modeTask_excavate_checker_title','modeTask_excavate_checker_desc')
                 else
                     T.add(P,'excavate_checker','modeTask_unknown_title','modeTask_excavate_unknown_desc')
@@ -99,11 +98,11 @@ return {
                         PROGRESS.setExteriorScore('dig','volcanics',P.gameTime,'<')
                     end
 
-                    local playCount=PROGRESS.getExteriorModeState('dig').playCount or 0
+                    local playCount=PROGRESS.getExteriorModeScore('dig','playCount') or 0
                     if
-                        (PROGRESS.getExteriorModeState('dig').shale     or 1e99)<=100e3+10e3*playCount or
-                        (PROGRESS.getExteriorModeState('dig').volcanics or 1e99)<=100e3+10e3*playCount or
-                        (PROGRESS.getExteriorModeState('dig').checker   or 1e99)<=60e3+5e3*playCount
+                        (PROGRESS.getExteriorModeScore('dig','shale')     or 1e99)<=100e3+10e3*playCount or
+                        (PROGRESS.getExteriorModeScore('dig','volcanics') or 1e99)<=100e3+10e3*playCount or
+                        (PROGRESS.getExteriorModeScore('dig','checker')   or 1e99)<=60e3+5e3*playCount
                     then
                         PROGRESS.setExteriorUnlock('backfire')
                         return true
