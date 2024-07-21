@@ -11,21 +11,21 @@ return {
                 mechLib.brik.marathon.event_playerInit,
                 function(P)
                     mechLib.common.music.set(P,{id='level_marathon_exterior',path='.level'},'afterClear')
-                    if not PROGRESS.getExteriorModeState('combo') then
+                    if not PROGRESS.getExteriorUnlock('combo') then
                         P.settings.combo_sound=true
                     end
                 end,
             },
             afterClear={
                 function(P)
-                    if PROGRESS.getExteriorModeState('allclear') then return true end
+                    if PROGRESS.getExteriorUnlock('allclear') then return true end
                     if P.stat.allclear>0 then
                         PROGRESS.setExteriorUnlock('allclear')
                         return true
                     end
                 end,
                 function(P)
-                    if PROGRESS.getExteriorModeState('combo') then return true end
+                    if PROGRESS.getExteriorUnlock('combo') then return true end
                     if P.combo==10 then
                         PROGRESS.setExteriorUnlock('combo')
                         return true

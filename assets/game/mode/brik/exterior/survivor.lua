@@ -35,7 +35,7 @@ return {
                     T.add(P,'survivor_cheese','modeTask_survivor_cheese_title','modeTask_survivor_cheese_desc')
                     T.add(P,'survivor_power','modeTask_survivor_power_title','modeTask_survivor_power_desc')
 
-                    if PROGRESS.getExteriorModeState('survivor').showSpike then
+                    if PROGRESS.getExteriorModeScore('survivor','showSpike') then
                         T.add(P,'survivor_spike','modeTask_survivor_spike_title','modeTask_survivor_spike_desc')
                     end
                 end,
@@ -59,7 +59,7 @@ return {
                 if P.stat.atk>=8 then
                     local eff=P.stat.atk/P.stat.line
                     if eff>=2 then
-                        if not PROGRESS.getExteriorModeState('survivor').showSpike then
+                        if not PROGRESS.getExteriorModeScore('survivor','showSpike') then
                             T.add(P,'survivor_spike','modeTask_survivor_spike_title','modeTask_survivor_spike_desc')
                             T.set(P,'survivor_spike',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
                         end

@@ -41,22 +41,22 @@ return {
                     end
                 end,
                 function()
-                    if PROGRESS.getExteriorModeState('excavate') then return true end
+                    if PROGRESS.getExteriorUnlock('excavate') then return true end
                     if
-                        0.4/PROGRESS.getExteriorModeState('dig').spl10+
-                        0.3/PROGRESS.getExteriorModeState('dig').spl20+
-                        0.2/PROGRESS.getExteriorModeState('dig').spl40+
-                        0.3/PROGRESS.getExteriorModeState('dig').spl100
+                        0.4/PROGRESS.getExteriorModeScore('dig','spl10')+
+                        0.3/PROGRESS.getExteriorModeScore('dig','spl20')+
+                        0.2/PROGRESS.getExteriorModeScore('dig','spl40')+
+                        0.3/PROGRESS.getExteriorModeScore('dig','spl100')
                         >=0.26 -- lps, ≈3.85 spl
                     then PROGRESS.setExteriorUnlock('excavate') return true end
                 end,
                 function()
-                    if PROGRESS.getExteriorModeState('drill') then return true end
+                    if PROGRESS.getExteriorUnlock('drill') then return true end
                     if
-                        0.4/PROGRESS.getExteriorModeState('dig').ppl10+
-                        0.3/PROGRESS.getExteriorModeState('dig').ppl20+
-                        0.2/PROGRESS.getExteriorModeState('dig').ppl40+
-                        0.3/PROGRESS.getExteriorModeState('dig').ppl100
+                        0.4/PROGRESS.getExteriorModeScore('dig','ppl10')+
+                        0.3/PROGRESS.getExteriorModeScore('dig','ppl20')+
+                        0.2/PROGRESS.getExteriorModeScore('dig','ppl40')+
+                        0.3/PROGRESS.getExteriorModeScore('dig','ppl100')
                         >=0.42 -- lpp, ≈2.38 ppl
                     then PROGRESS.setExteriorUnlock('drill') return true end
                 end,

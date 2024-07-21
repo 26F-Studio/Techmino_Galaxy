@@ -41,22 +41,22 @@ return {
                     end
                 end,
                 function()
-                    if PROGRESS.getExteriorModeState('survivor') then return true end
+                    if PROGRESS.getExteriorUnlock('survivor') then return true end
                     if
-                        0.3/PROGRESS.getExteriorModeState('drill').spl10+
-                        0.3/PROGRESS.getExteriorModeState('drill').spl20+
-                        0.2/PROGRESS.getExteriorModeState('drill').spl40+
-                        0.4/PROGRESS.getExteriorModeState('drill').spl100
+                        0.3/PROGRESS.getExteriorModeScore('drill','spl10')+
+                        0.3/PROGRESS.getExteriorModeScore('drill','spl20')+
+                        0.2/PROGRESS.getExteriorModeScore('drill','spl40')+
+                        0.4/PROGRESS.getExteriorModeScore('drill','spl100')
                         >=0.355 -- lps, ≈2.82 spl
                     then PROGRESS.setExteriorUnlock('survivor') return true end
                 end,
                 function()
                     if PROGRESS.getStyleUnlock('acry') then return true end
                     if
-                        0.3/PROGRESS.getExteriorModeState('drill').ppl10+
-                        0.3/PROGRESS.getExteriorModeState('drill').ppl20+
-                        0.2/PROGRESS.getExteriorModeState('drill').ppl40+
-                        0.4/PROGRESS.getExteriorModeState('drill').ppl100
+                        0.3/PROGRESS.getExteriorModeScore('drill','ppl10')+
+                        0.3/PROGRESS.getExteriorModeScore('drill','ppl20')+
+                        0.2/PROGRESS.getExteriorModeScore('drill','ppl40')+
+                        0.4/PROGRESS.getExteriorModeScore('drill','ppl100')
                         >=0.495 -- lpp, ≈2.02 ppl
                     then
                         PROGRESS.setStyleUnlock('acry')

@@ -82,19 +82,18 @@ return {
                 T.add(P,'sequence_rect',    'modeTask_sequence_rect_title',    'modeTask_sequence_rect_desc')
                 T.add(P,'sequence_rain',    'modeTask_sequence_rain_title',    'modeTask_sequence_rain_desc')
 
-                local S=PROGRESS.getExteriorModeState('sequence')
                 local count=0
                 for _,v in next,{'mph','flood','drought','saw','rect','rain','pento'} do
-                    if S[v] then count=count+1 end
+                    if PROGRESS.getExteriorModeScore('sequence',v) then count=count+1 end
                 end
                 if count>=6 then PROGRESS.setExteriorScore('sequence','showPento',1) end
 
-                if S.showPento then
+                if PROGRESS.getExteriorModeScore('sequence','showPento') then
                     T.add(P,'sequence_pento','modeTask_sequence_pento_title','modeTask_sequence_pento_desc')
                 else
                     T.add(P,'sequence_pento','modeTask_unknown_title','modeTask_sequence_unknown_desc')
                 end
-                if S.showMPH then
+                if PROGRESS.getExteriorModeScore('sequence','showMPH') then
                     T.add(P,'sequence_mph','modeTask_sequence_mph_title','modeTask_sequence_mph_desc')
                 end
             end,
@@ -105,7 +104,7 @@ return {
 
                     -- MPH
                     if P.stat.piece<=4 then
-                        if not PROGRESS.getExteriorModeState('sequence').showMPH then
+                        if not PROGRESS.getExteriorModeScore('sequence','showMPH') then
                             T.add(P,'sequence_mph','modeTask_sequence_mph_title','modeTask_sequence_mph_desc')
                         end
                         T.set(P,'sequence_mph',true)
