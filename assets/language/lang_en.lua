@@ -226,11 +226,9 @@ local L={
     },
 
     -- Submode Task Texts
-    modeTask_question_title="???",
-    modeTask_question_desc="??????",
+    modeTask_unknown_title="???",
+    modeTask_unknown_desc="??????",
 
-    modeTask_sequence_mph_title="MPH",
-    modeTask_sequence_mph_desc="Any clear in 4 pieces",
     modeTask_sequence_flood_title="Flood",
     modeTask_sequence_flood_desc="Clear with S or Z",
     modeTask_sequence_drought_title="Drought",
@@ -241,8 +239,11 @@ local L={
     modeTask_sequence_rect_desc="Clear with O",
     modeTask_sequence_rain_title="Rain",
     modeTask_sequence_rain_desc="Clear with I",
+    modeTask_sequence_mph_title="MPH",
+    modeTask_sequence_mph_desc="Any clear in 4 pieces",
     modeTask_sequence_pento_title="Pento",
     modeTask_sequence_pento_desc="Clear with a Pento",
+    modeTask_sequence_unknown_desc="Clear with a ???",
 
     modeTask_hypersonic_low_title="Low",
     modeTask_hypersonic_low_desc="Clear 4 lines",
@@ -254,11 +255,12 @@ local L={
     modeTask_hypersonic_titanium_desc="no-hold Techrash in 8s ",
 
     modeTask_excavate_shale_title="Shale",
-    modeTask_excavate_shale_desc="Dig with Triple-",
+    modeTask_excavate_shale_desc="Dig with Double-",
     modeTask_excavate_volcanics_title="Volcanics",
     modeTask_excavate_volcanics_desc="Dig with Triple+",
     modeTask_excavate_checker_title="Checker",
     modeTask_excavate_checker_desc="Dig with Split",
+    modeTask_excavate_unknown_desc="Dig with ???",
 
     modeTask_backfire_cheese_title="Cheese",
     modeTask_backfire_cheese_desc="Clear 8 lines",

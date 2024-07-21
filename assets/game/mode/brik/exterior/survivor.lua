@@ -34,7 +34,10 @@ return {
                     T.install(P)
                     T.add(P,'survivor_cheese','modeTask_survivor_cheese_title','modeTask_survivor_cheese_desc')
                     T.add(P,'survivor_power','modeTask_survivor_power_title','modeTask_survivor_power_desc')
-                    T.add(P,'survivor_spike','modeTask_survivor_spike_title','modeTask_survivor_spike_desc')
+
+                    if PROGRESS.getExteriorModeState('survivor').showSpike then
+                        T.add(P,'survivor_spike','modeTask_survivor_spike_title','modeTask_survivor_spike_desc')
+                    end
                 end,
             },
             gameStart=function(P) P.timing=false end,
@@ -56,7 +59,12 @@ return {
                 if P.stat.atk>=8 then
                     local eff=P.stat.atk/P.stat.line
                     if eff>=2 then
+                        if not PROGRESS.getExteriorModeState('survivor').showSpike then
+                            T.add(P,'survivor_spike','modeTask_survivor_spike_title','modeTask_survivor_spike_desc')
+                            T.set(P,'survivor_spike',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
+                        end
                         T.set(P,'survivor_spike',true)
+                        PROGRESS.setExteriorScore('survivor','showSpike',1)
                         P.modeData.subMode='spike'
                         P.settings.dropDelay=260
                         P.settings.maxFreshChance=10

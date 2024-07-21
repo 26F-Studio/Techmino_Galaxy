@@ -20,7 +20,10 @@ return {
                 T.install(P)
                 T.add(P,'backfire_cheese','modeTask_backfire_cheese_title','modeTask_backfire_cheese_desc','(0/8)')
                 T.add(P,'backfire_normal','modeTask_backfire_normal_title','modeTask_backfire_normal_desc','(0/7)')
-                T.add(P,'backfire_amplify','modeTask_backfire_amplify_title','modeTask_backfire_amplify_desc','(0/8)')
+
+                if PROGRESS.getExteriorModeState('backfire').showAmplify then
+                    T.add(P,'backfire_amplify','modeTask_backfire_amplify_title','modeTask_backfire_amplify_desc','(0/8)')
+                end
             end,
             gameStart=function(P) P.timing=false end,
             beforeSend=function(P,atk)
@@ -31,17 +34,22 @@ return {
                 local T=mechLib.common.task
                 T.set(P,'backfire_cheese',P.stat.line/8,("($1/8)"):repD(P.stat.line))
                 if P.stat.line<=6 then
-                    T.set(P,'backfire_normal',P.stat.line/7,("($1/7)"):repD(P.stat.atk))
+                    T.set(P,'backfire_normal',P.stat.atk/7,("($1/7)"):repD(P.stat.atk))
                 else
                     T.set(P,'backfire_normal',0,"---")
                 end
                 if P.stat.line<=4 then
-                    T.set(P,'backfire_amplify',P.stat.line/8,("($1/8)"):repD(P.stat.atk))
+                    T.set(P,'backfire_amplify',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
                 else
                     T.set(P,'backfire_amplify',0,"---")
                 end
                 if P.stat.atk>=8 and P.stat.line<=4 then
+                    if not PROGRESS.getExteriorModeState('backfire').showAmplify then
+                        T.add(P,'backfire_amplify','modeTask_backfire_amplify_title','modeTask_backfire_amplify_desc','(0/8)')
+                        T.set(P,'backfire_amplify',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
+                    end
                     T.set(P,'backfire_amplify',true)
+                    PROGRESS.setExteriorScore('backfire','showAmplify',1)
                     P.modeData.subMode='amplify'
                     P.settings.dropDelay=260
                     P.settings.maxFreshChance=10
