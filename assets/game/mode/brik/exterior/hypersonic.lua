@@ -20,7 +20,7 @@ return {
                 T.add(P,'hypersonic_low','modeTask_hypersonic_low_title','modeTask_hypersonic_low_desc','(0/4)')
                 T.add(P,'hypersonic_high','modeTask_hypersonic_high_title','modeTask_hypersonic_high_desc')
 
-                local S=PROGRESS.getExteriorModeState('hypersonic')
+                local S=PROGRESS.getExteriorModeState('hypersonic') or NONE
                 if S.showHidden then
                     T.add(P,'hypersonic_hidden','modeTask_hypersonic_hidden_title','modeTask_hypersonic_hidden_desc')
                 else
@@ -44,7 +44,7 @@ return {
 
                     if #P.holdQueue==0 and P.gameTime<=8e3 then
                         -- Titanium: Techrash in 8s without hold
-                        if not PROGRESS.getExteriorModeState('hypersonic').showTitanium then
+                        if not PROGRESS.getExteriorModeScore('hypersonic','showTitanium') then
                             T.add(P,'hypersonic_titanium','modeTask_hypersonic_titanium_title','modeTask_hypersonic_titanium_desc')
                         end
                         T.set(P,'hypersonic_titanium',true)

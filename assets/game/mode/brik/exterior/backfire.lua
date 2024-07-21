@@ -21,7 +21,7 @@ return {
                 T.add(P,'backfire_cheese','modeTask_backfire_cheese_title','modeTask_backfire_cheese_desc','(0/8)')
                 T.add(P,'backfire_normal','modeTask_backfire_normal_title','modeTask_backfire_normal_desc','(0/7)')
 
-                if PROGRESS.getExteriorModeState('backfire').showAmplify then
+                if PROGRESS.getExteriorModeScore('backfire','showAmplify') then
                     T.add(P,'backfire_amplify','modeTask_backfire_amplify_title','modeTask_backfire_amplify_desc','(0/8)')
                 end
             end,
@@ -44,7 +44,7 @@ return {
                     T.set(P,'backfire_amplify',0,"---")
                 end
                 if P.stat.atk>=8 and P.stat.line<=4 then
-                    if not PROGRESS.getExteriorModeState('backfire').showAmplify then
+                    if not PROGRESS.getExteriorModeScore('backfire','showAmplify') then
                         T.add(P,'backfire_amplify','modeTask_backfire_amplify_title','modeTask_backfire_amplify_desc','(0/8)')
                         T.set(P,'backfire_amplify',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
                     end

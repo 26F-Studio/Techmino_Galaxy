@@ -21,7 +21,7 @@ return {
                 T.add(P,'excavate_shale',     'modeTask_excavate_shale_title',     'modeTask_excavate_shale_desc')
                 T.add(P,'excavate_volcanics', 'modeTask_excavate_volcanics_title', 'modeTask_excavate_volcanics_desc')
 
-                local S=PROGRESS.getExteriorModeState('excavate')
+                local S=PROGRESS.getExteriorModeState('excavate') or NONE
                 if S.shale and S.volcanics then
                     PROGRESS.setExteriorScore('excavate','showChecker',1)
                 end
