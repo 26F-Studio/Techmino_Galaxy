@@ -4,7 +4,7 @@ local scene={}
 local pauseText
 
 local function fuse()
-    repeat DEBUG.yieldT(6.26) until SCN.cur~='pause_in'
+    repeat TASK.yieldT(6.26) until SCN.cur~='pause_in'
     FMOD.effect.keyOff('music_pause')
 end
 

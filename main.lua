@@ -674,7 +674,9 @@ else
     end
 end
 
-DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins")
+TASK.new(task_powerManager)
+
+DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins/FMOD/Managers")
 
 --------------------------------------------------------------
 

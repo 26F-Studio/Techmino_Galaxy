@@ -14,7 +14,7 @@
 local sims={
     { -- Exterior 1
         trigger=function()
-            DEBUG.yieldUntilNextScene()
+            TASK.yieldUntilNextScene()
             if SCN.cur=='simulation' then
                 SCN.go('mode_exterior','fadeHeader')
             end

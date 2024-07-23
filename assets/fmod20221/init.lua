@@ -224,7 +224,7 @@ function M.music.stop(instant)
         TASK.new(function()
             e:setParameterByName('fade',0,false)
             repeat
-                DEBUG.yieldT(0.26)
+                TASK.yieldT(0.26)
                 local _,v=e:getParameterByName('fade')
             until v<=0
             e:stop(M.FMOD_STUDIO_STOP_IMMEDIATE)
