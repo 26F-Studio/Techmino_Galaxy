@@ -24,7 +24,9 @@ end
 
 local function sysAction(action)
     if action=='restart' then
-        startGame(GAME.mode.name)
+        if GAME.playing then
+            startGame(GAME.mode.name)
+        end
     elseif action=='back' then
         if canPause() then
             SCN.swapTo('pause_in','none')

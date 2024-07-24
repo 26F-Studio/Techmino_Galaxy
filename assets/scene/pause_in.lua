@@ -28,7 +28,9 @@ local function sysAction(action)
         FMOD.effect.keyOff('music_pause')
         SCN.swapTo('game_in','none')
     elseif action=='restart' then
-        SCN.swapTo('game_in','none',GAME.mode.name)
+        if GAME.playing then
+            SCN.swapTo('game_in','none',GAME.mode.name)
+        end
     elseif action=='setting' then
         if PROGRESS.get('main')<=2 or isCtrlPressed() then
             SCN.go('setting_in','none')

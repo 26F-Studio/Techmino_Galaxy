@@ -34,8 +34,10 @@ local function sysAction(action)
         FMOD.effect('unpause')
         SCN.swapTo('game_out','none')
     elseif action=='restart' then
-        FMOD.effect('pause_restart')
-        SCN.swapTo('game_out',nil,GAME.mode.name)
+        if GAME.playing then
+            FMOD.effect('pause_restart')
+            SCN.swapTo('game_out',nil,GAME.mode.name)
+        end
     elseif action=='setting' then
         FMOD.effect('pause_setting')
         SCN.go('setting_out')

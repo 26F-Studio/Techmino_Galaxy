@@ -141,7 +141,7 @@ function playExterior(name)
 end
 
 function canPause()
-    return not GAME.mode.name:find('/test')
+    return GAME.playing and not GAME.mode.name:find('/test')
 end
 
 local function task_interiorAutoQuit()
