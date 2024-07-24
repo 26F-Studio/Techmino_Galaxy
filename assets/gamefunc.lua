@@ -198,7 +198,7 @@ function task_powerManager()
         local state,pow=love.system.getPowerInfo()
         if not pow then return end
         if state=='charging' or state=='charged' then
-            while pow>warnThres[warnCheck] do
+            while warnCheck<5 and pow>warnThres[warnCheck] do
                 warnCheck=warnCheck+1
             end
         else
