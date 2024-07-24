@@ -28,7 +28,9 @@ end
 
 local function sysAction(action)
     if action=='restart' then
-        startGame(GAME.mode.name)
+        if GAME.playing then
+            startGame(GAME.mode.name)
+        end
     elseif action=='view' then
         -- TODO: more camera modes
         if GAME.camera.k0>.8 then

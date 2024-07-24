@@ -16,7 +16,35 @@ local garbageTypes={
         P.modeData.garbageRised=P.modeData.garbageRised+1
     end,
     drill=function(P)
-        P:riseGarbage()
+        if not P.modeData.dig_drill_init then
+            P.modeData.dig_drill_init=true
+            P.modeData.dig_drill_data=TABLE.new(10,P.settings.fieldW)
+        end
+
+        local d=P.modeData.dig_drill_data
+        local sum=0
+        for i=1,#d do
+            sum=sum+d[i]
+        end
+        local r=P:random(sum)
+        for x=1,#d do
+            r=r-d[x]
+            if r<=0 then
+                r=x
+                break
+            end
+        end
+        P:riseGarbage(r)
+
+        for x=1,P.settings.fieldW do
+            local dist=math.abs(x-r)
+            if dist<=2 then
+                d[x]=math.max(d[x]-(dist==0 and 26 or dist==1 and 5 or 2),0)
+            else
+                d[x]=math.min(d[x]+3,12)
+            end
+        end
+        print(table.concat(d,' '))
     end,
     solid=function(P)
         P:riseGarbage({})

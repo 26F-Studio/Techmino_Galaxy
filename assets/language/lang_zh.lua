@@ -293,6 +293,8 @@ local L={
         exterior_hypersonic_titanium_holdless="你可以暂存的",
         interior_console="这是什么？",
         musicroom_recollection="Recollection不是一首曲子",
+        dial_enter="乐器？",
+        dial_password="密码正确",
     },
 
     -- Level

@@ -294,6 +294,8 @@ local L={
         exterior_hypersonic_titanium_holdless="You can hold",
         interior_console="What's this?",
         musicroom_recollection="Recollection is not a song",
+        dial_enter="Instrument?",
+        dial_password="Password correct",
     },
 
     -- Level

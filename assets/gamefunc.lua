@@ -42,7 +42,8 @@ function playSample(...)
             local len=l[i][3] or 420
             local rel=l[i][4] or 620
             local event=FMOD.effect(inst,{
-                tune=note-33,
+                tune=note>=0 and note-33 or nil,
+                pitch=note<0 and -note or nil,
                 volume=vol,
                 param={'release',rel*1.0594630943592953^(note-33)},
             })
@@ -140,7 +141,7 @@ function playExterior(name)
 end
 
 function canPause()
-    return not GAME.mode.name:find('/test')
+    return GAME.playing and not GAME.mode.name:find('/test')
 end
 
 local function task_interiorAutoQuit()
@@ -198,7 +199,7 @@ function task_powerManager()
         local state,pow=love.system.getPowerInfo()
         if not pow then return end
         if state=='charging' or state=='charged' then
-            while pow>warnThres[warnCheck] do
+            while warnCheck<5 and pow>warnThres[warnCheck] do
                 warnCheck=warnCheck+1
             end
         else

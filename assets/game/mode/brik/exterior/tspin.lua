@@ -66,17 +66,17 @@ return {
                         end
                         local goSecretApp
                         if P.modeData.tspin==4 and P.modeData.tspinText=='target_tss' and PROGRESS.getSecret('exterior_tspin_10TSS') then
-                            goSecretApp='app_polyforge'
+                            goSecretApp='polyforge'
                         elseif P.modeData.tspin==3 and P.modeData.tspinText=='target_tst' and PROGRESS.getSecret('exterior_tspin_10TST') then
-                            goSecretApp='app_UTTT'
+                            goSecretApp='uttt'
                         elseif P.modeData.tspin>=10 then
                             PROGRESS.setExteriorScore('tspin','any',P.modeData.tspin)
                             if P.modeData.tspinText=='target_tss' then
                                 PROGRESS.setSecret('exterior_tspin_10TSS')
-                                goSecretApp='app_polyforge'
+                                goSecretApp='polyforge'
                             elseif P.modeData.tspinText=='target_tst' then
                                 PROGRESS.setSecret('exterior_tspin_10TST')
-                                goSecretApp='app_UTTT'
+                                goSecretApp='uttt'
                             else
                                 P:finish('AC')
                             end
