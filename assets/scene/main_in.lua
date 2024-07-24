@@ -58,7 +58,7 @@ function scene.draw()
     end
 
     -- Logo & verNum
-    GC.setColor(1,1,1)
+    GC.setColor(PROGRESS.get('main')>=3 and COLOR.LD or COLOR.L)
     FONT.set(30)
     GC.mStr(VERSION.appVer,0,-180)
     FONT.set(100)

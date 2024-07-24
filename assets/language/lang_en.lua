@@ -14,6 +14,12 @@ local L={
     musicroom_lowVolume="Please increase BGM volume (bottom right)",
     bgm_collected="BGM collected: $1",
     autoGC="[Auto GC] Low Memory",
+    batteryWarn={
+        "See you!",
+        "Battery depleted, popup may appear soon",
+        "Low battery, please charge",
+        "Device power insufficient, may affect performance",
+    },
 
     -- In-Game
     clearName={

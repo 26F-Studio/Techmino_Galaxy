@@ -14,6 +14,12 @@ local L={
     musicroom_lowVolume="请调高音乐音量（开关在右下角）",
     bgm_collected="收集到音乐: $1",
     autoGC="[Auto GC] 设备内存过低",
+    batteryWarn={
+        "回见!",
+        "电池耗尽，注意弹窗",
+        "电量不足，请尽快充电",
+        "电量不充足，可能影响性能",
+    },
 
     -- In-Game
     clearName={

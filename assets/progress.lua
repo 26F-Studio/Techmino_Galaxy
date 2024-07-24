@@ -289,7 +289,7 @@ function PROGRESS.transcendTo(n)
                     WAIT.interrupt()
                     TASK.new(function()
                         MSG.new('warn',Text.interior_crash,10)
-                        DEBUG.yieldT(3)
+                        TASK.yieldT(3)
                         MSG.new('info',Text.booting_changed,7)
                     end)
                 end

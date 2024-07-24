@@ -48,7 +48,7 @@ function playSample(...)
             })
             if not event then return end
             TASK.new(function()
-                DEBUG.yieldT(len/1000)
+                TASK.yieldT(len/1000)
                 event:stop(FMOD.FMOD_STUDIO_STOP_ALLOWFADEOUT)
             end)
         end
@@ -159,7 +159,7 @@ function autoQuitInterior(disable)
 end
 
 local function _saveSettings()
-    DEBUG.yieldT(.626)
+    TASK.yieldT(.626)
     FILE.save({
         system=SETTINGS._system,
         game_brik=SETTINGS.game_brik,
@@ -191,6 +191,28 @@ function showSaveIcon(str)
     TEXT:add{text=str,x=SCR.w0-15,y=SCR.h0+5,align='bottomright',a=.26,duration=.62,fontSize=70}
 end
 
+local warnThres={-1,2.6,6.26,14.2,26}
+local warnCheck=5
+function task_powerManager()
+    while true do
+        local state,pow=love.system.getPowerInfo()
+        if not pow then return end
+        if state=='charging' or state=='charged' then
+            while pow>warnThres[warnCheck] do
+                warnCheck=warnCheck+1
+            end
+        else
+            if pow<=warnThres[warnCheck] then
+                repeat
+                    warnCheck=warnCheck-1
+                until warnCheck==1 or pow>warnThres[warnCheck]
+                MSG.new(({'check','error','warn','info'})[warnCheck],Text.batteryWarn[warnCheck])
+            end
+        end
+        TASK.yieldT(6.26)
+    end
+end
+
 function backText()
     return CHAR.icon.back_chevron..' '..Text.button_back
 end
@@ -201,7 +223,7 @@ end
 
 function task_unloadGame()
     coroutine.yield()
-    DEBUG.yieldUntilNextScene()
+    TASK.yieldUntilNextScene()
     GAME.unload()
     collectgarbage()
 end
