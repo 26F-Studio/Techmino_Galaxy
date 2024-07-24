@@ -406,7 +406,7 @@ function PROGRESS.getTotalInteriorScore() return prgs.interiorScore.dig+prgs.int
 function PROGRESS.getExteriorMapState() return prgs.exteriorMap end
 function PROGRESS.getExteriorUnlock(mode) return not not prgs.exteriorMap[mode] end ---@param mode Techmino.ModeName
 function PROGRESS.getExteriorModeScore(mode,key) local M=prgs.exteriorMap[mode] return M and M[key] end --[[@param mode Techmino.ModeName]] --[[@param key string]]
-function PROGRESS.getSecret(id) return not not prgs.secretFound[id] end
+function PROGRESS.getSecret(id) return not not prgs.secretFound[id] end ---@param id Techmino.Text.Achievement
 
 --------------------------------------------------------------
 -- Set

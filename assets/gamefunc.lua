@@ -42,7 +42,8 @@ function playSample(...)
             local len=l[i][3] or 420
             local rel=l[i][4] or 620
             local event=FMOD.effect(inst,{
-                tune=note-33,
+                tune=note>=0 and note-33 or nil,
+                pitch=note<0 and -note or nil,
                 volume=vol,
                 param={'release',rel*1.0594630943592953^(note-33)},
             })
