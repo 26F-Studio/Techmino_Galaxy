@@ -1315,7 +1315,7 @@ function BP:riseGarbage(holePos,count)
                 L[holePos[i]]=false
             end
         else
-            L[rnd(w)]=false
+            L[self:random(w)]=false
         end
 
         -- Add connection
