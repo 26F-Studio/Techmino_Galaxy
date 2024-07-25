@@ -256,9 +256,9 @@ local L={
     modeTask_hypersonic_high_title="High",
     modeTask_hypersonic_high_desc="Clear a Techrash",
     modeTask_hypersonic_hidden_title="Hidden",
-    modeTask_hypersonic_hidden_desc="Techrash in 6s",
+    modeTask_hypersonic_hidden_desc="Techrash in 8s",
     modeTask_hypersonic_titanium_title="Titanium",
-    modeTask_hypersonic_titanium_desc="no-hold Techrash in 8s ",
+    modeTask_hypersonic_titanium_desc="no-hold Techrash in 10s ",
 
     modeTask_excavate_shale_title="Shale",
     modeTask_excavate_shale_desc="Dig with Double-",

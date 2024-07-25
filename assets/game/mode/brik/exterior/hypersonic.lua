@@ -41,8 +41,8 @@ return {
                 end
                 if clear.line>=4 then
 
-                    if #P.holdQueue==0 and P.gameTime<=8e3 then
-                        -- Titanium: Techrash in 8s without hold
+                    if #P.holdQueue==0 and P.gameTime<=10e3 then
+                        -- Titanium: Techrash in 10s without hold
                         if not PROGRESS.getExteriorModeScore('hypersonic','showTitanium') then
                             T.add(P,'hypersonic_titanium','modeTask_hypersonic_titanium_title','modeTask_hypersonic_titanium_desc')
                         end
@@ -53,7 +53,7 @@ return {
                         initFunc=mechLib.brik.marathon.hypersonic_titanium_event_playerInit
                         playBgm('secret7th remix_hypersonic_titanium')
 
-                    elseif P.gameTime<=6e3 then
+                    elseif P.gameTime<=8e3 then
                         -- Hidden: Techrash in 6s
                         T.set(P,'hypersonic_hidden',true)
                         T.setTitle(P,'hypersonic_hidden','modeTask_hypersonic_hidden_title','modeTask_hypersonic_hidden_desc')
