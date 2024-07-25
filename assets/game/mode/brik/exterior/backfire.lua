@@ -58,8 +58,8 @@ return {
                     P:addEvent('beforeCancel',mechLib.brik.survivor.backfire_triplePower_event_beforeCancel)
                     P:addEvent('beforeSend',mechLib.brik.survivor.backfire_easy_event_beforeSend)
                     playBgm('supercritical')
-                elseif P.stat.atk>=7 and P.stat.line<=6 then
-                    -- Normal: 7 atk in 6 lines
+                elseif P.stat.atk>=6 and P.stat.line<=6 then
+                    -- Normal: 6 atk in 6 lines
                     T.set(P,'backfire_normal',true)
                     P.modeData.subMode='normal'
                     P.settings.dropDelay=620

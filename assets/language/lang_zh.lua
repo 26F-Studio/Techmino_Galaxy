@@ -271,7 +271,7 @@ local L={
     modeTask_backfire_break_title="Scattered",
     modeTask_backfire_break_desc="消除8行",
     modeTask_backfire_normal_title="Normal",
-    modeTask_backfire_normal_desc="在消除6行内打出7行攻击",
+    modeTask_backfire_normal_desc="在消除6行内打出6行攻击",
     modeTask_backfire_amplify_title="Amplify",
     modeTask_backfire_amplify_desc="在消除4行内打出8行攻击",
 

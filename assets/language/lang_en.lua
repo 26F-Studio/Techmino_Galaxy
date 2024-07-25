@@ -271,7 +271,7 @@ local L={
     modeTask_backfire_break_title="Scattered",
     modeTask_backfire_break_desc="Clear 8 lines",
     modeTask_backfire_normal_title="Normal",
-    modeTask_backfire_normal_desc="Send 7 lines in 6 lines",
+    modeTask_backfire_normal_desc="Send 6 lines in 6 lines",
     modeTask_backfire_amplify_title="Amplify",
     modeTask_backfire_amplify_desc="Send 8 lines in 4 lines",
 
