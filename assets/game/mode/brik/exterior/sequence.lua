@@ -82,12 +82,6 @@ return {
                 T.add(P,'sequence_rect',    'modeTask_sequence_rect_title',    'modeTask_sequence_rect_desc')
                 T.add(P,'sequence_rain',    'modeTask_sequence_rain_title',    'modeTask_sequence_rain_desc')
 
-                local count=0
-                for _,v in next,{'mph','flood','drought','saw','rect','rain','pento'} do
-                    if PROGRESS.getExteriorModeScore('sequence',v) then count=count+1 end
-                end
-                if count>=6 then PROGRESS.setExteriorScore('sequence','showPento',1) end
-
                 if PROGRESS.getExteriorModeScore('sequence','showPento') then
                     T.add(P,'sequence_pento','modeTask_sequence_pento_title','modeTask_sequence_pento_desc')
                 else
@@ -177,6 +171,12 @@ return {
             gameOver=function(P,reason)
                 if reason=='AC' then
                     PROGRESS.setExteriorScore('sequence',P.modeData.subMode,P.gameTime,'<')
+
+                    local count=0
+                    for _,v in next,{'mph','flood','drought','saw','rect','rain','pento'} do
+                        if PROGRESS.getExteriorModeScore('sequence',v) then count=count+1 end
+                    end
+                    if count>=6 then PROGRESS.setExteriorScore('sequence','showPento',1) end
                 end
             end
         },

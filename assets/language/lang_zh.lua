@@ -256,7 +256,7 @@ local L={
     modeTask_hypersonic_high_title="High",
     modeTask_hypersonic_high_desc="消四",
     modeTask_hypersonic_hidden_title="Hidden",
-    modeTask_hypersonic_hidden_desc="8秒内消四",
+    modeTask_hypersonic_hidden_desc="6秒内消四",
     modeTask_hypersonic_titanium_title="Titanium",
     modeTask_hypersonic_titanium_desc="10秒内消四 且 不使用暂存",
 

@@ -21,9 +21,6 @@ return {
                 T.add(P,'excavate_shale',     'modeTask_excavate_shale_title',     'modeTask_excavate_shale_desc')
                 T.add(P,'excavate_volcanics', 'modeTask_excavate_volcanics_title', 'modeTask_excavate_volcanics_desc')
 
-                if PROGRESS.getExteriorModeScore('excavate','shale') and PROGRESS.getExteriorModeScore('excavate','volcanics') then
-                    PROGRESS.setExteriorScore('excavate','showChecker',1)
-                end
                 if PROGRESS.getExteriorModeScore('excavate','showChecker') then
                     T.add(P,'excavate_checker','modeTask_excavate_checker_title','modeTask_excavate_checker_desc')
                 else
@@ -92,6 +89,10 @@ return {
                 if reason=='AC' then
                     PROGRESS.setExteriorScore('dig',P.modeData.digMode,P.gameTime,'<')
 
+                    if PROGRESS.getExteriorModeScore('excavate','shale') and PROGRESS.getExteriorModeScore('excavate','volcanics') then
+                        PROGRESS.setExteriorScore('excavate','showChecker',1)
+                    end
+
                     local playCount=PROGRESS.getExteriorModeScore('dig','playCount') or 0
                     if
                         (PROGRESS.getExteriorModeScore('dig','shale')     or 1e99)<=100e3+10e3*playCount or
@@ -99,9 +100,7 @@ return {
                         (PROGRESS.getExteriorModeScore('dig','checker')   or 1e99)<=60e3+5e3*playCount
                     then
                         PROGRESS.setExteriorUnlock('backfire')
-                        return true
                     end
-
                     PROGRESS.setExteriorScore('dig','playCount',playCount+1)
                 end
             end,
