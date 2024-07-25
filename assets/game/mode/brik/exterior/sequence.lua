@@ -173,10 +173,10 @@ return {
                     PROGRESS.setExteriorScore('sequence',P.modeData.subMode,P.gameTime,'<')
 
                     local count=0
-                    for _,v in next,{'mph','flood','drought','saw','rect','rain','pento'} do
+                    for _,v in next,{'mph','flood','drought','saw','rect','rain'} do
                         if PROGRESS.getExteriorModeScore('sequence',v) then count=count+1 end
                     end
-                    if count>=6 then PROGRESS.setExteriorScore('sequence','showPento',1) end
+                    if count>=5 then PROGRESS.setExteriorScore('sequence','showPento',1) end
                 end
             end
         },
