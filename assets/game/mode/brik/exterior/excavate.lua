@@ -90,13 +90,7 @@ return {
             },
             gameOver=function(P,reason)
                 if reason=='AC' then
-                    if P.modeData.digMode=='checker' then
-                        PROGRESS.setExteriorScore('dig','checker',P.gameTime,'<')
-                    elseif P.modeData.digMode=='shale' then
-                        PROGRESS.setExteriorScore('dig','shale',P.gameTime,'<')
-                    elseif P.modeData.digMode=='volcanics' then
-                        PROGRESS.setExteriorScore('dig','volcanics',P.gameTime,'<')
-                    end
+                    PROGRESS.setExteriorScore('dig',P.modeData.digMode,P.gameTime,'<')
 
                     local playCount=PROGRESS.getExteriorModeScore('dig','playCount') or 0
                     if

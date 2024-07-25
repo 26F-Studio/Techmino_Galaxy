@@ -27,7 +27,7 @@ function survivor.event_drawOnPlayer(P)
     gc.circle('line',-300,130,48)
 end
 
-function survivor.cheese_event_always(P)
+function survivor.scattered_event_always(P)
     if not P.timing then return end
     local md=P.modeData
     if md.waveTimer>0 then
