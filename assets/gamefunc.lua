@@ -189,7 +189,7 @@ function saveTouch()
     showSaveIcon(CHAR.icon.settings..CHAR.icon.save)
 end
 function showSaveIcon(str)
-    TEXT:add{text=str,x=SCR.w0-15,y=SCR.h0+5,align='bottomright',a=.26,duration=.62,fontSize=70}
+    TEXT:add{text=str,x=SCR.w0-15,y=SCR.h0+5,align='bottomright',a=.0626,duration=.62,fontSize=70}
 end
 
 local warnThres={-1,2.6,6.26,14.2,26}
