@@ -90,6 +90,9 @@ return {
             gameOver=function(P)
                 if P.modeData.subMode and P.stat.line>=100 then
                     PROGRESS.setExteriorScore('backfire',P.modeData.subMode,P.gameTime,'<')
+                    if P.modeData.subMode=='normal' then
+                        PROGRESS.setExteriorScore('backfire','showAmplify',1)
+                    end
                 end
             end,
         },

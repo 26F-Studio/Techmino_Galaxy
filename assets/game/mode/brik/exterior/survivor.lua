@@ -107,6 +107,9 @@ return {
             gameOver=function(P)
                 if P.modeData.subMode then
                     PROGRESS.setExteriorScore('survivor',P.modeData.subMode,P.modeData.lastPieceWave[1])
+                    if P.modeData.subMode=='power' then
+                        PROGRESS.setExteriorScore('survivor','showSpike',1)
+                    end
                 end
             end,
         },
