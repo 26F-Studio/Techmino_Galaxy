@@ -22,6 +22,7 @@ local function sysAction(action)
     end
 end
 function scene.keyDown(key,isRep)
+    if key=='t' then playExterior('acry/test')() return true end
     if isRep then return true end
     sysAction(KEYMAP.sys:getAction(key))
     return true
