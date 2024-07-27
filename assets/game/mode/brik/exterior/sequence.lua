@@ -2,8 +2,8 @@ local function cutField_event_always(P)
     P.modeData.initTimer=P.modeData.initTimer-1
     if P.modeData.initTimer==872 then
         local mat=P.field._matrix
-        local cutHeight=#mat<=5 and 3 or 4
-        while #mat>=cutHeight do table.remove(mat) end
+        local cutHeight=#mat<=5 and 2 or 3
+        while #mat>cutHeight do table.remove(mat) end
         P:createMoveEffect(1,cutHeight,P.settings.fieldW,20)
         P:playSound('frenzy')
     elseif P.modeData.initTimer<=0 then
@@ -81,12 +81,6 @@ return {
                 T.add(P,'sequence_saw',     'modeTask_sequence_saw_title',     'modeTask_sequence_saw_desc')
                 T.add(P,'sequence_rect',    'modeTask_sequence_rect_title',    'modeTask_sequence_rect_desc')
                 T.add(P,'sequence_rain',    'modeTask_sequence_rain_title',    'modeTask_sequence_rain_desc')
-
-                local count=0
-                for _,v in next,{'mph','flood','drought','saw','rect','rain','pento'} do
-                    if PROGRESS.getExteriorModeScore('sequence',v) then count=count+1 end
-                end
-                if count>=6 then PROGRESS.setExteriorScore('sequence','showPento',1) end
 
                 if PROGRESS.getExteriorModeScore('sequence','showPento') then
                     T.add(P,'sequence_pento','modeTask_sequence_pento_title','modeTask_sequence_pento_desc')
@@ -177,6 +171,12 @@ return {
             gameOver=function(P,reason)
                 if reason=='AC' then
                     PROGRESS.setExteriorScore('sequence',P.modeData.subMode,P.gameTime,'<')
+
+                    local count=0
+                    for _,v in next,{'mph','flood','drought','saw','rect','rain'} do
+                        if PROGRESS.getExteriorModeScore('sequence',v) then count=count+1 end
+                    end
+                    if count>=5 then PROGRESS.setExteriorScore('sequence','showPento',1) end
                 end
             end
         },

@@ -18,7 +18,7 @@ return {
                 mechLib.common.music.set(P,{path='stat.line',s=40,e=75},'afterClear')
                 local T=mechLib.common.task
                 T.install(P)
-                T.add(P,'backfire_cheese','modeTask_backfire_cheese_title','modeTask_backfire_cheese_desc','(0/8)')
+                T.add(P,'backfire_break','modeTask_backfire_break_title','modeTask_backfire_break_desc','(0/8)')
                 T.add(P,'backfire_normal','modeTask_backfire_normal_title','modeTask_backfire_normal_desc','(0/7)')
 
                 if PROGRESS.getExteriorModeScore('backfire','showAmplify') then
@@ -32,7 +32,7 @@ return {
             end,
             beforeDiscard=function(P)
                 local T=mechLib.common.task
-                T.set(P,'backfire_cheese',P.stat.line/8,("($1/8)"):repD(P.stat.line))
+                T.set(P,'backfire_break',P.stat.line/8,("($1/8)"):repD(P.stat.line))
                 if P.stat.line<=6 then
                     T.set(P,'backfire_normal',P.stat.atk/7,("($1/7)"):repD(P.stat.atk))
                 else
@@ -44,6 +44,7 @@ return {
                     T.set(P,'backfire_amplify',0,"---")
                 end
                 if P.stat.atk>=8 and P.stat.line<=4 then
+                    -- Amplify: 8 atk in 4 lines
                     if not PROGRESS.getExteriorModeScore('backfire','showAmplify') then
                         T.add(P,'backfire_amplify','modeTask_backfire_amplify_title','modeTask_backfire_amplify_desc','(0/8)')
                         T.set(P,'backfire_amplify',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
@@ -57,7 +58,8 @@ return {
                     P:addEvent('beforeCancel',mechLib.brik.survivor.backfire_triplePower_event_beforeCancel)
                     P:addEvent('beforeSend',mechLib.brik.survivor.backfire_easy_event_beforeSend)
                     playBgm('supercritical')
-                elseif P.stat.atk>=7 and P.stat.line<=6 then
+                elseif P.stat.atk>=6 and P.stat.line<=6 then
+                    -- Normal: 6 atk in 6 lines
                     T.set(P,'backfire_normal',true)
                     P.modeData.subMode='normal'
                     P.settings.dropDelay=620
@@ -67,8 +69,9 @@ return {
                     P:addEvent('beforeSend',mechLib.brik.survivor.backfire_normal_event_beforeSend)
                     playBgm('storm')
                 elseif P.stat.line>=8 then
-                    T.set(P,'backfire_cheese',true)
-                    P.modeData.subMode='cheese'
+                    -- Break: 8 lines
+                    T.set(P,'backfire_break',true)
+                    P.modeData.subMode='break'
                     P.settings.dropDelay=1000
                     P.settings.maxFreshChance=15
                     P.settings.maxFreshTime=6200
@@ -87,6 +90,9 @@ return {
             gameOver=function(P)
                 if P.modeData.subMode and P.stat.line>=100 then
                     PROGRESS.setExteriorScore('backfire',P.modeData.subMode,P.gameTime,'<')
+                    if P.modeData.subMode=='normal' then
+                        PROGRESS.setExteriorScore('backfire','showAmplify',1)
+                    end
                 end
             end,
         },

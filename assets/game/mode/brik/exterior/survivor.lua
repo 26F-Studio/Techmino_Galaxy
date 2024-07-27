@@ -32,7 +32,7 @@ return {
                     P.modeData.lastPieceWave={-1,-1,-1,-1}
                     local T=mechLib.common.task
                     T.install(P)
-                    T.add(P,'survivor_cheese','modeTask_survivor_cheese_title','modeTask_survivor_cheese_desc')
+                    T.add(P,'survivor_scattered','modeTask_survivor_scattered_title','modeTask_survivor_scattered_desc')
                     T.add(P,'survivor_power','modeTask_survivor_power_title','modeTask_survivor_power_desc')
 
                     if PROGRESS.getExteriorModeScore('survivor','showSpike') then
@@ -53,12 +53,13 @@ return {
             end,
             beforeCancel=function(P)
                 local T=mechLib.common.task
-                T.set(P,'survivor_cheese',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
+                T.set(P,'survivor_scattered',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
                 T.set(P,'survivor_power',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
                 T.set(P,'survivor_spike',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
                 if P.stat.atk>=8 then
                     local eff=P.stat.atk/P.stat.line
                     if eff>=2 then
+                        -- Spike: 8 atk & 2 Eff
                         if not PROGRESS.getExteriorModeScore('survivor','showSpike') then
                             T.add(P,'survivor_spike','modeTask_survivor_spike_title','modeTask_survivor_spike_desc')
                             T.set(P,'survivor_spike',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
@@ -74,6 +75,7 @@ return {
                         playBgm('there')
                         mechLib.common.music.set(P,{path='.wave',s=10,e=30},'afterClear')
                     elseif eff>=1 then
+                        -- Power: 8 atk & 1 Eff
                         T.set(P,'survivor_power',true)
                         P.modeData.subMode='power'
                         P.settings.dropDelay=620
@@ -83,13 +85,14 @@ return {
                         playBgm('here')
                         mechLib.common.music.set(P,{path='.wave',s=20,e=50},'afterClear')
                     else
-                        T.set(P,'survivor_cheese',true)
-                        P.modeData.subMode='cheese'
+                        -- Scattered: 8 atk
+                        T.set(P,'survivor_scattered',true)
+                        P.modeData.subMode='scattered'
                         P.settings.dropDelay=1000
                         P.settings.maxFreshChance=15
                         P.settings.maxFreshTime=6200
                         P:setAttackSystem('basic')
-                        P:addEvent('always',mechLib.brik.survivor.cheese_event_always)
+                        P:addEvent('always',mechLib.brik.survivor.scattered_event_always)
                         playBgm('shift')
                         mechLib.common.music.set(P,{path='.wave',s=30,e=80},'afterClear')
                     end
@@ -104,6 +107,9 @@ return {
             gameOver=function(P)
                 if P.modeData.subMode then
                     PROGRESS.setExteriorScore('survivor',P.modeData.subMode,P.modeData.lastPieceWave[1])
+                    if P.modeData.subMode=='power' then
+                        PROGRESS.setExteriorScore('survivor','showSpike',1)
+                    end
                 end
             end,
         },

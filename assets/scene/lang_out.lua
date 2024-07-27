@@ -18,7 +18,7 @@ local languages={
 local curLang=1
 local changed
 
-local rec
+local rec,recTimer
 local dialMode,transTimer
 local mode,instrument,octave_plus
 
@@ -100,7 +100,7 @@ local codes={
     '1235789',
 }
 local function dial(n)
-    rec=(rec..n):sub(-26)
+    rec,recTimer=(rec..n):sub(-26),2.6
     if mode=='dial' then
         playSample(instrument,unpack(dialModeData[mode][n].notes))
         for _,sequence in next,codes do
@@ -135,7 +135,7 @@ local function dial(n)
 end
 
 function scene.load()
-    rec=''
+    rec,recTimer='',2.6
     if SCN.stackChange>0 then
         dialMode,transTimer=false,PROGRESS.getSecret('dial_enter') and 6.26 or 26
         mode,instrument,octave_plus='normal','square',false
@@ -173,6 +173,12 @@ function scene.update(dt)
             PROGRESS.setSecret('dial_enter')
         end
     end
+    if recTimer>0 then
+        recTimer=recTimer-dt
+        if recTimer<=0 then
+            rec=''
+        end
+    end
 end
 
 function scene.draw()
@@ -185,6 +191,11 @@ function scene.draw()
     GC.setColor(1,1,1,curLang%1*2)
     GC.mStr(languages[curLang-curLang%1+1] or languages[1],0,20)
 
+    if recTimer>0 then
+        FONT.set(50,'bold')
+        GC.setColor(1,1,1,math.min(recTimer,1))
+        GC.mStr(rec,0,155)
+    end
     if octave_plus then
         GC.replaceTransform(SCR.xOy)
         GC.setColor(COLOR.LD)

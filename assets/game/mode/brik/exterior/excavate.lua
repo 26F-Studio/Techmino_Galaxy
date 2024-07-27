@@ -21,9 +21,6 @@ return {
                 T.add(P,'excavate_shale',     'modeTask_excavate_shale_title',     'modeTask_excavate_shale_desc')
                 T.add(P,'excavate_volcanics', 'modeTask_excavate_volcanics_title', 'modeTask_excavate_volcanics_desc')
 
-                if PROGRESS.getExteriorModeScore('excavate','shale') and PROGRESS.getExteriorModeScore('excavate','volcanics') then
-                    PROGRESS.setExteriorScore('excavate','showChecker',1)
-                end
                 if PROGRESS.getExteriorModeScore('excavate','showChecker') then
                     T.add(P,'excavate_checker','modeTask_excavate_checker_title','modeTask_excavate_checker_desc')
                 else
@@ -90,12 +87,10 @@ return {
             },
             gameOver=function(P,reason)
                 if reason=='AC' then
-                    if P.modeData.digMode=='checker' then
-                        PROGRESS.setExteriorScore('dig','checker',P.gameTime,'<')
-                    elseif P.modeData.digMode=='shale' then
-                        PROGRESS.setExteriorScore('dig','shale',P.gameTime,'<')
-                    elseif P.modeData.digMode=='volcanics' then
-                        PROGRESS.setExteriorScore('dig','volcanics',P.gameTime,'<')
+                    PROGRESS.setExteriorScore('dig',P.modeData.digMode,P.gameTime,'<')
+
+                    if PROGRESS.getExteriorModeScore('excavate','shale') and PROGRESS.getExteriorModeScore('excavate','volcanics') then
+                        PROGRESS.setExteriorScore('excavate','showChecker',1)
                     end
 
                     local playCount=PROGRESS.getExteriorModeScore('dig','playCount') or 0
@@ -105,9 +100,7 @@ return {
                         (PROGRESS.getExteriorModeScore('dig','checker')   or 1e99)<=60e3+5e3*playCount
                     then
                         PROGRESS.setExteriorUnlock('backfire')
-                        return true
                     end
-
                     PROGRESS.setExteriorScore('dig','playCount',playCount+1)
                 end
             end,
