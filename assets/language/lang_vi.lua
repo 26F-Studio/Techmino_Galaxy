@@ -11,7 +11,7 @@ return {
     interior_crash="Bạn chơi quá hay, hộp cát không thể xử lý được nên nó đã bị crash", -- Thanks User670 for suggesting me this alternative
     booting_changed="Phát hiện tệp boot hiện tại bị hỏng, đã thay thế bằng file dự phòng!",
     musicroom_lowVolume="Vặn âm lượng nhạc nền lên đi! (Ở dưới góc phải màn hình đấy!)",
-    bgm_collected="Bạn vừa tìm thấy nhạc nền mới mang tên: $1",
+    bgm_collected="Nhạc nền mới: $1",
     autoGC="[TRÌNH DỌN RÁC TỰ ĐỘNG] RAM đang gần đầy!",
 
     -- In-Game
@@ -113,7 +113,7 @@ return {
     setting_fmod_DSPBufferLength="Độ dài bộ đệm âm thanh",
     setting_apply="Áp dụng",
 
-    lang_note="Bản tiếng Trung (Giản thể) (简体中文) là bản gốc của game. Bản dịch này được dịch từ bản tiếng Anh (English)\nCác bản dịch được các tình nguyện viên đóng góp và chúng có thể không chính xác 100%\nCó một số thuật ngữ không được dịch trực tiếp trong game. Vui lòng tra Zictionary để tìm hiểu thêm",
+    lang_note="Tiếng Trung giản thể là ngôn ngữ gốc của game này. Bản dịch này được dịch từ bản tiếng Anh\nCác bản dịch được các tình nguyện viên đóng góp và chúng có thể không chính xác 100%\nCó một số thuật ngữ không được dịch trực tiếp trong game. Vui lòng tra Zictionary để tìm hiểu thêm",
 
     -- GHI CHÚ: Viết hoa các từ chỉ hướng!
     title_keyset="Bố cục phím",
@@ -204,38 +204,91 @@ return {
     about_toolchain="Toolchain:",
     about_peopleLost="Bạn vừa bỏ qua $1!",
 
-   -- Mode name
-   exteriorModeInfo={ -- TRASLATING NOTE: Unnecessary to be accurate, try to quote some short proverbs in your language
-   sprint=           {"Sprint"    ,"Tốc độ là TRÊN HẾT!"},
-   sequence=         {"Sequence"  ,"Sẵn sàng cho những chuỗi gạch quái gở chưa nào?"},
-   hidden=           {"Hidden"    ,"Như biến mất trong hư vô..."},
-   tspin=            {"T-Spin"    ,"Bạn sẽ làm được bao nhiêu T-spin đây?"},
-   marathon=         {"Marathon"  ,"Đối đầu với tốc độ tăng dần"},
-   allclear=         {"All Clear" ,"\"Thuốc nổ\" trong game nào đó vẫn chưa bằng cái này đâu!"},
-   combo=            {"Combo"     ,"Ai ai cũng thích combo,\nnhà nhà đều yêu combo!"},
-   hypersonic=       {"Hypersonic","Khi trọng lực biến thành nam châm..."},
-   dig=              {"Dig"       ,"Những hàng rác gọn gàng đang chờ bạn xóa kìa!"},
-   excavate=         {"Excavate"  ,"Đống rác này khó xơi hơn. Bạn xử chúng được không?"},
-   backfire=         {"Backfire"  ,"Ăn miếng trả miếng, nhưng là phiên bản một mình"},
-   drill=            {"Drill"     ,"Tới giờ xử lý những hàng rác \"chuẩn không cần chỉnh\" nào!"},
-   survivor=         {"Survivor"  ,"Hãy sống sót dưới làn \"mưa bom bão đạn\" từ kẻ địch!"},
+    -- Mode name
+    exteriorModeInfo={ -- TRASLATING NOTE: Unnecessary to be accurate, try to quote some short proverbs in your language
+        sprint=           {"Sprint"    ,"Tốc độ là TRÊN HẾT!"},
+        sequence=         {"Sequence"  ,"Sẵn sàng cho những chuỗi gạch quái gở chưa nào?"},
+        hidden=           {"Hidden"    ,"Như biến mất trong hư vô..."},
+        tspin=            {"T-Spin"    ,"Bạn sẽ làm được bao nhiêu T-spin đây?"},
+        marathon=         {"Marathon"  ,"Đối đầu với tốc độ tăng dần"},
+        allclear=         {"All Clear" ,"\"Thuốc nổ\" trong game nào đó vẫn chưa bằng cái này đâu!"},
+        combo=            {"Combo"     ,"Ai ai cũng thích combo,\nnhà nhà đều yêu combo!"},
+        hypersonic=       {"Hypersonic","Khi trọng lực biến thành nam châm..."},
+        dig=              {"Dig"       ,"Những hàng rác gọn gàng đang chờ bạn xóa kìa!"},
+        excavate=         {"Excavate"  ,"Đống rác này khó xơi hơn. Bạn xử chúng được không?"},
+        backfire=         {"Backfire"  ,"Ăn miếng trả miếng, nhưng là phiên bản một mình"},
+        drill=            {"Drill"     ,"Tới giờ xử lý những hàng rác \"chuẩn không cần chỉnh\" nào!"},
+        survivor=         {"Survivor"  ,"Hãy sống sót dưới làn \"mưa bom bão đạn\" từ kẻ địch!"},
 
-   chain=            {"Chain"     ,"Hãy xâu một chuỗi cùng màu để xóa chúng!"},
-   action=           {"Action"    ,"Hãy chơi mode này bằng cách dùng bàn phím và chuột nha!"},
-},
+        chain=            {"Chain"     ,"Hãy xâu một chuỗi cùng màu để xóa chúng!"},
+        action=           {"Action"    ,"Hãy chơi mode này bằng cách dùng bàn phím và chuột nha!"},
+    },
 
--- Achievement
-achievementMessage={
-   dict_shortcut="Hotkey Expert",
-   exterior_excavate_notDig="What are you doing?",
-   exterior_hidden_superBrain="COOL",
-   exterior_sprint_SZOpen="Really want to start with SZO?",
-   exterior_tspin_10TSS="What's this?",
-   exterior_tspin_10TST="EZ.",
-   exterior_hypersonic_titanium_holdless="You can hold",
-   interior_console="Cái này là cái gì đây?",
-   musicroom_recollection="Không có bài nhạc nào tên là \"Hồi tưởng\" cả!",
-},
+    -- Submode Task Texts
+    modeTask_question_title="???",
+    modeTask_question_desc="??????",
+
+    modeTask_sequence_flood_title="Flood",
+    modeTask_sequence_flood_desc="Xóa hàng bằng\ncục Z hoặc cục S",
+    modeTask_sequence_drought_title="Drought",
+    modeTask_sequence_drought_desc="Xóa hàng bằng\ncục J hay cục L",
+    modeTask_sequence_saw_title="Saw",
+    modeTask_sequence_saw_desc="Xóa hàng bằng cục T",
+    modeTask_sequence_rect_title="Rect",
+    modeTask_sequence_rect_desc="Xóa hàng bằng cục O",
+    modeTask_sequence_rain_title="Rain",
+    modeTask_sequence_rain_desc="Xóa hàng bằng cục I",
+    modeTask_sequence_mph_title="MPH",
+    modeTask_sequence_mph_desc="Xóa một hàng\nchỉ với 4 gạch.",
+    modeTask_sequence_pento_title="Pento",
+    modeTask_sequence_pento_desc="Xóa hàng bằng\nmột Pento (gạch 5 ô)",
+    modeTask_sequence_unknown_desc="Xóa hàng bằng ???",
+
+    modeTask_hypersonic_low_title="Low",
+    modeTask_hypersonic_low_desc="Xóa 4 hàng",
+    modeTask_hypersonic_high_title="High",
+    modeTask_hypersonic_high_desc="Làm Techrash",
+    modeTask_hypersonic_hidden_title="Hidden",
+    modeTask_hypersonic_hidden_desc="Làm Techrash\nchỉ trong 6s",
+    modeTask_hypersonic_titanium_title="Titanium",
+    modeTask_hypersonic_titanium_desc="Làm Techrash + ko Giữ\nchỉ trong 8s",
+
+    modeTask_excavate_shale_title="Shale",
+    modeTask_excavate_shale_desc="Đào khi\nSingle hay Double",
+    modeTask_excavate_volcanics_title="Volcanics",
+    modeTask_excavate_volcanics_desc="Đào khi\nTriple hay Techrash ",
+    modeTask_excavate_checker_title="Checker",
+    modeTask_excavate_checker_desc="Đào khi Split",
+    modeTask_excavate_unknown_desc="Đào khi ???",
+
+    modeTask_backfire_cheese_title="Cheese",
+    modeTask_backfire_cheese_desc="Xóa 8 hàng",
+    modeTask_backfire_normal_title="Normal",
+    modeTask_backfire_normal_desc="Gửi 7 hàng trong 6 hàng",
+    modeTask_backfire_amplify_title="Amplify",
+    modeTask_backfire_amplify_desc="Gửi 8 hàng trong 4 hàng",
+
+    modeTask_survivor_cheese_title="Cheese",
+    modeTask_survivor_cheese_desc="Gửi 8 hàng",
+    modeTask_survivor_power_title="Power",
+    modeTask_survivor_power_desc="Gửi 8 hàng với 1 Eff",
+    modeTask_survivor_spike_title="Spike",
+    modeTask_survivor_spike_desc="Gửi 8 hàng với 2 Eff",
+
+    -- Achievement
+    achievementMessage={
+        dict_shortcut="Chuyên gia Phím tắt",
+        exterior_excavate_notDig="Bạn đang làm gì đấy?",
+        exterior_hidden_superBrain="NGẦU QUÁ!",
+        exterior_sprint_SZOpen="Bạn muốn mở màn bằng SZO à?",
+        exterior_tspin_10TSS="Cái gì đây?",
+        exterior_tspin_10TST="EZ.",
+        exterior_hypersonic_titanium_holdless="You can hold",
+        interior_console="Cái này là cái gì đây?",
+        musicroom_recollection="Không có bài nhạc nào tên là \"Hồi tưởng\" cả!",
+        dial_enter="Điện thoại à?",
+        dial_password="Mật khẩu đúng rồi đấy!",
+    },
     -- Level
     tutorial_basic="Những thứ cơ bản",
     tutorial_sequence="Next & Hold",

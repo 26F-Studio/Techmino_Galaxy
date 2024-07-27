@@ -28,7 +28,7 @@ local scene={}
 local dialModeData={
     normal={
         ['1']={text=langList.en},
-        ['2']={text=''},
+        ['2']={text=langList.vi},
         ['3']={text=langList.zh},
         ['4']={text=''},
         ['5']={text=''},
