@@ -84,6 +84,7 @@ function scene.keyUp(key)
 end
 
 function scene.touchDown(x,y,id)
+    x,y=SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y))
     if GAME.mainPlayer then
         if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
             if SETTINGS.system.touchControl then VCTRL.press(x,y,id) end
@@ -93,6 +94,7 @@ function scene.touchDown(x,y,id)
     end
 end
 function scene.touchMove(x,y,dx,dy,id)
+    x,y=SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y))
     if GAME.mainPlayer then
         if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
             if SETTINGS.system.touchControl then VCTRL.move(x,y,id) end
@@ -102,6 +104,7 @@ function scene.touchMove(x,y,dx,dy,id)
     end
 end
 function scene.touchUp(x,y,id)
+    x,y=SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y))
     if GAME.mainPlayer then
         if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
             if SETTINGS.system.touchControl then VCTRL.release(id) end

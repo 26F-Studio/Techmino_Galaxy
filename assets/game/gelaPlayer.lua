@@ -421,10 +421,9 @@ function GP:freshDelay(reason)
     end
 end
 function GP:setSequenceGen(seqData,args)
-    if assert(type(args)=='string',"setSequenceGen: 'args' need string") then
-        if args:sArg('-clearData') then self.seqData={} end
-        if args:sArg('-clearNext') then TABLE.clear(self.nextQueue) end
-    end
+    if type(args)~='string' then args='' end
+    if args:sArg('-clearData') then self.seqData={} end
+    if args:sArg('-clearNext') then TABLE.clear(self.nextQueue) end
 
     self.seqGen=mechLib.gela.sequence[seqData] or seqData
     assert(self:seqGen(self.seqData,true)==nil,"First call of sequence generator must return nil")

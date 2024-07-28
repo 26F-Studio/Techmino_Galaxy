@@ -729,19 +729,30 @@ function AP:render()
         GC.stc_rect(0,0,720,-720)
         gc_scale(16/SET.fieldSize)
 
-            self:triggerEvent('drawBelowField') -- From frame's bottom-left, 40px a cell
+            self:triggerEvent('drawBelowField') -- From frame's bottom-left, 45px a cell
 
             -- Grid & Cells
             skin.drawFieldBackground(SET.fieldSize)
-            local F=self.field
-            for y=1,#F do for x=1,#F[1] do
-                local C=F[y][x]
-                if C then
-                    skin.drawFieldCell(C,F,(x-1)*40+2,-y*40+2)
-                end
-            end end
 
-            self:triggerEvent('drawInField') -- From frame's bottom-left, 40px a cell
+            do -- Field
+                local matrix=self.field
+                gc_push('transform')
+
+                local width=SET.fieldSize
+                for y=1,#matrix do
+                    for x=1,#matrix[1] do
+                        local C=matrix[y][x]
+                        if C then
+                            skin.drawFieldCell(C,matrix,x,y)
+                        end
+                        gc_translate(45,0)
+                    end
+                    gc_translate(-45*width,-45) -- \r\n (Return + Newline)
+                end
+                gc_pop()
+            end
+
+            self:triggerEvent('drawInField') -- From frame's bottom-left, 45px a cell
 
         -- Stop field stencil
         GC.stc_stop()

@@ -157,9 +157,10 @@ local function drawAcry(g)
         gc_rectangle('line',-12,-12,24,24)
     end
 end
-function S.drawFieldCell(G,_,x,y)
+function S.drawFieldCell(G,_,_,_)
     gc_setLineWidth(2)
     gc_push('transform')
+    gc_translate(22.5,-22.5)
     if G.moveTimer then
         local d=G.moveTimer/G.moveDelay
         if G.fall then
@@ -167,9 +168,7 @@ function S.drawFieldCell(G,_,x,y)
         else
             d=-math.cos(d*math.pi)/2+.5
         end
-        gc_translate(45*(x+d*G.dx)-22.5,-45*(y+d*G.dy)+22.5)
-    else
-        gc_translate(45*x-22.5,-45*y+22.5)
+        gc_translate(45*(d*G.dx),-45*(d*G.dy))
     end
     if G.clearTimer and not G.generate then
         local t=G.clearTimer/G.clearDelay

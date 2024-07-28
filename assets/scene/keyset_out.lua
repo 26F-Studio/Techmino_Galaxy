@@ -135,12 +135,18 @@ scene.widgetList={
     {type='button',name='sys', x=900,y=390,w=200,h=60,text=LANG"keyset_sys_down",        fontSize=20, color='lC',code=selAct('sys', 'down'   )},
     {type='button',name='sys', x=900,y=460,w=200,h=60,text=LANG"keyset_sys_select",      fontSize=20, color='lC',code=selAct('sys', 'select' )},
 
-    {type='button_invis',name='Sacry',pos={1,0},x=-800,y=60,w=150,h=100,cornerR=20,fontSize=60,text="G",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='acry' then keyMode='acry'; scene.load() end end,visibleFunc=function() return PROGRESS.getStyleUnlock('acry') end},
-    {type='button_invis',name='Sgela',pos={1,0},x=-600,y=60,w=150,h=100,cornerR=20,fontSize=60,text="P",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='gela' then keyMode='gela'; scene.load() end end,visibleFunc=function() return PROGRESS.getStyleUnlock('gela') end},
-    {type='button_invis',name='Sbrik',pos={1,0},x=-400,y=60,w=150,h=100,cornerR=20,fontSize=60,text="M",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='brik' then keyMode='brik'; scene.load() end end,visibleFunc=function() return PROGRESS.getStyleUnlock('brik') end},
+    {type='button_invis',name='Sacry',pos={1,0},x=-800,y=60,w=150,h=100,cornerR=20,fontSize=60,text="A",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='acry' then keyMode='acry'; scene.load() end end,visibleFunc=function() return PROGRESS.getStyleUnlock('acry') end},
+    {type='button_invis',name='Sgela',pos={1,0},x=-600,y=60,w=150,h=100,cornerR=20,fontSize=60,text="G",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='gela' then keyMode='gela'; scene.load() end end,visibleFunc=function() return PROGRESS.getStyleUnlock('gela') end},
+    {type='button_invis',name='Sbrik',pos={1,0},x=-400,y=60,w=150,h=100,cornerR=20,fontSize=60,text="B",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='brik' then keyMode='brik'; scene.load() end end,visibleFunc=function() return PROGRESS.getStyleUnlock('brik') end},
     {type='button_invis',name='Ssys', pos={1,0},x=-200,y=60,w=150,h=100,cornerR=20,fontSize=60,text="S",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='sys'  then keyMode='sys';  scene.load() end end},
 
-    {type='button',pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG"setting_test",fontSize=40,code=playExterior('brik/exterior/test'),visibleFunc=function() return not GAME.mode end},
+    {type='button',pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG"setting_test",fontSize=40,code=function()
+        if GAME.mode then return MSG.new('warn',Text.setting_tryTestInGame) end
+        playExterior(
+            keyMode=='brik' and 'brik/exterior/test' or
+            keyMode..'/test'
+        )()
+    end,visibleFunc=function() return keyMode~='sys' end},
     {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'settings_title'},
     {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
 }
