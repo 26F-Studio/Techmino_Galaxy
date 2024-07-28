@@ -15,11 +15,22 @@ M.banks={}
 -- M.C=ffi.load(fmodPath)
 -- M.C2=ffi.load(fmodstudioPath)
 
-M.C=ffi.load('fmod')
-if not M.C then MSG.new('error',"FMOD library not found") end
+do -- Load library
+    local suc,res
+    suc,M.C=pcall(ffi.load,'fmod')
+    if not suc then
+        MSG.new('error',"Loading FMOD lib:"..M.C)
+    elseif not M.C then
+        MSG.new('error',"Error in Loading FMOD lib")
+    end
 
-M.C2=ffi.load('fmodstudio')
-if not M.C2 then MSG.new('error',"FMODstudio library not found") end
+    suc,M.C2=pcall(ffi.load,'fmodstudio')
+    if not suc then
+        MSG.new('error',"Loading FMODstudio lib:"..M.C2)
+    elseif not M.C2 then
+        MSG.new('error',"Error in Loading FMODstudio lib")
+    end
+end
 
 require'enums'
 require'constants'
