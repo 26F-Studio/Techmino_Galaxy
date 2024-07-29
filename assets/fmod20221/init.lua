@@ -15,11 +15,22 @@ M.banks={}
 -- M.C=ffi.load(fmodPath)
 -- M.C2=ffi.load(fmodstudioPath)
 
-M.C=ffi.load('fmod')
-if not M.C then MSG.new('error',"FMOD library not found") end
+do -- Load library
+    local suc
+    suc,M.C=pcall(ffi.load,'fmod')
+    if not suc then
+        MSG.new('error',"Loading FMOD lib:"..M.C)
+    elseif not M.C then
+        MSG.new('error',"Error in Loading FMOD lib")
+    end
 
-M.C2=ffi.load('fmodstudio')
-if not M.C2 then MSG.new('error',"FMODstudio library not found") end
+    suc,M.C2=pcall(ffi.load,'fmodstudio')
+    if not suc then
+        MSG.new('error',"Loading FMODstudio lib:"..M.C2)
+    elseif not M.C2 then
+        MSG.new('error',"Error in Loading FMODstudio lib")
+    end
+end
 
 require'enums'
 require'constants'
@@ -164,6 +175,8 @@ function M.music.getDesc(name)
     return musicLib[name]
 end
 
+local unhintedBGM={}
+
 ---@param name string
 ---@param args? {instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}
 ---@return FMOD.Studio.EventInstance?
@@ -172,7 +185,10 @@ function M.music.play(name,args)
     FMOD.music.stop()
     local desc=musicLib[name]
     if not desc then
-        MSG.new('warn',"No BGM named "..name)
+        if not unhintedBGM[name] then
+            unhintedBGM[name]=true
+            MSG.new('warn',"No BGM named "..name)
+        end
         return
     end
     local event,res=desc:createInstance()
@@ -297,6 +313,8 @@ function M.effect.getDesc(name)
     return effectLib[name]
 end
 
+local unhintedSFX={}
+
 ---priority: pitch>tune>fine
 ---
 ---pos:{x,y,z}
@@ -309,7 +327,10 @@ function M.effect.play(name,args)
     if not studio then return end
     local desc=effectLib[name]
     if not desc then
-        MSG.new('warn',"No SE named "..name)
+        if not unhintedSFX[name] then
+            unhintedSFX[name]=true
+            MSG.new('warn',"No SE named "..name)
+        end
         return
     end
     local event,res=desc:createInstance()
