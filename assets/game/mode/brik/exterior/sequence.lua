@@ -58,6 +58,13 @@ local function sequence_pento_arc(P,d,init)
     return table.remove(d.bag1,P:random(#d.bag1))
 end
 
+regFuncLib({
+    cutField_event_always=cutField_event_always,
+    sequence_weird=sequence_weird,
+    sequence_pento_arc=sequence_pento_arc,
+},'exterior_sequence')
+
+
 ---@type Techmino.Mode
 return {
     initialize=function()

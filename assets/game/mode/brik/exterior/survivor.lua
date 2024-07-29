@@ -12,6 +12,8 @@ local function accelerate_event_always(P)
         end
     end
 end
+regFuncLib(accelerate_event_always,'exterior_survivor.accelerate_event_always')
+
 ---@type Techmino.Mode
 return {
     initialize=function()

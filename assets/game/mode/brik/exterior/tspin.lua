@@ -3,6 +3,7 @@ local function degraded_tspin_event_drawOnPlayer(P)
     FONT.set(80) GC.mStr(P.modeData.tspin,-300,-70)
     FONT.set(30) GC.mStr(Text[P.modeData.tspinText],-300,15)
 end
+regFuncLib(degraded_tspin_event_drawOnPlayer,'exterior_tspin.degraded_tspin_event_drawOnPlayer')
 
 ---@type Techmino.Mode
 return {
