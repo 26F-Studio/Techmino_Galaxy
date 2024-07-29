@@ -1,3 +1,8 @@
+local gc=love.graphics
+local recordedLinesStr={'line20','line40','line100','line260'}
+local recordedLinesName={'[20]','[40]','[100]','[260]'}
+local setFont,getFont=FONT.set,FONT.get
+
 ---@type Techmino.Mode
 return {
     initialize=function()
@@ -154,12 +159,33 @@ return {
                         if P.stat.piece<102.6 then
                             PROGRESS.setExteriorUnlock('sequence')
                         end
+                        P:delEvent('drawInField',mechLib.brik.misc.lineClear_event_drawInField)
                         return true
                     end
                 end,
             },
             drawInField=mechLib.brik.misc.lineClear_event_drawInField,
-            -- drawOnPlayer=mechLib.brik.misc.lineClear_event_drawOnPlayer,
+            drawOnPlayer=function(P)
+                P:drawInfoPanel(-380,-180,160,360)
+                local y=-180
+                for i=1,4 do
+                    local time=PROGRESS.getExteriorModeScore('sprint',recordedLinesStr[i])
+                    if time then
+                        setFont(45)
+                        local int=tostring(math.floor(time/1000))
+                        gc.print(int,-370,y)
+                        setFont(25)
+                        gc.print('.'..time%1000,-367+getFont(45):getWidth(int),y+20)
+                    else
+                        setFont(40)
+                        -- gc.print('———',-370,y)
+                        gc.print('<WIP>',-370,y)
+                    end
+                    setFont(20,'bold')
+                    gc.print(recordedLinesName[i],-370,y+50)
+                    y=y+90
+                end
+            end,
             -- whenSuffocate=mechLib.brik.misc.suffocateLock_event_whenSuffocate,
         },
     }},
@@ -205,8 +231,8 @@ return {
         ---@cast P Techmino.Player.Brik
         if not P then return end
         if not P.modeData.finalTime then
-            FONT.set(100)
-            GC.setColor(1,1,1,math.min(time*2.6,1))
+            setFont(100)
+            gc.setColor(1,1,1,math.min(time*2.6,1))
             GC.mStr(P.stat.line.." / "..P.modeData.target.line,800,400)
             return
         end
@@ -215,33 +241,33 @@ return {
         local maxH=600*MATH.expApproach(0,1,math.max(time-.26,0)^2*12.6)
 
         -- Set axis' trasformation
-        GC.translate(400,800)
-        GC.scale(1,-1)
+        gc.translate(400,800)
+        gc.scale(1,-1)
 
         -- Reference line
-        GC.setLineWidth(6)
-        GC.setColor(1,1,.626,.5)
+        gc.setLineWidth(6)
+        gc.setColor(1,1,.626,.5)
         if P.stat.line==P.modeData.target.line then
-            GC.line(0,0,800*t,(100/#P.dropHistory)*600*t)
+            gc.line(0,0,800*t,(100/#P.dropHistory)*600*t)
         else
-            GC.line(0,0,800*t,600*t)
+            gc.line(0,0,800*t,600*t)
         end
 
         -- Line-time
-        GC.setLineWidth(2)
+        gc.setLineWidth(2)
         local clearData=P.modeData.clearInfo
         local lastX,lastY=0,0
         for i=1,#clearData do
-            GC.setColor(.1,.1,1,.42)
-            GC.polygon('fill',
+            gc.setColor(.1,.1,1,.42)
+            gc.polygon('fill',
                 800*t*lastX,0,
                 800*t*lastX,lastY*maxH,
                 800*t*clearData[i].x,lastY*maxH, -- FLIP --
                 -- 800*t*clearData[i].x,clearData[i].y*maxH, -- FLIP --
                 800*t*clearData[i].x,0
             )
-            GC.setColor(.2,.3,1)
-            GC.line(
+            gc.setColor(.2,.3,1)
+            gc.line(
                 800*t*lastX,lastY*maxH,
                 800*t*clearData[i].x,lastY*maxH, -- FLIP --
                 800*t*clearData[i].x,clearData[i].y*maxH
@@ -254,13 +280,13 @@ return {
         lastX,lastY=0,0
         for i=1,#dropData do
             local gb=dropData[i].choke
-            GC.setColor(.8+gb,gb,gb)
+            gc.setColor(.8+gb,gb,gb)
             -- KPP mark
-            GC.setLineWidth(1)
-            GC.circle('line',800*t*lastX,lastY*maxH,math.min(dropData[i].key^2/10,4))
+            gc.setLineWidth(1)
+            gc.circle('line',800*t*lastX,lastY*maxH,math.min(dropData[i].key^2/10,4))
             -- Line
-            GC.setLineWidth(2)
-            GC.line(
+            gc.setLineWidth(2)
+            gc.line(
                 800*t*lastX,lastY*maxH,
                 800*t*dropData[i].x,lastY*maxH, -- FLIP --
                 800*t*dropData[i].x,dropData[i].y*maxH
@@ -269,11 +295,11 @@ return {
         end
 
         -- Axis
-        GC.setLineWidth(2)
-        GC.setColor(COLOR.dL)
-        GC.line(0,600*t,0,0,800*t,0)
-        FONT.set(30)
-        GC.setColor(1,1,1,t)
-        GC.printf(STRING.time(P.modeData.finalTime/1000),800*t-260,-10,260,'right',nil,1,-1)
+        gc.setLineWidth(2)
+        gc.setColor(COLOR.dL)
+        gc.line(0,600*t,0,0,800*t,0)
+        setFont(30)
+        gc.setColor(1,1,1,t)
+        gc.printf(STRING.time(P.modeData.finalTime/1000),800*t-260,-10,260,'right',nil,1,-1)
     end,
 }

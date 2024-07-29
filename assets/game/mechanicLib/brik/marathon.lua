@@ -103,7 +103,7 @@ do -- marathon
         end
     end
     function marathon.event_drawOnPlayer(P)
-        P:drawInfoPanel(-380,-85,160,200)
+        P:drawInfoPanel(-380,-100,160,200)
 
         local md=P.modeData
         FONT.set(70)

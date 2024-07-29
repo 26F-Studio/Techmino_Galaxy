@@ -176,9 +176,10 @@ local GAME={
 GAME.camera.moveSpeed=12
 
 function GAME._refresh()
-    regFuncToStr,regStrToFunc={},{}
     mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
     regFuncLib(mechLib,'mechLib')
+    regFuncToStr,regStrToFunc={},{}
+    modeLib={}
 end
 GAME._refresh()
 
