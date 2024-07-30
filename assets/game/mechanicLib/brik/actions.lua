@@ -31,7 +31,7 @@ local function move(P,dir,canBuffer)
             end
         end
     else
-        if P.settings.entryChrg=='on' or P.settings.entryChrg=='full' then
+        if P.settings.entryChrg=='full' then
             P.moveCharge=P.settings.asd
         end
         if canBuffer then
