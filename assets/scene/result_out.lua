@@ -19,6 +19,7 @@ function scene.keyDown(key)
 end
 
 function scene.update(dt)
+    GAME.update(dt*.26)
     time=time+dt
 end
 
