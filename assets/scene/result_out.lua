@@ -11,10 +11,7 @@ function scene.mouseDown(_,_,k) if k==2 then SCN.back() end end
 function scene.keyDown(key)
     local action=KEYMAP.sys:getAction(key)
     if action=='restart' then
-        SCN._pop()
-        if GAME.playing then
-            SCN.go('game_out',nil,GAME.mode.name)
-        end
+        SCN.swapTo('game_out',nil,GAME.mode.name)
     elseif action=='back' then
         SCN.back()
     end
