@@ -176,6 +176,9 @@ return {
                 P:drawInfoPanel(-380,-180,160,360)
                 local y=-175
                 for i=1,4 do
+                    if i==3 and not P.modeData.infSprint_switch then
+                        gc.setColor(COLOR.lD)
+                    end
                     local time=PROGRESS.getExteriorModeScore('sprint',recordedLinesStr[i])
                     if time then
                         setFont(45)
