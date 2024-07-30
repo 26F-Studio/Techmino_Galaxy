@@ -15,6 +15,7 @@ return {
                         P.settings.combo_sound=true
                     end
                 end,
+                -- "P:setAction('func1',mechLib.brik.stack.switch_auto)",
             },
             afterClear={
                 function(P)
