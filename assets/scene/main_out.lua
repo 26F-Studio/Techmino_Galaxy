@@ -22,7 +22,13 @@ local function sysAction(action)
     end
 end
 function scene.keyDown(key,isRep)
-    if key=='t' then playExterior('acry/test')() return true end
+    if key=='1' then FMOD.effect('notice')
+    elseif key=='2' then FMOD.effect('solve')
+    end
+    -- if     key=='b' then playExterior('brik/exterior/test')() return true
+    -- elseif key=='g' then playExterior('gela/test')() return true
+    -- elseif key=='a' then playExterior('acry/test')() return true
+    -- end
     if isRep then return true end
     sysAction(KEYMAP.sys:getAction(key))
     return true

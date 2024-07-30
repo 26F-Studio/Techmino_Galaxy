@@ -40,7 +40,7 @@ local function sysAction(action)
         end
     elseif action=='back' then
         if canPause() then
-            FMOD.effect('pause')
+            FMOD.effect('pause_pause')
             SCN.swapTo('pause_out','none')
         else
             SCN.back()
