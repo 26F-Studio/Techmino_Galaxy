@@ -4,6 +4,12 @@ local recordedLinesStr={'line20','line40','line100','line260'}
 local recordedLinesName={'[20]','[40]','[100]','[260]'}
 local setFont,getFont=FONT.set,FONT.get
 
+local function infSprint_turnOn(P)
+    P.modeData.infSprint_switch=true
+end
+
+regFuncLib(infSprint_turnOn,'exterior_sprint.infSprint_turnOn')
+
 ---@type Techmino.Mode
 return {
     initialize=function()
@@ -18,6 +24,7 @@ return {
         seqType='bag7_sprint',
         event={
             playerInit=function(P)
+                P.modeData.infSprint_switch=false
                 P.modeData.infSprint_dropCheckPos=1
                 P.modeData.infSprint_clears={}
                 P.modeData.target.line=20
@@ -30,6 +37,7 @@ return {
                     P.settings.spin_immobile=false
                     P.settings.spin_corners=false
                 end
+                P:setAction('func1',infSprint_turnOn)
             end,
             beforePress=function(P)
                 P.modeData.curKeyCount=P.modeData.curKeyCount+1
@@ -121,11 +129,7 @@ return {
                     if P.stat.line>=P.modeData.target.line then
                         P.modeData.target.line=TABLE.next(recordedLines,P.modeData.target.line)
                         if not P.modeData.target.line then
-                        P:delEvent('drawInField',mechLib.brik.misc.lineClear_event_drawInField)
-                        P:delEvent('drawInField',mechLib.brik.misc.lineClear_event_drawInField)
-                        -- P:delEvent('drawOnPlayer',mechLib.brik.misc.lineClear_event_drawOnPlayer)
                             P:delEvent('drawInField',mechLib.brik.misc.lineClear_event_drawInField)
-                        -- P:delEvent('drawOnPlayer',mechLib.brik.misc.lineClear_event_drawOnPlayer)
                             return true
                         end
                     end
@@ -160,6 +164,9 @@ return {
                             PROGRESS.setExteriorUnlock('sequence')
                         end
                         P:delEvent('drawInField',mechLib.brik.misc.lineClear_event_drawInField)
+                        if not P.modeData.infSprint_switch then
+                            P:finish('ILE')
+                        end
                         return true
                     end
                 end,
@@ -196,32 +203,29 @@ return {
         if P.stat.line<20 then return end
 
         local dropInfo={}
-        local clearInfo={}
-
         local averageTime=P.gameTime/#P.dropHistory
-
         local lastPieceTime=0
         for i,d in next,P.dropHistory do
             table.insert(dropInfo,{
-                x=d.time/P.gameTime,
+                x=d.gameTime/P.gameTime,
                 y=i/#P.dropHistory,
-                choke=math.min(averageTime/(d.time-lastPieceTime),1),
+                choke=math.min(averageTime/(d.gameTime-lastPieceTime),1),
                 key=P.modeData.keyCount[i] or 0,
             })
-            lastPieceTime=d.time
+            lastPieceTime=d.gameTime
         end
+        P.modeData.dropInfo=dropInfo
 
+        local clearInfo={}
         local _cleared=0
         for _,c in next,P.clearHistory do
             _cleared=math.min(_cleared+c.line,P.stat.line)
             table.insert(clearInfo,{
-                x=c.time/P.gameTime,
+                x=c.gameTime/P.gameTime,
                 y=_cleared/P.stat.line,
             })
         end
-
-        P.modeData.finalTime=P.gameTime
-        P.modeData.dropInfo=dropInfo
+        table.insert(clearInfo,{x=1,y=1})
         P.modeData.clearInfo=clearInfo
     end,
     resultPage=function(time)
@@ -229,7 +233,7 @@ return {
         ---@cast P Techmino.Player.Brik
         if not P then return end
 
-        if not P.modeData.finalTime then
+        if P.stat.line<20 then
             setFont(100)
             gc.setColor(1,1,1,math.min(time*2.6,1))
             GC.mStr(P.stat.line.." / 20",800,400)
@@ -244,8 +248,8 @@ return {
         gc.scale(1,-1)
 
         -- Reference line
-        gc.setLineWidth(6)
-        gc.setColor(1,1,.626,.5)
+        gc.setLineWidth(3)
+        gc.setColor(1,1,.626,.626)
         gc.line(0,0,800*t,600*t)
 
         -- Line-time
@@ -297,6 +301,6 @@ return {
         gc.line(0,600*t,0,0,800*t,0)
         setFont(30)
         gc.setColor(1,1,1,t)
-        gc.printf(STRING.time(P.modeData.finalTime/1000),800*t-260,-10,260,'right',nil,1,-1)
+        gc.printf(STRING.time(P.gameTime/1000),800*t-260,-10,260,'right',nil,1,-1)
     end,
 }
