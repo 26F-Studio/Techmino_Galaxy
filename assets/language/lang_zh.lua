@@ -287,7 +287,6 @@ local L={
         dict_shortcut="快捷键高手",
         exterior_excavate_notDig="你在干什么？",
         exterior_hidden_superBrain="COOL",
-        exterior_sprint_SZOpen="真的要用SZO开局吗",
         exterior_tspin_10TSS="这是什么？",
         exterior_tspin_10TST="轻松。",
         exterior_hypersonic_titanium_holdless="你可以暂存的",
