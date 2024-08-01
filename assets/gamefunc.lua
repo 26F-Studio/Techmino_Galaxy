@@ -309,8 +309,7 @@ function setSafeEnv(func)
     setfenv(func,TABLE.copyAll(sandBoxEnv))
 end
 
-regFuncToStr={}
-regStrToFunc={}
+regFuncToStr,regStrToFunc={},{}
 ---Flatten a table of functions into string-to-function and function-to-string maps
 ---@param obj table|function
 ---@param path string

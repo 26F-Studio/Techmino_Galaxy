@@ -31,7 +31,7 @@ local function sysAction(action)
         SCN.back()
     elseif action=='back' then
         FMOD.effect.keyOff('music_pause')
-        FMOD.effect('unpause')
+        FMOD.effect('pause_unpause')
         SCN.swapTo('game_out','none')
     elseif action=='restart' then
         if GAME.playing then

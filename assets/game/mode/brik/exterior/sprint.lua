@@ -1,3 +1,15 @@
+local gc=love.graphics
+local recordedLines={20,40,100,260}
+local recordedLinesStr={'line20','line40','line100','line260'}
+local recordedLinesName={'[20]','[40]','[100]','[260]'}
+local setFont,getFont=FONT.set,FONT.get
+
+local function infSprint_turnOn(P)
+    P.modeData.infSprint_switch=true
+end
+
+regFuncLib(infSprint_turnOn,'exterior_sprint.infSprint_turnOn')
+
 ---@type Techmino.Mode
 return {
     initialize=function()
@@ -12,9 +24,10 @@ return {
         seqType='bag7_sprint',
         event={
             playerInit=function(P)
+                P.modeData.infSprint_switch=false
                 P.modeData.infSprint_dropCheckPos=1
                 P.modeData.infSprint_clears={}
-                P.modeData.target.line=40
+                P.modeData.target.line=20
                 P.modeData.keyCount={}
                 P.modeData.curKeyCount=0
                 if not PROGRESS.getExteriorUnlock('combo') then
@@ -24,13 +37,7 @@ return {
                     P.settings.spin_immobile=false
                     P.settings.spin_corners=false
                 end
-            end,
-            gameStart=function(P)
-                local set={S=0,Z=0,O=0}
-                if set[P.nextQueue[1].name] and set[P.nextQueue[2].name] then
-                    PROGRESS.setSecret('exterior_sprint_SZOpen')
-                end
-                return true
+                P:setAction('func1',infSprint_turnOn)
             end,
             beforePress=function(P)
                 P.modeData.curKeyCount=P.modeData.curKeyCount+1
@@ -120,9 +127,11 @@ return {
                 -- mechLib.brik.misc.cascade_event_afterClear,
                 function(P)
                     if P.stat.line>=P.modeData.target.line then
-                        P:delEvent('drawInField',mechLib.brik.misc.lineClear_event_drawInField)
-                        -- P:delEvent('drawOnPlayer',mechLib.brik.misc.lineClear_event_drawOnPlayer)
-                        return true
+                        P.modeData.target.line=TABLE.next(recordedLines,P.modeData.target.line)
+                        if not P.modeData.target.line then
+                            P:delEvent('drawInField',mechLib.brik.misc.lineClear_event_drawInField)
+                            return true
+                        end
                     end
                 end,
                 function(P)
@@ -154,12 +163,39 @@ return {
                         if P.stat.piece<102.6 then
                             PROGRESS.setExteriorUnlock('sequence')
                         end
+                        P:delEvent('drawInField',mechLib.brik.misc.lineClear_event_drawInField)
+                        if not P.modeData.infSprint_switch then
+                            P:finish('ILE')
+                        end
                         return true
                     end
                 end,
             },
             drawInField=mechLib.brik.misc.lineClear_event_drawInField,
-            -- drawOnPlayer=mechLib.brik.misc.lineClear_event_drawOnPlayer,
+            drawOnPlayer=function(P)
+                P:drawInfoPanel(-380,-180,160,360)
+                local y=-175
+                for i=1,4 do
+                    if i==3 and not P.modeData.infSprint_switch then
+                        gc.setColor(COLOR.lD)
+                    end
+                    local time=PROGRESS.getExteriorModeScore('sprint',recordedLinesStr[i])
+                    if time then
+                        setFont(45)
+                        local int=tostring(math.floor(time/1000))
+                        gc.print(int,-370,y)
+                        setFont(25)
+                        gc.print('.'..time%1000,-367+getFont(45):getWidth(int),y+20)
+                    else
+                        setFont(40)
+                        -- gc.print('———',-370,y)
+                        gc.print('<WIP>',-370,y)
+                    end
+                    setFont(20,'bold')
+                    gc.print(recordedLinesName[i],-370,y+45)
+                    y=y+90
+                end
+            end,
             -- whenSuffocate=mechLib.brik.misc.suffocateLock_event_whenSuffocate,
         },
     }},
@@ -167,47 +203,43 @@ return {
         local P=GAME.mainPlayer
         ---@cast P Techmino.Player.Brik
         if not P then return end
-        if P.stat.line<10 then return end
+        if P.stat.line<20 then return end
 
         local dropInfo={}
-        local clearInfo={}
-
-        local finalTime=P.gameTime
-        local finRate=P.stat.line/P.modeData.target.line
-        local averageTime=finalTime/#P.dropHistory
-
+        local averageTime=P.gameTime/#P.dropHistory
         local lastPieceTime=0
         for i,d in next,P.dropHistory do
             table.insert(dropInfo,{
-                x=d.time/finalTime*finRate,
-                y=i/#P.dropHistory*finRate,
-                choke=math.min(averageTime/(d.time-lastPieceTime),1),
+                x=d.gameTime/P.gameTime,
+                y=i/#P.dropHistory,
+                choke=math.min(averageTime/(d.gameTime-lastPieceTime),1),
                 key=P.modeData.keyCount[i] or 0,
             })
-            lastPieceTime=d.time
+            lastPieceTime=d.gameTime
         end
+        P.modeData.dropInfo=dropInfo
 
+        local clearInfo={}
         local _cleared=0
         for _,c in next,P.clearHistory do
-            _cleared=math.min(_cleared+c.line,P.modeData.target.line)
+            _cleared=math.min(_cleared+c.line,P.stat.line)
             table.insert(clearInfo,{
-                x=c.time/finalTime*finRate,
-                y=_cleared/P.modeData.target.line*(100/#P.dropHistory)*finRate,
+                x=c.gameTime/P.gameTime,
+                y=_cleared/P.stat.line,
             })
         end
-
-        P.modeData.finalTime=finalTime
-        P.modeData.dropInfo=dropInfo
+        table.insert(clearInfo,{x=1,y=1})
         P.modeData.clearInfo=clearInfo
     end,
     resultPage=function(time)
         local P=GAME.mainPlayer
         ---@cast P Techmino.Player.Brik
         if not P then return end
-        if not P.modeData.finalTime then
-            FONT.set(100)
-            GC.setColor(1,1,1,math.min(time*2.6,1))
-            GC.mStr(P.stat.line.." / "..P.modeData.target.line,800,400)
+
+        if P.stat.line<20 then
+            setFont(100)
+            gc.setColor(1,1,1,math.min(time*2.6,1))
+            GC.mStr(P.stat.line.." / 20",800,400)
             return
         end
 
@@ -215,33 +247,29 @@ return {
         local maxH=600*MATH.expApproach(0,1,math.max(time-.26,0)^2*12.6)
 
         -- Set axis' trasformation
-        GC.translate(400,800)
-        GC.scale(1,-1)
+        gc.translate(400,800)
+        gc.scale(1,-1)
 
         -- Reference line
-        GC.setLineWidth(6)
-        GC.setColor(1,1,.626,.5)
-        if P.stat.line==P.modeData.target.line then
-            GC.line(0,0,800*t,(100/#P.dropHistory)*600*t)
-        else
-            GC.line(0,0,800*t,600*t)
-        end
+        gc.setLineWidth(3)
+        gc.setColor(1,1,.626,.626)
+        gc.line(0,0,800*t,600*t)
 
         -- Line-time
-        GC.setLineWidth(2)
+        gc.setLineWidth(2)
         local clearData=P.modeData.clearInfo
         local lastX,lastY=0,0
         for i=1,#clearData do
-            GC.setColor(.1,.1,1,.42)
-            GC.polygon('fill',
+            gc.setColor(.1,.1,1,.42)
+            gc.polygon('fill',
                 800*t*lastX,0,
                 800*t*lastX,lastY*maxH,
                 800*t*clearData[i].x,lastY*maxH, -- FLIP --
                 -- 800*t*clearData[i].x,clearData[i].y*maxH, -- FLIP --
                 800*t*clearData[i].x,0
             )
-            GC.setColor(.2,.3,1)
-            GC.line(
+            gc.setColor(.2,.3,1)
+            gc.line(
                 800*t*lastX,lastY*maxH,
                 800*t*clearData[i].x,lastY*maxH, -- FLIP --
                 800*t*clearData[i].x,clearData[i].y*maxH
@@ -254,13 +282,15 @@ return {
         lastX,lastY=0,0
         for i=1,#dropData do
             local gb=dropData[i].choke
-            GC.setColor(.8+gb,gb,gb)
+            gc.setColor(.8+gb,gb,gb)
             -- KPP mark
-            GC.setLineWidth(1)
-            GC.circle('line',800*t*lastX,lastY*maxH,math.min(dropData[i].key^2/10,4))
+            if dropData[i].key>2.6 then
+                gc.setLineWidth(1)
+                gc.circle('line',800*t*lastX,lastY*maxH,math.min(dropData[i].key^2/10,4))
+            end
             -- Line
-            GC.setLineWidth(2)
-            GC.line(
+            gc.setLineWidth(2)
+            gc.line(
                 800*t*lastX,lastY*maxH,
                 800*t*dropData[i].x,lastY*maxH, -- FLIP --
                 800*t*dropData[i].x,dropData[i].y*maxH
@@ -269,11 +299,11 @@ return {
         end
 
         -- Axis
-        GC.setLineWidth(2)
-        GC.setColor(COLOR.dL)
-        GC.line(0,600*t,0,0,800*t,0)
-        FONT.set(30)
-        GC.setColor(1,1,1,t)
-        GC.printf(STRING.time(P.modeData.finalTime/1000),800*t-260,-10,260,'right',nil,1,-1)
+        gc.setLineWidth(2)
+        gc.setColor(COLOR.dL)
+        gc.line(0,600*t,0,0,800*t,0)
+        setFont(30)
+        gc.setColor(1,1,1,t)
+        gc.printf(STRING.time(P.gameTime/1000),800*t-260,-10,260,'right',nil,1,-1)
     end,
 }

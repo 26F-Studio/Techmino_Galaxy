@@ -176,9 +176,10 @@ local GAME={
 GAME.camera.moveSpeed=12
 
 function GAME._refresh()
-    modeLib={}
     mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
     regFuncLib(mechLib,'mechLib')
+    regFuncToStr,regStrToFunc={},{}
+    modeLib={}
 end
 GAME._refresh()
 
@@ -198,6 +199,12 @@ function GAME.getMode(name)
         assert(type(M.checkFinish)        =='function',"[mode].checkFinish must be function")
         assert(type(M.result)             =='function',"[mode].result must be function")
         assert(type(M.resultPage)         =='function',"[mode].resultPage must be function")
+
+        for _,m in next,{'brik','gela','acry'} do
+            if M.settings[m] then
+                regFuncLib(M.settings[m].event,name)
+            end
+        end
 
         M.name=name
         modeLib[name]=M

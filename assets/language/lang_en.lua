@@ -288,7 +288,6 @@ local L={
         dict_shortcut="Hotkey Expert",
         exterior_excavate_notDig="What are you doing?",
         exterior_hidden_superBrain="COOL",
-        exterior_sprint_SZOpen="Really want to start with SZO?",
         exterior_tspin_10TSS="What's this?",
         exterior_tspin_10TST="EZ.",
         exterior_hypersonic_titanium_holdless="You can hold",

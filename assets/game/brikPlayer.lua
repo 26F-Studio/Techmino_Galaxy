@@ -14,8 +14,8 @@ local clamp,expApproach=MATH.clamp,MATH.expApproach
 
 ---@class Techmino.Player.Brik: Techmino.Player
 ---@field stat Techmino.PlayerStatTable.Brik
----@field dropHistory {id:integer, x:integer, y:integer, direction:integer, time:integer}[]
----@field clearHistory {combo:integer, line:integer, linePos:integer[], time:integer}[]
+---@field dropHistory {id:integer, x:integer, y:integer, direction:integer, time:integer, gameTime:integer}[]
+---@field clearHistory {combo:integer, line:integer, linePos:integer[], time:integer, gameTime:integer}[]
 local BP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 --------------------------------------------------------------
@@ -1100,6 +1100,7 @@ function BP:doClear(fullLines)
         line=n,
         linePos=fullLines,
         time=self.time,
+        gameTime=self.gameTime,
     }
     ins(self.clearHistory,his)
     self:shakeBoard('-clear',n)
@@ -1152,6 +1153,7 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
         y=self.handY,
         direction=self.hand.direction,
         time=self.time,
+        gameTime=self.gameTime,
     })
     if self.handY+#self.hand.matrix-1>SET.deathH then
         self:finish('MLE')
@@ -2042,8 +2044,8 @@ local baseEnv={
     asp=26,                       -- *Auto shift period
     ash=26,                       -- *Auto Shift Halt, discharge asd when piece spawn
     softdropSkipAsd=true,         -- *Skip asd when softdrop
-    entryChrg='on',               -- on/off/full/cancel charge when move before spawn
-    wallChrg='on',                -- on/off/full/cancel charge when move towards wall
+    entryChrg='on',               -- on/off/full/break charge when move before spawn
+    wallChrg='on',                -- on/off/full/break charge when move towards wall
     stopMoveWhenSpawn=false,      -- Stop moving when piece spawn
     stopMoveWhenRotate=false,     -- Stop moving when rotate
     stopMoveWhenHold=false,       -- Stop moving when hold

@@ -712,6 +712,7 @@ function GP:lock() -- Put hand into field
         x=self.handX,
         y=self.handY,
         time=self.time,
+        gameTime=self.gameTime,
     })
 end
 function GP:getGroup(x,y,cell,set)
@@ -1617,7 +1618,7 @@ function GP:initialize()
         hardDrop=false,
     }
     self.dropHistory={}
-    self.clearHistory={}
+    self.clearHistory={} -- TODO: not used
 
     self:loadScript(self.settings.script)
 end
