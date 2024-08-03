@@ -294,6 +294,7 @@ local L={
         musicroom_recollection="Recollection不是一首曲子",
         dial_enter="乐器？",
         dial_password="密码正确",
+        menu_fastype="看起来你很喜欢打字",
     },
 
     -- Level

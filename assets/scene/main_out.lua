@@ -7,8 +7,12 @@ local terminalName=GC.newText(FONT.get(35))
 versionText:set(VERSION.appVer)
 terminalName:set(("TERM[%s]"):format(SYSTEM:sub(1,3):upper()))
 
+local secretString="techmino"
+local secretInput=0
+
 function scene.load()
     PROGRESS.applyEnv('exterior')
+    secretInput=0
 end
 
 local function sysAction(action)
@@ -30,7 +34,25 @@ function scene.keyDown(key,isRep)
     -- elseif key=='a' then playExterior('acry/test')() return true
     -- end
     if isRep then return true end
-    sysAction(KEYMAP.sys:getAction(key))
+    if secretInput==0 then
+        if key==secretString:sub(1,1) then
+            secretInput=1
+        elseif KEYMAP.sys:getAction(key) then
+            sysAction(KEYMAP.sys:getAction(key))
+        end
+    else
+        if key==secretString:sub(secretInput+1,secretInput+1) then
+            secretInput=secretInput+1
+            if secretInput>=#secretString then
+                PROGRESS.setSecret('menu_fastype')
+                SCN.go('fastype')
+            end
+        else
+            sysAction(KEYMAP.sys:getAction(key))
+            secretInput=0
+        end
+    end
+    print(secretInput)
     return true
 end
 

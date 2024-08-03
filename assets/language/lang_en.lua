@@ -295,6 +295,7 @@ local L={
         musicroom_recollection="Recollection is not a song",
         dial_enter="Instrument?",
         dial_password="Password correct",
+        menu_fastype="You seems enjoy typing",
     },
 
     -- Level
