@@ -44,34 +44,6 @@ local AP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 --------------------------------------------------------------
 -- Function tables
 
-local defaultSoundFunc={
-    countDown=      countDownSound,
-    move=           function() FMOD.effect('move')          end,
-    move_failed=    function() FMOD.effect('move_failed')   end,
-    swap=           function() FMOD.effect('rotate')        end,
-    swap_failed=    function() FMOD.effect('tuck')          end,
-    twist=          function() FMOD.effect('rotate')        end,
-    twist_failed=   function() FMOD.effect('tuck')          end,
-    move_back=      function() FMOD.effect('rotate_failed') end,
-    touch=          function() FMOD.effect('lock')          end,
-    clear=function(lines)
-        lines=floor(max(lines,1))
-        FMOD.effect(
-            lines<=6 and 'clear_'..lines or -- 1, 2, 3, 4, 5, 6
-            lines<=18 and 'clear_'..(lines-lines%2) or -- 8, 10, 12, 14, 16, 18
-            lines<=22 and 'clear_'..lines or -- 20, 21, 22
-            lines<=26 and 'clear_'..(lines-lines%2) or -- 24, 26
-            'clear_26'
-        )
-    end,
-    combo=       function() end,
-    chain=       function() end,
-    beep_rise=   function() FMOD.effect('beep_rise')   end,
-    beep_drop=   function() FMOD.effect('beep_drop')   end,
-    beep_notice= function() FMOD.effect('beep_notice') end,
-    win=         function() FMOD.effect('win')         end,
-    fail=        function() FMOD.effect('fail')        end,
-}
 ---@type Map<fun(P:Techmino.Player.Acry):any>
 AP.scriptCmd={
 }
@@ -651,7 +623,7 @@ function AP:updateFrame()
         end
     end
 
-    if touch then self:playSound('touch') end
+    if touch then self:playSound('lock') end
 
     -- Update needCheck
     for y=1,size do for x=1,size do local g=F[y][x] if g and g.needCheck then
@@ -847,10 +819,6 @@ local baseEnv={
     shakeness=.26,
     inputDelay=0,
 }
-local soundEventMeta={
-    __index=defaultSoundFunc,
-    __metatable=true,
-}
 function AP.new()
     local self=setmetatable(require'basePlayer'.new(),{__index=AP,__metatable=true})
     self.settings=TABLE.copyAll(baseEnv)
@@ -880,7 +848,7 @@ function AP.new()
         drawInField={},
         drawOnPlayer={},
     }
-    self.soundEvent=setmetatable({},soundEventMeta)
+    self.soundEvent=setmetatable({},gameSoundFunc)
 
     ---@class Techmino.PlayerStatTable.Acry: Techmino.PlayerStatTable
     self.stat={

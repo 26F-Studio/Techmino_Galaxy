@@ -33,7 +33,7 @@ do -- tspin
                 P:delEvent('drawBelowMarks',chargeLimit.tspin_event_drawBelowMarks)
                 P:playSound('beep_drop')
             else
-                P:finish('PE')
+                P:finish('rule')
             end
             return true
         end
@@ -97,10 +97,10 @@ do -- tspin
                 end
                 P.modeData.tspin=P.modeData.tspin+1
             else
-                P:finish('PE')
+                P:finish('rule')
             end
         else
-            P:finish('PE')
+            P:finish('rule')
         end
     end
     function chargeLimit.tspin_event_drawBelowMarks(P)
@@ -191,7 +191,7 @@ do -- techrash
             if not list[x] then list[x]={charge=0,_charge=0} end
             if list[x].charge>=maxCharge then
                 list[x].dead=true
-                P:finish('PE')
+                P:finish('rule')
             else
                 for k,v in next,list do
                     if k~=x then
@@ -215,7 +215,7 @@ do -- techrash
                 P.modeData.chargePower=P.modeData.chargePower+1
             end
         else
-            P:finish('PE')
+            P:finish('rule')
         end
     end
     function chargeLimit.techrash_event_drawBelowMarks(P)

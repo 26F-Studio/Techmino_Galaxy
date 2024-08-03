@@ -110,7 +110,7 @@ local function endGame(passLevel)
         inPoint=.1,
         outPoint=0,
     }
-    if passLevel>0 then FMOD.effect('win') end
+    if passLevel>0 then FMOD.effect('finish_win') end
     autoQuitInterior()
 end
 
@@ -220,7 +220,7 @@ function scene.update(dt)
                 PROGRESS.setTutorialPassed(6)
             end
         elseif totalTime>passTime then
-            FMOD.effect('fail')
+            FMOD.effect('finish_timeout')
             endGame(0)
         end
     end

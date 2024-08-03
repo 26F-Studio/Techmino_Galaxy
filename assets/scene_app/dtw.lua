@@ -249,7 +249,7 @@ local function touch(n)
                     end
                     time=love.timer.getTime()-startTime
                     state=2
-                    FMOD.effect('win')
+                    FMOD.effect('finish_win')
                 else
                     FMOD.effect('beep_notice',{volume=.5})
                 end

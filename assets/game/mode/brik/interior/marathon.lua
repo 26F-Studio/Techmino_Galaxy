@@ -37,7 +37,7 @@ return {
                     else
                         -- TODO
                         P.stat.line=200
-                        P:finish('AC')
+                        P:finish('win')
                         return
                     end
                 end

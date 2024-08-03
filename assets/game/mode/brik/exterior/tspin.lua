@@ -79,7 +79,7 @@ return {
                                 PROGRESS.setSecret('exterior_tspin_10TST')
                                 goSecretApp='uttt'
                             else
-                                P:finish('AC')
+                                P:finish('win')
                             end
                         end
                         if goSecretApp then

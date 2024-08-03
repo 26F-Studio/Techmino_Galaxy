@@ -288,8 +288,18 @@ function P:finish(reason)
 
     -- TODO: Just for temporary use
     if self.isMain then
-        MSG.new(reason=='AC' and 'check' or 'error',reason,6.26)
-        self:playSound(reason=='AC' and 'win' or 'fail')
+        MSG.new(reason=='win' and 'check' or 'error',
+            reason=='win' and 'AC' or
+            reason=='suffocate' and 'WA' or
+            reason=='lockout' and 'CE' or
+            reason=='topout' and 'MLE' or
+            reason=='timeout' and 'TLE' or
+            reason=='rule' and 'OLE' or
+            reason=='exahust' and 'ILE' or
+            reason=='taskfail' and 'PE' or
+            'UKE'
+        ,6.26)
+        self:playSound('finish_'..reason)
     end
 end
 
@@ -758,7 +768,6 @@ function P:initialize()
 end
 local dumpIgnore={
     'P.soundTimeHistory',
-    'P.soundEvent',
     'P.particles',
     'P.texts',
 }

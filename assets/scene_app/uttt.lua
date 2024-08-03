@@ -71,7 +71,7 @@ local function place(X,x)
         score[X]=round
         if checkBoard(score,round) then
             gameover=round
-            FMOD.effect('win')
+            FMOD.effect('finish_win')
             return
         else
             if full(score) then

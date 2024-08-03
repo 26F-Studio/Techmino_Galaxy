@@ -136,7 +136,7 @@ local function answer(option)
                 if time>parTime[1] then
                     -- Just pass
                     endGame(1)
-                    FMOD.effect('win')
+                    FMOD.effect('finish_win')
                 else
                     level=2
                     time=parTime[2]
@@ -146,14 +146,14 @@ local function answer(option)
             elseif level==2 then
                 -- Cleared
                 endGame(2)
-                FMOD.effect('win')
+                FMOD.effect('finish_win')
             end
         else
             -- Correct
             FMOD.effect('beep_rise')
         end
     else
-        FMOD.effect('fail')
+        FMOD.effect('finish_rule')
     end
     newQuestion()
 end
@@ -191,10 +191,10 @@ function scene.update(dt)
         if time==0 then
             if level==1 then
                 endGame(0)
-                FMOD.effect('fail')
+                FMOD.effect('finish_timeout')
             else
                 endGame(1)
-                FMOD.effect('win')
+                FMOD.effect('finish_win')
             end
         end
     end

@@ -97,7 +97,7 @@ do -- marathon
                 md.levelStartTime=P.gameTime
                 P:playSound('beep_rise')
             else
-                P:finish('AC')
+                P:finish('win')
                 return
             end
         end
@@ -194,7 +194,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
                         P.settings.spawnDelay=levels[md.level].spawn
                     else
                         md.point=md.target.point
-                        P:finish('AC')
+                        P:finish('win')
                         return
                     end
                 end
@@ -294,7 +294,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
                         end
                     else
                         md.point=md.target.point
-                        P:finish('AC')
+                        P:finish('win')
                         return
                     end
                 end
@@ -437,7 +437,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
                         P.settings.pieceFadeTime=levels[md.level].fadeTime
                     else
                         md.point=md.target.point
-                        P:finish('AC')
+                        P:finish('win')
                         return
                     end
                 end
@@ -514,7 +514,7 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
                         P.settings.maxFreshChance=levels[md.level].freshC
                     else
                         md.point=md.target.point
-                        P:finish('AC')
+                        P:finish('win')
                         return
                     end
                 end

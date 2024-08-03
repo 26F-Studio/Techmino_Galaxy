@@ -232,7 +232,7 @@ local function tap(x,y)
                         FMOD.effect('beep_rise')
                     else
                         state=2
-                        FMOD.effect('win')
+                        FMOD.effect('finish_win')
                     end
                 else
                     FMOD.effect(

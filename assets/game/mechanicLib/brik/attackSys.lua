@@ -131,7 +131,7 @@ modern={
                         style='flicker',
                         duration=2.5,
                     }
-                    P:playSound('allClear')
+                    P:playSound('clear_all')
                 else
                     P.texts:add{
                         text=t..(Text.clearName[lines] or ('['..lines..']')),
@@ -241,7 +241,7 @@ nextgen={
                     style='flicker',
                     duration=2.5,
                 }
-                P:playSound('allClear')
+                P:playSound('clear_all')
             elseif M.y>P.field:getHeight() then
                 P.texts:add{
                     text=Text.halfClear,
@@ -251,7 +251,7 @@ nextgen={
                     style='fly',
                     duration=1.6,
                 }
-                P:playSound('halfClear')
+                P:playSound('clear_half')
             end
 
             -- Calculate attack

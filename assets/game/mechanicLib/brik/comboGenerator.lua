@@ -101,7 +101,7 @@ function comboGenerator.event_beforeDiscard(P)
             P.modeData.comboCount=P.modeData.comboCount+1
         end
         if P.modeData.comboCount>=P.modeData.target.combo then
-            P:finish('AC')
+            P:finish('win')
         elseif P.modeData.levelRemain<=0 then
             P.modeData.levelsCleared=P.modeData.levelsCleared+1
             newMap(P)

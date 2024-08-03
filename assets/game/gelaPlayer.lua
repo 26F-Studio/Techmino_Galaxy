@@ -20,39 +20,6 @@ local GP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 --------------------------------------------------------------
 -- Function tables
 
-local defaultSoundFunc={
-    countDown=      countDownSound,
-    move=           function() FMOD.effect('move')           end,
-    move_down=      function() FMOD.effect('move_down')      end,
-    move_failed=    function() FMOD.effect('move_failed')    end,
-    rotate=         function() FMOD.effect('rotate')         end,
-    rotate_init=    function() FMOD.effect('rotate_init')    end,
-    rotate_failed=  function() FMOD.effect('rotate_failed')  end,
-    rotate_special= function() FMOD.effect('rotate_special') end,
-    touch=          function() FMOD.effect('touch')          end,
-    drop=           function() FMOD.effect('drop')           end,
-    lock=           function() FMOD.effect('lock')           end,
-    clear=function(lines)
-        lines=floor(max(lines,1))
-        FMOD.effect(
-            lines<=6 and 'clear_'..lines or -- 1, 2, 3, 4, 5, 6
-            lines<=18 and 'clear_'..(lines-lines%2) or -- 8, 10, 12, 14, 16, 18
-            lines<=22 and 'clear_'..lines or -- 20, 21, 22
-            lines<=26 and 'clear_'..(lines-lines%2) or -- 24, 26
-            'clear_26'
-        )
-    end,
-    chain=       comboSound,
-    frenzy=      function() FMOD.effect('frenzy')      end,
-    allClear=    function() FMOD.effect('clear_all')   end,
-    suffocate=   function() FMOD.effect('suffocate')   end,
-    desuffocate= function() FMOD.effect('desuffocate') end,
-    beep_rise=   function() FMOD.effect('beep_rise')   end,
-    beep_drop=   function() FMOD.effect('beep_drop')   end,
-    beep_notice= function() FMOD.effect('beep_notice') end,
-    win=         function() FMOD.effect('win')         end,
-    fail=        function() FMOD.effect('fail')        end,
-}
 ---@type Map<fun(P:Techmino.Player.Gela):any>
 GP.scriptCmd={
 }
@@ -299,7 +266,7 @@ function GP:resetPosCheck()
 
             if self:isSuffocate() then
                 self:lock()
-                self:finish('WA')
+                self:finish('suffocate')
             end
             return
         end
@@ -488,7 +455,7 @@ function GP:popNext()
         self.hand=rem(self.nextQueue,1)
         self:freshNextQueue()
     else -- If no piece to use, Next queue are empty, game over
-        self:finish('ILE')
+        self:finish('exahust')
         return
     end
 
@@ -676,7 +643,7 @@ function GP:gelaDropped() -- Drop & lock gela, and trigger a lot of things
 
     -- Lockout check
     if self.handY>self.settings.lockoutH then
-        self:finish('CE')
+        self:finish('lockout')
     end
 
     -- Update field
@@ -1166,7 +1133,7 @@ function GP:updateFrame()
 
             if self:isSuffocate() then
                 self:lock()
-                self:finish('WA')
+                self:finish('suffocate')
             end
             return
         end
@@ -1496,10 +1463,6 @@ local baseEnv={
     shakeness=.26,
     inputDelay=0,
 }
-local soundEventMeta={
-    __index=defaultSoundFunc,
-    __metatable=true,
-}
 function GP.new()
     local self=setmetatable(require'basePlayer'.new(),{__index=GP,__metatable=true})
     self.settings=TABLE.copyAll(baseEnv)
@@ -1538,7 +1501,7 @@ function GP.new()
         -- Other
         whenSuffocate={},
     }
-    self.soundEvent=setmetatable({},soundEventMeta)
+    self.soundEvent=setmetatable({},gameSoundFunc)
 
     ---@class Techmino.PlayerStatTable.Gela: Techmino.PlayerStatTable
     self.stat={
