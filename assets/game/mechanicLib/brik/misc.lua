@@ -26,14 +26,14 @@ function misc.suffocateLock_event_whenSuffocate(P)
     P:createDesuffocateEffect()
     P:brikDropped()
     if clearCount==#P.clearHistory then
-        P:finish('WA')
+        P:finish('suffocate')
     end
 end
 
 do -- Line Clear
     function misc.lineClear_event_afterClear(P)
         if P.stat.line>=P.modeData.target.line then
-            P:finish('AC')
+            P:finish('win')
         end
     end
     function misc.lineClear_event_drawInField(P)
@@ -320,7 +320,7 @@ do -- Obstacle
             outPoint=1,
         }
         if P.modeData.score>=P.modeData.target.line then
-            P:finish('AC')
+            P:finish('win')
         else
             misc.obstacle_generateField(P)
         end

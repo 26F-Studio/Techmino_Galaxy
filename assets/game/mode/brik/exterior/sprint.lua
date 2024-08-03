@@ -165,7 +165,7 @@ return {
                         end
                         P:delEvent('drawInField',mechLib.brik.misc.lineClear_event_drawInField)
                         if not P.modeData.infSprint_switch then
-                            P:finish('ILE')
+                            P:finish('other')
                         end
                         return true
                     end

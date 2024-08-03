@@ -216,7 +216,7 @@ function scene.update(dt)
                     for i=1,4 do for j=1,5 do if board[i][j]==board[i+1][j] then return end end end
                     for i=1,5 do for j=1,4 do if board[i][j]==board[i][j+1] then return end end end
                     setState(2)
-                    FMOD.effect('fail')
+                    FMOD.effect('finish_suffocate')
                 else
                     fallingTimer=fast and .05 or .1
                     FMOD.effect('touch')

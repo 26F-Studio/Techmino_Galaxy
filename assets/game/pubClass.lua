@@ -1,14 +1,14 @@
 ---@alias Techmino.Player.Type 'brik'|'gela'|'acry'
 ---@alias Techmino.EndReason
----|'AC'  Win (Accepted)
----|'WA'  Block out (Wrong Answer)
----|'CE'  Lock out (Compile Error)
----|'MLE' Top out (Memory Limit Exceeded)
----|'TLE' Time out (Time Limit Exceeded)
----|'OLE' Finesse fault (Output Limit Exceeded)
----|'ILE' Ran out pieces (Idleness Limit Exceeded)
----|'PE'  Mission failed (Presentation Error)
----|'UKE' Other reason (Unknown Error)
+---|'win'        Win (AC, Accepted)
+---|'suffocate'  Suffocate (WA, Wrong Answer)
+---|'lockout'    Lock out (CE, Compile Error)
+---|'topout'     Top out (MLE, Memory Limit Exceeded)
+---|'timeout'    Time out (TLE, Time Limit Exceeded)
+---|'rule'       Rule violation (OLE, Output Limit Exceeded)
+---|'exahust'    Ran out pieces (ILE, Idleness Limit Exceeded)
+---|'taskfail'   Task failed (PE, Presentation Error)
+---|'other'      Other reason (UKE, Unknown Error)
 
 ---@alias Techmino.EventName -- All event function will be called with format `Event(P[,see below])`
 ---| 'beforePress'     -- General(act)

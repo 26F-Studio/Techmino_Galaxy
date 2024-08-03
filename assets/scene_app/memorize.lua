@@ -73,7 +73,7 @@ function scene.update(dt)
             if inputTime<=0 then
                 inputTime=0
                 state=1
-                FMOD.effect('fail',{volume=.6})
+                FMOD.effect('finish_timeout',{volume=.6})
             end
         end
     end

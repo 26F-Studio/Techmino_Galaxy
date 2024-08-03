@@ -105,7 +105,7 @@ return {
                         table.insert(P.nextQueue,1,P:getBrik(Brik.getID(P.hand.name)))
                         P.hand=false
                         P.spawnTimer=1000
-                        P:playSound('fail')
+                        P:playSound('finish_rule')
                         P:say{
                             duration='1s',
                             text='@tutorial_twoRotatingKey_unnecessaryRotation',

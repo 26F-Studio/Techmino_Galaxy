@@ -292,7 +292,7 @@ function P:click(x,y)
                 for i=1,6 do if TABLE.find(self.board[i],0) then return end end
 
                 self.state=2
-                FMOD.effect('fail')
+                FMOD.effect('finish_suffocate')
             end
         end
     end

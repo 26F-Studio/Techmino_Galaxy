@@ -21,54 +21,6 @@ local BP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 --------------------------------------------------------------
 -- Function tables
 
-local defaultSoundFunc={
-    countDown=      countDownSound,
-    move=           function() FMOD.effect('move')               end,
-    move_down=      function() FMOD.effect('move_down')          end,
-    move_failed=    function() FMOD.effect('move_failed')        end,
-    tuck=           function() FMOD.effect('tuck')               end,
-    rotate=         function() FMOD.effect('rotate')             end,
-    rotate_init=    function() FMOD.effect('rotate_init')        end,
-    rotate_locked=  function() FMOD.effect('rotate_locked')      end,
-    rotate_corners= function() FMOD.effect('rotate_corners')     end,
-    rotate_failed=  function() FMOD.effect('rotate_failed')      end,
-    rotate_special= function() FMOD.effect('rotate_special')     end,
-    hold=           function() FMOD.effect('hold')               end,
-    hold_init=      function() FMOD.effect('hold_init')          end,
-    touch=          function() FMOD.effect('touch')              end,
-    drop=           function() FMOD.effect('drop')               end,
-    lock=           function() FMOD.effect('lock')               end,
-    charge=         function(lv) FMOD.effect('charge_'..clamp(floor(lv),1,11)) end,
-    discharge=      function() FMOD.effect('discharge')          end,
-    clear=function(lines)
-        lines=floor(max(lines,1))
-        FMOD.effect(
-            lines<=6 and 'clear_'..lines or -- 1, 2, 3, 4, 5, 6
-            lines<=18 and 'clear_'..(lines-lines%2) or -- 8, 10, 12, 14, 16, 18
-            lines<=22 and 'clear_'..lines or -- 20, 21, 22
-            lines<=26 and 'clear_'..(lines-lines%2) or -- 24, 26
-            'clear_26'
-        )
-    end,
-    spin=function(lines)
-        lines=floor(max(lines,0))
-        FMOD.effect(
-            lines<=4 and 'spin_'..lines or
-            'spin_mega'
-        )
-    end,
-    combo=       comboSound,
-    frenzy=      function() FMOD.effect('frenzy')      end,
-    allClear=    function() FMOD.effect('clear_all')   end,
-    halfClear=   function() FMOD.effect('clear_half')  end,
-    suffocate=   function() FMOD.effect('suffocate')   end,
-    desuffocate= function() FMOD.effect('desuffocate') end,
-    beep_rise=   function() FMOD.effect('beep_rise')   end,
-    beep_drop=   function() FMOD.effect('beep_drop')   end,
-    beep_notice= function() FMOD.effect('beep_notice') end,
-    win=         function() FMOD.effect('win')         end,
-    fail=        function() FMOD.effect('fail')        end,
-}
 ---@type Map<fun(P:Techmino.Player.Brik):any>
 BP.scriptCmd={
     clearHold=function(P) P:clearHold() end,
@@ -459,7 +411,7 @@ function BP:resetPosCheck()
 
             if self:isSuffocate() then
                 self:lock()
-                self:finish('WA')
+                self:finish('suffocate')
             end
             return
         end
@@ -657,7 +609,7 @@ function BP:popNext(ifHold)
             ins(self.nextQueue,rem(self.holdQueue,1))
             self:popNext()
         else -- No piece to use, game over
-            self:finish('ILE')
+            self:finish('exahust')
         end
         return
     end
@@ -1156,7 +1108,7 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
         gameTime=self.gameTime,
     })
     if self.handY+#self.hand.matrix-1>SET.deathH then
-        self:finish('MLE')
+        self:finish('topout')
         return
     end
     self:playSound('lock')
@@ -1232,7 +1184,7 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
 
     -- Lockout check
     if self.handY>SET.lockoutH and (SET.strictLockout or not fullLines)  then
-        self:finish('CE')
+        self:finish('lockout')
         return
     end
 
@@ -1607,7 +1559,7 @@ function BP:updateFrame()
 
             if self:isSuffocate() then
                 self:lock()
-                self:finish('WA')
+                self:finish('suffocate')
             end
             return
         end
@@ -2076,7 +2028,7 @@ local baseEnv={
     inputDelay=0,
 }
 local soundEventMeta={
-    __index=defaultSoundFunc,
+    __index=gameSoundFunc,
     __metatable=true,
 }
 function BP.new()

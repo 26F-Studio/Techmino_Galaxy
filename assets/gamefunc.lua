@@ -55,7 +55,25 @@ function playSample(...)
         end
     end
 end
-function countDownSound(num)
+gameSoundFunc={}
+for _,n in next,{
+    'move','move_down','move_failed',
+    'touch','drop','lock','tuck',
+    'rotate','rotate_init',
+    'rotate_locked','rotate_corners',
+    'rotate_failed','rotate_special',
+    'hold','hold_init',
+    'clear_all','clear_half',
+    'frenzy','discharge',
+    'suffocate','desuffocate',
+    'beep_rise','beep_drop','beep_notice',
+    'finish_win','finish_suffocate','finish_lockout','finish_topout',
+    'finish_timeout','finish_rule','finish_exhaust','finish_taskfail','finish_other',
+    'win','fail',
+} do
+    gameSoundFunc[n]=function() FMOD.effect(n) end
+end
+function gameSoundFunc.countDown(num)
     if num==0 then -- 6, 3+6+6
         playSample('sine',{'A3',.8})
         playSample('square',{'A4',.9},{'E5',.9},{'A5',.9})
@@ -78,7 +96,24 @@ function countDownSound(num)
         playSample('sine',{'A2',2.2-num/5},{'E3',2.2-num/5})
     end
 end
-comboSound=setmetatable({
+function gameSoundFunc.clear(lines)
+    lines=math.floor(math.max(lines,1))
+    FMOD.effect(
+        lines<=6 and 'clear_'..lines or -- 1, 2, 3, 4, 5, 6
+        lines<=18 and 'clear_'..(lines-lines%2) or -- 8, 10, 12, 14, 16, 18
+        lines<=22 and 'clear_'..lines or -- 20, 21, 22
+        lines<=26 and 'clear_'..(lines-lines%2) or -- 24, 26
+        'clear_26'
+    )
+end
+function gameSoundFunc.spin(lines)
+    lines=math.floor(math.max(lines,0))
+    FMOD.effect(
+        lines<=4 and 'spin_'..lines or
+        'spin_mega'
+    )
+end
+gameSoundFunc.combo=setmetatable({
     function() playSample('sine',{'A2',.70,420}) end, -- 1
     function() playSample('sine',{'C3',.75,410}) end, -- 2
     function() playSample('sine',{'D3',.80,400}) end, -- 3
@@ -111,6 +146,15 @@ comboSound=setmetatable({
         playSample('square',{57+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- A5+
     end
 end,__metatable=true})
+function gameSoundFunc.charge(lv)
+    FMOD.effect('charge_'..MATH.clamp(math.floor(lv),1,11))
+end
+gameSoundFunc.chain=gameSoundFunc.combo
+gameSoundFunc.swap=gameSoundFunc.rotate
+gameSoundFunc.swap_failed=gameSoundFunc.tuck
+gameSoundFunc.twist=gameSoundFunc.rotate
+gameSoundFunc.twist_failed=gameSoundFunc.tuck
+gameSoundFunc.move_back=gameSoundFunc.rotate_failed
 
 local interiorModeMeta={
     __call=function(self)
