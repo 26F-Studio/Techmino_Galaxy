@@ -819,10 +819,6 @@ local baseEnv={
     shakeness=.26,
     inputDelay=0,
 }
-local soundEventMeta={
-    __index=gameSoundFunc,
-    __metatable=true,
-}
 function AP.new()
     local self=setmetatable(require'basePlayer'.new(),{__index=AP,__metatable=true})
     self.settings=TABLE.copyAll(baseEnv)
@@ -852,7 +848,7 @@ function AP.new()
         drawInField={},
         drawOnPlayer={},
     }
-    self.soundEvent=setmetatable({},soundEventMeta)
+    self.soundEvent=setmetatable({},gameSoundFunc)
 
     ---@class Techmino.PlayerStatTable.Acry: Techmino.PlayerStatTable
     self.stat={

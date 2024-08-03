@@ -2027,10 +2027,6 @@ local baseEnv={
     shakeness=.26, -- *
     inputDelay=0,
 }
-local soundEventMeta={
-    __index=gameSoundFunc,
-    __metatable=true,
-}
 function BP.new()
     local self=setmetatable(require'basePlayer'.new(),{__index=BP,__metatable=true})
     self.settings=TABLE.copyAll(baseEnv)
@@ -2074,7 +2070,7 @@ function BP.new()
         -- Special
         extraSolidCheck={}, -- Manually called
     }
-    self.soundEvent=setmetatable({},soundEventMeta)
+    self.soundEvent=setmetatable({},gameSoundFunc)
 
     ---@class Techmino.PlayerStatTable.Brik: Techmino.PlayerStatTable
     self.stat={
@@ -2157,7 +2153,7 @@ function BP:unserialize_custom()
     self.field._width=f._width
     self.field._matrix=f._matrix
 
-    self.soundEvent=setmetatable({},soundEventMeta)
+    self.soundEvent=setmetatable({},gameSoundFunc)
 end
 
 --------------------------------------------------------------

@@ -56,9 +56,11 @@ function playSample(...)
     end
 end
 gameSoundFunc={}
+gameSoundFunc.__index=gameSoundFunc
+gameSoundFunc.__metatable=true
 for _,n in next,{
     'move','move_down','move_failed',
-    'touch','drop','lock','tuck',
+    'touch','lock','tuck',
     'rotate','rotate_init',
     'rotate_locked','rotate_corners',
     'rotate_failed','rotate_special',
@@ -95,6 +97,9 @@ function gameSoundFunc.countDown(num)
     elseif num<=10 then
         playSample('sine',{'A2',2.2-num/5},{'E3',2.2-num/5})
     end
+end
+function gameSoundFunc.drop()
+    FMOD.effect('drop_'..math.random(6))
 end
 function gameSoundFunc.clear(lines)
     lines=math.floor(math.max(lines,1))

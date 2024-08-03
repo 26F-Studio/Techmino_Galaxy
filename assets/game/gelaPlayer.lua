@@ -1463,10 +1463,6 @@ local baseEnv={
     shakeness=.26,
     inputDelay=0,
 }
-local soundEventMeta={
-    __index=gameSoundFunc,
-    __metatable=true,
-}
 function GP.new()
     local self=setmetatable(require'basePlayer'.new(),{__index=GP,__metatable=true})
     self.settings=TABLE.copyAll(baseEnv)
@@ -1505,7 +1501,7 @@ function GP.new()
         -- Other
         whenSuffocate={},
     }
-    self.soundEvent=setmetatable({},soundEventMeta)
+    self.soundEvent=setmetatable({},gameSoundFunc)
 
     ---@class Techmino.PlayerStatTable.Gela: Techmino.PlayerStatTable
     self.stat={
