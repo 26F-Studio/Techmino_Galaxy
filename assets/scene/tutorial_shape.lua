@@ -11,28 +11,28 @@ local texts ---@type Zenitha.Text
 local passTime=60
 local parTime={30,35}
 local questList={
-    {quest={0,0,0}, good='J L O',   bad='S Z',},
-    {quest={0,0,1}, good='S L O',   bad='J T',},
-    {quest={0,0,2}, good='L O',     bad='Z S T I',},
-    {quest={0,0,3}, good='O J',     bad='Z S L T I',},
-    {quest={0,1,0}, good='T I',     bad='J L O',},
-    {quest={0,1,1}, good='L T I',   bad='S',},
-    {quest={0,1,2}, good='Z T I',   bad='S J L O',},
-    {quest={0,1,3}, good='Z T',     bad='S J L I',},
-    {quest={0,2,0}, good='J L I',   bad='Z S T O',},
-    {quest={0,2,1}, good='S J T I', bad='Z L O',},
-    {quest={0,2,2}, good='J I',     bad='Z S',},
-    {quest={0,2,3}, good='Z J I',   bad='S L O',},
-    {quest={0,3,0}, good='I',       bad='Z S J L T O',},
-    {quest={0,3,1}, good='I L',     bad='Z S J T O',},
-    {quest={0,3,2}, good='T I',     bad='Z L O',},
-    {quest={0,3,3}, good='I',       bad='Z S L T',},
-    {quest={1,0,1}, good='Z S T',   bad='J L O',},
-    {quest={1,0,2}, good='S T',     bad='Z L O',},
-    {quest={1,0,3}, good='S T',     bad='Z J O I',},
-    {quest={2,0,2}, good='J L',     bad='Z S T O',},
-    {quest={2,0,3}, good='L',       bad='Z J T O',},
-    {quest={3,0,3}, good='I',       bad='Z S T O',},
+    {quest={1,1,1}, good='J L O',   bad='S Z'},
+    {quest={1,1,2}, good='S L O',   bad='J T'},
+    {quest={1,1,3}, good='L O',     bad='Z S T'},
+    {quest={1,1,4}, good='O J L',   bad='Z S T I'},
+    {quest={1,2,1}, good='T I',     bad='J L O'},
+    {quest={1,2,2}, good='L T I',   bad='S'},
+    {quest={1,2,3}, good='Z T I',   bad='S J L O'},
+    {quest={1,2,4}, good='Z T',     bad='S J L I'},
+    {quest={1,3,1}, good='J L I',   bad='Z S T O'},
+    {quest={1,3,2}, good='S J T I', bad='Z L O'},
+    {quest={1,3,3}, good='J I',     bad='Z S'},
+    {quest={1,3,4}, good='Z J I',   bad='S L O'},
+    {quest={1,4,1}, good='I',       bad='Z S J L T O'},
+    {quest={1,4,2}, good='I L',     bad='Z S J T O'},
+    {quest={1,4,3}, good='T I',     bad='Z L O'},
+    {quest={1,4,4}, good='I',       bad='Z S L T'},
+    {quest={2,1,2}, good='Z S T',   bad='J L O'},
+    {quest={2,1,3}, good='S T',     bad='Z L O'},
+    {quest={2,1,4}, good='S T',     bad='Z J O I'},
+    {quest={3,1,3}, good='J L',     bad='Z S T O'},
+    {quest={3,1,4}, good='L',       bad='Z J T O'},
+    {quest={4,1,4}, good='I',       bad='Z S T O'},
 } for _,v in next,questList do
     v.good=v.good:split(' ')
     v.bad=v.bad:split(' ')
@@ -202,13 +202,9 @@ function scene.update(dt)
     if texts then texts:update(dt) end
 end
 
+local gridW,gridH=5,7
 function scene.draw()
     GC.replaceTransform(SCR.xOy_m)
-
-    -- Questionmark
-    -- GC.setColor(COLOR.L)
-    -- FONT.set(100,'bold')
-    -- GC.mStr("?",0,-330)
 
     local len=#quest
     -- Grid
@@ -216,9 +212,9 @@ function scene.draw()
         GC.setLineWidth((i==0 or i==len) and 3 or 1)
         GC.setColor(1,1,1,(i==0 or i==len) and 1 or .42)
         local x=60*(i-len/2)
-        GC.line(x,380,x,20)
+        GC.line(x,380,x,380-60*gridH)
     end
-    for i=0,6 do
+    for i=0,gridH do
         GC.setLineWidth(i==0 and 3 or 1)
         GC.setColor(1,1,1,i==0 and 1 or .42)
         local y=380-60*i
@@ -233,7 +229,7 @@ function scene.draw()
     -- Choices
     for i=1,#choices do
         GC.push('transform')
-        GC.translate(600*(i-1-(#choices-1)/2),0)
+        GC.translate(700*(i-1-(#choices-1)/2),0)
         local mat=choices[i].shape
         GC.translate(-#mat[1]*30,#mat*30)
         GC.setColor(choices[i].color)
@@ -250,7 +246,7 @@ function scene.draw()
     -- Score
     GC.setColor(1,1,1,.42)
     FONT.set(80,'bold')
-    GC.mStr(score.."/"..(40*level),0,-110)
+    GC.mStr(score.."/"..(40*level),0,-180)
 
     -- Time
     if level>1 then
@@ -274,8 +270,8 @@ function scene.draw()
 end
 
 scene.widgetList={
-    {type='button',pos={.5,.5},x=-300,y=0,w=260,h=260,sound_trigger=false,code=function() answer(1) end},
-    {type='button',pos={.5,.5},x=300,y=0,w=260,h=260,sound_trigger=false,code=function() answer(2) end},
+    {type='button',pos={.5,.5},x=-350,y=0,w=260,h=260,sound_trigger=false,code=function() answer(1) end},
+    {type='button',pos={.5,.5},x=350,y=0,w=260,h=260,sound_trigger=false,code=function() answer(2) end},
     {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
 }
 return scene
