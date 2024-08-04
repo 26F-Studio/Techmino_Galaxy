@@ -1085,9 +1085,10 @@ function BP:brikDropped() -- Drop & lock brik, and trigger a lot of things
     -- Move down
     if self.ghostY and self.handY>self.ghostY then
         self.soundTimeHistory.touch=self.time -- Cancel touching sound
-        self:moveHand('drop',self.ghostY-self.handY)
+        local dY=self.handY-self.ghostY
+        self:moveHand('drop',-dY)
         self:shakeBoard('-drop',1)
-        self:playSound('drop')
+        self:playSound('drop',min(dY/SET.spawnH*2.6,1))
     end
 
     self:triggerEvent('afterDrop')
