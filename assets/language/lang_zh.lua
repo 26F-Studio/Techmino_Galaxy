@@ -320,7 +320,7 @@ local L={
     tutorial_sequence_4="使用暂存键来调整方块的顺序",
 
     tutorial_shape_1="3. 方块形状",
-    tutorial_shape_2="选择能贴合地形的方块",
+    tutorial_shape_2="指出方块下部剪影对应的形状",
 
     tutorial_stackBasic_1="4.堆叠(基础)",
     tutorial_stackBasic_m1="请按照提示摆块",

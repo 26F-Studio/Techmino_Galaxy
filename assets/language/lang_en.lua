@@ -321,7 +321,7 @@ local L={
     tutorial_sequence_4="Use the Hold key to adjust the order of the pieces.",
 
     tutorial_shape_1="3. Piece shapes",
-    tutorial_shape_2="Select one piece which can fit the field",
+    tutorial_shape_2="Select the shape corresponding to the bottom of block outline",
 
     tutorial_stackBasic_1="4. Basic Stacking",
     tutorial_stackBasic_m1="Please follow the follwing instructions:",

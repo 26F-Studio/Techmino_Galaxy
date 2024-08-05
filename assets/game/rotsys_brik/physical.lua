@@ -1,5 +1,5 @@
 local Physical={}
-Physical.centerTex=GC.load{10,10,
+Physical.centerTex=GC.load{w=10,h=10,
     {'setLW',2},
     {'dRect',0,0,10,10},
 }

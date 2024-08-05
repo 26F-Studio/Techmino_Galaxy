@@ -376,7 +376,7 @@ function regFuncLib(obj,path)
     end
 end
 
-love_logo=GC.load{128,128,
+love_logo=GC.load{w=128,h=128,
     {'clear',0,0,0,0},
     {'move',64,64},
     {'setCL',COLOR.D},

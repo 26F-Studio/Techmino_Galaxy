@@ -1,6 +1,6 @@
 brikRotSys={}
 
-brikRotSys._defaultCenterTex=GC.load{1,1} -- No texture
+brikRotSys._defaultCenterTex=GC.load{w=1,h=1} -- No texture
 brikRotSys._defaultCenterPos={
     common={ -- For SRS-like RSs
         -- Tetromino

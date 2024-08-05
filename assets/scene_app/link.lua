@@ -37,15 +37,15 @@ local colorList={
 }
 gc.setDefaultFilter('nearest','nearest')
 local iconList={
-    GC.load{10,10,{'fRect',2,2,6,6}},
-    GC.load{10,10,{'dRect',2.5,2.5,5,5}},
-    GC.load{10,10,{'fCirc',5,5,2}},
-    GC.load{10,10,{'fRect',2,2,2,6},{'fRect',6.5,2,2,6}},
-    GC.load{10,10,{'fRect',2,2,1,1},{'fRect',3,3,1,1},{'fRect',4,4,1,1},{'fRect',5,5,1,1},{'fRect',6,6,1,1},{'fRect',7,7,1,1}},
-    GC.load{10,10,{'fRect',2,2,2,2},{'fRect',2,6,2,2},{'fRect',6,2,2,2},{'fRect',6,6,2,2}},
-    GC.load{1,1},
-    GC.load{10,10,{'fRect',2,2,1,6},{'fRect',3,2,1,5},{'fRect',4,2,1,4},{'fRect',5,2,1,3},{'fRect',6,2,1,2},{'fRect',7,2,1,1}},
-    GC.load{10,10,{'fRect',2,5,3,3},{'fRect',5,2,3,3}},
+    GC.load{w=10,h=10,{'fRect',2,2,6,6}},
+    GC.load{w=10,h=10,{'dRect',2.5,2.5,5,5}},
+    GC.load{w=10,h=10,{'fCirc',5,5,2}},
+    GC.load{w=10,h=10,{'fRect',2,2,2,6},{'fRect',6.5,2,2,6}},
+    GC.load{w=10,h=10,{'fRect',2,2,1,1},{'fRect',3,3,1,1},{'fRect',4,4,1,1},{'fRect',5,5,1,1},{'fRect',6,6,1,1},{'fRect',7,7,1,1}},
+    GC.load{w=10,h=10,{'fRect',2,2,2,2},{'fRect',2,6,2,2},{'fRect',6,2,2,2},{'fRect',6,6,2,2}},
+    GC.load{w=1,h=1},
+    GC.load{w=10,h=10,{'fRect',2,2,1,6},{'fRect',3,2,1,5},{'fRect',4,2,1,4},{'fRect',5,2,1,3},{'fRect',6,2,1,2},{'fRect',7,2,1,1}},
+    GC.load{w=10,h=10,{'fRect',2,5,3,3},{'fRect',5,2,3,3}},
 }
 gc.setDefaultFilter('linear','linear')
 

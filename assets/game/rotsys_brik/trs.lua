@@ -1,6 +1,6 @@
 local TRS={}
 TRS.centerPreset='common'
-TRS.centerTex=GC.load{10,10,
+TRS.centerTex=GC.load{w=10,h=10,
     {'setCL',1,1,1,.4},
     {'fRect',1,1,8,8},
     {'setCL',1,1,1,.6},

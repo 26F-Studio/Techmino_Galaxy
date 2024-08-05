@@ -1,6 +1,6 @@
 local None={}
 None.centerPreset='common'
-None.centerTex=GC.load{10,10,
+None.centerTex=GC.load{w=10,h=10,
     {'setLW',2},
     {'line',2,2,6,6},
 }

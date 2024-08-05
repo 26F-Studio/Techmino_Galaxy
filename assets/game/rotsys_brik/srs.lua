@@ -1,6 +1,6 @@
 local SRS={}
 SRS.centerPreset='common'
-SRS.centerTex=GC.load{10,10,
+SRS.centerTex=GC.load{w=10,h=10,
     {'setCL',1,1,1,.3},
     {'fCirc',5,5,4},
     {'setCL',1,1,1,.6},

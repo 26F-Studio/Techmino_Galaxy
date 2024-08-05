@@ -1,6 +1,6 @@
 local BiRS={}
 BiRS.centerPreset='common'
-BiRS.centerTex=GC.load{10,10,
+BiRS.centerTex=GC.load{w=10,h=10,
     {'setCL',1,1,1,.6},
     {'fRect',0,3,10,4},
     {'fRect',3,0,4,10},

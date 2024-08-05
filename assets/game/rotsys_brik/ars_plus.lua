@@ -1,6 +1,6 @@
 local ARS_plus={}
 ARS_plus.centerPreset='common'
-ARS_plus.centerTex=GC.load{10,10,
+ARS_plus.centerTex=GC.load{w=10,h=10,
     {'setLW',2},
     {'setCL',1,1,1,.5},
     {'line',1,9,5,1,9,9},

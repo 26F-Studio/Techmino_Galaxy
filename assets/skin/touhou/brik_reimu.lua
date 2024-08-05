@@ -39,7 +39,7 @@ local function drawCell(B,x,y,r,g,b,a)
 end
 local crossR=1
 local gridMark=(function()
-    local l={40,40}
+    local l={w=40,h=40}
     for x=0,39 do
         table.insert(l,{'setCL',1,1,1,.062+(math.abs(19.5-x)/62)^1.62})
         table.insert(l,{'fRect',x,0, 1,crossR})
