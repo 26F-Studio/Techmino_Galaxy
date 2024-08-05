@@ -339,6 +339,6 @@ local L={
     tutorial_twoRotatingKey_unnecessaryRotation="Redundant Rotation",
 
     tutorial_rotating_1="6. Rotating Practice",
-    tutorial_rotating_2="Please rotating the top piece to align the bottom one",
+    tutorial_rotating_2="Rotate the top piece to align the bottom one",
 }
 return L
