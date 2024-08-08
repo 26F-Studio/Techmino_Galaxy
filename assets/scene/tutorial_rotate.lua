@@ -3,7 +3,7 @@ local level,score
 local time,totalTime
 local protect -- Prevent punishment 90 when need 180 for one time
 local handID,handMat,targetMat
-local texts ---@type Zenitha.Text
+local texts=TEXT.new()
 
 --[[ Levels
     1~40:    R/L(+F after 20)
@@ -71,7 +71,7 @@ local function newQuestion()
 end
 
 local function reset()
-    autoQuitInterior(true)
+    autoBack_interior(true)
     level=1
     score=0
     time=parTime[1]
@@ -111,17 +111,16 @@ local function endGame(passLevel)
         outPoint=0,
     }
     if passLevel>0 then FMOD.effect('finish_win') end
-    autoQuitInterior()
+    autoBack_interior()
 end
 
 function scene.load()
-    texts=TEXT.new()
     reset()
     playBgm('space')
 end
 
 function scene.unload()
-    texts=nil
+    texts:clear()
 end
 
 function scene.keyDown(key,isRep)

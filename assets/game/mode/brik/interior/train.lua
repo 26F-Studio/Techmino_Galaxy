@@ -80,5 +80,5 @@ return {
             end,
         },
     }},
-    result=autoQuitInterior,
+    result=autoBack_interior,
 }

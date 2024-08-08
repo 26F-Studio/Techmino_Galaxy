@@ -194,5 +194,5 @@ return {
             "finish AC",
         },
     }},
-    result=autoQuitInterior,
+    result=autoBack_interior,
 }
