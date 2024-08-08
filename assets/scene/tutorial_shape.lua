@@ -1,5 +1,5 @@
 local gc=love.graphics
-local fieldW=3
+local fieldW=5
 
 local matrix
 local pieceWeights
@@ -144,12 +144,14 @@ end
 local function answer(ansID)
     if noControl then return end
     if ansID==curPiece.id then
-        FMOD.effect('beep_rise')
         if #matrix==0 then
             matrix[1]=TABLE.new(false,fieldW)
         end
         AI.util.lockPiece(matrix,curPiece.shape,curPiece.x)
-        AI.util.clearLine(matrix)
+        local lines=AI.util.clearLine(matrix)
+        if lines>0 then gameSoundFunc.clear(lines) end
+        FMOD.effect('drop')
+        FMOD.effect('lock')
         newPiece()
     else
         FMOD.effect('finish_rule')
@@ -192,7 +194,7 @@ function scene.draw()
     gc.translate(0,162)
     gc.translate(-fieldW/2*cell,0)
         -- Matrix
-        gc.setColor(COLOR.lD)
+        gc.setColor(COLOR.DL)
         gc.rectangle('fill',-2,0,fieldW*cell+4,2)
         gc.draw(transition_image,-2,0,-math.pi/2,cell*4/127,2)
         gc.draw(transition_image,fieldW*cell,0,-math.pi/2,cell*4/127,2)
@@ -206,11 +208,14 @@ function scene.draw()
         -- Dropping Piece
         gc.translate(cell*(curPiece.x-1),-curPiece.y*cell)
         -- gc.setColor(curPiece.color)
-        gc.setColor(COLOR.lD)
+        local h=#curPiece.shape
         for y=1,#curPiece.shape do
             for x=1,#curPiece.shape[y] do
                 if curPiece.shape[y][x] then
-                    gc.rectangle('fill',(x-1)*cell,-(y-1)*cell,cell,-cell)
+                    for slice=0,7 do
+                        gc.setColor(1,1,1,.62/(1+y-slice/8)-(h<=2 and .2 or .16))
+                        gc.rectangle('fill',(x-1)*cell,-(y-1-slice/8)*cell-cell,cell,-cell/8)
+                    end
                 end
             end
         end
