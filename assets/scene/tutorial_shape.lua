@@ -1,31 +1,104 @@
-local level,score
-local time,totalTime
+local gc=love.graphics
+local fieldW=3
+
+local matrix
+local pieceWeights
+local curPiece
+local score,target
 local noControl
 local choices
-local texts ---@type Zenitha.Text
+local texts=TEXT.new()
 
---[[ Levels
-    1~40:    R/L(+F after 20)
-    41~80:   Random spawning direction
-]]
-local passTime=60
-local parTime={30,35}
+local pieces={} -- Different orientations of all needed pieces
+for k,v in next,STRING.split('S0 SR Z0 ZR J0 JR JF JL L0 LR LF LL T0 TR TF TL O0 IR',' ') do
+    local p=Brik.get(v:sub(1,1))
+    local shape=TABLE.rotate(TABLE.copy(p.shape),v:sub(2,2))
+    local footH={}
+    for x=1,#shape[1] do
+        for y=1,#shape do
+            if shape[y][x] then
+                footH[x]=y-1
+                break
+            end
+        end
+    end
+    pieces[k]={
+        id=p.id,
+        name=p.name,
+        shape=shape,
+        color=RGB9[defaultBrikColor[p.id]],
+        dir=v:sub(2,2),
+
+        width=#shape[1],
+        height=#shape,
+        footH=footH,
+    }
+end
 
 ---@type Zenitha.Scene
 local scene={}
 
-local function newQuestion()
+local function newPiece()
+    local solutions={}
+    for i=1,#pieces do
+        local tempMat=TABLE.copy(matrix)
+        local hb0=AI.paperArtist.getBoundCount(tempMat)
+        local piece=pieces[i]
+        for x=1,1+fieldW-piece.width do
+            local point=6.26
+            local tempMat2=TABLE.copy(matrix)
+            AI.util.lockPiece(tempMat2,piece.shape,x)
+            if #tempMat2>=6 then
+                point=-1e99
+            end
+            point=point+AI.util.clearLine(tempMat2)
+            local hb,vb=AI.paperArtist.getBoundCount(tempMat2)
+            if vb>0 then
+                point=-1e99
+            else
+                point=point+hb0-hb
+            end
+            if point>0 then
+                table.insert(solutions,{
+                    point=point,
+                    id=piece.id,
+                    name=piece.name,
+                    color=piece.color,
+                    shape=piece.shape,
+                    x=x,
+                    y=7.023-#piece.shape/2,
+                })
+            end
+        end
+    end
 
+    if #solutions>0 then
+        local sum=0
+        for i=1,#solutions do
+            sum=sum+solutions[i].point
+        end
+        sum=sum*math.random()
+        for i=1,#solutions do
+            sum=sum-solutions[i].point
+            if sum<=0 then
+                curPiece=solutions[i]
+                break
+            end
+        end
+    else
+        MSG.new('warn','No solution found')
+    end
 end
 
 local function reset()
-    autoQuitInterior(true)
-    level=1
-    score=0
-    time=passTime
-    totalTime=0
+    autoBack_interior(true)
     noControl=false
-    newQuestion()
+
+    matrix={}
+    score=0
+    target=40
+    pieceWeights={1,1,1,1,1,1,1}
+    newPiece()
 
     texts:clear()
     texts:add{
@@ -44,7 +117,7 @@ local function reset()
     }
 
     choices={}
-    for i=1,5 do
+    for i=1,7 do
         local p=TABLE.copyAll((Brik.get(i)))
         p.color=RGB9[defaultBrikColor[p.id]]
         choices[i]=p
@@ -65,59 +138,35 @@ local function endGame(passLevel)
         inPoint=.1,
         outPoint=0,
     }
-    autoQuitInterior()
+    autoBack_interior()
 end
 
-local function answer(option)
+local function answer(ansID)
     if noControl then return end
-    if choices[option].correct then
-        score=score+1
-        if score%40==0 then
-            -- End game check
-            if level==1 then
-                if time>parTime[1] then
-                    -- Just pass
-                    endGame(1)
-                    FMOD.effect('finish_win')
-                else
-                    level=2
-                    time=parTime[2]
-                    FMOD.effect('beep_notice')
-                end
-                PROGRESS.setTutorialPassed(3)
-            elseif level==2 then
-                -- Cleared
-                endGame(2)
-                FMOD.effect('finish_win')
-            end
-        else
-            -- Correct
-            FMOD.effect('beep_rise')
+    if ansID==curPiece.id then
+        FMOD.effect('beep_rise')
+        if #matrix==0 then
+            matrix[1]=TABLE.new(false,fieldW)
         end
+        AI.util.lockPiece(matrix,curPiece.shape,curPiece.x)
+        AI.util.clearLine(matrix)
+        newPiece()
     else
         FMOD.effect('finish_rule')
     end
-    newQuestion()
 end
 
 function scene.load()
-    texts=TEXT.new()
     reset()
     playBgm('space')
 end
 function scene.unload()
-    texts=nil
+    texts:clear()
 end
 
 function scene.keyDown(key,isRep)
     if isRep then return true end
-    local action
-    action=KEYMAP.brik:getAction(key)
-    if action=='moveLeft' or action=='moveRight' then
-        answer(action=='moveLeft' and 1 or 2)
-        return true
-    end
-    action=KEYMAP.sys:getAction(key)
+    local action=KEYMAP.sys:getAction(key)
     if action=='restart' then
         reset()
     elseif action=='back' then
@@ -127,78 +176,84 @@ function scene.keyDown(key,isRep)
 end
 
 function scene.update(dt)
-    totalTime=totalTime+dt
     if not noControl then
-        time=math.max(time-dt,0)
-        if time==0 then
-            if level==1 then
-                endGame(0)
-                FMOD.effect('finish_timeout')
-            else
-                endGame(1)
-                FMOD.effect('finish_win')
-            end
-        end
+
     end
 
     if texts then texts:update(dt) end
 end
 
-local cellSize=50
+local cell=60
+local ansCell=50
 function scene.draw()
-    GC.replaceTransform(SCR.xOy_m)
+    gc.replaceTransform(SCR.xOy_m)
 
-    -- Choices
-    for i=1,#choices do
-        GC.push('transform')
-        GC.translate(220*(i-1-(#choices-1)/2),300)
-        local mat=choices[i].shape
-        GC.translate(-#mat[1]*cellSize/2,#mat*cellSize/2)
-        GC.setColor(choices[i].color)
-        for y=1,#mat do
-            for x=1,#mat[y] do
-                if mat[y][x] then
-                    GC.rectangle('fill',(x-1)*cellSize,-(y-1)*cellSize,cellSize,-cellSize)
+    gc.push('transform')
+    gc.translate(0,162)
+    gc.translate(-fieldW/2*cell,0)
+        -- Matrix
+        gc.setColor(COLOR.lD)
+        gc.rectangle('fill',-2,0,fieldW*cell+4,2)
+        gc.draw(transition_image,-2,0,-math.pi/2,cell*4/127,2)
+        gc.draw(transition_image,fieldW*cell,0,-math.pi/2,cell*4/127,2)
+        for y=1,#matrix do
+            for x=1,fieldW do
+                if matrix[y][x] then
+                    gc.rectangle('fill',(x-1)*cell,-(y-1)*cell,cell,-cell)
                 end
             end
         end
-        GC.pop()
+        -- Dropping Piece
+        gc.translate(cell*(curPiece.x-1),-curPiece.y*cell)
+        -- gc.setColor(curPiece.color)
+        gc.setColor(COLOR.lD)
+        for y=1,#curPiece.shape do
+            for x=1,#curPiece.shape[y] do
+                if curPiece.shape[y][x] then
+                    gc.rectangle('fill',(x-1)*cell,-(y-1)*cell,cell,-cell)
+                end
+            end
+        end
+    gc.pop()
+
+    -- Choices
+    for i=1,#choices do
+        gc.push('transform')
+        gc.translate(220*(i-1-(#choices-1)/2),300)
+        local mat=choices[i].shape
+        gc.translate(-#mat[1]*ansCell/2,#mat*ansCell/2)
+        gc.setColor(choices[i].color)
+        for y=1,#mat do
+            for x=1,#mat[y] do
+                if mat[y][x] then
+                    GC.rectangle('fill',(x-1)*ansCell,-(y-1)*ansCell,ansCell,-ansCell)
+                end
+            end
+        end
+        gc.pop()
     end
 
     -- Score
-    GC.setColor(1,1,1,.42)
+    gc.setColor(1,1,1,.42)
     FONT.set(80,'bold')
-    GC.mStr(score.."/"..(40*level),0,-200)
-
-    -- Time
-    if level>1 then
-        local barLen=time/parTime[level]*313
-        GC.setColor(1,1,1,.26)
-        GC.rectangle('fill',-barLen,-180,2*barLen,10)
-    else
-        GC.replaceTransform(SCR.xOy_l)
-        GC.setLineWidth(2)
-        GC.setColor(COLOR.L)
-        GC.rectangle('line',200-3,150+3,20+6,-300-6)
-        GC.rectangle('fill',200,150,20,-300*math.max(passTime-totalTime,0)/passTime)
-    end
+    GC.mStr(score.."/"..target,500,-26)
 
     -- Floating texts
     if texts then
-        GC.replaceTransform(SCR.xOy_m)
-        GC.scale(2)
+        gc.replaceTransform(SCR.xOy_m)
+        gc.scale(2)
         texts:draw()
     end
 end
 
 scene.widgetList={
-    {type='button',pos={.5,.5},x=220*(0-2),y=300,w=200,sound_trigger=false,code=function() answer(1) end},
-    {type='button',pos={.5,.5},x=220*(1-2),y=300,w=200,sound_trigger=false,code=function() answer(2) end},
-    {type='button',pos={.5,.5},x=220*(2-2),y=300,w=200,sound_trigger=false,code=function() answer(2) end},
-    {type='button',pos={.5,.5},x=220*(3-2),y=300,w=200,sound_trigger=false,code=function() answer(2) end},
-    {type='button',pos={.5,.5},x=220*(4-2),y=300,w=200,sound_trigger=false,code=function() answer(2) end},
-    -- {type='button',pos={.5,.5},x=220*(5-3),y=300,w=200,sound_trigger=false,code=function() answer(2) end},
-    -- {type='button',pos={.5,.5},x=220*(6-3),y=300,w=200,sound_trigger=false,code=function() answer(2) end},
+    {type='button',pos={.5,.5},x=220*(0-3),y=300,w=210,sound_trigger=false,code=function() answer(1) end},
+    {type='button',pos={.5,.5},x=220*(1-3),y=300,w=210,sound_trigger=false,code=function() answer(2) end},
+    {type='button',pos={.5,.5},x=220*(2-3),y=300,w=210,sound_trigger=false,code=function() answer(3) end},
+    {type='button',pos={.5,.5},x=220*(3-3),y=300,w=210,sound_trigger=false,code=function() answer(4) end},
+    {type='button',pos={.5,.5},x=220*(4-3),y=300,w=210,sound_trigger=false,code=function() answer(5) end},
+    {type='button',pos={.5,.5},x=220*(5-3),y=300,w=210,sound_trigger=false,code=function() answer(6) end},
+    {type='button',pos={.5,.5},x=220*(6-3),y=300,w=210,sound_trigger=false,code=function() answer(7) end},
     {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
 }
 return scene

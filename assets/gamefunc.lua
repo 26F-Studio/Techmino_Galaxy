@@ -393,4 +393,11 @@ love_logo=GC.load{w=128,h=128,
     {'fCirc',20,0,20},
 }
 
+transition_image={w=128,h=1}
+for x=0,127 do
+    table.insert(transition_image,{'setCL',1,1,1,1-x/128})
+    table.insert(transition_image,{'fRect',x,0,1,1})
+end
+transition_image=GC.load(transition_image)
+
 regFuncLib(gameSoundFunc,'gameSoundFunc')
