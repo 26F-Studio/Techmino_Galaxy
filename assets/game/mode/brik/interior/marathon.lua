@@ -15,7 +15,10 @@ return {
         spawnDelay=130,
         clearDelay=300,
         deathDelay=0,
-        soundEvent={countDown=mechLib.brik.misc.interior_soundEvent_countDown},
+        soundEvent={
+            countDown=mechLib.brik.misc.interior_soundEvent_countDown,
+            drop=gameSoundFunc.drop_old,
+        },
         event={
             playerInit=function(P)
                 P.settings.asd=math.max(P.settings.asd,100)

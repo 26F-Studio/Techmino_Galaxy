@@ -18,7 +18,10 @@ return {
         nextSlot=0,
         holdSlot=0,
         seqType='none',
-        soundEvent={countDown=NULL},
+        soundEvent={
+            countDown=NULL,
+            drop=gameSoundFunc.drop_old,
+        },
         event={
             playerInit=function(P)
                 P:switchAction('rotateCW',false)

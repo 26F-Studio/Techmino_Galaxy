@@ -73,7 +73,10 @@ return {
         nextSlot=3,
         holdSlot=0,
         seqType='none',
-        soundEvent={countDown=NULL},
+        soundEvent={
+            countDown=NULL,
+            drop=gameSoundFunc.drop_old,
+        },
         event={
             playerInit=function(P)
                 P.modeData.waitTime=0

@@ -18,7 +18,10 @@ return {
         nextSlot=0,
         holdSlot=0,
         seqType='none',
-        soundEvent={countDown=NULL},
+        soundEvent={
+            countDown=NULL,
+            drop=gameSoundFunc.drop_old,
+        },
         event={
             gameStart=function(P)
                 P.spawnTimer=1800
