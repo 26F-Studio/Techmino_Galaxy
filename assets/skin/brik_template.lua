@@ -22,7 +22,7 @@ local RGB9=RGB9
 local S={}
 
 local crossR,crossL=1,6
-local gridMark=GC.load{40,40,
+local gridMark=GC.load{w=40,h=40,
     {'setCL',1,1,1,.26},
     {'fRect',0, 0, crossL, crossR},
     {'fRect',0, 0, crossR, crossL},

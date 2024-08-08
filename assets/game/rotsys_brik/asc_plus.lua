@@ -1,6 +1,6 @@
 local ASC={}
 ASC.centerPreset='common'
-ASC.centerTex=GC.load{10,10,
+ASC.centerTex=GC.load{w=10,h=10,
     {'setLW',2},
     {'setCL',1,1,1,.7},
     {'line',1,1,9,9},

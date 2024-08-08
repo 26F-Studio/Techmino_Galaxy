@@ -2,7 +2,7 @@
 local ps={}
 
 do -- Moving
-    local p=love.graphics.newParticleSystem(GC.load{1,1,
+    local p=love.graphics.newParticleSystem(GC.load{w=1,h=1,
         {'clear',1,1,1,1},
     },260)
     p:setSizes(40)
@@ -53,7 +53,7 @@ do -- Hold
 end
 
 do -- Clearing
-    local p=love.graphics.newParticleSystem(GC.load{7,7,
+    local p=love.graphics.newParticleSystem(GC.load{w=7,h=7,
         {'setLW',1},
         {'line',0,3.5,6.5,3.5},
         {'line',3.5,0,3.5,6.5},
@@ -66,7 +66,7 @@ do -- Clearing
 end
 
 do -- Fever State
-    local p=love.graphics.newParticleSystem(GC.load{1,1,
+    local p=love.graphics.newParticleSystem(GC.load{w=1,h=1,
         {'clear',1,1,1},
     },2600)
     p:setSpread(.26)
@@ -81,7 +81,7 @@ do -- Fever State
 end
 
 do -- Rotate
-    local p=love.graphics.newParticleSystem(GC.load{10,3,
+    local p=love.graphics.newParticleSystem(GC.load{w=10,h=3,
         {'clear',1,1,1,1},
     },2600)
     p:setEmissionArea('uniform',40,40,MATH.tau,true)
@@ -91,7 +91,7 @@ do -- Rotate
 end
 
 do -- Touching spark
-    local p=love.graphics.newParticleSystem(GC.load{4,4,
+    local p=love.graphics.newParticleSystem(GC.load{w=4,h=4,
         {'clear',1,1,1,1},
     },260)
     p:setSizes(.6,.9,1,1)
@@ -105,7 +105,7 @@ do -- Touching spark
 end
 
 do -- Rotating corner check
-    local p=love.graphics.newParticleSystem(GC.load{1,1,
+    local p=love.graphics.newParticleSystem(GC.load{w=1,h=1,
         {'clear',1,1,1,1},
     },26)
     p:setSizes(26)
@@ -117,7 +117,7 @@ do -- Rotating corner check
 end
 
 do -- Piece controlling effect
-    local p=love.graphics.newParticleSystem(GC.load{1,1,
+    local p=love.graphics.newParticleSystem(GC.load{w=1,h=1,
         {'clear',1,1,1},
     },26)
     p:setSizes(60,50,25,0)
@@ -132,7 +132,7 @@ do -- Harddrop light
     local height=240
     local fadeLength=40
     local p=love.graphics.newParticleSystem((function()
-        local L={width,height}
+        local L={w=width,h=height}
         for i=1,width/2 do
             table.insert(L,{'setCL',1,1,1,i/(width/2)})
             table.insert(L,{'fRect',i,0,1,height})
@@ -165,7 +165,7 @@ do -- Harddrop light
 end
 
 do -- Piece lock effect
-    local p=love.graphics.newParticleSystem(GC.load{1,1,
+    local p=love.graphics.newParticleSystem(GC.load{w=1,h=1,
         {'clear',1,1,1},
     },26)
     p:setSizes(40,30)
@@ -175,7 +175,7 @@ do -- Piece lock effect
 end
 
 do -- Background light of exterior map
-    local p=love.graphics.newParticleSystem(GC.load{10,10,
+    local p=love.graphics.newParticleSystem(GC.load{w=10,h=10,
         {'setCL',1,1,1,.5},
         {'fRect',0,0,10,10},
         {'fRect',1,1,8,8},

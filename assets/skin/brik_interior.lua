@@ -26,7 +26,7 @@ function S.drawFieldBorder()
     gc_line(-201,-401,-201,401,201,401,201,-401)
 end
 
-local gridMark=GC.load{40,40,
+local gridMark=GC.load{w=40,h=40,
     {'setCL',1,1,1,.26},
     {'fRect',0,0,40,1},
     {'fRect',0,39,40,1},

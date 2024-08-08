@@ -14,7 +14,7 @@ local COLOR=COLOR
 local S={}
 
 local crossR,crossL=1,6
-local gridMark=GC.load{45,45,
+local gridMark=GC.load{w=45,h=45,
     {'setCL',1,1,1,.42},
     {'fRect',0, 0, crossL, crossR},
     {'fRect',0, 0, crossR, crossL},

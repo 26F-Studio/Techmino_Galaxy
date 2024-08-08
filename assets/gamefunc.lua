@@ -65,6 +65,7 @@ for _,n in next,{
     'rotate_locked','rotate_corners',
     'rotate_failed','rotate_special',
     'hold','hold_init',
+    'drop_old',
     'clear_all','clear_half',
     'frenzy','discharge',
     'suffocate','desuffocate',
@@ -74,6 +75,9 @@ for _,n in next,{
     'win','fail',
 } do
     gameSoundFunc[n]=function() FMOD.effect(n) end
+end
+function gameSoundFunc.drop(vol)
+    FMOD.effect('drop',{volume=vol})
 end
 function gameSoundFunc.countDown(num)
     if num==0 then -- 6, 3+6+6
@@ -98,9 +102,6 @@ function gameSoundFunc.countDown(num)
         playSample('sine',{'A2',2.2-num/5},{'E3',2.2-num/5})
     end
 end
-function gameSoundFunc.drop()
-    FMOD.effect('drop_'..math.random(6))
-end
 function gameSoundFunc.clear(lines)
     lines=math.floor(math.max(lines,1))
     FMOD.effect(
@@ -118,7 +119,10 @@ function gameSoundFunc.spin(lines)
         'spin_mega'
     )
 end
-gameSoundFunc.combo=setmetatable({
+function gameSoundFunc.charge(lv)
+    FMOD.effect('charge_'..MATH.clamp(math.floor(lv),1,11))
+end
+gameSoundFunc.combo=setmetatable({__register=true,
     function() playSample('sine',{'A2',.70,420}) end, -- 1
     function() playSample('sine',{'C3',.75,410}) end, -- 2
     function() playSample('sine',{'D3',.80,400}) end, -- 3
@@ -151,9 +155,6 @@ gameSoundFunc.combo=setmetatable({
         playSample('square',{57+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- A5+
     end
 end,__metatable=true})
-function gameSoundFunc.charge(lv)
-    FMOD.effect('charge_'..MATH.clamp(math.floor(lv),1,11))
-end
 gameSoundFunc.chain=gameSoundFunc.combo
 gameSoundFunc.swap=gameSoundFunc.rotate
 gameSoundFunc.swap_failed=gameSoundFunc.tuck
@@ -363,17 +364,19 @@ regFuncToStr,regStrToFunc={},{}
 ---@param obj table|function
 ---@param path string
 function regFuncLib(obj,path)
-    if type(obj)=='table' then
-        for k,v in next,obj do
-            regFuncLib(v,path.."."..k)
-        end
-    elseif type(obj)=='function' then
+    if type(obj)=='function' or type(obj)=='table' and rawget(obj,'__register') then
         regFuncToStr[obj]=path
         regStrToFunc[path]=obj
+    elseif type(obj)=='table' then
+        for k,v in next,obj do
+            if k~='__index' then
+                regFuncLib(v,path.."."..k)
+            end
+        end
     end
 end
 
-love_logo=GC.load{128,128,
+love_logo=GC.load{w=128,h=128,
     {'clear',0,0,0,0},
     {'move',64,64},
     {'setCL',COLOR.D},
@@ -388,3 +391,5 @@ love_logo=GC.load{128,128,
     {'fCirc',0,-20,20},
     {'fCirc',20,0,20},
 }
+
+regFuncLib(gameSoundFunc,'gameSoundFunc')

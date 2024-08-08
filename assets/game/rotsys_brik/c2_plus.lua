@@ -1,6 +1,6 @@
 local C2_plus={}
 C2_plus.centerPreset='common'
-C2_plus.centerTex=GC.load{10,10,
+C2_plus.centerTex=GC.load{w=10,h=10,
     {'setLW',2},
     {'dRect',2,2,6,6},
 }

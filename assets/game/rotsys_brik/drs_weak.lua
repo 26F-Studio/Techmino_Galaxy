@@ -1,6 +1,6 @@
 local DRS_weak={}
 DRS_weak.centerPreset='common'
-DRS_weak.centerTex=GC.load{10,10,
+DRS_weak.centerTex=GC.load{w=10,h=10,
     {'setLW',2},
     {'dRect',1,1,8,8},
     {'fRect',3,3,4,4},
