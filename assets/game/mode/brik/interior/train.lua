@@ -15,7 +15,10 @@ return {
         deathDelay=0,
         infHold=true,
         -- spawnDelay=26,
-        soundEvent={countDown=mechLib.brik.misc.interior_soundEvent_countDown},
+        soundEvent={
+            countDown=mechLib.brik.misc.interior_soundEvent_countDown,
+            drop=gameSoundFunc.drop_old,
+        },
         event={ -- Display ghost at not-bad places to help new players learn stacking
             playerInit=function(P)
                 P.modeData.waitTime=0
@@ -80,5 +83,5 @@ return {
             end,
         },
     }},
-    result=autoQuitInterior,
+    result=autoBack_interior,
 }

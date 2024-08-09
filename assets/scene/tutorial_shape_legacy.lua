@@ -2,7 +2,7 @@ local level,score
 local time,totalTime
 local noControl
 local quest,choices
-local texts ---@type Zenitha.Text
+local texts=TEXT.new()
 
 --[[ Levels
     1~40:    R/L(+F after 20)
@@ -84,7 +84,7 @@ local function newQuestion()
 end
 
 local function reset()
-    autoQuitInterior(true)
+    autoBack_interior(true)
     level=1
     score=0
     time=passTime
@@ -123,7 +123,7 @@ local function endGame(passLevel)
         inPoint=.1,
         outPoint=0,
     }
-    autoQuitInterior()
+    autoBack_interior()
 end
 
 local function answer(option)
@@ -159,12 +159,11 @@ local function answer(option)
 end
 
 function scene.load()
-    texts=TEXT.new()
     reset()
     playBgm('space')
 end
 function scene.unload()
-    texts=nil
+    texts:clear()
 end
 
 function scene.keyDown(key,isRep)
