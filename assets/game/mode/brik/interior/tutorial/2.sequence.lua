@@ -148,7 +148,7 @@ return {
             end},
             "wait signal",
             "jeq quest2,signal,false",
-            "sfx win",
+            "sfx finish_win",
 
             {cmd=function(P)
                 P.settings.holdSlot=1
@@ -178,7 +178,7 @@ return {
             end},
             "wait signal",
             "jeq quest3,signal,false",
-            "sfx win",
+            "sfx finish_win",
 
             {cmd=function(P)
                 P.spawnTimer=1200
@@ -204,7 +204,7 @@ return {
             end},
             "wait signal",
             "jeq quest4,signal,false",
-            "sfx win",
+            "sfx finish_win",
 
             "jeq extra,extra,true",
             {cmd='say',arg={duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}},
@@ -213,7 +213,7 @@ return {
             {cmd='say',arg={duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lY,y=-30}},
             "end:",
             {cmd=function(P) if P.isMain then PROGRESS.setTutorialPassed(2) end end},
-            "finish AC",
+            "finish win",
         },
     }},
     result=autoBack_interior,

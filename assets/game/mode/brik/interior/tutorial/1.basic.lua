@@ -98,7 +98,7 @@ return {
             end},
             "wait signal",
             "jeq quest1,signal,false",
-            "sfx win",
+            "sfx finish_win",
 
             "setc quest,2",
             "quest2:",
@@ -121,7 +121,7 @@ return {
             end},
             "wait signal",
             "jeq quest2,signal,false",
-            "sfx win",
+            "sfx finish_win",
 
             "setc quest,3",
             "quest3:",
@@ -143,7 +143,7 @@ return {
             end},
             "wait signal",
             "jeq quest3,signal,false",
-            "sfx win",
+            "sfx finish_win",
 
             "switchAction rotateCW",
             "switchAction rotateCCW",
@@ -166,11 +166,11 @@ return {
             end},
             "wait signal",
             "jeq quest4,signal,false",
-            "sfx win",
+            "sfx finish_win",
 
             {cmd='say',arg={duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}},
             {cmd=function(P) if P.isMain then PROGRESS.setTutorialPassed(1) end end},
-            "finish AC",
+            "finish win",
         },
     }},
     result=autoBack_interior,
