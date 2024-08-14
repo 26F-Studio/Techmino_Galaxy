@@ -571,20 +571,20 @@ for k,v in next,{
 for _,v in next,love.filesystem.getDirectoryItems('assets/background') do
     if FILE.isSafe('assets/background/'..v) and v:sub(-3)=='lua' then
         local name=v:sub(1,-5)
-        BG.add(name,require('assets/background/'..name))
+        BG.add(name,FILE.load('assets/background/'..v,'-lua'))
     end
 end
 
 for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
     if FILE.isSafe('assets/scene/'..v) then
         local sceneName=v:sub(1,-5)
-        SCN.add(sceneName,require('assets/scene/'..sceneName))
+        SCN.add(sceneName,FILE.load('assets/scene/'..v,'-lua'))
     end
 end
 for _,v in next,love.filesystem.getDirectoryItems('assets/scene_app') do
     if FILE.isSafe('assets/scene_app/'..v) then
         local sceneName=v:sub(1,-5)
-        SCN.add(sceneName,require('assets/scene_app/'..sceneName))
+        SCN.add(sceneName,FILE.load('assets/scene_app/'..v,'-lua'))
     end
 end
 
@@ -598,10 +598,10 @@ for _,v in next,{
 
     'acry_template',
 
-    'touhou.brik_reimu',
+    'touhou/brik_reimu',
 } do
     if FILE.isSafe('assets/skin/'..v..'.lua') then
-        SKIN.add(v,require('assets/skin/'..v))
+        SKIN.add(v,FILE.load('assets/skin/'..v..'.lua','-lua'))
     end
 end
 

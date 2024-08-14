@@ -1,6 +1,6 @@
 local bit=require'bit'
 local ffi=require'ffi'
-local require=simpRequire(((...):gsub("[^%.]*$", "")))
+local require=simpRequire(((...):match(".+%.")))
 
 ---@class FMOD.Master
 local M=require'master'
