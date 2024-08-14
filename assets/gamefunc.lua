@@ -55,30 +55,55 @@ function playSample(...)
         end
     end
 end
+
 gameSoundFunc={}
 gameSoundFunc.__index=gameSoundFunc
 gameSoundFunc.__metatable=true
-for _,n in next,{
-    'move','move_down','move_failed',
-    'touch','lock','tuck',
-    'rotate','rotate_init',
-    'rotate_locked','rotate_corners',
-    'rotate_failed','rotate_special',
-    'hold','hold_init',
-    'drop_old',
-    'clear_all','clear_half',
-    'frenzy','discharge',
-    'suffocate','desuffocate',
-    'beep_rise','beep_drop','beep_notice',
-    'finish_win','finish_suffocate','finish_lockout','finish_topout',
-    'finish_timeout','finish_rule','finish_exhaust','finish_taskfail','finish_other',
-    'win','fail',
-} do
-    gameSoundFunc[n]=function() FMOD.effect(n) end
-end
-function gameSoundFunc.drop(vol)
-    FMOD.effect('drop',{volume=vol})
-end
+setmetatable(gameSoundFunc,{
+    __newindex=function(self,k,v)
+        if v==NULL then
+            rawset(self,k,function(vol) FMOD.effect(k,vol) end)
+        else
+            rawset(self,k,v)
+        end
+    end
+})
+
+gameSoundFunc.move                  =NULL
+gameSoundFunc.move_down             =NULL
+gameSoundFunc.move_failed           =NULL
+gameSoundFunc.touch                 =NULL
+gameSoundFunc.lock                  =NULL
+gameSoundFunc.tuck                  =NULL
+gameSoundFunc.rotate                =NULL
+gameSoundFunc.rotate_init           =NULL
+gameSoundFunc.rotate_locked         =NULL
+gameSoundFunc.rotate_corners        =NULL
+gameSoundFunc.rotate_failed         =NULL
+gameSoundFunc.rotate_special        =NULL
+gameSoundFunc.hold                  =NULL
+gameSoundFunc.hold_init             =NULL
+gameSoundFunc.drop                  =NULL
+gameSoundFunc.drop_old              =NULL
+gameSoundFunc.clear_all             =NULL
+gameSoundFunc.clear_half            =NULL
+gameSoundFunc.frenzy                =NULL
+gameSoundFunc.discharge             =NULL
+gameSoundFunc.suffocate             =NULL
+gameSoundFunc.desuffocate           =NULL
+gameSoundFunc.beep_rise             =NULL
+gameSoundFunc.beep_drop             =NULL
+gameSoundFunc.beep_notice           =NULL
+gameSoundFunc.finish_win            =NULL
+gameSoundFunc.finish_suffocate      =NULL
+gameSoundFunc.finish_lockout        =NULL
+gameSoundFunc.finish_topout         =NULL
+gameSoundFunc.finish_timeout        =NULL
+gameSoundFunc.finish_rule           =NULL
+gameSoundFunc.finish_exhaust        =NULL
+gameSoundFunc.finish_taskfail       =NULL
+gameSoundFunc.finish_other          =NULL
+
 function gameSoundFunc.countDown(num)
     if num==0 then -- 6, 3+6+6
         playSample('sine',{'A3',.8})

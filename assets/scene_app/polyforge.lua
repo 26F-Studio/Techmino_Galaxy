@@ -64,7 +64,7 @@ function scene.keyDown(key,isRep)
                 end
             else
                 hit[c]=2
-                FMOD.effect('finish_suffocate',{volume=.6})
+                FMOD.effect('finish_suffocate',.6)
                 needReset=true
                 state=1
             end

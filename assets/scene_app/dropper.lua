@@ -96,7 +96,7 @@ function scene.update(dt)
             else
                 move.y=SCR.h0-2*brickHeight
                 comboSound(math.floor(floor/2)+1)
-                FMOD.effect(move.x==base.x and 'clear_3' or 'clear_2',{volume=.6})
+                FMOD.effect(move.x==base.x and 'clear_3' or 'clear_2',.6)
                 state='shorten'
             end
         end

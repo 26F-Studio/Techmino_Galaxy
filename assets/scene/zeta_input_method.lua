@@ -149,7 +149,7 @@ function scene.load()
     charQueue={}
 
     if not database then
-        local data=STRING.split(FILE.load("assets/stroke_data.txt"),"\n")
+        local data=STRING.split(FILE.load('datatable/stroke_data.txt'),'\n')
         database={{},{},{},{},{},list={}}
         for i=1,#data do
             local char

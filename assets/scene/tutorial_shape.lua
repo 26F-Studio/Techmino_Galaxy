@@ -152,7 +152,7 @@ end
 local function answer(ansID)
     if noControl then
         if ansID==curPiece.id then
-            gameSoundFunc.move_failed()
+            FMOD.effect('move_failed')
         end
         return
     end
@@ -171,7 +171,7 @@ local function answer(ansID)
             noControl=0.26
         end
     else
-        FMOD.effect('finish_rule')
+        FMOD.effect('move_failed')
     end
 end
 
@@ -201,7 +201,7 @@ function scene.update(dt)
             local lines=AI.util.clearLine(matrix)
             if lines>0 then gameSoundFunc.clear(lines) end
             if #matrix==0 then
-                gameSoundFunc.clear_all()
+                FMOD.effect('clear_all')
             end
             -- newPiece()
             noControl=nil
