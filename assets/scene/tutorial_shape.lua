@@ -2,9 +2,10 @@ local gc=love.graphics
 local fieldW=5
 
 local matrix
+local score,target
 local pieceWeights
 local curPiece
-local score,target
+local pieceSpawnTimer
 local noControl
 local choices
 local texts=TEXT.new()
@@ -59,6 +60,7 @@ local function newPiece()
                 point=point+hb0-hb
             end
             if point>0 then
+                point=point+pieceWeights[piece.id]
                 table.insert(solutions,{
                     point=point,
                     id=piece.id,
@@ -72,6 +74,7 @@ local function newPiece()
         end
     end
 
+    pieceSpawnTimer=.42
     if #solutions>0 then
         local sum=0
         for i=1,#solutions do
@@ -82,6 +85,10 @@ local function newPiece()
             sum=sum-solutions[i].point
             if sum<=0 then
                 curPiece=solutions[i]
+                for i=1,#pieceWeights do
+                    local v=pieceWeights[curPiece.id]
+                    pieceWeights[curPiece.id]=i==curPiece.id and v*.5 or v+0.26
+                end
                 break
             end
         end
@@ -113,6 +120,7 @@ local function reset()
         text=Text.tutorial_shape_2,
         fontSize=25,
         style='appear',
+        a=0.26,
         duration=6.26,
     }
 
@@ -142,19 +150,28 @@ local function endGame(passLevel)
 end
 
 local function answer(ansID)
-    if noControl then return end
+    if noControl then
+        if ansID==curPiece.id then
+            FMOD.effect('move_failed')
+        end
+        return
+    end
     if ansID==curPiece.id then
         if #matrix==0 then
             matrix[1]=TABLE.new(false,fieldW)
         end
         AI.util.lockPiece(matrix,curPiece.shape,curPiece.x)
-        local lines=AI.util.clearLine(matrix)
-        if lines>0 then gameSoundFunc.clear(lines) end
-        FMOD.effect('drop')
+        FMOD.effect('drop_old')
         FMOD.effect('lock')
+        local m1=TABLE.copy(matrix)
+        local lines=AI.util.clearLine(matrix)
         newPiece()
+        matrix=m1
+        if lines>0 then
+            noControl=0.26
+        end
     else
-        FMOD.effect('finish_rule')
+        FMOD.effect('move_failed')
     end
 end
 
@@ -178,8 +195,20 @@ function scene.keyDown(key,isRep)
 end
 
 function scene.update(dt)
-    if not noControl then
-
+    if noControl then
+        noControl=noControl-dt
+        if noControl<=0 then
+            local lines=AI.util.clearLine(matrix)
+            if lines>0 then gameSoundFunc.clear(lines) end
+            if #matrix==0 then
+                FMOD.effect('clear_all')
+            end
+            -- newPiece()
+            noControl=nil
+        end
+    end
+    if pieceSpawnTimer>0 then
+        pieceSpawnTimer=math.max(pieceSpawnTimer-dt,0)
     end
 
     if texts then texts:update(dt) end
@@ -206,15 +235,18 @@ function scene.draw()
             end
         end
         -- Dropping Piece
-        gc.translate(cell*(curPiece.x-1),-curPiece.y*cell)
-        -- gc.setColor(curPiece.color)
-        local h=#curPiece.shape
-        for y=1,#curPiece.shape do
-            for x=1,#curPiece.shape[y] do
-                if curPiece.shape[y][x] then
-                    for slice=0,7 do
-                        gc.setColor(1,1,1,.62/(1+y-slice/8)-(h<=2 and .2 or .16))
-                        gc.rectangle('fill',(x-1)*cell,-(y-1-slice/8)*cell-cell,cell,-cell/8)
+        if curPiece then
+            local dy=pieceSpawnTimer^2*126
+            gc.translate(cell*(curPiece.x-1),-curPiece.y*cell-dy)
+            -- gc.setColor(curPiece.color)
+            local h=#curPiece.shape
+            for y=1,#curPiece.shape do
+                for x=1,#curPiece.shape[y] do
+                    if curPiece.shape[y][x] then
+                        for slice=0,7 do
+                            gc.setColor(1,1,1,.62/(1+y-slice/8)-(h<=2 and .2 or .16)-dy/260)
+                            gc.rectangle('fill',(x-1)*cell,-(y-1-slice/8)*cell-cell,cell,-cell/8)
+                        end
                     end
                 end
             end

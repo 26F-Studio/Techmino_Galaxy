@@ -251,7 +251,7 @@ local function touch(n)
                     state=2
                     FMOD.effect('finish_win')
                 else
-                    FMOD.effect('beep_notice',{volume=.5})
+                    FMOD.effect('beep_notice',.5)
                 end
             end
             height=height+B.ch

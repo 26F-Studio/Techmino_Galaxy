@@ -1,5 +1,5 @@
 local ffi=require'ffi'
-local require=simpRequire(((...):gsub("[^%.]*$", "")))
+local require=simpRequire(((...):match(".+%.")))
 
 ---@alias FMOD.GUID FMOD.GUID
 ---@alias FMOD.Result FMOD.Result

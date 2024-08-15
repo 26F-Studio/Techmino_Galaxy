@@ -197,7 +197,7 @@ local function tap(x,y)
 
                 -- Check win
                 if field.remain==0 then
-                    FMOD.effect('frenzy',{volume=.8})
+                    FMOD.effect('frenzy',.8)
                     if noComboBreak then
                         TEXT:add{text="FULL COMBO",x=800,y=500,fontSize=50,k=2,style='beat',styleArg=.626}
                         comboTime=comboTime+3
@@ -244,12 +244,12 @@ local function tap(x,y)
                 selX,selY=false,false
             else
                 selX,selY=x,y
-                FMOD.effect('move',{volume=.9})
+                FMOD.effect('move',.9)
             end
         else
             if field[y][x] and (x~=selX or y~=selY) then
                 selX,selY=x,y
-                FMOD.effect('move',{volume=.8})
+                FMOD.effect('move',.8)
             end
         end
     end

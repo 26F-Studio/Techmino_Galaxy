@@ -19,7 +19,7 @@ return {
                 local T=mechLib.common.task
                 T.install(P)
                 T.add(P,'backfire_break','modeTask_backfire_break_title','modeTask_backfire_break_desc','(0/8)')
-                T.add(P,'backfire_normal','modeTask_backfire_normal_title','modeTask_backfire_normal_desc','(0/7)')
+                T.add(P,'backfire_normal','modeTask_backfire_normal_title','modeTask_backfire_normal_desc','(0/6)')
 
                 if PROGRESS.getExteriorModeScore('backfire','showAmplify') then
                     T.add(P,'backfire_amplify','modeTask_backfire_amplify_title','modeTask_backfire_amplify_desc','(0/8)')
@@ -34,7 +34,7 @@ return {
                 local T=mechLib.common.task
                 T.set(P,'backfire_break',P.stat.line/8,("($1/8)"):repD(P.stat.line))
                 if P.stat.line<=6 then
-                    T.set(P,'backfire_normal',P.stat.atk/7,("($1/7)"):repD(P.stat.atk))
+                    T.set(P,'backfire_normal',P.stat.atk/6,("($1/6)"):repD(P.stat.atk))
                 else
                     T.set(P,'backfire_normal',0,"---")
                 end

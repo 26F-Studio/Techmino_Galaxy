@@ -295,7 +295,7 @@ setmetatable(M.music,{__call=function(_,...) return M.music.play(...) end})
 --------------------------
 
 ---@class FMOD._Effect
----@overload fun(name:string, args?:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}):FMOD.Studio.EventInstance?
+---@overload fun(name:string, args?:number|{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}):FMOD.Studio.EventInstance?
 M.effect={}
 
 ---@param v number
@@ -321,7 +321,7 @@ local unhintedSFX={}
 ---
 ---param:{'paramName', 0, true?}
 ---@param name string
----@param args? {volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}
+---@param args? number|{volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}
 ---@return FMOD.Studio.EventInstance?
 function M.effect.play(name,args)
     if not studio then return end
@@ -339,7 +339,9 @@ function M.effect.play(name,args)
         return
     end
 
-    if args then
+    if type(args)=='number' then
+        event:setVolume(args)
+    elseif args then
         assert(type(args)=='table',"args must be table")
         if args.volume then event:setVolume(args.volume) end
         if args.pitch then

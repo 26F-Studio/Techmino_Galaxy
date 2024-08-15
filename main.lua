@@ -409,6 +409,18 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
         -- print("--------------------------")
         -- print("Musics")
         -- for k,v in next,L do print(k,v)end
+
+        -- Music check
+        local regMore={}
+        for name in next,SONGBOOK do
+            if not L[name] then
+                table.insert(regMore,name)
+            end
+        end
+        if #regMore>0 then
+            MSG.new('warn',"Music not found in Bank:")
+            for i=1,#regMore do MSG.new('info',regMore[i]) end
+        end
         return L
     end)())
     FMOD.registerEffect((function()
@@ -422,18 +434,37 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
             return {}
         end
         local L={}
+        local nameList={}
         local l,c=bankEffect:getEventList()
         for i=1,c do
             local path=l[i-1]:getPath()
             if path then
                 local name=path:match('/([^/]+)$'):lower()
                 L[name]=path
+                if path:find('event:') then
+                    table.insert(nameList,name)
+                end
                 -- print(name,path)
             end
         end
         -- print("--------------------------")
         -- print("Effects")
         -- for k,v in next,L do print(k,v)end
+
+        -- SE check
+        local regList=require'datatable.se_names'
+        local existMore,regMore=TABLE.copy(nameList),TABLE.copy(regList)
+        TABLE.subtract(existMore,regList)
+        TABLE.subtract(regMore,nameList)
+        if #existMore>0 then
+            MSG.new('warn',"SE not registered:")
+            for i=1,#existMore do MSG.new('info',existMore[i]) end
+        end
+        if #regMore>0 then
+            MSG.new('warn',"SE not found in Bank:")
+            for i=1,#regMore do MSG.new('info',regMore[i]) end
+        end
+
         return L
     end)())
 end
@@ -572,20 +603,20 @@ for k,v in next,{
 for _,v in next,love.filesystem.getDirectoryItems('assets/background') do
     if FILE.isSafe('assets/background/'..v) and v:sub(-3)=='lua' then
         local name=v:sub(1,-5)
-        BG.add(name,require('assets/background/'..name))
+        BG.add(name,FILE.load('assets/background/'..v,'-lua'))
     end
 end
 
 for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
     if FILE.isSafe('assets/scene/'..v) then
         local sceneName=v:sub(1,-5)
-        SCN.add(sceneName,require('assets/scene/'..sceneName))
+        SCN.add(sceneName,FILE.load('assets/scene/'..v,'-lua'))
     end
 end
 for _,v in next,love.filesystem.getDirectoryItems('assets/scene_app') do
     if FILE.isSafe('assets/scene_app/'..v) then
         local sceneName=v:sub(1,-5)
-        SCN.add(sceneName,require('assets/scene_app/'..sceneName))
+        SCN.add(sceneName,FILE.load('assets/scene_app/'..v,'-lua'))
     end
 end
 
@@ -599,10 +630,10 @@ for _,v in next,{
 
     'acry_template',
 
-    'touhou.brik_reimu',
+    'touhou/brik_reimu',
 } do
     if FILE.isSafe('assets/skin/'..v..'.lua') then
-        SKIN.add(v,require('assets/skin/'..v))
+        SKIN.add(v,FILE.load('assets/skin/'..v..'.lua','-lua'))
     end
 end
 

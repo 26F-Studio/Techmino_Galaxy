@@ -120,7 +120,7 @@ local function newTile()
 
     -- Die.
     state=2
-    FMOD.effect(maxTile>=10 and 'win' or 'fail')
+    FMOD.effect(maxTile>=10 and 'finish_win' or 'finish_suffocate')
 end
 local function freshMaxTile()
     maxTile=maxTile+1

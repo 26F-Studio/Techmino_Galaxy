@@ -273,6 +273,17 @@ function P:delEvent(name,E)
     end
     if pos then L[pos][2]=_scrap end
 end
+local finishTexts={
+    win='AC',
+    suffocate='WA',
+    lockout='CE',
+    topout='MLE',
+    timeout='TLE',
+    rule='OLE',
+    exahust='ILE',
+    taskfail='PE',
+    other='UKE',
+}
 ---@param reason Techmino.EndReason
 function P:finish(reason)
     if self.finished then return end
@@ -288,17 +299,7 @@ function P:finish(reason)
 
     -- TODO: Just for temporary use
     if self.isMain then
-        MSG.new(reason=='win' and 'check' or 'error',
-            reason=='win' and 'AC' or
-            reason=='suffocate' and 'WA' or
-            reason=='lockout' and 'CE' or
-            reason=='topout' and 'MLE' or
-            reason=='timeout' and 'TLE' or
-            reason=='rule' and 'OLE' or
-            reason=='exahust' and 'ILE' or
-            reason=='taskfail' and 'PE' or
-            'UKE'
-        ,6.26)
+        MSG.new(reason=='win' and 'check' or 'error',finishTexts[reason] or finishTexts.other,6.26)
         self:playSound('finish_'..reason)
     end
 end
