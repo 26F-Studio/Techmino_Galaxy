@@ -186,7 +186,7 @@ local L={
     setting_touch_stickSize="摇杆尺寸",
     setting_touch_ballSize="摇把尺寸",
 
-    main_in_dig="挖掘练习",
+    main_in_dig="挖掘",
     main_in_sprint="40行",
     main_in_marathon="马拉松",
     main_in_tutorial="教程",

@@ -186,7 +186,7 @@ local L={
     setting_touch_stickSize="Stick length",
     setting_touch_ballSize="Stick size",
 
-    main_in_dig="Dig Practice",
+    main_in_dig="Dig",
     main_in_sprint="40 Lines",
     main_in_marathon="Marathon",
     main_in_tutorial="Tutorial",
