@@ -66,13 +66,25 @@ scene.widgetList={
     {name='S4',type='button_invis',pos={1,0},x=-200,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.controller,sound_trigger='button_soft',code=function() if page~='4' then SCN.swapTo('setting_out','none',4) end end},
 
     -- Controls
-    {name='1',type='slider', pos={0,0},x=340, y=220,w=650, fontSize=35,text=LANG'setting_asd',  widthLimit=260,axis={0,260,1},smooth=true,disp=TABLE.func_getVal(SETTINGS.game_brik,'asd'),  valueShow=sliderShow_time, code=function(v) SETTINGS.game_brik.asd=v; SETTINGS.game_brik.asp=math.min(SETTINGS.game_brik.asp,SETTINGS.game_brik.asd); SETTINGS.game_brik.ash=math.min(SETTINGS.game_brik.ash,SETTINGS.game_brik.asd) end},
-    {name='1',type='slider', pos={0,0},x=340, y=300,w=300, fontSize=35,text=LANG'setting_asp',  widthLimit=260,axis={0,120,1},smooth=true,disp=TABLE.func_getVal(SETTINGS.game_brik,'asp'),  valueShow=sliderShow_time, code=function(v) SETTINGS.game_brik.asp=v; SETTINGS.game_brik.asd=math.max(SETTINGS.game_brik.asd,SETTINGS.game_brik.asp) end},
-    {name='1',type='switch', pos={0,0},x=750, y=300,h=40,  labelPos='right',fontSize=35,text=LANG'setting_softdropSkipAsd',disp=TABLE.func_getVal(SETTINGS.game_brik,'softdropSkipAsd'),code=TABLE.func_revVal(SETTINGS.game_brik,'softdropSkipAsd')}, -- visibleTick=function() return page=='1' and SETTINGS.game_brik.asp>0 end
-    {name='1',type='slider', pos={0,0},x=340, y=380,w=650, fontSize=35,text=LANG'setting_ash',  widthLimit=260,axis={0,260,1},smooth=true,disp=TABLE.func_getVal(SETTINGS.game_brik,'ash'),  valueShow=sliderShow_time, code=function(v) SETTINGS.game_brik.ash=v; SETTINGS.game_brik.asd=math.max(SETTINGS.game_brik.asd,SETTINGS.game_brik.ash) end},
-    {name='1',type='button', pos={0,0},x=500, y=480,w=360, h=80,cornerR=10, fontSize=40,text=LANG'setting_keymapping',     code=WIDGET.c_goScn('keyset_out','fadeHeader')},
-    {name='1',type='switch', pos={0,0},x=360, y=620,h=40,  labelPos='right',fontSize=40,text=LANG'setting_enableTouching', disp=TABLE.func_getVal(SETTINGS.system,'touchControl'),code=TABLE.func_revVal(SETTINGS.system,'touchControl')},
-    {name='1',type='button', pos={0,0},x=500, y=700,w=360, h=80,cornerR=10, fontSize=40,text=LANG'setting_touching',       code=WIDGET.c_goScn'keyset_touch_out',visibleTick=function() return page=='1' and SETTINGS.system.touchControl end},
+    {name='1',type='slider', pos={0,0},x=340, y=220,w=650, fontSize=35,text=LANG'setting_asd',  widthLimit=260,axis={0,260,1},smooth=true,disp=TABLE.func_getVal(SETTINGS.game_brik,'asd'),  valueShow=sliderShow_time, code=function(v)
+        SETTINGS.game_brik.asd=v
+        SETTINGS.game_brik.asp=math.min(SETTINGS.game_brik.asp,SETTINGS.game_brik.asd)
+        SETTINGS.game_brik.adp=math.min(SETTINGS.game_brik.adp,SETTINGS.game_brik.asd)
+        SETTINGS.game_brik.ash=math.min(SETTINGS.game_brik.ash,SETTINGS.game_brik.asd)
+    end},
+    {name='1',type='slider', pos={0,0},x=340, y=300,w=300, fontSize=35,text=LANG'setting_asp',  widthLimit=260,axis={0,120,1},smooth=true,disp=TABLE.func_getVal(SETTINGS.game_brik,'asp'),  valueShow=sliderShow_time, code=function(v)
+        SETTINGS.game_brik.asp=v
+        SETTINGS.game_brik.asd=math.max(SETTINGS.game_brik.asd,SETTINGS.game_brik.asp)
+    end},
+    {name='1',type='slider', pos={0,0},x=340, y=380,w=300, fontSize=35,text=LANG'setting_adp',  widthLimit=260,axis={0,120,1},smooth=true,disp=TABLE.func_getVal(SETTINGS.game_brik,'adp'),  valueShow=sliderShow_time, code=function(v)
+        SETTINGS.game_brik.adp=v
+        SETTINGS.game_brik.asd=math.max(SETTINGS.game_brik.asd,SETTINGS.game_brik.adp)
+    end},
+    {name='1',type='switch', pos={0,0},x=750, y=380,h=40,  labelPos='right',fontSize=35,text=LANG'setting_softdropSkipAsd',disp=TABLE.func_getVal(SETTINGS.game_brik,'softdropSkipAsd'),code=TABLE.func_revVal(SETTINGS.game_brik,'softdropSkipAsd')}, -- visibleTick=function() return page=='1' and SETTINGS.game_brik.asp>0 end
+    {name='1',type='slider', pos={0,0},x=340, y=460,w=650, fontSize=35,text=LANG'setting_ash',  widthLimit=260,axis={0,260,1},smooth=true,disp=TABLE.func_getVal(SETTINGS.game_brik,'ash'),  valueShow=sliderShow_time, code=function(v) SETTINGS.game_brik.ash=v; SETTINGS.game_brik.asd=math.max(SETTINGS.game_brik.asd,SETTINGS.game_brik.ash) end},
+    {name='1',type='button', pos={0,0},x=500, y=560,w=360, h=80,cornerR=10, fontSize=40,text=LANG'setting_keymapping',     code=WIDGET.c_goScn('keyset_out','fadeHeader')},
+    {name='1',type='switch', pos={0,0},x=360, y=700,h=40,  labelPos='right',fontSize=40,text=LANG'setting_enableTouching', disp=TABLE.func_getVal(SETTINGS.system,'touchControl'),code=TABLE.func_revVal(SETTINGS.system,'touchControl')},
+    {name='1',type='button', pos={0,0},x=500, y=780,w=360, h=80,cornerR=10, fontSize=40,text=LANG'setting_touching',       code=WIDGET.c_goScn'keyset_touch_out',visibleTick=function() return page=='1' and SETTINGS.system.touchControl end},
 
     -- Audio
     {name='2',type='slider_fill',pos={0,0},x=340, y=220,w=650, fontSize=40,text=LANG'setting_mainVol', widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'mainVol'), code=TABLE.func_setVal(SETTINGS.system,'mainVol')},

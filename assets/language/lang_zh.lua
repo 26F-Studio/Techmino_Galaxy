@@ -82,9 +82,10 @@ local L={
     graph_brik_title="M-图谱", -- 翻译注意：取自“知识图谱”(人工智能领域)
     settings_title="设置",
 
-    setting_asd="自动移动延迟",
-    setting_asp="自动重复周期",
-    setting_ash="自动移动阻止",
+    setting_asd="重复移动延迟",
+    setting_asp="重复移动周期",
+    setting_adp="重复下落周期",
+    setting_ash="重复移动阻止",
     setting_softdropSkipAsd="跳过软降延迟",
     setting_shakeness="场地晃动",
     setting_hitWavePower="冲击波强度",

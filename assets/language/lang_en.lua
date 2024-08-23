@@ -84,6 +84,7 @@ local L={
 
     setting_asd="ASD",
     setting_asp="ASP",
+    setting_adp="ADP",
     setting_ash="AS Halt",
     setting_softdropSkipAsd="Skip Drop Delay",
     setting_shakeness="Shakiness",

@@ -76,7 +76,7 @@ C4.禁用暂存，稳定全部消四完成40行
 4.参数设置设置不当；
 5.姿势不当，不便用力；
 6.换新键位/新设备后不适应操作习惯；
-7.肌肉疲劳反应和协调能力下降，可以进行睡眠或体育运动。
+7.肌肉疲劳反应和协调能力下降，需进行睡眠或体育运动。
 
 # piece_appearance
 @ title 形状、颜色、朝向
@@ -136,24 +136,21 @@ B2B：Back to Back，连续
 
 # all_clear
 @ title 全消（AC）
-All Clear，消除场地内所有方块。
-
-# half_clear
-@ title 半全消（HC）
-Half Clear，AC（全消）的外延，指“下方有剩余方块”的全消。
-特别地，如果只消1行则必须不剩余主动放置的方块。
+All Clear，消除场地内所有方格。
+另有两个变种：
+Half Clear：“下方有剩余方格”的全消
+Color Clear：消除了非垃圾行的所有方格
 
 # rotation_system
 @ title 旋转系统
-方块进行“旋转”操作的时候，如果旋转后的原定目标位置和场地或墙壁有重合，会进行一些偏移测试，把方块平移到附近的空位来使旋转操作能顺利完成，更不容易卡住。
-上文中的偏移过程称为“踢墙”。通常偏移坐标会被用表格的方式存储，根据方块的种类和旋转的方向来选择，该表被称为“踢墙表”。
+方块进行“旋转”操作的时候，如果旋转后的原定目标位置被遮挡，则会尝试将方块平移到附近的空位来使旋转能顺利执行而不是卡住。
+上述执行的偏移动作称为“踢墙”。通常尝试的偏移坐标以表格的方式存储，根据方块的种类和旋转的方向来选择其中一行，该表被称为“踢墙表”。
 旋转系统决定了上述过程如何进行。
 
 # spin
 @ title 卡块消（Spin）
-在规则允许的情况下，使用旋转操作将方块卡进不能直接移到的位置称为Spin，根据使用的具体方块，操作会被称为例如Z-Spin、J-Spin等。
-如果Spin的同时产生了消除，则该消除为Spin消除。
-Mini-Spin：不满足一些条件的卡块消可能会被附加Mini的前缀，获得的奖励会减少。
+在规则允许的情况下，使用旋转操作将方块卡进不能直接移到的位置称为卡块，操作会根据使用的具体方块被称为Z-Spin、J-Spin等。
+如果卡块的同时产生了消除，则该消除为卡块消。
 
 # all_spin
 @ title 所有块可旋（All-Spin）
@@ -190,20 +187,20 @@ LPM：Line per Minute，行每分，其中行的计算方式有两种，一是�
 APM：Attack per Minute，攻击每分
 APL：Attack per Line，攻击每行（行的定义有两种，详见LPM词条），也叫效率
 
-# asd_asp
-@ title 移动延迟（ASD & ASP & ADP）
+# control
+@ title 控制系统（ASD & ASP & ADP）
 @ contentSize 25
-ASD：Auto Shift Delay，自动移动延迟，旧称DAS（Delayed Auto Shift）
-ASP：Auto Shift Period，自动重复周期，旧称ARR（Auto Repeat Rate)
+ASD：Auto Shift Delay，重复移动延迟，别名DAS（Delayed Auto Shift）
+ASP：Auto Shift Period，重复移动周期，别名ARR（Auto Repeat Rate)
+ADP：Auto Drop Period，重复下落周期
+ASH：Auto Shift Halt，重复移动阻止
 ~~
-在使用键盘输入文本时按住一个键，会连续输入了一大串字符。注意字符出现的时机：第一个字按下后立刻出现，停了一小会后开始快速连续自动输入，其中“停了一小会”就是ASD长度，“连续自动输入”的间隔就是ASP长度。
+使用键盘输入文本时按住一个键，会出现一大串字符。注意字符出现的时机：第一个字符在按键时立刻出现，停了一小会后开始快速自动输入。
+其中“停了一小会”就是ASD长度，“快速自动输入”的间隔就是ASP长度。
 ADP含义同ASP，只是把水平移动换成软降。
+新的方块出现后即使ASD已充满，方块也会额外等待ASH的时长后再开始移动，优化手感。
 ~~
 最佳调节方法：ASD越小越好，但小到依然能准确区分单点和长按两种动作为止；ASP能多小就多小，尽可能接近0；ADP通常都为0。
-
-# ash
-@ title 自动移动阻止（ASH）
-ASH：Auto Shift Halt，新的方块出现后即使ASD已充满，方块也会等ASH的时长后再开始移动，优化手感。
 
 # init_control
 @ title 预输入

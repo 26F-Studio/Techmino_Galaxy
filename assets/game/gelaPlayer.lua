@@ -1022,13 +1022,13 @@ function GP:updateFrame()
 
         -- Auto drop
         if self.downCharge and self.keyState.softDrop then
-            local dropASD=SET.softdropSkipAsd and SET.asp or SET.asd
+            local dropASD=SET.softdropSkipAsd and SET.adp or SET.asd
             if self.hand and not self:ifoverlap(self.hand.matrix,self.handX,self.handY-1) then
                 local dist=0
                 if self.downCharge>=dropASD then
-                    if SET.asp==0 then
+                    if SET.adp==0 then
                         dist=1e99
-                    elseif (self.downCharge-dropASD)%SET.asp==0 then
+                    elseif (self.downCharge-dropASD)%SET.adp==0 then
                         dist=1
                     end
                 end
@@ -1434,6 +1434,7 @@ local baseEnv={
     -- Control
     asd=122,
     asp=26,
+    adp=26,
     ash=26,
     softdropSkipAsd=true,
     entryChrg='on',

@@ -35,6 +35,7 @@ local settings={
         -- Handling
         asd=120,
         asp=20,
+        adp=20,
         ash=26,
         softdropSkipAsd=true,
 
@@ -45,6 +46,7 @@ local settings={
         -- Handling
         asd=120,
         asp=20,
+        adp=20,
         ash=26,
         aHdLock=200,
         mHdLock=62,
