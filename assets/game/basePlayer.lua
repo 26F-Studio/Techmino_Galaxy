@@ -11,6 +11,7 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 ---@field team number Team ID, 0 as No Team
 ---@field isMain boolean
 ---@field sound boolean
+---@field remote boolean
 ---@field settings Techmino.Mode.Setting.Brik|Techmino.Mode.Setting.Gela|Techmino.Mode.Setting.Acry
 ---@field buffedKey table
 ---@field modeData Techmino.PlayerModeData Warning: may contain anything, choose variable name carefully, suggested to be >=6 characters in total & multiple words (eg. `tspinCount`)
@@ -725,10 +726,11 @@ local soundTimeMeta={
     __metatable=true,
 }
 ---@return Techmino.Player
-function P.new()
+function P.new(remote)
     local self={}
     self.isMain=false
     self.sound=false
+    self.remote=not not remote
 
     self.buffedKey={}
     self.modeData={target={},music={id='intensity'}}
