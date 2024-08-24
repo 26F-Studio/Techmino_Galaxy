@@ -273,7 +273,7 @@ end
 
 ---@param id integer
 ---@param pType 'brik'|'gela'|'acry'
----@param remote boolean
+---@param remote? boolean
 function GAME.newPlayer(id,pType,remote)
     if not (type(id)=='number' and math.floor(id)==id and id>=1 and id<=1000) then
         MSG.new('error',"player id must be 1~1000 integer")
