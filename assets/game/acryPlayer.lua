@@ -819,8 +819,10 @@ local baseEnv={
     shakeness=.26,
     inputDelay=0,
 }
-function AP.new()
-    local self=setmetatable(require'basePlayer'.new(),{__index=AP,__metatable=true})
+---@return Techmino.Player.Acry
+function AP.new(remote)
+    local self=setmetatable(require'basePlayer'.new(remote),{__index=AP,__metatable=true})
+    ---@cast self Techmino.Player.Acry
     self.settings=TABLE.copyAll(baseEnv)
     self.event={
         -- Press & Release

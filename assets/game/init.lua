@@ -271,7 +271,10 @@ function GAME.unload()
     GAME.mainPlayer=false
 end
 
-function GAME.newPlayer(id,pType)
+---@param id integer
+---@param pType 'brik'|'gela'|'acry'
+---@param remote? boolean
+function GAME.newPlayer(id,pType,remote)
     if not (type(id)=='number' and math.floor(id)==id and id>=1 and id<=1000) then
         MSG.new('error',"player id must be 1~1000 integer")
         return
@@ -279,11 +282,11 @@ function GAME.newPlayer(id,pType)
 
     local P
     if pType=='brik' then
-        P=require'brikPlayer'.new(GAME.mode)
+        P=require'brikPlayer'.new(remote)
     elseif pType=='gela' then
-        P=require'gelaPlayer'.new(GAME.mode)
+        P=require'gelaPlayer'.new(remote)
     elseif pType=='acry' then
-        P=require'acryPlayer'.new(GAME.mode)
+        P=require'acryPlayer'.new(remote)
     else
         MSG.new('error',"invalid player type :'"..tostring(pType).."'")
         return

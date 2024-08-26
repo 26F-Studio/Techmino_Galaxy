@@ -95,30 +95,38 @@ return {
                         end
                         if not lClearBound then break end
 
-                        local rClearBound
+                        local rClearBounds={}
+                        local currentCheck=1
                         local count=0
                         for j=lClearBound,#CLEAR do
                             for id,num in next,CLEAR[j] do
                                 if id>=dropCheckPos then
                                     count=count+num
-                                    if count>=400 then
-                                        rClearBound=j
-                                        break
+                                    if count>=recordedLines[currentCheck]*10 then
+                                        rClearBounds[currentCheck]=j
+                                        currentCheck=currentCheck+1
+                                        if currentCheck>4 then
+                                            break
+                                        end
                                     end
                                 end
                             end
                         end
-                        if rClearBound then
-                            local drop=P.dropHistory[dropCheckPos-1]
-                            local time=CLEAR[rClearBound][0]-(drop and drop.time or 0)
-                            PROGRESS.setExteriorScore('sprint','line40',time,'<')
-                            -- print(("Time=%.2f"):format(time/1000))
-                            -- print(dropCheckPos,lClearBound,rClearBound)
-                            dropCheckPos=dropCheckPos+1
-                            P.modeData.infSprint_dropCheckPos=dropCheckPos
-                        else
-                            break
-                            -- TODO: calculate approximate time
+                        for j=1,4 do
+                            if rClearBounds[j] then
+                                local drop=P.dropHistory[dropCheckPos-1]
+                                local time=CLEAR[rClearBounds[j]][0]-(drop and drop.time or 0)
+                                PROGRESS.setExteriorScore('sprint',recordedLinesStr[j],time,'<')
+                                -- print(("Time=%.2f"):format(time/1000))
+                                -- print(dropCheckPos,lClearBound,rClearBound)
+                                if j==4 then
+                                    dropCheckPos=dropCheckPos+1
+                                    P.modeData.infSprint_dropCheckPos=dropCheckPos
+                                end
+                            else
+                                return
+                                -- TODO: calculate approximate time
+                            end
                         end
                     end
                 end,
@@ -188,8 +196,7 @@ return {
                         gc.print('.'..time%1000,-367+getFont(45):getWidth(int),y+20)
                     else
                         setFont(40)
-                        -- gc.print('———',-370,y)
-                        gc.print('<WIP>',-370,y)
+                        gc.print('———',-370,y)
                     end
                     setFont(20,'bold')
                     gc.print(recordedLinesName[i],-370,y+45)
