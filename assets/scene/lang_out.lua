@@ -7,6 +7,7 @@ local langList={
     pt="Português",
     id="Bahasa Indonesia",
     ja="日本語",
+    vi="Tiếng Việt",
 }
 local languages={
     "Language  语言  Idioma",
@@ -27,7 +28,7 @@ local scene={}
 local dialModeData={
     normal={
         ['1']={text=langList.en},
-        ['2']={text=''},
+        ['2']={text=langList.vi},
         ['3']={text=langList.zh},
         ['4']={text=''},
         ['5']={text=''},
@@ -226,7 +227,7 @@ scene.widgetList={
     {type='text',x=800,y=900,fontSize=30,text=LANG'lang_note'},
 
     {type='button',    name='dial_1',x=350 ,y=310,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LV',sound_trigger=false,code=function() if dialMode then dial('1') else _setLang('en') end end},
-    {type='button',    name='dial_2',x=800 ,y=310,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LP',sound_trigger=false,code=function() if dialMode then dial('2') else end end},
+    {type='button',    name='dial_2',x=800 ,y=310,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LP',sound_trigger=false,code=function() if dialMode then dial('2') else _setLang('vi') end end},
     {type='button',    name='dial_3',x=1250,y=310,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LG',sound_trigger=false,code=function() if dialMode then dial('3') else _setLang('zh') end end},
     {type='button',    name='dial_4',x=350 ,y=460,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LB',sound_trigger=false,code=function() if dialMode then dial('4') else end end},
     {type='button',    name='dial_5',x=800 ,y=460,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LJ',sound_trigger=false,code=function() if dialMode then dial('5') else end end},
