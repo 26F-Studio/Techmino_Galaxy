@@ -292,6 +292,7 @@ local L={
         exterior_tspin_10TST="轻松。",
         exterior_hypersonic_titanium_holdless="你可以暂存的",
         interior_console="这是什么？",
+        language_japanese="あ?",
         musicroom_recollection="Recollection不是一首曲子",
         dial_enter="乐器？",
         dial_password="密码正确",

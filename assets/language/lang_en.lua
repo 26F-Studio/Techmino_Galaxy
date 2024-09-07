@@ -293,6 +293,7 @@ local L={
         exterior_tspin_10TST="EZ.",
         exterior_hypersonic_titanium_holdless="You can hold",
         interior_console="What's this?",
+        language_japanese="あ?",
         musicroom_recollection="Recollection is not a song",
         dial_enter="Instrument?",
         dial_password="Password correct",

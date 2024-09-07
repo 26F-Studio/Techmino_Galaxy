@@ -17,11 +17,14 @@ local languages={
 local curLang=1
 local changed
 
+local jaClickCount
+
 ---@type Zenitha.Scene
 local scene={}
 
 function scene.load()
     changed=false
+    jaClickCount=0
 end
 
 function scene.unload()
@@ -52,18 +55,24 @@ function scene.draw()
 end
 
 local function _setLang(lid)
-    TEXT:clear()
-    TEXT:add{
-        text=langList[lid],
-        x=800,y=500,k=2,
-        fontSize=50,
-        style='appear',
-        duration=1,inPoint=0,outPoint=0,
-    }
-    if SETTINGS.system.locale~=lid then
-        SETTINGS.system.locale=lid
-        changed=true
-        WIDGET._reset()
+    if lid=='ja' then jaClickCount=jaClickCount+1 end
+    if jaClickCount>=26 then
+        PROGRESS.setSecret('language_japanese')
+        SCN.go('goyin')
+    else
+        TEXT:clear()
+        TEXT:add{
+            text=langList[lid],
+            x=800,y=500,k=2,
+            fontSize=50,
+            style='appear',
+            duration=1,inPoint=0,outPoint=0,
+        }
+        if SETTINGS.system.locale~=lid then
+            SETTINGS.system.locale=lid
+            changed=true
+            WIDGET._reset()
+        end
     end
 end
 

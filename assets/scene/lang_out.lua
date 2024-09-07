@@ -21,6 +21,8 @@ local rec,recTimer
 local dialMode,transTimer
 local mode,instrument,octave_plus
 
+local jaClickCount
+
 ---@type Zenitha.Scene
 local scene={}
 
@@ -143,6 +145,8 @@ function scene.load()
     BG.set('none')
     changed=false
     freshTexts()
+
+    jaClickCount=0
 end
 function scene.unload()
     if changed and SCN.stackChange<0 then
@@ -204,20 +208,26 @@ function scene.draw()
 end
 
 local function _setLang(lid)
-    if transTimer then transTimer=26 end
-    SFX.play('check_on')
-    TEXT:clear()
-    TEXT:add{
-        text=langList[lid],
-        x=800,y=500,a=.626,k=2,
-        fontSize=50,
-        style='zoomout',
-        duration=1.26,
-    }
-    if SETTINGS.system.locale~=lid then
-        SETTINGS.system.locale=lid
-        changed=true
-        WIDGET._reset()
+    if lid=='ja' then jaClickCount=jaClickCount+1 end
+    if jaClickCount>=26 then
+        PROGRESS.setSecret('language_japanese')
+        SCN.go('goyin')
+    else
+        if transTimer then transTimer=26 end
+        SFX.play('check_on')
+        TEXT:clear()
+        TEXT:add{
+            text=langList[lid],
+            x=800,y=500,a=.626,k=2,
+            fontSize=50,
+            style='zoomout',
+            duration=1.26,
+        }
+        if SETTINGS.system.locale~=lid then
+            SETTINGS.system.locale=lid
+            changed=true
+            WIDGET._reset()
+        end
     end
 end
 
