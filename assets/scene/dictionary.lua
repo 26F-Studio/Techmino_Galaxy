@@ -11,8 +11,9 @@ local scene={}
 local categoryColor={
     intro= {index=COLOR.F, content=COLOR.lF}, -- Instruction for current scene
     guide= {index=COLOR.Y, content=COLOR.lY}, -- Practice methods
-    term=  {index=COLOR.lB,content=COLOR.LB}, -- Concept in game
-    tech=  {index=COLOR.G, content=COLOR.lG}, -- General technics
+    term1= {index=COLOR.lC,content=COLOR.LC}, -- Basic concepts in game
+    term2= {index=COLOR.lS,content=COLOR.LS}, -- Secondary concepts
+    term3= {index=COLOR.lB,content=COLOR.LB}, -- Popular concepts
     other= {index=COLOR.M, content=COLOR.lM}, -- Other
 }
 local mainW,mainH=900,700
@@ -85,7 +86,7 @@ local function selectItem(item)
             contents.texts[i]=line
         end
         contents.maxScroll=math.max(contents.maxScroll,0)
-        table.insert(contents.texts,1,{divider=4,height=10})
+        table.insert(contents.texts,1,{divider=3,height=10})
         copyButton:setVisible(true)
     else
         contents.title="x"
