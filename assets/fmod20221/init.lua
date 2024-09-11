@@ -32,10 +32,12 @@ do -- Load library
     end
 end
 
-require'enums'
-require'constants'
-require'wrap'
-require'errors'
+if M.C and M.C2 then
+    require'enums'
+    require'constants'
+    require'wrap'
+    require'errors'
+end
 
 --------------------------------------------------------------
 
