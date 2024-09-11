@@ -193,7 +193,7 @@ local interiorModeMeta={
         if success then
             SCN.go('game_in','none',self.name)
         else
-            MSG.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+            MSG.new('warn',Text.noMode:repD(tostring(self.name):simplifyPath(),errInfo))
         end
     end
 }
@@ -207,7 +207,7 @@ local exteriorModeMeta={
         if success then
             SCN.go('game_out','fade',self.name)
         else
-            MSG.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+            MSG.new('warn',Text.noMode:repD(tostring(self.name):simplifyPath(),errInfo))
         end
     end
 }

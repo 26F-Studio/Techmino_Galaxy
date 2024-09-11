@@ -115,7 +115,7 @@ local songbook={
 
 for name,data in next,songbook do
     if not data.author then data.author="MrZ" end
-    local words=STRING.split(name,' ')
+    local words=name:split(' ')
     for i=1,#words do
         words[i]=words[i]:sub(1,1):upper()..words[i]:sub(2)
     end

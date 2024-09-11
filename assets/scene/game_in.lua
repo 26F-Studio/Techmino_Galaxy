@@ -49,7 +49,6 @@ function scene.keyDown(key,isRep)
     end
 
     sysAction(KEYMAP.sys:getAction(key))
-
     return true
 end
 

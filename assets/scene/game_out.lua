@@ -84,39 +84,24 @@ function scene.keyUp(key)
 end
 
 function scene.touchDown(x,y,id)
-    x,y=SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y))
-    if GAME.mainPlayer then
-        if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
-            if SETTINGS.system.touchControl then VCTRL.press(x,y,id) end
-        elseif GAME.mainPlayer.gameMode=='acry' then
-            GAME.mainPlayer:mouseDown(x,y,id)
-        end
-    end
+    GAME.cursorDown(x,y,id)
 end
 function scene.touchMove(x,y,dx,dy,id)
-    x,y=SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y))
-    if GAME.mainPlayer then
-        if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
-            if SETTINGS.system.touchControl then VCTRL.move(x,y,id) end
-        elseif GAME.mainPlayer.gameMode=='acry' then
-            GAME.mainPlayer:mouseMove(x,y,dx,dy,id)
-        end
-    end
+    GAME.cursorMove(x,y,dx,dy,id)
 end
 function scene.touchUp(x,y,id)
-    x,y=SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y))
-    if GAME.mainPlayer then
-        if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
-            if SETTINGS.system.touchControl then VCTRL.release(id) end
-        elseif GAME.mainPlayer.gameMode=='acry' then
-            GAME.mainPlayer:mouseUp(x,y,id)
-        end
-    end
+    GAME.cursorUp(x,y,id)
 end
 
-scene.mouseDown=scene.touchDown
-function scene.mouseMove(x,y,dx,dy) scene.touchMove(x,y,dx,dy,1) end
-scene.mouseUp=scene.touchUp
+function scene.mouseDown(x,y,_)
+    GAME.cursorDown(x,y,1)
+end
+function scene.mouseMove(x,y,dx,dy)
+    GAME.cursorMove(x,y,dx,dy,1)
+end
+function scene.mouseUp(x,y,_)
+    GAME.cursorUp(x,y,1)
+end
 
 function scene.update(dt)
     if love.keyboard.isDown('f1') then

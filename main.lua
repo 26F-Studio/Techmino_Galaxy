@@ -99,8 +99,7 @@ ZENITHA.addConsoleCommand('regurl',{
                 end
                 local exeN=f:read('*a'); f:close()
 
-                exeN=exeN:gsub('\r','')
-                exeN=STRING.split(exeN,'\n')
+                exeN=exeN:gsub('\r',''):split('\n')
                 if #exeN==0 then
                     _CL{COLOR.R,"Error: No .exe file found in working directory"}
                     return

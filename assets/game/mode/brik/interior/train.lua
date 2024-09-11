@@ -62,11 +62,11 @@ return {
             },
             afterClear=function(P)
                 if P.modeData.hint and P.modeData.hint_obey==0 and P.stat.line>=20 then
-                    -- Nice.
                     P.modeData.hint=false
                     P.modeData.hint_x,P.modeData.hint_y=false,false
                     P.modeData.hint_matrix=false
                 end
+                -- Nice.
             end,
             drawBelowMarks=function(P)
                 local m=P.modeData.hint_matrix

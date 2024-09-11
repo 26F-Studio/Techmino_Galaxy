@@ -1,8 +1,8 @@
 --[[
 格式说明：
-# 内部词条id，不可修改
+# 内部词条id, 不可修改
 @ title 词条标题，必填，如果有多个会视为多行标题（目录页只显示一行）
-@ titleFull 可选，显示在正文页面的完整词条标题，不写就同title，有多个也视为多行标题
+@ titleFull 可选，显示在正文页面的完整词条标题，不写就同title, 有多个也视为多行标题
 @ titleSize 可选，标题字号，默认50，会自动取整到最近的5的整倍数
 @ contentSize 可选，正文字号，默认30，也会自动取整
 @ link 可选，让词条附带网址链接
@@ -132,11 +132,11 @@ C4.禁用暂存，稳定全部消四完成40行
 @ title 充能（CHG / B2B）
 进行特殊消除（消四或卡块消）中间没有间隔普通消行时可以获得充能，为后续的攻击提供加成。
 CHG：Charge
-B2B：Back to Back，连续
+B2B：Back to Back, 连续
 
 # all_clear
 @ title 全消（AC）
-All Clear，消除场地内所有方格。
+All Clear, 消除场地内所有方格。
 另有两个变种：
 Half Clear：“下方有剩余方格”的全消
 Color Clear：消除了非垃圾行的所有方格
@@ -171,29 +171,29 @@ Color Clear：消除了非垃圾行的所有方格
 # key_speed
 @ title 按键速度（KPS / KPM）
 表示按键速度的常用标准有KPS和KPM。
-KPS：Key per Second，按键每秒
-KPM：Key per Minute，按键每分
+KPS：Key per Second, 按键每秒
+KPM：Key per Minute, 按键每分
 
 # drop_speed
 @ title 落块速度（LPM / BPM / PPS）
 表示落块速度的常用标准有PPS和BPM和LPM。
-PPS：Piece per Second，块每秒
-BPM：Block per Minute，块每分，也有写作PPM的，第一个P同PPS，意思相同
-LPM：Line per Minute，行每分，其中行的计算方式有两种，一是字面意义上的消了几行，二是只用落下的方块数来换算，去掉垃圾行等外部因素的影响
+PPS：Piece per Second, 块每秒
+BPM：Block per Minute, 块每分，也有写作PPM的，第一个P同PPS, 意思相同
+LPM：Line per Minute, 行每分，其中行的计算方式有两种，一是字面意义上的消了几行，二是只用落下的方块数来换算，去掉垃圾行等外部因素的影响
 
 # attack_power
 @ title 攻击强度（APM / APL）
 表示攻击强度的常用标准有APM和APL。
-APM：Attack per Minute，攻击每分
-APL：Attack per Line，攻击每行（行的定义有两种，详见LPM词条），也叫效率
+APM：Attack per Minute, 攻击每分
+APL：Attack per Line, 攻击每行（行的定义有两种，详见LPM词条），也叫效率
 
 # control
 @ title 控制系统（ASD & ASP & ADP）
 @ contentSize 25
-ASD：Auto Shift Delay，重复移动延迟，别名DAS（Delayed Auto Shift）
-ASP：Auto Shift Period，重复移动周期，别名ARR（Auto Repeat Rate)
-ADP：Auto Drop Period，重复下落周期
-ASH：Auto Shift Halt，重复移动阻止
+ASD：Auto Shift Delay, 重复移动延迟，别名DAS（Delayed Auto Shift）
+ASP：Auto Shift Period, 重复移动周期，别名ARR（Auto Repeat Rate)
+ADP：Auto Drop Period, 重复下落周期
+ASH：Auto Shift Halt, 重复移动阻止
 ~~
 使用键盘输入文本时按住一个键，会出现一大串字符。注意字符出现的时机：第一个字符在按键时立刻出现，停了一小会后开始快速自动输入。
 其中“停了一小会”就是ASD长度，“快速自动输入”的间隔就是ASP长度。
@@ -203,16 +203,15 @@ ADP含义同ASP，只是把水平移动换成软降。
 最佳调节方法：ASD越小越好，但小到依然能准确区分单点和长按两种动作为止；ASP能多小就多小，尽可能接近0；ADP通常都为0。
 
 # init_control
-@ title 预输入
-指在新的方块出现之前就进行的旋转、暂存、移动等指令的输入，能减少吃键现象，增加完美输入的窗口时间，优化手感，
-甚至避开死亡判定。
+@ title 预输入（Buffered Input）
+指在新的方块出现之前就进行的旋转、暂存、移动等指令的输入，能减少吃键现象，增加完美输入的窗口时间，优化手感，甚至避开死亡判定。
 
 # misaction
 @ title 误操作（mis-action）
 误操作通常有误放（mis-drop）和误暂存（mis-hold）。误放指因为操作问题无意中将方块锁定在了错误的地方，误暂存指本来不用暂存的时候按了暂存，导致需要的块进暂存拿不出来了（通常不允许连续暂存）。
 
 # gravity
-@ title 下落速度
+@ title 重力（下落速度）
 指在不操作的情况下，方块自然下落的速度。
 下落比较慢的时候一般用“x秒一格”和“一秒x格”，很快的时候一般以G为单位表示方块的下落速度，意思是每一帧方块往下移动多少格，默认60FPS的情况下1G就是每秒下落60格，半秒之内就能触底。另见“无限重力（20G）”词条。
 
@@ -228,16 +227,16 @@ ADP含义同ASP，只是把水平移动换成软降。
 
 # spwan_delay
 @ title 出块延迟（ED）
-Entry Delay，进场延迟，指“当前方块锁定”到“下一个方块出现”之间的时间。
+Entry Delay, 进场延迟，指“当前方块锁定”到“下一个方块出现”之间的时间。
 有时也被称为ARE
 
 # clear_delay
 @ title 消行延迟（LCD）
-Line Clear Delay，指消行动画持续的时间。
+Line Clear Delay, 指消行动画持续的时间。
 
 # death_delay
 @ title 窒息死亡延迟（SDD）
-Suffocating Death Delay，如果方块出生后和场地有重叠，将进入窒息状态，倒计时结束后方块强制锁定，本局结束。
+Suffocating Death Delay, 如果方块出生后和场地有重叠，将进入窒息状态，倒计时结束后方块强制锁定，本局结束。
 
 # death_condition
 @ title 死亡判定

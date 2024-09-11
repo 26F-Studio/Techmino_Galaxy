@@ -104,7 +104,7 @@ local function _newBridge(m1,m2)
     })
 end
 for _,link in next,bridgeLinks do
-    local b=STRING.split(link,' - ')
+    local b=link:split(' - ')
     for i=1,#b-1 do
         _newBridge(
             assert(modes_str[b[i]],"Mode "..b[i].." doesn't exist"),

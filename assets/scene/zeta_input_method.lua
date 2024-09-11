@@ -149,7 +149,7 @@ function scene.load()
     charQueue={}
 
     if not database then
-        local data=STRING.split(FILE.load('datatable/stroke_data.txt'),'\n')
+        local data=FILE.load('datatable/stroke_data.txt'):split('\n')
         database={{},{},{},{},{},list={}}
         for i=1,#data do
             local char
@@ -158,7 +158,7 @@ function scene.load()
             local depth=0
             while true do
                 p.depth=depth
-                char,str=STRING.readChars(str,1)
+                char,str=str:readChars(1)
                 if char==' ' then
                     ins(p.list,str)
                     break

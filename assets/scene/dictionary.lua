@@ -39,7 +39,7 @@ local baseDict do
         end
     end}
     for _,obj in next,baseDict do
-        local list=STRING.split(obj[1],':')
+        local list=obj[1]:split(':')
         obj[1]=nil
         obj.cat,obj.id=list[1]:trim(),list[2]:trim()
         setmetatable(obj,dictObjMeta)

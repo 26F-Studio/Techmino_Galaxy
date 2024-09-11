@@ -321,18 +321,47 @@ function GAME.setTeam(id,teamID)
 end
 
 function GAME.press(action,id)
-    if id then
-        GAME.playerMap[id]:pressKey(action)
-    elseif GAME.mainPlayer then
-        GAME.mainPlayer:pressKey(action)
-    end
+    local p=id and GAME.playerMap[id] or GAME.mainPlayer
+    p:pressKey(action)
 end
 
 function GAME.release(action,id)
-    if id then
-        GAME.playerMap[id]:releaseKey(action)
-    elseif GAME.mainPlayer then
-        GAME.mainPlayer:releaseKey(action)
+    local p=id and GAME.playerMap[id] or GAME.mainPlayer
+    p:releaseKey(action)
+end
+
+function GAME.cursorDown(x,y,tid,id)
+    local p=id and GAME.playerMap[id] or GAME.mainPlayer
+    if p.gameMode=='acry' then
+    x,y=GAME.camera.transform:inverseTransformPoint(SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y)))
+        p:mouseDown(x,y,tid)
+    elseif SETTINGS.system.touchControl then
+        VCTRL.press(x,y,id)
+    end
+end
+
+function GAME.cursorMove(x,y,dx,dy,tid,id)
+    local p=id and GAME.playerMap[id] or GAME.mainPlayer
+    if p.gameMode=='acry' then
+        x,y=GAME.camera.transform:inverseTransformPoint(SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y)))
+        p:mouseMove(x,y,dx,dy,
+            tid or
+            love.mouse.isDown(1) and 1 or
+            love.mouse.isDown(2) and 2 or
+            3
+        )
+    elseif SETTINGS.system.touchControl then
+        VCTRL.move(x,y,id)
+    end
+end
+
+function GAME.cursorUp(x,y,tid,id)
+    local p=id and GAME.playerMap[id] or GAME.mainPlayer
+    if p.gameMode=='acry' then
+        x,y=GAME.camera.transform:inverseTransformPoint(SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y)))
+        p:mouseUp(x,y,tid)
+    elseif SETTINGS.system.touchControl then
+        VCTRL.release(id)
     end
 end
 
