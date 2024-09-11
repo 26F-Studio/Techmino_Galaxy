@@ -93,14 +93,14 @@ function scene.touchUp(x,y,id)
     GAME.cursorUp(x,y,id)
 end
 
-function scene.mouseDown(x,y,_)
-    GAME.cursorDown(x,y,1)
+function scene.mouseDown(x,y,button)
+    GAME.cursorDown(x,y,button)
 end
 function scene.mouseMove(x,y,dx,dy)
-    GAME.cursorMove(x,y,dx,dy,1)
+    GAME.cursorMove(x,y,dx,dy,false)
 end
-function scene.mouseUp(x,y,_)
-    GAME.cursorUp(x,y,1)
+function scene.mouseUp(x,y,button)
+    GAME.cursorUp(x,y,button)
 end
 
 function scene.update(dt)
