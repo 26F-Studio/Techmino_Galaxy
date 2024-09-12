@@ -2,17 +2,25 @@ local gc=love.graphics
 
 --[[
     I/II:
-        Sum>=100 → II
+        Sum>=150 → II
         Single>=200 or Sum>=350 → III
 ]]
 local prgs=setmetatable({
     launchCount=0,
     main=1,
-    tutorial='000000',
     interiorScore={
         dig=0,
         sprint=0,
         marathon=0,
+        tutorial='0000', -- 0: Not Finished, 1: Passed, 2: Perfect Passed (unlock B side)
+        tuto_B1_score=0,
+        tuto_B2_score=0,
+        tuto_B3_score=0,
+        tuto_B4_score=0,
+        tuto_B1_time=false,
+        tuto_B2_time=false,
+        tuto_B3_time=false,
+        tuto_B4_time=false,
     },
     styles={
         brik=true,
@@ -102,7 +110,7 @@ local function zDump(t)
     return table.concat(list)
 end
 local function getHash(t)
-    return love.data.encode('string','base64',STRING.digezt(zDump(t)))
+    return love.data.encode('string','base64',zDump(t):digezt())
 end
 
 local PROGRESS={}
@@ -145,6 +153,17 @@ function PROGRESS.load()
 end
 function PROGRESS.fix()
     prgs.brik_stdMap=nil
+    if type(prgs.interiorScore.tutorial)=='table' then
+        prgs.interiorScore.tutorial='0000'
+        prgs.tuto_B1_score=0
+        prgs.tuto_B2_score=0
+        prgs.tuto_B3_score=0
+        prgs.tuto_B4_score=0
+        prgs.tuto_B1_time=false
+        prgs.tuto_B2_time=false
+        prgs.tuto_B3_time=false
+        prgs.tuto_B4_time=false
+    end
 end
 
 --------------------------------------------------------------
@@ -396,9 +415,9 @@ function PROGRESS.getBgmUnlocked(name) return prgs.bgmUnlocked[name] end
 function PROGRESS.getStyleUnlock(style) return prgs.styles[style] end
 function PROGRESS.getTutorialPassed(n)
     if n then
-        return prgs.tutorial:sub(n,n)=='1'
+        return tonumber(prgs.interiorScore.tutorial:sub(n,n))
     else
-        return prgs.tutorial=='111111'
+        return not prgs.interiorScore.tutorial:find('0')
     end
 end
 function PROGRESS.getInteriorScore(mode) return prgs.interiorScore[mode] end
@@ -420,9 +439,15 @@ function PROGRESS.setMain(n)
         while prgs.main<n do
             prgs.main=prgs.main+1
             if prgs.main==2 then
-                prgs.tutorial='111'..prgs.tutorial:sub(4)
+                for i=1,4 do
+                    prgs.interiorScore.tutorial[i]=math.max(prgs.interiorScore.tutorial[i],1)
+                end
             elseif prgs.main==3 then
-                prgs.tutorial='111111'
+                -- ?
+            elseif prgs.main==4 then
+                -- ?
+            elseif prgs.main==5 then
+                -- ?
             end
         end
         PROGRESS.save()
@@ -453,9 +478,11 @@ function PROGRESS.setStyleUnlock(style)
         PROGRESS.save()
     end
 end
-function PROGRESS.setTutorialPassed(n)
-    if prgs.tutorial:sub(n,n)=='0' then
-        prgs.tutorial=prgs.tutorial:sub(1,n-1)..'1'..prgs.tutorial:sub(n+1)
+function PROGRESS.setTutorialPassed(n,v)
+    local l=STRING.atomize(prgs.interiorScore.tutorial)
+    if v>tonumber(l[n]) then
+        l[n]=v
+        prgs.interiorScore.tutorial=table.concat(l)
         PROGRESS.save()
     end
 end

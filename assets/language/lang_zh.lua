@@ -302,10 +302,12 @@ local L={
     -- Level
     tutorial_basic="基本规则",
     tutorial_sequence="预览&暂存",
-    tutorial_piece="方块形状",
-    tutorial_stackBasic="堆叠(基础)",
-    tutorial_twoRotatingKey="双旋",
-    tutorial_rotating="旋转练习",
+    tutorial_stackBasic="基础堆叠",
+    tutorial_finesseBasic="基础极简",
+    tutorial_finessePractice="极简练习",
+    tutorial_allclearPractice="全消练习",
+    tutorial_techrash="仅消四",
+    tutorial_finessePlus="优雅堆叠",
 
     tutorial_notpass="Failed",
     tutorial_pass="PASS",

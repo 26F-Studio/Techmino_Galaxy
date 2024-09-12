@@ -303,10 +303,12 @@ local L={
     -- Level
     tutorial_basic="The Basics",
     tutorial_sequence="Next & Hold",
-    tutorial_piece="Piece shapes",
     tutorial_stackBasic="Basic Stacking",
-    tutorial_twoRotatingKey="Two-way Rotation",
-    tutorial_rotating="Rotating Practice",
+    tutorial_finesseBasic="Basic Finesse",
+    tutorial_finessePractice="Finesse Practice",
+    tutorial_allclearPractice="All Clear Practice",
+    tutorial_techrash="Techrash Only",
+    tutorial_finessePlus="Elegant Stack",
 
     tutorial_notpass="Failed",
     tutorial_pass="PASS",
