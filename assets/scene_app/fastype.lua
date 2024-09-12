@@ -4,22 +4,18 @@ local rnd=math.random
 local levels={
     A_Z="ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     Z_A="ZYXWVUTSRQPONMLKJIHGFEDCBA",
-    Tech1="TECHMINOHAOWAN",
-    Tech2="TECHMINOISFUN",
+    Hello="HELLOWORLD",
     TG1="TECHMINOGALAXYHAOWAN",
     TG2="TECHMINOGALAXYISFUN",
     KeyTest1="THEQUICKBROWNFOXJUMPSOVERALAZYDOG",
     KeyTest2="THEFIVEBOXINGWIZARDSJUMPQUICKLY",
-    Hello="HELLOWORLD",
     Roll1="QWERTYUIOPASDFGHJKLZXCVBNM",
     Roll2="QAZWSXEDCRFVTGBYHNUJMIKOLP",
     Roll3="ZAQWSXCDERFVBGTYHNMJUIKLOP",
-    ZZZ="ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ",
-    ZXZX="ZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZXZX",
-    ZMZM="ZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZMZM",
-    Stair="ZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCV",
+    Stair1="ZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCVZXCV",
     Stair2="ZXCVCXZXCVCXZXCVCXZXCVCXZXCVCXZXCVCXZXCVCXZXCVCXZXCVCXZXCVCXZXCV",
     Stair3="XZCVXZCVXZCVXZCVXZCVXZCVXZCVXZCVXZCVXZCVXZCVXZCVXZCVXZCVXZCVXZCV",
+    Stair4="ZCXVZCXVZCXVZCXVZCXVZCXVZCXVZCXVZCXVZCXVZCXVZCXVZCXVZCXVZCXVZCXV",
     BPW="OHOOOOOOOOOAAAAEAAIAUJOOOOOOOOOOOAAEOAAUUAEEEEEEEEEAAAAEAEIEAJOOOOOOOOOOEEEEOAAAAAAA",
 }
 
@@ -127,7 +123,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='selector',name='level',text="",x=220,y=640,w=200,list={'A_Z','Z_A','Tech1','Tech2','TG1','TG2','KeyTest1','KeyTest2','Hello','Roll1','Roll2','Roll3','ZZZ','ZXZX','ZMZM','Stair','Stair2','Stair3','BPW'},disp=function() return levelName end,code=function(i) levelName=i; targetString=levels[i] end,visibleTick=function() return state==0 end},
+    WIDGET.new{type='selector',name='level',text="",x=220,y=640,w=200,list={'A_Z','Z_A','HELLO','TG1','TG2','KeyTest1','KeyTest2','Roll1','Roll2','Roll3','Stair1','Stair2','Stair3','Stair4','BPW'},disp=function() return levelName end,code=function(i) levelName=i; targetString=levels[i] end,visibleTick=function() return state==0 end},
     WIDGET.new{type='button',  x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'space'},
     WIDGET.new{type='button',  name='keyboard',x=160,y=210,w=180,h=100,fontSize=60,text=CHAR.icon.keyboard,code=function() love.keyboard.setTextInput(true,0,select(2,SCR.xOy:transformPoint(0,500)),1,1) end},
     WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},

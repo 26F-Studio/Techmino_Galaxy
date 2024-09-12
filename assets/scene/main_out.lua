@@ -52,7 +52,6 @@ function scene.keyDown(key,isRep)
             secretInput=0
         end
     end
-    print(secretInput)
     return true
 end
 
