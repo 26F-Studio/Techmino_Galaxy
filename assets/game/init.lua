@@ -336,7 +336,7 @@ function GAME.cursorDown(x,y,tid,id)
     x,y=GAME.camera.transform:inverseTransformPoint(SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y)))
         p:mouseDown(x,y,tid)
     elseif SETTINGS.system.touchControl then
-        VCTRL.press(x,y,id)
+        VCTRL.press(x,y,tid)
     end
 end
 
@@ -351,7 +351,7 @@ function GAME.cursorMove(x,y,dx,dy,tid,id)
             3
         )
     elseif SETTINGS.system.touchControl then
-        VCTRL.move(x,y,id)
+        VCTRL.move(x,y,tid)
     end
 end
 
@@ -361,7 +361,7 @@ function GAME.cursorUp(x,y,tid,id)
         x,y=GAME.camera.transform:inverseTransformPoint(SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y)))
         p:mouseUp(x,y,tid)
     elseif SETTINGS.system.touchControl then
-        VCTRL.release(id)
+        VCTRL.release(tid)
     end
 end
 
