@@ -380,14 +380,14 @@ function BP:resetPosCheck()
             end
 
             -- Suffocate IRS
-            if SET.initRotate then
-                if SET.initRotate=='hold' then
+            if SET.bufferRotate then
+                if SET.bufferRotate=='hold' then
                     if self.keyState.rotate180 then
                         self:rotate('F',true)
                     elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                         self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                     end
-                elseif SET.initRotate=='buffer' then
+                elseif SET.bufferRotate=='buffer' then
                     if self.keyBuffer.rotate then
                         self:rotate(self.keyBuffer.rotate,true)
                         if not self.keyBuffer.hold then
@@ -418,13 +418,13 @@ function BP:resetPosCheck()
         end
     else
         -- IMS
-        if SET.initMove then
-            if SET.initMove=='hold' then
+        if SET.bufferMove then
+            if SET.bufferMove=='hold' then
                 if self.keyState.softDrop then self:moveDown() end
                 if self.keyState.moveRight~=self.keyState.moveLeft then
                     if self.keyState.moveRight then self:moveRight(true) else self:moveLeft(true) end
                 end
-            elseif SET.initMove=='buffer' then
+            elseif SET.bufferMove=='buffer' then
                 if self.keyBuffer.move then
                     if self.keyBuffer.move=='L' then
                         self:moveLeft(true)
@@ -437,14 +437,14 @@ function BP:resetPosCheck()
         end
 
         -- IRS
-        if SET.initRotate then
-            if SET.initRotate=='hold' then
+        if SET.bufferRotate then
+            if SET.bufferRotate=='hold' then
                 if self.keyState.rotate180 then
                     self:rotate('F',true)
                 elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                     self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                 end
-            elseif SET.initRotate=='buffer' then
+            elseif SET.bufferRotate=='buffer' then
                 if self.keyBuffer.rotate then
                     self:rotate(self.keyBuffer.rotate,true)
                     if not self.keyBuffer.hold then
@@ -617,13 +617,13 @@ function BP:popNext(ifHold)
 
     -- IHS
     local IHStriggered
-    if not ifHold and self.settings.initHold then
-        if self.settings.initHold=='hold' then
+    if not ifHold and self.settings.bufferHold then
+        if self.settings.bufferHold=='hold' then
             if self.keyState.holdPiece then
                 self:hold(true)
                 IHStriggered=true
             end
-        elseif self.settings.initHold=='buffer' then
+        elseif self.settings.bufferHold=='buffer' then
             if self.keyBuffer.hold then
                 self.keyBuffer.hold=false
                 self:hold(true)
@@ -2012,9 +2012,9 @@ local baseEnv={
     dblMoveRelInvChrg='reset',    -- reset/keep/raw/full charge (Release 2)
     dblMoveRelInvStep=true,       -- Move (Release 2)
     dblMoveRelInvRedir=true,      -- Change direction (Release 2)
-    initMove='buffer',            -- buffer/hold to do initial move
-    initRotate='buffer',          -- buffer/hold to do initial rotate
-    initHold='buffer',            -- buffer/hold to do initial hold
+    bufferMove='buffer',          -- buffer/hold to do initial move
+    bufferRotate='buffer',        -- buffer/hold to do initial rotate
+    bufferHold='buffer',          -- buffer/hold to do initial hold
     aHdLock=60,                   -- Auto harddrop lock
     mHdLock=40,                   -- Manual harddrop lock
     freshLockInASD=true,          -- Fresh lockDelay in auto shift delay

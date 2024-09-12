@@ -236,14 +236,14 @@ function GP:resetPosCheck()
             end
 
             -- Suffocate IRS
-            if SET.initRotate then
-                if SET.initRotate=='hold' then
+            if SET.bufferRotate then
+                if SET.bufferRotate=='hold' then
                     if self.keyState.rotate180 then
                         self:rotate('F',true)
                     elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                         self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                     end
-                elseif SET.initRotate=='buffer' then
+                elseif SET.bufferRotate=='buffer' then
                     if self.keyBuffer.rotate then
                         self:rotate(self.keyBuffer.rotate,true)
                         if not self.keyBuffer.hold then
@@ -272,15 +272,15 @@ function GP:resetPosCheck()
         end
     else
         -- IMS
-        if SET.initMove then
-            if SET.initMove=='hold' then
+        if SET.bufferMove then
+            if SET.bufferMove=='hold' then
                 if self.keyState.softDrop then self:moveDown() end
                 if self.keyState.moveRight~=self.keyState.moveLeft then
                     local origY=self.handY -- For canceling 20G effect of IMS
                     if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
                     self.handY=origY
                 end
-            elseif SET.initMove=='buffer' then
+            elseif SET.bufferMove=='buffer' then
                 if self.keyBuffer.move then
                     local origY=self.handY -- For canceling 20G effect of IMS
                     if self.keyBuffer.move=='L' then
@@ -295,14 +295,14 @@ function GP:resetPosCheck()
         end
 
         -- IRS
-        if SET.initRotate then
-            if SET.initRotate=='hold' then
+        if SET.bufferRotate then
+            if SET.bufferRotate=='hold' then
                 if self.keyState.rotate180 then
                     self:rotate('F',true)
                 elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                     self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                 end
-            elseif SET.initRotate=='buffer' then
+            elseif SET.bufferRotate=='buffer' then
                 if self.keyBuffer.rotate then
                     self:rotate(self.keyBuffer.rotate,true)
                     if not self.keyBuffer.hold then
@@ -1449,8 +1449,8 @@ local baseEnv={
     dblMoveRelInvChrg='reset',
     dblMoveRelInvStep=true,
     dblMoveRelInvRedir=true,
-    initMove='buffer',
-    initRotate='buffer',
+    bufferMove='buffer',
+    bufferRotate='buffer',
     aHdLock=60,
     mHdLock=40,
     freshLockInASD=true,
