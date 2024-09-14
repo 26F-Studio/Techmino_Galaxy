@@ -342,7 +342,7 @@ end
 function BP:resetPos() -- Move hand piece to the normal spawn position
     self:moveHand('reset',floor(self.settings.fieldW/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1+ceil(self.fieldDived/40))
 
-    self:triggerEvent('changeSpawnPos')
+    self:triggerEvent('beforeResetPos')
 
     self.deathTimer=false
     self.ghostState=false
@@ -2070,7 +2070,7 @@ function BP.new(remote)
 
         -- Other
         whenSuffocate={},
-        changeSpawnPos={},
+        beforeResetPos={},
 
         -- Special
         extraSolidCheck={}, -- Manually called

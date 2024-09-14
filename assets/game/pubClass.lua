@@ -36,7 +36,7 @@
 ---| 'drawOnPlayer'    -- Brik, Gela, Acry
 ---|
 ---| 'whenSuffocate'   -- Brik, Gela
----| 'changeSpawnPos'  -- Brik
+---| 'beforeResetPos'  -- Brik
 ---| 'extraSolidCheck' -- Brik
 ---|
 ---| 'legalMove'       -- Acry(mode)

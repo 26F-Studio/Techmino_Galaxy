@@ -26,7 +26,7 @@ function squeeze.switch_auto(P,width,wait,depth,speed)
     squeeze.switch(P,width,wait,depth,speed)
     local setEvent=P.modeData.squeeze_enabled and P.addEvent or P.delEvent
     setEvent(P,'extraSolidCheck',squeeze.event_extraSolidCheck)
-    setEvent(P,'changeSpawnPos',squeeze.event_changeSpawnPos)
+    setEvent(P,'beforeResetPos',squeeze.event_changeSpawnPos)
     setEvent(P,'afterDrop',squeeze.event_afterDrop)
     setEvent(P,'drawInField',squeeze.event_drawInField)
 end
