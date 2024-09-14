@@ -33,14 +33,8 @@ return {
             afterResetPos=function(P)
                 if P.modeData.hint then
                     local field=P.field:export_table_simp()
-                    local m=P.hand.matrix
-                    local shape={}
-                    for y=1,#m do
-                        shape[y]={}
-                        for x=1,#m[y] do
-                            shape[y][x]=m[y][x] and true or false
-                        end
-                    end
+                    local shape=P:getBoolHandMatrix()
+                    ---@cast shape -nil
                     local x,y,dir=AI.paperArtist.findPosition(field,shape)
                     P.modeData.hint_x,P.modeData.hint_y=x,y
                     P.modeData.hint_matrix=TABLE.rotate(shape,dir)

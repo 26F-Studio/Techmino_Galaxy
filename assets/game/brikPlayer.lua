@@ -37,6 +37,24 @@ BP._actions={}
 for k,v in next,mechLib.brik.actions do BP._actions[k]=BP:_getActionObj(v) end
 
 --------------------------------------------------------------
+-- Utils
+
+---@return Mat<boolean>?
+function BP:getBoolHandMatrix()
+    if not self.hand then return end
+    local m=self.hand.matrix
+    local w=#m[1]
+    local shape={}
+    for y=1,#m do
+        shape[y]={}
+        for x=1,w do
+            shape[y][x]=m[y][x] and true
+        end
+    end
+    return shape
+end
+
+--------------------------------------------------------------
 -- Effects
 
 function BP:createMoveEffect(x1,y1,x2,y2)
