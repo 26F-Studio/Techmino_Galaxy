@@ -14,8 +14,9 @@ local clamp,expApproach=MATH.clamp,MATH.expApproach
 
 ---@class Techmino.Player.Brik: Techmino.Player
 ---@field stat Techmino.PlayerStatTable.Brik
----@field dropHistory {id:integer, x:integer, y:integer, direction:integer, time:integer, gameTime:integer}[]
----@field clearHistory {combo:integer, line:integer, linePos:integer[], time:integer, gameTime:integer}[]
+---@field lastMovement Techmino.BrikMovement
+---@field dropHistory Techmino.BrikDropHis[]
+---@field clearHistory Techmino.BrikClearHis[]
 local BP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 --------------------------------------------------------------
@@ -281,6 +282,7 @@ function BP:moveHand(action,A,B,C,D)
 
     if self.handX%1~=0 or self.handY%1~=0 then error("EUREKA! Decimal position") end
 
+    ---@type Techmino.BrikMovement
     local movement={
         action=action,
         brik=self.hand,
@@ -2147,7 +2149,7 @@ function BP:initialize()
     self.hand=false
     self.handX=false
     self.handY=false
-    self.lastMovement=false -- Table contain last movement info of brik, for spin/... checking
+    self.lastMovement={} -- Table contain last movement info of brik, for spin/... checking
     self.ghostY=false
     self.minY=false
 

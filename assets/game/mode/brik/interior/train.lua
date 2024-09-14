@@ -35,7 +35,7 @@ return {
                     local field=P.field:export_table_simp()
                     local shape=P:getBoolHandMatrix()
                     ---@cast shape -nil
-                    local x,y,dir=AI.paperArtist.findPosition(field,shape)
+                    local x,y,dir=AI.paperArtist.getBestPosition(field,shape)
                     P.modeData.hint_x,P.modeData.hint_y=x,y
                     P.modeData.hint_matrix=TABLE.rotate(shape,dir)
                     P.modeData.waitTime=0

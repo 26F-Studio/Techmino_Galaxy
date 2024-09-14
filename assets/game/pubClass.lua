@@ -88,6 +88,29 @@
 ---
 ---@field size number Gela only
 
+---@class Techmino.BrikDropHis
+---@field id number
+---@field x number
+---@field y number
+---@field direction number
+---@field time number
+---@field gameTime number
+
+---@class Techmino.BrikClearHis
+---@field combo number
+---@field line number
+---@field linePos number[]
+---@field time number
+---@field gameTime number
+
+---@class Techmino.BrikMovement
+---@field action string
+---@field brik Techmino.Hand
+---@field x number
+---@field y number
+---@field immobile? boolean
+---@field corners? boolean
+
 ---@class Techmino.Mode
 ---@field initialize function Called when initializing the mode
 ---@field settings {brik:Techmino.Mode.Setting.Brik?, gela:Techmino.Mode.Setting.Gela?, acry:Techmino.Mode.Setting.Acry?}
