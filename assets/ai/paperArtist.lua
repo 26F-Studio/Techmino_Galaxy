@@ -65,7 +65,7 @@ local ins,rem=table.insert,table.remove
 
 ---@param F Mat<boolean> Field (read)
 ---@param shape Mat<boolean>
----@return {x:number, y:number, dir:string}[]
+---@return {x:number, y:number, dir:string, score:number}[]
 function paperArtist.search(F,shape,dirCount,bestCount)
     local posList={{
         score=-1e99,
@@ -101,10 +101,10 @@ end
 
 ---@param F Mat<boolean> Field (read)
 ---@param shape Mat<boolean>
----@return number x, number y, string dir
+---@return number x, number y, string dir, number score
 function paperArtist.getBestPosition(F,shape)
     local best=paperArtist.search(F,shape,4,1)[1]
-    return best.x,best.y,best.dir
+    return best.x,best.y,best.dir,best.score
 end
 
 return paperArtist

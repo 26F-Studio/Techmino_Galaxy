@@ -630,7 +630,7 @@ function BP:popNext(ifHold)
             ins(self.nextQueue,rem(self.holdQueue,1))
             self:popNext()
         else -- No piece to use, game over
-            self:finish('exahust')
+            self:finish('exhaust')
         end
         return
     end

@@ -455,7 +455,7 @@ function GP:popNext()
         self.hand=rem(self.nextQueue,1)
         self:freshNextQueue()
     else -- If no piece to use, Next queue are empty, game over
-        self:finish('exahust')
+        self:finish('exhaust')
         return
     end
 

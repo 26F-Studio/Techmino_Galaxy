@@ -281,7 +281,7 @@ local finishTexts={
     topout='MLE',
     timeout='TLE',
     rule='OLE',
-    exahust='ILE',
+    exhaust='ILE',
     taskfail='PE',
     other='UKE',
 }

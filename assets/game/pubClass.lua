@@ -6,7 +6,7 @@
 ---|'topout'     Top out (MLE, Memory Limit Exceeded)
 ---|'timeout'    Time out (TLE, Time Limit Exceeded)
 ---|'rule'       Rule violation (OLE, Output Limit Exceeded)
----|'exahust'    Ran out pieces (ILE, Idleness Limit Exceeded)
+---|'exhaust'    Ran out pieces (ILE, Idleness Limit Exceeded)
 ---|'taskfail'   Task failed (PE, Presentation Error)
 ---|'other'      Other reason (UKE, Unknown Error)
 
@@ -110,6 +110,8 @@
 ---@field y number
 ---@field immobile? boolean
 ---@field corners? boolean
+---@field clear? number[]
+---@field combo? number
 
 ---@class Techmino.Mode
 ---@field initialize function Called when initializing the mode
