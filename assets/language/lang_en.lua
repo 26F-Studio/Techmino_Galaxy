@@ -60,6 +60,7 @@ local L={
     target_piece="Piece",
     target_line="Line",
     target_time="Time",
+    target_score="Score",
     target_ac="AC",
     target_hc="HC",
     target_tss="TSS",
@@ -307,7 +308,7 @@ local L={
     tutorial_finesseBasic="Basic Finesse (WIP)",
     tutorial_finessePractice="Finesse Practice (WIP)",
     tutorial_allclearPractice="All Clear Practice (WIP)",
-    tutorial_techrash="Techrash Only (WIP)",
+    tutorial_techrashPractice="Techrash Only",
     tutorial_finessePlus="Elegant Stack (WIP)",
 
     tutorial_notpass="Failed",

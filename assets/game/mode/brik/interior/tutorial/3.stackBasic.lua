@@ -1,6 +1,3 @@
---[[
-    玩家放下块的位置根据AI评分，20行内场地的不稳定度在一定数值内时过关
-]]
 ---@type Techmino.Mode
 return {
     initialize=function()
@@ -33,7 +30,6 @@ return {
             end,
             gameStart=function(P)
                 P.spawnTimer=1500
-                -- P.modeData._shadowCreated=nil
             end,
             always=function(P)
                 P.modeData.scoreDisp=MATH.expApproach(P.modeData.scoreDisp,P.modeData.score,0.0042)
@@ -94,10 +90,7 @@ return {
             {cmd='say',arg={duration='10s',text="@tutorial_stackBasic_4",size=35,y=-60}},
             "[10s]",
             {cmd='say',arg={duration='10s',text="@tutorial_stackBasic_5",size=35,y=-60}},
-            -- {cmd='say',arg={duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}},
-            -- {cmd=function(P) if P.isMain then PROGRESS.setTutorialPassed(3,1) end end},
-            -- "finish win",
-    },
+        },
     }},
     result=autoBack_interior,
 }

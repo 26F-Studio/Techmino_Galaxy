@@ -60,6 +60,7 @@ local L={
     target_piece="块数",
     target_line="行数",
     target_time="时间",
+    target_score="分数",
     target_ac="全消",
     target_hc="半全消",
     target_tss="TSS",
@@ -306,7 +307,7 @@ local L={
     tutorial_finesseBasic="基础极简 (WIP)",
     tutorial_finessePractice="极简练习 (WIP)",
     tutorial_allclearPractice="全消练习 (WIP)",
-    tutorial_techrash="仅消四 (WIP)",
+    tutorial_techrashPractice="仅消四",
     tutorial_finessePlus="优雅堆叠 (WIP)",
 
     tutorial_notpass="Failed",

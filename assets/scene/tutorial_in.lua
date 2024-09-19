@@ -8,7 +8,7 @@ local buttonTexts={
     'tutorial_finesseBasic',
     'tutorial_finessePractice',
     'tutorial_allclearPractice',
-    'tutorial_techrash',
+    'tutorial_techrashPractice',
     'tutorial_finessePlus',
 }
 local function B(t)
@@ -24,8 +24,7 @@ local function B(t)
     return WIDGET.new(w)
 end
 local function playTutorial(level)
-    if PROGRESS.getTutorialPassed(level)==2 then level=level+4 end
-    if level<=4 then
+    if PROGRESS.getTutorialPassed(level)<2 then
         SCN.go('game_in','none','brik/interior/tutorial/'..(
             level==1 and '1.basic' or
             level==2 and '2.sequence' or
@@ -33,13 +32,13 @@ local function playTutorial(level)
             level==4 and '4.finesseBasic'
         ))
     else
-        MSG.new('warn','Coming Soon')
-        -- SCN.go('game_in','none','brik/interior/tutorial/'..(
-        --     level==1 and '5.finessePractice' or
-        --     level==2 and '6.allclearPractice' or
-        --     level==3 and '7.techrash' or
-        --     level==4 and '8.finessePlus'
-        -- ))
+        -- MSG.new('warn','Coming Soon')
+        SCN.go('game_in','none','brik/interior/tutorial/'..(
+            level==1 and '5.finessePractice' or
+            level==2 and '6.allclearPractice' or
+            level==3 and '7.techrashPractice' or
+            level==4 and '8.finessePlus'
+        ))
     end
 end
 

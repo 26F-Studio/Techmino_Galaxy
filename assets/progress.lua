@@ -486,9 +486,11 @@ function PROGRESS.setTutorialPassed(n,v)
         PROGRESS.save()
     end
 end
-function PROGRESS.setInteriorScore(mode,score)
+---@param sign? '<'|'>' #default to `'>'` bigger=better, `'<'` smaller=better
+function PROGRESS.setInteriorScore(mode,score,sign)
+    sign=sign or '>'
     score=MATH.clamp(math.floor(score),0,200)
-    if score>prgs.interiorScore[mode] then
+    if not prgs.interiorScore[mode] or sign=='>' and score>prgs.interiorScore[mode] or sign=='<' and score<prgs.interiorScore[mode] then
         prgs.interiorScore[mode]=score
         PROGRESS.save()
     end
