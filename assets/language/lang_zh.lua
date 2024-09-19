@@ -300,14 +300,14 @@ local L={
     },
 
     -- Level
-    tutorial_basic="基本规则",
+    tutorial_basic="基本规则 (WIP)",
     tutorial_sequence="预览&暂存",
     tutorial_stackBasic="基础堆叠",
-    tutorial_finesseBasic="基础极简",
-    tutorial_finessePractice="极简练习",
-    tutorial_allclearPractice="全消练习",
-    tutorial_techrash="仅消四",
-    tutorial_finessePlus="优雅堆叠",
+    tutorial_finesseBasic="基础极简 (WIP)",
+    tutorial_finessePractice="极简练习 (WIP)",
+    tutorial_allclearPractice="全消练习 (WIP)",
+    tutorial_techrash="仅消四 (WIP)",
+    tutorial_finessePlus="优雅堆叠 (WIP)",
 
     tutorial_notpass="Failed",
     tutorial_pass="PASS",
@@ -323,25 +323,12 @@ local L={
     tutorial_sequence_3="现在你可以看到之后会来什么块了",
     tutorial_sequence_4="使用暂存键来调整方块的顺序",
 
-    tutorial_shape_1="3. 方块形状",
-    tutorial_shape_2="指出方块下部剪影对应的形状",
+    tutorial_stackBasic_1="3.基础堆叠",
+    tutorial_stackBasic_2="请尝试保持“地形平坦”，不要让左侧的危险度指示条过高",
+    tutorial_stackBasic_3="初学时一般都推荐以此为目标",
+    tutorial_stackBasic_4="所以方块通常会尽量摆成平躺的方向，很少竖着",
+    tutorial_stackBasic_5="这能保证后续的选择空间，实现可持续发展",
 
-    tutorial_stackBasic_1="4.堆叠(基础)",
-    tutorial_stackBasic_m1="请按照提示摆块",
-    tutorial_stackBasic_m2="刚开始学习时，一般都推荐尽量“让地形平坦”",
-    tutorial_stackBasic_m3="方块通常会尽量摆成平躺的方向，很少竖着",
-    tutorial_stackBasic_m4="保持地形的顶部平坦比较好持续，不容易出现空洞",
-    tutorial_stackBasic_m5="通常的规则里用棍子一次消四行往往会有较大的收益，再做一个消四试试看",
-    tutorial_stackBasic_m6="尝试不借助提示把消四最后几块补完整吧",
-
-    tutorial_twoRotatingKey_1="5. 双旋",
-    tutorial_twoRotatingKey_m1="如果可以逆时针旋转一次到位，那么就不需要顺时针转三次",
-    tutorial_twoRotatingKey_m2="不仅浪费力气，还会减慢操作速度",
-    tutorial_twoRotatingKey_m3="你需要先想好放在哪然后开始操作，而不是依赖影子去对地形",
-    tutorial_twoRotatingKey_m4="请按照提示摆块，但旋转的次数必须尽可能少",
-    tutorial_twoRotatingKey_unnecessaryRotation="多余旋转",
-
-    tutorial_rotating_1="6. 旋转练习",
-    tutorial_rotating_2="请将上面的方块旋转成下面的朝向",
+    tutorial_basicFinesse_1="4. 基础极简",
 }
 return L

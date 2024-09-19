@@ -301,14 +301,14 @@ local L={
     },
 
     -- Level
-    tutorial_basic="The Basics",
+    tutorial_basic="The Basics (WIP)",
     tutorial_sequence="Next & Hold",
     tutorial_stackBasic="Basic Stacking",
-    tutorial_finesseBasic="Basic Finesse",
-    tutorial_finessePractice="Finesse Practice",
-    tutorial_allclearPractice="All Clear Practice",
-    tutorial_techrash="Techrash Only",
-    tutorial_finessePlus="Elegant Stack",
+    tutorial_finesseBasic="Basic Finesse (WIP)",
+    tutorial_finessePractice="Finesse Practice (WIP)",
+    tutorial_allclearPractice="All Clear Practice (WIP)",
+    tutorial_techrash="Techrash Only (WIP)",
+    tutorial_finessePlus="Elegant Stack (WIP)",
 
     tutorial_notpass="Failed",
     tutorial_pass="PASS",
@@ -324,25 +324,12 @@ local L={
     tutorial_sequence_3="…but now you can see what pieces are coming next.",
     tutorial_sequence_4="Use the Hold key to adjust the order of the pieces.",
 
-    tutorial_shape_1="3. Piece shapes",
-    tutorial_shape_2="Select the shape corresponding to the bottom of block outline",
+    tutorial_stackBasic_1="3. Basic Stacking",
+    tutorial_stackBasic_2="Try to keep the top levels \"flat\", to make the danger meter on the left low.",
+    tutorial_stackBasic_3="This is the usual goal for beginners.",
+    tutorial_stackBasic_4="Pieces are often placed \"lying down\", not \"standing up\".",
+    tutorial_stackBasic_5="This ensures more choices for future pieces and avoiding making holes.",
 
-    tutorial_stackBasic_1="4. Basic Stacking",
-    tutorial_stackBasic_m1="Please follow the follwing instructions:",
-    tutorial_stackBasic_m2="It's recommended to keep the top levels as flat as you can.",
-    tutorial_stackBasic_m3="Pieces are often placed \"lying down\", not \"standing up\".",
-    tutorial_stackBasic_m4="Flat tops are easier to keep, and you can also avoid making holes.",
-    tutorial_stackBasic_m5="You will usually be rewarded more for clearing four lines at once. Try to make another one.",
-    tutorial_stackBasic_m6="Try finishing the Techrash with the last piece without a guide!",
-
-    tutorial_twoRotatingKey_1="5. Two-way Rotations",
-    tutorial_twoRotatingKey_m1="Follow the following guides, but try to use the least number of rotations as possible.",
-    tutorial_twoRotatingKey_m2="If you can rotate it using one CCW, try not to use three CWs.",
-    tutorial_twoRotatingKey_m3="This not only wastes your effort, but also slows you down.",
-    tutorial_twoRotatingKey_m4="You should decide in your mind where to put each piece and not rely on the shadow pieces alone.",
-    tutorial_twoRotatingKey_unnecessaryRotation="Redundant Rotation",
-
-    tutorial_rotating_1="6. Rotating Practice",
-    tutorial_rotating_2="Rotate the top piece to align the bottom one",
+    tutorial_basicFinesse_1="4. Basic Finesse",
 }
 return L

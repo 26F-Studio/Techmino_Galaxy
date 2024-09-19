@@ -1,3 +1,8 @@
+--[[
+    （启用出块打断das）
+    一块一个pc，讲解基础操作
+    （会故意放几个不可能无意按出极简的情况，作为里关卡入口）
+]]
 ---@type Techmino.Mode
 return {
     initialize=function()
@@ -11,6 +16,9 @@ return {
         particles=false,
         shakeness=0,
         readyDelay=1,
+        bufferMove=false,
+        bufferRotate=false,
+        stopMoveWhenSpawn=true,
         spawnDelay=260,
         dropDelay=1e99,
         lockDelay=1e99,

@@ -1,27 +1,6 @@
-local correctPositions={
-    { -- Quest 1
-        {x=1,y=1,dir={0},       msg="tutorial_stackBasic_m1"},
-        {x=4,y=1,dir={0,2}},
-        {x=7,y=1,dir={0,2}},
-        {x=5,y=2,dir={0,1,2,3}, msg="tutorial_stackBasic_m2"},
-        {x=2,y=2,dir={0}},
-        {x=4,y=3,dir={2}},
-        {x=1,y=3,dir={0,2},     msg="tutorial_stackBasic_m3"},
-        {x=7,y=2,dir={2}},
-        {x=6,y=4,dir={0,2}},
-        {x=1,y=4,dir={1},       msg="tutorial_stackBasic_m4"},
-        {x=8,y=4,dir={1,3}},
-        {x=10,y=1,dir={1,3},    msg="tutorial_stackBasic_m5"},
-    },
-    { -- Quest 2
-        {x=3,y=1,dir={0}},
-        {x=6,y=2,dir={0,1,2,3}},
-        {x=3,y=2,dir={0,1,2,3}},
-        {x=1,y=2,dir={1,3},     msg="tutorial_stackBasic_m6"},
-        {x=8,y=2,dir={3}},
-    }
-}
-
+--[[
+    玩家放下块的位置根据AI评分，20行内场地的不稳定度在一定数值内时过关
+]]
 ---@type Techmino.Mode
 return {
     initialize=function()
@@ -40,118 +19,85 @@ return {
         lockDelay=1e99,
         deathDelay=0,
         nextSlot=3,
-        holdSlot=0,
-        seqType='none',
+        holdSlot=1,
+        -- seqType='none',
         soundEvent={
             countDown=NULL,
             drop=gameSoundFunc.drop_old,
         },
         event={
             playerInit=function(P)
-                P.modeData.waitTime=0
-                P.modeData.msgTimer=0
+                P.modeData.score=0
+                P.modeData.scoreDisp=0
+                P.modeData.maxScore=0
             end,
             gameStart=function(P)
                 P.spawnTimer=1500
-                P.modeData.msg=false
+                -- P.modeData._shadowCreated=nil
             end,
             always=function(P)
-                P.modeData.waitTime=P.modeData.waitTime+1
-                P.modeData.msgTimer=P.modeData.msgTimer+1
-            end,
-            afterResetPos=function(P)
-                local ans=P.modeData.quest==1 and correctPositions[1][12-#P.nextQueue] or correctPositions[2][9-#P.nextQueue]
-                local shape=TABLE.copy(Brik.getShape(P.hand.name),1)
-                if ans then
-                    if ans.dir[1]~=0 then
-                        shape=TABLE.rotate(shape,ans.dir[1]==1 and 'R' or ans.dir[1]==2 and ans.dir[1] and 'F' or 'L')
-                    end
-                    P.modeData.x,P.modeData.y=ans.x,ans.y
-                    P.modeData.dir=ans.dir
-                    P.modeData.shape=shape
-                    P.modeData.waitTime=0
-                    if ans.msg~=nil and P.modeData.msg~=ans.msg then
-                        P.modeData.msg=ans.msg
-                        P.modeData.msgTimer=0
-                    end
+                P.modeData.scoreDisp=MATH.expApproach(P.modeData.scoreDisp,P.modeData.score,0.0042)
+                P.modeData.maxScore=math.max(P.modeData.scoreDisp,P.modeData.maxScore)
+                if P.modeData.maxScore>=1 then
+                    P.modeData.score,P.modeData.scoreDisp,P.modeData.maxScore=1,1,1
+                    P:finish('taskfail')
                 end
             end,
-            afterDrop=function(P)
-                if P.modeData.shape and not (P.handX==P.modeData.x and P.handY==P.modeData.y and TABLE.find(P.modeData.dir,P.hand.direction)) then
-                    table.insert(P.nextQueue,1,P:getBrik(Brik.getID(P.hand.name)))
-                    P.hand=false
+            afterClear={
+                function(P,clear)
+                    P.modeData._clear=clear
+                end,
+            },
+            beforeDiscard=function(P)
+                if P.stat.line>=20 then
+                    P:finish('win')
+                    local normalClear=P.stat.clears[4]<MATH.sum(P.stat.clears)
+                    PROGRESS.setTutorialPassed(3,normalClear and 1 or 2)
+                    P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=normalClear and COLOR.lG or COLOR.lY,y=-30}
                 else
-                    P.modeData.shape=false
-                end
-            end,
-            afterLock=function(P)
-                if #P.nextQueue==0 then
-                    P.modeData.signal=
-                        mechLib.brik.clearRule.line.isFill(P,1) and
-                        mechLib.brik.clearRule.line.isFill(P,2) and
-                        mechLib.brik.clearRule.line.isFill(P,3) and
-                        mechLib.brik.clearRule.line.isFill(P,4) or false
-                end
-            end,
-            drawBelowMarks=function(P)
-                local m=P.modeData.shape
-                if type(m)=='table' then
-                    GC.setColor(1,1,1,.42*(math.min(P.modeData.waitTime/126,1)+.42*math.sin(P.modeData.waitTime*.01)))
-                    GC.setLineWidth(6)
-                    for y=1,#m do for x=1,#m[1] do
-                        local C=m[y][x]
-                        if C then
-                            GC.rectangle('line',(P.modeData.x+x-2)*40+7,-(P.modeData.y+y-1)*40+7,26,26)
-                        end
-                    end end
+                    local unstabality=0
+
+                    local HBC,VBC=AI.paperArtist.getBoundCount(P.field:export_table_simp())
+                    unstabality=unstabality+HBC*4+VBC*2
+
+                    local heights=AI.util.getColumnHeight(P.field._matrix)
+                    local diffHeights={}
+                    for i=1,#heights-1 do
+                        diffHeights[i]=math.min((heights[i+1]-heights[i])^2,12)
+                    end
+                    unstabality=unstabality+MATH.sum(diffHeights)
+
+                    P.modeData.score=unstabality/100
                 end
             end,
             drawOnPlayer=function(P)
-                if P.modeData.msg then
-                    FONT.set(35)
-                    GC.setColor(1,.75,.7,math.min(P.modeData.msgTimer/260,1))
-                    GC.mStr(Text[P.modeData.msg],0,-30)
-                end
+                local x,w,h=-320,40,355
+                local s=P.modeData.scoreDisp
+                GC.setColor(2*s,(2-2*s)*0.95,0)
+                GC.rectangle('fill',x,h/2,w,-h*s)
+                GC.setColor(COLOR.L)
+                GC.setLineWidth(2)
+                GC.rectangle('line',x,h/2,w,-h)
+                GC.setLineWidth(4)
+                GC.line(x,h/2-h*P.modeData.maxScore,x+w,h/2-h*P.modeData.maxScore)
+                FONT.set(60,'bold')
+                GC.mStr(math.max(20-P.stat.line,0),-300,226)
             end,
         },
         script={
-            {cmd='say',arg={duration='1.5s',text="@tutorial_stackBasic_1",y=-60}},
-
-            "setc quest,1",
-            "setc signal,nil",
-            "pushNext JIZOTLSJZTSI",
-            "wait signal",
-
-            "setc quest,2",
-            "setc signal,nil",
-            "pushNext LOOSTJZLI",
-            "wait signal",
-            "jeq win,signal,true",
-
-            "rewind:",
-            "pushNext JZLI",
-            "setc signal,nil",
-            {cmd=function(P)
-                P:setField{
-                    sudden=true,
-                    {2,0,0,0,0,0,0,0,5,0},
-                    {2,2,6,6,0,6,6,5,5,0},
-                    {5,2,6,6,4,6,6,2,5,0},
-                    {5,5,4,4,4,1,1,2,2,0},
-                }
-            end},
-            "wait signal",
-            "jeq rewind,signal,false",
-
-            "win:",
-            "sfx finish_win",
-
-            "setc msg,false",
-
-            {cmd='say',arg={duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}},
-            {cmd=function(P) if P.isMain then PROGRESS.setTutorialPassed(3,1) end end},
-            "finish win",
-        },
+            {cmd='say',arg={duration='3s',text="@tutorial_stackBasic_1",size=80,type='bold',style='beat',y=-60}},
+            "[3s]",
+            {cmd='say',arg={duration='10s',text="@tutorial_stackBasic_2",size=35,y=-60}},
+            "[10s]",
+            {cmd='say',arg={duration='10s',text="@tutorial_stackBasic_3",size=35,y=-60}},
+            "[10s]",
+            {cmd='say',arg={duration='10s',text="@tutorial_stackBasic_4",size=35,y=-60}},
+            "[10s]",
+            {cmd='say',arg={duration='10s',text="@tutorial_stackBasic_5",size=35,y=-60}},
+            -- {cmd='say',arg={duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}},
+            -- {cmd=function(P) if P.isMain then PROGRESS.setTutorialPassed(3,1) end end},
+            -- "finish win",
+    },
     }},
     result=autoBack_interior,
 }

@@ -3,6 +3,26 @@ local rem=table.remove
 local Util={}
 
 ---@param field Mat<boolean> Field (read)
+---@overload fun(field:Mat<boolean>, cx:number): number
+---@return number[]
+function Util.getColumnHeight(field,cx)
+    if cx then
+        local y=#field
+        while y>0 and not field[y][cx] do y=y-1 end
+        return y
+    else
+        local width=field[1] and #field[1] or 10
+        local fieldTop={}
+        for x=1,width do
+            local y=#field
+            while y>0 and not field[y][x] do y=y-1 end
+            fieldTop[x]=y
+        end
+        return fieldTop
+    end
+end
+
+---@param field Mat<boolean> Field (read)
 ---@param shape Mat<boolean>
 ---@param X number
 ---@return number Y, number[] colH the height of the piece if only check collision with this column
