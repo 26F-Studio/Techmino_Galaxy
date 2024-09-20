@@ -70,7 +70,7 @@ return {
                     for y=1,#m do for x=1,#m[1] do
                         local C=m[y][x]
                         if C then
-                            GC.rectangle('line',(P.modeData.hint_x+x-2)*40+7,-(P.modeData.hint_y+y-1)*40+7,26,26)
+                            GC.rectangle('line',(P.modeData.hint_x+x-2)*40+7,-(P.modeData.hint_y+y-1)*40+7,40-14,40-14)
                         end
                     end end
                 end
