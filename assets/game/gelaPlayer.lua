@@ -1564,7 +1564,7 @@ function GP:initialize()
     self.freshChance=self.settings.maxFreshChance
     self.freshTime=0
 
-    ---@type Techmino.Hand|false
+    ---@type Techmino.Piece|false
     self.hand=false
     self.handX=false
     self.handY=false

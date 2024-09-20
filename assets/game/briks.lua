@@ -8,7 +8,6 @@ local Brik={}
 ---@field name Techmino.Brik.Name
 ---@field id Techmino.Brik.ID
 ---@field shape Techmino.Brik.Shape
----@field color? number RGB9
 
 ---@type Map<Techmino.Brik>
 local briks={}

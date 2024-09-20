@@ -78,13 +78,13 @@
 
 ---@alias Techmino.RectPiece Mat<Techmino.Cell|false>
 
----@class Techmino.Hand
----@field id number
+---@class Techmino.Piece
+---@field id Techmino.Brik.ID
 ---@field shape number
----@field direction number
----@field name string
+---@field direction 0|1|2|3|number
+---@field name Techmino.Brik.Name
 ---@field matrix Techmino.RectPiece
----@field _origin Techmino.Hand
+---@field _origin Techmino.Piece
 ---
 ---@field size number Gela only
 
@@ -105,7 +105,7 @@
 
 ---@class Techmino.BrikMovement
 ---@field action string
----@field brik Techmino.Hand
+---@field brik Techmino.Piece
 ---@field x number
 ---@field y number
 ---@field immobile? boolean

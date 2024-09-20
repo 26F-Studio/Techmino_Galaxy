@@ -31,7 +31,7 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 ---@field decodeScript function
 ---@field checkScriptSyntax function
 ---
----@field hand Techmino.Hand|false Current controlling piece object
+---@field hand Techmino.Piece|false Current controlling piece object
 ---@field handX number
 ---@field handY number
 ---@field event table<string, Techmino.Event[]>

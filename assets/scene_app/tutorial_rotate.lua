@@ -155,14 +155,14 @@ function scene.keyDown(key,isRep)
                     if time==0 then
                         -- Just pass
                         endGame(1)
-                        PROGRESS.setTutorialPassed(6)
+                        -- PROGRESS.setTutorialPassed(6)
                     elseif level==4 then
                         -- Cleared
                         endGame(3)
                     else
                         -- Level Up
                         if level==1 then
-                            PROGRESS.setTutorialPassed(6)
+                            -- PROGRESS.setTutorialPassed(6)
                         end
                         level=level+1
                         time=parTime[level]
@@ -216,7 +216,7 @@ function scene.update(dt)
         if level>1 then
             if time==0 then
                 endGame(level>=3 and 2 or 1)
-                PROGRESS.setTutorialPassed(6)
+                -- PROGRESS.setTutorialPassed(6)
             end
         elseif totalTime>passTime then
             FMOD.effect('finish_timeout')
