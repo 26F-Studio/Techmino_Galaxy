@@ -43,19 +43,23 @@ return {
                     P.combo=0
                 else
                     P.modeData.protect=false
-                    P.modeData.score=math.min(P.modeData.score+P.modeData.multiplier*math.min(P.combo,10),99)
-                    PROGRESS.setInteriorScore('tuto_B3_score',P.modeData.score)
-                    if P.modeData.score==10 then
+                    local s1=P.modeData.score
+                    local s2=math.min(s1+P.modeData.multiplier*math.min(P.combo,10),99)
+                    P.modeData.score=s2
+                    PROGRESS.setInteriorScore('tuto_B3_score',s2)
+                    if s2>=99 then
+                        if not P.modeData.display then
+                            PROGRESS.setInteriorScore('tuto_B3_time',P.gameTime/1000,'<')
+                            P.modeData.display=STRING.time(P.gameTime/1000)
+                        end
+                    elseif s1<62 and s2>=62 then
+                        P.settings.holdSlot=0
+                        P.holdQueue[1]=nil
+                    elseif s1<10 and s2>=10 then
                         if not P.holdQueue[1] then
                             P.settings.holdSlot=0
                             P.modeData.multiplier=2
                         end
-                    elseif P.holdQueue[1] and P.modeData.score>=62 then
-                        P.settings.holdSlot=0
-                        P.holdQueue[1]=nil
-                    elseif P.modeData.score>=99 and not P.modeData.display then
-                        PROGRESS.setInteriorScore('tuto_B3_time',P.gameTime/1000,'<')
-                        P.modeData.display=STRING.time(P.gameTime/1000)
                     end
                 end
             end,
