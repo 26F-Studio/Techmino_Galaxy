@@ -61,6 +61,7 @@ local L={
     target_line="Line",
     target_time="Time",
     target_score="Score",
+    target_combo="Combo",
     target_ac="AC",
     target_hc="HC",
     target_tss="TSS",
@@ -121,7 +122,7 @@ local L={
     setting_fmod_DSPBufferLength="DSPBufferLength",
     setting_apply="Apply",
 
-    lang_note="Chinese is the original game language.\nAll translations are contributed by volunteers and it may not be 100% accurate\nThere are some terms not translated directly, please check Zictionary for more information.",
+    lang_note="Chinese is the original game language.\nAll translations are contributed by volunteers and it may not be 100% accurate\nThere are some terms not translated directly, please check Zictionary for more information",
 
     keyset_title="Keybinds",
     keyset_brik_moveLeft=   "Move Left",
@@ -302,35 +303,50 @@ local L={
     },
 
     -- Level
-    tutorial_basic="The Basics (WIP)",
-    tutorial_sequence="Next & Hold",
-    tutorial_stackBasic="Basic Stacking",
-    tutorial_finesseBasic="Basic Finesse (WIP)",
-    tutorial_finessePractice="Finesse Practice (WIP)",
-    tutorial_allclearPractice="All Clear Practice (WIP)",
-    tutorial_techrashPractice="Techrash Only",
-    tutorial_finessePlus="Elegant Stack (WIP)",
+    tutorial_basic="1. The Basics (WIP)",
+    tutorial_sequence="2. Next & Hold",
+    tutorial_stackBasic="3. Basic Stacking",
+    tutorial_finesseBasic="4. Basic Finesse (WIP)",
+    tutorial_finessePractice="5. Finesse Practice",
+    tutorial_allclearPractice="6. All Clear Practice (WIP)",
+    tutorial_techrashPractice="7. Techrash Practice",
+    tutorial_finessePlus="8. Elegant Stack (WIP)",
 
     tutorial_notpass="Failed",
     tutorial_pass="PASS",
 
     tutorial_basic_1="Welcome to Techmino!",
     tutorial_basic_2="1. The Basics",
-    tutorial_basic_3="Use the left and right keys to move your current piece.",
-    tutorial_basic_4="Press the hard drop key to place the piece on the board.",
-    tutorial_basic_5="You can also rotate the piece with the rotation keys.",
+    tutorial_basic_3="Use the left and right keys to move your current piece",
+    tutorial_basic_4="Press the hard drop key to place the piece on the board",
+    tutorial_basic_5="You can also rotate the piece with the rotation keys",
 
     tutorial_sequence_1="2. Next & Hold",
     tutorial_sequence_2="Oops, this piece doesn't seem to fit into the hole…",
-    tutorial_sequence_3="…but now you can see what pieces are coming next.",
-    tutorial_sequence_4="Use the Hold key to adjust the order of the pieces.",
+    tutorial_sequence_3="…but now you can see what pieces are coming next",
+    tutorial_sequence_4="Use the Hold key to adjust the order of the pieces",
 
     tutorial_stackBasic_1="3. Basic Stacking",
-    tutorial_stackBasic_2="Try to keep the top levels \"flat\", to make the danger meter on the left low.",
-    tutorial_stackBasic_3="This is the usual goal for beginners.",
-    tutorial_stackBasic_4="Pieces are often placed \"lying down\", not \"standing up\".",
-    tutorial_stackBasic_5="This ensures more choices for future pieces and avoiding making holes.",
+    tutorial_stackBasic_2="Try to keep the top levels \"flat\", to make the danger meter on the left low",
+    tutorial_stackBasic_3="This is the usual goal for beginners",
+    tutorial_stackBasic_4="Pieces are often placed \"lying down\", not \"standing up\"",
+    tutorial_stackBasic_5="This ensures more choices for future pieces and avoiding making holes",
 
     tutorial_basicFinesse_1="4. Basic Finesse",
+    tutorial_basicFinesse_2="",
+    tutorial_basicFinesse_3="",
+
+    tutorial_finessePractice_1="5. Finesse Practice",
+    tutorial_finessePractice_2="Minimize the number of key presses",
+    tutorial_finessePractice_par="Par",
+
+    tutorial_allclearPractice_1="6. All Clear Practice",
+    tutorial_allclearPractice_2="Do as much All Clear as possible",
+
+    tutorial_techrashPractice_1="7. Techrash Practice",
+    tutorial_techrashPractice_2="Clear as much Techrashes as possible",
+
+    tutorial_finessePlus_1="8. Elegant Stack",
+    tutorial_finessePlus_2="Use as less key-pressing as possible",
 }
 return L

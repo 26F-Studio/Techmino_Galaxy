@@ -13,14 +13,14 @@ local prgs=setmetatable({
         sprint=0,
         marathon=0,
         tutorial='0000', -- 0: Not Finished, 1: Passed, 2: Perfect Passed (unlock B side)
-        tuto_B1_score=0,
-        tuto_B2_score=0,
-        tuto_B3_score=0,
-        tuto_B4_score=0,
-        tuto_B1_time=false,
-        tuto_B2_time=false,
-        tuto_B3_time=false,
-        tuto_B4_time=false,
+        tuto5_score=0,
+        tuto6_score=0,
+        tuto7_score=0,
+        tuto8_score=0,
+        tuto5_time=false,
+        tuto6_time=false,
+        tuto7_time=false,
+        tuto8_time=false,
     },
     styles={
         brik=true,
@@ -155,14 +155,14 @@ function PROGRESS.fix()
     prgs.brik_stdMap=nil
     if type(prgs.interiorScore.tutorial)=='table' then
         prgs.interiorScore.tutorial='0000'
-        prgs.tuto_B1_score=0
-        prgs.tuto_B2_score=0
-        prgs.tuto_B3_score=0
-        prgs.tuto_B4_score=0
-        prgs.tuto_B1_time=false
-        prgs.tuto_B2_time=false
-        prgs.tuto_B3_time=false
-        prgs.tuto_B4_time=false
+        prgs.tuto5_score=0
+        prgs.tuto6_score=0
+        prgs.tuto7_score=0
+        prgs.tuto8_score=0
+        prgs.tuto5_time=false
+        prgs.tuto6_time=false
+        prgs.tuto7_time=false
+        prgs.tuto8_time=false
     end
 end
 

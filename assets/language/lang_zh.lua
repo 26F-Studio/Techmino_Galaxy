@@ -61,6 +61,7 @@ local L={
     target_line="行数",
     target_time="时间",
     target_score="分数",
+    target_combo="连击",
     target_ac="全消",
     target_hc="半全消",
     target_tss="TSS",
@@ -301,14 +302,14 @@ local L={
     },
 
     -- Level
-    tutorial_basic="基本规则 (WIP)",
-    tutorial_sequence="预览&暂存",
-    tutorial_stackBasic="基础堆叠",
-    tutorial_finesseBasic="基础极简 (WIP)",
-    tutorial_finessePractice="极简练习 (WIP)",
-    tutorial_allclearPractice="全消练习 (WIP)",
-    tutorial_techrashPractice="仅消四",
-    tutorial_finessePlus="优雅堆叠 (WIP)",
+    tutorial_basic="1.基本规则 (WIP)",
+    tutorial_sequence="2.预览&暂存",
+    tutorial_stackBasic="3.基础堆叠",
+    tutorial_finesseBasic="4.基础极简 (WIP)",
+    tutorial_finessePractice="5.极简练习",
+    tutorial_allclearPractice="6.全消练习 (WIP)",
+    tutorial_techrashPractice="7.消四练习",
+    tutorial_finessePlus="8.优雅堆叠 (WIP)",
 
     tutorial_notpass="Failed",
     tutorial_pass="PASS",
@@ -331,5 +332,20 @@ local L={
     tutorial_stackBasic_5="这能保证后续的选择空间，实现可持续发展",
 
     tutorial_basicFinesse_1="4. 基础极简",
+    tutorial_basicFinesse_2="",
+    tutorial_basicFinesse_3="",
+
+    tutorial_finessePractice_1="5.极简练习",
+    tutorial_finessePractice_2="减少按键次数",
+    tutorial_finessePractice_par="标准步数",
+
+    tutorial_allclearPractice_1="6.全消练习",
+    tutorial_allclearPractice_2="尽可能做全消",
+
+    tutorial_techrashPractice_1="7.消四练习",
+    tutorial_techrashPractice_2="尽可能做消四",
+
+    tutorial_finessePlus_1="8.优雅堆叠",
+    tutorial_finessePlus_2="用尽可能少的按键数",
 }
 return L

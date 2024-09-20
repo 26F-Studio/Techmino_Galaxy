@@ -26,8 +26,8 @@ return {
                 P.modeData.multiplier=1
                 P.modeData.protect=false
                 P.modeData.display=false
-                PROGRESS.setInteriorScore('tuto_B3_score',0)
-                PROGRESS.setInteriorScore('tuto_B3_time',2600,'<')
+                PROGRESS.setInteriorScore('tuto7_score',0)
+                PROGRESS.setInteriorScore('tuto7_time',2600,'<')
             end,
             afterClear=function(P,clear)
                 if clear.line<4 then
@@ -46,12 +46,11 @@ return {
                     local s1=P.modeData.score
                     local s2=math.min(s1+P.modeData.multiplier*math.min(P.combo,10),99)
                     P.modeData.score=s2
-                    PROGRESS.setInteriorScore('tuto_B3_score',s2)
+                    PROGRESS.setInteriorScore('tuto7_score',s2)
                     if s2>=99 then
-                        if not P.modeData.display then
-                            PROGRESS.setInteriorScore('tuto_B3_time',P.gameTime/1000,'<')
-                            P.modeData.display=STRING.time(P.gameTime/1000)
-                        end
+                        PROGRESS.setInteriorScore('tuto7_time',P.gameTime/1000,'<')
+                        P.modeData.display=STRING.time(P.gameTime/1000)
+                        P:finish('win')
                     elseif s1<62 and s2>=62 then
                         P.settings.holdSlot=0
                         P.holdQueue[1]=nil
@@ -71,12 +70,16 @@ return {
                 GC.setColor(1,1,1,.872)
                 if P.modeData.display then
                     GC.mStr(P.modeData.display,-300,60)
-                elseif PROGRESS.getInteriorScore('tuto_B3_score')<99 then
-                    GC.mStr(PROGRESS.getInteriorScore('tuto_B3_score'),-300,60)
+                elseif PROGRESS.getInteriorScore('tuto7_score')<99 then
+                    GC.mStr(PROGRESS.getInteriorScore('tuto7_score'),-300,60)
                 else
-                    GC.mStr(STRING.time(PROGRESS.getInteriorScore('tuto_B3_time')),-300,60)
+                    GC.mStr(STRING.time(PROGRESS.getInteriorScore('tuto7_time')),-300,60)
                 end
             end,
+        },
+        script={
+            {cmd='say',arg={duration='4.2s',text="@tutorial_techrashPractice_1",size=60,type='bold',y=-80}},
+            {cmd='say',arg={duration='4.2s',text="@tutorial_techrashPractice_2",size=30,y=60}},
         },
     }},
     result=autoBack_interior,
