@@ -172,6 +172,10 @@ end
 function P:rand(a,b)
     return a+self.RND:random()*(b-a)
 end
+---Random value
+function P:coin(a,b)
+    return self.RND:random()>.5 and a or b
+end
 function P:_getActionObj(a)
     if type(a)=='string' then
         return self._actions[a]
