@@ -122,7 +122,7 @@ local L={
     setting_fmod_DSPBufferLength="DSP缓冲区长度",
     setting_apply="应用",
 
-    lang_note="中文是本游戏的原始语言\n翻译由志愿者贡献，不保证100%准确\n部分术语可能没有翻译，请查阅词典获取更多信息",
+    lang_note="原始语言只有中文和英文\n翻译由志愿者贡献，不保证100%准确\n部分术语可能没有翻译，请查阅词典获取更多信息",
 
     keyset_title="键位绑定",
     keyset_brik_moveLeft=   "左移",

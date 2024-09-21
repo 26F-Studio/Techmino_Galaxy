@@ -122,7 +122,7 @@ local L={
     setting_fmod_DSPBufferLength="DSPBufferLength",
     setting_apply="Apply",
 
-    lang_note="Chinese is the original game language.\nAll translations are contributed by volunteers and it may not be 100% accurate\nThere are some terms not translated directly, please check Zictionary for more information",
+    lang_note="The original languages are Chinese & English.\nAll translations are contributed by volunteers and it may not be 100% accurate\nThere are some terms not translated directly, please check Zictionary for more information",
 
     keyset_title="Keybinds",
     keyset_brik_moveLeft=   "Move Left",
