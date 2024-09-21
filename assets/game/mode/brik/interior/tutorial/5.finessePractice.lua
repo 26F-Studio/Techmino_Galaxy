@@ -141,7 +141,9 @@ return {
                 if posSucc and keySucc then
                     -- Correct
                     P.modeData.finesseCombo=P.modeData.finesseCombo+1
-                    PROGRESS.setInteriorScore('tuto5_score',P.modeData.finesseCombo)
+                    if P.modeData.finesseCombo%3==0 then
+                        PROGRESS.setInteriorScore('tuto5_score',P.modeData.finesseCombo)
+                    end
                     if P.modeData.finesseCombo==99 then
                         PROGRESS.setInteriorScore('tuto5_time',P.modeData.finesseCombo)
                         P.modeData.display=STRING.time(P.gameTime/1000)
