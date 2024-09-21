@@ -40,7 +40,6 @@ return {
                 P:switchAction('rotate180',false)
                 P:switchAction('softDrop',false)
                 P:switchAction('hardDrop',false)
-                P:switchAction('holdPiece',false)
                 P.modeData.curKeyCount=0
                 P.modeData.allFinesse=true
             end,
@@ -70,13 +69,6 @@ return {
                 P.modeData.signal=P.handY==1
                 if P.handY~=1 then P.hand=false end
             end,
-            afterClear=function(P)
-                if P.stat.piece==5 then
-                    P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=P.modeData.allFinesse and COLOR.lY or COLOR.lG,y=-30}
-                    PROGRESS.setTutorialPassed(1,P.modeData.allFinesse and 2 or 1)
-                    P:finish('win')
-                end
-            end
         },
         script={
             {cmd='say',arg={duration='3s',text="@tutorial_basic_1",size=80,type='bold',style='beat',y=-60}},
@@ -202,6 +194,12 @@ return {
             "wait signal",
             "jeq quest5,signal,false",
             "sfx beep_rise",
+
+            {cmd=function(P)
+                P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=P.modeData.allFinesse and COLOR.lY or COLOR.lG,y=-30}
+                PROGRESS.setTutorialPassed(1,P.modeData.allFinesse and 2 or 1)
+                P:finish('win')
+            end},
         },
     }},
     result=autoBack_interior,

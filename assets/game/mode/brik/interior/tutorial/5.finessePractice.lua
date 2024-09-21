@@ -47,7 +47,7 @@ local function pushFinesseTarget(P,n)
     local piece=P.nextQueue[n]
     ---@cast piece Techmino.Piece
     local matrix=TABLE.copy(piece.matrix)
-    local dir=MATH.selectFreq(P:random(),{3,5,2,5})-1
+    local dir=MATH.selectFreq(P:random()*15,{3,5,2,5})-1
     if P:random()*62>P.modeData.finesseCombo then dir=(dir+1)%4 end
     for _=1,dir do matrix=TABLE.rotate(matrix,'R') end
     local xList=TABLE.copy(finesseData[piece.shape][dir+1])
@@ -99,9 +99,8 @@ return {
                 P.modeData.display=false
                 P.modeData.correct=true
                 P.modeData.protect=false
-
-                P:switchAction('holdPiece',false)
                 P:switchAction('softDrop',false)
+
                 P.modeData.targetPreview={}
                 for i=1,3 do pushFinesseTarget(P,i) end
 
@@ -187,7 +186,7 @@ return {
                 end
             end,
             drawOnPlayer=function(P)
-                GC.setColor(P.modeData.display and 0.62 or 1,1,1,P.modeData.protect and .5 or 1)
+                GC.setColor(1,1,1,P.modeData.protect and .5 or 1)
                 FONT.set(80) GC.mStr(P.modeData.finesseCombo,-300,-70)
                 FONT.set(30) GC.mStr(Text.target_combo,-300,20)
                 FONT.set(20)
@@ -206,7 +205,7 @@ return {
                     GC.print(P.modeData.curKeyCount,-340-5,140)
                     GC.print("/",-305-5,135)
                     GC.print(P.modeData.targetPreview[1].best,-280-5,140)
-                    FONT.set(30) GC.mStr(Text.tutorial_finessePractice_par,-300,205)
+                    FONT.set(30) GC.mStr(Text.tutorial_finessePractice_par,-300,200)
                 end
             end,
         },

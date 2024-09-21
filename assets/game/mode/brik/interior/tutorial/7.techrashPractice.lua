@@ -63,7 +63,7 @@ return {
                 end
             end,
             drawOnPlayer=function(P)
-                GC.setColor(P.modeData.display and 0.62 or 1,P.modeData.multiplier==1 and 1 or 0.62,1-P.combo*.26,P.modeData.protect and .5 or 1)
+                GC.setColor(1,P.modeData.multiplier==1 and 1 or 0.62,1-P.combo*.26,P.modeData.protect and .5 or 1)
                 FONT.set(80) GC.mStr(P.modeData.score,-300,-70)
                 FONT.set(30) GC.mStr(Text.target_score,-300,20)
                 FONT.set(20)

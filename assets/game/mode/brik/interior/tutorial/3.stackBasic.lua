@@ -17,7 +17,6 @@ return {
         deathDelay=0,
         nextSlot=3,
         holdSlot=1,
-        -- seqType='none',
         soundEvent={
             countDown=NULL,
             drop=gameSoundFunc.drop_old,
