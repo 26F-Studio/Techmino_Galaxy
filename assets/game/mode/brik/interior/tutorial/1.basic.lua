@@ -3,6 +3,7 @@
     一块一个pc，讲解基础操作
     （会故意放几个不可能无意按出极简的情况，作为里关卡入口）
 ]]
+local parScore={1e26,2,4,3,2}
 ---@type Techmino.Mode
 return {
     initialize=function()
@@ -19,6 +20,8 @@ return {
         bufferMove=false,
         bufferRotate=false,
         stopMoveWhenSpawn=true,
+        -- asd=120,
+        -- asp=10,
         spawnDelay=260,
         dropDelay=1e99,
         lockDelay=1e99,
@@ -38,61 +41,65 @@ return {
                 P:switchAction('softDrop',false)
                 P:switchAction('hardDrop',false)
                 P:switchAction('holdPiece',false)
+                P.modeData.curKeyCount=0
+                P.modeData.allFinesse=true
             end,
             gameStart=function(P)
-                P.spawnTimer=6500
+                P.spawnTimer=5500
             end,
-            afterDrop=function(P)
-                if P.modeData.quest==1 then
-                    if P.handY~=1 then P.hand=false end
-                    P.modeData.signal=P.handY==1
-                elseif P.modeData.quest==2 then
-                    if P.handY~=1 then
-                        P.hand=false
-                        P.modeData.signal=false
-                    elseif #P.nextQueue==0 then
-                        P.modeData.signal=true
-                    end
-                elseif P.modeData.quest==3 then
-                    if P.handY~=1 then
-                        P.hand=false
-                        P.modeData.signal=false
-                    elseif #P.nextQueue==0 then
-                        P.modeData.signal=true
+            afterResetPos=function(P)
+                P.modeData.curKeyCount=0
+            end,
+            beforePress=function(P,act)
+                if act=='hardDrop' then
+                    if P.modeData.quest and P.modeData.curKeyCount>parScore[P.modeData.quest] then
+                        P.modeData.allFinesse=false
                     end
                 else
-                    if P.handY==1 and P.hand.direction==2 then
-                        P.modeData.signal=true
-                    else
-                        P.hand=false
-                        P.modeData.signal=false
-                    end
+                    P.modeData.curKeyCount=P.modeData.curKeyCount+(
+                        act=='moveLeft' and 1 or
+                        act=='moveRight' and 1 or
+                        act=='rotateCW' and 1 or
+                        act=='rotateCCW' and 1 or
+                        act=='rotate180' and 2 or
+                        0
+                    )
                 end
             end,
+            afterDrop=function(P)
+                P.modeData.signal=P.handY==1
+                if P.handY~=1 then P.hand=false end
+            end,
+            afterClear=function(P)
+                if P.stat.piece==5 then
+                    P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=P.modeData.allFinesse and COLOR.lY or COLOR.lG,y=-30}
+                    PROGRESS.setTutorialPassed(1,P.modeData.allFinesse and 2 or 1)
+                    P:finish('win')
+                end
+            end
         },
         script={
             {cmd='say',arg={duration='3s',text="@tutorial_basic_1",size=80,type='bold',style='beat',y=-60}},
             "[3s]",
 
             "pushNext O",
-            {cmd='say',arg={duration='3s',text="@tutorial_basic_2",y=-60}},
+            {cmd='say',arg={duration='2s',text="@tutorial_basic_2",y=-60}},
+            "[2s]",
+
+            {cmd='say',arg={duration='6s',text="@tutorial_basic_3",size=50,y=-100}},
             "[3s]",
 
-            {cmd='say',arg={duration='12s',text="@tutorial_basic_3",size=50,y=-100}},
-            "[6s]",
-
-            {cmd='say',arg={duration='6s',text="@tutorial_basic_4",size=50,y=-30}},
+            {cmd='say',arg={duration='4s',text="@tutorial_basic_4",size=50,y=-30}},
 
             "switchAction hardDrop",
             "setc quest,1",
-            "setc signal,nil",
             "j skipFirstO",
 
             "setc quest,1",
             "quest1:",
-            "setc signal,nil",
             "pushNext O",
             "skipFirstO:",
+            "setc signal,nil",
             {cmd=function(P)
                 local d={
                     sudden=false,
@@ -100,19 +107,19 @@ return {
                     {8,8,8,8,8,8,8,8,8,8},
                     {8,8,8,8,8,8,8,8,8,8},
                 }
-                local r=math.random(5,6)+MATH.coin(-1,1)*math.random(2,3)
+                local r=P:random(4,6)
                 d[1][r],d[2][r],d[1][r+1],d[2][r+1]=0,0,0,0
                 P:setField(d)
             end},
             "wait signal",
             "jeq quest1,signal,false",
-            "sfx finish_win",
+            "sfx beep_rise",
 
             "setc quest,2",
             "quest2:",
             "setc signal,nil",
             "clearNext",
-            "pushNext OO",
+            "pushNext O",
             {cmd=function(P)
                 local d={
                     sudden=false,
@@ -120,45 +127,22 @@ return {
                     {8,8,8,8,8,8,8,8,8,8},
                     {8,8,8,8,8,8,8,8,8,8},
                 }
-                local r=math.random(5,6)+MATH.coin(-1,1)*math.random(2,3)
-                d[1][r],d[2][r],d[1][r+1],d[2][r+1]=0,0,0,0
-                r=(r+3)%10+1
-                if r==10 then r=2 end
+                local r=P:coin(3,7)
                 d[1][r],d[2][r],d[1][r+1],d[2][r+1]=0,0,0,0
                 P:setField(d)
             end},
             "wait signal",
             "jeq quest2,signal,false",
-            "sfx finish_win",
+            "sfx beep_rise",
+
+            "switchAction rotateCW",
+            "switchAction rotateCCW",
+            "switchAction rotate180",
+            {cmd='say',arg={duration='3s',text="@tutorial_basic_5",size=50,y=40}},
 
             "setc quest,3",
             "quest3:",
             "setc signal,nil",
-            "clearNext",
-            "pushNext OI",
-            {cmd=function(P)
-                local d={
-                    sudden=false,
-                    resetHand=false,
-                    {8,8,8,8,8,8,8,8,8,8},
-                    {8,8,8,8,8,8,8,8,8,8},
-                }
-                local r=math.random(5,6)+MATH.coin(-1,1)*math.random(2,3)
-                d[1][r],d[2][r],d[1][r+1],d[2][r+1]=0,0,0,0
-                local r2=r<=5 and r+2 or r-4
-                for i=0,3 do d[1][r2+i]=0 end
-                P:setField(d)
-            end},
-            "wait signal",
-            "jeq quest3,signal,false",
-            "sfx finish_win",
-
-            "switchAction rotateCW",
-            "switchAction rotateCCW",
-            "setc quest,4",
-            "quest4:",
-            "setc signal,nil",
-            {cmd='say',arg={duration='3s',text="@tutorial_basic_5",size=50,y=40}},
             "clearNext",
             "pushNext T",
             {cmd=function(P)
@@ -168,17 +152,56 @@ return {
                     {8,8,8,8,8,8,8,8,8,8},
                     {8,8,8,8,8,8,8,8,8,8},
                 }
-                local r=math.random(5,6)+MATH.coin(-1,1)*math.random(2,3)
-                d[1][r-1],d[1][r],d[1][r+1],d[2][r]=0,0,0,0
+                local r=P:coin(2,7)
+                d[1][r],d[1][r+1],d[1][r+2],d[2][r+1]=0,0,0,0
+                P:setField(d)
+            end},
+            "wait signal",
+            "jeq quest3,signal,false",
+            "sfx beep_rise",
+
+            "setc quest,4",
+            "quest4:",
+            "setc signal,nil",
+            "clearNext",
+            "pushNext J",
+            {cmd=function(P)
+                local d={
+                    sudden=false,
+                    resetHand=false,
+                    {8,8,8,8,8,8,8,8,8,8},
+                    {8,8,8,8,8,8,8,8,8,8},
+                    {8,8,8,8,8,8,8,8,8,8},
+                }
+                local r=P:coin(3,8)
+                d[1][r+1],d[1][r],d[2][r],d[3][r]=0,0,0,0
                 P:setField(d)
             end},
             "wait signal",
             "jeq quest4,signal,false",
-            "sfx finish_win",
+            "sfx beep_rise",
 
-            {cmd='say',arg={duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}},
-            {cmd=function(P) PROGRESS.setTutorialPassed(1,1) end},
-            "finish win",
+            "setc quest,5",
+            "quest5:",
+            "setc signal,nil",
+            "clearNext",
+            "pushNext I",
+            {cmd=function(P)
+                local d={
+                    sudden=false,
+                    resetHand=false,
+                    {8,8,8,8,8,8,8,8,8,8},
+                    {8,8,8,8,8,8,8,8,8,8},
+                    {8,8,8,8,8,8,8,8,8,8},
+                    {8,8,8,8,8,8,8,8,8,8},
+                }
+                local r=2^P:random(3)
+                for i=1,4 do d[i][r]=0 end
+                P:setField(d)
+            end},
+            "wait signal",
+            "jeq quest5,signal,false",
+            "sfx beep_rise",
         },
     }},
     result=autoBack_interior,

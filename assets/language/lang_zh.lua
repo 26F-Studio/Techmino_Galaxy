@@ -302,7 +302,7 @@ local L={
     },
 
     -- Level
-    tutorial_basic="1.基本规则 (WIP)",
+    tutorial_basic="1.基本规则",
     tutorial_sequence="2.预览&暂存",
     tutorial_stackBasic="3.基础堆叠",
     tutorial_finesseBasic="4.基础极简 (WIP)",
@@ -317,7 +317,7 @@ local L={
     tutorial_basic_1="欢迎来到Techmino",
     tutorial_basic_2="1. 基本规则",
     tutorial_basic_3="用左/右键移动当前方块",
-    tutorial_basic_4="按下硬降键放置当前方块",
+    tutorial_basic_4="按下硬降键放置方块，满行消除",
     tutorial_basic_5="你也可以旋转当前方块",
 
     tutorial_sequence_1="2. 预览&暂存",

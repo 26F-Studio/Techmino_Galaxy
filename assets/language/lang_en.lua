@@ -303,7 +303,7 @@ local L={
     },
 
     -- Level
-    tutorial_basic="1. The Basics (WIP)",
+    tutorial_basic="1. The Basics",
     tutorial_sequence="2. Next & Hold",
     tutorial_stackBasic="3. Basic Stacking",
     tutorial_finesseBasic="4. Basic Finesse (WIP)",
@@ -318,7 +318,7 @@ local L={
     tutorial_basic_1="Welcome to Techmino!",
     tutorial_basic_2="1. The Basics",
     tutorial_basic_3="Use the left and right keys to move your current piece",
-    tutorial_basic_4="Press the hard drop key to place the piece on the board",
+    tutorial_basic_4="Press the hard drop key to place piece, clearing filled lines",
     tutorial_basic_5="You can also rotate the piece with the rotation keys",
 
     tutorial_sequence_1="2. Next & Hold",
