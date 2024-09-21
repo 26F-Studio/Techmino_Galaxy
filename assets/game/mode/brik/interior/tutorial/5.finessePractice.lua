@@ -84,8 +84,6 @@ return {
         clearMovement='teleBack',
         particles=false,
         shakeness=0,
-        bufferMove=false,
-        bufferRotate=false,
         dropDelay=1e99,
         lockDelay=1e99,
         nextSlot=3,
