@@ -1,3 +1,4 @@
+local GC=GC
 local finesseData={
     {
         {1,2,1,0,1,2,2,1},
@@ -104,8 +105,14 @@ return {
                 P.modeData.targetPreview={}
                 for i=1,3 do pushFinesseTarget(P,i) end
 
-                PROGRESS.setInteriorScore('tuto7_score',0)
-                PROGRESS.setInteriorScore('tuto7_time',2600,'<')
+                PROGRESS.setInteriorScore('tuto5_score',0)
+                PROGRESS.setInteriorScore('tuto5_time',2600e3,'<')
+
+                if PROGRESS.getInteriorScore('tuto5_score')<99 then
+                    P.modeData.display=PROGRESS.getInteriorScore('tuto5_score').."/99"
+                else
+                    P.modeData.display=STRING.time(PROGRESS.getInteriorScore('tuto5_time')/1000)
+                end
             end,
             afterResetPos=function(P)
                 P.modeData.curKeyCount=0
@@ -142,7 +149,7 @@ return {
                         PROGRESS.setInteriorScore('tuto5_score',P.modeData.finesseCombo)
                     end
                     if P.modeData.finesseCombo==99 then
-                        PROGRESS.setInteriorScore('tuto5_time',P.modeData.finesseCombo)
+                        PROGRESS.setInteriorScore('tuto5_time',P.gameTime)
                         P.modeData.display=STRING.time(P.gameTime/1000)
                         P:finish('win')
                     end
@@ -186,27 +193,24 @@ return {
                 end
             end,
             drawOnPlayer=function(P)
+                GC.push('transform')
+                GC.translate(-300,0)
                 GC.setColor(1,1,1,P.modeData.protect and .5 or 1)
-                FONT.set(80) GC.mStr(P.modeData.finesseCombo,-300,-70)
-                FONT.set(30) GC.mStr(Text.target_combo,-300,20)
+                FONT.set(80) GC.mStr(P.modeData.finesseCombo,0,-90)
+                FONT.set(30) GC.mStr(Text.target_combo,0,-5)
                 FONT.set(20)
                 GC.setColor(1,1,1,.872)
-                if P.modeData.display then
-                    GC.mStr(P.modeData.display,-300,60)
-                elseif PROGRESS.getInteriorScore('tuto5_score')<99 then
-                    GC.mStr(PROGRESS.getInteriorScore('tuto5_score'),-300,60)
-                else
-                    GC.mStr(STRING.time(PROGRESS.getInteriorScore('tuto5_time')),-300,60)
-                end
+                GC.mStr(P.modeData.display,0,40)
 
                 if P.modeData.finesseCombo<=62 or P.modeData.protect then
                     GC.setColor(COLOR.lD)
                     FONT.set(50)
-                    GC.print(P.modeData.curKeyCount,-340-5,140)
-                    GC.print("/",-305-5,135)
-                    GC.print(P.modeData.targetPreview[1].best,-280-5,140)
-                    FONT.set(30) GC.mStr(Text.tutorial_finessePractice_par,-300,200)
+                    GC.print(P.modeData.curKeyCount,-40-5,120)
+                    GC.print("/",-5-5,115)
+                    GC.print(P.modeData.targetPreview[1].best,20-5,120)
+                    FONT.set(30) GC.mStr(Text.tutorial_finessePractice_par,0,175)
                 end
+                GC.pop()
             end,
         },
         script={

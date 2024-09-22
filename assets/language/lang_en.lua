@@ -59,6 +59,7 @@ local L={
 
     target_piece="Piece",
     target_line="Line",
+    target_key="Key",
     target_time="Time",
     target_score="Score",
     target_combo="Combo",

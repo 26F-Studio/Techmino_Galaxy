@@ -59,6 +59,7 @@ local L={
 
     target_piece="块数",
     target_line="行数",
+    target_key="按键数",
     target_time="时间",
     target_score="分数",
     target_combo="连击",

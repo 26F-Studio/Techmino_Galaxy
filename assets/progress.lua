@@ -16,11 +16,10 @@ local prgs=setmetatable({
         tuto5_score=0,
         tuto6_score=0,
         tuto7_score=0,
-        tuto8_score=0,
+        tuto8_keys=0,
         tuto5_time=false,
         tuto6_time=false,
         tuto7_time=false,
-        tuto8_time=false,
     },
     styles={
         brik=true,
@@ -158,11 +157,10 @@ function PROGRESS.fix()
         prgs.tuto5_score=0
         prgs.tuto6_score=0
         prgs.tuto7_score=0
-        prgs.tuto8_score=0
+        prgs.tuto8_keys=0
         prgs.tuto5_time=false
         prgs.tuto6_time=false
         prgs.tuto7_time=false
-        prgs.tuto8_time=false
     end
 end
 
