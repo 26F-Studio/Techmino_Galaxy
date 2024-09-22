@@ -14,7 +14,6 @@ return {
         spawnDelay=260,
         dropDelay=1e99,
         lockDelay=1e99,
-        deathDelay=0,
         nextSlot=0,
         holdSlot=0,
         seqType='none',
@@ -206,7 +205,10 @@ return {
             "jeq quest4,signal,false",
             "sfx beep_rise",
             {cmd=function(P)
-                P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=P.modeData.extra and COLOR.lY or COLOR.lG,y=-30}
+                P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}
+                if P.modeData.extra then
+                    P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='flicker',c=COLOR.Y,y=-30}
+                end
                 PROGRESS.setTutorialPassed(2,P.modeData.extra and 2 or 1)
                 P:finish('win')
             end},

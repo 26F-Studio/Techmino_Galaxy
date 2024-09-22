@@ -25,7 +25,6 @@ return {
         spawnDelay=260,
         dropDelay=1e99,
         lockDelay=1e99,
-        deathDelay=0,
         nextSlot=0,
         holdSlot=0,
         seqType='none',
@@ -110,7 +109,6 @@ return {
             "setc quest,2",
             "quest2:",
             "setc signal,nil",
-            "clearNext",
             "pushNext O",
             {cmd=function(P)
                 local d={
@@ -135,7 +133,6 @@ return {
             "setc quest,3",
             "quest3:",
             "setc signal,nil",
-            "clearNext",
             "pushNext T",
             {cmd=function(P)
                 local d={
@@ -155,7 +152,6 @@ return {
             "setc quest,4",
             "quest4:",
             "setc signal,nil",
-            "clearNext",
             "pushNext J",
             {cmd=function(P)
                 local d={
@@ -176,7 +172,6 @@ return {
             "setc quest,5",
             "quest5:",
             "setc signal,nil",
-            "clearNext",
             "pushNext I",
             {cmd=function(P)
                 local d={
@@ -196,7 +191,10 @@ return {
             "sfx beep_rise",
 
             {cmd=function(P)
-                P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=P.modeData.allFinesse and COLOR.lY or COLOR.lG,y=-30}
+                P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}
+                if P.modeData.allFinesse then
+                    P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='flicker',c=COLOR.Y,y=-30}
+                end
                 PROGRESS.setTutorialPassed(1,P.modeData.allFinesse and 2 or 1)
                 P:finish('win')
             end},

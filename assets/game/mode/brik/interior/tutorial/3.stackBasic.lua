@@ -14,7 +14,6 @@ return {
         spawnDelay=62,
         dropDelay=1e99,
         lockDelay=1e99,
-        deathDelay=0,
         nextSlot=3,
         holdSlot=1,
         soundEvent={
@@ -48,7 +47,10 @@ return {
                     P:finish('win')
                     local normalClear=P.stat.clears[4]<MATH.sum(P.stat.clears)
                     PROGRESS.setTutorialPassed(3,normalClear and 1 or 2)
-                    P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=normalClear and COLOR.lG or COLOR.lY,y=-30}
+                    P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}
+                    if not normalClear then
+                        P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='flicker',c=COLOR.Y,y=-30}
+                    end
                 else
                     local unstabality=0
 
