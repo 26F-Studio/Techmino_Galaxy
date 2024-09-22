@@ -1,10 +1,10 @@
-local availableActionMap={
-    moveLeft=true,
-    moveRight=true,
-    rotateCW=true,
-    rotateCCW=true,
-    rotate180=true,
-    holdPiece=true,
+local actionCosts={
+    moveLeft=1,
+    moveRight=1,
+    rotateCW=1,
+    rotateCCW=1,
+    rotate180=2,
+    holdPiece=1,
 }
 ---@type Techmino.Mode
 return {
@@ -35,9 +35,7 @@ return {
                 P.modeData.display=PROGRESS.getInteriorScore('tuto8_keys')
             end,
             beforePress=function(P,act)
-                if availableActionMap[act] then
-                    P.modeData.keyCount=P.modeData.keyCount+1
-                end
+                P.modeData.keyCount=P.modeData.keyCount+(actionCosts[act] or 0)
             end,
             afterClear=mechLib.brik.misc.lineClear_event_afterClear,
             drawOnPlayer=function(P)

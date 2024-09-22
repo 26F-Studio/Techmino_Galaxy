@@ -22,6 +22,9 @@ return {
             drop=gameSoundFunc.drop_old,
         },
         event={
+            playerInit=function(P)
+                P.modeData.quest=false
+            end,
             gameStart=function(P)
                 P.spawnTimer=1800
             end,
@@ -208,8 +211,10 @@ return {
                 P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}
                 if P.modeData.extra then
                     P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='flicker',c=COLOR.Y,y=-30}
+                    PROGRESS.setTutorialPassed(2,2)
+                else
+                    PROGRESS.setTutorialPassed(2,1)
                 end
-                PROGRESS.setTutorialPassed(2,P.modeData.extra and 2 or 1)
                 P:finish('win')
             end},
         },

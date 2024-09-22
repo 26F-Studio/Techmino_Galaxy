@@ -142,7 +142,7 @@ local function answer(option)
                     time=parTime[2]
                     FMOD.effect('beep_notice')
                 end
-                PROGRESS.setTutorialPassed(3)
+                -- PROGRESS.setTutorialPassed()
             elseif level==2 then
                 -- Cleared
                 endGame(2)

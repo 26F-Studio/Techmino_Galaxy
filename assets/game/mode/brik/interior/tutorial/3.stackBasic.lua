@@ -46,10 +46,12 @@ return {
                 if P.stat.line>=20 then
                     P:finish('win')
                     local normalClear=P.stat.clears[4]<MATH.sum(P.stat.clears)
-                    PROGRESS.setTutorialPassed(3,normalClear and 1 or 2)
                     P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}
                     if not normalClear then
                         P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='flicker',c=COLOR.Y,y=-30}
+                        PROGRESS.setTutorialPassed(3,2)
+                    else
+                        PROGRESS.setTutorialPassed(3,1)
                     end
                 else
                     local unstabality=0

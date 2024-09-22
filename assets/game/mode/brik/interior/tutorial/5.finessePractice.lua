@@ -43,8 +43,14 @@ local finesseData={
         {2,2,2,2,1,1,2,2,2,2},
     }, -- I
 }
+local actionCosts={
+    moveLeft=1,
+    moveRight=1,
+    rotateCW=1,
+    rotateCCW=1,
+    rotate180=2,
+}
 local function pushFinesseTarget(P,n)
-    ---@cast P Techmino.Player.Brik
     local piece=P.nextQueue[n]
     ---@cast piece Techmino.Piece
     local matrix=TABLE.copy(piece.matrix)
@@ -124,14 +130,7 @@ return {
                 P:freshGhost()
             end,
             beforePress=function(P,act)
-                P.modeData.curKeyCount=P.modeData.curKeyCount+(
-                    act=='moveLeft' and 1 or
-                    act=='moveRight' and 1 or
-                    act=='rotateCW' and 1 or
-                    act=='rotateCCW' and 1 or
-                    act=='rotate180' and 2 or
-                    0
-                )
+                P.modeData.curKeyCount=P.modeData.curKeyCount+(actionCosts[act] or 0)
             end,
             afterDrop=function(P)
                 local target=P.modeData.targetPreview[1]
