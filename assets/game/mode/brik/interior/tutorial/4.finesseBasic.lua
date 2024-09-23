@@ -163,7 +163,6 @@ return {
                     -- Correct
                     table.remove(P.modeData.targetPreview,1)
                     P.modeData.keySaved=P.modeData.keySaved+(target.best-P.modeData.curKeyCount)
-                    print(P.modeData.keySaved)
                     if #P.modeData.targetPreview==0 then
                         P.modeData.questFin=true
                         P.settings.spawnDelay=1e99

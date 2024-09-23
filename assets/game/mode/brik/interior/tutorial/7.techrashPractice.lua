@@ -26,8 +26,14 @@ return {
                 P.modeData.multiplier=1
                 P.modeData.protect=false
                 P.modeData.display=false
+                P.modeData.techrashTimer=0
                 PROGRESS.setInteriorScore('tuto7_score',0)
-                PROGRESS.setInteriorScore('tuto7_time',2600,'<')
+                PROGRESS.setInteriorScore('tuto7_time',2600e3,'<')
+            end,
+            always=function(P)
+                if P.modeData.techrashTimer>0 then
+                    P.modeData.techrashTimer=P.modeData.techrashTimer-1
+                end
             end,
             afterClear=function(P,clear)
                 if clear.line<4 then
@@ -45,10 +51,13 @@ return {
                     P.modeData.protect=false
                     local s1=P.modeData.score
                     local s2=math.min(s1+P.modeData.multiplier*math.min(P.combo,10),99)
+                    if s2-s1>1 then
+                        P.modeData.techrashTimer=P.modeData.techrashTimer+260*(s2-s1-1)
+                    end
                     P.modeData.score=s2
                     PROGRESS.setInteriorScore('tuto7_score',s2)
                     if s2>=99 then
-                        PROGRESS.setInteriorScore('tuto7_time',P.gameTime/1000,'<')
+                        PROGRESS.setInteriorScore('tuto7_time',P.gameTime,'<')
                         P.modeData.display=STRING.time(P.gameTime/1000)
                         P:finish('win')
                     elseif s1<62 and s2>=62 then
@@ -63,9 +72,11 @@ return {
                 end
             end,
             drawOnPlayer=function(P)
-                GC.setColor(1,P.modeData.multiplier==1 and 1 or 0.62,1-P.combo*.26,P.modeData.protect and .5 or 1)
+                GC.setColor(1,P.modeData.multiplier==1 and 1 or 0.62,1.1-P.combo*.126,P.modeData.protect and .5 or 1)
                 FONT.set(80) GC.mStr(P.modeData.score,-300,-70)
-                FONT.set(30) GC.mStr(Text.target_score,-300,20)
+                FONT.set(30) GC.mStr(P.modeData.techrashTimer>0 and Text.target_score or Text.target_techrash,-300,20)
+                GC.setColor(1,1,1,.62)
+                GC.mStr(Text.target_score,-300,20)
                 FONT.set(20)
                 GC.setColor(1,1,1,.872)
                 if P.modeData.display then
@@ -73,7 +84,7 @@ return {
                 elseif PROGRESS.getInteriorScore('tuto7_score')<99 then
                     GC.mStr(PROGRESS.getInteriorScore('tuto7_score'),-300,60)
                 else
-                    GC.mStr(STRING.time(PROGRESS.getInteriorScore('tuto7_time')),-300,60)
+                    GC.mStr(STRING.time(PROGRESS.getInteriorScore('tuto7_time')/1000),-300,60)
                 end
             end,
         },
