@@ -311,7 +311,7 @@ local L={
     tutorial_finessePractice="5. Finesse Practice",
     tutorial_allclearPractice="6. All Clear Practice (WIP)",
     tutorial_techrashPractice="7. Techrash Practice",
-    tutorial_finessePlus="8. Elegant Stack",
+    tutorial_finessePlus="8. Elegant Moves",
 
     tutorial_notpass="Failed",
     tutorial_pass="PASS",
@@ -362,7 +362,7 @@ local L={
     tutorial_techrashPractice_1="7. Techrash Practice",
     tutorial_techrashPractice_2="Clear as much Techrashes as possible",
 
-    tutorial_finessePlus_1="8. Elegant Stack",
+    tutorial_finessePlus_1="8. Elegant Moves",
     tutorial_finessePlus_2="Use as less key-pressing as possible",
 }
 return L

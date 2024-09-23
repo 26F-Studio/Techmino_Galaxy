@@ -310,7 +310,7 @@ local L={
     tutorial_finessePractice="5.极简练习",
     tutorial_allclearPractice="6.全消练习 (WIP)",
     tutorial_techrashPractice="7.消四练习",
-    tutorial_finessePlus="8.优雅堆叠",
+    tutorial_finessePlus="8.优雅操作",
 
     tutorial_notpass="Failed",
     tutorial_pass="PASS",
@@ -361,7 +361,7 @@ local L={
     tutorial_techrashPractice_1="7.消四练习",
     tutorial_techrashPractice_2="尽可能做消四",
 
-    tutorial_finessePlus_1="8.优雅堆叠",
-    tutorial_finessePlus_2="用尽可能少的按键数",
+    tutorial_finessePlus_1="8.优雅操作",
+    tutorial_finessePlus_2="尽可能少按键",
 }
 return L
