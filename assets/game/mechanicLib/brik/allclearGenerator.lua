@@ -181,11 +181,17 @@ local function printSeq(s)
     print(table.concat(s))
 end
 function allclearGenerator._shuffleSeq(P,seq,holdSlot)
+    local backup=TABLE.copy(seq)
     local pickArea=holdSlot or P.settings.holdSlot+1
-    for i=1,#seq-1 do
-        local pick=P:random(pickArea)
-        if pick>1 then
-            seq[i],seq[pick]=seq[pick],seq[i]
+    local pointers={}
+    for i=1,pickArea do pointers[i]=i end
+
+    for i=1,#backup do
+        local pick=P:random(#pointers)
+        seq[pointers[pick]]=backup[i]
+        pointers[pick]=i+#pointers
+        if pointers[pick]>#backup then
+            table.remove(pointers,pick)
         end
     end
 end
