@@ -23,7 +23,7 @@ local baseDict={
     {'term2: delays'},
     {'term2: death_condition'},
     {'term3: invisible'},
-    {'term3: cascade'},
+    {'term3: chain'},
     {'term3: spike'},
     {'term3: speeds'},
     {'term3: misaction'},

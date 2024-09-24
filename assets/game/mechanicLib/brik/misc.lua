@@ -332,7 +332,7 @@ do -- Obstacle
     end
 end
 
-do -- Cascade
+do -- Chain
     local function getSolidMat(P)
         local F=P.field
         local visitedMat={}
@@ -363,7 +363,7 @@ do -- Cascade
         return visitedMat
     end
     ---Check floating blocks
-    function misc.cascade_check(P)
+    function misc.chain_check(P)
         local F=P.field
         local solidMat=getSolidMat(P)
 
@@ -377,7 +377,7 @@ do -- Cascade
 
         return false
     end
-    function misc.cascade_fall(P)
+    function misc.chain_fall(P)
         local F=P.field
         local solidMat=getSolidMat(P)
 
@@ -387,20 +387,20 @@ do -- Cascade
                     local C=F:getCell(x,y)
                     F:setCell(false,x,y)
                     F:setCell(C,x,y-1)
-                    P:setCellBias(x,y-1,{y=1,lineBack=40/P.modeData.cascadeDelay})
+                    P:setCellBias(x,y-1,{y=1,lineBack=40/P.modeData.chainDelay})
                 end
             end
         end
         F:fresh()
     end
     ---Will be automatically added
-    function misc.cascade_autoEvent_always(P)
-        P.modeData.cascadeTimer=P.modeData.cascadeTimer-1
-        if P.modeData.cascadeTimer>0 then return end
+    function misc.chain_autoEvent_always(P)
+        P.modeData.chainTimer=P.modeData.chainTimer-1
+        if P.modeData.chainTimer>0 then return end
 
-        if misc.cascade_check(P) then
-            misc.cascade_fall(P)
-            P.modeData.cascadeTimer=P.modeData.cascadeDelay
+        if misc.chain_check(P) then
+            misc.chain_fall(P)
+            P.modeData.chainTimer=P.modeData.chainDelay
         else
             local fullLines=mechLib.brik.clearRule[P.settings.clearRule].getFill(P)
             if fullLines then
@@ -412,22 +412,22 @@ do -- Cascade
                 end
 
                 P.modeData.cascading=false
-                P.modeData.cascadeTimer=false
-                P.modeData.cascadeDelay=false
+                P.modeData.chainTimer=false
+                P.modeData.chainDelay=false
                 P.modeData.storedClearDelay=nil
                 return true
             end
         end
     end
-    ---Add this to enabled cascade, clearRule='line_float' needed
-    function misc.cascade_event_afterClear(P)
-        if misc.cascade_check(P) and not P.modeData.cascading then
+    ---Add this to enabled chain, clearRule='line_float' needed
+    function misc.chain_event_afterClear(P)
+        if misc.chain_check(P) and not P.modeData.cascading then
             P.modeData.cascading=true
-            P.modeData.cascadeDelay=math.max(math.floor(P.settings.clearDelay^.9),62)
-            P.modeData.cascadeTimer=0
+            P.modeData.chainDelay=math.max(math.floor(P.settings.clearDelay^.9),62)
+            P.modeData.chainTimer=0
             P.modeData.storedClearDelay=P.settings.clearDelay
             P.settings.clearDelay=1e99
-            P:addEvent('always',misc.cascade_autoEvent_always)
+            P:addEvent('always',misc.chain_autoEvent_always)
         end
     end
 end
