@@ -341,8 +341,8 @@ local MyRPC={
     RPC=RPC,
     presence={
         startTimestamp=os.time(),
-        details="Initializing...",
-        state="",
+        state="Initializing...",
+        details="",
         largeImageKey='',
         largeImageText="Techmino Galaxy",
         smallImageKey='',
@@ -382,19 +382,35 @@ else
 end
 
 ---@class DiscordRPC.presence
----@field startTimestamp number
----@field details string
----@field state string
----@field largeImageKey string
----@field largeImageText string
----@field smallImageKey string
----@field smallImageText string
+---@field state? string
+---@field details? string
+---@field startTimestamp? number
+---@field endTimestamp? number
+---@field largeImageKey? string
+---@field largeImageText? string
+---@field smallImageKey? string
+---@field smallImageText? string
+---@field partyId? string
+---@field partySize? number
+---@field partyMax? number
+---@field matchSecret? string
+---@field joinSecret? string
+---@field spectateSecret? string
+---@field instance? number
 
----@param new DiscordRPC.presence
-function MyRPC.update(new)
-    if new then
-        if type(new)=='string' then new={details=new} end
-        for k,v in next,new do MyRPC.presence[k]=v end
+---@overload fun()
+---@overload fun(state: DiscordRPC.presence)
+---@param state string
+---@param details string
+function MyRPC.update(state,details)
+    if state then
+        for k,v in next,
+            type(state)=='string'
+            and {state=state,details=details}
+            or state
+        do
+            MyRPC.presence[k]=v
+        end
     end
     if RPC then RPC.updatePresence(MyRPC.presence) end
 end

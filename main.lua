@@ -729,10 +729,7 @@ else
 end
 
 DiscordRPC=require'assets.discordRPC'
-TASK.new(function()
-    TASK.yieldT(6.26)
-    DiscordRPC.update("Online")
-end)
+DiscordRPC.update("Online")
 
 DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins/FMOD/Managers")
 
