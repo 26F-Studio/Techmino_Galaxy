@@ -666,6 +666,30 @@ SCN.addSwapStyle('fastFadeHeader',{
 SCN.scenes._console.widgetList.output.fontType='codepixel'
 SCN.scenes._console.widgetList.input.fontType='codepixel'
 
+do -- Power Manager
+    local warnThres={-1,2.6,6.26,14.2,26}
+    local warnCheck=5
+    TASK.new(function()
+        while true do
+            local state,pow=love.system.getPowerInfo()
+            if not pow then return end
+            if state=='charging' or state=='charged' then
+                while warnCheck<5 and pow>warnThres[warnCheck] do
+                    warnCheck=warnCheck+1
+                end
+            else
+                if pow<=warnThres[warnCheck] then
+                    repeat
+                        warnCheck=warnCheck-1
+                    until warnCheck==1 or pow>warnThres[warnCheck]
+                    MSG.new(({'check','error','warn','info'})[warnCheck],Text.batteryWarn[warnCheck])
+                end
+            end
+            TASK.yieldT(6.26)
+        end
+    end)
+end
+
 FMODLoadFunc()
 if tostring(FMOD.studio):find('NULL') then
     MSG.new('error',"FMOD initialization failed")
@@ -704,7 +728,6 @@ else
     end
 end
 
-TASK.new(task_powerManager)
 
 DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins/FMOD/Managers")
 
