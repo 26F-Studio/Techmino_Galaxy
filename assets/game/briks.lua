@@ -111,7 +111,6 @@ function Brik._binarize(shape)
     end
     if byte>0 then
         pStr=string.char(byte)..pStr
-        print(pStr:byte())
     end
     return pNum,pStr
 end
