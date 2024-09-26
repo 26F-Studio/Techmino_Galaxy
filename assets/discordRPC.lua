@@ -1,18 +1,69 @@
-local appId='1288524924042084523'
+local MyRPC={
+    appId='1288524924042084523', ---@type string Register your own app at https://discord.com/developers/applications
+    C=nil, ---@type ffi.namespace*
+    RPC=nil, ---@type DiscordRPC.RPC
+    presence={ --- @type DiscordRPC.presence
+        startTimestamp=os.time(),
+        state="Initializing...",
+        details="",
+        largeImageKey='',
+        largeImageText="Techmino Galaxy",
+        smallImageKey='',
+        smallImageText="",
+    },
+}
+
+---@overload fun()
+---@overload fun(state: DiscordRPC.presence)
+---@param state string
+---@param details string
+function MyRPC.update(state,details)
+    if state then
+        for k,v in next,
+        type(state)=='string'
+        and {state=state,details=details}
+        or state
+        do
+            MyRPC.presence[k]=v
+        end
+    end
+    if MyRPC.RPC then MyRPC.RPC.updatePresence(MyRPC.presence) end
+end
+
+---@class DiscordRPC.presence
+---@field state? string
+---@field details? string
+---@field startTimestamp? number
+---@field endTimestamp? number
+---@field largeImageKey? string
+---@field largeImageText? string
+---@field smallImageKey? string
+---@field smallImageText? string
+---@field partyId? string
+---@field partySize? number
+---@field partyMax? number
+---@field matchSecret? string
+---@field joinSecret? string
+---@field spectateSecret? string
+---@field instance? number
 
 local ffi=require"ffi"
 
-local suc,RPC_C=pcall(ffi.load,"discord-rpc")
-if not suc then
-    MSG.new('error',"Error in Loading Discord-RPC lib: "..RPC_C:match("[ -~]+"))
-    RPC_C=nil
-elseif not RPC_C then
-    MSG.new('error',"Error in Loading Discord-RPC lib")
+local Cname
+if SYSTEM=='Windows' then
+    local suc
+    suc,Cname=pcall(ffi.load,"discord-rpc")
+    if not (suc and Cname) then
+        LOG("Error in Loading Discord-RPC lib: "..Cname)
+        Cname=nil
+    end
+elseif MOBILE then
+    LOG("No Discord-RPC for mobile devices yet")
+else
+    LOG("Waiting Discord-RPC for other platforms")
 end
 
-local RPC
-if RPC_C then
-    RPC={}
+if Cname then
     ffi.cdef[[
         typedef struct DiscordRichPresence {
             const char* state;   /* max 128 bytes */
@@ -67,9 +118,13 @@ if RPC_C then
         void Discord_UpdateHandlers(DiscordEventHandlers* handlers);
     ]]
 
+    MyRPC.C=Cname
+    ---@class DiscordRPC.RPC
+    local RPC={}
+    MyRPC.RPC=RPC
+
     local function unpackDiscordUser(request)
-        return ffi.string(request.userId),ffi.string(request.username),
-            ffi.string(request.discriminator),ffi.string(request.avatar)
+        return ffi.string(request.userId),ffi.string(request.username),ffi.string(request.discriminator),ffi.string(request.avatar)
     end
 
     -- callback proxies
@@ -147,6 +202,7 @@ if RPC_C then
             checkStrArg(optionalSteamId,nil,"optionalSteamId",func)
         end
 
+        ---@class DiscordRPC.c.DiscordEventHandlers: ffi.cdata*
         local eventHandlers=ffi.new("struct DiscordEventHandlers")
         eventHandlers.ready=ready_proxy
         eventHandlers.disconnected=disconnected_proxy
@@ -155,16 +211,16 @@ if RPC_C then
         eventHandlers.spectateGame=spectateGame_proxy
         eventHandlers.joinRequest=joinRequest_proxy
 
-        RPC_C.Discord_Initialize(applicationId,eventHandlers,
+        Cname.Discord_Initialize(applicationId,eventHandlers,
             autoRegister and 1 or 0,optionalSteamId)
     end
 
     function RPC.shutdown()
-        RPC_C.Discord_Shutdown()
+        Cname.Discord_Shutdown()
     end
 
     function RPC.runCallbacks()
-        RPC_C.Discord_RunCallbacks()
+        Cname.Discord_RunCallbacks()
     end
     -- http://luajit.org/ext_ffi_semantics.html#callback :
     -- It is not allowed, to let an FFI call into a C function (runCallbacks)
@@ -202,6 +258,7 @@ if RPC_C then
 
         checkIntArg(presence.instance,8,"presence.instance",func,true)
 
+        ---@class DiscordRPC.c.DiscordRichPresence: ffi.cdata*
         local cpresence=ffi.new("struct DiscordRichPresence")
         cpresence.state=presence.state
         cpresence.details=presence.details
@@ -219,11 +276,11 @@ if RPC_C then
         cpresence.spectateSecret=presence.spectateSecret
         cpresence.instance=presence.instance or 0
 
-        RPC_C.Discord_UpdatePresence(cpresence)
+        Cname.Discord_UpdatePresence(cpresence)
     end
 
     function RPC.clearPresence()
-        RPC_C.Discord_ClearPresence()
+        Cname.Discord_ClearPresence()
     end
 
     local replyMap={
@@ -236,89 +293,42 @@ if RPC_C then
     function RPC.respond(userId,reply)
         checkStrArg(userId,nil,"userId","discordRPC.respond")
         assert(replyMap[reply],"Argument 'reply' to discordRPC.respond must be 'yes'|'no'|'ignore'")
-        RPC_C.Discord_Respond(userId,replyMap[reply])
+        Cname.Discord_Respond(userId,replyMap[reply])
     end
 
     -- garbage collection callback
     RPC.gcDummy=newproxy(true)
     getmetatable(RPC.gcDummy).__gc=function()
-        RPC.shutdown()
+        ---@diagnostic disable: undefined-field
         ready_proxy:free()
         disconnected_proxy:free()
         errored_proxy:free()
         joinGame_proxy:free()
         spectateGame_proxy:free()
         joinRequest_proxy:free()
+        ---@diagnostic enable: undefined-field
     end
 
     function RPC.ready(userId,username,discriminator,avatar)
-        print(string.format("Discord: ready (%s,%s,%s,%s)",userId,username,discriminator,avatar))
+        LOG(string.format("Discord: ready (%s,%s,%s,%s)",userId,username,discriminator,avatar))
     end
     function RPC.disconnected(errorCode,message)
-        print(string.format("Discord: disconnected (%d: %s)",errorCode,message))
+        LOG(string.format("Discord: disconnected (%d: %s)",errorCode,message))
     end
     function RPC.errored(errorCode,message)
-        print(string.format("Discord: error (%d: %s)",errorCode,message))
+        LOG(string.format("Discord: error (%d: %s)",errorCode,message))
     end
     function RPC.joinGame(joinSecret)
-        print(string.format("Discord: join (%s)",joinSecret))
+        LOG(string.format("Discord: join (%s)",joinSecret))
     end
     function RPC.spectateGame(spectateSecret)
-        print(string.format("Discord: spectate (%s)",spectateSecret))
+        LOG(string.format("Discord: spectate (%s)",spectateSecret))
     end
     function RPC.joinRequest(userId,username,discriminator,avatar)
-        print(string.format("Discord: join request (%s,%s,%s,%s)",userId,username,discriminator,avatar))
+        LOG(string.format("Discord: join request (%s,%s,%s,%s)",userId,username,discriminator,avatar))
         RPC.respond(userId,'yes')
     end
-    RPC.initialize(appId,true)
-end
-
-local MyRPC={
-    C=RPC_C,
-    RPC=RPC,
-    presence={
-        startTimestamp=os.time(),
-        state="Initializing...",
-        details="",
-        largeImageKey='',
-        largeImageText="Techmino Galaxy",
-        smallImageKey='',
-        smallImageText="",
-    },
-}
-
----@class DiscordRPC.presence
----@field state? string
----@field details? string
----@field startTimestamp? number
----@field endTimestamp? number
----@field largeImageKey? string
----@field largeImageText? string
----@field smallImageKey? string
----@field smallImageText? string
----@field partyId? string
----@field partySize? number
----@field partyMax? number
----@field matchSecret? string
----@field joinSecret? string
----@field spectateSecret? string
----@field instance? number
-
----@overload fun()
----@overload fun(state: DiscordRPC.presence)
----@param state string
----@param details string
-function MyRPC.update(state,details)
-    if state then
-        for k,v in next,
-        type(state)=='string'
-        and {state=state,details=details}
-        or state
-        do
-            MyRPC.presence[k]=v
-        end
-    end
-    if RPC then RPC.updatePresence(MyRPC.presence) end
+    RPC.initialize(MyRPC.appId,true)
 end
 
 return MyRPC
