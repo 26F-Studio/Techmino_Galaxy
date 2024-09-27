@@ -28,16 +28,10 @@ return {
     result=function()
         local P=GAME.mainPlayer
         if not P then return end
-        if P.finished=='AC' then
+        if P.finished=='win' then
             P.stat.line=40
             PROGRESS.setInteriorScore('marathon',30)
-            PROGRESS.setInteriorScore('sprint',
-                P.gameTime<60e3  and 200 or
-                P.gameTime<90e3  and MATH.interpolate(90e3,140,60e3,200,P.gameTime) or
-                P.gameTime<180e3 and MATH.interpolate(180e3,90,90e3,140,P.gameTime) or
-                P.gameTime<300e3 and MATH.interpolate(300e3,40,180e3,90,P.gameTime) or
-                40
-            )
+            PROGRESS.setInteriorScore('sprint',MATH.lLerp({200,140,90,40},MATH.ilLerp({60e3,90e3,180e3,300e3},P.gameTime)))
         else
             PROGRESS.setInteriorScore('marathon',P.stat.line*0.75)
             PROGRESS.setInteriorScore('sprint',P.stat.line)

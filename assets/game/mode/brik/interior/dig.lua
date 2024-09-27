@@ -29,13 +29,8 @@ return {
     }},
     result=function()
         local P=GAME.mainPlayer
-        if P and P.finished=='AC' then
-            PROGRESS.setInteriorScore('dig',
-                P.gameTime<=30e3  and 160 or
-                P.gameTime<=60e3  and MATH.interpolate(60e3,120,30e3,160,P.gameTime) or
-                P.gameTime<=120e3 and MATH.interpolate(120e3,90,60e3,120,P.gameTime) or
-                math.max(MATH.interpolate(200e3,40,120e3,90,P.gameTime),0)
-            )
+        if P and P.finished=='win' then
+            PROGRESS.setInteriorScore('dig',MATH.lLerp({160,120,90,40,0},MATH.ilLerp({30e3,60e3,120e3,200e3,260e3},P.gameTime)))
         end
     end,
     resultPage=function(time)
