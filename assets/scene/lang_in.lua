@@ -54,6 +54,13 @@ function scene.draw()
     GC.mStr(languages[curLang-curLang%1],800,60)
 end
 
+function scene.overDraw()
+    -- Glitch effect after III
+    if PROGRESS.get('main')>=3 then
+        drawInteriorGlitch()
+    end
+end
+
 local function _setLang(lid)
     if lid=='ja' then jaClickCount=jaClickCount+1 end
     if jaClickCount>=26 then

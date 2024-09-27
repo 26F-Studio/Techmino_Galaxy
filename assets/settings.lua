@@ -22,7 +22,7 @@ local settings={
         msaa=4,
 
         -- Gameplay
-        touchControl=false,
+        touchControl=MOBILE,
 
         -- Other
         powerInfo=true,

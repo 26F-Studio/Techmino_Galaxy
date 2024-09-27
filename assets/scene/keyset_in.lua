@@ -60,6 +60,13 @@ function scene.draw()
     end
 end
 
+function scene.overDraw()
+    -- Glitch effect after III
+    if PROGRESS.get('main')>=3 then
+        drawInteriorGlitch()
+    end
+end
+
 local function _selAct(mode,act)
     SCN.go('keyset_press','none',mode,act)
 end

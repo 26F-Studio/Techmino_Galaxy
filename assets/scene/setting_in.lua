@@ -27,7 +27,7 @@ function scene.keyDown(key)
     end
 end
 
-function scene.draw()
+function scene.overDraw()
     -- Notify new player about setting
     if settingHint then
         GC.replaceTransform(SCR.xOy)
@@ -35,6 +35,11 @@ function scene.draw()
         GC.setColor(.626,1,.626,.26+.1*math.sin(2.6*love.timer.getTime()))
         local W=scene.widgetList[MOBILE and 'setTouch' or 'setKey']
         GC.mRect('line',W._x,W._y,W.w+42,W.h+42)
+    end
+
+    -- Glitch effect after III
+    if PROGRESS.get('main')>=3 then
+        drawInteriorGlitch()
     end
 end
 

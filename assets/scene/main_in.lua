@@ -38,6 +38,37 @@ function scene.keyDown(key,isRep)
     return true
 end
 
+function scene.draw()
+    GC.replaceTransform(SCR.xOy_m)
+
+    -- Logo & verNum
+    local s3=PROGRESS.get('main')>=3
+    for i=1,3 do
+        if s3 then
+            if i==1 then
+                GC.translate(-2.6,0)
+                GC.setColorMask(true,false,false,true)
+            elseif i==2 then
+                GC.translate(2.6,0)
+                GC.setColorMask(false,true,false,true)
+            else
+                GC.translate(2.6,0)
+                GC.setColorMask(false,false,true,true)
+            end
+        end
+        GC.setColor(COLOR.L)
+        FONT.set(30)
+        GC.mStr(VERSION.appVer,0,-180)
+        FONT.set(100)
+        GC.scale(2)
+        GC.print("T",-215,-200)
+        GC.print("echmino",-165,-200)
+        GC.scale(.5)
+        if not s3 then break end
+    end
+    GC.setColorMask()
+end
+
 local function scoreColor(x,score)
     if score<160 then
         GC.setColor(1,1,1)
@@ -47,7 +78,7 @@ local function scoreColor(x,score)
         GC.rectangle('fill',x,36,320,7)
     end
 end
-function scene.draw()
+function scene.overDraw()
     GC.replaceTransform(SCR.xOy_m)
 
     -- Progress bar
@@ -57,22 +88,18 @@ function scene.draw()
         scoreColor(200, PROGRESS.getInteriorScore('marathon'))
     end
 
-    -- Logo & verNum
-    GC.setColor(PROGRESS.get('main')>=3 and COLOR.LD or COLOR.L)
-    FONT.set(30)
-    GC.mStr(VERSION.appVer,0,-180)
-    FONT.set(100)
-    GC.scale(2)
-    GC.print("T",-215,-200)
-    GC.print("echmino",-165,-200)
-
     -- Notify new player about setting
     if settingHint then
         GC.replaceTransform(SCR.xOy)
         GC.setLineWidth(6)
         GC.setColor(.626,1,.626,.26+.1*math.sin(2.6*love.timer.getTime()))
-        local W=scene.widgetList.GameSet
+        local W=scene.widgetList['GameSet']
         GC.mRect('line',W._x,W._y,W.w+42,W.h+42)
+    end
+
+    -- Glitch effect after III
+    if PROGRESS.get('main')>=3 then
+        drawInteriorGlitch()
     end
 end
 

@@ -6,19 +6,42 @@ function sureCheck(event)
     end
 end
 
+function drawInteriorGlitch()
+    GC.replaceTransform(SCR.origin)
+    local setc,rect=GC.setColor,GC.rectangle
+    local t=love.timer.getTime()
+    local cellSize=math.min(SCR.w,SCR.h)/26
+    for x=0,SCR.w,cellSize do
+        for y=0,SCR.h,cellSize do
+            setc(1,1,1,(math.floor(t*2.6)*(x*26+62)*(y*42+24))/10%2.6%.042)
+            rect('fill',x,y,cellSize,cellSize)
+        end
+    end
+
+    -- GC.scale(1,SCR.h)
+    -- local a=1/26
+    -- for i=0,26 do
+    --     setc(1,1,1,(math.floor(t*2.6+i/6)*(26+i))%0.026)
+    --     rect('fill',0,a*(i-t%1),SCR.w,a*.42)
+    -- end
+end
+
 local _bgmPlaying ---@type string?
 ---@param name Techmino.MusicName
----@param full? boolean
+---@param full? boolean|table
 ---@param noProgress? boolean
 function playBgm(name,full,noProgress)
     if name==_bgmPlaying then return end
     if not noProgress and not SONGBOOK[name].inside then
         PROGRESS.setBgmUnlocked(SONGBOOK[name].redirect or name,full and 2 or 1)
     end
-    if full then
+    if full==true then
         FMOD.music(name)
-    else
+    elseif not full then
         FMOD.music(name,{param={'intensity',0,true}})
+    else
+        ---@cast full table
+        FMOD.music(name,full)
     end
     _bgmPlaying=name
 end

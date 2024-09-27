@@ -195,7 +195,19 @@ function PROGRESS.applyCoolWaitTemplate()
 end
 function PROGRESS.applyInteriorBG() BG.set('none') end
 function PROGRESS.applyExteriorBG() BG.set(prgs.main==3 and 'space' or 'galaxy') end
-function PROGRESS.applyInteriorBGM() playBgm('blank',prgs.main~=1) end
+
+local function fuse()
+    repeat TASK.yieldT(6.26) until SCN.cur~='main_in'
+    FMOD.effect.keyOff('music_glitch')
+end
+function PROGRESS.applyInteriorBGM()
+    playBgm('blank',prgs.main~=1)
+    if prgs.main>=3 then
+        FMOD.effect('music_glitch')
+        TASK.removeTask_code(fuse)
+        TASK.new(fuse)
+    end
+end
 function PROGRESS.applyExteriorBGM()
     if prgs.main==3 then
         playBgm('vacuum')
