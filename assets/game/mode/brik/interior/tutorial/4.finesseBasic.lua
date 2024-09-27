@@ -241,7 +241,7 @@ return {
             "[5s]",
             {cmd=function(P)
                 P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}
-                if P.modeData.keySaved>12.6 then
+                if P.modeData.keySaved>=12 then -- Theoretically 13
                     P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='flicker',c=COLOR.Y,y=-30}
                     PROGRESS.setTutorialPassed(4,3)
                 elseif P.modeData.keySaved>6.26  then
