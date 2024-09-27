@@ -171,6 +171,11 @@ return {
                         if P.stat.piece<102.6 then
                             PROGRESS.setExteriorUnlock('sequence')
                         end
+                        return true
+                    end
+                end,
+                function(P)
+                    if P.stat.line>=40 then
                         P:delEvent('drawInField',mechLib.brik.misc.lineClear_event_drawInField)
                         if not P.modeData.infSprint_switch then
                             P:finish('other')
