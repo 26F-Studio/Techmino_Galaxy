@@ -243,11 +243,11 @@ return {
                 P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}
                 if P.modeData.keySaved>12.6 then
                     P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='flicker',c=COLOR.Y,y=-30}
-                    PROGRESS.setTutorialPassed(4,2)
+                    PROGRESS.setTutorialPassed(4,3)
                 elseif P.modeData.keySaved>6.26  then
                     P:say{duration='1.26s',text=P.modeData.keySaved.."/12",k=2,size=30,type='bold',style='fly',c=COLOR.lY,y=60}
                 else
-                    PROGRESS.setTutorialPassed(4,1)
+                    PROGRESS.setTutorialPassed(4,2)
                 end
                 P:finish('win')
             end},

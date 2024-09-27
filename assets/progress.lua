@@ -12,7 +12,7 @@ local prgs=setmetatable({
         dig=0,
         sprint=0,
         marathon=0,
-        tutorial='0000', -- 0: Not Finished, 1: Passed, 2: Perfect Passed (unlock B side)
+        tutorial='1000', -- 0:Not Unlocked  1: Not Finished,  2: Passed,  3: Perfect Passed (unlock B side)
         tuto5_score=0,
         tuto6_score=0,
         tuto7_score=0,
@@ -153,7 +153,7 @@ end
 function PROGRESS.fix()
     prgs.brik_stdMap=nil
     if type(prgs.interiorScore.tutorial)=='table' then
-        prgs.interiorScore.tutorial='0000'
+        prgs.interiorScore.tutorial='1000'
         prgs.tuto5_score=0
         prgs.tuto6_score=0
         prgs.tuto7_score=0
@@ -415,7 +415,7 @@ function PROGRESS.getTutorialPassed(n)
     if n then
         return tonumber(prgs.interiorScore.tutorial:sub(n,n))
     else
-        return not prgs.interiorScore.tutorial:find('0')
+        return not prgs.interiorScore.tutorial:find('[01]')
     end
 end
 function PROGRESS.getInteriorScore(mode) return prgs.interiorScore[mode] end
@@ -437,11 +437,9 @@ function PROGRESS.setMain(n)
         while prgs.main<n do
             prgs.main=prgs.main+1
             if prgs.main==2 then
-                for i=1,4 do
-                    prgs.interiorScore.tutorial[i]=math.max(prgs.interiorScore.tutorial[i],1)
-                end
+                prgs.interiorScore.tutorial=prgs.interiorScore.tutorial:gsub('0','1')
             elseif prgs.main==3 then
-                -- ?
+                prgs.interiorScore.tutorial=prgs.interiorScore.tutorial:gsub('[01]','2')
             elseif prgs.main==4 then
                 -- ?
             elseif prgs.main==5 then

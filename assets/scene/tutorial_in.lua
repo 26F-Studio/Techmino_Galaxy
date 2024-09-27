@@ -24,7 +24,9 @@ local function B(t)
     return WIDGET.new(w)
 end
 local function playTutorial(level)
-    if PROGRESS.getTutorialPassed(level)<2 then
+    local unlock=PROGRESS.getTutorialPassed(level)
+    if unlock==0 then
+    elseif unlock<=2 then
         SCN.go('game_in','none','brik/interior/tutorial/'..(
             level==1 and '1.basic' or
             level==2 and '2.sequence' or
@@ -47,16 +49,15 @@ function scene.load()
         if v.name then
             local id=tonumber(v.name:sub(-1))
             local state=PROGRESS.getTutorialPassed(id)
-            if state==2 then
+            if state==0 then
+                v.color='lD'
+                v.text="???"
+            elseif state<=2 then
+                v.color=state==1 and 'B' or 'lG'
+                v.text=LANG(buttonTexts[id])
+            else
                 v.color='lR'
                 v.text=LANG(buttonTexts[4+id])
-            else
-                if state==0 then
-                    v.color='B'
-                elseif state==1 then
-                    v.color='lG'
-                end
-                v.text=LANG(buttonTexts[id])
             end
         end
     end

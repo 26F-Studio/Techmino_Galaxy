@@ -49,10 +49,11 @@ return {
                     P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}
                     if not normalClear then
                         P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='flicker',c=COLOR.Y,y=-30}
-                        PROGRESS.setTutorialPassed(3,2)
+                        PROGRESS.setTutorialPassed(3,3)
                     else
-                        PROGRESS.setTutorialPassed(3,1)
+                        PROGRESS.setTutorialPassed(3,2)
                     end
+                    PROGRESS.setTutorialPassed(4,1)
                 else
                     local unstabality=0
 
