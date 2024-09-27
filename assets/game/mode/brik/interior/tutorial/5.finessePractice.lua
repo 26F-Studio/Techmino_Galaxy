@@ -84,7 +84,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'brik')
         GAME.setMain(1)
-        playBgm('space')
+        playBgm('space',true)
     end,
     settings={brik={
         skin='brik_interior',
