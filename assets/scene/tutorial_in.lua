@@ -84,7 +84,7 @@ end
 function scene.overDraw()
     -- Glitch effect after III
     if PROGRESS.get('main')>=3 then
-        drawInteriorGlitch()
+        drawGlitch()
     end
 end
 

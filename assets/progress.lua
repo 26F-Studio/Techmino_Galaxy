@@ -206,6 +206,7 @@ function PROGRESS.applyExteriorBG() BG.set(prgs.main==3 and 'space' or 'galaxy')
 local function fuse()
     repeat TASK.yieldT(6.26) until SCN.cur~='main_in'
     FMOD.effect.keyOff('music_glitch')
+    TASK.unlock('musicroom_glitchFX')
 end
 function PROGRESS.applyInteriorBGM()
     playBgm('blank',prgs.main~=1)

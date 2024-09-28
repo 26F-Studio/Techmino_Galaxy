@@ -131,6 +131,13 @@ local function searchMusic(str)
         musicListBox:select(bestID)
     end
 end
+local function timeBomb()
+    TASK.yieldT(26)
+    if TASK.getLock('musicroom_glitchFX') then
+        FMOD.effect.keyOff('music_glitch')
+        TASK.unlock('musicroom_glitchFX')
+    end
+end
 function scene.keyDown(key,isRep)
     scene.focus(true)
     local act=KEYMAP.sys:getAction(key)
@@ -140,7 +147,7 @@ function scene.keyDown(key,isRep)
         if FMOD.music.getPlaying() then
             local now=FMOD.music.tell()
             local dur=FMOD.music.getDuration()
-            FMOD.music.seek(key=='left' and max(now-5,0) or (now+5)%dur)
+            FMOD.music.seek(act=='left' and max(now-5,0) or (now+5)%dur)
         end
     elseif key=='backspace' or key=='delete' then
         searchStr=""
@@ -183,6 +190,11 @@ function scene.keyDown(key,isRep)
         elseif key=='`' and isAltPressed() then
             noProgress=true
             scene.load()
+        elseif key=='f3' then
+            if TASK.lock('musicroom_glitchFX') then
+                FMOD.effect('music_glitch')
+                TASK.new(timeBomb)
+            end
         end
     end
     return true
@@ -328,6 +340,12 @@ function scene.draw()
         gc.circle('line',-670,95,20)
         gc_setColor(1,1,1,.26)
         gc.arc('fill','pie',-670,95,20,-MATH.pi/2,-MATH.pi/2+autoplay/126*MATH.tau)
+    end
+end
+
+function scene.overDraw()
+    if TASK.getLock('musicroom_glitchFX') then
+        drawGlitch2()
     end
 end
 
