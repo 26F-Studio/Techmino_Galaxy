@@ -158,6 +158,11 @@ function PROGRESS.fix()
         prgs.interiorScore.tuto7_score,prgs.interiorScore.tuto7_time=0,2600e3
         prgs.interiorScore.tuto8_keys=260
     end
+    for k in next,prgs.interiorScore do
+        if k:find("tuto_B") then
+            prgs.interiorScore[k]=nil
+        end
+    end
     prgs.tutorial=nil
     prgs.tuto5_score,prgs.tuto5_time=nil,nil
     prgs.tuto6_score,prgs.tuto6_time=nil,nil
