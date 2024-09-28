@@ -14,12 +14,12 @@ local prgs=setmetatable({
         marathon=0,
         tutorial='1000', -- 0:Not Unlocked  1: Not Finished,  2: Passed,  3: Perfect Passed (unlock B side)
         tuto5_score=0,
+        tuto5_time=2600e3,
         tuto6_score=0,
+        tuto6_time=2600e3,
         tuto7_score=0,
-        tuto8_keys=0,
-        tuto5_time=false,
-        tuto6_time=false,
-        tuto7_time=false,
+        tuto7_time=2600e3,
+        tuto8_keys=260,
     },
     styles={
         brik=true,
@@ -151,17 +151,19 @@ function PROGRESS.load()
     end
 end
 function PROGRESS.fix()
-    prgs.brik_stdMap=nil
     if type(prgs.interiorScore.tutorial)=='table' then
         prgs.interiorScore.tutorial='1000'
-        prgs.tuto5_score=0
-        prgs.tuto6_score=0
-        prgs.tuto7_score=0
-        prgs.tuto8_keys=0
-        prgs.tuto5_time=false
-        prgs.tuto6_time=false
-        prgs.tuto7_time=false
+        prgs.interiorScore.tuto5_score,prgs.interiorScore.tuto5_time=0,2600e3
+        prgs.interiorScore.tuto6_score,prgs.interiorScore.tuto6_time=0,2600e3
+        prgs.interiorScore.tuto7_score,prgs.interiorScore.tuto7_time=0,2600e3
+        prgs.interiorScore.tuto8_keys=260
     end
+    prgs.tutorial=nil
+    prgs.tuto5_score,prgs.tuto5_time=nil,nil
+    prgs.tuto6_score,prgs.tuto6_time=nil,nil
+    prgs.tuto7_score,prgs.tuto7_time=nil,nil
+    prgs.tuto8_keys=nil
+    prgs.brik_stdMap=nil
 end
 
 --------------------------------------------------------------
@@ -497,7 +499,7 @@ end
 ---@param sign? '<'|'>' #default to `'>'` bigger=better, `'<'` smaller=better
 function PROGRESS.setInteriorScore(mode,score,sign)
     sign=sign or '>'
-    score=MATH.clamp(math.floor(score),0,200)
+    score=MATH.clamp(math.floor(score),0,260)
     if not prgs.interiorScore[mode] or sign=='>' and score>prgs.interiorScore[mode] or sign=='<' and score<prgs.interiorScore[mode] then
         prgs.interiorScore[mode]=score
         PROGRESS.save()

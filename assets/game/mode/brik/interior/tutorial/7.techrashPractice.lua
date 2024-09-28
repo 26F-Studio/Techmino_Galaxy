@@ -27,8 +27,6 @@ return {
                 P.modeData.protect=false
                 P.modeData.display=false
                 P.modeData.techrashTimer=0
-                PROGRESS.setInteriorScore('tuto7_score',0)
-                PROGRESS.setInteriorScore('tuto7_time',2600e3,'<')
             end,
             always=function(P)
                 if P.modeData.techrashTimer>0 then

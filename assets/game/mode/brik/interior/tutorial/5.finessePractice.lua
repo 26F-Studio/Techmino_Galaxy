@@ -111,9 +111,6 @@ return {
                 P.modeData.targetPreview={}
                 for i=1,3 do pushFinesseTarget(P,i) end
 
-                PROGRESS.setInteriorScore('tuto5_score',0)
-                PROGRESS.setInteriorScore('tuto5_time',2600e3,'<')
-
                 if PROGRESS.getInteriorScore('tuto5_score')<99 then
                     P.modeData.display=PROGRESS.getInteriorScore('tuto5_score').."/99"
                 else

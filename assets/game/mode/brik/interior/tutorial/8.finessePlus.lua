@@ -21,7 +21,7 @@ return {
         readyDelay=1,
         spawnDelay=62,
         dropDelay=2600,
-        lockDelay=2600,
+        lockDelay=1e99,
         soundEvent={
             countDown=NULL,
             drop=gameSoundFunc.drop_old,
@@ -30,8 +30,6 @@ return {
             playerInit=function(P)
                 P.modeData.target.line=20
                 P.modeData.keyCount=0
-
-                PROGRESS.setInteriorScore('tuto8_keys',2600,'<')
                 P.modeData.display=PROGRESS.getInteriorScore('tuto8_keys')
             end,
             beforePress=function(P,act)
