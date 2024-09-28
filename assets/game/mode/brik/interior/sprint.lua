@@ -33,8 +33,8 @@ return {
             PROGRESS.setInteriorScore('marathon',30)
             PROGRESS.setInteriorScore('sprint',MATH.lLerp({200,140,90,40},MATH.ilLerp({60e3,90e3,180e3,300e3},P.gameTime)))
         else
-            PROGRESS.setInteriorScore('marathon',P.stat.line*0.75)
-            PROGRESS.setInteriorScore('sprint',P.stat.line)
+            PROGRESS.setInteriorScore('marathon',MATH.clamp(P.stat.line*0.75,0,200))
+            PROGRESS.setInteriorScore('sprint',MATH.clamp(P.stat.line,0,200))
         end
     end,
     resultPage=function(time)

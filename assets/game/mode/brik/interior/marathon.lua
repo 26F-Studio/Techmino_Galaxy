@@ -57,8 +57,8 @@ return {
     result=function()
         local P=GAME.mainPlayer
         if not P then return end
-        PROGRESS.setInteriorScore('sprint',math.min(P.stat.line*4/3,40))
-        MATH.lLerp({0,40,90,120,160},MATH.ilLerp({0,40,80,130,200},P.stat.line))
+        PROGRESS.setInteriorScore('sprint',MATH.clamp(P.stat.line*4/3,0,40))
+        PROGRESS.setInteriorScore('marathon',MATH.lLerp({0,40,90,120,160},MATH.ilLerp({0,40,80,130,200},P.stat.line)))
     end,
     resultPage=function(time)
         local P=GAME.mainPlayer
