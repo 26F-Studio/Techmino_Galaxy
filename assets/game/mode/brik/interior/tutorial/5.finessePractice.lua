@@ -194,9 +194,8 @@ return {
                 GC.setColor(1,1,1,P.modeData.protect and .5 or 1)
                 FONT.set(80) GC.mStr(P.modeData.finesseCombo,0,-90)
                 FONT.set(30) GC.mStr(Text.target_combo,0,-5)
-                FONT.set(20)
                 GC.setColor(1,1,1,.872)
-                GC.mStr(P.modeData.display,0,40)
+                FONT.set(20) GC.mStr(P.modeData.display,0,40)
 
                 if P.modeData.finesseCombo<=62 or P.modeData.protect then
                     GC.setColor(COLOR.lD)

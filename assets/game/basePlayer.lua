@@ -173,8 +173,12 @@ function P:rand(a,b)
     return a+self.RND:random()*(b-a)
 end
 ---Random value
-function P:coin(a,b)
-    return self.RND:random()>.5 and a or b
+function P:coin(head,tail)
+    return self.RND:random()>.5 and head or tail
+end
+---Random boolean
+function P:roll(chance)
+    return self.RND:random()<(chance or .5)
 end
 function P:_getActionObj(a)
     if type(a)=='string' then

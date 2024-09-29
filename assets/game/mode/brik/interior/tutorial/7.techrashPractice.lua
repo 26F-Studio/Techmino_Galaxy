@@ -84,9 +84,8 @@ return {
                 FONT.set(30) GC.mStr(P.modeData.techrashTimer>0 and Text.target_score or Text.target_techrash,-300,20)
                 GC.setColor(1,1,1,.62)
                 GC.mStr(Text.target_score,-300,20)
-                FONT.set(20)
                 GC.setColor(1,1,1,.872)
-                GC.mStr(P.modeData.display,-300,60)
+                FONT.set(20) GC.mStr(P.modeData.display,-300,60)
             end,
         },
         script={
