@@ -114,7 +114,7 @@ return {
                 if PROGRESS.getInteriorScore('tuto5_score')<99 then
                     P.modeData.display=PROGRESS.getInteriorScore('tuto5_score').."/99"
                 else
-                    P.modeData.display=STRING.time(PROGRESS.getInteriorScore('tuto5_time')/1000)
+                    P.modeData.display={COLOR.lY,STRING.time(PROGRESS.getInteriorScore('tuto5_time')/1000)}
                 end
             end,
             afterResetPos=function(P)
@@ -141,13 +141,12 @@ return {
                 if posSucc and keySucc then
                     -- Correct
                     P.modeData.finesseCombo=P.modeData.finesseCombo+1
-                    if P.modeData.finesseCombo%3==0 then
-                        PROGRESS.setInteriorScore('tuto5_score',P.modeData.finesseCombo)
-                    end
                     if P.modeData.finesseCombo==99 then
+                        PROGRESS.setInteriorScore('tuto5_score',99)
                         PROGRESS.setInteriorScore('tuto5_time',P.gameTime)
-                        P.modeData.display=STRING.time(P.gameTime/1000)
+                        P.modeData.display={COLOR.lY,STRING.time(PROGRESS.getInteriorScore('tuto5_time')/1000)}
                         P:finish('win')
+                    else
                     end
                     table.remove(P.modeData.targetPreview,1)
                     P.modeData.correct=true
@@ -158,6 +157,7 @@ return {
                     table.insert(P.nextQueue,1,P.hand)
                     P.hand=nil
                     P:playSound(posSucc and 'rotate_failed' or 'move_failed',2)
+                    P.modeData.display=PROGRESS.getInteriorScore('tuto5_score').."/99"
                     if not P.modeData.protect then
                         P.modeData.finesseCombo=math.max(P.modeData.finesseCombo-6,0)
                         P.modeData.protect=true

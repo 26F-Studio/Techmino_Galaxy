@@ -27,6 +27,12 @@ return {
                 P.modeData.protect=false
                 P.modeData.display=false
                 P.modeData.techrashTimer=0
+
+                if PROGRESS.getInteriorScore('tuto7_score')>=99 then
+                    P.modeData.display=PROGRESS.getInteriorScore('tuto7_score').."/99"
+                else
+                    P.modeData.display={COLOR.lY,PROGRESS.getInteriorScore('tuto7_time')/1000}
+                end
             end,
             always=function(P)
                 if P.modeData.techrashTimer>0 then
@@ -56,15 +62,18 @@ return {
                     PROGRESS.setInteriorScore('tuto7_score',s2)
                     if s2>=99 then
                         PROGRESS.setInteriorScore('tuto7_time',P.gameTime,'<')
-                        P.modeData.display=STRING.time(P.gameTime/1000)
+                        P.modeData.display={COLOR.lY,PROGRESS.getInteriorScore('tuto7_time')/1000}
                         P:finish('win')
-                    elseif s1<62 and s2>=62 then
-                        P.settings.holdSlot=0
-                        P.holdQueue[1]=nil
-                    elseif s1<10 and s2>=10 then
-                        if not P.holdQueue[1] then
+                    else
+                        P.modeData.display=PROGRESS.getInteriorScore('tuto7_score').."/99"
+                        if s1<62 and s2>=62 then
                             P.settings.holdSlot=0
-                            P.modeData.multiplier=2
+                            P.holdQueue[1]=nil
+                        elseif s1<10 and s2>=10 then
+                            if not P.holdQueue[1] then
+                                P.settings.holdSlot=0
+                                P.modeData.multiplier=2
+                            end
                         end
                     end
                 end
@@ -77,13 +86,7 @@ return {
                 GC.mStr(Text.target_score,-300,20)
                 FONT.set(20)
                 GC.setColor(1,1,1,.872)
-                if P.modeData.display then
-                    GC.mStr(P.modeData.display,-300,60)
-                elseif PROGRESS.getInteriorScore('tuto7_score')<99 then
-                    GC.mStr(PROGRESS.getInteriorScore('tuto7_score'),-300,60)
-                else
-                    GC.mStr(STRING.time(PROGRESS.getInteriorScore('tuto7_time')/1000),-300,60)
-                end
+                GC.mStr(P.modeData.display,-300,60)
             end,
         },
         script={
