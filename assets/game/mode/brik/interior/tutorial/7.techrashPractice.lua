@@ -43,6 +43,8 @@ return {
                 if clear.line<4 then
                     if not P.modeData.protect then
                         P.modeData.protect=true
+                        PROGRESS.setInteriorScore('tuto7_score',P.modeData.score)
+                        P.modeData.display=PROGRESS.getInteriorScore('tuto7_score').."/99"
                         P.modeData.score=math.max(P.modeData.score-10,0)
                         P.settings.holdSlot=1
                         P.modeData.multiplier=1
@@ -59,13 +61,12 @@ return {
                         P.modeData.techrashTimer=P.modeData.techrashTimer+260*(s2-s1-1)
                     end
                     P.modeData.score=s2
-                    PROGRESS.setInteriorScore('tuto7_score',s2)
                     if s2>=99 then
+                        PROGRESS.setInteriorScore('tuto7_score',99)
                         PROGRESS.setInteriorScore('tuto7_time',P.gameTime,'<')
                         P.modeData.display={COLOR.lY,PROGRESS.getInteriorScore('tuto7_time')/1000}
                         P:finish('win')
                     else
-                        P.modeData.display=PROGRESS.getInteriorScore('tuto7_score').."/99"
                         if s1<62 and s2>=62 then
                             P.settings.holdSlot=0
                             P.holdQueue[1]=nil
