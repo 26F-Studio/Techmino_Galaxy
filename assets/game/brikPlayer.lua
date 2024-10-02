@@ -498,7 +498,7 @@ function BP:freshGhost()
             end
 
             -- 20G check
-            if (self.settings.dropDelay<=0 or self.downCharge and self.settings.asp==0) and self.ghostY<self.handY then
+            if (self.settings.dropDelay<=0 or self.downCharge and self.settings.adp==0) and self.ghostY<self.handY then
                 local dY=self.ghostY-self.handY
                 self:moveHand('drop',dY)
                 self:freshDelay('drop')
