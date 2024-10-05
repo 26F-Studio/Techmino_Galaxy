@@ -95,41 +95,48 @@ setmetatable(gameSoundFunc,{
         end
     end
 })
-
-gameSoundFunc.move                  =NULL
-gameSoundFunc.move_down             =NULL
-gameSoundFunc.move_failed           =NULL
-gameSoundFunc.touch                 =NULL
-gameSoundFunc.lock                  =NULL
-gameSoundFunc.tuck                  =NULL
-gameSoundFunc.rotate                =NULL
-gameSoundFunc.rotate_init           =NULL
-gameSoundFunc.rotate_locked         =NULL
-gameSoundFunc.rotate_corners        =NULL
-gameSoundFunc.rotate_failed         =NULL
-gameSoundFunc.rotate_special        =NULL
-gameSoundFunc.hold                  =NULL
-gameSoundFunc.hold_init             =NULL
-gameSoundFunc.drop                  =NULL
-gameSoundFunc.drop_old              =NULL
-gameSoundFunc.clear_all             =NULL
-gameSoundFunc.clear_half            =NULL
-gameSoundFunc.frenzy                =NULL
-gameSoundFunc.discharge             =NULL
-gameSoundFunc.suffocate             =NULL
-gameSoundFunc.desuffocate           =NULL
-gameSoundFunc.beep_rise             =NULL
-gameSoundFunc.beep_drop             =NULL
-gameSoundFunc.beep_notice           =NULL
-gameSoundFunc.finish_win            =NULL
-gameSoundFunc.finish_suffocate      =NULL
-gameSoundFunc.finish_lockout        =NULL
-gameSoundFunc.finish_topout         =NULL
-gameSoundFunc.finish_timeout        =NULL
-gameSoundFunc.finish_rule           =NULL
-gameSoundFunc.finish_exhaust        =NULL
-gameSoundFunc.finish_taskfail       =NULL
-gameSoundFunc.finish_other          =NULL
+do
+    local _someSFX=NULL
+    gameSoundFunc.move                  =_someSFX
+    gameSoundFunc.move_down             =_someSFX
+    gameSoundFunc.move_failed           =_someSFX
+    gameSoundFunc.touch                 =_someSFX
+    gameSoundFunc.lock                  =_someSFX
+    gameSoundFunc.tuck                  =_someSFX
+    gameSoundFunc.rotate                =_someSFX
+    gameSoundFunc.rotate_init           =_someSFX
+    gameSoundFunc.rotate_locked         =_someSFX
+    gameSoundFunc.rotate_corners        =_someSFX
+    gameSoundFunc.rotate_failed         =_someSFX
+    gameSoundFunc.rotate_special        =_someSFX
+    gameSoundFunc.hold                  =_someSFX
+    gameSoundFunc.hold_init             =_someSFX
+    gameSoundFunc.drop                  =_someSFX
+    gameSoundFunc.drop_old              =_someSFX
+    gameSoundFunc.clear_all             =_someSFX
+    gameSoundFunc.clear_half            =_someSFX
+    gameSoundFunc.frenzy                =_someSFX
+    gameSoundFunc.discharge             =_someSFX
+    gameSoundFunc.suffocate             =_someSFX
+    gameSoundFunc.desuffocate           =_someSFX
+    gameSoundFunc.beep_rise             =_someSFX
+    gameSoundFunc.beep_drop             =_someSFX
+    gameSoundFunc.beep_notice           =_someSFX
+    gameSoundFunc.finish_win            =_someSFX
+    gameSoundFunc.finish_suffocate      =_someSFX
+    gameSoundFunc.finish_lockout        =_someSFX
+    gameSoundFunc.finish_topout         =_someSFX
+    gameSoundFunc.finish_timeout        =_someSFX
+    gameSoundFunc.finish_rule           =_someSFX
+    gameSoundFunc.finish_exhaust        =_someSFX
+    gameSoundFunc.finish_taskfail       =_someSFX
+    gameSoundFunc.finish_other          =_someSFX
+    for k,v in next,gameSoundFunc do
+        if v==_someSFX then
+            gameSoundFunc[k]=function(vol) FMOD.effect(k,vol) end
+        end
+    end
+end
 
 function gameSoundFunc.countDown(num)
     if num==0 then -- 6, 3+6+6
@@ -407,6 +414,8 @@ function regFuncLib(obj,path)
     end
 end
 
+regFuncLib(gameSoundFunc,'gameSoundFunc')
+
 love_logo=GC.load{w=128,h=128,
     {'clear',0,0,0,0},
     {'move',64,64},
@@ -429,5 +438,3 @@ for x=0,127 do
     table.insert(transition_image,{'fRect',x,0,1,1})
 end
 transition_image=GC.load(transition_image)
-
-regFuncLib(gameSoundFunc,'gameSoundFunc')
