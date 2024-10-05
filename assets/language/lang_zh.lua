@@ -302,13 +302,13 @@ local L={
         menu_fastype="看起来你很喜欢打字",
     },
 
-    -- Level
+    -- Tutorial levels
     tutorial_basic="1.基本规则",
     tutorial_sequence="2.预览&暂存",
     tutorial_stackBasic="3.基础堆叠",
     tutorial_finesseBasic="4.基础极简",
     tutorial_finessePractice="5.极简练习",
-    tutorial_allclearPractice="6.全消练习 (WIP)",
+    tutorial_allclearPractice="6.全消练习",
     tutorial_techrashPractice="7.消四练习",
     tutorial_finessePlus="8.优雅操作",
 

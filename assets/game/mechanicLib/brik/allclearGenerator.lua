@@ -1,4 +1,3 @@
----@type Map<Techmino.Event.Brik>
 local allclearGenerator={}
 
 local pieceShapes do
@@ -195,7 +194,9 @@ function allclearGenerator._shuffleSeq(P,seq,holdSlot)
         end
     end
 end
-function allclearGenerator._getQuestion(P,args)
+---@return Mat<boolean> field, Techmino.Brik.Name[] seq
+function allclearGenerator._generateQuestion(P,args)
+    ---@cast P Techmino.Player.Brik
     local field={} -- 0-1 matrix
     local seq={} -- briks' names
     local failCount=0
@@ -283,20 +284,142 @@ function allclearGenerator._getQuestion(P,args)
         printSeq(seq)
     end
 
-    return field,seq
-end
-
-function allclearGenerator.newQuestion(P,args)
-    local field,seq=allclearGenerator._getQuestion(P,args)
     TABLE.reverse(field)
     TABLE.reverse(seq)
+
     for y=1,#field do
         for x=1,#field[y] do
             field[y][x]=field[y][x] and 8 or 0
         end
     end
-    P:setField(field)
-    P:pushNext(seq)
+
+    return field,seq
+end
+
+---@return Mat<number> field, Techmino.Brik.Name[] seq
+function allclearGenerator._getLibQuestion(P,args)
+    ---@cast P Techmino.Player.Brik
+    local field={} -- 0-1 matrix
+    local seq={} -- briks' names
+
+    local pool=require'assets.game.mechanicLib.brik.allclearQuestLib'
+    local basePool=pool.base[args.lib]
+    local seqPool=pool.sequence[args.lib]
+
+    local args1={
+        debugging=false,
+        holdUsed=false,
+        startPiece=false,
+        avoidRepeat=true,
+    }
+    if type(args)=='table' then TABLE.update(args1,args) end
+
+    local debugging=  args1.debugging
+    local holdUsed=   TABLE.getFirstValue(args1.holdUsed,P and P.settings.holdSlot)
+    local startPiece= args1.startPiece
+
+    -- Initialize
+    if not P.modeData.allclearBaseID then
+        P.modeData.allclearBaseID={}
+        P.modeData.allclearSeqHis={}
+        for lib in next,pool.base do
+            P.modeData.allclearBaseID[lib]=1
+            P.modeData.allclearSeqHis[lib]={}
+        end
+    end
+
+    local baseID=P.modeData.allclearBaseID[args.lib]
+    local seqHis=P.modeData.allclearSeqHis[args.lib]
+
+    field=basePool[baseID]
+    local attempts=0
+    local r
+    while true do
+        r=P:random(#seqPool)
+        attempts=attempts+1
+        if attempts>26 then break end
+        if not args1.avoidRepeat then break end
+        if not TABLE.find(seqHis,r) then
+            table.insert(seqHis,1,r)
+            seqHis[11]=nil
+            break
+        end
+    end
+    seq=seqPool[r]
+
+    field=TABLE.copy(field)
+    seq=STRING.atomize(seq)
+    if 1 or P:roll() then
+        for i=1,#seq do
+            seq[i]=
+                seq[i]=='Z' and 'S' or
+                seq[i]=='S' and 'Z' or
+                seq[i]=='J' and 'L' or
+                seq[i]=='L' and 'J' or
+                seq[i]
+        end
+        for y=1,#field do
+            TABLE.reverse(field[y])
+            for x=1,#field[y] do
+                local c=field[y][x]
+                field[y][x]=c==0 and 0 or c<=2 and 3-c or c<=4 and 7-c or c
+            end
+        end
+    end
+
+    if holdUsed==true then holdUsed=1 end
+    if holdUsed then
+        if debugging then
+            print("Pre-shuffle: ")
+            printSeq(seq)
+        end
+        allclearGenerator._shuffleSeq(P,seq,type(holdUsed)=='number' and holdUsed or holdUsed)
+    end
+
+    if debugging then
+        printField(field)
+        printSeq(seq)
+    end
+
+    P.modeData.allclearBaseID[args.lib]=baseID%#basePool+1
+
+    return field,seq
+end
+
+---@class Techmino.Mech.Brik.AllclearGenerator.arg1
+---@field debugging boolean
+---@field raw boolean
+---@field pieceCount integer
+---@field holdUsed boolean|integer
+---@field emptyTop boolean
+---@field mergeRate number
+---@field repRate number
+---@field growRate number
+---@field splitRate number
+---@field highRate number
+
+---@class Techmino.Mech.Brik.AllclearGenerator.arg2
+---@field lib 'box_3_4'|'pco'|'box_4_4'
+---@field debugging boolean
+---@field raw boolean
+---@field holdUsed boolean|integer
+---@field startPiece boolean
+---@field avoidRepeat boolean
+
+---@param args Techmino.Mech.Brik.AllclearGenerator.arg1|Techmino.Mech.Brik.AllclearGenerator.arg2
+function allclearGenerator.newQuestion(P,args)
+    local field,seq
+    if args.lib then
+        field,seq=allclearGenerator._getLibQuestion(P,args)
+    else
+        field,seq=allclearGenerator._generateQuestion(P,args)
+    end
+    if args.raw then
+        return field,seq
+    else
+        P:setField(field)
+        P:pushNext(seq)
+    end
 end
 
 return allclearGenerator

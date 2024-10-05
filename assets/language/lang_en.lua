@@ -303,13 +303,13 @@ local L={
         menu_fastype="You seems enjoy typing",
     },
 
-    -- Level
+    -- Tutorial levels
     tutorial_basic="1. The Basics",
     tutorial_sequence="2. Next & Hold",
     tutorial_stackBasic="3. Basic Stacking",
     tutorial_finesseBasic="4. Basic Finesse",
     tutorial_finessePractice="5. Finesse Practice",
-    tutorial_allclearPractice="6. All Clear Practice (WIP)",
+    tutorial_allclearPractice="6. All Clear Practice",
     tutorial_techrashPractice="7. Techrash Practice",
     tutorial_finessePlus="8. Elegant Moves",
 
