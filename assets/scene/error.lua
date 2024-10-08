@@ -15,6 +15,9 @@ local texts={
 local scene={}
 
 function scene.load()
+    ZENITHA.setMaxFPS(60)
+    ZENITHA.setUpdateFreq(62)
+    ZENITHA.setDrawFreq(26)
     FMOD.destroy()
     time=0
     err=ZENITHA.getErr('#') or {
