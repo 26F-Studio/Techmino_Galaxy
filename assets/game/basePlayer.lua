@@ -846,7 +846,7 @@ local function dump(self,L,t,path)
                 s=s..(s=='{' and k or ','..k)..v
             end
         else
-            LOG("Filtered: "..nPath)
+            -- print("Filtered: "..nPath)
         end
     end
     return s..'}'

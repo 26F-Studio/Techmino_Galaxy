@@ -1367,10 +1367,10 @@ function BP:setField(arg)
     for y=1,#arg do
         for x=1,w do
             if f[y][x] then
-                if f[y]   and f[y][x-1] then f[y][x].conn[f[y][x-1]]=0 end
-                if f[y]   and f[y][x+1] then f[y][x].conn[f[y][x+1]]=0 end
-                if f[y-1] and f[y-1][x] then f[y][x].conn[f[y-1][x]]=0 end
-                if f[y+1] and f[y+1][x] then f[y][x].conn[f[y+1][x]]=0 end
+                if f[y]   and f[y][x-1] then f[y][x].conn[f[y][x-1].cid]=0 end
+                if f[y]   and f[y][x+1] then f[y][x].conn[f[y][x+1].cid]=0 end
+                if f[y-1] and f[y-1][x] then f[y][x].conn[f[y-1][x].cid]=0 end
+                if f[y+1] and f[y+1][x] then f[y][x].conn[f[y+1][x].cid]=0 end
             end
         end
     end
