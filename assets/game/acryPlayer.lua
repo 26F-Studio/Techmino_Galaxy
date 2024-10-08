@@ -894,6 +894,9 @@ function AP:initialize()
 
     self:loadScript(self.settings.script)
 end
+function AP:unserialize_custom()
+    setmetatable(self.soundEvent,gameSoundFunc)
+end
 
 --------------------------------------------------------------
 

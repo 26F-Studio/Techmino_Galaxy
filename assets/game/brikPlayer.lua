@@ -2178,7 +2178,7 @@ function BP:unserialize_custom()
     self.field._width=f._width
     self.field._matrix=f._matrix
 
-    self.soundEvent=setmetatable({},gameSoundFunc)
+    setmetatable(self.soundEvent,gameSoundFunc)
 end
 
 --------------------------------------------------------------

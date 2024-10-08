@@ -1588,6 +1588,9 @@ function GP:initialize()
 
     self:loadScript(self.settings.script)
 end
+function GP:unserialize_custom()
+    setmetatable(self.soundEvent,gameSoundFunc)
+end
 
 --------------------------------------------------------------
 
