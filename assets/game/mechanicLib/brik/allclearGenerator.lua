@@ -302,7 +302,7 @@ function allclearGenerator._getLibQuestion(P,args)
     local field={} -- 0-1 matrix
     local seq={} -- briks' names
 
-    local pool=require'assets.game.mechanicLib.brik.allclearQuestLib'
+    local pool=require'datatable.allclearQuestLib'
     local basePool=pool.base[args.lib]
     local seqPool=pool.sequence[args.lib]
 
@@ -399,7 +399,7 @@ end
 ---@field highRate number
 
 ---@class Techmino.Mech.Brik.AllclearGenerator.arg2
----@field lib 'box_3_4'|'pco'|'box_4_4'
+---@field lib 'box3'|'pco'|'box4'|'pco4'
 ---@field debugging boolean
 ---@field raw boolean
 ---@field holdUsed boolean|integer

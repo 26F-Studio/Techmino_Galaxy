@@ -1,8 +1,14 @@
 local function newQuestion(P)
     ---@cast P Techmino.Player.Brik
-    local score=P.modeData.score
+    P.modeData.questCount=P.modeData.questCount+1
+    P.modeData.currentQuestType=
+        P.modeData.score<10 and (
+            'box_3'
+            -- P.modeData.questCount%2==1 and 'box_3' or 'pco3'
+        ) or
+        P.modeData.questCount%2==1 and 'box_4' or 'pco4'
     local field,seq=mechLib.brik.allclearGenerator.newQuestion(P,{
-        lib=score<10 and 'box_3_4' or score%2==0 and 'pco' or 'box_4_4',
+        lib=P.modeData.currentQuestType,
         raw=true,
     })
     P:setField(field)
@@ -38,9 +44,12 @@ return {
         },
         event={
             playerInit=function(P)
+                P.modeData.currentQuestType="box_3"
+                P.modeData.questCount=0
                 P.modeData.score=0
                 P.modeData.protect=false
                 P.modeData.display=false
+                P.modeData.lastPassTime=0
 
                 if PROGRESS.getInteriorScore('tuto6_score')<99 then
                     P.modeData.display=PROGRESS.getInteriorScore('tuto6_score').."/99"
@@ -58,8 +67,13 @@ return {
                 local ac=#P.field._matrix==0
                 if #P.nextQueue==0 or ac then
                     if ac then
+                        local timeUsed=(P.gameTime-P.modeData.lastPassTime)/1000
+                        P.modeData.lastPassTime=P.gameTime
+                        local parTime=P.modeData.currentQuestType=='box_3' and 6.26 or 10.33
+                        local scoreAdd=timeUsed<parTime and not P.modeData.protect and 2 or 1
+                        P:playSound(scoreAdd<=1 and 'beep_rise' or 'beep_notice')
+                        P.modeData.score=math.min(P.modeData.score+scoreAdd,99)
                         P.modeData.protect=false
-                        P.modeData.score=P.modeData.score+1
                         if P.modeData.score>=99 then
                             PROGRESS.setInteriorScore('tuto6_score',99)
                             PROGRESS.setInteriorScore('tuto6_time',P.gameTime,'<')
