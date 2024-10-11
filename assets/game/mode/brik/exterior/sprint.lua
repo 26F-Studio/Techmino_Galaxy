@@ -178,7 +178,7 @@ return {
                     if P.stat.line>=40 then
                         P:delEvent('drawInField',mechLib.brik.misc.lineClear_event_drawInField)
                         if not P.modeData.infSprint_switch then
-                            P:finish('other')
+                            P:finish('rule')
                         end
                         return true
                     end
