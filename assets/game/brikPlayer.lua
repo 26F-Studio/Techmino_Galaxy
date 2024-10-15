@@ -663,7 +663,7 @@ function BP:popNext(ifHold)
         self:brikDropped()
     end
 end
----@return Techmino.Cell
+---@return Techmino.Brik.Cell
 function BP:newCell(color,id)
     self.totalCellCount=self.totalCellCount+1
     return {
@@ -693,7 +693,7 @@ function BP:getBrik(shapeData)
     self.pieceCount=self.pieceCount+1
 
     -- Generate cell matrix from bool matrix
-    ---@cast shapeMat Mat<Techmino.Cell>
+    ---@cast shapeMat Mat<Techmino.Brik.Cell>
     for y=1,#shapeMat do for x=1,#shapeMat[1] do
         shapeMat[y][x]=shapeMat[y][x] and self:newCell(shapeColor,self.pieceCount)
     end end
@@ -1397,7 +1397,7 @@ function BP:changeFieldWidth(w,origPos)
         if not origPos then origPos=1 end
         local w0=self.settings.fieldW
         for y=1,#self.field:getHeight() do
-            local L=TABLE.new(false,w) ---@type Techmino.Cell[]
+            local L=TABLE.new(false,w) ---@type Techmino.Brik.Cell[]
             for x=1,w0 do
                 local newX=origPos+x-1
                 if newX>=1 and newX<=w then
@@ -1434,7 +1434,7 @@ end
 --------------------------------------------------------------
 -- Press & Release & Update & Render
 
-function BP:updateFrame()
+function BP:tickStep()
     local SET=self.settings
 
     -- Hard-drop lock

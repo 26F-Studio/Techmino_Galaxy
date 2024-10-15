@@ -960,7 +960,7 @@ end
 --------------------------------------------------------------
 -- Press & Release & Update & Render
 
-function GP:updateFrame()
+function GP:tickStep()
     local SET=self.settings
 
     -- Hard-drop lock

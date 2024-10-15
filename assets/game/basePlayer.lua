@@ -26,7 +26,7 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 ---@field texts Zenitha.Text
 ---@field particles Techmino.ParticleSystems
 ---
----@field updateFrame function
+---@field tickStep function
 ---@field scriptCmd function
 ---@field decodeScript function
 ---@field checkScriptSyntax function
@@ -505,7 +505,7 @@ function P:update(dt)
             self.time=self.time+1
         end
 
-        self:updateFrame()
+        self:tickStep()
     end
     for _,v in next,self.particles do v:update(dt) end
     self.texts:update(dt)

@@ -60,7 +60,9 @@
 ---@alias Techmino.Event.Gela string | {[1]:number, [2]:fun(P:Techmino.Player.Gela):...} | fun(P:Techmino.Player.Gela):...
 ---@alias Techmino.Event.Acry string | {[1]:number, [2]:fun(P:Techmino.Player.Acry):...} | fun(P:Techmino.Player.Acry):...
 
----@class Techmino.Cell
+
+
+---@class Techmino.Brik.Cell
 ---@field id number piece id
 ---@field did number drop id (exist when hand piece locks)
 ---@field cid string cell id (unique) (already exist when piece display in next queue)
@@ -76,7 +78,7 @@
 ---@field diggable boolean Gela only
 ---@field connClear boolean Gela only
 
----@alias Techmino.RectPiece Mat<Techmino.Cell|false>
+---@alias Techmino.RectPiece Mat<Techmino.Brik.Cell|false>
 
 ---@class Techmino.Piece
 ---@field id Techmino.Brik.ID

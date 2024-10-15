@@ -59,7 +59,7 @@ return {
             beforeClear={
                 function(P,lines) -- Infinite Sprint Core
                     local CLEAR=P.modeData.infSprint_clears
-                    ---@type Techmino.Cell[][]
+                    ---@type Techmino.Brik.Cell[][]
                     local mat=P.field._matrix
                     for i=1,#lines do
                         local l={[0]=P.time}

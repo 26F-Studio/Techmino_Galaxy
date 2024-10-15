@@ -9,11 +9,11 @@ local function _getTime() return SKIN.time end
 ---@field base string
 ---@field getTime function
 ---@field drawFieldBackground fun(fieldW:number)
----@field drawFieldCell fun(C:Techmino.Cell, F:Techmino.RectField, x:number, y:number)
----@field drawGhostCell fun(C:Techmino.Cell, B:Techmino.RectPiece, x:number, y:number)
----@field drawHandCellStroke fun(C:Techmino.Cell, B:Techmino.RectPiece, x:number, y:number)
----@field drawHandCell fun(C:Techmino.Cell, B:Techmino.RectPiece, x:number, y:number)
----@field drawFloatHoldCell fun(C:Techmino.Cell, disabled:boolean, B:Techmino.RectPiece, x:number, y:number)
+---@field drawFieldCell fun(C:Techmino.Brik.Cell, F:Techmino.RectField, x:number, y:number)
+---@field drawGhostCell fun(C:Techmino.Brik.Cell, B:Techmino.RectPiece, x:number, y:number)
+---@field drawHandCellStroke fun(C:Techmino.Brik.Cell, B:Techmino.RectPiece, x:number, y:number)
+---@field drawHandCell fun(C:Techmino.Brik.Cell, B:Techmino.RectPiece, x:number, y:number)
+---@field drawFloatHoldCell fun(C:Techmino.Brik.Cell, disabled:boolean, B:Techmino.RectPiece, x:number, y:number)
 ---@field drawFloatHoldMark fun(n:number, disabled:boolean)
 ---@field drawHeightLines fun(fieldW:number, maxSpawnH:number, spawnH:number, lockoutH:number, deathH:number, voidH:number)
 ---@field drawFieldBorder fun()
@@ -22,9 +22,9 @@ local function _getTime() return SKIN.time end
 ---@field drawGarbageBuffer fun(garbageBuffer:table)
 ---@field drawLockDelayIndicator fun(freshCondition:string, freshChance:number, maxFreshTime:number, freshTime:number)
 ---@field drawNextBorder fun(slot:number)
----@field drawNextCell fun(C:Techmino.Cell, disabled:boolean, B:Techmino.RectPiece, x:number, y:number)
+---@field drawNextCell fun(C:Techmino.Brik.Cell, disabled:boolean, B:Techmino.RectPiece, x:number, y:number)
 ---@field drawHoldBorder fun(mode:string, slot:number)
----@field drawHoldCell fun(C:Techmino.Cell, disabled:boolean, B:Techmino.RectPiece, x:number, y:number)
+---@field drawHoldCell fun(C:Techmino.Brik.Cell, disabled:boolean, B:Techmino.RectPiece, x:number, y:number)
 ---@field drawTime fun(time:number)
 ---@field drawStartingCounter fun(readyDelay:number)
 ---@field drawInfoPanel fun(x:number, y:number, w:number, h:number) Only called by mode
@@ -32,7 +32,7 @@ local function _getTime() return SKIN.time end
 ---@class Techmino.Skin.Brik: Techmino.Skin
 
 ---@class Techmino.Skin.Gela: Techmino.Skin
----@field drawFieldCell fun(C:Techmino.Cell, F:Techmino.RectField, x:number, y:number, connH?:number)
+---@field drawFieldCell fun(C:Techmino.Brik.Cell, F:Techmino.RectField, x:number, y:number, connH?:number)
 
 ---@class Techmino.Skin.Acry: Techmino.Skin
 ---@field drawSwapCursor fun(cx:number, cy:number, lock:boolean)
