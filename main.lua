@@ -728,6 +728,8 @@ else
     end
 end
 
+love.joystick.loadGamepadMappings('datatable/gamecontrollerdb.txt')
+
 DiscordRPC=require'assets.discordRPC'
 DiscordRPC.update("Online")
 
