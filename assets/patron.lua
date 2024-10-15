@@ -151,4 +151,9 @@ return {
     {score=25,name="电蜥蜴"},
     {score=25,name="浮芙fufu"},
     {score=25,name="NOname_awa"},
+    {score=25,name="liaotianhao"},
+    {score=25,name="Aquamarine"},
+    {score=25,name="jacky"},
+    {score=25,name="方块丶小刘"},
+    {score=25,name="DX3906"},
 }
