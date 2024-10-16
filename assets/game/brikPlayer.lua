@@ -1972,7 +1972,7 @@ local baseEnv={
     clearRule='line',
     clearMovement='lineBack',
 
-    -- Sequence
+    -- Generator
     seqType='bag7', ---@type Techmino.Mech.Brik.SequenceName
     nextSlot=6,
     holdSlot=1,

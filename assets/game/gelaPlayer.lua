@@ -1405,7 +1405,7 @@ local baseEnv={
     -- Clear
     clearGroupSize=4,
 
-    -- Sequence
+    -- Generator
     seqType='twin_2S4C',
     maxOpeningLength=2,
     maxOpeningColor=3,
