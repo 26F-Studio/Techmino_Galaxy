@@ -7,7 +7,7 @@ local MyRPC={
         state="Initializing...",
         details="",
         largeImageKey='',
-        largeImageText="Techmino Galaxy",
+        largeImageText="Techmino: Galaxy",
         smallImageKey='',
         smallImageText="",
     },
