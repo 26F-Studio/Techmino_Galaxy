@@ -1,15 +1,17 @@
-# Techmino
+# ***Techmino: Galaxy***
 
-## 注意：本游戏目前处于开发阶段，故不提供给玩家直接下载的渠道。
-## 不建议在公开区域讨论本项目中随时可能变化的内容，感谢配合。
+> ## 注意：本app目前处于开发阶段，故不提供直接下载的渠道。
 
-## ATTENTION: This game is currently under some heavy developments. Therefore, we do not provide any public release currently.
-## Not recommened to talk about features which can be changed at any time. Thank you for your cooperation.
+> ## ATTENTION: This game is currently under some heavy developments. Therefore, we do not provide any public release currently.
 
-**Techmino: Galaxy GitHub 官方仓库**
+> ## 不建议在公开区域讨论本项目中随时可能变化的内容，感谢配合！
 
-**The Official Repository of Techmino: Galaxy on GitHub.**
+> ## Not recommened to talk about features which can be changed at any time. Thank you for your cooperation.
 
-给你几乎全新的，更理想的，同时更有趣味的Techmino体验。
+*GitHub 官方仓库*
 
-A brand new, more ideal, and more fascinating Techmino experience.
+*The Official Repository on GitHub*
+
+给你几乎全新的，更理想的堆块体验。
+
+A brand new, more ideal and fascinating Block-Stacking experience.
