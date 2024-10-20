@@ -224,7 +224,7 @@ function scene.update(dt)
             end
         elseif fast and (
             isMouseDown(1) or
-            #getTouches()>0 or
+            getTouches()[1] or
             isKeyDown('space')
         ) then
             merge()

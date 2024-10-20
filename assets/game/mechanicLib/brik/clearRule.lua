@@ -53,7 +53,7 @@ do -- line (fill row to clear)
                 ins(fullLines,y)
             end
         end
-        if #fullLines>0 then
+        if fullLines[1] then
             return fullLines
         end
     end
@@ -113,7 +113,7 @@ do -- triplets (filled lines which form arithmetic progression to clear, from te
             end
         end
 
-        if #fullLines>0 then
+        if fullLines[1] then
             return fullLines
         end
     end
@@ -144,7 +144,7 @@ do -- cheese (90% fill to clear)
                 ins(fullLines,y)
             end
         end
-        if #fullLines>0 then
+        if fullLines[1] then
             return fullLines
         end
     end

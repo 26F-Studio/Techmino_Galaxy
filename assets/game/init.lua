@@ -481,7 +481,7 @@ function GAME.render()
     gc.setCanvas()
 
     gc.replaceTransform(SCR.origin)
-    if #GAME.hitWaves>0 then
+    if GAME.hitWaves[1] then
         local L=GAME.hitWaves
         for i=1,#L do
             local timeK=1/(400*L[i].time+50)-.0026

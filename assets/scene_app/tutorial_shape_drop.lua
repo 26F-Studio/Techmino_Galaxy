@@ -75,7 +75,7 @@ local function newPiece()
     end
 
     pieceSpawnTimer=.42
-    if #solutions>0 then
+    if solutions[1] then
         local sum=0
         for i=1,#solutions do
             sum=sum+solutions[i].point

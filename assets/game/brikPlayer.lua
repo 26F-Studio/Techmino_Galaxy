@@ -1770,7 +1770,7 @@ function BP:render()
                 end
 
                 -- Float hold
-                if #self.floatHolds>0 then
+                if self.floatHolds[1] then
                     for n=1,#self.floatHolds do
                         local H=self.floatHolds[n]
                         local disabled=SET.holdMode=='float' and not SET.infHold and n<=self.holdTime

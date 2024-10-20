@@ -561,7 +561,7 @@ local function decodeScript(str,errMsg) -- Translate some string commands to lua
         local arg=p and str:sub(p+1):split(',') or {}
         for i=1,#arg do arg[i]=arg[i]:trim() end
         if cmd=='wait' then
-            assert(#arg>0,errMsg.."Wait which var(s)?")
+            assert(arg[1],errMsg.."Wait which var(s)?")
             line.arg=arg
         elseif _jmpOP[cmd] then
             if #arg~=_jmpOP[cmd]+1 then error(errMsg.."Wrong arg count, "..cmd.." need "..(_jmpOP[cmd]+1).." args") end
@@ -681,7 +681,7 @@ function P:loadScript(script) -- Parse time stamps and labels, check syntax of l
                     assert(type(arg)=='string',errMsg.."arg must be string")
                 elseif cmd=='wait' then
                     assert(type(arg)=='table',errMsg.."arg must be table")
-                    assert(#arg>0,errMsg.."Wait which var(s)?")
+                    assert(arg[1],errMsg.."Wait which var(s)?")
                     if not line.t then line.t=1 end
                 elseif _jmpOP[cmd] then
                     assert(type(arg)=='table',errMsg.."arg must be table")

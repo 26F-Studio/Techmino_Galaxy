@@ -798,7 +798,7 @@ function GP:checkClear()
             self:checkPosition(x,y)
         end
     end end
-    if #self.clearingGroups>0 then
+    if self.clearingGroups[1] then
         self:playSound('desuffocate')
         if SET.clearDelay<=0 then
             self:doClear()
