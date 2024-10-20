@@ -126,13 +126,14 @@ ZENITHA.addConsoleCommand('regurl',{
                     [HKEY_CLASSES_ROOT\techmino\shell\open],
                     [HKEY_CLASSES_ROOT\techmino\shell\open\command],
                     @="\"EXEPATH\" %1",
-                ]=]
-                regCode=regCode:gsub('EXEPATH',path)
+                ]=]:gsub('EXEPATH',path)
                 love.filesystem.write('RegisterURL.reg',regCode)
-                love.system.openURL(love.filesystem.getSaveDirectory())
+                _CL{COLOR.G,".reg script generated, check it carefully then run it"}
+                _CL("Check the file with command 'explorer'.")
             elseif bool=="off" then
                 love.filesystem.write('UnregisterURL.reg',[=[Windows Registry Editor Version 5.00\n[-HKEY_CLASSES_ROOT\techmino]]=])
-                love.system.openURL(love.filesystem.getSaveDirectory())
+                _CL{COLOR.G,".reg script generated, check it carefully then run it"}
+                _CL("Check the file with command 'explorer'.")
             end
         else
             _CL{COLOR.lR,"Only",COLOR.lS,"available",COLOR.lY,"on",COLOR.lG,"Windows"}
@@ -152,8 +153,8 @@ ZENITHA.addConsoleCommand('supernova',{
         if not PROGRESS.getStyleUnlock('acry') then
             PROGRESS.setStyleUnlock('acry')
             PROGRESS.setExteriorUnlock('action')
-            _CL("Extraordinary!")
         end
+        _CL("Extraordinary!")
     end,
 },true)
 ZENITHA.addConsoleCommand('chain',{
@@ -161,8 +162,8 @@ ZENITHA.addConsoleCommand('chain',{
         if not PROGRESS.getStyleUnlock('gela') then
             PROGRESS.setStyleUnlock('gela')
             PROGRESS.setExteriorUnlock('chain')
-            _CL("Ice storm!")
         end
+        _CL("Fever!")
     end,
 },true)
 
