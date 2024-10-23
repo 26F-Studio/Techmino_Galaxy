@@ -53,6 +53,14 @@ function S.drawFieldBorder()
 end
 
 local acryShapes={
+    [0]={ -- Gray Matter
+        color={COLOR.HSV(0,0,.626,.26)},
+        coords={
+            -12,-16,
+            14,-10,
+            0,16,
+        },
+    },
     { -- Red Square
         color={COLOR.HSV(.97,.9,1,.5)},
         coords={
@@ -129,53 +137,30 @@ local acryShapes={
         end)()
     },
 }
-for i=1,#acryShapes do
-    acryShapes[i].lineColor=TABLE.copy(acryShapes[i].color)
-    acryShapes[i].lineColor[4]=nil
+for _,shape in next,acryShapes do
+    shape.lineColor=TABLE.copy(shape.color)
+    shape.lineColor[4]=nil
 end
-local function drawAcry(g)
-    if g.type=='acry' then
-        if g.appearance=='flame' then
-            gc_setColor(COLOR.O)
-            gc_circle('line',0,0,15+3*math.sin(S.getTime()*.01))
-        elseif g.appearance=='star' then
-            gc_setColor(COLOR.lC)
-            gc_circle('line',0,0,15+3*math.sin(S.getTime()*.01))
-        elseif g.appearance=='nova' then
-            gc_setColor(COLOR.L)
-            gc_circle('line',0,0,15+3*math.sin(S.getTime()*.01))
-        end
-        local color=g.color
+local function drawAcry(a)
+    ---@cast a Techmino.Acry.Cell
+    local color=a.color
         gc_setColor(acryShapes[color].lineColor)
         gc_polygon('line',acryShapes[color].coords)
         gc_setColor(acryShapes[color].color)
         gc_polygon('fill',acryShapes[color].coords)
-    elseif g.type=='cube' then
-        gc_setColor(COLOR.rainbow(S.getTime()*.01,.626))
-        gc_rectangle('fill',-12,-12,24,24)
-        gc_setColor(1,1,1)
-        gc_rectangle('line',-12,-12,24,24)
-    end
 end
-function S.drawFieldCell(G,_,_,_)
+function S.drawFieldCell(a,_,_,_)
+    ---@cast a Techmino.Acry.Cell
     gc_setLineWidth(2)
-    gc_push('transform')
-    gc_translate(22.5,-22.5)
-    if G.moveTimer then
-        local d=G.moveTimer/G.moveDelay
-        if G.fall then
-            d=-d*(d-2)
-        else
-            d=-math.cos(d*math.pi)/2+.5
-        end
-        gc_translate(45*(d*G.dx),-45*(d*G.dy))
+    if a.clearTimer then
+        local t=a.clearTimer/a.clearDelay
+        scale=-2*t^2+3*t
+        gc_scale(scale)
+        drawAcry(a)
+        gc_scale(1/scale)
+    else
+        drawAcry(a)
     end
-    if G.clearTimer and not G.generate then
-        local t=G.clearTimer/G.clearDelay
-        gc_scale(-2*t^2+3*t)
-    end
-    drawAcry(G)
-    gc_pop()
 end
 
 function S.drawGarbageBuffer(garbageBuffer)

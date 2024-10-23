@@ -39,6 +39,7 @@ local mechLib={
     acry={
         -- Basic
         actions=require'acry/actions',
+        propSys=require'acry/propSys',
         mergeSys=require'acry/mergeSys',
         attackSys=require'acry/attackSys',
     },

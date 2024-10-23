@@ -115,6 +115,58 @@
 ---@field clear? number[]
 ---@field combo? number
 
+
+
+---@alias Techmino.Acry.Prop 'fire'|'elec'|'hyper'|'lock'|'stepbomb'|'timebomb'|'butterfly'|'multiplier'|string
+---@alias Techmino.Acry.State
+---|'idle'
+---|'fall'
+---|'moveAhead'
+---|'moveBack'
+---|'moveWait'
+---|'clear'
+---
+---|'_discard'
+
+---@class Techmino.Acry.Cell
+---@field id string cell id (unique)
+---@field color number 1~7
+---@field prop Techmino.Acry.Prop[]
+---@field propData table
+---
+---@field gridX integer
+---@field gridY integer
+---@field biasX number
+---@field biasY number
+---
+---@field state Techmino.Acry.State
+--- 'idle':
+---     @field stableTime integer
+--- 'moveAhead':
+---     @field active boolean
+---     @field wallHit boolean
+---     @field moveDirection integer[]
+---     @field moveTimer integer
+---     @field moveDelay integer
+---     @field moveReadyDelay integer
+--- 'moveWait':
+---     @field waitTimer integer
+---     @field waitDelay integer
+--- 'moveBack':
+---     moveTimer integer (same as in moveAhead)
+---     moveDelay integer (same as in moveAhead)
+--- 'fall':
+---     @field fallSpeed integer
+--- 'clear':
+---     @field clearTimer integer
+---     @field clearDelay integer
+---     @field craftTargetBias integer[]
+--- '_discard':
+---
+---@field _newState Techmino.Acry.State|false
+
+
+
 ---@class Techmino.Mode
 ---@field initialize function Called when initializing the mode
 ---@field settings {brik:Techmino.Mode.Setting.Brik?, gela:Techmino.Mode.Setting.Gela?, acry:Techmino.Mode.Setting.Acry?}
