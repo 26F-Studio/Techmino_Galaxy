@@ -4,6 +4,7 @@ local tc=love.touch
 ---@type Zenitha.Scene
 local scene={}
 
+local timeScale=1
 local repMode=false
 
 local function startGame(modeName)
@@ -51,7 +52,9 @@ function scene.keyDown(key,isRep)
     if isRep then return true end
 
     -- Debug
-    if key=='f6' then love.system.setClipboardText(GAME.playerList[1]:serialize()) MSG.new('info',"Exported") return true
+    if key=='f3' then timeScale=timeScale==0 and 1 or 0
+    elseif key=='f4' then GAME.update(.001)
+    elseif key=='f6' then love.system.setClipboardText(GAME.playerList[1]:serialize()) MSG.new('info',"Exported") return true
     elseif key=='f7' then GAME.playerList[1]:unserialize(love.system.getClipboardText()) MSG.new('info',"Imported") return true
     end
 
@@ -108,6 +111,8 @@ function scene.update(dt)
         dt=dt*.1
     elseif love.keyboard.isDown('f2') then
         dt=dt*2.6
+    else
+        dt=dt*timeScale
     end
     GAME.update(dt)
 end
