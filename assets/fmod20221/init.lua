@@ -15,9 +15,13 @@ M.banks={}
 -- M.C=ffi.load(fmodPath)
 -- M.C2=ffi.load(fmodstudioPath)
 
+local path='$1'
+
+if STRING.sArg(_G.arg[2] or '','--project') then path=love.filesystem.getSaveDirectory().."/lib/lib$1.so" end
+
 do -- Load library
     local suc
-    suc,M.C=pcall(ffi.load,'fmod')
+    suc,M.C=pcall(ffi.load,STRING.repD(path,'fmod'))
     if not suc then
         MSG.new('error',"Loading FMOD lib:"..M.C)
         M.C=nil
@@ -25,7 +29,7 @@ do -- Load library
         MSG.new('error',"Error in Loading FMOD lib")
     end
 
-    suc,M.C2=pcall(ffi.load,'fmodstudio')
+    suc,M.C2=pcall(ffi.load,STRING.repD(path,'fmodstudio'))
     if not suc then
         MSG.new('error',"Loading FMODstudio lib:"..M.C2)
         M.C2=nil
