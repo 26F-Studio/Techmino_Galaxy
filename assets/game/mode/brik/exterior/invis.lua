@@ -32,17 +32,17 @@ return {
             drawInField=mechLib.brik.misc.lineClear_event_drawInField,
             drawOnPlayer=mechLib.brik.misc.lineClear_event_drawOnPlayer,
             gameOver=function(P,reason)
-                PROGRESS.setExteriorScore('hidden','line',math.min(P.stat.line,100))
+                PROGRESS.setExteriorScore('invis','line',math.min(P.stat.line,100))
                 if reason=='AC' then
-                    PROGRESS.setExteriorScore('hidden','easy',P.gameTime,'<')
+                    PROGRESS.setExteriorScore('invis','easy',P.gameTime,'<')
                     if P.modeData.maxSimplicity<=12 then
-                        PROGRESS.setExteriorScore('hidden','hard',P.gameTime,'<')
+                        PROGRESS.setExteriorScore('invis','hard',P.gameTime,'<')
                         P:showInvis(1,P.settings.pieceFadeTime/2)
                     else
                         P:showInvis(2,P.settings.pieceFadeTime)
                     end
                     if P.stat.clears[1]+P.stat.clears[2]+P.stat.clears[3]==0 then
-                        PROGRESS.setSecret('exterior_hidden_superBrain')
+                        PROGRESS.setSecret('exterior_invis_superBrain')
                     end
                 end
             end,

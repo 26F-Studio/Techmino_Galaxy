@@ -160,10 +160,10 @@ return {
                     end
                 end,
                 function(P)
-                    if PROGRESS.getExteriorUnlock('hidden') then return true end
+                    if PROGRESS.getExteriorUnlock('invis') then return true end
                     if P.stat.line>=40 then
                         if P.stat.clears[1]+P.stat.clears[2]+P.stat.clears[3]==0 then
-                            PROGRESS.setExteriorUnlock('hidden')
+                            PROGRESS.setExteriorUnlock('invis')
                         end
                         return true
                     end

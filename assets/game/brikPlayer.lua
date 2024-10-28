@@ -1993,7 +1993,7 @@ local baseEnv={
     maxFreshChance=15,
     maxFreshTime=6200,
 
-    -- Hidden
+    -- Hidden by Time
     pieceVisTime=false, ---@type number|false When enabled, blocks will become transparent after this value
     pieceFadeTime=1000, -- Start fading out below this value
 

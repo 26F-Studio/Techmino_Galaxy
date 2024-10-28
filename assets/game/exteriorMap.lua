@@ -14,7 +14,7 @@ local tau=MATH.tau
 ---@alias Techmino.ModeName
 ---| 'sprint'
 ---| 'sequence'
----| 'hidden'
+---| 'invis'
 ---| 'tspin'
 ---| 'marathon'
 ---| 'allclear'
@@ -34,7 +34,7 @@ local tau=MATH.tau
 local modes={
     {pos={25,35,00},name='sprint'},
     {pos={25,50,00},name='sequence'},
-    {pos={25,65,15},name='hidden'},
+    {pos={25,65,15},name='invis'},
     {pos={25,50,15},name='tspin'},
 
     {pos={45,45,00},name='marathon'},
@@ -68,7 +68,7 @@ local modes_str={} for i=1,#modes do modes_str[modes[i].name]=modes[i] end
 local bridgeLinks={
     'marathon - dig - sprint - marathon',
     'sprint - tspin',
-    'sprint - hidden',
+    'sprint - invis',
     'sprint - sequence',
     'marathon - hypersonic',
     'marathon - combo',
