@@ -26,12 +26,12 @@ function scene.touchDown(x,y,k)
 end
 scene.mouseDown=scene.touchDown
 
-function scene.keyDown(key,isRep)
-    if not isRep and keys[key] then
-        local note=keys[key]+offset
+function scene.keyDown(key,isRep,keyCode)
+    if not isRep and keys[keyCode] then
+        local note=keys[keyCode]+offset
         if isShiftPressed() then note=note+1 end
         if isCtrlPressed() then note=note-1 end
-        activeEventMap[key]=FMOD.effect(inst,{
+        activeEventMap[keyCode]=FMOD.effect(inst,{
             tune=note-21,
             volume=1,
             param={'release',1000*1.0594630943592953^(note-21)},
@@ -55,10 +55,10 @@ function scene.keyDown(key,isRep)
     end
     return true
 end
-function scene.keyUp(key)
-    if keys[key] and activeEventMap[key] then
-        activeEventMap[key]:stop(FMOD.FMOD_STUDIO_STOP_ALLOWFADEOUT)
-        activeEventMap[key]=false
+function scene.keyUp(_,keyCode)
+    if keys[keyCode] and activeEventMap[keyCode] then
+        activeEventMap[keyCode]:stop(FMOD.FMOD_STUDIO_STOP_ALLOWFADEOUT)
+        activeEventMap[keyCode]=false
     end
 end
 
