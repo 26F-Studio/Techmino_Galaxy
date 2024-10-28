@@ -38,7 +38,7 @@ end
 function scene.mouseDown(_,_,k) if k==2 then SCN.back('fadeHeader') end end
 function scene.keyDown(key,isRep)
     if isRep then return true end
-    if key=='`' then
+    if key=='\\' then
         scene.widgetList.Sacry._visible=true
         scene.widgetList.Sgela._visible=true
         scene.widgetList.Sbrik._visible=true

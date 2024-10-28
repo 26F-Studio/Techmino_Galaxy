@@ -129,7 +129,7 @@ function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='f6' then exMap:_printModePos() return true end
     if key=='f5' then MSG.new('info',"Mode cache cleared") GAME._refresh() return true end
-    if key=='`' then exMap:_unlockall() end
+    if key=='\\' then exMap:_unlockall() end
     sysAction(KEYMAP.sys:getAction(key))
     return true
 end

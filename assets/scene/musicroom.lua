@@ -187,7 +187,7 @@ function scene.keyDown(key,isRep)
             FMOD.music.seek(0)
         elseif act=='back' then
             SCN.back('fadeHeader')
-        elseif key=='`' then
+        elseif key=='\\' then
             noProgress=true
             scene.load()
         elseif key=='f3' then
