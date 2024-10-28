@@ -115,7 +115,7 @@ local function dial(n)
         end
     else
         if n=='*' then
-            instrument=TABLE.next({'square','sine','triangle'},instrument) or 'square'
+            instrument=TABLE.next({'organ','square','saw','complex','stairs','spectral'},instrument) or 'organ'
         elseif n=='0' then
             octave_plus=not octave_plus
         elseif n=='#' then
@@ -139,7 +139,7 @@ function scene.load()
     rec,recTimer='',2.6
     if SCN.stackChange>0 then
         dialMode,transTimer=false,PROGRESS.getSecret('dial_enter') and 6.26 or 26
-        mode,instrument,octave_plus='normal','square',false
+        mode,instrument,octave_plus='normal','organ',false
     end
     scene.widgetList.musicroom:setVisible(mode~='normal' and mode~='dial')
     BG.set('none')

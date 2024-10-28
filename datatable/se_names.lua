@@ -40,5 +40,10 @@ return {
     'inputbox_input','inputbox_bksp','inputbox_clear',
 
     -- Other
-    'triangle_wave','sine_wave','square_wave',
+    'organ_wave',
+    'square_wave',
+    'saw_wave',
+    'complex_wave',
+    'stairs_wave',
+    'spectral_wave',
 }

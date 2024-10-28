@@ -197,7 +197,7 @@ function stack.event_afterLock_noFall(P)
                 end
             end
             md.stack_lines=md.stack_lines+1
-            playSample('sine',{scale[md.stack_lines],(20-md.stack_lines)/10})
+            playSample('organ',{scale[md.stack_lines],(20-md.stack_lines)/10})
             playSample('square',{scale[md.stack_lines],min(md.stack_lines/10,1)})
         end
     end
