@@ -39,9 +39,12 @@ return {
                 end
                 P:setAction('func1',infSprint_turnOn)
             end,
-            beforePress=function(P)
-                P.modeData.curKeyCount=P.modeData.curKeyCount+1
-            end,
+            beforePress={
+                mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
+                function(P)
+                    P.modeData.curKeyCount=P.modeData.curKeyCount+1
+                end,
+            },
             afterLock=function(P)
                 table.insert(P.modeData.keyCount,P.modeData.curKeyCount)
                 P.modeData.curKeyCount=0

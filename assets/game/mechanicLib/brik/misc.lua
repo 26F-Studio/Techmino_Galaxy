@@ -4,6 +4,15 @@ local gc=love.graphics
 ---@type Map<Techmino.Event.Brik>
 local misc={}
 
+function misc.skipReadyWithHardDrop_beforePress(P,act)
+    if P.timing then return true end
+    if act=='hardDrop' and P.spawnTimer>1000 and P.finished==false then
+        P.settings.readyDelay=P.time+1000
+        P.spawnTimer=1000
+        return true
+    end
+end
+
 function misc.interior_soundEvent_countDown(num)
     playSample('square',{num>0 and 'E4' or 'E5'})
 end
