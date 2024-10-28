@@ -193,7 +193,7 @@ function S.drawStartingCounter(readyDelay)
     gc_push('transform')
     local num=math.ceil((readyDelay-S.getTime())/1000)
     local r,g,b=.8,.8,.8
-    local d=1-S.getTime()%1000/1000 -- from .999 to 0
+    local d=(readyDelay-S.getTime())%1000/1000 -- from .999 to 0
 
     if num<=3 and d>.75 then
         if     num==1 then gc_scale(1,1+(d/.25-3)^2)
