@@ -343,6 +343,7 @@ IMG.init{
 Text=nil ---@type Techmino.I18N
 LANG.add{
     en='assets/language/lang_en.lua',
+    it='assets/language/lang_it.lua',
     zh='assets/language/lang_zh.lua',
 }
 LANG.setDefault('en')
