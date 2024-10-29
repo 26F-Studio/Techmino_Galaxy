@@ -2,6 +2,7 @@ local langList={
     zh="简体中文",
     zh_trad="繁體中文",
     en="English",
+    it="Italiano",
     fr="Français",
     es="　Español\n(Castellano)",
     pt="Português",
@@ -91,7 +92,7 @@ scene.widgetList={
     {type='button_fill',    x=350,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=35, text='',          color='K'},
     {type='button_fill',    x=350,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=35, text='',          color='G'},
 
-    {type='button_fill',    x=800,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='O'},
+    {type='button_fill',    x=800,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.it, color='O', sound_trigger='check_on',code=function() _setLang('it') end},
     {type='button_fill',    x=800,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='A'},
     {type='button_fill',    x=800,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='J'},
     {type='button_fill',    x=800,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='P'},
