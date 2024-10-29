@@ -47,9 +47,23 @@ function scene.keyDown(key,isRep,keyCode)
     elseif key=='tab' then
         inst=TABLE.next(instList,inst) or instList[1]
     elseif key=='lalt' then
-        offset=math.max(offset-1,-12)
+        local d=0
+        if isShiftPressed() then d=d+12 end
+        if isCtrlPressed() then d=d-12 end
+        if d==0 then
+            offset=MATH.clamp(offset-1,-12,24)
+        else
+            offset=MATH.clamp(offset+d,-12,24)
+        end
     elseif key=='ralt' then
-        offset=math.min(offset+1,12)
+        local d=0
+        if isShiftPressed() then d=d+12 end
+        if isCtrlPressed() then d=d-12 end
+        if d==0 then
+            offset=MATH.clamp(offset+1,-12,24)
+        else
+            offset=MATH.clamp(offset+d,-12,24)
+        end
     elseif key=='escape' then
         if sureCheck('back') then SCN.back() end
     end
