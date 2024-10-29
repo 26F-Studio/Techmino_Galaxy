@@ -17,6 +17,15 @@ return {
                 end,
                 -- "P:setAction('func1',mechLib.brik.stack.switch_auto)",
             },
+            beforePress={
+                mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
+                function(P)
+                    if P.timing then return true end
+                    if P.settings.readyDelay%1000~=0 then
+                        PROGRESS.setSecret('exterior_sprint_gunJumping')
+                    end
+                end,
+            },
             afterClear={
                 function(P)
                     if PROGRESS.getExteriorUnlock('allclear') then return true end

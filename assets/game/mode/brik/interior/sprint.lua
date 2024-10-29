@@ -21,7 +21,15 @@ return {
                 P.modeData.target.line=40
                 mechLib.common.music.set(P,{path='stat.line',s=10,e=30},'afterClear')
             end,
-            beforePress=mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
+            beforePress={
+                mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
+                function(P)
+                    if P.timing then return true end
+                    if P.settings.readyDelay%1000~=0 then
+                        PROGRESS.setSecret('exterior_sprint_gunJumping')
+                    end
+                end,
+            },
             afterClear=mechLib.brik.misc.lineClear_event_afterClear,
             drawOnPlayer=mechLib.brik.misc.lineClear_event_drawOnPlayer,
         },

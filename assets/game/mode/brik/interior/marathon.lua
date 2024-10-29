@@ -27,6 +27,15 @@ return {
                 P.settings.dropDelay=dropSpeed[1]
                 P.modeData.lineTarget=10
             end,
+            beforePress={
+                mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
+                function(P)
+                    if P.timing then return true end
+                    if P.settings.readyDelay%1000~=0 then
+                        PROGRESS.setSecret('exterior_sprint_gunJumping')
+                    end
+                end,
+            },
             afterClear=function(P)
                 local md=P.modeData
                 while P.stat.line>=md.lineTarget do

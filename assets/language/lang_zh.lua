@@ -289,6 +289,7 @@ local L={
     -- Achievement
     achievementMessage={
         dict_shortcut="快捷键高手",
+        exterior_sprint_gunJumping="检测到抢跑",
         exterior_excavate_notDig="你在干什么？",
         exterior_invis_superBrain="COOL",
         exterior_tspin_10TSS="这是什么？",

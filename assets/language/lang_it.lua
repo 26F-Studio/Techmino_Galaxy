@@ -290,6 +290,7 @@ local L={
     ---@enum (key) Techmino.Text.Achievement
     achievementMessage={
         dict_shortcut="Esperto di Hotkeys",
+        -- exterior_sprint_gunJumping="Gun jumping detected",
         exterior_excavate_notDig="Che stai facendo?",
         exterior_hidden_superBrain="COOL",
         exterior_tspin_10TSS="Cos'è questo?",
