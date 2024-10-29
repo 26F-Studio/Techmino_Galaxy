@@ -12,6 +12,7 @@ local keys={
 local activeEventMap={}
 local inst
 local offset
+local release
 
 ---@type Zenitha.Scene
 local scene={}
@@ -20,6 +21,7 @@ function scene.load()
     stopBgm()
     inst='square_wave'
     offset=0
+    release=500
 end
 
 function scene.touchDown(x,y,k)
@@ -35,7 +37,7 @@ function scene.keyDown(key,isRep,keyCode)
         activeEventMap[keyCode]=FMOD.effect(inst,{
             tune=note-26,
             volume=1,
-            param={'release',500*1.0594630943592953^(note-26)},
+            param={'release',release*1.0594630943592953^(note-26)},
         })
         TEXT:add{
             text=SFX.getNoteName(note),
@@ -65,6 +67,10 @@ function scene.keyDown(key,isRep,keyCode)
         else
             offset=MATH.clamp(offset+d,-12,24)
         end
+    elseif key=='f1' then
+        release=math.max(release-100,0)
+    elseif key=='f2' then
+        release=math.min(release+100,2600)
     elseif key=='escape' then
         if sureCheck('back') then SCN.back() end
     end
@@ -81,6 +87,7 @@ function scene.draw()
     FONT.set(30)
     gc.print(inst,40,60)
     gc.print(offset,40,100)
+    gc.print(release,40,140)
 end
 
 scene.widgetList={
