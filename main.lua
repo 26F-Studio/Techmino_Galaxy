@@ -195,6 +195,7 @@ function ZENITHA.globalEvent.lowMemory()
 end
 function ZENITHA.globalEvent.quit()
     PROGRESS.save('save')
+    FMOD.destroy()
 end
 
 FONT.load{
