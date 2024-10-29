@@ -26,13 +26,11 @@ local function sysAction(action)
     end
 end
 function scene.keyDown(key,isRep)
-    if key=='1' then FMOD.effect('notice')
-    elseif key=='2' then FMOD.effect('solve')
+    if     key=='z' then SCN.go('piano') return true
+    elseif key=='b' then playExterior('brik/exterior/test')() return true
+    elseif key=='g' then playExterior('gela/test')() return true
+    elseif key=='a' then playExterior('acry/test')() return true
     end
-    -- if     key=='b' then playExterior('brik/exterior/test')() return true
-    -- elseif key=='g' then playExterior('gela/test')() return true
-    -- elseif key=='a' then playExterior('acry/test')() return true
-    -- end
     if isRep then return true end
     if secretInput==0 then
         if key==secretString:sub(1,1) then
