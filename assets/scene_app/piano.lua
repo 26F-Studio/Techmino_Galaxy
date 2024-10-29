@@ -35,7 +35,7 @@ function scene.keyDown(key,isRep,keyCode)
         activeEventMap[keyCode]=FMOD.effect(inst,{
             tune=note-26,
             volume=1,
-            param={'release',1000*1.0594630943592953^(note-26)},
+            param={'release',500*1.0594630943592953^(note-26)},
         })
         TEXT:add{
             text=SFX.getNoteName(note),
