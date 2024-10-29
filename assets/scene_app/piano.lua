@@ -17,6 +17,7 @@ local offset
 local scene={}
 
 function scene.load()
+    stopBgm()
     inst='square_wave'
     offset=0
 end
