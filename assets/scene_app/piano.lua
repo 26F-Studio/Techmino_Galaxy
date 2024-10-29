@@ -20,7 +20,7 @@ local scene={}
 function scene.load()
     stopBgm()
     inst='square_wave'
-    offset=0
+    offset=-3
     release=500
 end
 
