@@ -95,6 +95,7 @@ local songbook={
     ['reason remix']             ={author="TetraCepra"},
     ['seeking star']             ={},
     ['space warp']               ={author="LR & MrZ"},
+    ['invisible']                ={author="DJ Asriel"},
 
     ['caprice']                               ={inside=true,redirect='rectification'},
     ['fruit dance_ex']                        ={inside=true,redirect='fruit dance'},
