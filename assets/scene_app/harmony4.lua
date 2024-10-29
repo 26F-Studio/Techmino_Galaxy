@@ -23,8 +23,7 @@ function Voice.init(v)
     if not v.vol then v.vol=.626 end
     v.sounds={}
     for i=1,3 do
-        v.sounds[i]=FMOD.effect.play(v.wave,{pitch=(262*step^v.tune)/baseFreq})
-        -- v.sounds[i]:stop()
+        v.sounds[i]=FMOD.effect.play(v.wave,{pitch=(262*step^v.tune)/baseFreq,param={'release',1000}})
     end
     return v
 end
@@ -45,38 +44,44 @@ function Voice:randomize()
         s:setPitch((262*step^(self.tune+MATH.rand(diffMin,diffMax)))/baseFreq)
     end
 end
+function Voice:stop()
+    for _,v in next,self.sounds do
+        v:stop(FMOD.FMOD_STUDIO_STOP_ALLOWFADEOUT)
+    end
+end
 
 ---@type Techmino.App.Harmony.Voice[]
-local voice={
+local voiceData={
     {
-        wave='square_wave',
+        wave='organ_wave',
         tune=0,
         key='1',
         x=-600,
         y=0,
     },
     {
-        wave='square_wave',
+        wave='organ_wave',
         tune=4,
         key='2',
         x=-200,
         y=0,
     },
     {
-        wave='square_wave',
+        wave='organ_wave',
         tune=7,
         key='3',
         x=200,
         y=0,
     },
     {
-        wave='square_wave',
+        wave='organ_wave',
         tune=11,
         key='4',
         x=600,
         y=0,
     },
 }
+local voice
 
 
 ---@type Zenitha.Scene
@@ -93,10 +98,18 @@ end
 
 function scene.load()
     love.mouse.setRelativeMode(true)
-    for k,v in next,voice do
+    voice={}
+    for k,v in next,voiceData do
         voice[k]=Voice.init(v)
         voice[k]:volumeChange(0)
     end
+end
+function scene.unload()
+    love.mouse.setRelativeMode(false)
+    for _,v in next,voice do
+        v:stop()
+    end
+    voice=nil
 end
 
 function scene.mouseDown(x,y,k)
