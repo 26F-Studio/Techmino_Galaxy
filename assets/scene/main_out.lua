@@ -26,12 +26,16 @@ local function sysAction(action)
     end
 end
 function scene.keyDown(key,isRep)
+    -- Debug
+    if key=='1' then
+    end
     if     key=='z' then SCN.go('piano') return true
     elseif key=='x' then SCN.go('harmony4') return true
     elseif key=='b' then playExterior('brik/exterior/test')() return true
     elseif key=='g' then playExterior('gela/test')() return true
     elseif key=='a' then playExterior('acry/test')() return true
     end
+
     if isRep then return true end
     if secretInput==0 then
         if key==secretString:sub(1,1) then
