@@ -7,6 +7,7 @@ local modules={
     {"Zenitha framework","MrZ"},
     {"json.lua","rxi"},
     {"profile.lua","itraykov"},
+    {"discord-rpc.lib","Discord Team"},
     {"sha2.lua","Egor Skriptunoff"},
     {"FMOD Studio","Firelight Technologies Pty Ltd"},
 }
@@ -14,10 +15,12 @@ local toolchain={
     "VS Code",
     "BeepBox",
     "GFIE",
+    "REAPER",
+    "GoldWave",
     "FL Studio",
     "FL Mobile",
-    "GoldWave",
     "FMOD Studio",
+    "Arch Linux",
 }
 
 local timer,score
