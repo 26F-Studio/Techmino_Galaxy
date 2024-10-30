@@ -8,6 +8,7 @@ return {
     settings={brik={
         dropDelay=1000,
         lockDelay=1e99,
+        readyDelay=0,
         maxFreshChance=1e99,
         maxFreshTime=1e99,
         event={
