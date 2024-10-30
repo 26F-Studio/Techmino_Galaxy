@@ -15,7 +15,6 @@ return {
                 P.settings.dropDelay=0
                 P.settings.lockDelay=1e99
                 P.settings.spawnDelay=260
-                P.modeData.keyCount={}
                 P.modeData.curKeyCount=0
                 local T=mechLib.common.task
                 T.install(P)
@@ -38,9 +37,6 @@ return {
                     if P.settings.readyDelay%1000~=0 then
                         PROGRESS.setSecret('exterior_sprint_gunJumping')
                     end
-                end,
-                function(P)
-                    P.modeData.curKeyCount=P.modeData.curKeyCount+1
                 end,
             },
             afterClear=function(P,clear)

@@ -19,7 +19,6 @@ return {
                 P.modeData.lineStay=8
                 mechLib.brik.dig.event_playerInit(P)
                 P.fieldDived=0
-                P.modeData.keyCount={}
                 P.modeData.curKeyCount=0
             end,
             beforePress={
@@ -29,9 +28,6 @@ return {
                     if P.settings.readyDelay%1000~=0 then
                         PROGRESS.setSecret('exterior_sprint_gunJumping')
                     end
-                end,
-                function(P)
-                    P.modeData.curKeyCount=P.modeData.curKeyCount+1
                 end,
             },
             beforeClear={
