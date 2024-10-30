@@ -19,7 +19,21 @@ return {
                 P.modeData.lineStay=6
                 mechLib.brik.dig.event_playerInit(P)
                 P.fieldDived=0
+                P.modeData.keyCount={}
+                P.modeData.curKeyCount=0
             end,
+            beforePress={
+                mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
+                function(P)
+                    if P.timing then return true end
+                    if P.settings.readyDelay%1000~=0 then
+                        PROGRESS.setSecret('exterior_sprint_gunJumping')
+                    end
+                end,
+                function(P)
+                    P.modeData.curKeyCount=P.modeData.curKeyCount+1
+                end,
+            },
             beforeClear={
                 function(P,lines)
                     local CLEARS=P.modeData.infDig_clears

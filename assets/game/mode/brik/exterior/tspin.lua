@@ -23,8 +23,22 @@ return {
                 P.modeData.hardModeFlag=true
                 mechLib.brik.chargeLimit.tspin_event_playerInit(P)
                 mechLib.common.music.set(P,{path='.tsd',s=3,e=12},'afterClear')
+                P.modeData.keyCount={}
+                P.modeData.curKeyCount=0
             end,
             always=mechLib.brik.chargeLimit.tspin_event_always,
+            beforePress={
+                mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
+                function(P)
+                    if P.timing then return true end
+                    if P.settings.readyDelay%1000~=0 then
+                        PROGRESS.setSecret('exterior_sprint_gunJumping')
+                    end
+                end,
+                function(P)
+                    P.modeData.curKeyCount=P.modeData.curKeyCount+1
+                end,
+            },
             afterClear={
                 mechLib.brik.chargeLimit.tspin_event_afterClear,
                 function(P) -- Switch to easy mode when TS not D

@@ -15,6 +15,8 @@ return {
                 P.settings.dropDelay=0
                 P.settings.lockDelay=1e99
                 P.settings.spawnDelay=260
+                P.modeData.keyCount={}
+                P.modeData.curKeyCount=0
                 local T=mechLib.common.task
                 T.install(P)
                 T.add(P,'hypersonic_low','modeTask_hypersonic_low_title','modeTask_hypersonic_low_desc','(0/4)')
@@ -29,6 +31,18 @@ return {
                     T.add(P,'hypersonic_titanium','modeTask_hypersonic_titanium_title','modeTask_hypersonic_titanium_desc')
                 end
             end,
+            beforePress={
+                mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
+                function(P)
+                    if P.timing then return true end
+                    if P.settings.readyDelay%1000~=0 then
+                        PROGRESS.setSecret('exterior_sprint_gunJumping')
+                    end
+                end,
+                function(P)
+                    P.modeData.curKeyCount=P.modeData.curKeyCount+1
+                end,
+            },
             afterClear=function(P,clear)
                 local initFunc
                 local T=mechLib.common.task
