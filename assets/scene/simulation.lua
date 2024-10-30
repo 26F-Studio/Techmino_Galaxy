@@ -154,7 +154,7 @@ function scene.update(dt)
             s.active=MATH.expApproach(s.active,(s.trigTimer or i==subjectFocused) and 1 or 0,dt*26)
             s.size=390+120*s.active
             if s.trigTimer then
-                if s.trigTimer<.62 and s.trigTimer+dt>.62 then
+                if s.trigTimer<.62 and s.trigTimer+dt>.26 then
                     TASK.new(s.trigger)
                 end
                 s.trigTimer=s.trigTimer+dt
