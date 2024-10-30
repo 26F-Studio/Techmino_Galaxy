@@ -29,6 +29,7 @@ return {
                     T.add(P,'hypersonic_titanium','modeTask_hypersonic_titanium_title','modeTask_hypersonic_titanium_desc')
                 end
             end,
+            beforePress=mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
             afterClear=function(P,clear)
                 local initFunc
                 local T=mechLib.common.task
