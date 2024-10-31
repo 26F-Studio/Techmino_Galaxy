@@ -225,7 +225,27 @@ local function _setLang(lid)
             duration=1.26,
         }
         if SETTINGS.system.locale~=lid then
-            SETTINGS.system.locale=lid
+            if isCtrlPressed() then
+                local oldText=TABLE.copyAll(Text)
+                local oldLocale=SETTINGS.system.locale:upper()
+                SETTINGS.system.locale=lid
+                local newText=TABLE.copyAll(Text)
+                local newLocale=SETTINGS.system.locale:upper()
+                TABLE.flatten(oldText,6.26)
+                TABLE.flatten(newText,6.26)
+                for entry in next,newText do
+                    if not oldText[entry] then
+                        MSG.new('warn',("[$1] Missing '$2'"):repD(oldLocale,entry),26)
+                    end
+                end
+                for entry in next,oldText do
+                    if not newText[entry] then
+                        MSG.new('warn',("[$1] Missing '$2'"):repD(newLocale,entry),26)
+                    end
+                end
+            else
+                SETTINGS.system.locale=lid
+            end
             changed=true
             WIDGET._reset()
         end
