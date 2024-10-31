@@ -188,6 +188,12 @@ end
 function scene.draw()
     PROGRESS.drawExteriorHeader()
 
+    if isCtrlPressed() then
+        FONT.set(100)
+        GC.setColor(1,1,1,.626)
+        GC.mStr(CHAR.icon.eye,love.mouse.getX(),love.mouse.getY()-64)
+    end
+
     GC.replaceTransform(SCR.xOy_u)
     FONT.set(60)
     GC.setColor(1,1,1,1-curLang%1*2)
@@ -233,15 +239,21 @@ local function _setLang(lid)
                 local newLocale=SETTINGS.system.locale:upper()
                 TABLE.flatten(oldText,6.26)
                 TABLE.flatten(newText,6.26)
+                local anyMissing
                 for entry in next,newText do
                     if not oldText[entry] then
-                        MSG.new('warn',("[$1] Missing '$2'"):repD(oldLocale,entry),26)
+                        MSG.new('info',("[$1] missing '$2'"):repD(oldLocale,entry),26)
+                        anyMissing=true
                     end
                 end
                 for entry in next,oldText do
                     if not newText[entry] then
-                        MSG.new('warn',("[$1] Missing '$2'"):repD(newLocale,entry),26)
+                        MSG.new('info',("[$1] missing '$2'"):repD(newLocale,entry),26)
+                        anyMissing=true
                     end
+                end
+                if anyMissing then
+                    MSG.new('warn',"Some i18n strings missing",26)
                 end
             else
                 SETTINGS.system.locale=lid
