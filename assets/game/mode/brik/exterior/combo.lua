@@ -17,6 +17,7 @@ return {
                     mechLib.common.music.set(P,{path='.comboCount',s=50,e=100},'afterClear')
                 end,
             },
+            beforePress=mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
             afterDrop=mechLib.brik.comboGenerator.event_afterDrop,
             afterLock=mechLib.brik.comboGenerator.event_afterLock,
             afterClear=mechLib.brik.comboGenerator.event_afterClear,
