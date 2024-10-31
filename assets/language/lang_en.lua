@@ -262,6 +262,11 @@ local L={
     modeTask_sequence_pento_desc="Clear with a Pento",
     modeTask_sequence_unknown_desc="Clear with a ???",
 
+    modeTask_invis_haunted_title="Haunted",
+    modeTask_invis_haunted_desc="Clear 4 lines",
+    modeTask_invis_hidden_title="Hidden",
+    modeTask_invis_hidden_desc="Clear a Techrash",
+
     modeTask_hypersonic_low_title="Low",
     modeTask_hypersonic_low_desc="Clear 4 lines",
     modeTask_hypersonic_high_title="High",
@@ -288,14 +293,14 @@ local L={
 
     modeTask_survivor_scattered_title="Scattered",
     modeTask_survivor_scattered_desc="Send 8 lines",
-    achievementMessage={ -- TRASLATING NOTE: The tone can be lighter
+    modeTask_survivor_power_title="Power",
     modeTask_survivor_power_desc="Send 8 lines with 1 Eff",
     modeTask_survivor_spike_title="Spike",
     modeTask_survivor_spike_desc="Send 8 lines with 2 Eff",
 
     -- Achievement
     ---@enum (key) Techmino.Text.Achievement
-    achievementMessage={
+    achievementMessage={ -- TRASLATING NOTE: The tone can be lighter
         dict_shortcut="Hotkey Expert",
         exterior_sprint_gunJumping="Gun jumping detected",
         exterior_excavate_notDig="What are you doing?",
