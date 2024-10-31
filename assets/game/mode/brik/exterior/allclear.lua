@@ -25,6 +25,7 @@ return {
                 newQuestion(P)
                 return 1,2
             end,
+            beforePress=mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
             afterClear=function(P)
                 if P.field:getHeight()==0 then
                     newQuestion(P)
