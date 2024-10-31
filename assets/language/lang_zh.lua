@@ -262,6 +262,11 @@ local L={
     modeTask_sequence_pento_desc="用五连块消除",
     modeTask_sequence_unknown_desc="用？？？消除",
 
+    modeTask_invis_haunted_title="Haunted",
+    modeTask_invis_haunted_desc="消除四行",
+    modeTask_invis_hidden_title="Hidden",
+    modeTask_invis_hidden_desc="消四",
+
     modeTask_hypersonic_low_title="Low",
     modeTask_hypersonic_low_desc="消除四行",
     modeTask_hypersonic_high_title="High",
