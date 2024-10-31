@@ -1,3 +1,10 @@
+--[[
+    中文是本应用的原始语言之一，通常由MrZ维护，不需要修改
+    请尽量保持所有的语言文件行数一致，方便定位和补充
+    按住Ctrl再选语言来对比语言差异
+    注意"TRASLATING NOTE"标记，因为有故事背景
+    不能完全理解含义的时候请去问MrZ，不用怕打扰
+]]
 ---@class Techmino.I18N
 local L={
     -- Info
@@ -82,7 +89,7 @@ local L={
     button_back="返回",
 
     simulation_title="模拟",
-    graph_brik_title="M-图谱", -- 翻译注意：取自“知识图谱”(人工智能领域)
+    graph_brik_title="M-图谱", -- TRASLATING NOTE: 取自“知识图谱”(人工智能领域)
     settings_title="设置",
 
     setting_asd="重复移动延迟",
@@ -216,7 +223,7 @@ local L={
     about_peopleLost="你弄丢了 $1 !",
 
     -- Mode name
-    exteriorModeInfo={
+    exteriorModeInfo={ -- TRASLATING NOTE: 不需要完全准确，可以尝试引用你使用的语言中的俗语
         sprint=           {"竞速","速度即一切"},
         sequence=         {"序列","面对奇异的方块序列"},
         invis=            {"隐形","方块落下后将不可见"},
@@ -287,7 +294,8 @@ local L={
     modeTask_survivor_spike_desc="打出8行攻击 且 效率达到2",
 
     -- Achievement
-    achievementMessage={
+    ---@enum (key) Techmino.Text.Achievement
+    achievementMessage={ -- TRASLATING NOTE: 语气可以更轻松
         dict_shortcut="快捷键高手",
         exterior_sprint_gunJumping="检测到抢跑",
         exterior_excavate_notDig="你在干什么？",

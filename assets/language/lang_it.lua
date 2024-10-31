@@ -1,3 +1,10 @@
+--[[
+    If you want to contribute translations, play and unlock "Exterior" chapter first
+    Try keeping all language files have same line count, will make translators easier to find what's missing
+    You can check if there are missing strings by "Ctrl + [Pick a Language]"
+    Don't ignore the "TRASLATING NOTE" mark, it's necessary to be accurate because there's lore
+    Ask MrZ for more information if you cannot fully understand the text, don't worry about disturbing me!
+]]
 ---@class Techmino.I18N
 local L={
     -- Info
@@ -288,7 +295,7 @@ local L={
 
     -- Achievement
     ---@enum (key) Techmino.Text.Achievement
-    achievementMessage={
+    achievementMessage={ -- TRASLATING NOTE: The tone can be lighter
         dict_shortcut="Esperto di Hotkeys",
         -- exterior_sprint_gunJumping="Gun jumping detected",
         exterior_excavate_notDig="Che stai facendo?",
