@@ -18,7 +18,7 @@ return {
         playBgm('race')
     end,
     settings={brik={
-        -- clearRule='float',
+        -- clearRule='line_float',
         spin_immobile=true,
         spin_corners=3,
         seqType='bag7_sprint',
@@ -141,7 +141,7 @@ return {
                 end,
             },
             afterClear={
-                -- mechLib.brik.misc.cascade_event_afterClear,
+                -- mechLib.brik.misc.chain_event_afterClear,
                 function(P)
                     if P.stat.line>=P.modeData.target.line then
                         P.modeData.target.line=TABLE.next(recordedLines,P.modeData.target.line)
