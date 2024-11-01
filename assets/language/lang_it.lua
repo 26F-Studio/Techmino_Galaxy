@@ -115,14 +115,14 @@ local L={
     setting_sysCursor="Cursore esterno",
     setting_clickFX="Click FX",
     setting_power="Stato terminale",
-    setting_clean="VRAM Boost",
-    setting_fullscreen="Fullscreen",
+    setting_clean="Accellerazione VRAM",
+    setting_fullscreen="Schermo intero",
     setting_portrait="Portrait",
     setting_autoMute="Muta quando la finestra non è focalizzata",
     setting_showTouch="Mostra controlli touch",
 
     setting_maxFPS="FPS Massimi",
-    setting_updRate="Update rate",
+    setting_updRate="Indice di aggiornamento",
     setting_drawRate="Velocità di aggiornamento",
     setting_msaa="MSAA",
     setting_fmod_maxChannel="Canali massimi",
@@ -141,7 +141,7 @@ local L={
     keyset_brik_softDrop=   "Soft Drop",
     keyset_brik_hardDrop=   "Hard Drop",
     keyset_brik_holdPiece=  "Riserva",
-    keyset_brik_skip=       "Skip",
+    keyset_brik_skip=       "Salta",
 
     keyset_gela_moveLeft=   "Muovi a Sinistra",
     keyset_gela_moveRight=  "Muovi a Destra",
@@ -150,7 +150,7 @@ local L={
     keyset_gela_rotate180=  "Ruota a 180 Gradi",
     keyset_gela_softDrop=   "Soft Drop",
     keyset_gela_hardDrop=   "Hard Drop",
-    keyset_gela_skip=       "Skip",
+    keyset_brik_skip=       "Salta",
 
     keyset_acry_swapLeft=    "Scambia a Sinistra",
     keyset_acry_swapRight=   "Scambia a Destra",
@@ -213,7 +213,7 @@ local L={
     main_out_multi="Multiplo",
 
     musicroom_title="Stanza musicale",
-    musicroom_fullband="Banda Pienab",
+    musicroom_fullband="Banda Piena",
     musicroom_section='Coro',
     musicroom_autoplay="Cambio automatico",
 
@@ -226,7 +226,7 @@ local L={
     exteriorModeInfo={ -- TRASLATING NOTE: Unnecessary to be accurate, try to quote some short proverbs in your language
         sprint=           {"Sprint","La velocità è tutto ciò di cui hai bisogno"},
         sequence=         {"Sequenza","Affronta strane sequenze di tetromini"},
-        invis=            {"Invisibile","I pezzi diventano invisibili appena piazzati"},
+        hidden=           {"Invisibile","I pezzi diventano invisibili appena piazzati"},
         tspin=            {"T-Spin","Costruisci terreni speciali"},
         marathon=         {"Maratona","Resisti contro la gravità in aumento"},
         allclear=         {"All Clear","Gli All-Clear controllati sono possibili"},
@@ -241,6 +241,7 @@ local L={
         chain=            {"Catena","Completa linee con lo stesso colore"},
         action=           {"Azione","Usa la tastiera e il mouse contemporaneamente"},
     },
+
 
     -- Submode Task Texts
     modeTask_unknown_title="???",
@@ -284,12 +285,12 @@ local L={
     modeTask_backfire_normal_title="Normale",
     modeTask_backfire_normal_desc="Invia 6 linee completando fino a 6 linee",
     modeTask_backfire_amplify_title="Amplificato",
-    modeTask_backfire_amplify_desc="Invia 8 lines completando fino a 4 lines",
+    modeTask_backfire_amplify_desc="Invia 8 linee completando fino a 4 linee",
 
     modeTask_survivor_scattered_title="Sparpagliato",
     modeTask_survivor_scattered_desc="Completa 8 linee",
     modeTask_survivor_power_title="Potenza",
-    modeTask_survivor_power_desc="Invia 8 lines con 1 Eff",
+    modeTask_survivor_power_desc="Invia 8 linee con 1 Eff",
     modeTask_survivor_spike_title="Spike",
     modeTask_survivor_spike_desc="Invia 8 linee con 2 Eff",
 
