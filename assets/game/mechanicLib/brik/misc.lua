@@ -178,7 +178,7 @@ do -- Random Press
     function misc.randomPress_event_always(P)
         if not P.timing then return end
         P.modeData.randomPressTimer=P.modeData.randomPressTimer-1
-        if P.modeData.randomPressTimer==0 then
+        if P.modeData.randomPressTimer<=0 then
             local r=P:random(P.holdTime==0 and 5 or 4)
             if r==1 then
                 P:moveLeft()

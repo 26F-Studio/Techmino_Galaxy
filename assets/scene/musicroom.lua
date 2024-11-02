@@ -152,7 +152,7 @@ function scene.keyDown(key,isRep)
     elseif key=='backspace' or key=='delete' then
         searchStr=""
     elseif #key==1 and key:find'[0-9a-z]' then
-        if searchTimer==0 then
+        if searchTimer<=0 then
             if searchStr:sub(6)=='recoll' then
                 PROGRESS.setSecret('musicroom_recollection')
             end
