@@ -529,7 +529,7 @@ end
 ---@param sign? '<'|'>' #default to `'>'` bigger=better, `'<'` smaller=better
 ---@return boolean success
 function PROGRESS.setExteriorScore(mode,key,value,sign)
-    sign=sign or '>'
+    assert(sign=='<' or sign=='>',"Saving condition required '>'|'<'")
     local data=prgs.exteriorMap[mode]
     if not data then
         data={}

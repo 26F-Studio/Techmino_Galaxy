@@ -109,7 +109,7 @@ return {
                             T.add(P,'sequence_mph','modeTask_sequence_mph_title','modeTask_sequence_mph_desc')
                         end
                         T.set(P,'sequence_mph',true)
-                        PROGRESS.setExteriorScore('sequence','showMPH',1)
+                        PROGRESS.setExteriorScore('sequence','showMPH',1,'>')
                         P.modeData.subMode='mph'
                         playBgm('blox')
                         P:setSequenceGen('messy','-clearData')
@@ -146,7 +146,7 @@ return {
                     elseif MATH.between(P.hand.shape,8,25) then
                         T.set(P,'sequence_pento',true)
                         T.setTitle(P,'sequence_pento','modeTask_sequence_pento_title','modeTask_sequence_pento_desc')
-                        PROGRESS.setExteriorScore('sequence','showPento',1)
+                        PROGRESS.setExteriorScore('sequence','showPento',1,'>')
                         P.modeData.subMode='pento'
                         playBgm('beat5th')
                         P:setSequenceGen(sequence_pento_arc,'-clearData -clearNext')
@@ -183,7 +183,7 @@ return {
                     for _,v in next,{'mph','flood','drought','saw','rect','rain'} do
                         if PROGRESS.getExteriorModeScore('sequence',v) then count=count+1 end
                     end
-                    if count>=5 then PROGRESS.setExteriorScore('sequence','showPento',1) end
+                    if count>=5 then PROGRESS.setExteriorScore('sequence','showPento',1,'>') end
                 end
             end
         },

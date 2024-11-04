@@ -71,7 +71,7 @@ return {
                         elseif P.modeData.tspin==3 and P.modeData.tspinText=='target_tst' and PROGRESS.getSecret('exterior_tspin_10TST') then
                             goSecretApp='uttt'
                         elseif P.modeData.tspin>=10 then
-                            PROGRESS.setExteriorScore('tspin','any',P.modeData.tspin)
+                            PROGRESS.setExteriorScore('tspin','any',P.modeData.tspin,'>')
                             if P.modeData.tspinText=='target_tss' then
                                 PROGRESS.setSecret('exterior_tspin_10TSS')
                                 goSecretApp='polyforge'
@@ -88,10 +88,10 @@ return {
                             SCN.go(goSecretApp)
                         end
                     else
-                        PROGRESS.setExteriorScore('tspin','any',P.modeData.tsd)
-                        PROGRESS.setExteriorScore('tspin','tsd',P.modeData.tsd)
+                        PROGRESS.setExteriorScore('tspin','any',P.modeData.tsd,'>')
+                        PROGRESS.setExteriorScore('tspin','tsd',P.modeData.tsd,'>')
                         if P.modeData.hardModeFlag then
-                            PROGRESS.setExteriorScore('tspin','tsd_hard',P.modeData.tsd)
+                            PROGRESS.setExteriorScore('tspin','tsd_hard',P.modeData.tsd,'>')
                         end
                     end
 

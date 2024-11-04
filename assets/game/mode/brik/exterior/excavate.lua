@@ -45,7 +45,7 @@ return {
                         if split then
                             T.set(P,'excavate_checker',true)
                             T.setTitle(P,'excavate_checker','modeTask_excavate_checker_title','modeTask_excavate_checker_desc')
-                            PROGRESS.setExteriorScore('excavate','showChecker',1)
+                            PROGRESS.setExteriorScore('excavate','showChecker',1,'>')
                             P.modeData.digMode='checker'
                             P.modeData.target.lineDig=8
                             P.modeData.lineStay=8
@@ -90,7 +90,7 @@ return {
                     PROGRESS.setExteriorScore('dig',P.modeData.digMode,P.gameTime,'<')
 
                     if PROGRESS.getExteriorModeScore('excavate','shale') and PROGRESS.getExteriorModeScore('excavate','volcanics') then
-                        PROGRESS.setExteriorScore('excavate','showChecker',1)
+                        PROGRESS.setExteriorScore('excavate','showChecker',1,'>')
                     end
 
                     local playCount=PROGRESS.getExteriorModeScore('dig','playCount') or 0
@@ -101,7 +101,7 @@ return {
                     then
                         PROGRESS.setExteriorUnlock('backfire')
                     end
-                    PROGRESS.setExteriorScore('dig','playCount',playCount+1)
+                    PROGRESS.setExteriorScore('dig','playCount',playCount+1,'>')
                 end
             end,
         },
