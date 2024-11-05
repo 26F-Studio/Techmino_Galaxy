@@ -66,7 +66,7 @@
 ---@field id number piece id
 ---@field did number drop id (exist when hand piece locks)
 ---@field cid string cell id (unique) (already exist when piece display in next queue)
----@field color number 0~63
+---@field color number 000~999
 ---@field alpha? number 0~1
 ---@field conn table<string, any>
 ---@field bias {expBack?:number, lineBack?:number, teleBack?:number, x:number, y:number}

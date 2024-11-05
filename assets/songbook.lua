@@ -12,11 +12,16 @@
 ---@field multitrack? boolean
 ---@field looppoint? boolean
 
+-- Ordering rule of music with multiple authors:
+-- 1. Prepare seats equal to the number of all authors, then choose one by one.
+-- 2. Original Author(s) choose first, then Direct Author(s).
+-- 3. Default to choose the first seat available. Can also choose not to credit.
+
 ---@enum (key) Techmino.MusicName
 local songbook={
     ['8-bit happiness']          ={},
     ['8-bit sadness']            ={},
-    ['antispace']                ={message="Blank remix remix"},
+    ['antispace']                ={message="Blank remix^2"},
     ['battle']                   ={author="Aether & MrZ"},
     ['blank']                    ={message="The beginning"},
     ['blox']                     ={message="Recollection remix"},
@@ -95,7 +100,9 @@ local songbook={
     ['reason remix']             ={author="TetraCepra"},
     ['seeking star']             ={},
     ['space warp']               ={author="LR & MrZ"},
-    ['invisible']                ={author="DJ Asriel"},
+    ['invisible mode']           ={author="DJ Asriel"},
+    ['invisible mode 2']         ={author="DJ Asriel"},
+    ['total mayhem']             ={author="DJ Asriel"},
 
     ['caprice']                               ={inside=true,redirect='rectification'},
     ['fruit dance_ex']                        ={inside=true,redirect='fruit dance'},
@@ -112,10 +119,11 @@ local songbook={
     ['reason remix_mix']                      ={inside=true,author="TetraCepra",redirect='reason remix'},
     ['sakura_noloop']                         ={inside=true,author="C₂₉H₂₅N₃O₅",redirect='sakura'},
     ['shibamata_noloop']                      ={inside=true,author="C₂₉H₂₅N₃O₅",redirect='shibamata'},
+    ['invisible']                             ={inside=true,author="DJ Asriel"},
 }
 
 for name,data in next,songbook do
-    if not data.author then data.author="MrZ" end
+    if not data.author then data.author="MrZ" end -- MrZ is fun!
     local words=name:split(' ')
     for i=1,#words do
         words[i]=words[i]:sub(1,1):upper()..words[i]:sub(2)
