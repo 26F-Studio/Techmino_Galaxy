@@ -469,10 +469,10 @@ do -- Variabal Next
 end
 
 do -- Haunted
+    local default_spreadTime=26
+    local default_lifeTime=260
     local default_lightVisTimer=1000
     local default_lightFadeTime=800
-    local default_spreadTime=50
-    local default_lifeTime=1000
 
     ---@class Techmino.Mech.Brik.HauntedLight
     ---@field x integer
@@ -483,6 +483,21 @@ do -- Haunted
     ---@field listKey number
     ---@field mapKey string
 
+    local function delLight(P,c0)
+        local md=P.modeData
+        ---@type Techmino.Mech.Brik.HauntedLight[]
+        local list=md.ghostLight_List
+        ---@type Map<Techmino.Mech.Brik.HauntedLight>
+        local map=md.ghostLight_Map
+
+        map[c0.mapKey]=nil
+        if c0.listKey==#list then
+            list[c0.listKey]=nil
+        else
+            list[#list].listKey=c0.listKey
+            list[c0.listKey],list[#list]=list[#list],nil
+        end
+    end
     local function newLight(P,x,y,power)
         local md=P.modeData
         if not (x>=1 and x<=P.settings.fieldW and y>=1 and y<=P.field:getHeight()) then return end
@@ -515,23 +530,9 @@ do -- Haunted
         }
         list[l.listKey],map[x..','..y]=l,l
     end
-    local function delLight(P,c0)
-        local md=P.modeData
-        ---@type Techmino.Mech.Brik.HauntedLight[]
-        local list=md.ghostLight_List
-        ---@type Map<Techmino.Mech.Brik.HauntedLight>
-        local map=md.ghostLight_Map
-
-        map[c0.mapKey]=nil
-        if c0.listKey==#list then
-            list[c0.listKey]=nil
-        else
-            list[#list].listKey=c0.listKey
-            list[c0.listKey],list[#list]=list[#list],nil
-        end
-    end
-    misc.haunted_newLight=newLight
     misc.haunted_delLight=delLight
+    misc.haunted_newLight=newLight
+    ---@type fun(P:Techmino.Player.Brik,spreadTime:number,lifeTime:number,visTime:number,fadeTime:number)
     function misc.haunted_turnOn(P,spreadTime,lifeTime,visTime,fadeTime)
         if not P.modeData.ghostLight_powerID then
             P.modeData.ghostLight_powerID=0
@@ -541,10 +542,10 @@ do -- Haunted
             P:addEvent('afterLock',mechLib.brik.misc.haunted_afterLock)
             -- P:addEvent('drawInField',mechLib.brik.misc.haunted_drawInField)
         end
-        P.modeData.ghostLight_lightVisTimer=visTime or P.modeData.ghostLight_lightVisTimer or default_lightVisTimer
-        P.modeData.ghostLight_lightFadeTime=fadeTime or P.modeData.ghostLight_lightFadeTime or default_lightFadeTime
         P.modeData.ghostLight_spreadTime=spreadTime or P.modeData.ghostLight_spreadTime or default_spreadTime
         P.modeData.ghostLight_lifeTime=lifeTime or P.modeData.ghostLight_lifeTime or default_lifeTime
+        P.modeData.ghostLight_lightVisTimer=visTime or P.modeData.ghostLight_lightVisTimer or default_lightVisTimer
+        P.modeData.ghostLight_lightFadeTime=fadeTime or P.modeData.ghostLight_lightFadeTime or default_lightFadeTime
     end
     function misc.haunted_always(P)
         local list=P.modeData.ghostLight_List
@@ -552,6 +553,7 @@ do -- Haunted
             ---@type Techmino.Mech.Brik.HauntedLight
             local c=list[i]
             local x,y=c.x,c.y
+            local discard
             if c.spreadTimer then
                 c.spreadTimer=c.spreadTimer-1
                 if c.spreadTimer<=0 then
@@ -561,16 +563,27 @@ do -- Haunted
                     newLight(P,x,y+1,c.power)
                     c.spreadTimer=nil
                 end
+            elseif not P.field:getCell(x,y) then
+                discard=true
+            else
+                c.lifeTimer=c.lifeTimer-1
+                if c.lifeTimer<=0 then
+                    discard=true
+                end
             end
-            c.lifeTimer=c.lifeTimer-1
-            if c.lifeTimer<=0 or not P.field:getCell(x,y) then
+            if discard then
                 delLight(P,c)
             end
         end
     end
     function misc.haunted_afterLock(P)
-        P.modeData.ghostLight_powerID=P.modeData.ghostLight_powerID+1
-        newLight(P,P.handX,P.handY,P.modeData.ghostLight_powerID)
+        local powID=P.modeData.ghostLight_powerID+1
+        P.modeData.ghostLight_powerID=powID
+        local bx,by=P.handX-1,P.handY-1
+        local B=P.hand.matrix
+        for y=1,#B do for x=1,#B[1] do
+            if B[y][x] then newLight(P,bx+x,by+y,powID) end
+        end end
     end
     function misc.haunted_drawInField(P)
         -- Debugging use
