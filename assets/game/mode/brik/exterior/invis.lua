@@ -1,13 +1,38 @@
 local max,min=math.max,math.min
 local floor,abs=math.floor,math.abs
-local ins=table.insert
+local ins,rem=table.insert,table.remove
 local cIntp=MATH.clampInterpolate
 
 -- Speed of Invisible EP:
--- Phase 1: 126 BPM (476.2 ms/Beat)
--- Phase 2: 143 BPM (419.6 ms/Beat)
--- Phase 3: 160 BPM (375.0 ms/Beat)
+-- Phase 1: 126 BPM (476.2 ms/Beat) 6=F
+-- Phase 2: 143 BPM (419.6 ms/Beat) 6=F#
+-- Phase 3: 160 BPM (375.0 ms/Beat) 6=G
 
+local function haunted_dropSound1(vol)
+    FMOD.effect('drop_'..math.random(6),{tune=-4,volume=vol})
+end
+local function haunted_dropSound2(vol)
+    FMOD.effect('drop_'..math.random(6),{tune=-3,volume=vol})
+end
+local function haunted_dropSound3(vol)
+    FMOD.effect('drop_'..math.random(6),{tune=-2,volume=vol})
+end
+local function haunted_afterLock(P)
+    ---@cast P Techmino.Player.Brik
+    local l=P.modeData.lastDropTimes
+    ins(l,1,P.gameTime)
+    l[7]=nil
+    local acc
+    for i=1,5 do
+        local l2=TABLE.copy(l)
+        rem(l2,i)
+        -- TODO: check linear
+    end
+    if acc then
+        P.modeData.accuracyPoint=P.modeData.accuracyPoint+acc
+        playSample('organ',{'F2'})
+    end
+end
 local function haunted_p2_afterSpawn(P)
     local N=P.nextQueue[#P.nextQueue]
     if not N then return end
@@ -36,6 +61,10 @@ local function haunted_p3_afterSpawn(P)
         end
     end
 end
+regFuncLib(haunted_dropSound1,'exterior_invis.haunted_dropSound1')
+regFuncLib(haunted_dropSound2,'exterior_invis.haunted_dropSound2')
+regFuncLib(haunted_dropSound3,'exterior_invis.haunted_dropSound3')
+regFuncLib(haunted_afterLock,'exterior_invis.haunted_afterLock')
 regFuncLib(haunted_p2_afterSpawn,'exterior_invis.haunted_p2_afterSpawn')
 regFuncLib(haunted_p3_afterSpawn,'exterior_invis.haunted_p3_afterSpawn')
 
@@ -51,8 +80,6 @@ return {
         pieceFadeTime=1000,
         event={
             playerInit=function(P)
-                P.modeData.maxSimplicity=0
-                P.modeData.simplicity=0
                 P.modeData.target.line=100
 
                 local T=mechLib.common.task
@@ -64,6 +91,7 @@ return {
             end,
             afterClear={
                 function(P,clear)
+                    ---@cast P Techmino.Player.Brik
                     local T=mechLib.common.task
                     T.set(P,'invis_haunted',P.stat.line/4,"("..P.stat.line.."/4)")
                     if clear.line>=4 then
@@ -82,15 +110,23 @@ return {
                     if P.modeData.subMode then
                         if P.modeData.subMode=='haunted' then
                             -- Haunted Phase 1 init
+                            P.modeData.phase=1
+                            P.modeData.lastDropTimes={}
+                            P.modeData.accuracyPoint=0
                             P.settings.spawnDelay=238
                             P.settings.clearDelay=476
+                            P:addEvent('afterLock',haunted_afterLock)
                             playBgm('invisible')
+                            P:addSoundEvent('drop',haunted_dropSound1)
                             PROGRESS.setBgmUnlocked('invisible mode',1)
                             if FMOD.music.getParam('section')>0 then
                                 FMOD.music.setParam('section',0)
                                 FMOD.music.seek(0)
                             end
                         elseif P.modeData.subMode=='hidden' then
+                            -- Hidden init
+                            P.modeData.maxSimplicity=0
+                            P.modeData.simplicity=0
                             P.settings.pieceVisTime=260
                             P.settings.pieceFadeTime=260
                             mechLib.common.music.set(P,{path='stat.line',s=50,e=100},'afterClear')
@@ -101,69 +137,81 @@ return {
                 function(P,clear)
                     ---@cast P Techmino.Player.Brik
                     if P.modeData.subMode=='haunted' then
-                        local prev,curLine=P.stat.line-clear.line,P.stat.line
-                        if prev<100 and curLine>=100 then
-                            -- Haunted Phase 2 init
-                            P.modeData.target.line=200
-                            P.settings.spawnDelay=210
-                            P.settings.clearDelay=420
-                            P:addEvent('afterSpawn',haunted_p2_afterSpawn)
-                            P:playSound('beep_rise')
-                            FMOD.music.setParam('section',1)
-                            PROGRESS.setBgmUnlocked('invisible mode 2',1)
-                        elseif prev<200 and curLine>=200 then
-                            local passTechrashTorikan=P.stat.clears[4]>42
-                            local passTimeTorikan=P.gameTime<=303e3
-                            if passTechrashTorikan or passTimeTorikan then
-                                -- Haunted Phase 3 init
-                                P.modeData.target.line=260
-                                if passTechrashTorikan and passTimeTorikan then
-                                    P.settings.spawnDelay=188
-                                    P.settings.clearDelay=188
-                                    P.settings.dropDelay=0
-                                else
-                                    P.settings.spawnDelay=375
-                                    P.settings.clearDelay=0
-                                    P.settings.dropDelay=94
-                                end
-                                P:delEvent('afterSpawn',haunted_p2_afterSpawn)
-                                P:addEvent('afterSpawn',haunted_p3_afterSpawn)
-                                mechLib.brik.misc.haunted_turnOn(P,62,120,600,1000)
-                                P:playSound('beep_rise')
-                                FMOD.music.setParam('section',2)
-                                PROGRESS.setBgmUnlocked('total mayhem',1)
+                        local curLine=P.stat.line
+                        if P.modeData.phase==1 then
+                            if curLine<100 then
+                                -- Haunted Phase 1 step
+                                P.settings.dropDelay=floor(cIntp(20,476,80,238,MATH.clamp(curLine,20,80)))
+                                mechLib.brik.misc.haunted_turnOn(P,
+                                    floor(cIntp(70,5,90,20,curLine)),
+                                    260,
+                                    floor(cIntp(0,1600,80,600,curLine)),
+                                    floor(cIntp(0,600,80,300,curLine))
+                                )
                             else
-                                P:finish('timeout')
+                                -- Haunted Phase 2 init
+                                P.modeData.phase=2
+                                P.modeData.target.line=200
+                                P.settings.spawnDelay=210
+                                P.settings.clearDelay=420
+                                P:addEvent('afterSpawn',haunted_p2_afterSpawn)
+                                P:addSoundEvent('drop',haunted_dropSound2)
+                                P:playSound('beep_rise')
+                                FMOD.music.setParam('section',1)
+                                PROGRESS.setBgmUnlocked('invisible mode 2',1)
                             end
-                        elseif curLine>=260 then
-                            P:finish('win')
-                            FMOD.music.setParam('section',3)
-                            return true
                         end
-
-                        if curLine<100 then
-                            -- Haunted Phase 1 step
-                            P.settings.dropDelay=floor(cIntp(20,476,80,238,MATH.clamp(curLine,20,80)))
-                            mechLib.brik.misc.haunted_turnOn(P,
-                                floor(cIntp(70,5,90,20,curLine)),
-                                260,
-                                floor(cIntp(0,1600,80,600,curLine)),
-                                floor(cIntp(0,600,80,300,curLine))
-                            )
-                        elseif curLine<200 then
-                            -- Haunted Phase 2 step
-                            P.settings.dropDelay=floor(cIntp(120,210,180,105,MATH.clamp(curLine,120,180)))
-                            P.modeData.cyanizeRate=floor(cIntp(102,16,126,100,curLine))
-                            mechLib.brik.misc.haunted_turnOn(P,
-                                floor(cIntp(100,26,200,42,curLine)),
-                                260,
-                                floor(cIntp(100,500,150,300,curLine)),
-                                floor(cIntp(100,300,150,200,curLine))
-                            )
-                        else
-                            -- Haunted Phase 3 step
-                            P.modeData.deColorRate=floor(cIntp(200,0,230,42,curLine))
-                            P.modeData.darkRate=floor(cIntp(220,26,240,62,curLine))
+                        if P.modeData.phase==2 then
+                            if curLine<200 then
+                                -- Haunted Phase 2 step
+                                P.settings.dropDelay=floor(cIntp(120,210,180,105,MATH.clamp(curLine,120,180)))
+                                P.modeData.cyanizeRate=floor(cIntp(102,16,126,100,curLine))
+                                mechLib.brik.misc.haunted_turnOn(P,
+                                    floor(cIntp(100,26,200,42,curLine)),
+                                    260,
+                                    floor(cIntp(100,500,150,300,curLine)),
+                                    floor(cIntp(100,300,150,200,curLine))
+                                )
+                            else
+                                local passTechrashTorikan=P.stat.clears[4]>42
+                                local passTimeTorikan=P.gameTime<=303e3
+                                if passTechrashTorikan or passTimeTorikan then
+                                    -- Haunted Phase 3 init
+                                    P.modeData.phase=3
+                                    P.modeData.target.line=260
+                                    if passTechrashTorikan and passTimeTorikan then
+                                        P.settings.spawnDelay=188
+                                        P.settings.clearDelay=188
+                                        P.settings.dropDelay=0
+                                        P.settings.asd=max(P.settings.asd,26)
+                                    else
+                                        P.settings.spawnDelay=375
+                                        P.settings.clearDelay=0
+                                        P.settings.dropDelay=94
+                                    end
+                                    P:delEvent('afterSpawn',haunted_p2_afterSpawn)
+                                    P:addEvent('afterSpawn',haunted_p3_afterSpawn)
+                                    mechLib.brik.misc.haunted_turnOn(P,62,120,600,1000)
+                                    P:addSoundEvent('drop',haunted_dropSound3)
+                                    P:playSound('beep_rise')
+                                    FMOD.music.setParam('section',2)
+                                    PROGRESS.setBgmUnlocked('total mayhem',1)
+                                else
+                                    P:finish('timeout')
+                                end
+                            end
+                        end
+                        if P.modeData.phase==3 then
+                            if curLine<260 then
+                                -- Haunted Phase 3 step
+                                P.modeData.deColorRate=floor(cIntp(200,0,230,42,curLine))
+                                P.modeData.darkRate=floor(cIntp(220,26,240,62,curLine))
+                            else
+                                -- Haunted finished
+                                P:finish('win')
+                                FMOD.music.setParam('section',3)
+                                return true
+                            end
                         end
                     elseif P.modeData.subMode=='hidden' then
                         if P.stat.line>=P.modeData.target.line then
