@@ -268,6 +268,7 @@ function P:addEvent(name,E)
     end
 end
 local function _scrap() return true end
+---Mark an event as scrapped, it will destroy itself after next update
 ---@param E number|function|Techmino.Event
 function P:delEvent(name,E)
     local L=self.event[name]
