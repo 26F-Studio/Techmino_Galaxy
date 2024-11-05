@@ -1,12 +1,13 @@
 local max,min=math.max,math.min
-local floor,abs=math.floor,math.abs
+local floor=math.floor
 local ins,rem=table.insert,table.remove
-local cIntp=MATH.clampInterpolate
+local round,cIntp=MATH.round,MATH.clampInterpolate
 
 -- Speed of Invisible EP:
--- Phase 1: 126 BPM (476.2 ms/Beat) 6=F
--- Phase 2: 143 BPM (419.6 ms/Beat) 6=F#
--- Phase 3: 160 BPM (375.0 ms/Beat) 6=G
+-- Phase 1: 126 BPM (476.19 ms/Beat) 6=F
+-- Phase 2: 143 BPM (419.58 ms/Beat) 6=F#
+-- Phase 3: 160 BPM (375.00 ms/Beat) 6=G
+local beatItvl={476.19,419.58,375.00}
 
 local function haunted_dropSound1(vol)
     FMOD.effect('drop_'..math.random(6),{tune=-4,volume=vol})
@@ -22,11 +23,16 @@ local function haunted_afterLock(P)
     local l=P.modeData.lastDropTimes
     ins(l,1,P.gameTime)
     l[7]=nil
+
+    local interval=beatItvl[P.modeData.section]
     local acc
     for i=1,5 do
         local l2=TABLE.copy(l)
         rem(l2,i)
-        -- TODO: check linear
+        -- l2: int[5]
+        for j=1,5 do
+            l2[j]=l2[j]
+        end
     end
     if acc then
         P.modeData.accuracyPoint=P.modeData.accuracyPoint+acc
@@ -113,8 +119,9 @@ return {
                             P.modeData.phase=1
                             P.modeData.lastDropTimes={}
                             P.modeData.accuracyPoint=0
-                            P.settings.spawnDelay=238
-                            P.settings.clearDelay=476
+                            P.settings.spawnDelay=round(beatItvl[1]/2)
+                            P.settings.clearDelay=round(beatItvl[1])
+                            P.settings.lockDelay=round(beatItvl[1]*2.5)
                             P:addEvent('afterLock',haunted_afterLock)
                             playBgm('invisible')
                             P:addSoundEvent('drop',haunted_dropSound1)
@@ -141,19 +148,20 @@ return {
                         if P.modeData.phase==1 then
                             if curLine<100 then
                                 -- Haunted Phase 1 step
-                                P.settings.dropDelay=floor(cIntp(20,476,80,238,MATH.clamp(curLine,20,80)))
+                                P.settings.dropDelay=round(cIntp(20,beatItvl[1],80,beatItvl[1]/2,MATH.clamp(curLine,20,80)))
                                 mechLib.brik.misc.haunted_turnOn(P,
-                                    floor(cIntp(70,5,90,20,curLine)),
+                                    round(cIntp(70,5,90,20,curLine)),
                                     260,
-                                    floor(cIntp(0,1600,80,600,curLine)),
-                                    floor(cIntp(0,600,80,300,curLine))
+                                    round(cIntp(0,1600,80,600,curLine)),
+                                    round(cIntp(0,600,80,300,curLine))
                                 )
                             else
                                 -- Haunted Phase 2 init
                                 P.modeData.phase=2
                                 P.modeData.target.line=200
-                                P.settings.spawnDelay=210
-                                P.settings.clearDelay=420
+                                P.settings.spawnDelay=round(beatItvl[2]/2)
+                                P.settings.clearDelay=round(beatItvl[2])
+                                P.settings.lockDelay=round(beatItvl[2]*2.5)
                                 P:addEvent('afterSpawn',haunted_p2_afterSpawn)
                                 P:addSoundEvent('drop',haunted_dropSound2)
                                 P:playSound('beep_rise')
@@ -164,30 +172,32 @@ return {
                         if P.modeData.phase==2 then
                             if curLine<200 then
                                 -- Haunted Phase 2 step
-                                P.settings.dropDelay=floor(cIntp(120,210,180,105,MATH.clamp(curLine,120,180)))
-                                P.modeData.cyanizeRate=floor(cIntp(102,16,126,100,curLine))
+                                P.settings.dropDelay=round(cIntp(120,round(beatItvl[2]/2),180,round(beatItvl[2]/4),MATH.clamp(curLine,120,180)))
+                                P.modeData.cyanizeRate=round(cIntp(102,16,126,100,curLine))
                                 mechLib.brik.misc.haunted_turnOn(P,
-                                    floor(cIntp(100,26,200,42,curLine)),
+                                    round(cIntp(100,26,200,42,curLine)),
                                     260,
-                                    floor(cIntp(100,500,150,300,curLine)),
-                                    floor(cIntp(100,300,150,200,curLine))
+                                    round(cIntp(100,800,150,500,curLine)),
+                                    round(cIntp(100,400,150,260,curLine))
                                 )
                             else
-                                local passTechrashTorikan=P.stat.clears[4]>42
-                                local passTimeTorikan=P.gameTime<=303e3
+                                local passTimeTorikan=P.gameTime<=420e3
+                                local passTechrashTorikan=P.stat.clears[4]>=42
                                 if passTechrashTorikan or passTimeTorikan then
                                     -- Haunted Phase 3 init
                                     P.modeData.phase=3
                                     P.modeData.target.line=260
                                     if passTechrashTorikan and passTimeTorikan then
-                                        P.settings.spawnDelay=188
-                                        P.settings.clearDelay=188
+                                        P.settings.spawnDelay=round(beatItvl[3]/2)
+                                        P.settings.clearDelay=round(beatItvl[3]/2)
                                         P.settings.dropDelay=0
-                                        P.settings.asd=max(P.settings.asd,26)
+                                        P.settings.lockDelay=round(beatItvl[3]*1.5)
+                                        P.settings.asd=max(P.settings.asd,42)
                                     else
-                                        P.settings.spawnDelay=375
+                                        P.settings.spawnDelay=round(beatItvl[3])
                                         P.settings.clearDelay=0
-                                        P.settings.dropDelay=94
+                                        P.settings.dropDelay=round(beatItvl[3]/4)
+                                        P.settings.lockDelay=round(beatItvl[3]*2.5)
                                     end
                                     P:delEvent('afterSpawn',haunted_p2_afterSpawn)
                                     P:addEvent('afterSpawn',haunted_p3_afterSpawn)
@@ -204,8 +214,8 @@ return {
                         if P.modeData.phase==3 then
                             if curLine<260 then
                                 -- Haunted Phase 3 step
-                                P.modeData.deColorRate=floor(cIntp(200,0,230,42,curLine))
-                                P.modeData.darkRate=floor(cIntp(220,26,240,62,curLine))
+                                P.modeData.deColorRate=round(cIntp(200,0,230,42,curLine))
+                                P.modeData.darkRate=round(cIntp(220,26,240,62,curLine))
                             else
                                 -- Haunted finished
                                 P:finish('win')
@@ -224,8 +234,8 @@ return {
                             end
                             P.modeData.simplicity=min(P.modeData.simplicity,62-floor(P.stat.line/5))
                             P.modeData.maxSimplicity=max(P.modeData.maxSimplicity,P.modeData.simplicity)
-                            P.settings.pieceVisTime=floor(MATH.cLerp(260,2e3,P.modeData.simplicity/62))
-                            P.settings.pieceFadeTime=floor(MATH.cLerp(260,1e3,P.modeData.simplicity/62))
+                            P.settings.pieceVisTime=round(MATH.cLerp(260,2e3,P.modeData.simplicity/62))
+                            P.settings.pieceFadeTime=round(MATH.cLerp(260,1e3,P.modeData.simplicity/62))
                         end
                     end
                 end,
