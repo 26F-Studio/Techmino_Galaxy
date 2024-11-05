@@ -58,10 +58,7 @@ return {
                 local T=mechLib.common.task
                 T.install(P)
                 T.add(P,'invis_haunted','modeTask_invis_haunted_title','modeTask_invis_haunted_desc','(0/4)')
-                if PROGRESS.getExteriorModeScore('invis','showHaunted') then
-                    T.add(P,'invis_hidden','modeTask_invis_hidden_title','modeTask_invis_hidden_desc')
-                end
-                if not PROGRESS.getExteriorModeScore('invis','showHaunted') then
+                if PROGRESS.getExteriorModeScore('invis','showHidden') then
                     T.add(P,'invis_hidden','modeTask_invis_hidden_title','modeTask_invis_hidden_desc')
                 end
             end,
@@ -71,6 +68,10 @@ return {
                     T.set(P,'invis_haunted',P.stat.line/4,"("..P.stat.line.."/4)")
                     if clear.line>=4 then
                         P.modeData.subMode='hidden'
+                        if not PROGRESS.getExteriorModeScore('invis','showHidden') then
+                            PROGRESS.setExteriorScore('invis','showHidden',1,'>')
+                            T.add(P,'invis_hidden','modeTask_invis_hidden_title','modeTask_invis_hidden_desc')
+                        end
                         T.set(P,'invis_hidden',true)
                     else
                         if P.stat.line>=4 then

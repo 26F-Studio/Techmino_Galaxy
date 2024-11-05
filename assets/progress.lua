@@ -526,7 +526,7 @@ end
 ---@param mode Techmino.ModeName
 ---@param key string
 ---@param value number
----@param sign? '<'|'>' #default to `'>'` bigger=better, `'<'` smaller=better
+---@param sign? '>'|'<' `'>'` bigger=better, `'<'` smaller=better
 ---@return boolean success
 function PROGRESS.setExteriorScore(mode,key,value,sign)
     assert(sign=='<' or sign=='>',"Saving condition required '>'|'<'")
