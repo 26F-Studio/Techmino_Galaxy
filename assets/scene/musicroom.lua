@@ -152,12 +152,6 @@ function scene.keyDown(key,isRep)
     elseif key=='backspace' or key=='delete' then
         searchStr=""
     elseif #key==1 and key:find'[0-9a-z]' then
-        if searchTimer<=0 then
-            if searchStr:sub(6)=='recoll' then
-                PROGRESS.setSecret('musicroom_recollection')
-            end
-            searchStr=""
-        end
         if #searchStr<26 then
             searchStr=searchStr..key
             searchTimer=1.26
@@ -230,6 +224,17 @@ function scene.update(dt)
     end
     if searchTimer>0 then
         searchTimer=max(searchTimer-dt,0)
+        if searchTimer<=0 then
+            if searchStr:sub(6)=='recoll' then
+                PROGRESS.setSecret('musicroom_recollection')
+            elseif searchStr=='piano' or searchStr=='liszt' then
+                PROGRESS.setSecret('musicroom_piano')
+                SCN.go('piano')
+            elseif searchStr=='chord' then
+                SCN.go('harmony4')
+            end
+            searchStr=""
+        end
     end
     if autoplay and FMOD.music.getPlaying() then
         if autoplay>0 then
