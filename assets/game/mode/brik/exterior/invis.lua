@@ -101,27 +101,41 @@ return {
                 function(P,clear)
                     ---@cast P Techmino.Player.Brik
                     if P.modeData.subMode=='haunted' then
-                        local bLine,curLine=P.stat.line-clear.line,P.stat.line
-                        if bLine<100 and curLine>=100 then
+                        local prev,curLine=P.stat.line-clear.line,P.stat.line
+                        if prev<100 and curLine>=100 then
                             -- Haunted Phase 2 init
                             P.modeData.target.line=200
                             P.settings.spawnDelay=210
                             P.settings.clearDelay=420
                             P:addEvent('afterSpawn',haunted_p2_afterSpawn)
+                            P:playSound('beep_rise')
                             FMOD.music.setParam('section',1)
                             PROGRESS.setBgmUnlocked('invisible mode 2',1)
-                        elseif bLine<200 and curLine>=200 then
-                            -- Haunted Phase 3 init
-                            P.modeData.target.line=260
-                            P.settings.spawnDelay=375
-                            P.settings.clearDelay=0
-                            P.settings.dropDelay=94
-                            P:delEvent('afterSpawn',haunted_p2_afterSpawn)
-                            P:addEvent('afterSpawn',haunted_p3_afterSpawn)
-                            mechLib.brik.misc.haunted_turnOn(P,62,120,600,1000)
-                            FMOD.music.setParam('section',2)
-                            PROGRESS.setBgmUnlocked('total mayhem',1)
-                        elseif bLine<260 and curLine>=260 then
+                        elseif prev<200 and curLine>=200 then
+                            local passTechrashTorikan=P.stat.clears[4]>42
+                            local passTimeTorikan=P.gameTime<=303e3
+                            if passTechrashTorikan or passTimeTorikan then
+                                -- Haunted Phase 3 init
+                                P.modeData.target.line=260
+                                if passTechrashTorikan and passTimeTorikan then
+                                    P.settings.spawnDelay=188
+                                    P.settings.clearDelay=188
+                                    P.settings.dropDelay=0
+                                else
+                                    P.settings.spawnDelay=375
+                                    P.settings.clearDelay=0
+                                    P.settings.dropDelay=94
+                                end
+                                P:delEvent('afterSpawn',haunted_p2_afterSpawn)
+                                P:addEvent('afterSpawn',haunted_p3_afterSpawn)
+                                mechLib.brik.misc.haunted_turnOn(P,62,120,600,1000)
+                                P:playSound('beep_rise')
+                                FMOD.music.setParam('section',2)
+                                PROGRESS.setBgmUnlocked('total mayhem',1)
+                            else
+                                P:finish('timeout')
+                            end
+                        elseif curLine>=260 then
                             P:finish('win')
                             FMOD.music.setParam('section',3)
                             return true
