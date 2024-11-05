@@ -44,6 +44,8 @@ function scene.keyDown(key,isRep)
     elseif act=='help' then
         callDict('setting_out')
         PROGRESS.setSecret('dict_shortcut')
+    elseif key=='d' then
+        _getLatestBank()
     end
     return true
 end

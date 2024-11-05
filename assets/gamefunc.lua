@@ -317,6 +317,14 @@ function task_unloadGame()
     collectgarbage()
 end
 
+function _getLatestBank(dt)
+    TASK.new(function()
+        MSG.new('info',"Opening URL to bank files...")
+        TASK.yieldT(dt or 0.626)
+        love.system.openURL("https://kyzj-my.sharepoint.com/:f:/g/personal/noreply_studio26f_org/ElmKJZYcNpFDhGks9nekrUYBoyr1ZJZgpx1lCyFu6tHXQg?e=vJnaQX")
+    end)
+end
+
 getTouches=love.touch.getTouches
 isMouseDown=love.mouse.isDown
 isKeyDown=love.keyboard.isDown

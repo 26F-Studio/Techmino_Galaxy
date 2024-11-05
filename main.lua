@@ -374,11 +374,14 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
         coreFlag=FMOD.FMOD_INIT_NORMAL,
     }
 
+    local noFile
     if not loadBank('soundbank/Master.strings.bank') then
         MSG.new('warn',"Strings bank file load failed")
+        noFile=true
     end
     if not loadBank('soundbank/Master.bank') then
         MSG.new('warn',"Master bank file load failed")
+        noFile=true
     end
     FMOD.registerMusic((function()
         if not love.filesystem.getInfo('soundbank/Master.bank') then
@@ -391,6 +394,7 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
                 MSG.new('warn',bankName.." bank file not found")
             else
                 local bankMusic=loadBank('soundbank/'..bankName..'.bank')
+                noFile=true
                 if not bankMusic then
                     MSG.new('warn',"bank "..bankName.." load failed")
                 else
@@ -407,6 +411,8 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
                 end
             end
         end
+        if noFile then _getLatestBank(2.6) end
+
         -- print("--------------------------")
         -- print("Musics")
         -- for k,v in next,L do print(k,v)end
