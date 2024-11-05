@@ -392,9 +392,9 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
         for _,bankName in next,{'Music_Beepbox','Music_FL','Music_Community','Music_Extra'} do
             if not love.filesystem.getInfo('soundbank/'..bankName..'.bank') then
                 MSG.new('warn',bankName.." bank file not found")
+                noFile=true
             else
                 local bankMusic=loadBank('soundbank/'..bankName..'.bank')
-                noFile=true
                 if not bankMusic then
                     MSG.new('warn',"bank "..bankName.." load failed")
                 else
