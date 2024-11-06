@@ -415,6 +415,11 @@ scene.widgetList={
 
     -- Volume slider
     {type='slider_progress',pos={.5,.5},x=450,y=360,w=250,text=CHAR.icon.volUp,fontSize=60,disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
+
+    {type='button_invis',pos={1,0},x=-200,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_trigger='button_soft',code=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
+    -- {type='button_invis',pos={1,0},x=-400,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_trigger='button_soft',code=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
+    -- {type='button_invis',pos={1,0},x=-600,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_trigger='button_soft',code=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
+    -- {type='button_invis',pos={1,0},x=-800,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_trigger='button_soft',code=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
 }
 
 return scene
