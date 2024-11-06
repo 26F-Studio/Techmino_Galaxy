@@ -42,6 +42,19 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 ---@field render function
 local P={}
 
+---@class Techmino.Player.TextArg
+---@field text string "[TEXT]"
+---@field duration number 2.6s
+---@field style Zenitha.TextAnimStyle 'appear'
+---@field styleArg any nil
+---@field size number 60
+---@field type string 'norm'
+---@field x number 0
+---@field y number 0
+---@field i number 0.2
+---@field o number 0.5
+---@field c number[] {1,1,1,1}
+
 --------------------------------------------------------------
 -- Tools
 
@@ -113,17 +126,7 @@ local function parseTime(str)
         unit=='ms' and num or
         unit=='m'  and num*60000
 end
---[[arg:
-    text ("[TEXT]")
-    duration ('2.6s')
-    style ('appear')
-    styleArg (nil)
-    size (60)
-    type ('norm')
-    x,y (0,0)
-    i,o (0.2,0.5)
-    c ({1,1,1,1})
-]]
+---@param arg Techmino.Player.TextArg
 function P:say(arg)
     local str=arg.text
     if type(str)=='string' then
