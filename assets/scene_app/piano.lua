@@ -29,19 +29,23 @@ function scene.touchDown(x,y,k)
 end
 scene.mouseDown=scene.touchDown
 
+local _param={
+    tune=1,
+    volume=1,
+    param={'release',1},
+}
 function scene.keyDown(key,isRep,keyCode)
     if not isRep and keys[keyCode] then
         local note=keys[keyCode]+offset
         if isShiftPressed() then note=note+1 end
         if isCtrlPressed() then note=note-1 end
-        activeEventMap[keyCode]=FMOD.effect(inst,{
-            tune=note-26,
-            volume=1,
-            param={'release',release*1.0594630943592953^(note-26)},
-        })
+        _param.tune=note-26
+        _param.volume=1
+        _param.param[2]=release*1.0594630943592953^(note-26)
+        activeEventMap[keyCode]=FMOD.effect(inst,_param)
         TEXT:add{
             text=SFX.getNoteName(note),
-            x=math.random(150,1130),
+            x=800+(keys[keyCode]-40)*26+62*math.random(),
             y=math.random(140,500),
             fontSize=60,
             style='score',
