@@ -261,7 +261,7 @@ end
 ---@param param string
 ---@return number?,number?
 function M.music.getParam(param)
-    if not studio or not playing then return end
+    if not studio or not playing then return -1,-1 end
     local v,fv=playing.event:getParameterByName(param)
     return v,fv
 end
