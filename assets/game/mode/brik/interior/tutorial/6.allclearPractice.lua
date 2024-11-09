@@ -3,10 +3,10 @@ local function newQuestion(P)
     P.modeData.questCount=P.modeData.questCount+1
     P.modeData.currentQuestType=
         P.modeData.score<10 and (
-            'box_3'
-            -- P.modeData.questCount%2==1 and 'box_3' or 'pco3'
+            'box3'
+            -- P.modeData.questCount%2==1 and 'box3' or 'pco3'
         ) or
-        P.modeData.questCount%2==1 and 'box_4' or 'pco4'
+        P.modeData.questCount%2==1 and 'box4' or 'pco4'
     local field,seq=mechLib.brik.allclearGenerator.newQuestion(P,{
         lib=P.modeData.currentQuestType,
         raw=true,
@@ -44,7 +44,7 @@ return {
         },
         event={
             playerInit=function(P)
-                P.modeData.currentQuestType="box_3"
+                P.modeData.currentQuestType='box3'
                 P.modeData.questCount=0
                 P.modeData.score=0
                 P.modeData.protect=false
@@ -69,7 +69,7 @@ return {
                     if ac then
                         local timeUsed=(P.gameTime-P.modeData.lastPassTime)/1000
                         P.modeData.lastPassTime=P.gameTime
-                        local parTime=P.modeData.currentQuestType=='box_3' and 6.26 or 10.33
+                        local parTime=P.modeData.currentQuestType=='box3' and 6.26 or 10.33
                         local scoreAdd=timeUsed<parTime and not P.modeData.protect and 2 or 1
                         P:playSound(scoreAdd<=1 and 'beep_rise' or 'beep_notice')
                         P.modeData.score=math.min(P.modeData.score+scoreAdd,99)
