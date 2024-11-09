@@ -8,6 +8,7 @@ local langList={
     pt="Português",
     id="Bahasa Indonesia",
     ja="日本語",
+    eo="Esperanto"
 }
 local languages={
     "Language  语言  Idioma",
@@ -88,7 +89,7 @@ scene.widgetList={
     {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
 
     {type='button',         x=350,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.en, color='R', sound_trigger='check_on',code=function() _setLang('en') end},
-    {type='button_fill',    x=350,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          color='F'},
+    {type='button_fill',    x=350,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.eo, color='F', sound_trigger='check_on',code=function() _setLang('eo') end},
     {type='button_fill',    x=350,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=35, text='',          color='K'},
     {type='button_fill',    x=350,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=35, text='',          color='G'},
 
