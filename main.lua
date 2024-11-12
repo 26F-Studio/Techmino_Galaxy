@@ -672,8 +672,15 @@ SCN.addSwapStyle('fastFadeHeader',{
         GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
     end,
 })
-SCN.scenes._console.widgetList.output.fontType='codepixel'
-SCN.scenes._console.widgetList.input.fontType='codepixel'
+local _oldLoad=SCN.scenes._console.load
+function SCN.scenes._console.load(...)
+    _oldLoad(...)
+    local l=SCN.scenes._console.widgetList
+    l[5].fontType='codepixel'
+    l[6].fontType='codepixel'
+    l[5]:reset()
+    l[6]:reset()
+end
 
 do -- Power Manager
     local warnThres={-1,2.6,6.26,14.2,26}
