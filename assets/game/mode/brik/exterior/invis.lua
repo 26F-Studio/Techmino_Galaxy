@@ -1,5 +1,5 @@
 local max,min=math.max,math.min
-local floor=math.floor
+local floor,abs=math.floor,math.abs
 local ins,rem=table.insert,table.remove
 local round,cIntp=MATH.round,MATH.clampInterpolate
 
@@ -9,37 +9,76 @@ local round,cIntp=MATH.round,MATH.clampInterpolate
 -- Phase 3: 160 BPM (375.00 ms/Beat) 6=G
 local beatItvl={476.19,419.58,375.00}
 
-local function haunted_dropSound1(vol)
+local haunted={}
+function haunted.dropSound1(vol)
     FMOD.effect('drop_'..math.random(6),{tune=-4,volume=vol})
 end
-local function haunted_dropSound2(vol)
+function haunted.dropSound2(vol)
     FMOD.effect('drop_'..math.random(6),{tune=-3,volume=vol})
 end
-local function haunted_dropSound3(vol)
+function haunted.dropSound3(vol)
     FMOD.effect('drop_'..math.random(6),{tune=-2,volume=vol})
 end
-local function haunted_afterLock(P)
+function haunted.always(P)
+    P.modeData.energy=P.modeData.energy-1
+end
+local len=6
+function haunted.afterLock(P)
     ---@cast P Techmino.Player.Brik
     local l=P.modeData.lastDropTimes
     ins(l,1,P.gameTime)
-    l[7]=nil
+    if #l<len then return end
+    l[len+1]=nil
 
-    local interval=beatItvl[P.modeData.section]
-    local acc
-    for i=1,5 do
-        local l2=TABLE.copy(l)
-        rem(l2,i)
-        -- l2: int[5]
-        for j=1,5 do
-            l2[j]=l2[j]
-        end
+    local step=beatItvl[P.modeData.phase]
+    local minDelta=1e99
+    ---@type integer[] [len]
+    local l2=TABLE.copy(l)
+    for j=len,1,-1 do
+        l2[j]=(l2[j]-l2[1]+step/2)%step
     end
-    if acc then
-        P.modeData.accuracyPoint=P.modeData.accuracyPoint+acc
-        playSample('organ',{'F2'})
+    for i=2,len do
+        local delta=l2[1]-(MATH.sum(l2,2)-l2[i])/(len-2)
+        if abs(delta)<minDelta then minDelta=delta end
+    end
+    if abs(minDelta)<=62 then
+        P.modeData.beatChain=P.modeData.beatChain+1
+        if P.modeData.beatChain>=5 then
+            local perfect=abs(minDelta)<=26
+            local phase=P.modeData.phase
+            local acc
+            if perfect then
+                acc=100
+                if phase==1 then
+                    playSample('saw',{'F2',1,62})
+                    playSample('organ',{'F2',.626,62})
+                elseif phase==2 then
+                    playSample('saw',{'G#2',1,62})
+                    playSample('organ',{'G#2',.626,62})
+                elseif phase==3 then
+                    playSample('saw',{'A#2',1,62})
+                    playSample('organ',{'A#2',.626,62})
+                end
+            else
+                acc=60
+                if phase==1 then
+                    playSample('complex',{'F2',1,62})
+                elseif phase==2 then
+                    playSample('complex',{'G#2',1,62})
+                elseif phase==3 then
+                    playSample('complex',{'A#2',1,62})
+                end
+            end
+            P.modeData.energy=P.modeData.energy+acc*1000
+        end
+    else
+        if P.modeData.beatChain>=5 then
+            P:playSound('discharge',min(P.modeData.beatChain/10,1))
+        end
+        P.modeData.beatChain=0
     end
 end
-local function haunted_p2_afterSpawn(P)
+function haunted.p2_afterSpawn(P)
     local N=P.nextQueue[#P.nextQueue]
     if not N then return end
     N=N.matrix
@@ -53,7 +92,7 @@ local function haunted_p2_afterSpawn(P)
         end
     end
 end
-local function haunted_p3_afterSpawn(P)
+function haunted.p3_afterSpawn(P)
     local N=P.nextQueue[#P.nextQueue]
     if not N then return end
     N=N.matrix
@@ -67,12 +106,9 @@ local function haunted_p3_afterSpawn(P)
         end
     end
 end
-regFuncLib(haunted_dropSound1,'exterior_invis.haunted_dropSound1')
-regFuncLib(haunted_dropSound2,'exterior_invis.haunted_dropSound2')
-regFuncLib(haunted_dropSound3,'exterior_invis.haunted_dropSound3')
-regFuncLib(haunted_afterLock,'exterior_invis.haunted_afterLock')
-regFuncLib(haunted_p2_afterSpawn,'exterior_invis.haunted_p2_afterSpawn')
-regFuncLib(haunted_p3_afterSpawn,'exterior_invis.haunted_p3_afterSpawn')
+regFuncLib({
+    haunted=haunted,
+},'exterior_invis')
 
 ---@type Techmino.Mode
 return {
@@ -118,10 +154,14 @@ return {
                             -- Haunted Phase 1 init
                             P.modeData.phase=1
                             P.modeData.lastDropTimes={}
+                            P.modeData.beatChain=0
                             P.modeData.accuracyPoint=0
+                            P.modeData.energy=0
+                            P.modeData.energyShow=0
                             P.settings.spawnDelay=round(beatItvl[1]/2)
                             P.settings.clearDelay=round(beatItvl[1])
                             P.settings.lockDelay=round(beatItvl[1]*2.5)
+                            P:addEvent('always',haunted_always)
                             P:addEvent('afterLock',haunted_afterLock)
                             playBgm('invisible')
                             P:addSoundEvent('drop',haunted_dropSound1)
@@ -189,7 +229,7 @@ return {
                                     P.modeData.target.line=260
                                     if passTechrashTorikan and passTimeTorikan then
                                         P.settings.spawnDelay=round(beatItvl[3]/2)
-                                        P.settings.clearDelay=round(beatItvl[3]/2)
+                                        P.settings.clearDelay=0
                                         P.settings.dropDelay=0
                                         P.settings.lockDelay=round(beatItvl[3]*1.5)
                                         P.settings.asd=max(P.settings.asd,42)
