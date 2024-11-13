@@ -346,6 +346,7 @@ LANG.add{
     en='assets/language/lang_en.lua',
     it='assets/language/lang_it.lua',
     zh='assets/language/lang_zh.lua',
+    eo='assets/language/lang_eo.lua',
 }
 LANG.setDefault('en')
 

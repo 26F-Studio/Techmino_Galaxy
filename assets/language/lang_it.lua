@@ -226,7 +226,7 @@ local L={
     exteriorModeInfo={ -- TRASLATING NOTE: Unnecessary to be accurate, try to quote some short proverbs in your language
         sprint=           {"Sprint","La velocità è tutto ciò di cui hai bisogno"},
         sequence=         {"Sequenza","Affronta strane sequenze di tetromini"},
-        hidden=           {"Invisibile","I pezzi diventano invisibili appena piazzati"},
+        invis=           {"Invisibile","I pezzi diventano invisibili appena piazzati"},
         tspin=            {"T-Spin","Costruisci terreni speciali"},
         marathon=         {"Maratona","Resisti contro la gravità in aumento"},
         allclear=         {"All Clear","Gli All-Clear controllati sono possibili"},
@@ -262,6 +262,11 @@ local L={
     modeTask_sequence_pento_title="Pento",
     modeTask_sequence_pento_desc="Completa 1 linea con un pentomino",
     modeTask_sequence_unknown_desc="Completa 1 linea con ???",
+    
+    modeTask_invis_haunted_title="Infestato",
+    modeTask_invis_haunted_desc="Completa 4 linee",
+    modeTask_invis_hidden_title="Invisibile",
+    modeTask_invis_hidden_desc="Completa un Techrash",
 
     modeTask_hypersonic_low_title="Gravità bassa",
     modeTask_hypersonic_low_desc="Completa 4 linee",
@@ -298,7 +303,7 @@ local L={
     ---@enum (key) Techmino.Text.Achievement
     achievementMessage={ -- TRASLATING NOTE: The tone can be lighter
         dict_shortcut="Esperto di Hotkeys",
-        -- exterior_sprint_gunJumping="Gun jumping detected",
+        exterior_sprint_gunJumping="SCANNONATA!!!",
         exterior_excavate_notDig="Che stai facendo?",
         exterior_invis_superBrain="COOL",
         exterior_tspin_10TSS="Cos'è questo?",
@@ -307,6 +312,7 @@ local L={
         interior_console="Cos'è questo?",
         language_japanese="あ?",
         musicroom_recollection="Il ricordo non è una canzone",
+        musicroom_piano="Il Pianoforte di Nessuno",
         -- musicroom_piano="Nobody Piano",
         dial_enter="Strumento?",
         dial_password="Password corretta",

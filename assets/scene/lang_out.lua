@@ -8,6 +8,7 @@ local langList={
     pt="Português",
     id="Bahasa Indonesia",
     ja="日本語",
+    eo="Esperanto",
 }
 local languages={
     "Language  语言  Idioma",
@@ -32,7 +33,7 @@ local dialModeData={
         ['1']={text=langList.en},
         ['2']={text=langList.it},
         ['3']={text=langList.zh},
-        ['4']={text=''},
+        ['4']={text=langList.eo},
         ['5']={text=''},
         ['6']={text=''},
         ['7']={text=''},
@@ -271,7 +272,7 @@ scene.widgetList={
     {type='button',    name='dial_1',x=350 ,y=310,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LV',sound_trigger=false,code=function() if dialMode then dial('1') else _setLang('en') end end},
     {type='button',    name='dial_2',x=800 ,y=310,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LP',sound_trigger=false,code=function() if dialMode then dial('2') else _setLang('it') end end},
     {type='button',    name='dial_3',x=1250,y=310,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LG',sound_trigger=false,code=function() if dialMode then dial('3') else _setLang('zh') end end},
-    {type='button',    name='dial_4',x=350 ,y=460,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LB',sound_trigger=false,code=function() if dialMode then dial('4') else end end},
+    {type='button',    name='dial_4',x=350 ,y=460,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LB',sound_trigger=false,code=function() if dialMode then dial('4') else _setLang('eo') end end},
     {type='button',    name='dial_5',x=800 ,y=460,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LJ',sound_trigger=false,code=function() if dialMode then dial('5') else end end},
     {type='button',    name='dial_6',x=1250,y=460,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LK',sound_trigger=false,code=function() if dialMode then dial('6') else end end},
     {type='button',    name='dial_7',x=350 ,y=610,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LI',sound_trigger=false,code=function() if dialMode then dial('7') else end end},
