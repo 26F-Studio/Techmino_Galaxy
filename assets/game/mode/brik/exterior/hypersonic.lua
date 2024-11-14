@@ -97,7 +97,7 @@ return {
                 if P.modeData.point>=200 then
                     if #P.holdQueue==0 then
                         table.insert(P.holdQueue,P:getBrik('I5'))
-                        PROGRESS.setSecret('exterior_hypersonic_titanium_holdless')
+                        PROGRESS.setSecret('exterior_hypersonic_holdlessTitan')
                     end
                     return true
                 end

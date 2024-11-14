@@ -1,7 +1,7 @@
 local max,min=math.max,math.min
 local floor,abs=math.floor,math.abs
 local ins,rem=table.insert,table.remove
-local round,cIntp=MATH.round,MATH.clampInterpolate
+local round,cItp=MATH.round,MATH.clampInterpolate
 
 -- Speed of Invisible EP:
 -- Phase 1: 126 BPM (476.19 ms/Beat) 6=F
@@ -18,9 +18,6 @@ function haunted.dropSound2(vol)
 end
 function haunted.dropSound3(vol)
     FMOD.effect('drop_'..math.random(6),{tune=-2,volume=vol})
-end
-function haunted.always(P)
-    P.modeData.energy=P.modeData.energy-1
 end
 local len=6
 function haunted.afterLock(P)
@@ -43,12 +40,12 @@ function haunted.afterLock(P)
     end
     if abs(minDelta)<=62 then
         P.modeData.beatChain=P.modeData.beatChain+1
-        if P.modeData.beatChain>=5 then
+        if P.modeData.beatChain>=6 then
             local perfect=abs(minDelta)<=26
             local phase=P.modeData.phase
             local acc
             if perfect then
-                acc=100
+                acc=10
                 if phase==1 then
                     playSample('saw',{'F2',1,62})
                     playSample('organ',{'F2',.626,62})
@@ -60,7 +57,7 @@ function haunted.afterLock(P)
                     playSample('organ',{'A#2',.626,62})
                 end
             else
-                acc=60
+                acc=3
                 if phase==1 then
                     playSample('complex',{'F2',1,62})
                 elseif phase==2 then
@@ -69,13 +66,16 @@ function haunted.afterLock(P)
                     playSample('complex',{'A#2',1,62})
                 end
             end
-            P.modeData.energy=P.modeData.energy+acc*1000
+            P.modeData.energy=P.modeData.energy+acc -- 285 pieces if all Techrashes
         end
     else
-        if P.modeData.beatChain>=5 then
-            P:playSound('discharge',min(P.modeData.beatChain/10,1))
-        end
         P.modeData.beatChain=0
+    end
+end
+function haunted.beforeDiscard(P)
+    if P.modeData.energy>5200 then
+        PROGRESS.setSecret('exterior_invis_rhythmMaster')
+        return true
     end
 end
 function haunted.p2_afterSpawn(P)
@@ -153,6 +153,7 @@ return {
                     if P.modeData.subMode then
                         if P.modeData.subMode=='haunted' then
                             -- Haunted Phase 1 init
+                            P.modeData.linePoint=P.stat.line
                             P.modeData.phase=1
                             P.modeData.lastDropTimes={}
                             P.modeData.beatChain=0
@@ -162,7 +163,6 @@ return {
                             P.settings.spawnDelay=round(beatItvl[1]/2)
                             P.settings.clearDelay=round(beatItvl[1])
                             P.settings.lockDelay=round(beatItvl[1]*2.5)
-                            P:addEvent('always',haunted.always)
                             P:addEvent('afterLock',haunted.afterLock)
                             playBgm('invisible')
                             P:addSoundEvent('drop',haunted.dropSound1)
@@ -185,22 +185,27 @@ return {
                 function(P,clear)
                     ---@cast P Techmino.Player.Brik
                     if P.modeData.subMode=='haunted' then
-                        local curLine=P.stat.line
+                        if clear.line>=4 then
+                            -- Gain energy with Techrashes
+                            P.modeData.energy=P.modeData.energy+clear.line/4*100 -- 28.5 techrash
+                        end
+                        P.modeData.linePoint=P.modeData.linePoint+clear.line*2-1
+                        local LP=P.modeData.linePoint
                         if P.modeData.phase==1 then
-                            if curLine<100 then
+                            if LP<100 then
                                 -- Haunted Phase 1 step
-                                P.settings.dropDelay=round(cIntp(20,beatItvl[1],80,beatItvl[1]/2,MATH.clamp(curLine,20,80)))
+                                P.settings.dropDelay=round(cItp(20,beatItvl[1],80,beatItvl[1]/2,MATH.clamp(LP,20,80)))
                                 mechLib.brik.misc.haunted_turnOn(P,
-                                    round(cIntp(70,5,90,20,curLine)),
+                                    round(cItp(70,5,90,20,LP)),
                                     260,
-                                    round(cIntp(0,1600,80,600,curLine)),
-                                    round(cIntp(0,600,80,300,curLine))
+                                    round(cItp(0,1600,80,600,LP)),
+                                    round(cItp(0,600,80,300,LP))
                                 )
                             else
                                 -- Haunted Phase 2 init
                                 P.modeData.phase=2
                                 P.modeData.target.line=200
-                                P.settings.spawnDelay=round(beatItvl[2]/2)
+                                P.settings.spawnDelay=round(beatItvl[2]/4)
                                 P.settings.clearDelay=round(beatItvl[2])
                                 P.settings.lockDelay=round(beatItvl[2]*2.5)
                                 P:addEvent('afterSpawn',haunted.p2_afterSpawn)
@@ -211,25 +216,25 @@ return {
                             end
                         end
                         if P.modeData.phase==2 then
-                            if curLine<200 then
+                            if LP<200 then
                                 -- Haunted Phase 2 step
-                                P.settings.dropDelay=round(cIntp(120,round(beatItvl[2]/2),180,round(beatItvl[2]/4),MATH.clamp(curLine,120,180)))
-                                P.modeData.cyanizeRate=round(cIntp(102,16,126,100,curLine))
+                                P.settings.dropDelay=round(cItp(120,round(beatItvl[2]/2),180,round(beatItvl[2]/4),MATH.clamp(LP,120,180)))
+                                P.modeData.cyanizeRate=round(cItp(102,16,126,100,LP))
                                 mechLib.brik.misc.haunted_turnOn(P,
-                                    round(cIntp(100,26,200,42,curLine)),
+                                    round(cItp(100,26,200,42,LP)),
                                     260,
-                                    round(cIntp(100,800,150,500,curLine)),
-                                    round(cIntp(100,400,150,260,curLine))
+                                    round(cItp(100,800,150,500,LP)),
+                                    round(cItp(100,400,150,260,LP))
                                 )
                             else
-                                local passTimeTorikan=P.gameTime<=420e3
-                                local passTechrashTorikan=P.stat.clears[4]>=42
-                                if passTechrashTorikan or passTimeTorikan then
+                                local passTimeTorikan=P.gameTime<=260e3
+                                local passEnergyTorikan=P.modeData.energy>=2600
+                                if passTimeTorikan or passEnergyTorikan then
                                     -- Haunted Phase 3 init
                                     P.modeData.phase=3
                                     P.modeData.target.line=260
-                                    if passTechrashTorikan and passTimeTorikan then
-                                        P.settings.spawnDelay=round(beatItvl[3]/2)
+                                    if passEnergyTorikan and passTimeTorikan then
+                                        P.settings.spawnDelay=round(beatItvl[3]/4)
                                         P.settings.clearDelay=0
                                         P.settings.dropDelay=0
                                         P.settings.lockDelay=round(beatItvl[3]*1.5)
@@ -242,6 +247,7 @@ return {
                                     end
                                     P:delEvent('afterSpawn',haunted.p2_afterSpawn)
                                     P:addEvent('afterSpawn',haunted.p3_afterSpawn)
+                                    P:addEvent('beforeDiscard',haunted.beforeDiscard)
                                     mechLib.brik.misc.haunted_turnOn(P,62,120,600,1000)
                                     P:addSoundEvent('drop',haunted.dropSound3)
                                     P:playSound('beep_rise')
@@ -253,10 +259,10 @@ return {
                             end
                         end
                         if P.modeData.phase==3 then
-                            if curLine<260 then
+                            if LP<260 then
                                 -- Haunted Phase 3 step
-                                P.modeData.deColorRate=round(cIntp(200,0,230,42,curLine))
-                                P.modeData.darkRate=round(cIntp(220,26,240,62,curLine))
+                                P.modeData.deColorRate=round(cItp(200,0,230,42,LP))
+                                P.modeData.darkRate=round(cItp(220,26,240,62,LP))
                             else
                                 -- Haunted finished
                                 P:finish('win')
@@ -286,13 +292,23 @@ return {
                 P:drawInfoPanel(-380,-80,160,160)
                 GC.setColor(COLOR.L)
                 FONT.set(70)
-                GC.mStr(P.stat.line,-300,-90)
-                GC.rectangle('fill',-375,-2,150,4)
-                GC.mStr(P.modeData.target.line,-300,-5)
+                if P.modeData.subMode=='haunted' then
+                    GC.mStr(P.modeData.linePoint,-300,-90)
+                    GC.mStr(P.modeData.target.line,-300,-5)
+                    FONT.set(30)
+                    GC.setColor(1,1,P.modeData.energy>=5200 and .62 or 1,P.modeData.phase<3 and P.gameTime>260e3 and .42 or 1)
+                    GC.setLineWidth(1)
+                    GC.rectangle('line',-375,-2,150,4)
+                    GC.rectangle('fill',-375,-2,150*min(P.modeData.energy/2600,1),4)
+                else
+                    GC.mStr(P.stat.line,-300,-90)
+                    GC.rectangle('fill',-375,-2,150,4)
+                    GC.mStr(P.modeData.target.line,-300,-5)
+                end
             end,
             gameOver=function(P,reason)
                 if P.modeData.subMode=='haunted' then
-                    PROGRESS.setExteriorScore('invis','haunted',min(P.stat.line,260),'>')
+                    PROGRESS.setExteriorScore('invis','haunted',min(P.modeData.linePoint,260),'>')
                     if reason=='AC' then
                         PROGRESS.setExteriorScore('invis','haunted_time',P.gameTime,'<')
                     end
