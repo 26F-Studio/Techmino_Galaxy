@@ -236,7 +236,7 @@ local L={
         excavate=         {"Excavate","Deal with complex garbage lines"},
         backfire=         {"Backfire","Attacks out, garbages in"},
         drill=            {"Drill","Deal with standard garbage lines"},
-        survivor=         {"Survivor","Survive under pressure"},
+        survivor=         {"Survival","Survive under pressure"},
 
         chain=            {"Chain","Connect same color to clear"},
         action=           {"Action","Use both keyboard & mouse"},
