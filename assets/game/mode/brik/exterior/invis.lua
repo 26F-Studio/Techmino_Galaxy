@@ -131,6 +131,7 @@ return {
                     T.add(P,'invis_hidden','modeTask_invis_hidden_title','modeTask_invis_hidden_desc')
                 end
             end,
+            beforePress=mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
             afterClear={
                 function(P,clear)
                     ---@cast P Techmino.Player.Brik
