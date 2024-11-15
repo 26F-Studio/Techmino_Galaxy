@@ -236,7 +236,7 @@ local L={
         excavate=         {"Escava","Gestisci linee di scarto complesse"},
         backfire=         {"Ritorno Fiamma","Lotta contro te stesso!"},
         drill=            {"Trivella","Gestisci linee di scarto standard"},
-        survivor=         {"Sopravvivenza","Sopravvivi sotto pressione"},
+        survivor=         {"Sopravvivente","Sopravvivi sotto pressione"},
 
         chain=            {"Catena","Completa linee con lo stesso colore"},
         action=           {"Azione","Usa la tastiera e il mouse contemporaneamente"},
