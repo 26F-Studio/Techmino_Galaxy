@@ -42,10 +42,11 @@ function AP:printField() -- For debugging
     for y=self.settings.fieldSize,1,-1 do
         local s="|"
         for x=1,self.settings.fieldSize do
-            s=s..(F[y][x] and 'X' or '.')
+            s=s..(F[y][x] and F[y][x].color or '.')
         end
         print(s.."|")
     end
+    print("----------")
 end
 function AP:getAcry(data)
     self.totalCellCount=self.totalCellCount+1
@@ -137,18 +138,71 @@ function AP:triggerAcryEvent(acry,name)
         end
     end
 end
+function AP:linkProbe(clr,x,y,dx,dy)
+    local F=self.field
+    local dist=0
+    while true do
+        x,y=x+dx,y+dy
+        local acry=(F[y] or NONE)[x]
+        if acry and acry.color==clr then
+            dist=dist+1
+        else
+            break
+        end
+    end
+    return dist
+end
+-- Acry at F[y][x] requests starting a match
 function AP:requestMatch(acry)
     ---@cast acry Techmino.Acry.Cell
 
-    if acry.color==0 then return end
-    if acry.state=='idle' then
-    elseif acry.state=='moveWait' then
-        -- may update acry._newState here
-        acry._newState='moveBack'
+    -- print("Check at:",acry.gridX,acry.gridY)
+    -- self:printField()
+
+    local clr=acry.color
+    if clr==0 then return end
+    local matchSet={}
+    local scanStream={acry.gridX,acry.gridY}
+
+    local probe=1
+    while scanStream[probe] do
+        local x,y=scanStream[probe],scanStream[probe+1]
+        if not matchSet[x..'LR'..y] then
+            matchSet[x..'LR'..y]=true
+            local linkL=self:linkProbe(clr,x,y,-1,0)
+            local linkR=self:linkProbe(clr,x,y,1,0)
+            if linkL+linkR>=2 then
+                for _x=x-linkL,x+linkR do
+                    matchSet[_x..'LR'..y]=true
+                    ins(scanStream,_x)
+                    ins(scanStream,y)
+                end
+            end
+        end
+        if not matchSet[x..'UD'..y] then
+            matchSet[x..'UD'..y]=true
+            local linkU=self:linkProbe(clr,x,y,0,1)
+            local linkD=self:linkProbe(clr,x,y,0,-1)
+            if linkU+linkD>=2 then
+                for _y=y-linkD,y+linkU do
+                    matchSet[x..'UD'.._y]=true
+                    ins(scanStream,x)
+                    ins(scanStream,_y)
+                end
+            end
+        end
+        probe=probe+2
     end
-    -- TODO
-    -- Acry at F[y][x] requests starting a match
-    -- Attempt adding acries to self.acryProcessQueue.match
+
+    if #scanStream>=6 then
+        local F=self.field
+        for i=1,#scanStream,2 do
+            local x,y=scanStream[i],scanStream[i+1]
+            ins(self.acryProcessQueue.match,F[y][x])
+        end
+    elseif acry.state=='moveWait' then
+        acry._newState='idle'
+    end
 end
 function AP:matchExist()
     -- TODO
@@ -288,7 +342,9 @@ function AP:acryStateSwitch(acry,newS)
             end
             local dy=acry.gridY-y
             if dy>0 then
+                self.field[acry.gridY][acry.gridX]=false
                 acry.gridY=y
+                self.field[acry.gridY][acry.gridX]=acry
                 acry.biasY=dy
                 acry.fallSpeed=0
             else
@@ -385,56 +441,61 @@ function AP:tickStep()
         for x=1,size do
             ---@type Techmino.Acry.Cell
             local acry=F[y][x]
-            if acry.state=='idle' then
-                 -- Attempt to fall & match every tick
-                if acry.gridY>1 and not self.field[acry.gridY-1][acry.gridX] then
-                    acry._newState='fall'
-                else
+            if acry then
+                if acry.state=='idle' then
+                    -- Attempt to fall & match every tick
+                    if acry.gridY>1 then
+                        local under=F[acry.gridY-1][acry.gridX]
+                        if not under then
+                            acry._newState='fall'
+                        end
+                    -- else
+                    --     self:requestMatch(acry)
+                    end
+                elseif acry.state=='fall' then
+                    -- Fall animation (until biasY back to 0)
+                    acry.fallSpeed=acry.fallSpeed-self.settings.fallAcceleration
+                    acry.biasY=acry.biasY+acry.fallSpeed
+                    if acry.biasY<=0 then
+                        acry._newState='idle'
+                    end
+                elseif acry.state=='moveAhead' then
+                    -- The move ahead animation
+                    acry.moveTimer=acry.moveTimer-1
+                    local t=1-min(acry.moveTimer/(acry.moveDelay-acry.moveReadyDelay),1)
+                    acry.biasX=acry.moveDirection[1]*t
+                    acry.biasY=acry.moveDirection[2]*t
+                    if acry.moveTimer<=0 then
+                        if acry.wallHit then
+                            acry._newState='moveBack'
+                        else
+                            acry._newState='moveWait'
+                        end
+                    end
+                elseif acry.state=='moveBack' then
+                    -- The move back animation
+                    acry.moveTimer=acry.moveTimer-1
+                    local t=min(acry.moveTimer/(acry.moveDelay-acry.moveReadyDelay),1)
+                    acry.biasX=acry.moveDirection[1]*t
+                    acry.biasY=acry.moveDirection[2]*t
+                    if acry.moveTimer<=0 then
+                        acry._newState='idle'
+                    end
+                elseif acry.state=='moveWait' then
+                    -- Request match if stuck in 'moveWait' state, normally happen when doing BET
+                    -- state changing handled in :requestMatch
                     self:requestMatch(acry)
-                end
-            elseif acry.state=='fall' then
-                -- Fall animation (until biasY back to 0)
-                acry.fallSpeed=acry.fallSpeed-self.settings.fallAcceleration
-                acry.biasY=acry.biasY+acry.fallSpeed
-                if acry.biasY<=0 then
-                    acry._newState='idle'
-                end
-            elseif acry.state=='moveAhead' then
-                -- The move ahead animation
-                acry.moveTimer=acry.moveTimer-1
-                local t=1-min(acry.moveTimer/(acry.moveDelay-acry.moveReadyDelay),1)
-                acry.biasX=acry.moveDirection[1]*t
-                acry.biasY=acry.moveDirection[2]*t
-                if acry.moveTimer<=0 then
-                    if acry.wallHit then
-                        acry._newState='moveBack'
-                    else
-                        acry._newState='moveWait'
+                elseif acry.state=='clear' then
+                    -- The clear animation
+                    acry.clearTimer=acry.clearTimer-1
+                    if acry.clearTimer<=0 then
+                        acry._newState='_discard'
                     end
                 end
-            elseif acry.state=='moveBack' then
-                -- The move back animation
-                acry.moveTimer=acry.moveTimer-1
-                local t=min(acry.moveTimer/(acry.moveDelay-acry.moveReadyDelay),1)
-                acry.biasX=acry.moveDirection[1]*t
-                acry.biasY=acry.moveDirection[2]*t
-                if acry.moveTimer<=0 then
-                    acry._newState='idle'
+                self:triggerAcryEvent(acry,'always')
+                if acry._newState then
+                    self:acryStateSwitch(acry)
                 end
-            elseif acry.state=='moveWait' then
-                -- Request match if stuck in 'moveWait' state, normally happen when doing BET
-                -- state changing handled in :requestMatch
-                self:requestMatch(acry)
-            elseif acry.state=='clear' then
-                -- The clear animation
-                acry.clearTimer=acry.clearTimer-1
-                if acry.clearTimer<=0 then
-                    acry._newState='_discard'
-                end
-            end
-            self:triggerAcryEvent(acry,'always')
-            if acry._newState then
-                self:acryStateSwitch(acry)
             end
         end
     end
@@ -442,19 +503,30 @@ function AP:tickStep()
     -- Update acries (Phase 2, process movement)
     if self.acryProcessQueue.movement[1] then
         local list=self.acryProcessQueue.movement
+        -- 1: Move
         for i=1,#list do
             local acry=list[i]
             if acry.state=='moveWait' then
-                local newX,newY=acry.gridX+acry.moveDirection[1],acry.gridY+acry.moveDirection[2]
-                acry.gridX,acry.gridY=newX,newY
+                local oX,oY=acry.gridX,acry.gridY
+                local nX,nY=oX+acry.moveDirection[1],oY+acry.moveDirection[2]
+                acry.gridX,acry.gridY=nX,nY
                 acry.biasX,acry.biasY=0,0
-                self.field[newY][newX]=acry
-                self:requestMatch(acry)
+                if F[oY][oX]==acry then
+                    F[oY][oX]=false
+                end
+                F[nY][nX]=acry
             else
                 error("Unexpected state in [movement]: "..acry.state)
             end
-            if acry._newState then
-                self:acryStateSwitch(acry)
+        end
+        -- 2: Check link
+        for i=1,#list do
+            local acry=list[i]
+            if acry.state=='moveWait' then
+                self:requestMatch(acry)
+                if acry._newState then
+                    self:acryStateSwitch(acry)
+                end
             end
         end
         TABLE.clear(list)
@@ -479,7 +551,7 @@ function AP:tickStep()
                     local newX,newY=acry.gridX-acry.moveDirection[1],acry.gridY-acry.moveDirection[2]
                     acry.gridX,acry.gridY=newX,newY
                     acry.biasX,acry.biasY=acry.moveDirection[1],acry.moveDirection[2]
-                    self.field[newY][newX]=acry
+                    F[newY][newX]=acry
                 end
             else
                 error("Unexpected state in [movement]: "..acry.state)
@@ -509,7 +581,7 @@ function AP:tickStep()
     end
 
     if love.keyboard.isDown('f4') then
-        local acry=self.field[1][1]
+        local acry=F[1][1]
         if acry then
             print("--------------------------")
             print('state',acry.state)
@@ -634,9 +706,8 @@ local baseEnv={
 
     -- Generator
     colors=7,
+    clearRule='line',
     linkLen=3,
-    diagonalLinkLen=false,
-    refreshCount=0,
 
     -- Delay
     readyDelay=3000,
