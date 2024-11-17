@@ -13,7 +13,7 @@ local RGB9=RGB9
 local S={}
 S.base='brik_template'
 
-local X=3 -- Cell border width
+local X=2 -- Cell border width
 
 local function drawCell(B,x,y,r,g,b,a)
     gc_setColor(r,g,b,a)
