@@ -13,6 +13,9 @@
 ---@type Techmino.simulation[]
 local sims={
     { -- Exterior 1
+        unlock=function()
+            return PROGRESS.get('styles').brik
+        end,
         trigger=function()
             TASK.yieldUntilNextScene()
             if SCN.cur=='simulation' then
@@ -52,6 +55,24 @@ local sims={
     --         -108 ,-32
     --     )
     -- end,
+    { -- TTGM
+        unlock=function()
+            return PROGRESS.get('TTGM').stage>0
+        end,
+        trigger=function()
+            TASK.yieldUntilNextScene()
+            if SCN.cur=='simulation' then
+                -- SCN.go('tetra_galaxy_machine','flash')
+                MSG.new('warn',"Coming soon?")
+            end
+        end,
+        draw=function()
+            GC.setColor(COLOR.DL)
+            GC.translate(-150,-100)
+            GC.rectangle('fill',0,0,300,100)
+            GC.rectangle('fill',100,100,100,100)
+        end,
+    },
 }
 
 ---@type integer|false
@@ -63,14 +84,15 @@ local scene={}
 function scene.load(prev)
     for _,s in next,sims do
         s.valid=false
+        if type(s.unlock)=='function' then
+            s.valid=s.unlock() or s.valid
+        end
         s.active=0
         s.x,s.y=nil
         s.size=nil
         s.trigTimer=false
     end
     subjectFocused=false
-    sims[1].valid=true -- TODO
-    -- sims[2].valid=false -- TODO
     scene.update(0)
     PROGRESS.applyExteriorBG()
     PROGRESS.applyExteriorBGM()

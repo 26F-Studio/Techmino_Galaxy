@@ -36,6 +36,12 @@ local prgs=setmetatable({
 
     -- Utility
     musicTime=0,
+
+    -- Extra
+    TTGM={
+        stage=0,-- 0 = not unlocked, other = max level can start with
+        medal='00000000000000000000000000',
+    },
 },{
     __index=function(_,k)
         LOG("Attempt to read undefined progress data: "..tostring(k))
