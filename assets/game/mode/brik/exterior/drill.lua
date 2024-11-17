@@ -58,7 +58,7 @@ return {
                         0.3/PROGRESS.getExteriorModeScore('drill','ppl20')+
                         0.2/PROGRESS.getExteriorModeScore('drill','ppl40')+
                         0.4/PROGRESS.getExteriorModeScore('drill','ppl100')
-                        >=0.495 -- lpp, ≈2.02 ppl
+                        >=0.260 -- lpp, ≈3.85 ppl
                     then
                         PROGRESS.setStyleUnlock('acry')
                         PROGRESS.setExteriorUnlock('action')

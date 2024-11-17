@@ -98,7 +98,7 @@ return {
                     -- Unlock Gela
                     if
                         not (PROGRESS.getStyleUnlock('gela') and PROGRESS.getExteriorUnlock('chain')) and
-                        (PROGRESS.getExteriorModeScore('tspin','tsd_hard') or 0)+(PROGRESS.getExteriorModeScore('tspin','tsd') or 0)>=26
+                        (PROGRESS.getExteriorModeScore('tspin','tsd_hard') or 0)+(PROGRESS.getExteriorModeScore('tspin','tsd') or 0)>=12
                     then
                         PROGRESS.setStyleUnlock('gela')
                         PROGRESS.setExteriorUnlock('chain')
