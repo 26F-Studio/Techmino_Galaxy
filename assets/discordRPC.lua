@@ -54,13 +54,8 @@ end
 local ffi=require"ffi"
 
 local Cname
-if SYSTEM=='Windows' then
-    local suc
-    suc,Cname=pcall(ffi.load,"discord-rpc")
-    if not (suc and Cname) then
-        MSG.errorLog("Loading Discord-RPC lib: "..Cname)
-        Cname=nil
-    end
+if SYSTEM=='Windows' or SYSTEM=='Linux' then
+    Cname=LOADFFI('discord-rpc')
 elseif MOBILE then
     LOG("warn",STRING.repD("No Discord-RPC for $1",SYSTEM))
 else

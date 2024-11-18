@@ -12,7 +12,6 @@ if SYSTEM=='Web' then
     })
 end
 
-local ffi=require'ffi'
 local require=simpRequire(((...):gsub(".init$","").."."))
 
 require'cdef'
@@ -29,28 +28,8 @@ M.banks={}
 -- M.C=ffi.load(fmodPath)
 -- M.C2=ffi.load(fmodstudioPath)
 
-local path='$1'
-
-if STRING.sArg(_G.arg[2] or '','--project') then path=love.filesystem.getSaveDirectory().."/lib/lib$1.so" end
-
-do -- Load library
-    local suc
-    suc,M.C=pcall(ffi.load,STRING.repD(path,'fmod'))
-    if not suc then
-        MSG.errorLog("Loading FMOD lib:"..M.C)
-        M.C=nil
-    elseif not M.C then
-        MSG.errorLog("Loaded an empty FMOD lib")
-    end
-
-    suc,M.C2=pcall(ffi.load,STRING.repD(path,'fmodstudio'))
-    if not suc then
-        MSG.errorLog("Loading FMODstudio lib:"..M.C2)
-        M.C2=nil
-    elseif not M.C2 then
-        MSG.errorLog("Loaded an empty FMODstudio lib")
-    end
-end
+M.C=LOADFFI('fmod')
+M.C2=LOADFFI('fmodstudio')
 
 if M.C and M.C2 then
     require'enums'
