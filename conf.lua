@@ -6,8 +6,12 @@ function love.conf(t)
 
     local fs=love.filesystem
     fs.setIdentity(identity)
-    do -- Load grapgic settings from conf/settings
+
+    print('Loading settings from conf.lua')
+    if fs.getInfo('conf/settings') then -- Save graphic settings to conf/settings
+        print('Loading settings from conf/settings')
         local fileData=fs.read('conf/settings')
+        print(fileData)
         if fileData then
             msaa=tonumber(fileData:match('"msaa":(%d+)')) or 0
             portrait=mobile and fileData:find('"portrait":true') and true
