@@ -1,3 +1,7 @@
+if SYSTEM=='Web' then
+    return {update=NULL}
+end
+
 local MyRPC={
     appId='1288524924042084523', ---@type string Register your own app at https://discord.com/developers/applications
     C=nil, ---@type ffi.namespace*
@@ -54,13 +58,13 @@ if SYSTEM=='Windows' then
     local suc
     suc,Cname=pcall(ffi.load,"discord-rpc")
     if not (suc and Cname) then
-        LOG("Error in Loading Discord-RPC lib: "..Cname)
+        MSG.errorLog("Loading Discord-RPC lib: "..Cname)
         Cname=nil
     end
 elseif MOBILE then
-    LOG("No Discord-RPC for mobile devices yet")
+    LOG(STRING.repD("No Discord-RPC for current platform ($1)",SYSTEM))
 else
-    LOG("Waiting Discord-RPC for other platforms")
+    MSG.warnLog(STRING.repD("Waiting Discord-RPC for current platform ($1)",SYSTEM))
 end
 
 if Cname then

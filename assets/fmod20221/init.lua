@@ -1,3 +1,17 @@
+-- Skip FMOD on web for now
+if SYSTEM=='Web' then
+    local NOLL={}
+    setmetatable(NOLL,{__call=NULL,__index=function() return NOLL end})
+    return setmetatable({
+        C=false,C2=false,
+    },{
+        __index=function(t,k)
+            t[k]=NOLL
+            return NOLL
+        end
+    })
+end
+
 local ffi=require'ffi'
 local require=simpRequire(((...):gsub(".init$","").."."))
 
@@ -7,11 +21,11 @@ require'cdef'
 local M=require'master'
 M.banks={}
 
--- (Old method) search for fmod shared libraries in package.cpath
+-- --(Old method) search for fmod shared libraries in package.cpath
 -- local fmodPath=package.searchpath('fmod',package.cpath)
 -- local fmodstudioPath=package.searchpath('fmodstudio',package.cpath)
--- -- pretend to load libfmod through Lua (it's going to fail but not raise any errors) so that its location is known when loading libfmodstudio through ffi
--- -- package.loadlib(fmodPath,"")
+-- --pretend to load libfmod through Lua (it's going to fail but not raise any errors) so that its location is known when loading libfmodstudio through ffi
+-- package.loadlib(fmodPath,"")
 -- M.C=ffi.load(fmodPath)
 -- M.C2=ffi.load(fmodstudioPath)
 
@@ -23,18 +37,18 @@ do -- Load library
     local suc
     suc,M.C=pcall(ffi.load,STRING.repD(path,'fmod'))
     if not suc then
-        MSG.new('error',"Loading FMOD lib:"..M.C)
+        MSG.errorLog("Loading FMOD lib:"..M.C)
         M.C=nil
     elseif not M.C then
-        MSG.new('error',"Error in Loading FMOD lib")
+        MSG.errorLog("Loaded an empty FMOD lib")
     end
 
     suc,M.C2=pcall(ffi.load,STRING.repD(path,'fmodstudio'))
     if not suc then
-        MSG.new('error',"Loading FMODstudio lib:"..M.C2)
+        MSG.errorLog("Loading FMODstudio lib:"..M.C2)
         M.C2=nil
     elseif not M.C2 then
-        MSG.new('error',"Error in Loading FMODstudio lib")
+        MSG.errorLog("Loaded an empty FMODstudio lib")
     end
 end
 
@@ -87,8 +101,7 @@ function M.loadBank(path,flag)
     if not studio then return end
     local bank,res=studio:loadBankFile(path,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
     if res~=M.FMOD_OK then
-        LOG("FMOD loadBank error: "..M.errorString[res])
-        MSG.new('warn',"FMOD loadBank error: "..M.errorString[res])
+        MSG.errorLog("FMOD loadBank error: "..M.errorString[res])
         return
     end
     M.banks[path]=bank
@@ -110,8 +123,7 @@ function M.loadBank2(path,flag)
     local bank,res=studio:loadBankMemory(data:getPointer(),size,0,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
     file:close(); file:release(); data:release()
     if res~=M.FMOD_OK then
-        LOG("FMOD loadBankMemory error: "..M.errorString[res])
-        MSG.new('warn',"FMOD loadBankMemory error: "..M.errorString[res])
+        MSG.errorLog("FMOD loadBankMemory error: "..M.errorString[res])
         return
     end
     M.banks[path]=bank
