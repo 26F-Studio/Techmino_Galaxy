@@ -62,9 +62,9 @@ if SYSTEM=='Windows' then
         Cname=nil
     end
 elseif MOBILE then
-    LOG(STRING.repD("No Discord-RPC for current platform ($1)",SYSTEM))
+    LOG("warn",STRING.repD("No Discord-RPC for $1",SYSTEM))
 else
-    MSG.warnLog(STRING.repD("Waiting Discord-RPC for current platform ($1)",SYSTEM))
+    MSG.warnLog(STRING.repD("Waiting Discord-RPC for $1",SYSTEM))
 end
 
 if Cname then
@@ -314,22 +314,22 @@ if Cname then
     end
 
     function RPC.ready(userId,username,discriminator,avatar)
-        LOG(string.format("Discord: ready (%s,%s,%s,%s)",userId,username,discriminator,avatar))
+        LOG(1,string.format("Discord: ready (%s,%s,%s,%s)",userId,username,discriminator,avatar))
     end
     function RPC.disconnected(errorCode,message)
-        LOG(string.format("Discord: disconnected (%d: %s)",errorCode,message))
+        LOG(1,string.format("Discord: disconnected (%d: %s)",errorCode,message))
     end
     function RPC.errored(errorCode,message)
-        LOG(string.format("Discord: error (%d: %s)",errorCode,message))
+        LOG(1,string.format("Discord: error (%d: %s)",errorCode,message))
     end
     function RPC.joinGame(joinSecret)
-        LOG(string.format("Discord: join (%s)",joinSecret))
+        LOG(1,string.format("Discord: join (%s)",joinSecret))
     end
     function RPC.spectateGame(spectateSecret)
-        LOG(string.format("Discord: spectate (%s)",spectateSecret))
+        LOG(1,string.format("Discord: spectate (%s)",spectateSecret))
     end
     function RPC.joinRequest(userId,username,discriminator,avatar)
-        LOG(string.format("Discord: join request (%s,%s,%s,%s)",userId,username,discriminator,avatar))
+        LOG(1,string.format("Discord: join request (%s,%s,%s,%s)",userId,username,discriminator,avatar))
         RPC.respond(userId,'yes')
     end
     RPC.initialize(MyRPC.appId,true)

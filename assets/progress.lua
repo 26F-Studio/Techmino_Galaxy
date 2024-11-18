@@ -44,7 +44,7 @@ local prgs=setmetatable({
     },
 },{
     __index=function(_,k)
-        LOG("Attempt to read undefined progress data: "..tostring(k))
+        LOG("warn","Attempt to read undefined progress data: "..tostring(k))
     end,
 })
 
