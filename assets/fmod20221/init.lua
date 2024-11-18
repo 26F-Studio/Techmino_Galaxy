@@ -23,7 +23,7 @@ do -- Load library
     local suc
     suc,M.C=pcall(ffi.load,STRING.repD(path,'fmod'))
     if not suc then
-        MSG.new('error',"Loading FMOD lib:"..M.C)
+        -- MSG.new('error',"Loading FMOD lib:"..M.C)
         M.C=nil
     elseif not M.C then
         MSG.new('error',"Error in Loading FMOD lib")
@@ -31,7 +31,7 @@ do -- Load library
 
     suc,M.C2=pcall(ffi.load,STRING.repD(path,'fmodstudio'))
     if not suc then
-        MSG.new('error',"Loading FMODstudio lib:"..M.C2)
+        -- MSG.new('error',"Loading FMODstudio lib:"..M.C2)
         M.C2=nil
     elseif not M.C2 then
         MSG.new('error',"Error in Loading FMODstudio lib")
