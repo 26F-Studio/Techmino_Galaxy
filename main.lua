@@ -40,6 +40,13 @@ love.setDeprecationOutput(false)
 love.keyboard.setTextInput(false)
 VERSION=require'version'
 
+-- Bit module
+local success
+success,bit=pcall(require,"bit")
+if not success then
+    bit=require"assets.bitop".bit
+end
+
 --------------------------------------------------------------
 -- Create directories
 
