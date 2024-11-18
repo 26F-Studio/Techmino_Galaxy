@@ -288,7 +288,7 @@ jobs:
           LOVEJS_API_PLAYER_BASE_URL: https://raw.githubusercontent.com/MrcSnm/Love.js-Api-Player/refs/heads/master
         run: |
           pushd ${{ env.OUTPUT_FOLDER }}
-          sed -i 's|</head>|<script src="consolewrapper.js"></script><script src="globalizeFS.js"></script><script src="webdb.js"></script></head>|' index.html
+          sed -i 's|</head>|<script src="consolewrapper.js"></script><script src="webdb.js"></script></head>|' index.html
           wget ${{ env.LOVEJS_API_PLAYER_BASE_URL }}/consolewrapper.js
           wget ${{ env.LOVEJS_API_PLAYER_BASE_URL }}/globalizeFS.js
           wget ${{ env.LOVEJS_API_PLAYER_BASE_URL }}/webdb.js
