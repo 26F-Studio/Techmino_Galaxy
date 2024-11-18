@@ -25,6 +25,7 @@ return {
                 mechLib.common.music.set(P,{path='.tsd',s=3,e=12},'afterClear')
             end,
             always=mechLib.brik.chargeLimit.tspin_event_always,
+            beforePress=mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
             afterClear={
                 mechLib.brik.chargeLimit.tspin_event_afterClear,
                 function(P) -- Switch to easy mode when TS not D
