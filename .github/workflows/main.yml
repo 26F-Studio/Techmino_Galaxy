@@ -282,13 +282,16 @@ jobs:
           npx love.js ${{ env.CORE_LOVE_PACKAGE_PATH }} ${{ env.OUTPUT_FOLDER }} -t "${{ needs.get-info.outputs.app-name }}" -m ${{ env.MEMORY_LIMIT }} -c
       - name: Move assets
         run: |
-          mv ${{ env.BUILD_ASSETS_FOLDER }}/web/${{ env.BUILD_TYPE }}/* ${{ env.OUTPUT_FOLDER }}
+          mv ${{ env.BUILD_ASSETS_FOLDER }}/web-compat/${{ env.BUILD_TYPE }}/* ${{ env.OUTPUT_FOLDER }}
       - name: Initialize Love.js Api Player
+        env:
+          LOVEJS_API_PLAYER_BASE_URL: https://raw.githubusercontent.com/MrcSnm/Love.js-Api-Player/refs/heads/master
         run: |
           pushd ${{ env.OUTPUT_FOLDER }}
-          wget https://raw.githubusercontent.com/MrcSnm/Love.js-Api-Player/refs/heads/master/consolewrapper.js
-          wget https://raw.githubusercontent.com/MrcSnm/Love.js-Api-Player/refs/heads/master/globalizeFS.js
-          wget https://raw.githubusercontent.com/MrcSnm/Love.js-Api-Player/refs/heads/master/webdb.js
+          sed -i 's|</head>|<script src="consolewrapper.js"></script><script src="globalizeFS.js"></script><script src="webdb.js"></script></head>|' index.html
+          wget ${{ env.LOVEJS_API_PLAYER_BASE_URL }}/consolewrapper.js
+          wget ${{ env.LOVEJS_API_PLAYER_BASE_URL }}/globalizeFS.js
+          wget ${{ env.LOVEJS_API_PLAYER_BASE_URL }}/webdb.js
           node globalizeFS.js
           rm globalizeFS.js
           popd
