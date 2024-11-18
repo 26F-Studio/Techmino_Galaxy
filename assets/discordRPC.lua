@@ -55,7 +55,7 @@ local ffi=require"ffi"
 
 local Cname
 if SYSTEM=='Windows' or SYSTEM=='Linux' then
-    Cname=LOADFFI('discord-rpc')
+    Cname=LOADLIB.ffi('discord-rpc')
 elseif MOBILE then
     LOG("warn",STRING.repD("No Discord-RPC for $1",SYSTEM))
 else

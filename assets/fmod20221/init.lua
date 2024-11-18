@@ -28,8 +28,8 @@ M.banks={}
 -- M.C=ffi.load(fmodPath)
 -- M.C2=ffi.load(fmodstudioPath)
 
-M.C=LOADFFI('fmod')
-M.C2=LOADFFI('fmodstudio')
+M.C=LOADLIB.ffi('fmod')
+M.C2=LOADLIB.ffi('fmodstudio')
 
 if M.C and M.C2 then
     require'enums'
