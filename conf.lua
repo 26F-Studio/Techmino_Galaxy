@@ -53,7 +53,7 @@ function love.conf(t)
     end
     W.title=require'version'.appName..'  '..require'version'.appVer
 
-    if fs.getInfo('assets/image/icon.png') then
+    if love._os=='Linux' and fs.getInfo('assets/image/icon.png') then
         W.icon='assets/image/icon.png'
     end
 end
