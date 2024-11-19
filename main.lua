@@ -188,9 +188,10 @@ end
 local autoGCcount=0
 function ZENITHA.globalEvent.lowMemory()
     collectgarbage()
-    if autoGCcount<6 then
-        autoGCcount=autoGCcount+1
-        MSG.new('check',Text.autoGC..('.'):rep(4-autoGCcount))
+    autoGCcount=autoGCcount+1
+    LOG('debug',"Auto GC "..autoGCcount)
+    if autoGCcount<=6 then
+        MSG('check',Text.autoGC..('.'):rep(4-autoGCcount))
     end
 end
 function ZENITHA.globalEvent.quit()
@@ -351,22 +352,32 @@ LANG.add{
 LANG.setDefault('en')
 
 function FMODLoadFunc() -- Will be called again when applying advanced options
-    local memLoad=SETTINGS.system.fmod_loadMemory
-    local function loadBank(path)
-        if memLoad then
-            local bank=FMOD.loadBank2(path)
-            if bank then return bank end
-            memLoad=false
-            SETTINGS.system.fmod_loadMemory=false
-            MSG.new('other',"Switched to another bank loading mode")
-        end
-        return FMOD.loadBank(love.filesystem.getSaveDirectory()..'/'..path)
-    end
     if not (FMOD.C and FMOD.C2) then
-        MSG.new('error',"FMOD library loaded failed")
+        MSG.log('error',"FMOD library loaded failed")
         return
     end
 
+    LOG('debug',"Will loading FMOD banks from "..(SETTINGS.system.fmod_loadMemory and "memory" or "file"))
+    local errorLogged=false
+    local function loadBank(path)
+        local bank,errInfo,errInfo2
+        if SETTINGS.system.fmod_loadMemory then
+            bank,errInfo=FMOD.loadBank2(path)
+            if bank then return bank end
+            SETTINGS.system.fmod_loadMemory=false
+            LOG('debug',"Will load FMOD banks from file")
+            MSG('other',"Switched to another bank loading mode to file")
+        end
+        bank,errInfo2=FMOD.loadBank(love.filesystem.getSaveDirectory()..'/'..path)
+        if bank then return bank end
+        if not errorLogged then
+            errorLogged=true
+            MSG.log('error',"FMOD bank load failed :"..errInfo)
+            MSG.log('error',"FMOD bank load failed :"..errInfo2)
+        end
+    end
+
+    LOG('debug',"Ready to init FMOD")
     FMOD.init{
         maxChannel=math.min(SETTINGS.system.fmod_maxChannel,256),
         DSPBufferCount=math.min(SETTINGS.system.fmod_DSPBufferCount,16),
@@ -377,27 +388,27 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
 
     local noFile
     if not loadBank('soundbank/Master.strings.bank') then
-        MSG.new('warn',"Strings bank file load failed")
+        MSG.log('warn',"Strings bank file load failed")
         noFile=true
     end
     if not loadBank('soundbank/Master.bank') then
-        MSG.new('warn',"Master bank file load failed")
+        MSG.log('warn',"Master bank file load failed")
         noFile=true
     end
     FMOD.registerMusic((function()
         if not love.filesystem.getInfo('soundbank/Master.bank') then
-            MSG.new('warn',"Music bank not found")
+            MSG.log('warn',"Music bank not found")
             return {}
         end
         local L={}
         for _,bankName in next,{'Music_Beepbox','Music_FL','Music_Community','Music_Extra'} do
             if not love.filesystem.getInfo('soundbank/'..bankName..'.bank') then
-                MSG.new('warn',bankName.." bank file not found")
+                MSG.log('warn',bankName.." bank file not found")
                 noFile=true
             else
                 local bankMusic=loadBank('soundbank/'..bankName..'.bank')
                 if not bankMusic then
-                    MSG.new('warn',"bank "..bankName.." load failed")
+                    MSG.log('warn',"bank "..bankName.." load failed")
                 else
                     local l,c=bankMusic:getEventList()
                     for i=1,c do
@@ -426,19 +437,19 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
             end
         end
         if #regMore>0 then
-            MSG.new('warn',"Music not found in Bank:")
-            for i=1,#regMore do MSG.new('info',regMore[i]) end
+            MSG.log('warn',"Music not found in Bank:")
+            for i=1,#regMore do MSG.log('warn',regMore[i]) end
         end
         return L
     end)())
     FMOD.registerEffect((function()
         if not love.filesystem.getInfo('soundbank/Effect.bank') then
-            MSG.new('warn',"Effect bank not found")
+            MSG.log('warn',"Effect bank not found")
             return {}
         end
         local bankEffect=loadBank('soundbank/Effect.bank')
         if not bankEffect then
-            MSG.new('warn',"Effect bank file load failed")
+            MSG.log('warn',"Effect bank file load failed")
             return {}
         end
         local L={}
@@ -465,12 +476,12 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
         TABLE.subtract(existMore,regList)
         TABLE.subtract(regMore,nameList)
         if #existMore>0 then
-            MSG.new('warn',"SE not registered:")
-            for i=1,#existMore do MSG.new('info',existMore[i]) end
+            MSG.log('warn',"SE not registered:")
+            for i=1,#existMore do MSG.log('warn',existMore[i]) end
         end
         if #regMore>0 then
-            MSG.new('warn',"SE not found in Bank:")
-            for i=1,#regMore do MSG.new('info',regMore[i]) end
+            MSG.log('warn',"SE not found in Bank:")
+            for i=1,#regMore do MSG.log('warn',regMore[i]) end
         end
 
         return L
@@ -699,7 +710,7 @@ do -- Power Manager
                     repeat
                         warnCheck=warnCheck-1
                     until warnCheck==1 or pow>warnThres[warnCheck]
-                    MSG.new(({'check','error','warn','info'})[warnCheck],Text.batteryWarn[warnCheck])
+                    MSG(({'check','error','warn','info'})[warnCheck],Text.batteryWarn[warnCheck])
                 end
             end
             TASK.yieldT(6.26)
@@ -709,16 +720,16 @@ end
 
 FMODLoadFunc()
 if tostring(FMOD.studio):find('NULL') then
-    MSG.new('error',"FMOD initialization failed")
+    MSG.log('error',"FMOD initialization failed")
 elseif TABLE.getSize(FMOD.banks)==0 then
-    MSG.new('error',"no FMOD bank files found")
+    MSG.log('error',"no FMOD bank files found")
 else
     FMOD.setMainVolume(SETTINGS.system.mainVol,true)
     for name,data in next,SONGBOOK do
         local ED=FMOD.music.getDesc(name)
         if ED then
             if select(2,ED:getParameterDescriptionByName('fade'))~=FMOD.FMOD_OK then
-                MSG.new('warn',"Missing 'fade' parameter in music '"..name.."'")
+                MSG.log('warn',"Missing 'fade' parameter in music '"..name.."'")
             end
             data.intensity=select(2,ED:getParameterDescriptionByName('intensity'))==FMOD.FMOD_OK
             data.section=select(2,ED:getParameterDescriptionByName('section'))==FMOD.FMOD_OK
@@ -730,7 +741,7 @@ else
                     ---@cast param FMOD.Studio.UserProperty
                     data.maxsection=param.intvalue
                 else
-                    MSG.new('warn',"Missing 'maxsection' property in music '"..name.."'")
+                    MSG.log('warn',"Missing 'maxsection' property in music '"..name.."'")
                 end
             end
             -- print(name..":")
@@ -740,7 +751,7 @@ else
             -- print('loop',data.looppoint)
         else
             data.notFound=true
-            MSG.new('warn',"Music '"..name.."' not found in FMOD",0)
+            MSG.log('warn',"Music '"..name.."' not found in FMOD",0)
         end
     end
 end

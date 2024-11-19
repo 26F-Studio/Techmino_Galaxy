@@ -63,7 +63,7 @@ local sims={
             TASK.yieldUntilNextScene()
             if SCN.cur=='simulation' then
                 -- SCN.go('tetra_galaxy_machine','flash')
-                MSG.new('warn',"Coming soon?")
+                MSG('warn',"Coming soon?")
             end
         end,
         draw=function()

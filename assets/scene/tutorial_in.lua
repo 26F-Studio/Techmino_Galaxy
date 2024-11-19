@@ -34,7 +34,7 @@ local function playTutorial(level)
             level==4 and '4.finesseBasic'
         ))
     else
-        -- MSG.new('warn','Coming Soon')
+        -- MSG('warn','Coming Soon')
         SCN.go('game_in','none','brik/interior/tutorial/'..(
             level==1 and '5.finessePractice' or
             level==2 and '6.allclearPractice' or

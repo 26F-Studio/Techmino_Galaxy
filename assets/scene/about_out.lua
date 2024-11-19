@@ -89,7 +89,7 @@ function scene.update(dt)
             if o.name then
                 if score>=2600 then
                     score=math.max(score*.9,2600)
-                    MSG.new('warn',Text.about_peopleLost:repD(o.name),2)
+                    MSG('warn',Text.about_peopleLost:repD(o.name),2)
                 end
             end
             table.remove(obj,i)

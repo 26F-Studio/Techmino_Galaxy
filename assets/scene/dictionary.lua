@@ -285,7 +285,7 @@ function scene.load(prev)
             else
                 currentDict=nil
                 ---@cast data string
-                MSG.new('error',data,10)
+                MSG.log('error',data)
             end
         end
         if not currentDict then currentDict={} end

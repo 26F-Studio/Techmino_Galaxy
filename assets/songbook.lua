@@ -132,7 +132,7 @@ for name,data in next,songbook do
 end
 
 setmetatable(songbook,{__call=function(t,name)
-    MSG.new('warn',"Unlisted song: "..name)
+    MSG.log('warn',"Unlisted song: "..name)
     t[name]={
         title='['..name..']',
         author='',

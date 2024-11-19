@@ -243,7 +243,7 @@ local function _enterMode(m)
             FMOD.effect('map_enter')
             SCN.go('game_out','fade','brik/exterior/'..m.name)
         else
-            MSG.new('warn',"No mode file")
+            MSG.log('warn',"No mode file")
         end
     end
 end

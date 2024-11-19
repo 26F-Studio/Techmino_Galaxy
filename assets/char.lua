@@ -360,7 +360,7 @@ for packName,set in next,L do
         setmetatable(set,{
             __index=function(t,k)
                 t[k]='?'
-                LOG("warn","char set '"..packName.."' has no char '"..k.."'")
+                LOG('warn',"char set '"..packName.."' has no char '"..k.."'")
             end
         })
         for name,code in next,set do

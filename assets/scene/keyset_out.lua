@@ -141,7 +141,7 @@ scene.widgetList={
     {type='button_invis',name='Ssys', pos={1,0},x=-200,y=60,w=150,h=100,cornerR=20,fontSize=60,text="S",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='sys'  then keyMode='sys';  scene.load() end end},
 
     {type='button',pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG"setting_test",fontSize=40,code=function()
-        if GAME.mode then return MSG.new('warn',Text.setting_tryTestInGame) end
+        if GAME.mode then return MSG('warn',Text.setting_tryTestInGame) end
         playExterior(
             keyMode=='brik' and 'brik/exterior/test' or
             keyMode..'/test'

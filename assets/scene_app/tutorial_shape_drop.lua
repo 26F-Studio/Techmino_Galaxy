@@ -93,7 +93,7 @@ local function newPiece()
             end
         end
     else
-        MSG.new('warn','No solution found')
+        MSG.log('warn','No solution found')
     end
 end
 

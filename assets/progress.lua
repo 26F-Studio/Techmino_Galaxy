@@ -44,7 +44,7 @@ local prgs=setmetatable({
     },
 },{
     __index=function(_,k)
-        LOG("warn","Attempt to read undefined progress data: "..tostring(k))
+        LOG('warn',"Attempt to read undefined progress data: "..tostring(k))
     end,
 })
 
@@ -148,12 +148,12 @@ function PROGRESS.load()
             -- if res.hash==getHash(res) then
             --     TABLE.update(prgs,res)
             -- else
-            --     MSG.new('info',"Hash not match")
+            --     MSG('info',"Hash not match")
             -- end
         end
         prgs.launchCount=prgs.launchCount+1
     else
-        MSG.new('info',"Load progress failed: "..res)
+        MSG.log('info',"Load progress failed: "..res)
     end
 end
 function PROGRESS.fix()
@@ -228,7 +228,7 @@ function PROGRESS.applyExteriorBGM()
     else
         if love.timer.getTime()>3.55 and getBgm()~='singularity' then
             playBgm('singularity')
-            FMOD.music.seek(5.25)
+            FMOD.music.seek(3.9)
         end
     end
 end
@@ -331,9 +331,9 @@ function PROGRESS.transcendTo(n)
                     PROGRESS.applyCoolWaitTemplate()
                     WAIT.interrupt()
                     TASK.new(function()
-                        MSG.new('warn',Text.interior_crash,10)
+                        MSG('warn',Text.interior_crash,10)
                         TASK.yieldT(3)
-                        MSG.new('info',Text.booting_changed,7)
+                        MSG('info',Text.booting_changed,7)
                     end)
                 end
             end,
@@ -486,7 +486,7 @@ function PROGRESS.setBgmUnlocked(name,state)
     if newState>(prgs.bgmUnlocked[name] or 0) then
         prgs.bgmUnlocked[name]=newState
         if prgs.main>=3 then
-            MSG.new('collect',Text.bgm_collected:repD(SONGBOOK[name].title))
+            MSG('collect',Text.bgm_collected:repD(SONGBOOK[name].title))
         end
         PROGRESS.save()
     end
@@ -561,7 +561,7 @@ function PROGRESS.setSecret(id)
         FMOD.effect('unlock_secret')
         prgs.secretFound[id]=1
         if rawget(Text.achievementMessage,id) then
-            MSG.new('achievement',Text.achievementMessage[id])
+            MSG('achievement',Text.achievementMessage[id])
         end
         PROGRESS.save()
         return true

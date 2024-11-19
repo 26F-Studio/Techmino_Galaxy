@@ -95,7 +95,7 @@ function P:playSound(event,...)
         if self.soundEvent[event] then
             self.soundEvent[event](...)
         else
-            MSG.new('warn',"Unknown sound event: "..event)
+            MSG.log('warn',"Unknown sound event: "..event)
         end
     end
 end
@@ -312,7 +312,7 @@ function P:finish(reason)
 
     -- TODO: Just for temporary use
     if self.isMain then
-        MSG.new(reason=='win' and 'check' or 'error',finishTexts[reason] or finishTexts.other,6.26)
+        MSG(reason=='win' and 'check' or 'error',finishTexts[reason] or finishTexts.other,6.26)
         self:playSound('finish_'..reason)
     end
 end
@@ -820,7 +820,7 @@ local function dump(self,L,t,path)
                 k='["FUNC:'..regFuncToStr[k]..'"]='
             else
                 k='["*'..tostring(k)..'"]='
-                LOG("Wrong key type: "..T..", "..nPath)
+                LOG('warn',"Wrong key type: "..T..", "..nPath)
             end
 
             T=type(v)
@@ -831,7 +831,7 @@ local function dump(self,L,t,path)
             elseif T=='table' then
                 v=t<10 and dump(self,v,t+1,nPath)
             elseif T=='function' then
-                v='"FUNC:'..(regFuncToStr[v] or LOG("UNKNOWN_FUNCTION: "..nPath) or "unknown")..'"'
+                v='"FUNC:'..(regFuncToStr[v] or LOG('warn',"UNKNOWN_FUNCTION: "..nPath) or "unknown")..'"'
             elseif T=='userdata' then
                 T=v:type()
                 if T=='RandomGenerator' then
@@ -839,11 +839,11 @@ local function dump(self,L,t,path)
                 elseif T=='ParticleSystem' then
                     v=nil -- Skip
                 else
-                    LOG("Un-handled type:"..T..", "..nPath)
+                    LOG('warn',"Un-handled type:"..T..", "..nPath)
                 end
             else
                 v='["*'..tostring(v)..'"]='
-                LOG("Wrong value type: "..T..", "..nPath)
+                LOG('warn',"Wrong value type: "..T..", "..nPath)
             end
 
             if v~=nil then
@@ -864,10 +864,10 @@ local function undump(self,L,t)
         if T=='number' or T=='boolean' then
         elseif T=='string' then
             if k:sub(1,5)=='FUNC:' then
-                k=regStrToFunc[k:sub(6)] or LOG("UNKNOWN_FUNCTION: "..k)
+                k=regStrToFunc[k:sub(6)] or LOG('warn',"UNKNOWN_FUNCTION: "..k)
             end
         else
-            LOG("Abnormal key type: "..T)
+            LOG('warn',"Abnormal key type: "..T)
         end
 
         T=type(v)
@@ -877,18 +877,18 @@ local function undump(self,L,t)
                     self[k]=love.math.newRandomGenerator()
                     self[k]:setState(v.state)
                 else
-                    LOG("Un-handled type:"..v.__type)
+                    LOG('warn',"Un-handled type:"..v.__type)
                 end
             elseif t<=10 then
                 self[k]={}
                 undump(self[k],v,t+1)
             else
-                LOG("WARNING: table depth over 10, skipped")
+                LOG('warn',"WARNING: table depth over 10, skipped")
             end
         else
             if T=='string' then
                 if v:sub(1,5)=='FUNC:' then
-                    v=regStrToFunc[v:sub(6)] or LOG("UNKNOWN_FUNCTION: "..v)
+                    v=regStrToFunc[v:sub(6)] or LOG('warn',"UNKNOWN_FUNCTION: "..v)
                 end
             end
             self[k]=v
@@ -898,10 +898,10 @@ end
 function P:unserialize(data)
     local f='return'..data
     f=loadstring(f)
-    if type(f)~='function' then return LOG("Cannot parse data as luaon") end
+    if type(f)~='function' then return LOG('warn',"Cannot parse data as luaon") end
     setfenv(f,{})
     local res=f()
-    if type(res)~='table' then return LOG("Cannot parse data as luaon") end
+    if type(res)~='table' then return LOG('warn',"Cannot parse data as luaon") end
     undump(self,res,0)
 
     self.soundTimeHistory=setmetatable({},soundTimeMeta)

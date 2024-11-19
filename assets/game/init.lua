@@ -215,7 +215,7 @@ end
 function GAME.load(mode,seed)
     -- print("Game Loaded: "..mode.."-"..seed)
     if GAME.mode then
-        MSG.new('warn',"Game is running")
+        MSG.log('warn',"Game is running")
         return
     end
     GAME.playing=true
@@ -232,7 +232,7 @@ function GAME.load(mode,seed)
     TASK.removeTask_code(task_unloadGame)
 
     if #GAME.playerList==0 then
-        MSG.new('warn',"No players created in this mode")
+        MSG.log('warn',"No players created in this mode")
     else
         if GAME.mainPlayer then
             local conf=SETTINGS['game_'..GAME.mainPlayer.gameMode]
@@ -276,7 +276,7 @@ end
 ---@param remote? boolean
 function GAME.newPlayer(id,pType,remote)
     if not (type(id)=='number' and math.floor(id)==id and id>=1 and id<=1000) then
-        MSG.new('error',"player id must be 1~1000 integer")
+        MSG.log('error',"player id must be 1~1000 integer")
         return
     end
 
@@ -288,7 +288,7 @@ function GAME.newPlayer(id,pType,remote)
     elseif pType=='acry' then
         P=require'acryPlayer'.new(remote)
     else
-        MSG.new('error',"invalid player type :'"..tostring(pType).."'")
+        MSG.log('error',"invalid player type :'"..tostring(pType).."'")
         return
     end
 

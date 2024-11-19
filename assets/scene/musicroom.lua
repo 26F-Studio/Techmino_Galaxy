@@ -111,7 +111,7 @@ function scene.load()
     musicListBox.code()
 
     if SETTINGS.system.bgmVol<.0626 then
-        MSG.new('warn',Text.musicroom_lowVolume)
+        MSG('warn',Text.musicroom_lowVolume)
     end
 end
 function scene.unload()

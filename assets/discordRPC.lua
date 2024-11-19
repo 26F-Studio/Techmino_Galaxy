@@ -57,14 +57,14 @@ local Cname
 if SYSTEM=='Windows' or SYSTEM=='Linux' then
     Cname=LOADLIB.ffi('discord-rpc')
 elseif MOBILE then
-    LOG("warn",STRING.repD("No Discord-RPC for $1",SYSTEM))
+    LOG('warn',STRING.repD("No Discord-RPC for $1",SYSTEM))
 else
-    MSG.warnLog(STRING.repD("Waiting Discord-RPC for $1",SYSTEM))
+    MSG.log('warn',STRING.repD("Waiting Discord-RPC for $1",SYSTEM))
 end
 
 if not Cname then return MyRPC end
 
-LOG("info","DiscordRPC loaded")
+LOG('info',"DiscordRPC loaded")
 
 ffi.cdef[[
     typedef struct DiscordRichPresence {
@@ -312,22 +312,22 @@ getmetatable(RPC.gcDummy).__gc=function()
 end
 
 function RPC.ready(userId,username,discriminator,avatar)
-    LOG("info",string.format("Discord: ready (%s,%s,%s,%s)",userId,username,discriminator,avatar))
+    LOG('info',string.format("Discord: ready (%s,%s,%s,%s)",userId,username,discriminator,avatar))
 end
 function RPC.disconnected(errorCode,message)
-    LOG("info",string.format("Discord: disconnected (%d: %s)",errorCode,message))
+    LOG('info',string.format("Discord: disconnected (%d: %s)",errorCode,message))
 end
 function RPC.errored(errorCode,message)
-    LOG("info",string.format("Discord: error (%d: %s)",errorCode,message))
+    LOG('info',string.format("Discord: error (%d: %s)",errorCode,message))
 end
 function RPC.joinGame(joinSecret)
-    LOG("info",string.format("Discord: join (%s)",joinSecret))
+    LOG('info',string.format("Discord: join (%s)",joinSecret))
 end
 function RPC.spectateGame(spectateSecret)
-    LOG("info",string.format("Discord: spectate (%s)",spectateSecret))
+    LOG('info',string.format("Discord: spectate (%s)",spectateSecret))
 end
 function RPC.joinRequest(userId,username,discriminator,avatar)
-    LOG("info",string.format("Discord: join request (%s,%s,%s,%s)",userId,username,discriminator,avatar))
+    LOG('info',string.format("Discord: join request (%s,%s,%s,%s)",userId,username,discriminator,avatar))
     RPC.respond(userId,'yes')
 end
 RPC.initialize(MyRPC.appId,true)

@@ -8,7 +8,7 @@ if SYSTEM=='Web' then
         __index=function(t,k)
             t[k]=NOLL
             return NOLL
-        end
+        end,
     })
 end
 
@@ -36,7 +36,7 @@ if M.C and M.C2 then
     require'constants'
     require'wrap'
     require'errors'
-    LOG("info","FMOD loaded")
+    LOG('info',"FMOD loaded")
 end
 
 --------------------------------------------------------------
@@ -52,11 +52,22 @@ function M.init(args)
         M.studio:release()
         firstTime=false
     end
-    M.studio=M.newStudio()
-    M.core=M.studio:getCoreSystem()
+
+    local res
+    M.studio,res=M.newStudio()
+    if res~=M.FMOD_OK then MSG.log('error',"fmod newStudio error: "..M.errorString[res]) return end
+
+    M.core,res=M.studio:getCoreSystem()
+    if res~=M.FMOD_OK then MSG.log('error',"fmod getCoreSystem error: "..M.errorString[res]) return end
+
     studio,core=M.studio,M.core
-    core:setDSPBufferSize(args.DSPBufferLength or 128,args.DSPBufferCount or 4)
-    studio:initialize(args.maxChannel,args.studioFlag,args.coreFlag)
+
+    res=core:setDSPBufferSize(args.DSPBufferLength or 128,args.DSPBufferCount or 4)
+    if res~=M.FMOD_OK then MSG.log('error',"fmod setDSPBufferSize error: "..M.errorString[res]) return end
+
+    res=studio:initialize(args.maxChannel,args.studioFlag,args.coreFlag)
+    if res~=M.FMOD_OK then MSG.log('error',"fmod initialize error: "..M.errorString[res]) return end
+
     if firstTime then
         TASK.new(function()
             while studio do
@@ -77,12 +88,13 @@ end
 ---This method can only load files visible to fmod
 ---@param path string
 ---@param flag? FMOD.Const
+---@return FMOD.Studio.Bank?, string? errInfo
 function M.loadBank(path,flag)
     if not studio then return end
     local bank,res=studio:loadBankFile(path,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
     if res~=M.FMOD_OK then
-        MSG.errorLog("FMOD loadBank error: "..M.errorString[res])
-        return
+        LOG('error',"fmodstudio:loadBankFile error: "..M.errorString[res])
+        return nil,M.errorString[res]
     end
     M.banks[path]=bank
     return bank
@@ -91,20 +103,20 @@ end
 ---This method uses 'loadBankMemory' instead of 'loadBankFile', which makes files visible to love2d's filesystem can be loaded
 ---@param path string
 ---@param flag? FMOD.Const
----@return FMOD.Studio.Bank?
+---@return FMOD.Studio.Bank?, string? errInfo
 function M.loadBank2(path,flag)
     if not studio then return end
     if not love.filesystem.getInfo(path) then
-        MSG.new('warn',"Bank file not found: "..path)
-        return
+        LOG('warn',"Bank file not found: "..path)
+        return nil,"Bank file not found: "..path
     end
     local file=love.filesystem.newFile(path)
     local data,size=file:read('data')
     local bank,res=studio:loadBankMemory(data:getPointer(),size,0,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
     file:close(); file:release(); data:release()
     if res~=M.FMOD_OK then
-        MSG.errorLog("FMOD loadBankMemory error: "..M.errorString[res])
-        return
+        LOG('error',"FMOD loadBankMemory error: "..M.errorString[res])
+        return nil,M.errorString[res]
     end
     M.banks[path]=bank
     return bank
@@ -187,13 +199,13 @@ function M.music.play(name,args)
     if not desc then
         if not unhintedBGM[name] then
             unhintedBGM[name]=true
-            MSG.new('warn',"No BGM named "..name)
+            MSG.log('warn',"No BGM named "..name)
         end
         return
     end
     local event,res=desc:createInstance()
     if res~=M.FMOD_OK then
-        MSG.new('warn',"Event named "..name.." created failed: "..M.errorString[res])
+        MSG.log('warn',"Event named "..name.." created failed: "..M.errorString[res])
         return
     end
     playing={
@@ -329,13 +341,13 @@ function M.effect.play(name,args)
     if not desc then
         if not unhintedSFX[name] then
             unhintedSFX[name]=true
-            MSG.new('warn',"No SE named "..name)
+            MSG.log('warn',"No SE named "..name)
         end
         return
     end
     local event,res=desc:createInstance()
     if res~=M.FMOD_OK then
-        MSG.new('warn',"Play SE '"..name.."' failed: "..M.errorString[res])
+        MSG.log('warn',"Play SE '"..name.."' failed: "..M.errorString[res])
         return
     end
 

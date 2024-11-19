@@ -243,18 +243,18 @@ local function _setLang(lid)
                 local anyMissing
                 for entry in next,newText do
                     if not oldText[entry] then
-                        MSG.new('info',("[$1] missing '$2'"):repD(oldLocale,entry),26)
+                        MSG.log('info',("[$1] missing '$2'"):repD(oldLocale,entry),26)
                         anyMissing=true
                     end
                 end
                 for entry in next,oldText do
                     if not newText[entry] then
-                        MSG.new('info',("[$1] missing '$2'"):repD(newLocale,entry),26)
+                        MSG.log('info',("[$1] missing '$2'"):repD(newLocale,entry),26)
                         anyMissing=true
                     end
                 end
                 if anyMissing then
-                    MSG.new('warn',"Some i18n strings missing",26)
+                    MSG.log('warn',"Some i18n strings missing",26)
                 end
             else
                 SETTINGS.system.locale=lid

@@ -1,6 +1,6 @@
 function sureCheck(event)
     if TASK.lock('sureCheck_'..event,1) then
-        MSG.new('info',Text.sureText[event],1)
+        MSG('info',Text.sureText[event],1)
     else
         return true
     end
@@ -227,7 +227,7 @@ local interiorModeMeta={
         if success then
             SCN.go('game_in','none',self.name)
         else
-            MSG.new('warn',Text.noMode:repD(tostring(self.name):simplifyPath(),errInfo))
+            MSG.log('warn',Text.noMode:repD(tostring(self.name):simplifyPath(),errInfo))
         end
     end
 }
@@ -241,7 +241,7 @@ local exteriorModeMeta={
         if success then
             SCN.go('game_out','fade',self.name)
         else
-            MSG.new('warn',Text.noMode:repD(tostring(self.name):simplifyPath(),errInfo))
+            MSG.log('warn',Text.noMode:repD(tostring(self.name):simplifyPath(),errInfo))
         end
     end
 }
@@ -319,7 +319,7 @@ end
 
 function _getLatestBank(dt)
     TASK.new(function()
-        MSG.new('info',"Opening URL to bank files...")
+        MSG('info',"Opening URL to bank files...")
         TASK.yieldT(dt or 0.626)
         love.system.openURL("https://kyzj-my.sharepoint.com/:f:/g/personal/noreply_studio26f_org/ElmKJZYcNpFDhGks9nekrUYBoyr1ZJZgpx1lCyFu6tHXQg?e=vJnaQX")
     end)
