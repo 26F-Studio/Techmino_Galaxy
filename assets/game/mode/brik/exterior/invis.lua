@@ -238,7 +238,8 @@ return {
                                         P.settings.clearDelay=0
                                         P.settings.dropDelay=0
                                         P.settings.lockDelay=round(beatItvl[3]*1.5)
-                                        P.settings.asd=max(P.settings.asd,42)
+                                        P.settings.asd=max(P.settings.asd,62)
+                                        P.settings.asp=max(P.settings.asp,26)
                                     else
                                         P.settings.spawnDelay=round(beatItvl[3])
                                         P.settings.clearDelay=0
@@ -265,6 +266,7 @@ return {
                                 P.modeData.darkRate=round(cItp(220,26,240,62,LP))
                             else
                                 -- Haunted finished
+                                P.stat.line=260
                                 P:finish('win')
                                 FMOD.music.setParam('section',3)
                                 return true
@@ -272,6 +274,7 @@ return {
                         end
                     elseif P.modeData.subMode=='hidden' then
                         if P.stat.line>=P.modeData.target.line then
+                            P.stat.line=P.modeData.target.line
                             P:finish('win')
                         else
                             if clear.line<4 then
