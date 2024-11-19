@@ -497,7 +497,7 @@ function BP:freshGhost()
                 self.ghostY=self.ghostY-1
             end
 
-            -- 20G check
+            -- infG check
             if (self.settings.dropDelay<=0 or self.downCharge and self.settings.adp==0) and self.ghostY<self.handY then
                 local dY=self.ghostY-self.handY
                 self:moveHand('drop',dY)
@@ -1565,7 +1565,7 @@ function BP:tickStep()
                     if self.dropTimer<=0 then
                         self:moveHand('drop',-1,true)
                     end
-                elseif self.handY~=self.ghostY then -- If switch to 20G during game, brik won't dropped to bottom instantly so we force fresh it
+                elseif self.handY~=self.ghostY then -- If switch to infG during game, brik won't dropped to bottom instantly so we force fresh it
                     self:freshDelay('drop')
                 end
             end

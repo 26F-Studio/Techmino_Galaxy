@@ -276,13 +276,13 @@ function GP:resetPosCheck()
             if SET.bufferMove=='hold' then
                 if self.keyState.softDrop then self:moveDown() end
                 if self.keyState.moveRight~=self.keyState.moveLeft then
-                    local origY=self.handY -- For canceling 20G effect of IMS
+                    local origY=self.handY -- For canceling infG effect of IMS
                     if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
                     self.handY=origY
                 end
             elseif SET.bufferMove=='buffer' then
                 if self.keyBuffer.move then
-                    local origY=self.handY -- For canceling 20G effect of IMS
+                    local origY=self.handY -- For canceling infG effect of IMS
                     if self.keyBuffer.move=='L' then
                         self:moveLeft()
                     elseif self.keyBuffer.move=='R' then
@@ -332,8 +332,8 @@ function GP:freshGhost()
             self.ghostY=self.ghostY-1
         end
 
-        -- 20G check
-        if (self.settings.dropDelay<=0 or self.downCharge and self.settings.asp==0) and self.ghostY<self.handY then -- if (temp) 20G on
+        -- infG check
+        if (self.settings.dropDelay<=0 or self.downCharge and self.settings.asp==0) and self.ghostY<self.handY then -- if (temp) infG on
             local dY=self.ghostY-self.handY
             self:moveHand('drop',dY)
             self:freshDelay('drop')
@@ -1117,7 +1117,7 @@ function GP:tickStep()
                     if self.dropTimer<=0 then
                         self:moveHand('drop',-1,true)
                     end
-                elseif self.handY~=self.ghostY then -- If switch to 20G during game, gela won't dropped to bottom instantly so we force fresh it
+                elseif self.handY~=self.ghostY then -- If switch to infG during game, gela won't dropped to bottom instantly so we force fresh it
                     self:freshDelay('drop')
                 end
             end
