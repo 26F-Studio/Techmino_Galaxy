@@ -399,7 +399,7 @@ end
 ---@field highRate number
 
 ---@class Techmino.Mech.Brik.AllclearGenerator.arg2
----@field lib 'box3'|'pco'|'box4'|'pco4'
+---@field lib 'box3'|'pco3'|'box4'|'pco4'
 ---@field debugging boolean
 ---@field raw boolean
 ---@field holdUsed boolean|integer

@@ -5,8 +5,8 @@ local function newQuestion(P)
         P.modeData.score<10 and (
             'box3'
             -- P.modeData.questCount%2==1 and 'box3' or 'pco3'
-        ) or
-        P.modeData.questCount%2==1 and 'box4' or 'pco4'
+        ) or 'box4'
+        -- P.modeData.questCount%2==1 and 'box4' or 'pco4'
     local field,seq=mechLib.brik.allclearGenerator.newQuestion(P,{
         lib=P.modeData.currentQuestType,
         raw=true,
