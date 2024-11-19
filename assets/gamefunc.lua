@@ -140,25 +140,25 @@ end
 
 function gameSoundFunc.countDown(num)
     if num==0 then -- 6, 3+6+6
-        playSample('complex',{'A3',.8})
-        playSample('square',{'A4',.9},{'E5',.9},{'A5',.9})
+        playSample('complex',{'A2',.9})
+        playSample('complex',{'A4',.9},{'E4',.9},{'A3',.9})
     elseif num==1 then -- 5, 3+7
         playSample('complex',{'G3',.9})
-        playSample('square',{'B4',.9},{'E5',.9})
+        playSample('complex',{'B3',.9},{'E4',.9})
     elseif num==2 then -- 4, 6+2
-        playSample('complex',{'F3'})
-        playSample('square',{'A4',.8},{'D5',.8})
+        playSample('complex',{'D4'})
+        playSample('complex',{'F3',.9},{'A3',.9})
     elseif num==3 then -- 6+6
-        playSample('complex',{'A3',.9},{'E4',.9})
-        playSample('square',{'A4',.8})
+        playSample('complex',{'A3',.9},{'C4',.9})
+        playSample('complex',{'E3',.9})
     elseif num==4 then -- 5+7, 5
-        playSample('complex',{'G3',.9},{'B3',.9})
-        playSample('square',{'G4',.6})
+        playSample('complex',{'G#3',.9},{'B3',.9})
+        playSample('complex',{'E3',.9})
     elseif num==5 then -- 4+6, 4
-        playSample('complex',{'F3',.8},{'A3',.8})
-        playSample('square',{'F4',.3})
+        playSample('complex',{'E3',.9},{'G#3',.9})
+        playSample('complex',{'B2',.9})
     elseif num<=10 then
-        playSample('complex',{'A2',2.2-num/5},{'E3',2.2-num/5})
+        playSample('complex',{'B2',2.2-num/5},{'E3',2.2-num/5})
     end
 end
 function gameSoundFunc.clear(lines)
