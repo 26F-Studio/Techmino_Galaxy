@@ -25,8 +25,12 @@ local aboveScene
 local searchTimer,lastSearchText
 local time,quiting
 local selected
+---@class Techmino.DictContent
 local contents={
     _width=0,
+    maxScroll=0,
+    scroll=0,
+    scroll1=0,
     title=GC.newText(FONT.get(30),''),
     texts={},
 }
@@ -70,6 +74,7 @@ local function selectItem(item)
         contents.title=selected.titleText
         contents._width,contents.texts=FONT.get(item.contentSize):getWrap(item.content,mainW-30)
         contents.scroll=0
+        contents.scroll1=0
         contents.maxScroll=126+(contents.title:getHeight()+5)-(mainH-searchH)
         for i=1,#contents.texts do
             local str=contents.texts[i]
@@ -91,10 +96,10 @@ local function selectItem(item)
     else
         contents.title="x"
         contents.texts=NONE
-        contents.scroll=0
         contents.maxScroll=0
     end
     contents.scroll=0
+    contents.scroll1=0
 end
 local function openLink()
     if selected.link then
@@ -414,6 +419,7 @@ function scene.wheelMove(_,y)
 end
 
 function scene.update(dt)
+    contents.scroll1=MATH.expApproach(contents.scroll1,contents.scroll,dt*26)
     if aboveScene.update then
         aboveScene.update(dt)
     end
@@ -485,7 +491,7 @@ function scene.draw()
     gc_stc_reset()
     gc_stc_rect(0,-mainH/2,mainW,mainH-searchH-5,5)
     gc_setColor(categoryColor[selected.cat].content)
-        gc_translate(0,-contents.scroll)
+        gc_translate(0,-contents.scroll1)
         -- Title
         gc_draw(contents.title,15,-mainH/2+5,nil,math.min(1,(mainW-25)/contents.title:getWidth()),1)
         gc_translate(0,contents.title:getHeight())
