@@ -139,25 +139,25 @@ do
 end
 
 function gameSoundFunc.countDown(num)
-    if num==0 then -- 6, 3+6+6
-        playSample('complex',{'A2',.9})
-        playSample('complex',{'A4',.9},{'E4',.9},{'A3',.9})
-    elseif num==1 then -- 5, 3+7
-        playSample('complex',{'G3',.9})
-        playSample('complex',{'B3',.9},{'E4',.9})
-    elseif num==2 then -- 4, 6+2
-        playSample('complex',{'D4'})
-        playSample('complex',{'F3',.9},{'A3',.9})
-    elseif num==3 then -- 6+6
-        playSample('complex',{'A3',.9},{'C4',.9})
-        playSample('complex',{'E3',.9})
-    elseif num==4 then -- 5+7, 5
-        playSample('complex',{'G#3',.9},{'B3',.9})
-        playSample('complex',{'E3',.9})
-    elseif num==5 then -- 4+6, 4
-        playSample('complex',{'E3',.9},{'G#3',.9})
-        playSample('complex',{'B2',.9})
-    elseif num<=10 then
+    if num==0 then -- 6 + 6 3 6
+        playSample('organ',{'A2',.5,420,1200})
+        playSample('complex',{'A3',.6,320,942},{'E4',.8,320,1100},{'A4',.9,320,2600})
+    elseif num==1 then -- 7 + 5 (7) 3
+        playSample('organ',{'B2',.45,460,520})
+        playSample('complex',{'G3',.7,360,768},{'B3',.5,360,872},{'E4',.85,360,942})
+    elseif num==2 then -- 2 + (4) 6 2
+        playSample('organ',{'D3',.4,450,580})
+        playSample('complex',{'F3',.4,390,662},{'A3',.7,390,662},{'D4',.8,390,872})
+    elseif num==3 then -- 1 + 3 (#5) 1
+        playSample('organ',{'C3',.4})
+        playSample('complex',{'E3',.6},{'A3',.4},{'C4',.75})
+    elseif num==4 then -- 2 + (3) #5 7
+        playSample('organ',{'D3',.4})
+        playSample('complex',{'E3',.3},{'G#3',.7},{'B3',.7})
+    elseif num==5 then -- 7 + 3 #5
+        playSample('organ',{'B2',.4})
+        playSample('complex',{'E3',.6},{'G#3',.8})
+    elseif num<=10 then -- 7 + 3
         playSample('complex',{'B2',2.2-num/5},{'E3',2.2-num/5})
     end
 end
