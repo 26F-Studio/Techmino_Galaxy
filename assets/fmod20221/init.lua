@@ -36,6 +36,7 @@ if M.C and M.C2 then
     require'constants'
     require'wrap'
     require'errors'
+    LOG("info","FMOD loaded")
 end
 
 --------------------------------------------------------------
