@@ -63,5 +63,5 @@ When you finish all the tasks in set C, keep practicing A1. This is the fundamen
 @ title 26F Studio
 @ contentSize 26
 @ link http://studio26f.org
-A group
+A team
 ]]
