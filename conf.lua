@@ -1,6 +1,7 @@
 function love.conf(t)
     local identity='Techmino_Galaxy'
     local mobile=love._os=='Android' or love._os=='iOS'
+    local web=love._os=='Web'
     local msaa=4
     local portrait=false
 
@@ -28,7 +29,7 @@ function love.conf(t)
     local M=t.modules
     M.window,M.system,M.event,M.thread=true,true,true,true
     M.timer,M.math,M.data=true,true,true
-    M.video,M.audio,M.sound=true,false,false
+    M.video,M.audio,M.sound=true,web,false
     M.graphics,M.font,M.image=true,true,true
     M.mouse,M.touch,M.keyboard,M.joystick=true,true,true,true
     M.physics=false
