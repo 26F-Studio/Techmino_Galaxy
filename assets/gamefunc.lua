@@ -328,6 +328,7 @@ end
 getTouches=love.touch.getTouches
 isMouseDown=love.mouse.isDown
 isKeyDown=love.keyboard.isDown
+isSCDown=love.keyboard.isScancodeDown
 local isKeyDown=isKeyDown
 function isCtrlPressed() return isKeyDown('lctrl','rctrl') end
 function isShiftPressed() return isKeyDown('lshift','rshift') end
