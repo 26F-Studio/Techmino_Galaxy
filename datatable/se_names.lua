@@ -46,6 +46,7 @@ return {
     'complex_wave',
     'stairs_wave',
     'spectral_wave',
+    'death_wave',
 
     'ibm_noise',
 }
