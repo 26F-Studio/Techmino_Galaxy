@@ -166,6 +166,23 @@ local defaultKeyName={
     [',']='<',
     ['.']='>',
     ['/']='?',
+    ['kp0']='(0)',
+    ['kp1']='(1)',
+    ['kp2']='(2)',
+    ['kp3']='(3)',
+    ['kp4']='(4)',
+    ['kp5']='(5)',
+    ['kp6']='(6)',
+    ['kp7']='(7)',
+    ['kp8']='(8)',
+    ['kp9']='(9)',
+    ['kp.']='(.)',
+    ['kp/']='(/)',
+    ['kp*']='(*)',
+    ['kp-']='(-)',
+    ['kp+']='(+)',
+    ['kp=']='(=)',
+    ['kpenter']='('..CHAR.key.returnKey..')',
 }
 local function checkColor(input)
     if type(input)=='string' then input=COLOR[input] end
