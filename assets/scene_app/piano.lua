@@ -1,6 +1,21 @@
 local gc=love.graphics
+local gc_setColor=GC.setColor
+local gc_rect=GC.rectangle
+local gc_mStr=GC.mStr
+local setFont=FONT.set
+
+local ins,rem=table.insert,table.remove
+
+local activeEventMap={}
+local objPool={} ---@type Techmino.Piano.Object[]
+local inst,offset,release
 
 local instList={'organ_wave','square_wave','saw_wave','complex_wave','stairs_wave','spectral_wave'}
+
+---@class Techmino.Piano.Object
+---@field _type string
+---@field _update fun(dt:number):any
+---@field _draw function
 
 ---@class Techmino.Piano.Layout
 ---@field name string
@@ -24,11 +39,13 @@ local instList={'organ_wave','square_wave','saw_wave','complex_wave','stairs_wav
 ---@field lineC? Zenitha.Color|Zenitha.ColorStr Outline color when NOT pressed
 ---@field actvC? Zenitha.Color|Zenitha.ColorStr color when pressed
 ---@field textC? Zenitha.Color|Zenitha.ColorStr Text color
+---@field _pressed? boolean
+---@field _onPress? function
+---@field _onRelease? function
 
 ---@type Techmino.Piano.Layout[]
 local layoutList={
-    {
-        name="Classic (on C)",
+    {name="Classic (on C)",
         pos_x=-70,
         pos_y=-25,
         size=10,
@@ -86,8 +103,7 @@ local layoutList={
             ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
         },
     },
-    {
-        name="Simple (on C)",
+    {name="Simple (on C)",
         pos_x=-71.5,
         pos_y=-25,
         size=10,
@@ -153,8 +169,7 @@ local layoutList={
             ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
         },
     },
-    {
-        name="Piano",
+    {name="Piano",
         pos_x=-96/2-1,
         pos_y=5,
         size=16,
@@ -214,8 +229,7 @@ local layoutList={
             ['z']=19,['x']=21,['c']=23,['v']=24,['b']=26,['n']=28,['m']=29,[',']=31,['.']=33,['/']=35,
         },
     },
-    {
-        name="Melodic Phone Keypad (on C)",
+    {name="Melodic Phone Keypad (on C)",
         pos_x=-28/2,
         pos_y=-38/2,
         size=18,
@@ -266,7 +280,9 @@ local function checkColor(input)
 end
 for _,layout in next,layoutList do
     for _,key in ipairs(layout.keyLayout) do
-        TABLE.updateMissing(key,(layout.templates or NONE)[key[1] or -1])
+        if key[1] and layout.templates[key[1]] then
+            TABLE.updateMissing(key,layout.templates[key[1]])
+        end
         key.x=(key.x+layout.pos_x)*layout.size
         key.y=(key.y+layout.pos_y)*layout.size
         key.w=key.w*layout.size
@@ -282,13 +298,13 @@ for _,layout in next,layoutList do
         key.lineC=checkColor(key.lineC or COLOR.M)
         key.actvC=checkColor(key.actvC or COLOR.M)
         key.textC=checkColor(key.textC or COLOR.M)
+
+        key._pressed=false
+        key._onPress=key._onPress or NULL
+        key._onRelease=key._onRelease or NULL
     end
 end
 local layout=layoutList[1]
-local activeEventMap={}
-local inst
-local offset
-local release
 
 ---@type Zenitha.Scene
 local scene={}
@@ -301,7 +317,7 @@ function scene.load()
 end
 
 function scene.touchDown(x,y,k)
-    -- TODO: cool piano
+    -- TODO
 end
 scene.mouseDown=scene.touchDown
 
@@ -359,31 +375,49 @@ function scene.keyUp(_,keyCode)
     end
 end
 
-local gc_setColor=GC.setColor
-local gc_rect=GC.rectangle
-local gc_mStr=GC.mStr
-local setFont=FONT.set
 local isSCDown=isSCDown
+function scene.update(dt)
+    local L=layout.keyLayout
+    for i=1,#L do
+        local key=L[i]
+        local keyList=key.key
+        local keyPressed=false
+        if keyList then
+            if type(keyList)=='string' then
+                keyPressed=isSCDown(keyList)
+            else
+                keyPressed=isSCDown(unpack(keyList))
+            end
+        end
+        if key._pressed~=keyPressed then
+            key._pressed=keyPressed
+            key[keyPressed and '_onPress' or '_onRelease'](key)
+        end
+    end
+    for i=#objPool,1,-1 do
+        if objPool[i]:_update(dt) then
+            rem(objPool,i)
+        end
+    end
+end
+
 function scene.draw()
-    FONT.set(30)
+    setFont(30)
     gc.print(layout.name,40,40)
     gc.print(inst,40,80)
     gc.print(offset,40,120)
     gc.print(release,40,160)
     gc.replaceTransform(SCR.xOy_m)
+
+    for i=1,#objPool do
+        objPool[i]:_draw()
+    end
+
     gc.setLineWidth(4)
     local L=layout.keyLayout
     for i=1,#L do
         local key=L[i]
-        local keyPressed=key.key
-        if keyPressed then
-            if type(keyPressed)=='string' then
-                keyPressed=isSCDown(keyPressed)
-            else
-                keyPressed=isSCDown(unpack(keyPressed))
-            end
-        end
-        if keyPressed then
+        if key._pressed then
             gc_setColor(key.actvC)
             gc_rect('fill',key.x,key.y,key.w,key.h)
         else
