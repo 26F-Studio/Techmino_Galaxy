@@ -1,134 +1,186 @@
 local gc=love.graphics
 
 local instList={'organ_wave','square_wave','saw_wave','complex_wave','stairs_wave','spectral_wave'}
+
+---@class Techmino.Piano.Layout
+---@field size number
+---@field pos_x number
+---@field pos_y number
+---@field font number
+---@field keyMap table<string,number>
+---@field keyLayout Techmino.Piano.keyObj[]
+---@field backC? Zenitha.Color|Zenitha.ColorStr
+---@field foreC? Zenitha.Color|Zenitha.ColorStr
+---@field textC? Zenitha.Color|Zenitha.ColorStr
+---@field actvC? Zenitha.Color|Zenitha.ColorStr
+
+---@class Techmino.Piano.keyObj
+---@field x number
+---@field y number
+---@field w number
+---@field h number
+---@field key? string
+---@field show? string
+---@field backC? Zenitha.Color|Zenitha.ColorStr
+---@field foreC? Zenitha.Color|Zenitha.ColorStr
+---@field textC? Zenitha.Color|Zenitha.ColorStr
+---@field actvC? Zenitha.Color|Zenitha.ColorStr
+
+---@type Techmino.Piano.Layout[]
 local layoutList={
     { -- Classic
+        keyMap={
             ['2']=37,['3']=39,         ['5']=42,['6']=44,['7']=46,         ['9']=49,['0']=51,         ['=']=54,['backspace']=56,
-        ['q']=36,['w']=38,['e']=40,['r']=41,['t']=43,['y']=45,['u']=47,['i']=48,['o']=50,['p']=52,['[']=53,[']']=55,['\\']=57,
+            ['q']=36,['w']=38,['e']=40,['r']=41,['t']=43,['y']=45,['u']=47,['i']=48,['o']=50,['p']=52,['[']=53,[']']=55,['\\']=57,
             ['s']=25,['d']=27,         ['g']=30,['h']=32,['j']=34,         ['l']=37,[';']=39,
-        ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
-
+            ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
+        },
         size=10,
         pos_x=-70,
         pos_y=-25,
         font=60,
-        {x=0,y=0,w=140,h=50}, -- Outline, just for look
-        {x=010,y=05,w=8,h=8,key='2'},
-        {x=020,y=05,w=8,h=8,key='3'},
-        {x=040,y=05,w=8,h=8,key='5'},
-        {x=050,y=05,w=8,h=8,key='6'},
-        {x=060,y=05,w=8,h=8,key='7'},
-        {x=080,y=05,w=8,h=8,key='9'},
-        {x=090,y=05,w=8,h=8,key='0'},
-        {x=110,y=05,w=8,h=8,key='='},
-        {x=120,y=05,w=13,h=8,key='backspace',show='←'},
-        {x=005,y=15,w=8,h=8,key='q'},
-        {x=015,y=15,w=8,h=8,key='w'},
-        {x=025,y=15,w=8,h=8,key='e'},
-        {x=035,y=15,w=8,h=8,key='r'},
-        {x=045,y=15,w=8,h=8,key='t'},
-        {x=055,y=15,w=8,h=8,key='y'},
-        {x=065,y=15,w=8,h=8,key='u'},
-        {x=075,y=15,w=8,h=8,key='i'},
-        {x=085,y=15,w=8,h=8,key='o'},
-        {x=095,y=15,w=8,h=8,key='p'},
-        {x=105,y=15,w=8,h=8,key='['},
-        {x=115,y=15,w=8,h=8,key=']'},
-        {x=125,y=15,w=8,h=8,key='\\'},
-        {x=020,y=25,w=8,h=8,key='s'},
-        {x=030,y=25,w=8,h=8,key='d'},
-        {x=050,y=25,w=8,h=8,key='g'},
-        {x=060,y=25,w=8,h=8,key='h'},
-        {x=070,y=25,w=8,h=8,key='j'},
-        {x=090,y=25,w=8,h=8,key='l'},
-        {x=100,y=25,w=8,h=8,key=';'},
-        {x=015,y=35,w=8,h=8,key='z'},
-        {x=025,y=35,w=8,h=8,key='x'},
-        {x=035,y=35,w=8,h=8,key='c'},
-        {x=045,y=35,w=8,h=8,key='v'},
-        {x=055,y=35,w=8,h=8,key='b'},
-        {x=065,y=35,w=8,h=8,key='n'},
-        {x=075,y=35,w=8,h=8,key='m'},
-        {x=085,y=35,w=8,h=8,key=','},
-        {x=095,y=35,w=8,h=8,key='.'},
-        {x=105,y=35,w=8,h=8,key='/'},
+        -- backC='M',
+        foreC='LD',
+        textC='D',
+        -- actvC='M',
+        keyLayout={
+            {x=0,y=0,w=140,h=50,backC={1,1,1,.26},foreC='dL'}, -- Frame
+            {x=010,y=05,w=8,h=8,key='2',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
+            {x=020,y=05,w=8,h=8,key='3',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
+            {x=040,y=05,w=8,h=8,key='5',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
+            {x=050,y=05,w=8,h=8,key='6',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
+            {x=060,y=05,w=8,h=8,key='7',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
+            {x=080,y=05,w=8,h=8,key='9',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
+            {x=090,y=05,w=8,h=8,key='0',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
+            {x=110,y=05,w=8,h=8,key='=',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
+            {x=120,y=05,w=13,h=8,key='backspace',backC='DS',actvC='dS',foreC='LD',textC='dL'},
+            {x=005,y=15,w=8,h=8,key='q',         backC='LS',actvC='S'},
+            {x=015,y=15,w=8,h=8,key='w',         backC='LS',actvC='S'},
+            {x=025,y=15,w=8,h=8,key='e',         backC='LS',actvC='S'},
+            {x=035,y=15,w=8,h=8,key='r',         backC='LS',actvC='S'},
+            {x=045,y=15,w=8,h=8,key='t',         backC='LS',actvC='S'},
+            {x=055,y=15,w=8,h=8,key='y',         backC='LS',actvC='S'},
+            {x=065,y=15,w=8,h=8,key='u',         backC='LS',actvC='S'},
+            {x=075,y=15,w=8,h=8,key='i',         backC='LS',actvC='S'},
+            {x=085,y=15,w=8,h=8,key='o',         backC='LS',actvC='S'},
+            {x=095,y=15,w=8,h=8,key='p',         backC='LS',actvC='S'},
+            {x=105,y=15,w=8,h=8,key='[',         backC='LS',actvC='S'},
+            {x=115,y=15,w=8,h=8,key=']',         backC='LS',actvC='S'},
+            {x=125,y=15,w=8,h=8,key='\\',        backC='LS',actvC='S'},
+            {x=020,y=25,w=8,h=8,key='s',         backC='DR',actvC='dR',foreC='LD',textC='dL'},
+            {x=030,y=25,w=8,h=8,key='d',         backC='DR',actvC='dR',foreC='LD',textC='dL'},
+            {x=050,y=25,w=8,h=8,key='g',         backC='DR',actvC='dR',foreC='LD',textC='dL'},
+            {x=060,y=25,w=8,h=8,key='h',         backC='DR',actvC='dR',foreC='LD',textC='dL'},
+            {x=070,y=25,w=8,h=8,key='j',         backC='DR',actvC='dR',foreC='LD',textC='dL'},
+            {x=090,y=25,w=8,h=8,key='l',         backC='DR',actvC='dR',foreC='LD',textC='dL'},
+            {x=100,y=25,w=8,h=8,key=';',         backC='DR',actvC='dR',foreC='LD',textC='dL'},
+            {x=015,y=35,w=8,h=8,key='z',         backC='LR',actvC='R',},
+            {x=025,y=35,w=8,h=8,key='x',         backC='LR',actvC='R',},
+            {x=035,y=35,w=8,h=8,key='c',         backC='LR',actvC='R',},
+            {x=045,y=35,w=8,h=8,key='v',         backC='LR',actvC='R',},
+            {x=055,y=35,w=8,h=8,key='b',         backC='LR',actvC='R',},
+            {x=065,y=35,w=8,h=8,key='n',         backC='LR',actvC='R',},
+            {x=075,y=35,w=8,h=8,key='m',         backC='LR',actvC='R',},
+            {x=085,y=35,w=8,h=8,key=',',         backC='LR',actvC='R',},
+            {x=095,y=35,w=8,h=8,key='.',         backC='LR',actvC='R',},
+            {x=105,y=35,w=8,h=8,key='/',         backC='LR',actvC='R',},
+        },
     },
     { -- Simple
-        ['1']=60,['2']=62,['3']=64,['4']=65,['5']=67,['6']=69,['7']=71,['8']=72,['9']=74,['0']=76,['-']=77,['=']=79,['backspace']=81,
-          ['q']=36,['w']=38,['e']=40,['r']=41,['t']=43,['y']=45,['u']=47,['i']=48,['o']=50,['p']=52,['[']=53,[']']=55,['\\']=57,
+        keyMap={
+            ['1']=60,['2']=62,['3']=64,['4']=65,['5']=67,['6']=69,['7']=71,['8']=72,['9']=74,['0']=76,['-']=77,['=']=79,['backspace']=81,
+            ['q']=36,['w']=38,['e']=40,['r']=41,['t']=43,['y']=45,['u']=47,['i']=48,['o']=50,['p']=52,['[']=53,[']']=55,['\\']=57,
             ['a']=36,['s']=38,['d']=40,['f']=41,['g']=43,['h']=45,['j']=47,['k']=48,['l']=50,[';']=52,["'"]=50,['return']=55,
-              ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
-
+            ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
+        },
         size=10,
         pos_x=-71.5,
         pos_y=-25,
         font=60,
-        {x=0,y=0,w=143,h=50}, -- Outline, just for look
-        {x=005,y=05,w=8,h=8,key='1'},
-        {x=015,y=05,w=8,h=8,key='2'},
-        {x=025,y=05,w=8,h=8,key='3'},
-        {x=035,y=05,w=8,h=8,key='4'},
-        {x=045,y=05,w=8,h=8,key='5'},
-        {x=055,y=05,w=8,h=8,key='6'},
-        {x=065,y=05,w=8,h=8,key='7'},
-        {x=075,y=05,w=8,h=8,key='8'},
-        {x=085,y=05,w=8,h=8,key='9'},
-        {x=095,y=05,w=8,h=8,key='0'},
-        {x=105,y=05,w=8,h=8,key='-'},
-        {x=115,y=05,w=8,h=8,key='='},
-        {x=125,y=05,w=13,h=8,key='backspace',show='←'},
-        {x=010,y=15,w=8,h=8,key='q'},
-        {x=020,y=15,w=8,h=8,key='w'},
-        {x=030,y=15,w=8,h=8,key='e'},
-        {x=040,y=15,w=8,h=8,key='r'},
-        {x=050,y=15,w=8,h=8,key='t'},
-        {x=060,y=15,w=8,h=8,key='y'},
-        {x=070,y=15,w=8,h=8,key='u'},
-        {x=080,y=15,w=8,h=8,key='i'},
-        {x=090,y=15,w=8,h=8,key='o'},
-        {x=100,y=15,w=8,h=8,key='p'},
-        {x=110,y=15,w=8,h=8,key='['},
-        {x=120,y=15,w=8,h=8,key=']'},
-        {x=130,y=15,w=8,h=8,key='\\'},
-        {x=015,y=25,w=8,h=8,key='a'},
-        {x=025,y=25,w=8,h=8,key='s'},
-        {x=035,y=25,w=8,h=8,key='d'},
-        {x=045,y=25,w=8,h=8,key='f'},
-        {x=055,y=25,w=8,h=8,key='g'},
-        {x=065,y=25,w=8,h=8,key='h'},
-        {x=075,y=25,w=8,h=8,key='j'},
-        {x=085,y=25,w=8,h=8,key='k'},
-        {x=095,y=25,w=8,h=8,key='l'},
-        {x=105,y=25,w=8,h=8,key=';'},
-        {x=115,y=25,w=8,h=8,key='\''},
-        {x=125,y=25,w=13,h=8,key='return',show=CHAR.key.returnKey},
-        {x=020,y=35,w=8,h=8,key='z'},
-        {x=030,y=35,w=8,h=8,key='x'},
-        {x=040,y=35,w=8,h=8,key='c'},
-        {x=050,y=35,w=8,h=8,key='v'},
-        {x=060,y=35,w=8,h=8,key='b'},
-        {x=070,y=35,w=8,h=8,key='n'},
-        {x=080,y=35,w=8,h=8,key='m'},
-        {x=090,y=35,w=8,h=8,key=','},
-        {x=100,y=35,w=8,h=8,key='.'},
-        {x=110,y=35,w=8,h=8,key='/'},
+        backC='dT',
+        foreC='L',
+        textC='DL',
+        actvC='lY',
+        keyLayout={
+            {x=0,y=0,w=143,h=50,backC={1,1,1,.26},foreC='dL'}, -- Frame
+            {x=005,y=05,w=8,h=8,key='1'},
+            {x=015,y=05,w=8,h=8,key='2'},
+            {x=025,y=05,w=8,h=8,key='3'},
+            {x=035,y=05,w=8,h=8,key='4'},
+            {x=045,y=05,w=8,h=8,key='5'},
+            {x=055,y=05,w=8,h=8,key='6'},
+            {x=065,y=05,w=8,h=8,key='7'},
+            {x=075,y=05,w=8,h=8,key='8'},
+            {x=085,y=05,w=8,h=8,key='9'},
+            {x=095,y=05,w=8,h=8,key='0'},
+            {x=105,y=05,w=8,h=8,key='-'},
+            {x=115,y=05,w=8,h=8,key='='},
+            {x=125,y=05,w=13,h=8,key='backspace'},
+            {x=010,y=15,w=8,h=8,key='q'},
+            {x=020,y=15,w=8,h=8,key='w'},
+            {x=030,y=15,w=8,h=8,key='e'},
+            {x=040,y=15,w=8,h=8,key='r'},
+            {x=050,y=15,w=8,h=8,key='t'},
+            {x=060,y=15,w=8,h=8,key='y'},
+            {x=070,y=15,w=8,h=8,key='u'},
+            {x=080,y=15,w=8,h=8,key='i'},
+            {x=090,y=15,w=8,h=8,key='o'},
+            {x=100,y=15,w=8,h=8,key='p'},
+            {x=110,y=15,w=8,h=8,key='['},
+            {x=120,y=15,w=8,h=8,key=']'},
+            {x=130,y=15,w=8,h=8,key='\\'},
+            {x=015,y=25,w=8,h=8,key='a'},
+            {x=025,y=25,w=8,h=8,key='s'},
+            {x=035,y=25,w=8,h=8,key='d'},
+            {x=045,y=25,w=8,h=8,key='f'},
+            {x=055,y=25,w=8,h=8,key='g'},
+            {x=065,y=25,w=8,h=8,key='h'},
+            {x=075,y=25,w=8,h=8,key='j'},
+            {x=085,y=25,w=8,h=8,key='k'},
+            {x=095,y=25,w=8,h=8,key='l'},
+            {x=105,y=25,w=8,h=8,key=';'},
+            {x=115,y=25,w=8,h=8,key='\''},
+            {x=125,y=25,w=13,h=8,key='return'},
+            {x=020,y=35,w=8,h=8,key='z'},
+            {x=030,y=35,w=8,h=8,key='x'},
+            {x=040,y=35,w=8,h=8,key='c'},
+            {x=050,y=35,w=8,h=8,key='v'},
+            {x=060,y=35,w=8,h=8,key='b'},
+            {x=070,y=35,w=8,h=8,key='n'},
+            {x=080,y=35,w=8,h=8,key='m'},
+            {x=090,y=35,w=8,h=8,key=','},
+            {x=100,y=35,w=8,h=8,key='.'},
+            {x=110,y=35,w=8,h=8,key='/'},
+        },
     },
 }
-
+local defaultKeyName={
+    ['backspace']='←',
+    ['return']=CHAR.key.returnKey,
+}
+local function checkColor(input)
+    if type(input)=='string' then input=COLOR[input] end
+    assert(type(input)=='table',"input should be an exist 'color string' or {R,G,B}, but got "..tostring(input))
+    return input
+end
 for _,layout in next,layoutList do
     local dx,dy,size=layout.pos_x,layout.pos_y,layout.size
-    for _,key in ipairs(layout) do
+    for _,key in ipairs(layout.keyLayout) do
         key.x=(key.x+dx)*size
         key.y=(key.y+dy)*size
         key.w=key.w*size
         key.h=key.h*size
         if not key.show then
             if key.key then
-                key.show=key.key:upper():sub(1,3)
+                key.show=defaultKeyName[key.key] or (key.key:upper():sub(1,1))
             else
                 key.show=''
             end
         end
+        key.backC=checkColor(key.backC or layout.backC or COLOR.M)
+        key.foreC=checkColor(key.foreC or layout.foreC or COLOR.M)
+        key.textC=checkColor(key.textC or layout.textC or COLOR.M)
+        key.actvC=checkColor(key.actvC or layout.actvC or COLOR.M)
     end
 end
 local layout=layoutList[1]
@@ -158,8 +210,8 @@ local _param={
     param={'release',1},
 }
 function scene.keyDown(key,isRep,keyCode)
-    if not isRep and layout[keyCode] then
-        local note=layout[keyCode]+offset
+    if not isRep and layout.keyMap[keyCode] then
+        local note=layout.keyMap[keyCode]+offset
         if isShiftPressed() then note=note+1 end
         if isCtrlPressed() then note=note-1 end
         _param.tune=note-26
@@ -198,13 +250,14 @@ function scene.keyDown(key,isRep,keyCode)
     return true
 end
 function scene.keyUp(_,keyCode)
-    if layout[keyCode] and activeEventMap[keyCode] then
+    if layout.keyMap[keyCode] and activeEventMap[keyCode] then
         activeEventMap[keyCode]:stop(FMOD.FMOD_STUDIO_STOP_ALLOWFADEOUT)
         activeEventMap[keyCode]=false
     end
 end
 
-local gc_rect=gc.rectangle
+local gc_setColor=GC.setColor
+local gc_rect=GC.rectangle
 local gc_mStr=GC.mStr
 local setFont=FONT.set
 local isSCDown=isSCDown
@@ -215,14 +268,23 @@ function scene.draw()
     gc.print(release,40,140)
     gc.replaceTransform(SCR.xOy_m)
     gc.setLineWidth(4)
-    for i=1,#layout do
-        local key=layout[i]
-        gc_rect(key.key and isSCDown(key.key) and 'fill' or 'line',key.x,key.y,key.w,key.h)
+    local L=layout.keyLayout
+    for i=1,#L do
+        local key=L[i]
+        if key.key and isSCDown(key.key) then
+            gc_setColor(key.actvC)
+            gc_rect('fill',key.x,key.y,key.w,key.h)
+        else
+            gc_setColor(key.backC)
+            gc_rect('fill',key.x,key.y,key.w,key.h)
+            gc_setColor(key.foreC)
+            gc_rect('line',key.x,key.y,key.w,key.h)
+        end
     end
-    gc.setColor(COLOR.LD)
     setFont(layout.font)
-    for i=1,#layout do
-        local key=layout[i]
+    for i=1,#L do
+        local key=L[i]
+        gc_setColor(key.textC)
         gc_mStr(key.show,key.x+key.w/2,key.y)
     end
 end
