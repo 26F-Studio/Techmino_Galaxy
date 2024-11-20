@@ -225,9 +225,10 @@ local layoutList={
         font=100,
         fillC='dL',
         lineC='lD',
-        actvC='lR',
+        actvC="DL",
         textC='D',
         keyLayout={
+            {x=-1,y=-1,w=30,h=40,fillC={1,1,1,.26},lineC='dL'}, -- Frame
             {x=00,y=00,w=8,h=8,key='kp7'},
             {x=10,y=00,w=8,h=8,key='kp8'},
             {x=20,y=00,w=8,h=8,key='kp9'},
