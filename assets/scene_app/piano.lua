@@ -3,28 +3,28 @@ local gc=love.graphics
 local instList={'organ_wave','square_wave','saw_wave','complex_wave','stairs_wave','spectral_wave'}
 
 ---@class Techmino.Piano.Layout
----@field size number
----@field pos_x number
----@field pos_y number
----@field font number
+---@field pos_x number Starting X position of the layout (0,0 for screen center)
+---@field pos_y number Starting Y position
+---@field size number Scale all things (based on the screen center)
+---@field font number Font size, MUST BE MULTIPLE OF 5
 ---@field keyMap table<string,number>
 ---@field keyLayout Techmino.Piano.keyObj[]
----@field backC? Zenitha.Color|Zenitha.ColorStr
----@field foreC? Zenitha.Color|Zenitha.ColorStr
----@field textC? Zenitha.Color|Zenitha.ColorStr
----@field actvC? Zenitha.Color|Zenitha.ColorStr
+---@field fillC? Zenitha.Color|Zenitha.ColorStr Default color, used when a key object doesn't have one
+---@field lineC? Zenitha.Color|Zenitha.ColorStr Default color
+---@field textC? Zenitha.Color|Zenitha.ColorStr Default color
+---@field actvC? Zenitha.Color|Zenitha.ColorStr Default color
 
 ---@class Techmino.Piano.keyObj
----@field x number
----@field y number
----@field w number
----@field h number
----@field key? string
----@field show? string
----@field backC? Zenitha.Color|Zenitha.ColorStr
----@field foreC? Zenitha.Color|Zenitha.ColorStr
----@field textC? Zenitha.Color|Zenitha.ColorStr
----@field actvC? Zenitha.Color|Zenitha.ColorStr
+---@field x number X position of key's upper-left corner
+---@field y number Y position
+---@field w number Width
+---@field h number Height
+---@field key? string Key code, leave blank for decorating only
+---@field show? string Text to show on the key, leave blank for default
+---@field fillC? Zenitha.Color|Zenitha.ColorStr Background color when NOT pressed
+---@field lineC? Zenitha.Color|Zenitha.ColorStr Outline color when NOT pressed
+---@field actvC? Zenitha.Color|Zenitha.ColorStr color when pressed
+---@field textC? Zenitha.Color|Zenitha.ColorStr Text color
 
 ---@type Techmino.Piano.Layout[]
 local layoutList={
@@ -35,55 +35,55 @@ local layoutList={
             ['s']=25,['d']=27,         ['g']=30,['h']=32,['j']=34,         ['l']=37,[';']=39,
             ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
         },
-        size=10,
         pos_x=-70,
         pos_y=-25,
+        size=10,
         font=60,
-        -- backC='M',
-        foreC='LD',
-        textC='D',
+        -- fillC='M',
+        lineC='LD',
         -- actvC='M',
+        textC='D',
         keyLayout={
-            {x=0,y=0,w=140,h=50,backC={1,1,1,.26},foreC='dL'}, -- Frame
-            {x=010,y=05,w=8,h=8,key='2',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
-            {x=020,y=05,w=8,h=8,key='3',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
-            {x=040,y=05,w=8,h=8,key='5',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
-            {x=050,y=05,w=8,h=8,key='6',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
-            {x=060,y=05,w=8,h=8,key='7',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
-            {x=080,y=05,w=8,h=8,key='9',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
-            {x=090,y=05,w=8,h=8,key='0',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
-            {x=110,y=05,w=8,h=8,key='=',         backC='DS',actvC='dS',foreC='LD',textC='dL'},
-            {x=120,y=05,w=13,h=8,key='backspace',backC='DS',actvC='dS',foreC='LD',textC='dL'},
-            {x=005,y=15,w=8,h=8,key='q',         backC='LS',actvC='S'},
-            {x=015,y=15,w=8,h=8,key='w',         backC='LS',actvC='S'},
-            {x=025,y=15,w=8,h=8,key='e',         backC='LS',actvC='S'},
-            {x=035,y=15,w=8,h=8,key='r',         backC='LS',actvC='S'},
-            {x=045,y=15,w=8,h=8,key='t',         backC='LS',actvC='S'},
-            {x=055,y=15,w=8,h=8,key='y',         backC='LS',actvC='S'},
-            {x=065,y=15,w=8,h=8,key='u',         backC='LS',actvC='S'},
-            {x=075,y=15,w=8,h=8,key='i',         backC='LS',actvC='S'},
-            {x=085,y=15,w=8,h=8,key='o',         backC='LS',actvC='S'},
-            {x=095,y=15,w=8,h=8,key='p',         backC='LS',actvC='S'},
-            {x=105,y=15,w=8,h=8,key='[',         backC='LS',actvC='S'},
-            {x=115,y=15,w=8,h=8,key=']',         backC='LS',actvC='S'},
-            {x=125,y=15,w=8,h=8,key='\\',        backC='LS',actvC='S'},
-            {x=020,y=25,w=8,h=8,key='s',         backC='DR',actvC='dR',foreC='LD',textC='dL'},
-            {x=030,y=25,w=8,h=8,key='d',         backC='DR',actvC='dR',foreC='LD',textC='dL'},
-            {x=050,y=25,w=8,h=8,key='g',         backC='DR',actvC='dR',foreC='LD',textC='dL'},
-            {x=060,y=25,w=8,h=8,key='h',         backC='DR',actvC='dR',foreC='LD',textC='dL'},
-            {x=070,y=25,w=8,h=8,key='j',         backC='DR',actvC='dR',foreC='LD',textC='dL'},
-            {x=090,y=25,w=8,h=8,key='l',         backC='DR',actvC='dR',foreC='LD',textC='dL'},
-            {x=100,y=25,w=8,h=8,key=';',         backC='DR',actvC='dR',foreC='LD',textC='dL'},
-            {x=015,y=35,w=8,h=8,key='z',         backC='LR',actvC='R',},
-            {x=025,y=35,w=8,h=8,key='x',         backC='LR',actvC='R',},
-            {x=035,y=35,w=8,h=8,key='c',         backC='LR',actvC='R',},
-            {x=045,y=35,w=8,h=8,key='v',         backC='LR',actvC='R',},
-            {x=055,y=35,w=8,h=8,key='b',         backC='LR',actvC='R',},
-            {x=065,y=35,w=8,h=8,key='n',         backC='LR',actvC='R',},
-            {x=075,y=35,w=8,h=8,key='m',         backC='LR',actvC='R',},
-            {x=085,y=35,w=8,h=8,key=',',         backC='LR',actvC='R',},
-            {x=095,y=35,w=8,h=8,key='.',         backC='LR',actvC='R',},
-            {x=105,y=35,w=8,h=8,key='/',         backC='LR',actvC='R',},
+            {x=0,y=0,w=140,h=50,fillC={1,1,1,.26},lineC='dL'}, -- Frame
+            {x=010,y=05,w=8,h=8,key='2',         fillC='DS',actvC='dS',lineC='LD',textC='dL'}, -- Line 1
+            {x=020,y=05,w=8,h=8,key='3',         fillC='DS',actvC='dS',lineC='LD',textC='dL'},
+            {x=040,y=05,w=8,h=8,key='5',         fillC='DS',actvC='dS',lineC='LD',textC='dL'},
+            {x=050,y=05,w=8,h=8,key='6',         fillC='DS',actvC='dS',lineC='LD',textC='dL'},
+            {x=060,y=05,w=8,h=8,key='7',         fillC='DS',actvC='dS',lineC='LD',textC='dL'},
+            {x=080,y=05,w=8,h=8,key='9',         fillC='DS',actvC='dS',lineC='LD',textC='dL'},
+            {x=090,y=05,w=8,h=8,key='0',         fillC='DS',actvC='dS',lineC='LD',textC='dL'},
+            {x=110,y=05,w=8,h=8,key='=',         fillC='DS',actvC='dS',lineC='LD',textC='dL'},
+            {x=120,y=05,w=13,h=8,key='backspace',fillC='DS',actvC='dS',lineC='LD',textC='dL'},
+            {x=005,y=15,w=8,h=8,key='q',         fillC='LS',actvC='S'}, -- Line 2
+            {x=015,y=15,w=8,h=8,key='w',         fillC='LS',actvC='S'},
+            {x=025,y=15,w=8,h=8,key='e',         fillC='LS',actvC='S'},
+            {x=035,y=15,w=8,h=8,key='r',         fillC='LS',actvC='S'},
+            {x=045,y=15,w=8,h=8,key='t',         fillC='LS',actvC='S'},
+            {x=055,y=15,w=8,h=8,key='y',         fillC='LS',actvC='S'},
+            {x=065,y=15,w=8,h=8,key='u',         fillC='LS',actvC='S'},
+            {x=075,y=15,w=8,h=8,key='i',         fillC='LS',actvC='S'},
+            {x=085,y=15,w=8,h=8,key='o',         fillC='LS',actvC='S'},
+            {x=095,y=15,w=8,h=8,key='p',         fillC='LS',actvC='S'},
+            {x=105,y=15,w=8,h=8,key='[',         fillC='LS',actvC='S'},
+            {x=115,y=15,w=8,h=8,key=']',         fillC='LS',actvC='S'},
+            {x=125,y=15,w=8,h=8,key='\\',        fillC='LS',actvC='S'},
+            {x=020,y=25,w=8,h=8,key='s',         fillC='DR',actvC='dR',lineC='LD',textC='dL'}, -- Line 3
+            {x=030,y=25,w=8,h=8,key='d',         fillC='DR',actvC='dR',lineC='LD',textC='dL'},
+            {x=050,y=25,w=8,h=8,key='g',         fillC='DR',actvC='dR',lineC='LD',textC='dL'},
+            {x=060,y=25,w=8,h=8,key='h',         fillC='DR',actvC='dR',lineC='LD',textC='dL'},
+            {x=070,y=25,w=8,h=8,key='j',         fillC='DR',actvC='dR',lineC='LD',textC='dL'},
+            {x=090,y=25,w=8,h=8,key='l',         fillC='DR',actvC='dR',lineC='LD',textC='dL'},
+            {x=100,y=25,w=8,h=8,key=';',         fillC='DR',actvC='dR',lineC='LD',textC='dL'},
+            {x=015,y=35,w=8,h=8,key='z',         fillC='LR',actvC='R',}, -- Line 4
+            {x=025,y=35,w=8,h=8,key='x',         fillC='LR',actvC='R',},
+            {x=035,y=35,w=8,h=8,key='c',         fillC='LR',actvC='R',},
+            {x=045,y=35,w=8,h=8,key='v',         fillC='LR',actvC='R',},
+            {x=055,y=35,w=8,h=8,key='b',         fillC='LR',actvC='R',},
+            {x=065,y=35,w=8,h=8,key='n',         fillC='LR',actvC='R',},
+            {x=075,y=35,w=8,h=8,key='m',         fillC='LR',actvC='R',},
+            {x=085,y=35,w=8,h=8,key=',',         fillC='LR',actvC='R',},
+            {x=095,y=35,w=8,h=8,key='.',         fillC='LR',actvC='R',},
+            {x=105,y=35,w=8,h=8,key='/',         fillC='LR',actvC='R',},
         },
     },
     { -- Simple
@@ -93,17 +93,17 @@ local layoutList={
             ['a']=36,['s']=38,['d']=40,['f']=41,['g']=43,['h']=45,['j']=47,['k']=48,['l']=50,[';']=52,["'"]=50,['return']=55,
             ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
         },
-        size=10,
         pos_x=-71.5,
         pos_y=-25,
+        size=10,
         font=60,
-        backC='dT',
-        foreC='L',
-        textC='DL',
+        fillC='dT',
+        lineC='L',
         actvC='lY',
+        textC='DL',
         keyLayout={
-            {x=0,y=0,w=143,h=50,backC={1,1,1,.26},foreC='dL'}, -- Frame
-            {x=005,y=05,w=8,h=8,key='1'},
+            {x=0,y=0,w=143,h=50,fillC={1,1,1,.26},lineC='dL'}, -- Frame
+            {x=005,y=05,w=8,h=8,key='1'}, -- Line 1
             {x=015,y=05,w=8,h=8,key='2'},
             {x=025,y=05,w=8,h=8,key='3'},
             {x=035,y=05,w=8,h=8,key='4'},
@@ -116,7 +116,7 @@ local layoutList={
             {x=105,y=05,w=8,h=8,key='-'},
             {x=115,y=05,w=8,h=8,key='='},
             {x=125,y=05,w=13,h=8,key='backspace'},
-            {x=010,y=15,w=8,h=8,key='q'},
+            {x=010,y=15,w=8,h=8,key='q'}, -- Line 2
             {x=020,y=15,w=8,h=8,key='w'},
             {x=030,y=15,w=8,h=8,key='e'},
             {x=040,y=15,w=8,h=8,key='r'},
@@ -129,7 +129,7 @@ local layoutList={
             {x=110,y=15,w=8,h=8,key='['},
             {x=120,y=15,w=8,h=8,key=']'},
             {x=130,y=15,w=8,h=8,key='\\'},
-            {x=015,y=25,w=8,h=8,key='a'},
+            {x=015,y=25,w=8,h=8,key='a'}, -- Line 3
             {x=025,y=25,w=8,h=8,key='s'},
             {x=035,y=25,w=8,h=8,key='d'},
             {x=045,y=25,w=8,h=8,key='f'},
@@ -141,7 +141,7 @@ local layoutList={
             {x=105,y=25,w=8,h=8,key=';'},
             {x=115,y=25,w=8,h=8,key='\''},
             {x=125,y=25,w=13,h=8,key='return'},
-            {x=020,y=35,w=8,h=8,key='z'},
+            {x=020,y=35,w=8,h=8,key='z'}, -- Line 4
             {x=030,y=35,w=8,h=8,key='x'},
             {x=040,y=35,w=8,h=8,key='c'},
             {x=050,y=35,w=8,h=8,key='v'},
@@ -177,10 +177,10 @@ for _,layout in next,layoutList do
                 key.show=''
             end
         end
-        key.backC=checkColor(key.backC or layout.backC or COLOR.M)
-        key.foreC=checkColor(key.foreC or layout.foreC or COLOR.M)
-        key.textC=checkColor(key.textC or layout.textC or COLOR.M)
+        key.fillC=checkColor(key.fillC or layout.fillC or COLOR.M)
+        key.lineC=checkColor(key.lineC or layout.lineC or COLOR.M)
         key.actvC=checkColor(key.actvC or layout.actvC or COLOR.M)
+        key.textC=checkColor(key.textC or layout.textC or COLOR.M)
     end
 end
 local layout=layoutList[1]
@@ -275,9 +275,9 @@ function scene.draw()
             gc_setColor(key.actvC)
             gc_rect('fill',key.x,key.y,key.w,key.h)
         else
-            gc_setColor(key.backC)
+            gc_setColor(key.fillC)
             gc_rect('fill',key.x,key.y,key.w,key.h)
-            gc_setColor(key.foreC)
+            gc_setColor(key.lineC)
             gc_rect('line',key.x,key.y,key.w,key.h)
         end
     end
