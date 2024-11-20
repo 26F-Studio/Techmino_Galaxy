@@ -2,59 +2,135 @@ local gc=love.graphics
 
 local instList={'organ_wave','square_wave','saw_wave','complex_wave','stairs_wave','spectral_wave'}
 local layoutList={
-    {
+    { -- Classic
             ['2']=37,['3']=39,         ['5']=42,['6']=44,['7']=46,         ['9']=49,['0']=51,         ['=']=54,['backspace']=56,
         ['q']=36,['w']=38,['e']=40,['r']=41,['t']=43,['y']=45,['u']=47,['i']=48,['o']=50,['p']=52,['[']=53,[']']=55,['\\']=57,
             ['s']=25,['d']=27,         ['g']=30,['h']=32,['j']=34,         ['l']=37,[';']=39,
         ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
 
-        pos={scale=10,x=-65,y=-20},
-        {x=-5,y=-5,w=140,h=50}, -- Outline, just for look
+        size=10,
+        pos_x=-70,
+        pos_y=-25,
+        font=60,
+        {x=0,y=0,w=140,h=50}, -- Outline, just for look
+        {x=010,y=05,w=8,h=8,key='2'},
+        {x=020,y=05,w=8,h=8,key='3'},
+        {x=040,y=05,w=8,h=8,key='5'},
+        {x=050,y=05,w=8,h=8,key='6'},
+        {x=060,y=05,w=8,h=8,key='7'},
+        {x=080,y=05,w=8,h=8,key='9'},
+        {x=090,y=05,w=8,h=8,key='0'},
+        {x=110,y=05,w=8,h=8,key='='},
+        {x=120,y=05,w=13,h=8,key='backspace',show='←'},
+        {x=005,y=15,w=8,h=8,key='q'},
+        {x=015,y=15,w=8,h=8,key='w'},
+        {x=025,y=15,w=8,h=8,key='e'},
+        {x=035,y=15,w=8,h=8,key='r'},
+        {x=045,y=15,w=8,h=8,key='t'},
+        {x=055,y=15,w=8,h=8,key='y'},
+        {x=065,y=15,w=8,h=8,key='u'},
+        {x=075,y=15,w=8,h=8,key='i'},
+        {x=085,y=15,w=8,h=8,key='o'},
+        {x=095,y=15,w=8,h=8,key='p'},
+        {x=105,y=15,w=8,h=8,key='['},
+        {x=115,y=15,w=8,h=8,key=']'},
+        {x=125,y=15,w=8,h=8,key='\\'},
+        {x=020,y=25,w=8,h=8,key='s'},
+        {x=030,y=25,w=8,h=8,key='d'},
+        {x=050,y=25,w=8,h=8,key='g'},
+        {x=060,y=25,w=8,h=8,key='h'},
+        {x=070,y=25,w=8,h=8,key='j'},
+        {x=090,y=25,w=8,h=8,key='l'},
+        {x=100,y=25,w=8,h=8,key=';'},
+        {x=015,y=35,w=8,h=8,key='z'},
+        {x=025,y=35,w=8,h=8,key='x'},
+        {x=035,y=35,w=8,h=8,key='c'},
+        {x=045,y=35,w=8,h=8,key='v'},
+        {x=055,y=35,w=8,h=8,key='b'},
+        {x=065,y=35,w=8,h=8,key='n'},
+        {x=075,y=35,w=8,h=8,key='m'},
+        {x=085,y=35,w=8,h=8,key=','},
+        {x=095,y=35,w=8,h=8,key='.'},
+        {x=105,y=35,w=8,h=8,key='/'},
+    },
+    { -- Simple
+        ['1']=60,['2']=62,['3']=64,['4']=65,['5']=67,['6']=69,['7']=71,['8']=72,['9']=74,['0']=76,['-']=77,['=']=79,['backspace']=81,
+          ['q']=36,['w']=38,['e']=40,['r']=41,['t']=43,['y']=45,['u']=47,['i']=48,['o']=50,['p']=52,['[']=53,[']']=55,['\\']=57,
+            ['a']=36,['s']=38,['d']=40,['f']=41,['g']=43,['h']=45,['j']=47,['k']=48,['l']=50,[';']=52,["'"]=50,['return']=55,
+              ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
 
-        {x=005,y=00,w=8,h=8,key='2'},
-        {x=015,y=00,w=8,h=8,key='3'},
-        {x=035,y=00,w=8,h=8,key='5'},
-        {x=045,y=00,w=8,h=8,key='6'},
-        {x=055,y=00,w=8,h=8,key='7'},
-        {x=075,y=00,w=8,h=8,key='9'},
-        {x=085,y=00,w=8,h=8,key='0'},
-        {x=105,y=00,w=8,h=8,key='='},
-        {x=115,y=00,w=13,h=8,key='backspace'},
-
-        {x=000,y=10,w=8,h=8,key='q'},
-        {x=010,y=10,w=8,h=8,key='w'},
-        {x=020,y=10,w=8,h=8,key='e'},
-        {x=030,y=10,w=8,h=8,key='r'},
-        {x=040,y=10,w=8,h=8,key='t'},
-        {x=050,y=10,w=8,h=8,key='y'},
-        {x=060,y=10,w=8,h=8,key='u'},
-        {x=070,y=10,w=8,h=8,key='i'},
-        {x=080,y=10,w=8,h=8,key='o'},
-        {x=090,y=10,w=8,h=8,key='p'},
-        {x=100,y=10,w=8,h=8,key='['},
-        {x=110,y=10,w=8,h=8,key=']'},
-        {x=120,y=10,w=8,h=8,key='\\'},
-
-        {x=015,y=20,w=8,h=8,key='s'},
-        {x=025,y=20,w=8,h=8,key='d'},
-        {x=045,y=20,w=8,h=8,key='g'},
-        {x=055,y=20,w=8,h=8,key='h'},
-        {x=065,y=20,w=8,h=8,key='j'},
-        {x=085,y=20,w=8,h=8,key='l'},
-        {x=095,y=20,w=8,h=8,key=';'},
-
-        {x=010,y=30,w=8,h=8,key='z'},
-        {x=020,y=30,w=8,h=8,key='x'},
-        {x=030,y=30,w=8,h=8,key='c'},
-        {x=040,y=30,w=8,h=8,key='v'},
-        {x=050,y=30,w=8,h=8,key='b'},
-        {x=060,y=30,w=8,h=8,key='n'},
-        {x=070,y=30,w=8,h=8,key='m'},
-        {x=080,y=30,w=8,h=8,key=','},
-        {x=090,y=30,w=8,h=8,key='.'},
-        {x=100,y=30,w=8,h=8,key='/'},
-    }
+        size=10,
+        pos_x=-71.5,
+        pos_y=-25,
+        font=60,
+        {x=0,y=0,w=143,h=50}, -- Outline, just for look
+        {x=005,y=05,w=8,h=8,key='1'},
+        {x=015,y=05,w=8,h=8,key='2'},
+        {x=025,y=05,w=8,h=8,key='3'},
+        {x=035,y=05,w=8,h=8,key='4'},
+        {x=045,y=05,w=8,h=8,key='5'},
+        {x=055,y=05,w=8,h=8,key='6'},
+        {x=065,y=05,w=8,h=8,key='7'},
+        {x=075,y=05,w=8,h=8,key='8'},
+        {x=085,y=05,w=8,h=8,key='9'},
+        {x=095,y=05,w=8,h=8,key='0'},
+        {x=105,y=05,w=8,h=8,key='-'},
+        {x=115,y=05,w=8,h=8,key='='},
+        {x=125,y=05,w=13,h=8,key='backspace',show='←'},
+        {x=010,y=15,w=8,h=8,key='q'},
+        {x=020,y=15,w=8,h=8,key='w'},
+        {x=030,y=15,w=8,h=8,key='e'},
+        {x=040,y=15,w=8,h=8,key='r'},
+        {x=050,y=15,w=8,h=8,key='t'},
+        {x=060,y=15,w=8,h=8,key='y'},
+        {x=070,y=15,w=8,h=8,key='u'},
+        {x=080,y=15,w=8,h=8,key='i'},
+        {x=090,y=15,w=8,h=8,key='o'},
+        {x=100,y=15,w=8,h=8,key='p'},
+        {x=110,y=15,w=8,h=8,key='['},
+        {x=120,y=15,w=8,h=8,key=']'},
+        {x=130,y=15,w=8,h=8,key='\\'},
+        {x=015,y=25,w=8,h=8,key='a'},
+        {x=025,y=25,w=8,h=8,key='s'},
+        {x=035,y=25,w=8,h=8,key='d'},
+        {x=045,y=25,w=8,h=8,key='f'},
+        {x=055,y=25,w=8,h=8,key='g'},
+        {x=065,y=25,w=8,h=8,key='h'},
+        {x=075,y=25,w=8,h=8,key='j'},
+        {x=085,y=25,w=8,h=8,key='k'},
+        {x=095,y=25,w=8,h=8,key='l'},
+        {x=105,y=25,w=8,h=8,key=';'},
+        {x=115,y=25,w=8,h=8,key='\''},
+        {x=125,y=25,w=13,h=8,key='return',show=CHAR.key.returnKey},
+        {x=020,y=35,w=8,h=8,key='z'},
+        {x=030,y=35,w=8,h=8,key='x'},
+        {x=040,y=35,w=8,h=8,key='c'},
+        {x=050,y=35,w=8,h=8,key='v'},
+        {x=060,y=35,w=8,h=8,key='b'},
+        {x=070,y=35,w=8,h=8,key='n'},
+        {x=080,y=35,w=8,h=8,key='m'},
+        {x=090,y=35,w=8,h=8,key=','},
+        {x=100,y=35,w=8,h=8,key='.'},
+        {x=110,y=35,w=8,h=8,key='/'},
+    },
 }
+
+for _,layout in next,layoutList do
+    local dx,dy,size=layout.pos_x,layout.pos_y,layout.size
+    for _,key in ipairs(layout) do
+        key.x=(key.x+dx)*size
+        key.y=(key.y+dy)*size
+        key.w=key.w*size
+        key.h=key.h*size
+        if not key.show then
+            if key.key then
+                key.show=key.key:upper():sub(1,3)
+            else
+                key.show=''
+            end
+        end
+    end
+end
 local layout=layoutList[1]
 local activeEventMap={}
 local inst
@@ -128,7 +204,9 @@ function scene.keyUp(_,keyCode)
     end
 end
 
-local rect=gc.rectangle
+local gc_rect=gc.rectangle
+local gc_mStr=GC.mStr
+local setFont=FONT.set
 local isSCDown=isSCDown
 function scene.draw()
     FONT.set(30)
@@ -136,12 +214,16 @@ function scene.draw()
     gc.print(offset,40,100)
     gc.print(release,40,140)
     gc.replaceTransform(SCR.xOy_m)
-    gc.scale(layout.pos.scale)
-    gc.translate(layout.pos.x,layout.pos.y)
-    gc.setLineWidth(5/layout.pos.scale)
+    gc.setLineWidth(4)
     for i=1,#layout do
         local key=layout[i]
-        rect(key.key and isSCDown(key.key) and 'fill' or 'line',key.x,key.y,key.w,key.h)
+        gc_rect(key.key and isSCDown(key.key) and 'fill' or 'line',key.x,key.y,key.w,key.h)
+    end
+    gc.setColor(COLOR.LD)
+    setFont(layout.font)
+    for i=1,#layout do
+        local key=layout[i]
+        gc_mStr(key.show,key.x+key.w/2,key.y)
     end
 end
 
