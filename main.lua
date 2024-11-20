@@ -594,7 +594,7 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/shader') do
     if FILE.isSafe('assets/shader/'..v) then
         local name=v:sub(1,-6)
         local suc,res=pcall(love.graphics.newShader,'assets/shader/'..name..'.hlsl')
-        SHADER[name]=suc and res or error("Error in Shader '"..name.."': "..res)
+        SHADER[name]=suc and res or error("Err in compiling Shader '"..name.."': "..tostring(res))
     end
 end
 -- Initialize shader parameters

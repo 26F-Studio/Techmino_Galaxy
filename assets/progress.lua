@@ -142,19 +142,16 @@ function PROGRESS.save(step)
 end
 function PROGRESS.load()
     local suc,res=pcall(FILE.load,'conf/progress','-json -canskip')
-    if suc then
-        if res then
-            TABLE.update(prgs,res)
-            -- if res.hash==getHash(res) then
-            --     TABLE.update(prgs,res)
-            -- else
-            --     MSG('info',"Hash not match")
-            -- end
-        end
-        prgs.launchCount=prgs.launchCount+1
-    else
-        MSG.log('info',"Load progress failed: "..res)
+    if not suc then return MSG.log('info',"Load progress failed: "..tostring(res)) end
+    if res then
+        TABLE.update(prgs,res)
+        -- if res.hash==getHash(res) then
+        --     TABLE.update(prgs,res)
+        -- else
+        --     MSG('info',"Hash not match")
+        -- end
     end
+    prgs.launchCount=prgs.launchCount+1
 end
 function PROGRESS.fix()
     if type(prgs.interiorScore.tutorial)=='table' then
@@ -193,7 +190,7 @@ function PROGRESS.applyCoolWaitTemplate()
     local list={}
     for i=1,52 do list[i]=('assets/image/loading/%d.png'):format(i) end
     local suc,res=pcall(gc.newArrayImage,list)
-    if not suc then return LOG('warn',"Failed to create ArrayImage: "..res) end
+    if not suc then return LOG('warn',"Failed to create ArrayImage: "..tostring(res)) end
     WAIT.setDefaultDraw(function(a,t)
         GC.setBlendMode('add','alphamultiply')
         GC.setColor(1,1,1,a)
