@@ -1,6 +1,6 @@
 local gc=love.graphics
 
-local instList={'organ_wave','square_wave','death_wave','saw_wave','complex_wave','stairs_wave','spectral_wave'}
+local instList={'organ_wave','square_wave','saw_wave','complex_wave','stairs_wave','spectral_wave'}
 
 ---@class Techmino.Piano.Layout
 ---@field name string
