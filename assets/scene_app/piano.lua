@@ -3,11 +3,12 @@ local gc=love.graphics
 local instList={'organ_wave','square_wave','saw_wave','complex_wave','stairs_wave','spectral_wave'}
 
 ---@class Techmino.Piano.Layout
+---@field name string
+---@field keyMap table<string,number>
 ---@field pos_x number Starting X position of the layout (0,0 for screen center)
 ---@field pos_y number Starting Y position
 ---@field size number Scale all things (based on the screen center)
 ---@field font number Font size, MUST BE MULTIPLE OF 5
----@field keyMap table<string,number>
 ---@field keyLayout Techmino.Piano.keyObj[]
 ---@field fillC? Zenitha.Color|Zenitha.ColorStr Default color, used when a key object doesn't have one
 ---@field lineC? Zenitha.Color|Zenitha.ColorStr Default color
@@ -28,13 +29,8 @@ local instList={'organ_wave','square_wave','saw_wave','complex_wave','stairs_wav
 
 ---@type Techmino.Piano.Layout[]
 local layoutList={
-    { -- Classic
-        keyMap={
-            ['2']=37,['3']=39,         ['5']=42,['6']=44,['7']=46,         ['9']=49,['0']=51,         ['=']=54,['backspace']=56,
-            ['q']=36,['w']=38,['e']=40,['r']=41,['t']=43,['y']=45,['u']=47,['i']=48,['o']=50,['p']=52,['[']=53,[']']=55,['\\']=57,
-            ['s']=25,['d']=27,         ['g']=30,['h']=32,['j']=34,         ['l']=37,[';']=39,
-            ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
-        },
+    {
+        name="Classic (on C)",
         pos_x=-70,
         pos_y=-25,
         size=10,
@@ -85,14 +81,15 @@ local layoutList={
             {x=095,y=35,w=8,h=8,key='.',         fillC='LR',actvC='R',},
             {x=105,y=35,w=8,h=8,key='/',         fillC='LR',actvC='R',},
         },
-    },
-    { -- Simple
         keyMap={
-            ['1']=60,['2']=62,['3']=64,['4']=65,['5']=67,['6']=69,['7']=71,['8']=72,['9']=74,['0']=76,['-']=77,['=']=79,['backspace']=81,
+            ['2']=37,['3']=39,         ['5']=42,['6']=44,['7']=46,         ['9']=49,['0']=51,         ['=']=54,['backspace']=56,
             ['q']=36,['w']=38,['e']=40,['r']=41,['t']=43,['y']=45,['u']=47,['i']=48,['o']=50,['p']=52,['[']=53,[']']=55,['\\']=57,
-            ['a']=36,['s']=38,['d']=40,['f']=41,['g']=43,['h']=45,['j']=47,['k']=48,['l']=50,[';']=52,["'"]=50,['return']=55,
+            ['s']=25,['d']=27,         ['g']=30,['h']=32,['j']=34,         ['l']=37,[';']=39,
             ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
         },
+    },
+    {
+        name="Simple (on C)",
         pos_x=-71.5,
         pos_y=-25,
         size=10,
@@ -151,6 +148,12 @@ local layoutList={
             {x=090,y=35,w=8,h=8,key=','},
             {x=100,y=35,w=8,h=8,key='.'},
             {x=110,y=35,w=8,h=8,key='/'},
+        },
+        keyMap={
+            ['1']=60,['2']=62,['3']=64,['4']=65,['5']=67,['6']=69,['7']=71,['8']=72,['9']=74,['0']=76,['-']=77,['=']=79,['backspace']=81,
+            ['q']=36,['w']=38,['e']=40,['r']=41,['t']=43,['y']=45,['u']=47,['i']=48,['o']=50,['p']=52,['[']=53,[']']=55,['\\']=57,
+            ['a']=36,['s']=38,['d']=40,['f']=41,['g']=43,['h']=45,['j']=47,['k']=48,['l']=50,[';']=52,["'"]=50,['return']=55,
+            ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
         },
     },
 }
@@ -245,13 +248,15 @@ function scene.keyDown(key,isRep,keyCode)
             offset=MATH.clamp(offset+d,-12,24)
         end
     elseif key=='f1' then
-        release=math.max(release-100,0)
+        layout=layoutList[TABLE.find(layoutList,layout-2)%layoutList+1]
     elseif key=='f2' then
+        layout=layoutList[TABLE.find(layoutList,layout)%layoutList+1]
+    elseif key=='f3' then
+        release=math.max(release-100,0)
+    elseif key=='f4' then
         release=math.min(release+100,2600)
     elseif key=='escape' then
         if sureCheck('back') then SCN.back() end
-    elseif key=='`' then
-        layout=TABLE.next(layoutList,layout) or layoutList[1]
     end
     return true
 end
@@ -269,9 +274,10 @@ local setFont=FONT.set
 local isSCDown=isSCDown
 function scene.draw()
     FONT.set(30)
-    gc.print(inst,40,60)
-    gc.print(offset,40,100)
-    gc.print(release,40,140)
+    gc.print(layout.name,40,40)
+    gc.print(inst,40,80)
+    gc.print(offset,40,120)
+    gc.print(release,40,160)
     gc.replaceTransform(SCR.xOy_m)
     gc.setLineWidth(4)
     local L=layout.keyLayout
