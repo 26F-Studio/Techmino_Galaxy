@@ -248,9 +248,9 @@ function scene.keyDown(key,isRep,keyCode)
             offset=MATH.clamp(offset+d,-12,24)
         end
     elseif key=='f1' then
-        layout=layoutList[TABLE.find(layoutList,layout-2)%layoutList+1]
+        layout=layoutList[(TABLE.find(layoutList,layout)-2)%#layoutList+1]
     elseif key=='f2' then
-        layout=layoutList[TABLE.find(layoutList,layout)%layoutList+1]
+        layout=layoutList[TABLE.find(layoutList,layout)%#layoutList+1]
     elseif key=='f3' then
         release=math.max(release-100,0)
     elseif key=='f4' then
