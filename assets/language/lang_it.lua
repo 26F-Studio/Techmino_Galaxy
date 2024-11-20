@@ -209,8 +209,8 @@ local L={
     main_out_dict="Dizionario",
     main_out_lang="Lingua",
     main_out_about="Informazioni di sistema",
-    main_out_single="Singolo",
-    main_out_multi="Multiplo",
+    main_out_single="Giocatore Singolo",
+    main_out_multi="Multigiocatore",
 
     musicroom_title="Stanza musicale",
     musicroom_fullband="Banda Piena",
