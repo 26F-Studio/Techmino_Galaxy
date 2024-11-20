@@ -155,8 +155,14 @@ local layoutList={
     },
 }
 local defaultKeyName={
+    ['=']='+',
     ['backspace']='←',
+    ['\\']='|',
+    ['\'']='"',
     ['return']=CHAR.key.returnKey,
+    [',']='<',
+    ['.']='>',
+    ['/']='?',
 }
 local function checkColor(input)
     if type(input)=='string' then input=COLOR[input] end
