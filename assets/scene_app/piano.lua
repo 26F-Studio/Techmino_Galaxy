@@ -9,18 +9,16 @@ local instList={'organ_wave','square_wave','saw_wave','complex_wave','stairs_wav
 ---@field pos_y number Starting Y position
 ---@field size number Scale all things (based on the screen center)
 ---@field font number Font size, MUST BE MULTIPLE OF 5
+---@field templates? Techmino.Piano.keyObj[]
 ---@field keyLayout Techmino.Piano.keyObj[]
----@field fillC? Zenitha.Color|Zenitha.ColorStr Default color, used when a key object doesn't have one
----@field lineC? Zenitha.Color|Zenitha.ColorStr Default color
----@field textC? Zenitha.Color|Zenitha.ColorStr Default color
----@field actvC? Zenitha.Color|Zenitha.ColorStr Default color
 
 ---@class Techmino.Piano.keyObj
----@field x number X position of key's upper-left corner
----@field y number Y position
----@field w number Width
----@field h number Height
----@field key? string Key code, leave blank for decorating only
+---@field [1]? number Template id (low priority)
+---@field x? number X position of key's upper-left corner
+---@field y? number Y position
+---@field w? number Width
+---@field h? number Height
+---@field key? string|string[] Key code, use list for multiple inputs, leave blank for decorating only
 ---@field show? string Text to show on the key, leave blank for default
 ---@field fillC? Zenitha.Color|Zenitha.ColorStr Background color when NOT pressed
 ---@field lineC? Zenitha.Color|Zenitha.ColorStr Outline color when NOT pressed
@@ -35,51 +33,51 @@ local layoutList={
         pos_y=-25,
         size=10,
         font=60,
-        -- fillC='M',
-        lineC='LD',
-        -- actvC='M',
-        textC='D',
+        templates={
+            {w=8,h=8,fillC='DS',actvC='dS',lineC='LD',textC='dL'}, -- Black key
+            {w=8,h=8,fillC='LS',actvC='S',lineC='LD',textC='D'}, -- White key
+        },
         keyLayout={
             {x=0,y=0,w=140,h=50,fillC={1,1,1,.26},lineC='dL'}, -- Frame
-            {x=010,y=05,w=8,h=8,key='2',         fillC='DS',actvC='dS',lineC='LD',textC='dL'}, -- Line 1
-            {x=020,y=05,w=8,h=8,key='3',         fillC='DS',actvC='dS',lineC='LD',textC='dL'},
-            {x=040,y=05,w=8,h=8,key='5',         fillC='DS',actvC='dS',lineC='LD',textC='dL'},
-            {x=050,y=05,w=8,h=8,key='6',         fillC='DS',actvC='dS',lineC='LD',textC='dL'},
-            {x=060,y=05,w=8,h=8,key='7',         fillC='DS',actvC='dS',lineC='LD',textC='dL'},
-            {x=080,y=05,w=8,h=8,key='9',         fillC='DS',actvC='dS',lineC='LD',textC='dL'},
-            {x=090,y=05,w=8,h=8,key='0',         fillC='DS',actvC='dS',lineC='LD',textC='dL'},
-            {x=110,y=05,w=8,h=8,key='=',         fillC='DS',actvC='dS',lineC='LD',textC='dL'},
-            {x=120,y=05,w=13,h=8,key='backspace',fillC='DS',actvC='dS',lineC='LD',textC='dL'},
-            {x=005,y=15,w=8,h=8,key='q',         fillC='LS',actvC='S'}, -- Line 2
-            {x=015,y=15,w=8,h=8,key='w',         fillC='LS',actvC='S'},
-            {x=025,y=15,w=8,h=8,key='e',         fillC='LS',actvC='S'},
-            {x=035,y=15,w=8,h=8,key='r',         fillC='LS',actvC='S'},
-            {x=045,y=15,w=8,h=8,key='t',         fillC='LS',actvC='S'},
-            {x=055,y=15,w=8,h=8,key='y',         fillC='LS',actvC='S'},
-            {x=065,y=15,w=8,h=8,key='u',         fillC='LS',actvC='S'},
-            {x=075,y=15,w=8,h=8,key='i',         fillC='LS',actvC='S'},
-            {x=085,y=15,w=8,h=8,key='o',         fillC='LS',actvC='S'},
-            {x=095,y=15,w=8,h=8,key='p',         fillC='LS',actvC='S'},
-            {x=105,y=15,w=8,h=8,key='[',         fillC='LS',actvC='S'},
-            {x=115,y=15,w=8,h=8,key=']',         fillC='LS',actvC='S'},
-            {x=125,y=15,w=8,h=8,key='\\',        fillC='LS',actvC='S'},
-            {x=020,y=25,w=8,h=8,key='s',         fillC='DR',actvC='dR',lineC='LD',textC='dL'}, -- Line 3
-            {x=030,y=25,w=8,h=8,key='d',         fillC='DR',actvC='dR',lineC='LD',textC='dL'},
-            {x=050,y=25,w=8,h=8,key='g',         fillC='DR',actvC='dR',lineC='LD',textC='dL'},
-            {x=060,y=25,w=8,h=8,key='h',         fillC='DR',actvC='dR',lineC='LD',textC='dL'},
-            {x=070,y=25,w=8,h=8,key='j',         fillC='DR',actvC='dR',lineC='LD',textC='dL'},
-            {x=090,y=25,w=8,h=8,key='l',         fillC='DR',actvC='dR',lineC='LD',textC='dL'},
-            {x=100,y=25,w=8,h=8,key=';',         fillC='DR',actvC='dR',lineC='LD',textC='dL'},
-            {x=015,y=35,w=8,h=8,key='z',         fillC='LR',actvC='R',}, -- Line 4
-            {x=025,y=35,w=8,h=8,key='x',         fillC='LR',actvC='R',},
-            {x=035,y=35,w=8,h=8,key='c',         fillC='LR',actvC='R',},
-            {x=045,y=35,w=8,h=8,key='v',         fillC='LR',actvC='R',},
-            {x=055,y=35,w=8,h=8,key='b',         fillC='LR',actvC='R',},
-            {x=065,y=35,w=8,h=8,key='n',         fillC='LR',actvC='R',},
-            {x=075,y=35,w=8,h=8,key='m',         fillC='LR',actvC='R',},
-            {x=085,y=35,w=8,h=8,key=',',         fillC='LR',actvC='R',},
-            {x=095,y=35,w=8,h=8,key='.',         fillC='LR',actvC='R',},
-            {x=105,y=35,w=8,h=8,key='/',         fillC='LR',actvC='R',},
+            {1,x=010,y=05,key='2'}, -- Line 1
+            {1,x=020,y=05,key='3'},
+            {1,x=040,y=05,key='5'},
+            {1,x=050,y=05,key='6'},
+            {1,x=060,y=05,key='7'},
+            {1,x=080,y=05,key='9'},
+            {1,x=090,y=05,key='0'},
+            {1,x=110,y=05,key='='},
+            {1,x=120,y=05,w=13,key='backspace'},
+            {2,x=005,y=15,key='q'}, -- Line 2
+            {2,x=015,y=15,key='w'},
+            {2,x=025,y=15,key='e'},
+            {2,x=035,y=15,key='r'},
+            {2,x=045,y=15,key='t'},
+            {2,x=055,y=15,key='y'},
+            {2,x=065,y=15,key='u'},
+            {2,x=075,y=15,key='i'},
+            {2,x=085,y=15,key='o'},
+            {2,x=095,y=15,key='p'},
+            {2,x=105,y=15,key='['},
+            {2,x=115,y=15,key=']'},
+            {2,x=125,y=15,key='\\'},
+            {1,x=020,y=25,key='s'}, -- Line 3
+            {1,x=030,y=25,key='d'},
+            {1,x=050,y=25,key='g'},
+            {1,x=060,y=25,key='h'},
+            {1,x=070,y=25,key='j'},
+            {1,x=090,y=25,key='l'},
+            {1,x=100,y=25,key=';'},
+            {2,x=015,y=35,key='z'}, -- Line 4
+            {2,x=025,y=35,key='x'},
+            {2,x=035,y=35,key='c'},
+            {2,x=045,y=35,key='v'},
+            {2,x=055,y=35,key='b'},
+            {2,x=065,y=35,key='n'},
+            {2,x=075,y=35,key='m'},
+            {2,x=085,y=35,key=','},
+            {2,x=095,y=35,key='.'},
+            {2,x=105,y=35,key='/'},
         },
         keyMap={
             ['2']=37,['3']=39,         ['5']=42,['6']=44,['7']=46,         ['9']=49,['0']=51,         ['=']=54,['backspace']=56,
@@ -94,60 +92,59 @@ local layoutList={
         pos_y=-25,
         size=10,
         font=60,
-        fillC='dT',
-        lineC='L',
-        actvC='lY',
-        textC='DL',
+        templates={
+            {w=8,h=8,fillC='dT',lineC='L',actvC='lY',textC='DL'},
+        },
         keyLayout={
-            {x=0,y=0,w=143,h=50,fillC={1,1,1,.26},lineC='dL'}, -- Frame
-            {x=005,y=05,w=8,h=8,key='1'}, -- Line 1
-            {x=015,y=05,w=8,h=8,key='2'},
-            {x=025,y=05,w=8,h=8,key='3'},
-            {x=035,y=05,w=8,h=8,key='4'},
-            {x=045,y=05,w=8,h=8,key='5'},
-            {x=055,y=05,w=8,h=8,key='6'},
-            {x=065,y=05,w=8,h=8,key='7'},
-            {x=075,y=05,w=8,h=8,key='8'},
-            {x=085,y=05,w=8,h=8,key='9'},
-            {x=095,y=05,w=8,h=8,key='0'},
-            {x=105,y=05,w=8,h=8,key='-'},
-            {x=115,y=05,w=8,h=8,key='='},
-            {x=125,y=05,w=13,h=8,key='backspace'},
-            {x=010,y=15,w=8,h=8,key='q'}, -- Line 2
-            {x=020,y=15,w=8,h=8,key='w'},
-            {x=030,y=15,w=8,h=8,key='e'},
-            {x=040,y=15,w=8,h=8,key='r'},
-            {x=050,y=15,w=8,h=8,key='t'},
-            {x=060,y=15,w=8,h=8,key='y'},
-            {x=070,y=15,w=8,h=8,key='u'},
-            {x=080,y=15,w=8,h=8,key='i'},
-            {x=090,y=15,w=8,h=8,key='o'},
-            {x=100,y=15,w=8,h=8,key='p'},
-            {x=110,y=15,w=8,h=8,key='['},
-            {x=120,y=15,w=8,h=8,key=']'},
-            {x=130,y=15,w=8,h=8,key='\\'},
-            {x=015,y=25,w=8,h=8,key='a'}, -- Line 3
-            {x=025,y=25,w=8,h=8,key='s'},
-            {x=035,y=25,w=8,h=8,key='d'},
-            {x=045,y=25,w=8,h=8,key='f'},
-            {x=055,y=25,w=8,h=8,key='g'},
-            {x=065,y=25,w=8,h=8,key='h'},
-            {x=075,y=25,w=8,h=8,key='j'},
-            {x=085,y=25,w=8,h=8,key='k'},
-            {x=095,y=25,w=8,h=8,key='l'},
-            {x=105,y=25,w=8,h=8,key=';'},
-            {x=115,y=25,w=8,h=8,key='\''},
-            {x=125,y=25,w=13,h=8,key='return'},
-            {x=020,y=35,w=8,h=8,key='z'}, -- Line 4
-            {x=030,y=35,w=8,h=8,key='x'},
-            {x=040,y=35,w=8,h=8,key='c'},
-            {x=050,y=35,w=8,h=8,key='v'},
-            {x=060,y=35,w=8,h=8,key='b'},
-            {x=070,y=35,w=8,h=8,key='n'},
-            {x=080,y=35,w=8,h=8,key='m'},
-            {x=090,y=35,w=8,h=8,key=','},
-            {x=100,y=35,w=8,h=8,key='.'},
-            {x=110,y=35,w=8,h=8,key='/'},
+            {1,x=0,y=0,w=143,h=50,fillC={1,1,1,.26},lineC='dL'}, -- Frame
+            {1,x=005,y=05,key='1'}, -- Line 1
+            {1,x=015,y=05,key='2'},
+            {1,x=025,y=05,key='3'},
+            {1,x=035,y=05,key='4'},
+            {1,x=045,y=05,key='5'},
+            {1,x=055,y=05,key='6'},
+            {1,x=065,y=05,key='7'},
+            {1,x=075,y=05,key='8'},
+            {1,x=085,y=05,key='9'},
+            {1,x=095,y=05,key='0'},
+            {1,x=105,y=05,key='-'},
+            {1,x=115,y=05,key='='},
+            {1,x=125,y=05,w=13,key='backspace'},
+            {1,x=010,y=15,key='q'}, -- Line 2
+            {1,x=020,y=15,key='w'},
+            {1,x=030,y=15,key='e'},
+            {1,x=040,y=15,key='r'},
+            {1,x=050,y=15,key='t'},
+            {1,x=060,y=15,key='y'},
+            {1,x=070,y=15,key='u'},
+            {1,x=080,y=15,key='i'},
+            {1,x=090,y=15,key='o'},
+            {1,x=100,y=15,key='p'},
+            {1,x=110,y=15,key='['},
+            {1,x=120,y=15,key=']'},
+            {1,x=130,y=15,key='\\'},
+            {1,x=015,y=25,key='a'}, -- Line 3
+            {1,x=025,y=25,key='s'},
+            {1,x=035,y=25,key='d'},
+            {1,x=045,y=25,key='f'},
+            {1,x=055,y=25,key='g'},
+            {1,x=065,y=25,key='h'},
+            {1,x=075,y=25,key='j'},
+            {1,x=085,y=25,key='k'},
+            {1,x=095,y=25,key='l'},
+            {1,x=105,y=25,key=';'},
+            {1,x=115,y=25,key='\''},
+            {1,x=125,y=25,w=13,key='return'},
+            {1,x=020,y=35,key='z'}, -- Line 4
+            {1,x=030,y=35,key='x'},
+            {1,x=040,y=35,key='c'},
+            {1,x=050,y=35,key='v'},
+            {1,x=060,y=35,key='b'},
+            {1,x=070,y=35,key='n'},
+            {1,x=080,y=35,key='m'},
+            {1,x=090,y=35,key=','},
+            {1,x=100,y=35,key='.'},
+            {1,x=110,y=35,key='/'},
         },
         keyMap={
             ['1']=60,['2']=62,['3']=64,['4']=65,['5']=67,['6']=69,['7']=71,['8']=72,['9']=74,['0']=76,['-']=77,['=']=79,['backspace']=81,
@@ -159,61 +156,61 @@ local layoutList={
     {
         name="Piano",
         pos_x=-96/2-1,
-        pos_y=12,
+        pos_y=5,
         size=16,
         font=30 ,
-        fillC='L',
-        lineC='LD',
-        actvC='LS',
-        textC='lD',
+        templates={
+            {y=0,w=4,h=15,show='',fillC='L',lineC='LD',actvC='lI'}, -- White key
+            {y=0,w=2.6,h=10,show='',fillC='lD',lineC='LD',actvC='LI'}, -- Black key
+        },
         keyLayout={
-            {x=.5*4,y=0,w=2,h=9},
-            {x=01*4,y=0,w=4,h=9,show='',key='z'},
-            {x=02*4,y=0,w=4,h=9,show='',key='x'},
-            {x=03*4,y=0,w=4,h=9,show='',key='c'},
-            {x=04*4,y=0,w=4,h=9,show='',key='v'},
-            {x=05*4,y=0,w=4,h=9,show='',key='b'},
-            {x=06*4,y=0,w=4,h=9,show='',key='n'},
-            {x=07*4,y=0,w=4,h=9,show='',key='m'},
-            {x=08*4,y=0,w=4,h=9,show='',key=','},
-            {x=09*4,y=0,w=4,h=9,show='',key='.'},
-            {x=10*4,y=0,w=4,h=9,show='',key='/'},
-            {x=11*4,y=0,w=4,h=9,show='',key='q'},
-            {x=12*4,y=0,w=4,h=9,show='',key='w'},
-            {x=13*4,y=0,w=4,h=9,show='',key='e'},
-            {x=14*4,y=0,w=4,h=9,show='',key='r'},
-            {x=15*4,y=0,w=4,h=9,show='',key='t'},
-            {x=16*4,y=0,w=4,h=9,show='',key='y'},
-            {x=17*4,y=0,w=4,h=9,show='',key='u'},
-            {x=18*4,y=0,w=4,h=9,show='',key='i'},
-            {x=19*4,y=0,w=4,h=9,show='',key='o'},
-            {x=20*4,y=0,w=4,h=9,show='',key='p'},
-            {x=21*4,y=0,w=4,h=9,show='',key='['},
-            {x=22*4,y=0,w=4,h=9,show='',key=']'},
-            {x=23*4,y=0,w=4,h=9,show='',key='\\'},
-            {x=2.7+00*4 -.4*1.5,y=0,w=2.6,h=6,show='',key='a',fillC='lD'},
-            {x=2.7+01*4 +.0*1.5,y=0,w=2.6,h=6,show='',key='s',fillC='lD'},
-            {x=2.7+02*4 +.4*1.5,y=0,w=2.6,h=6,show='',key='d',fillC='lD'},
-            {x=2.7+04*4 -.3*1.5,y=0,w=2.6,h=6,show='',key='g',fillC='lD'},
-            {x=2.7+05*4 +.3*1.5,y=0,w=2.6,h=6,show='',key='h',fillC='lD'},
-            {x=2.7+07*4 -.4*1.5,y=0,w=2.6,h=6,show='',key='k',fillC='lD'},
-            {x=2.7+08*4 +.0*1.5,y=0,w=2.6,h=6,show='',key='l',fillC='lD'},
-            {x=2.7+09*4 +.4*1.5,y=0,w=2.6,h=6,show='',key=';',fillC='lD'},
-            {x=2.7+11*4 -.3*1.5,y=0,w=2.6,h=6,show='',key='2',fillC='lD'},
-            {x=2.7+12*4 +.3*1.5,y=0,w=2.6,h=6,show='',key='3',fillC='lD'},
-            {x=2.7+14*4 -.4*1.5,y=0,w=2.6,h=6,show='',key='5',fillC='lD'},
-            {x=2.7+15*4 +.0*1.5,y=0,w=2.6,h=6,show='',key='6',fillC='lD'},
-            {x=2.7+16*4 +.4*1.5,y=0,w=2.6,h=6,show='',key='7',fillC='lD'},
-            {x=2.7+18*4 -.3*1.5,y=0,w=2.6,h=6,show='',key='9',fillC='lD'},
-            {x=2.7+19*4 +.3*1.5,y=0,w=2.6,h=6,show='',key='0',fillC='lD'},
-            {x=2.7+21*4 -.4*1.5,y=0,w=2.6,h=6,show='',key='=',fillC='lD'},
-            {x=2.7+22*4 +.0*1.5,y=0,w=2.6,h=6,show='',key='backspace',fillC='lD',actvC='dL',textC='dL'},
-            {x=2.7+23*4 +.0*1.5,y=0,w=1.3,h=6,show='',fillC='lD',actvC='dL',textC='dL'},
+            {1,x=.5*4,w=2,fillC='LD'},
+            {1,x=01*4,key='z'},
+            {1,x=02*4,key='x'},
+            {1,x=03*4,key='c'},
+            {1,x=04*4,key='v'},
+            {1,x=05*4,key='b'},
+            {1,x=06*4,key='n'},
+            {1,x=07*4,key='m'},
+            {1,x=08*4,key=','},
+            {1,x=09*4,key='.'},
+            {1,x=10*4,key={'/','1'}},
+            {1,x=11*4,key={'q','\''}},
+            {1,x=12*4,key='w'},
+            {1,x=13*4,key='e'},
+            {1,x=14*4,key='r'},
+            {1,x=15*4,key='t'},
+            {1,x=16*4,key='y'},
+            {1,x=17*4,key='u'},
+            {1,x=18*4,key='i'},
+            {1,x=19*4,key='o'},
+            {1,x=20*4,key='p'},
+            {1,x=21*4,key='['},
+            {1,x=22*4,key=']'},
+            {1,x=23*4,key='\\'},
+            {2,x=2.7+00*4 -.4*1.5,key='a'},
+            {2,x=2.7+01*4 +.0*1.5,key='s'},
+            {2,x=2.7+02*4 +.4*1.5,key='d'},
+            {2,x=2.7+04*4 -.3*1.5,key='g'},
+            {2,x=2.7+05*4 +.3*1.5,key='h'},
+            {2,x=2.7+07*4 -.4*1.5,key='k'},
+            {2,x=2.7+08*4 +.0*1.5,key='l'},
+            {2,x=2.7+09*4 +.4*1.5,key=';'},
+            {2,x=2.7+11*4 -.3*1.5,key='2'},
+            {2,x=2.7+12*4 +.3*1.5,key='3'},
+            {2,x=2.7+14*4 -.4*1.5,key='5'},
+            {2,x=2.7+15*4 +.0*1.5,key='6'},
+            {2,x=2.7+16*4 +.4*1.5,key='7'},
+            {2,x=2.7+18*4 -.3*1.5,key='9'},
+            {2,x=2.7+19*4 +.3*1.5,key='0'},
+            {2,x=2.7+21*4 -.4*1.5,key='='},
+            {2,x=2.7+22*4 +.0*1.5,key='backspace'},
+            {2,x=2.7+23*4 +.0*1.5,w=1.3,fillC='LD'},
         },
         keyMap={
-                     ['2']=37,['3']=39,         ['5']=42,['6']=44,['7']=46,         ['9']=49,['0']=51,         ['=']=54,['backspace']=56,
+            ['1']=35,['2']=37,['3']=39,         ['5']=42,['6']=44,['7']=46,         ['9']=49,['0']=51,         ['=']=54,['backspace']=56,
             ['q']=36,['w']=38,['e']=40,['r']=41,['t']=43,['y']=45,['u']=47,['i']=48,['o']=50,['p']=52,['[']=53,[']']=55,['\\']=57,
-            ['a']=18,['s']=20,['d']=22,         ['g']=25,['h']=27,         ['k']=30,['l']=32,[';']=34,
+            ['a']=18,['s']=20,['d']=22,         ['g']=25,['h']=27,         ['k']=30,['l']=32,[';']=34,['\'']=36,
             ['z']=19,['x']=21,['c']=23,['v']=24,['b']=26,['n']=28,['m']=29,[',']=31,['.']=33,['/']=35,
         },
     },
@@ -223,24 +220,23 @@ local layoutList={
         pos_y=-38/2,
         size=18,
         font=100,
-        fillC='dL',
-        lineC='lD',
-        actvC="DL",
-        textC='D',
+        templates={
+            {w=8,h=8,fillC='dL',lineC='lD',actvC="LD",textC='D'},
+        },
         keyLayout={
-            {x=-1,y=-1,w=30,h=40,fillC={1,1,1,.26},lineC='dL'}, -- Frame
-            {x=00,y=00,w=8,h=8,key='kp7'},
-            {x=10,y=00,w=8,h=8,key='kp8'},
-            {x=20,y=00,w=8,h=8,key='kp9'},
-            {x=00,y=10,w=8,h=8,key='kp4'},
-            {x=10,y=10,w=8,h=8,key='kp5'},
-            {x=20,y=10,w=8,h=8,key='kp6'},
-            {x=00,y=20,w=8,h=8,key='kp1'},
-            {x=10,y=20,w=8,h=8,key='kp2'},
-            {x=20,y=20,w=8,h=8,key='kp3'},
-            {x=00,y=30,w=8,h=8,key='kp0'},
-            {x=10,y=30,w=8,h=8,key='kp.'},
-            {x=20,y=30,w=8,h=8,key='kpenter'},
+            {1,x=-1,y=-1,w=30,h=40,fillC={1,1,1,.26},lineC='dL'}, -- Frame
+            {1,x=00,y=00,key='kp7'},
+            {1,x=10,y=00,key='kp8'},
+            {1,x=20,y=00,key='kp9'},
+            {1,x=00,y=10,key='kp4'},
+            {1,x=10,y=10,key='kp5'},
+            {1,x=20,y=10,key='kp6'},
+            {1,x=00,y=20,key='kp1'},
+            {1,x=10,y=20,key='kp2'},
+            {1,x=20,y=20,key='kp3'},
+            {1,x=00,y=30,key='kp0'},
+            {1,x=10,y=30,key='kp.'},
+            {1,x=20,y=30,key='kpenter'},
         },
         keyMap={
             ['kp7']=48,['kp8']=50,['kp9']=52,
@@ -269,23 +265,23 @@ local function checkColor(input)
     return input
 end
 for _,layout in next,layoutList do
-    local dx,dy,size=layout.pos_x,layout.pos_y,layout.size
     for _,key in ipairs(layout.keyLayout) do
-        key.x=(key.x+dx)*size
-        key.y=(key.y+dy)*size
-        key.w=key.w*size
-        key.h=key.h*size
+        TABLE.updateMissing(key,(layout.templates or NONE)[key[1] or -1])
+        key.x=(key.x+layout.pos_x)*layout.size
+        key.y=(key.y+layout.pos_y)*layout.size
+        key.w=key.w*layout.size
+        key.h=key.h*layout.size
         if not key.show then
             if key.key then
-                key.show=defaultKeyName[key.key] or (key.key:upper():sub(1,1))
+                key.show=defaultKeyName[key.key] or (key.key:upper():sub(1,2))
             else
                 key.show=''
             end
         end
-        key.fillC=checkColor(key.fillC or layout.fillC or COLOR.M)
-        key.lineC=checkColor(key.lineC or layout.lineC or COLOR.M)
-        key.actvC=checkColor(key.actvC or layout.actvC or COLOR.M)
-        key.textC=checkColor(key.textC or layout.textC or COLOR.M)
+        key.fillC=checkColor(key.fillC or COLOR.M)
+        key.lineC=checkColor(key.lineC or COLOR.M)
+        key.actvC=checkColor(key.actvC or COLOR.M)
+        key.textC=checkColor(key.textC or COLOR.M)
     end
 end
 local layout=layoutList[1]
@@ -379,7 +375,15 @@ function scene.draw()
     local L=layout.keyLayout
     for i=1,#L do
         local key=L[i]
-        if key.key and isSCDown(key.key) then
+        local keyPressed=key.key
+        if keyPressed then
+            if type(keyPressed)=='string' then
+                keyPressed=isSCDown(keyPressed)
+            else
+                keyPressed=isSCDown(unpack(keyPressed))
+            end
+        end
+        if keyPressed then
             gc_setColor(key.actvC)
             gc_rect('fill',key.x,key.y,key.w,key.h)
         else
