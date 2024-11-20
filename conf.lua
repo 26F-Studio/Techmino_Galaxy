@@ -1,3 +1,10 @@
+if love._os=='Web' then
+    local oldRead=love.filesystem.read
+    function love.filesystem.read(name,size)
+        if love.filesystem.getInfo(name) then return oldRead(name,size) end
+    end
+end
+
 function love.conf(t)
     local identity='Techmino_Galaxy'
     local mobile=love._os=='Android' or love._os=='iOS'
