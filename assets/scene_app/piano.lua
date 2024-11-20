@@ -89,6 +89,37 @@ local layoutList={
         },
     },
     {
+        name="Melodic Phone Keypad (on C)",
+        pos_x=-70,
+        pos_y=-25,
+        size=10,
+        font=60,
+        -- fillC='M',
+        lineC='LD',
+        -- actvC='M',
+        textC='D',
+        keyLayout={
+            {x=050,y=15,w=8,h=8,key='kp7',         fillC='LS',actvC='R',}, -- Line 4
+            {x=060,y=15,w=8,h=8,key='kp8',         fillC='LS',actvC='R',},
+            {x=070,y=15,w=8,h=8,key='kp9',         fillC='LS',actvC='R',},
+    
+            {x=050,y=25,w=8,h=8,key='kp4',         fillC='LS',actvC='R',},
+            {x=060,y=25,w=8,h=8,key='kp5',         fillC='LS',actvC='R',},
+            {x=070,y=25,w=8,h=8,key='kp6',         fillC='LS',actvC='R',},
+    
+            {x=050,y=35,w=8,h=8,key='kp1',         fillC='LS',actvC='R',},
+            {x=060,y=35,w=8,h=8,key='kp2',         fillC='LS',actvC='R',},
+            {x=070,y=35,w=8,h=8,key='kp3',         fillC='LS',actvC='R',},
+    
+            {x=050,y=45,w=8,h=8,key='kp0',         fillC='LS',actvC='R',},
+            {x=060,y=45,w=8,h=8,key='kp.',         fillC='LS',actvC='R',},
+            {x=070,y=45,w=8,h=8,key='kpenter',         fillC='LS',actvC='R',},
+        },
+        keyMap={
+            ['kp7']=60,['kp8']=62,['kp9']=64,['kp4']=65,['kp5']=67,['kp6']=69,['kp1']=71,['kp2']=72,['kp3']=74,['kp0']=76,['kp.']=77,['kpenter']=79,
+        },
+    },
+    {
         name="Simple (on C)",
         pos_x=-71.5,
         pos_y=-25,
