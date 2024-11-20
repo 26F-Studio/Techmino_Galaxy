@@ -11,6 +11,41 @@ local objPool={} ---@type Techmino.Piano.Object[]
 local inst,offset,release
 
 local instList={'organ_wave','square_wave','saw_wave','complex_wave','stairs_wave','spectral_wave'}
+local presets={}
+
+local scrollSpeed=620
+local disappearDist=-800
+presets.synthNote={}
+---@return Techmino.Piano.Object
+function presets.synthNote.newNote()
+    return {
+        len=0,
+        free=false,
+        _type='synthNote',
+        _update=function(self,dt)
+            local dSize=dt*scrollSpeed
+            self.y=self.y-dSize
+            if self.free then
+                return self.y+self.len<disappearDist
+            else
+                self.len=self.len+dSize
+            end
+        end,
+        _draw=function(self)
+            gc_setColor(self.color)
+            gc_rect('fill',self.x,self.y,self.w,self.len,10)
+        end,
+    }
+end
+function presets.synthNote.press(key)
+    key.note=presets.synthNote.newNote()
+    TABLE.update(key.note,{x=key.x,y=key.y,w=key.w,color=key.fillC})
+    ins(objPool,key.note)
+end
+function presets.synthNote.release(key)
+    key.note.free=true
+    key.note=nil
+end
 
 ---@class Techmino.Piano.Object
 ---@field _type string
@@ -175,8 +210,8 @@ local layoutList={
         size=16,
         font=30 ,
         templates={
-            {y=0,w=4,h=15,show='',fillC='L',lineC='LD',actvC='lI'}, -- White key
-            {y=0,w=2.6,h=10,show='',fillC='lD',lineC='LD',actvC='LI'}, -- Black key
+            {y=0,w=4,h=15,show='',fillC='L',lineC='LD',actvC='lI',_onPress=presets.synthNote.press,_onRelease=presets.synthNote.release}, -- White key
+            {y=0,w=2.6,h=10,show='',fillC='lD',lineC='LD',actvC='LI',_onPress=presets.synthNote.press,_onRelease=presets.synthNote.release}, -- Black key
         },
         keyLayout={
             {1,x=.5*4,w=2,fillC='LD'},
