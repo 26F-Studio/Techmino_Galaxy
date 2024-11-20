@@ -1,9 +1,15 @@
 -- Skip FMOD on web for now
 if SYSTEM=='Web' then
     local NOLL={}
-    setmetatable(NOLL,{__call=NULL,__index=function() return NOLL end})
+    local NOLLmeta={__call=NULL,__index=function() return NOLL end}
+    setmetatable(NOLL,NOLLmeta)
     return setmetatable({
         C=false,C2=false,
+        music=setmetatable({
+            getParam=function () return -1,-1 end,
+            getDuration=function () return 0 end,
+            tell=function () return 0 end,
+        },NOLLmeta),
     },{
         __index=function(t,k)
             t[k]=NOLL
