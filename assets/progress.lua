@@ -141,8 +141,8 @@ function PROGRESS.save(step)
     end
 end
 function PROGRESS.load()
-    local success,res=pcall(FILE.load,'conf/progress','-json -canskip')
-    if success then
+    local suc,res=pcall(FILE.load,'conf/progress','-json -canskip')
+    if suc then
         if res then
             TABLE.update(prgs,res)
             -- if res.hash==getHash(res) then
@@ -192,19 +192,18 @@ end
 function PROGRESS.applyCoolWaitTemplate()
     local list={}
     for i=1,52 do list[i]=('assets/image/loading/%d.png'):format(i) end
-    local success,z=pcall(gc.newArrayImage,list)
-    if success then
-        WAIT.setDefaultDraw(function(a,t)
-            GC.setBlendMode('add','alphamultiply')
-            GC.setColor(1,1,1,a)
-            GC.applyTransform(SCR.xOy_dr)
-            GC.mDrawL(z,
-                math.min(math.floor(t*60)%62,52)%52+1, -- floor(t*60)%62 → 0~61; min(ans) → 0~52~52; ans%52+1 → 1~52,1~1
-                -160,-150,nil,1.5*(1-(1-a)^2.6)
-            )
-            GC.setBlendMode('alpha')
-        end)
-    end
+    local suc,res=pcall(gc.newArrayImage,list)
+    if not suc then return LOG('warn',"Failed to create ArrayImage: "..res) end
+    WAIT.setDefaultDraw(function(a,t)
+        GC.setBlendMode('add','alphamultiply')
+        GC.setColor(1,1,1,a)
+        GC.applyTransform(SCR.xOy_dr)
+        GC.mDrawL(res,
+            math.min(math.floor(t*60)%62,52)%52+1, -- floor(t*60)%62 → 0~61; min(ans) → 0~52~52; ans%52+1 → 1~52,1~1
+            -160,-150,nil,1.5*(1-(1-a)^2.6)
+        )
+        GC.setBlendMode('alpha')
+    end)
 end
 function PROGRESS.applyInteriorBG() BG.set('none') end
 function PROGRESS.applyExteriorBG() BG.set(prgs.main==3 and 'space' or 'galaxy') end

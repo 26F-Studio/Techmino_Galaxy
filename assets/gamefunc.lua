@@ -223,8 +223,8 @@ gameSoundFunc.move_back=gameSoundFunc.rotate_failed
 
 local interiorModeMeta={
     __call=function(self)
-        local success,errInfo=pcall(GAME.getMode,self.name)
-        if success then
+        local suc,errInfo=pcall(GAME.getMode,self.name)
+        if suc then
             SCN.go('game_in','none',self.name)
         else
             MSG.log('warn',Text.noMode:repD(tostring(self.name):simplifyPath(),errInfo))
@@ -237,8 +237,8 @@ end
 
 local exteriorModeMeta={
     __call=function(self)
-        local success,errInfo=pcall(GAME.getMode,self.name)
-        if success then
+        local suc,errInfo=pcall(GAME.getMode,self.name)
+        if suc then
             SCN.go('game_out','fade',self.name)
         else
             MSG.log('warn',Text.noMode:repD(tostring(self.name):simplifyPath(),errInfo))
