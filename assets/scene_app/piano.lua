@@ -33,7 +33,7 @@ function presets.synthNote.newNote()
         end,
         _draw=function(self)
             gc_setColor(self.color)
-            gc_rect('fill',self.x,self.y,self.w,self.len,10)
+            gc_rect('fill',self.x,self.y,self.w,self.len,8)
         end,
     }
 end
@@ -88,8 +88,10 @@ local layoutList={
         size=10,
         font=60,
         templates={
-            {w=8,h=8,fillC='DS',actvC='dS',lineC='LD',textC='dL'}, -- Black key
-            {w=8,h=8,fillC='LS',actvC='S',lineC='LD',textC='D'}, -- White key
+            {w=8,h=8,fillC='DS',actvC='dS',lineC='LD',textC='dL'}, -- Treble (black)
+            {w=8,h=8,fillC='LS',actvC='S',lineC='LD',textC='D'},   -- Treble (white)
+            {w=8,h=8,fillC='DR',actvC='dR',lineC='LD',textC='dL'}, -- Bass (black)
+            {w=8,h=8,fillC='LR',actvC='R',lineC='LD',textC='D'},   -- Bass (white)
         },
         keyLayout={
             {x=0,y=0,w=140,h=50,fillC={1,1,1,.26},lineC='dL'}, -- Frame
@@ -115,23 +117,23 @@ local layoutList={
             {2,x=105,y=15,key='['},
             {2,x=115,y=15,key=']'},
             {2,x=125,y=15,key='\\'},
-            {1,x=020,y=25,key='s'}, -- Line 3
-            {1,x=030,y=25,key='d'},
-            {1,x=050,y=25,key='g'},
-            {1,x=060,y=25,key='h'},
-            {1,x=070,y=25,key='j'},
-            {1,x=090,y=25,key='l'},
-            {1,x=100,y=25,key=';'},
-            {2,x=015,y=35,key='z'}, -- Line 4
-            {2,x=025,y=35,key='x'},
-            {2,x=035,y=35,key='c'},
-            {2,x=045,y=35,key='v'},
-            {2,x=055,y=35,key='b'},
-            {2,x=065,y=35,key='n'},
-            {2,x=075,y=35,key='m'},
-            {2,x=085,y=35,key=','},
-            {2,x=095,y=35,key='.'},
-            {2,x=105,y=35,key='/'},
+            {3,x=020,y=25,key='s'}, -- Line 3
+            {3,x=030,y=25,key='d'},
+            {3,x=050,y=25,key='g'},
+            {3,x=060,y=25,key='h'},
+            {3,x=070,y=25,key='j'},
+            {3,x=090,y=25,key='l'},
+            {3,x=100,y=25,key=';'},
+            {4,x=015,y=35,key='z'}, -- Line 4
+            {4,x=025,y=35,key='x'},
+            {4,x=035,y=35,key='c'},
+            {4,x=045,y=35,key='v'},
+            {4,x=055,y=35,key='b'},
+            {4,x=065,y=35,key='n'},
+            {4,x=075,y=35,key='m'},
+            {4,x=085,y=35,key=','},
+            {4,x=095,y=35,key='.'},
+            {4,x=105,y=35,key='/'},
         },
         keyMap={
             ['2']=37,['3']=39,         ['5']=42,['6']=44,['7']=46,         ['9']=49,['0']=51,         ['=']=54,['backspace']=56,
@@ -146,7 +148,10 @@ local layoutList={
         size=10,
         font=60,
         templates={
-            {w=8,h=8,fillC='dT',lineC='L',actvC='lY',textC='DL'},
+            {w=8,h=8,fillC='dL',lineC='DL',actvC='lG',textC='lD'}, -- Soprano
+            {w=8,h=8,fillC='dL',lineC='DL',actvC='lY',textC='lD'}, -- Alto
+            {w=8,h=8,fillC='dL',lineC='DL',actvC='lB',textC='lD'}, -- Tenor
+            {w=8,h=8,fillC='dL',lineC='DL',actvC='lR',textC='lD'}, -- Bass
         },
         keyLayout={
             {1,x=0,y=0,w=143,h=50,fillC={1,1,1,.26},lineC='dL'}, -- Frame
@@ -163,45 +168,45 @@ local layoutList={
             {1,x=105,y=05,key='-'},
             {1,x=115,y=05,key='='},
             {1,x=125,y=05,w=13,key='backspace'},
-            {1,x=010,y=15,key='q'}, -- Line 2
-            {1,x=020,y=15,key='w'},
-            {1,x=030,y=15,key='e'},
-            {1,x=040,y=15,key='r'},
-            {1,x=050,y=15,key='t'},
-            {1,x=060,y=15,key='y'},
-            {1,x=070,y=15,key='u'},
-            {1,x=080,y=15,key='i'},
-            {1,x=090,y=15,key='o'},
-            {1,x=100,y=15,key='p'},
-            {1,x=110,y=15,key='['},
-            {1,x=120,y=15,key=']'},
-            {1,x=130,y=15,key='\\'},
-            {1,x=015,y=25,key='a'}, -- Line 3
-            {1,x=025,y=25,key='s'},
-            {1,x=035,y=25,key='d'},
-            {1,x=045,y=25,key='f'},
-            {1,x=055,y=25,key='g'},
-            {1,x=065,y=25,key='h'},
-            {1,x=075,y=25,key='j'},
-            {1,x=085,y=25,key='k'},
-            {1,x=095,y=25,key='l'},
-            {1,x=105,y=25,key=';'},
-            {1,x=115,y=25,key='\''},
-            {1,x=125,y=25,w=13,key='return'},
-            {1,x=020,y=35,key='z'}, -- Line 4
-            {1,x=030,y=35,key='x'},
-            {1,x=040,y=35,key='c'},
-            {1,x=050,y=35,key='v'},
-            {1,x=060,y=35,key='b'},
-            {1,x=070,y=35,key='n'},
-            {1,x=080,y=35,key='m'},
-            {1,x=090,y=35,key=','},
-            {1,x=100,y=35,key='.'},
-            {1,x=110,y=35,key='/'},
+            {2,x=010,y=15,key='q'}, -- Line 2
+            {2,x=020,y=15,key='w'},
+            {2,x=030,y=15,key='e'},
+            {2,x=040,y=15,key='r'},
+            {2,x=050,y=15,key='t'},
+            {2,x=060,y=15,key='y'},
+            {2,x=070,y=15,key='u'},
+            {2,x=080,y=15,key='i'},
+            {2,x=090,y=15,key='o'},
+            {2,x=100,y=15,key='p'},
+            {2,x=110,y=15,key='['},
+            {2,x=120,y=15,key=']'},
+            {2,x=130,y=15,key='\\'},
+            {3,x=015,y=25,key='a'}, -- Line 3
+            {3,x=025,y=25,key='s'},
+            {3,x=035,y=25,key='d'},
+            {3,x=045,y=25,key='f'},
+            {3,x=055,y=25,key='g'},
+            {3,x=065,y=25,key='h'},
+            {3,x=075,y=25,key='j'},
+            {3,x=085,y=25,key='k'},
+            {3,x=095,y=25,key='l'},
+            {3,x=105,y=25,key=';'},
+            {3,x=115,y=25,key='\''},
+            {3,x=125,y=25,w=13,key='return'},
+            {4,x=020,y=35,key='z'}, -- Line 4
+            {4,x=030,y=35,key='x'},
+            {4,x=040,y=35,key='c'},
+            {4,x=050,y=35,key='v'},
+            {4,x=060,y=35,key='b'},
+            {4,x=070,y=35,key='n'},
+            {4,x=080,y=35,key='m'},
+            {4,x=090,y=35,key=','},
+            {4,x=100,y=35,key='.'},
+            {4,x=110,y=35,key='/'},
         },
         keyMap={
             ['1']=60,['2']=62,['3']=64,['4']=65,['5']=67,['6']=69,['7']=71,['8']=72,['9']=74,['0']=76,['-']=77,['=']=79,['backspace']=81,
-            ['q']=36,['w']=38,['e']=40,['r']=41,['t']=43,['y']=45,['u']=47,['i']=48,['o']=50,['p']=52,['[']=53,[']']=55,['\\']=57,
+            ['q']=48,['w']=50,['e']=52,['r']=53,['t']=55,['y']=57,['u']=59,['i']=60,['o']=62,['p']=64,['[']=65,[']']=67,['\\']=69,
             ['a']=36,['s']=38,['d']=40,['f']=41,['g']=43,['h']=45,['j']=47,['k']=48,['l']=50,[';']=52,["'"]=50,['return']=55,
             ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
         },
@@ -522,7 +527,7 @@ function scene.draw()
             gc_setColor(key.fillC)
             gc_rect('fill',key.x,key.y,key.w,key.h)
             gc_setColor(key.lineC)
-            gc_rect('line',key.x,key.y,key.w,key.h)
+            gc_rect('line',key.x+2,key.y+2,key.w-4,key.h-4)
         end
     end
     setFont(layout.font)
@@ -534,6 +539,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button', pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 return scene
