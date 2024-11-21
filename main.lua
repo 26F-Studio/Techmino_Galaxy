@@ -760,9 +760,11 @@ end
 
 love.joystick.loadGamepadMappings('datatable/gamecontrollerdb.txt')
 
-DiscordRPC=require'assets.discordRPC'
----@diagnostic disable-next-line
-if SYSTEM=='Web' then _G[('DiscordRPC')]={update=NULL} end
+if SYSTEM=='Web' then
+    _G[('DiscordRPC')]={update=NULL}
+else
+    DiscordRPC=require'assets.discordRPC'
+end
 DiscordRPC.update("Online")
 
 DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins/FMOD/Managers")
