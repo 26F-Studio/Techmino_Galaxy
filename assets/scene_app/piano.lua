@@ -13,40 +13,44 @@ local inst,offset,release
 local instList={'organ_wave','square_wave','saw_wave','complex_wave','stairs_wave','spectral_wave'}
 local presets={}
 
-local scrollSpeed=620
-local disappearDist=-800
-presets.synthNote={}
----@return Techmino.Piano.Object
-function presets.synthNote.newNote()
-    return {
-        len=0,
-        free=false,
-        _type='synthNote',
-        _update=function(self,dt)
-            local dSize=dt*scrollSpeed
-            self.y=self.y-dSize
-            if self.free then
-                return self.y+self.len<disappearDist
-            else
-                self.len=self.len+dSize
-            end
-        end,
-        _draw=function(self)
-            gc_setColor(self.color)
-            gc_rect('fill',self.x,self.y,self.w,self.len,8)
-        end,
-    }
-end
-function presets.synthNote.press(key)
-    key.note=presets.synthNote.newNote()
-    local centerX=key.x+key.w/2+(key.synthNotePos or 0)
-    local width=key.synthNoteWidth or key.w
-    TABLE.update(key.note,{y=key.y,x=centerX-width/2,w=width,color=key.synthNoteColor or key.fillC})
-    ins(objPool,key.note)
-end
-function presets.synthNote.release(key)
-    key.note.free=true
-    key.note=nil
+do -- rollNote
+    local scrollSpeed=620
+    local disappearDist=-1000
+    presets.rollNote={}
+    function presets.rollNote.setSpeed(v) scrollSpeed=v end
+    function presets.rollNote.getSpeed() return scrollSpeed end
+    ---@return Techmino.Piano.Object
+    function presets.rollNote.newNote()
+        return {
+            len=0,
+            free=false,
+            _type='rollNote',
+            _update=function(self,dt)
+                local dSize=dt*scrollSpeed
+                self.y=self.y-dSize
+                if self.free then
+                    return self.y+self.len<disappearDist
+                else
+                    self.len=self.len+dSize
+                end
+            end,
+            _draw=function(self)
+                gc_setColor(self.color)
+                gc_rect('fill',self.x,self.y,self.w,self.len,8)
+            end,
+        }
+    end
+    function presets.rollNote.press(key)
+        key.note=presets.rollNote.newNote()
+        local centerX=key.x+key.w/2+(key.rollNotePos or 0)
+        local width=key.rollNoteWidth or key.w
+        TABLE.update(key.note,{y=key.y,x=centerX-width/2,w=width,color=key.rollNoteColor or key.fillC})
+        ins(objPool,key.note)
+    end
+    function presets.rollNote.release(key)
+        key.note.free=true
+        key.note=nil
+    end
 end
 
 ---@class Techmino.Piano.Object
@@ -217,31 +221,31 @@ local layoutList={
         size=16,
         font=35,
         templates={
-            {y=0,w=4,h=15,show='',fillC='L',lineC='LD',actvC='lI',_onPress=presets.synthNote.press,_onRelease=presets.synthNote.release,synthNoteWidth=30,synthNoteColor=COLOR.L}, -- White key
-            {y=0,w=2.6,h=10,show='',fillC='lD',lineC='LD',actvC='LI',_onPress=presets.synthNote.press,_onRelease=presets.synthNote.release,synthNoteWidth=30,synthNoteColor=COLOR.DL}, -- Black key
+            {y=0,w=4,h=15,show='',fillC='L',lineC='LD',actvC='lI',_onPress=presets.rollNote.press,_onRelease=presets.rollNote.release,rollNoteWidth=30,rollNoteColor=COLOR.L}, -- White key
+            {y=0,w=2.6,h=10,show='',fillC='lD',lineC='LD',actvC='LI',_onPress=presets.rollNote.press,_onRelease=presets.rollNote.release,rollNoteWidth=30,rollNoteColor=COLOR.DL}, -- Black key
             {y=11.5,w=3,h=3,fillC='X',lineC='X',textC='lD'}, -- Tag
         },
         keyLayout={
-            {1,x=00*4,synthNotePos=-13,key='z'},{3,x=00*4+.5,show='Z'},
-            {1,x=01*4,synthNotePos= 00,key='x'},
-            {1,x=02*4,synthNotePos= 13,key='c'},
-            {1,x=03*4,synthNotePos=-15,key='v'},
-            {1,x=04*4,synthNotePos=-05,key='b'},{3,x=04*4+.5,show='B'},
-            {1,x=05*4,synthNotePos= 05,key='n'},
-            {1,x=06*4,synthNotePos= 15,key='m'},
-            {1,x=07*4,synthNotePos=-13,key={',','q'}},{3,x=07*4+.5,show='Q'},
-            {1,x=08*4,synthNotePos= 00,key={'.','w'}},
-            {1,x=09*4,synthNotePos= 13,key={'/','e'}},
-            {1,x=10*4,synthNotePos=-15,key='r'},
-            {1,x=11*4,synthNotePos=-05,key='t'},{3,x=11*4+.5,show='T'},
-            {1,x=12*4,synthNotePos= 05,key='y'},
-            {1,x=13*4,synthNotePos= 15,key='u'},
-            {1,x=14*4,synthNotePos=-13,key='i'},{3,x=14*4+.5,show='I'},
-            {1,x=15*4,synthNotePos= 00,key='o'},
-            {1,x=16*4,synthNotePos= 13,key='p'},
-            {1,x=17*4,synthNotePos=-15,key='['},
-            {1,x=18*4,synthNotePos=-05,key=']'},{3,x=18*4+.5,show=']'},
-            {1,x=19*4,synthNotePos= 05,key='\\'},
+            {1,x=00*4,rollNotePos=-13,key='z'},{3,x=00*4+.5,show='Z'},
+            {1,x=01*4,rollNotePos= 00,key='x'},
+            {1,x=02*4,rollNotePos= 13,key='c'},
+            {1,x=03*4,rollNotePos=-15,key='v'},
+            {1,x=04*4,rollNotePos=-05,key='b'},{3,x=04*4+.5,show='B'},
+            {1,x=05*4,rollNotePos= 05,key='n'},
+            {1,x=06*4,rollNotePos= 15,key='m'},
+            {1,x=07*4,rollNotePos=-13,key={',','q'}},{3,x=07*4+.5,show='Q'},
+            {1,x=08*4,rollNotePos= 00,key={'.','w'}},
+            {1,x=09*4,rollNotePos= 13,key={'/','e'}},
+            {1,x=10*4,rollNotePos=-15,key='r'},
+            {1,x=11*4,rollNotePos=-05,key='t'},{3,x=11*4+.5,show='T'},
+            {1,x=12*4,rollNotePos= 05,key='y'},
+            {1,x=13*4,rollNotePos= 15,key='u'},
+            {1,x=14*4,rollNotePos=-13,key='i'},{3,x=14*4+.5,show='I'},
+            {1,x=15*4,rollNotePos= 00,key='o'},
+            {1,x=16*4,rollNotePos= 13,key='p'},
+            {1,x=17*4,rollNotePos=-15,key='['},
+            {1,x=18*4,rollNotePos=-05,key=']'},{3,x=18*4+.5,show=']'},
+            {1,x=19*4,rollNotePos= 05,key='\\'},
             {2,x=2.7+00*4 -.3*1.5,key='s'},
             {2,x=2.7+01*4 +.3*1.5,key='d'},
             {2,x=2.7+03*4 -.4*1.5,key='g'},
@@ -272,35 +276,35 @@ local layoutList={
         size=16,
         font=35,
         templates={
-            {y=0,w=4,h=15,show='',fillC='L',lineC='LD',actvC='lI',_onPress=presets.synthNote.press,_onRelease=presets.synthNote.release,synthNoteWidth=30,synthNoteColor=COLOR.L}, -- White key
-            {y=0,w=2.6,h=10,show='',fillC='lD',lineC='LD',actvC='LI',_onPress=presets.synthNote.press,_onRelease=presets.synthNote.release,synthNoteWidth=30,synthNoteColor=COLOR.DL}, -- Black key
+            {y=0,w=4,h=15,show='',fillC='L',lineC='LD',actvC='lI',_onPress=presets.rollNote.press,_onRelease=presets.rollNote.release,rollNoteWidth=30,rollNoteColor=COLOR.L}, -- White key
+            {y=0,w=2.6,h=10,show='',fillC='lD',lineC='LD',actvC='LI',_onPress=presets.rollNote.press,_onRelease=presets.rollNote.release,rollNoteWidth=30,rollNoteColor=COLOR.DL}, -- Black key
             {y=11.5,w=3,h=3,fillC='X',lineC='X',textC='lD'}, -- Tag
         },
         keyLayout={
             {1,x=.5*4,w=2,fillC='LD'},
-            {1,x=01*4,synthNotePos=-05,key='z'},{3,x=01*4+.5,show='Z'},
-            {1,x=02*4,synthNotePos= 05,key='x'},
-            {1,x=03*4,synthNotePos= 15,key='c'},
-            {1,x=04*4,synthNotePos=-13,key='v'},{3,x=04*4+.5,show='V'},
-            {1,x=05*4,synthNotePos= 00,key='b'},
-            {1,x=06*4,synthNotePos= 13,key='n'},
-            {1,x=07*4,synthNotePos=-15,key='m'},
-            {1,x=08*4,synthNotePos=-05,key=','},{3,x=08*4+.5,show='<'},
-            {1,x=09*4,synthNotePos= 05,key='.'},
-            {1,x=10*4,synthNotePos= 15,key={'/','1'}},
-            {1,x=11*4,synthNotePos=-13,key={'q','\''}},{3,x=11*4+.5,show='Q'},
-            {1,x=12*4,synthNotePos= 00,key='w'},
-            {1,x=13*4,synthNotePos= 13,key='e'},
-            {1,x=14*4,synthNotePos=-15,key='r'},
-            {1,x=15*4,synthNotePos=-05,key='t'},{3,x=15*4+.5,show='T'},
-            {1,x=16*4,synthNotePos= 05,key='y'},
-            {1,x=17*4,synthNotePos= 15,key='u'},
-            {1,x=18*4,synthNotePos=-13,key='i'},{3,x=18*4+.5,show='I'},
-            {1,x=19*4,synthNotePos= 00,key='o'},
-            {1,x=20*4,synthNotePos= 13,key='p'},
-            {1,x=21*4,synthNotePos=-15,key='['},
-            {1,x=22*4,synthNotePos=-05,key=']'},{3,x=22*4+.5,show=']'},
-            {1,x=23*4,synthNotePos= 05,key='\\'},
+            {1,x=01*4,rollNotePos=-05,key='z'},{3,x=01*4+.5,show='Z'},
+            {1,x=02*4,rollNotePos= 05,key='x'},
+            {1,x=03*4,rollNotePos= 15,key='c'},
+            {1,x=04*4,rollNotePos=-13,key='v'},{3,x=04*4+.5,show='V'},
+            {1,x=05*4,rollNotePos= 00,key='b'},
+            {1,x=06*4,rollNotePos= 13,key='n'},
+            {1,x=07*4,rollNotePos=-15,key='m'},
+            {1,x=08*4,rollNotePos=-05,key=','},{3,x=08*4+.5,show='<'},
+            {1,x=09*4,rollNotePos= 05,key='.'},
+            {1,x=10*4,rollNotePos= 15,key={'/','1'}},
+            {1,x=11*4,rollNotePos=-13,key={'q','\''}},{3,x=11*4+.5,show='Q'},
+            {1,x=12*4,rollNotePos= 00,key='w'},
+            {1,x=13*4,rollNotePos= 13,key='e'},
+            {1,x=14*4,rollNotePos=-15,key='r'},
+            {1,x=15*4,rollNotePos=-05,key='t'},{3,x=15*4+.5,show='T'},
+            {1,x=16*4,rollNotePos= 05,key='y'},
+            {1,x=17*4,rollNotePos= 15,key='u'},
+            {1,x=18*4,rollNotePos=-13,key='i'},{3,x=18*4+.5,show='I'},
+            {1,x=19*4,rollNotePos= 00,key='o'},
+            {1,x=20*4,rollNotePos= 13,key='p'},
+            {1,x=21*4,rollNotePos=-15,key='['},
+            {1,x=22*4,rollNotePos=-05,key=']'},{3,x=22*4+.5,show=']'},
+            {1,x=23*4,rollNotePos= 05,key='\\'},
             {2,x=2.7+01*4 +.0*1.5,key='s'},
             {2,x=2.7+00*4 -.4*1.5,key='a'},
             {2,x=2.7+02*4 +.4*1.5,key='d'},
@@ -466,6 +470,10 @@ function scene.keyDown(key,isRep,keyCode)
         release=math.max(release-100,0)
     elseif key=='f4' then
         release=math.min(release+100,2600)
+    elseif key=='f5' then
+        presets.rollNote.setSpeed(presets.rollNote.getSpeed()-100)
+    elseif key=='f6' then
+        presets.rollNote.setSpeed(presets.rollNote.getSpeed()+100)
     elseif key=='escape' then
         if sureCheck('back') then SCN.back() end
     end
