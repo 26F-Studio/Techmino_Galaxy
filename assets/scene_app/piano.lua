@@ -6,7 +6,7 @@ local setFont=FONT.set
 
 local ins,rem=table.insert,table.remove
 
-local activeEventMap={}
+local activeEventMap={} ---@type table<love.Scancode, FMOD.Studio.EventInstance>
 local objPool={} ---@type Techmino.Piano.Object[]
 local inst,offset,release
 
@@ -39,7 +39,9 @@ function presets.synthNote.newNote()
 end
 function presets.synthNote.press(key)
     key.note=presets.synthNote.newNote()
-    TABLE.update(key.note,{x=key.x,y=key.y,w=key.w,color=key.fillC})
+    local centerX=key.x+key.w/2+(key.synthNotePos or 0)
+    local width=key.synthNoteWidth or key.w
+    TABLE.update(key.note,{y=key.y,x=centerX-width/2,w=width,color=key.synthNoteColor or key.fillC})
     ins(objPool,key.note)
 end
 function presets.synthNote.release(key)
@@ -80,7 +82,7 @@ end
 
 ---@type Techmino.Piano.Layout[]
 local layoutList={
-    {name="Classic (on C)",
+    {name="Classic-C",
         pos_x=-70,
         pos_y=-25,
         size=10,
@@ -138,7 +140,7 @@ local layoutList={
             ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
         },
     },
-    {name="Simple (on C)",
+    {name="Simple-C",
         pos_x=-71.5,
         pos_y=-25,
         size=10,
@@ -204,42 +206,42 @@ local layoutList={
             ['z']=24,['x']=26,['c']=28,['v']=29,['b']=31,['n']=33,['m']=35,[',']=36,['.']=38,['/']=40,
         },
     },
-    {name="Piano",
+    {name="Piano (Full)",
         pos_x=-96/2-1,
         pos_y=5,
         size=16,
         font=30 ,
         templates={
-            {y=0,w=4,h=15,show='',fillC='L',lineC='LD',actvC='lI',_onPress=presets.synthNote.press,_onRelease=presets.synthNote.release}, -- White key
-            {y=0,w=2.6,h=10,show='',fillC='lD',lineC='LD',actvC='LI',_onPress=presets.synthNote.press,_onRelease=presets.synthNote.release}, -- Black key
+            {y=0,w=4,h=15,show='',fillC='L',lineC='LD',actvC='lI',_onPress=presets.synthNote.press,_onRelease=presets.synthNote.release,synthNoteWidth=30,synthNoteColor=COLOR.L}, -- White key
+            {y=0,w=2.6,h=10,show='',fillC='lD',lineC='LD',actvC='LI',_onPress=presets.synthNote.press,_onRelease=presets.synthNote.release,synthNoteWidth=30,synthNoteColor=COLOR.DL}, -- Black key
         },
         keyLayout={
             {1,x=.5*4,w=2,fillC='LD'},
-            {1,x=01*4,key='z'},
-            {1,x=02*4,key='x'},
-            {1,x=03*4,key='c'},
-            {1,x=04*4,key='v'},
-            {1,x=05*4,key='b'},
-            {1,x=06*4,key='n'},
-            {1,x=07*4,key='m'},
-            {1,x=08*4,key=','},
-            {1,x=09*4,key='.'},
-            {1,x=10*4,key={'/','1'}},
-            {1,x=11*4,key={'q','\''}},
-            {1,x=12*4,key='w'},
-            {1,x=13*4,key='e'},
-            {1,x=14*4,key='r'},
-            {1,x=15*4,key='t'},
-            {1,x=16*4,key='y'},
-            {1,x=17*4,key='u'},
-            {1,x=18*4,key='i'},
-            {1,x=19*4,key='o'},
-            {1,x=20*4,key='p'},
-            {1,x=21*4,key='['},
-            {1,x=22*4,key=']'},
-            {1,x=23*4,key='\\'},
-            {2,x=2.7+00*4 -.4*1.5,key='a'},
+            {1,x=01*4,synthNotePos=-05,key='z'},
+            {1,x=02*4,synthNotePos= 05,key='x'},
+            {1,x=03*4,synthNotePos= 15,key='c'},
+            {1,x=04*4,synthNotePos=-13,key='v'},
+            {1,x=05*4,synthNotePos= 00,key='b'},
+            {1,x=06*4,synthNotePos= 13,key='n'},
+            {1,x=07*4,synthNotePos=-15,key='m'},
+            {1,x=08*4,synthNotePos=-05,key=','},
+            {1,x=09*4,synthNotePos= 05,key='.'},
+            {1,x=10*4,synthNotePos= 15,key={'/','1'}},
+            {1,x=11*4,synthNotePos=-13,key={'q','\''}},
+            {1,x=12*4,synthNotePos= 00,key='w'},
+            {1,x=13*4,synthNotePos= 13,key='e'},
+            {1,x=14*4,synthNotePos=-15,key='r'},
+            {1,x=15*4,synthNotePos=-05,key='t'},
+            {1,x=16*4,synthNotePos= 05,key='y'},
+            {1,x=17*4,synthNotePos= 15,key='u'},
+            {1,x=18*4,synthNotePos=-13,key='i'},
+            {1,x=19*4,synthNotePos= 00,key='o'},
+            {1,x=20*4,synthNotePos= 13,key='p'},
+            {1,x=21*4,synthNotePos=-15,key='['},
+            {1,x=22*4,synthNotePos=-05,key=']'},
+            {1,x=23*4,synthNotePos= 05,key='\\'},
             {2,x=2.7+01*4 +.0*1.5,key='s'},
+            {2,x=2.7+00*4 -.4*1.5,key='a'},
             {2,x=2.7+02*4 +.4*1.5,key='d'},
             {2,x=2.7+04*4 -.3*1.5,key='g'},
             {2,x=2.7+05*4 +.3*1.5,key='h'},
@@ -345,11 +347,16 @@ local layout=layoutList[1]
 local scene={}
 
 function scene.load()
+    for _,effect in next,activeEventMap do effect:stop(FMOD.FMOD_STUDIO_STOP_ALLOWFADEOUT) end
+    TABLE.clearAll(activeEventMap)
+    TABLE.clearAll(objPool)
     stopBgm()
     inst='square_wave'
     offset=0
     release=500
 end
+
+scene.unload=scene.load
 
 function scene.touchDown(x,y,k)
     -- TODO
@@ -406,7 +413,7 @@ end
 function scene.keyUp(_,keyCode)
     if layout.keyMap[keyCode] and activeEventMap[keyCode] then
         activeEventMap[keyCode]:stop(FMOD.FMOD_STUDIO_STOP_ALLOWFADEOUT)
-        activeEventMap[keyCode]=false
+        activeEventMap[keyCode]=nil
     end
 end
 
