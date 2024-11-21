@@ -1,6 +1,6 @@
 if love._os=='Web' then
     local oldRead=love.filesystem.read
-    function love.filesystem.read(name,size)
+    love.filesystem[('read')]=function(name,size)
         if love.filesystem.getInfo(name) then return oldRead(name,size) end
     end
 end

@@ -150,7 +150,7 @@ local L={
     keyset_gela_rotate180=  "Ruota a 180 Gradi",
     keyset_gela_softDrop=   "Soft Drop",
     keyset_gela_hardDrop=   "Hard Drop",
-    keyset_brik_skip=       "Salta",
+    keyset_gela_skip=       "Salta",
 
     keyset_acry_swapLeft=    "Scambia a Sinistra",
     keyset_acry_swapRight=   "Scambia a Destra",
@@ -262,7 +262,7 @@ local L={
     modeTask_sequence_pento_title="Pento",
     modeTask_sequence_pento_desc="Completa 1 linea con un pentomino",
     modeTask_sequence_unknown_desc="Completa 1 linea con ???",
-    
+
     modeTask_invis_haunted_title="Infestato",
     modeTask_invis_haunted_desc="Completa 4 linee",
     modeTask_invis_hidden_title="Invisibile",

@@ -1,7 +1,3 @@
-if SYSTEM=='Web' then
-    return {update=NULL}
-end
-
 local MyRPC={
     appId='1288524924042084523', ---@type string Register your own app at https://discord.com/developers/applications
     C=nil, ---@type ffi.namespace*
@@ -17,16 +13,15 @@ local MyRPC={
     },
 }
 
----@overload fun()
----@overload fun(state: DiscordRPC.presence)
 ---@param state string
----@param details string
+---@param details? string
+---@overload fun(state:DiscordRPC.presence)
 function MyRPC.update(state,details)
     if state then
         for k,v in next,
-        type(state)=='string'
-        and {state=state,details=details}
-        or state
+            type(state)=='string'
+            and {state=state,details=details}
+            or state
         do
             MyRPC.presence[k]=v
         end

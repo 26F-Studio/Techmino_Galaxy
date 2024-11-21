@@ -261,7 +261,7 @@ local L={
     modeTask_sequence_pento_title="Kvino",
     modeTask_sequence_pento_desc="Kompletu 1 linion per 1 pentomino",
     modeTask_sequence_unknown_desc="Kompletu 1 linion per ???",
-    
+
     modeTask_invis_haunted_title="Hantita",
     modeTask_invis_haunted_desc="Kompletu 4 linioj",
     modeTask_invis_hidden_title="Nevidebla",
@@ -312,7 +312,7 @@ local L={
         interior_console="Kio estas ĉi tio?",
         language_japanese="あ?",
         musicroom_recollection="La memoro ne estas kanto",
-	musicroom_piano="La piano de Neniu",
+        musicroom_piano="La piano de Neniu",
         dial_enter="Instrumento?",
         dial_password="Ĝusta pasvorto",
         menu_fastype="Ŝajnas, ke vi amuzas skribi",

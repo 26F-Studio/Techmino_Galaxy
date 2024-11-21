@@ -3,8 +3,8 @@ local rem=table.remove
 local Util={}
 
 ---@param field Mat<boolean> Field (read)
----@overload fun(field:Mat<boolean>, cx:number): number
 ---@return number[]
+---@overload fun(field:Mat<boolean>, cx:number): number
 function Util.getColumnHeight(field,cx)
     if cx then
         local y=#field

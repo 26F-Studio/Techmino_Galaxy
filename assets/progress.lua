@@ -115,7 +115,7 @@ local function zDump(t)
     return table.concat(list)
 end
 local function getHash(t)
-    return love.data.encode('string','base64',zDump(t):digezt())
+    return love.data.encode('string','base64',STRING.digezt(zDump(t)))
 end
 
 local PROGRESS={}
