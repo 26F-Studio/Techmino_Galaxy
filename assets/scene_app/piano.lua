@@ -55,7 +55,7 @@ end
 
 ---@class Techmino.Piano.Object
 ---@field _type string
----@field _update fun(dt:number): any
+---@field _update fun(self:Techmino.Piano.Object, dt:number): any
 ---@field _draw function
 
 ---@class Techmino.Piano.Layout
@@ -442,11 +442,11 @@ function scene.keyDown(key,isRep,keyCode)
     if layout.keyMap[keyCode] then
         if isRep then return end
         local note=layout.keyMap[keyCode]+offset
-        if isKeyDown('lshift') then note=note+1 end
-        if isKeyDown('lctrl') then note=note-1 end
+        if isShiftDown() then note=note+1 end
+        if isCtrlDown() then note=note-1 end
         _param.tune=note-26
-        _param.volume=1
-        _param.param[2]=release*1.0594630943592953^(_param.tune)
+        _param.volume=isKeyDown('lalt') and .26 or 1
+        _param.param[2]=(isKeyDown('space') and 4200 or release)*1.0594630943592953^(_param.tune)
         activeEventMap[keyCode]=FMOD.effect(inst,_param)
     elseif key=='f3' then
         release=clamp(release-50,0,2600)
@@ -460,14 +460,23 @@ function scene.keyDown(key,isRep,keyCode)
         if key=='tab' then
             stopAllSounds()
             inst=TABLE.next(instList,inst) or instList[1]
-        elseif key=='rshift' then
-            offset=clamp(offset+(isKeyDown('ralt') and 12 or isKeyDown('rctrl') and 0.5 or 1),-12,24)
-        elseif key=='rctrl' then
-            offset=clamp(offset-(isKeyDown('ralt') and 12 or isKeyDown('rshift') and 0.5 or 1),-12,24)
+        elseif key=='space' then
+            -- TODO
+        elseif key=='ralt' then
+            -- TODO
         elseif key=='f1' then
+            stopAllSounds()
             layout=layoutData[(TABLE.find(layoutData,layout)-2)%#layoutData+1]
         elseif key=='f2' then
             layout=layoutData[TABLE.find(layoutData,layout)%#layoutData+1]
+        elseif key=='right' then
+            offset=clamp(offset+(isKeyDown('left') and 0.5 or 1),-12,24)
+        elseif key=='left' then
+            offset=clamp(offset-(isKeyDown('right') and 0.5 or 1),-12,24)
+        elseif key=='up' then
+            offset=clamp(offset+12,-12,24)
+        elseif key=='down' then
+            offset=clamp(offset-12,-12,24)
         elseif key=='escape' then
             if sureCheck('back') then SCN.back() end
         end
