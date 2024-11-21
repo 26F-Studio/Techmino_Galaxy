@@ -97,7 +97,7 @@ function scene.mouseClick(x,y,k)
 end
 function scene.wheelMove(dx,dy)
     exMap:hideCursor()
-    if isCtrlPressed() then
+    if isCtrlDown() then
         exMap:rotateCam(-(dx+dy)*.26)
     else
         exMap:scaleCam(1.1^(dx+dy))

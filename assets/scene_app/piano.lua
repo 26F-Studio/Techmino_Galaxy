@@ -432,8 +432,8 @@ local _param={
 function scene.keyDown(key,isRep,keyCode)
     if not isRep and layout.keyMap[keyCode] then
         local note=layout.keyMap[keyCode]+offset
-        if isShiftPressed() then note=note+1 end
-        if isCtrlPressed() then note=note-1 end
+        if isShiftDown() then note=note+1 end
+        if isCtrlDown() then note=note-1 end
         _param.tune=note-26
         _param.volume=1
         _param.param[2]=release*1.0594630943592953^(note-26)
@@ -442,8 +442,8 @@ function scene.keyDown(key,isRep,keyCode)
         inst=TABLE.next(instList,inst) or instList[1]
     elseif key=='lalt' then
         local d=0
-        if isShiftPressed() then d=d+12 end
-        if isCtrlPressed() then d=d-12 end
+        if isShiftDown() then d=d+12 end
+        if isCtrlDown() then d=d-12 end
         if d==0 then
             offset=MATH.clamp(offset-1,-12,24)
         else
@@ -451,8 +451,8 @@ function scene.keyDown(key,isRep,keyCode)
         end
     elseif key=='ralt' then
         local d=0
-        if isShiftPressed() then d=d+12 end
-        if isCtrlPressed() then d=d-12 end
+        if isShiftDown() then d=d+12 end
+        if isCtrlDown() then d=d-12 end
         if d==0 then
             offset=MATH.clamp(offset+1,-12,24)
         else

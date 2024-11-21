@@ -166,9 +166,9 @@ function scene.keyDown(key,isRep)
             end
             progressBar:reset()
         elseif key=='tab' then
-            if isCtrlPressed() then
+            if isCtrlDown() then
                 scene.widgetList.autoplay.code()
-            elseif isShiftPressed() then
+            elseif isShiftDown() then
                 scene.widgetList.section.code()
             else
                 scene.widgetList.fullband.code()

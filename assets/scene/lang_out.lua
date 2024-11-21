@@ -189,7 +189,7 @@ end
 function scene.draw()
     PROGRESS.drawExteriorHeader()
 
-    if isCtrlPressed() then
+    if isCtrlDown() then
         FONT.set(100)
         GC.setColor(1,1,1,.626)
         GC.mStr(CHAR.icon.eye,love.mouse.getX(),love.mouse.getY()-64)
@@ -232,7 +232,7 @@ local function _setLang(lid)
             duration=1.26,
         }
         if SETTINGS.system.locale~=lid then
-            if isCtrlPressed() then
+            if isCtrlDown() then
                 local oldText=TABLE.copyAll(Text)
                 local oldLocale=SETTINGS.system.locale:upper()
                 SETTINGS.system.locale=lid

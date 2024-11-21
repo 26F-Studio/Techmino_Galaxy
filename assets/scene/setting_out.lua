@@ -40,7 +40,7 @@ function scene.keyDown(key,isRep)
     if act=='back' then
         SCN.back('fadeHeader')
     elseif act=='setting' then
-        SCN.swapTo('setting_out','none',isShiftPressed() and (page-2)%4+1 or page%4+1)
+        SCN.swapTo('setting_out','none',isShiftDown() and (page-2)%4+1 or page%4+1)
     elseif act=='help' then
         callDict('setting_out')
         PROGRESS.setSecret('dict_shortcut')

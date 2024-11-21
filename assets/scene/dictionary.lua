@@ -349,7 +349,7 @@ function scene.keyDown(key,isRep)
     if WIDGET.isFocus(inputBox) and #key==1 then return true end
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
-        if not (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
+        if not (isCtrlDown() or isShiftDown() or isAltDown()) then
             local sel=listBox:getItem()
             listBox:arrowKey(key)
             if listBox:getItem()~=sel then
@@ -363,7 +363,7 @@ function scene.keyDown(key,isRep)
     elseif key=='pagedown' then
         listBox:scroll(15)
     elseif #key==1 and key:find'[0-9a-z]' then
-        if key=='c' and isCtrlPressed() then
+        if key=='c' and isCtrlDown() then
             copyText()
         else
             if not WIDGET.isFocus(inputBox) then
@@ -442,7 +442,7 @@ function scene.update(dt)
         end
         searchTimer=0
     end
-    if kbIsDown('up','down') and (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
+    if kbIsDown('up','down') and (isCtrlDown() or isShiftDown() or isAltDown()) then
         scroll(260*dt*(kbIsDown('up') and 1 or -1))
     end
 end

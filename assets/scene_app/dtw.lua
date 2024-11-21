@@ -276,10 +276,10 @@ function scene.keyDown(key,isRep)
         elseif state==0 then
             if key=='tab' then
                 local mode1=mode
-                modeSelector:scroll(isShiftPressed() and 1 or -1,0)
+                modeSelector:scroll(isShiftDown() and 1 or -1,0)
                 if mode1~=mode then reset() end
             elseif key=='q' then
-                colorSelector:scroll(isShiftPressed() and 1 or -1,0)
+                colorSelector:scroll(isShiftDown() and 1 or -1,0)
             elseif key=='w' then
                 arcade=not arcade
             end
