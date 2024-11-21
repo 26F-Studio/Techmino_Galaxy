@@ -14,13 +14,13 @@ local ins,rem=table.insert,table.remove
 
 ---@class Techmino.Player.Acry: Techmino.Player
 ---@field stat Techmino.PlayerStatTable.Acry
----@field field Mat<Techmino.Acry.Cell|false>
+---@field field Mat<Techmino.Acry.Cell | false>
 local AP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 --------------------------------------------------------------
 -- Function tables
 
----@type Map<fun(P:Techmino.Player.Acry):any>
+---@type Map<fun(P:Techmino.Player.Acry): any>
 AP.scriptCmd={
 }
 
@@ -699,7 +699,7 @@ end
 -- Builder
 
 ---@class Techmino.Mode.Setting.Acry
----@field event table<Techmino.EventName,Techmino.Event.Acry[]|Techmino.Event.Acry>
+---@field event table<Techmino.EventName, Techmino.Event.Acry[] | Techmino.Event.Acry>
 local baseEnv={
     -- Size
     fieldSize=8,

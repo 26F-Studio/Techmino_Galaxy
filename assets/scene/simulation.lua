@@ -8,7 +8,7 @@
 ---@field x number
 ---@field y number
 ---@field size number
----@field trigTimer number|false
+---@field trigTimer number | false
 
 ---@type Techmino.simulation[]
 local sims={
@@ -75,7 +75,7 @@ local sims={
     },
 }
 
----@type integer|false
+---@type integer | false
 local subjectFocused=false
 
 ---@type Zenitha.Scene

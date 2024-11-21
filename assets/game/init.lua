@@ -149,14 +149,14 @@ end
 
 ---@class Techmino.Game
 ---@field playing boolean
----@field playerList Techmino.Player[]|false
----@field playerMap Map<Techmino.Player>|false
+---@field playerList Techmino.Player[] | false
+---@field playerMap Map<Techmino.Player> | false
 ---@field camera Zenitha.Camera
 ---@field hitWaves table
----@field seed number|false
----@field mode Techmino.Mode|false
----@field mainID number|false
----@field mainPlayer Techmino.Player|false
+---@field seed number | false
+---@field mode Techmino.Mode | false
+---@field mainID number | false
+---@field mainPlayer Techmino.Player | false
 local GAME={
     playing=false,
 
@@ -272,7 +272,7 @@ function GAME.unload()
 end
 
 ---@param id integer
----@param pType 'brik'|'gela'|'acry'
+---@param pType 'brik' | 'gela' | 'acry'
 ---@param remote? boolean
 function GAME.newPlayer(id,pType,remote)
     if not (type(id)=='number' and math.floor(id)==id and id>=1 and id<=1000) then
@@ -370,11 +370,11 @@ end
 ---@field power number -∞~∞, no default
 ---@field sharpness number 0~∞, default to 1, how strong the attack can cancel the others
 ---@field hardness number 0~∞, default to 1, how strong the attack can defend the others
----@field mode number 0|1, default to 0, 0: trigger by time, 1:trigger by step
+---@field mode number 0 | 1, default to 0, 0: trigger by time, 1:trigger by step
 ---@field time number 0~∞, default to 0, ms / step
 ---@field fatal number 0~100, default to 30, percentage
 ---@field speed number 0~100, default to 30, percentage
----@field target number|Techmino.Player|nil default to nil
+---@field target number | Techmino.Player | nil default to nil
 
 local atkTemplate={
     sharpness=1,
@@ -405,7 +405,7 @@ function GAME.initAtk(atk) -- Normalize the attack object
     return atk
 end
 
----@param sender Techmino.Player|number|false
+---@param sender Techmino.Player | number | false
 ---@param atk Techmino.Game.Attack?
 function GAME.send(sender,atk)
     if not atk then return end

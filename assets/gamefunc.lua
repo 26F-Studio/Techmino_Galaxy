@@ -32,7 +32,7 @@ end
 
 local _bgmPlaying ---@type string?
 ---@param name Techmino.MusicName
----@param full? boolean|table
+---@param full? boolean | table
 ---@param noProgress? boolean
 function playBgm(name,full,noProgress)
     if name==_bgmPlaying then return end
@@ -408,7 +408,7 @@ end
 
 regFuncToStr,regStrToFunc={},{}
 ---Flatten a table of functions into string-to-function and function-to-string maps
----@param obj table|function
+---@param obj table | function
 ---@param path string
 function regFuncLib(obj,path)
     if type(obj)=='function' or type(obj)=='table' and rawget(obj,'__register') then

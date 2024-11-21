@@ -504,7 +504,7 @@ function PROGRESS.setTutorialPassed(n,v)
         PROGRESS.save()
     end
 end
----@param sign? '<'|'>' #default to `'>'` bigger=better, `'<'` smaller=better
+---@param sign? '<' | '>' #default to `'>'` bigger=better, `'<'` smaller=better
 function PROGRESS.setInteriorScore(mode,score,sign)
     sign=sign or '>'
     if not prgs.interiorScore[mode] or sign=='>' and score>prgs.interiorScore[mode] or sign=='<' and score<prgs.interiorScore[mode] then
@@ -528,10 +528,10 @@ end
 ---@param mode Techmino.ModeName
 ---@param key string
 ---@param value number
----@param sign? '>'|'<' `'>'` bigger=better, `'<'` smaller=better
+---@param sign? '>' | '<' `'>'` bigger=better, `'<'` smaller=better
 ---@return boolean success
 function PROGRESS.setExteriorScore(mode,key,value,sign)
-    assert(sign=='<' or sign=='>',"Saving condition required '>'|'<'")
+    assert(sign=='<' or sign=='>',"Saving condition required '<'|'>'")
     local data=prgs.exteriorMap[mode]
     if not data then
         data={}

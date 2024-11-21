@@ -3,7 +3,7 @@
 ---@field author string
 ---@field title string
 ---@field inside? boolean
----@field redirect? string|table<string>
+---@field redirect? string | table<string>
 ---
 ---@field notFound? boolean
 ---@field intensity? boolean
@@ -141,5 +141,5 @@ setmetatable(songbook,{__call=function(t,name)
     }
 end})
 
----@cast songbook table<Techmino.MusicName,Techmino.MusicMeta>
+---@cast songbook table<Techmino.MusicName, Techmino.MusicMeta>
 return songbook

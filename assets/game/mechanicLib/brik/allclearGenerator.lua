@@ -390,7 +390,7 @@ end
 ---@field debugging boolean
 ---@field raw boolean
 ---@field pieceCount integer
----@field holdUsed boolean|integer
+---@field holdUsed boolean | integer
 ---@field emptyTop boolean
 ---@field mergeRate number
 ---@field repRate number
@@ -399,14 +399,14 @@ end
 ---@field highRate number
 
 ---@class Techmino.Mech.Brik.AllclearGenerator.arg2
----@field lib 'box3'|'pco3'|'box4'|'pco4'
+---@field lib 'box3' | 'pco3' | 'box4' | 'pco4'
 ---@field debugging boolean
 ---@field raw boolean
----@field holdUsed boolean|integer
+---@field holdUsed boolean | integer
 ---@field startPiece boolean
 ---@field avoidRepeat boolean
 
----@param args Techmino.Mech.Brik.AllclearGenerator.arg1|Techmino.Mech.Brik.AllclearGenerator.arg2
+---@param args Techmino.Mech.Brik.AllclearGenerator.arg1 | Techmino.Mech.Brik.AllclearGenerator.arg2
 function allclearGenerator.newQuestion(P,args)
     local field,seq
     if args.lib then

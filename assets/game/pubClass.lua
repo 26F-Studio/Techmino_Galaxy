@@ -1,4 +1,4 @@
----@alias Techmino.Player.Type 'brik'|'gela'|'acry'
+---@alias Techmino.Player.Type 'brik' | 'gela' | 'acry'
 ---@alias Techmino.EndReason
 ---|'win'        Win (AC, Accepted)
 ---|'suffocate'  Suffocate (WA, Wrong Answer)
@@ -55,10 +55,10 @@
 ---@field trail love.ParticleSystem
 ---@field exMapBack love.ParticleSystem
 
----@alias Techmino.Event string | {[1]:number, [2]:fun(P:Techmino.Player):...} | fun(P:Techmino.Player):...
----@alias Techmino.Event.Brik string | {[1]:number, [2]:fun(P:Techmino.Player.Brik):...} | fun(P:Techmino.Player.Brik):...
----@alias Techmino.Event.Gela string | {[1]:number, [2]:fun(P:Techmino.Player.Gela):...} | fun(P:Techmino.Player.Gela):...
----@alias Techmino.Event.Acry string | {[1]:number, [2]:fun(P:Techmino.Player.Acry):...} | fun(P:Techmino.Player.Acry):...
+---@alias Techmino.Event string | {[1]:number, [2]:fun(P:Techmino.Player): ...} | fun(P:Techmino.Player): ...
+---@alias Techmino.Event.Brik string | {[1]:number, [2]:fun(P:Techmino.Player.Brik): ...} | fun(P:Techmino.Player.Brik): ...
+---@alias Techmino.Event.Gela string | {[1]:number, [2]:fun(P:Techmino.Player.Gela): ...} | fun(P:Techmino.Player.Gela): ...
+---@alias Techmino.Event.Acry string | {[1]:number, [2]:fun(P:Techmino.Player.Acry): ...} | fun(P:Techmino.Player.Acry): ...
 
 
 
@@ -78,12 +78,12 @@
 ---@field diggable boolean Gela only
 ---@field connClear boolean Gela only
 
----@alias Techmino.RectPiece Mat<Techmino.Brik.Cell|false>
+---@alias Techmino.RectPiece Mat<Techmino.Brik.Cell | false>
 
 ---@class Techmino.Piece
 ---@field id Techmino.Brik.ID
 ---@field shape number
----@field direction 0|1|2|3|number
+---@field direction 0 | 1 | 2 | 3 | number
 ---@field name Techmino.Brik.Name
 ---@field matrix Techmino.RectPiece
 ---@field _origin Techmino.Piece
@@ -117,7 +117,7 @@
 
 
 
----@alias Techmino.Acry.Prop 'fire'|'elec'|'hyper'|'lock'|'stepbomb'|'timebomb'|'butterfly'|'multiplier'|string
+---@alias Techmino.Acry.Prop 'fire' | 'elec' | 'hyper' | 'lock' | 'stepbomb' | 'timebomb' | 'butterfly' | 'multiplier' | string
 ---@alias Techmino.Acry.State
 ---|'idle'
 ---|'fall'
@@ -163,7 +163,7 @@
 ---     @field craftTargetBias integer[]
 --- '_discard':
 ---
----@field _newState Techmino.Acry.State|false
+---@field _newState Techmino.Acry.State | false
 
 
 

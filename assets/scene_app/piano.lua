@@ -51,7 +51,7 @@ end
 
 ---@class Techmino.Piano.Object
 ---@field _type string
----@field _update fun(dt:number):any
+---@field _update fun(dt:number): any
 ---@field _draw function
 
 ---@class Techmino.Piano.Layout
@@ -70,12 +70,12 @@ end
 ---@field y? number Y position
 ---@field w? number Width
 ---@field h? number Height
----@field key? string|string[] Key code, use list for multiple inputs, leave blank for decorating only
+---@field key? string | string[] Key code, use list for multiple inputs, leave blank for decorating only
 ---@field show? string Text to show on the key, leave blank for default
----@field fillC? Zenitha.Color|Zenitha.ColorStr Background color when NOT pressed
----@field lineC? Zenitha.Color|Zenitha.ColorStr Outline color when NOT pressed
----@field actvC? Zenitha.Color|Zenitha.ColorStr color when pressed
----@field textC? Zenitha.Color|Zenitha.ColorStr Text color
+---@field fillC? Zenitha.Color | Zenitha.ColorStr Background color when NOT pressed
+---@field lineC? Zenitha.Color | Zenitha.ColorStr Outline color when NOT pressed
+---@field actvC? Zenitha.Color | Zenitha.ColorStr color when pressed
+---@field textC? Zenitha.Color | Zenitha.ColorStr Text color
 ---@field _pressed? boolean
 ---@field _onPress? function
 ---@field _onRelease? function

@@ -25,7 +25,7 @@ end
 ---@param title string
 ---@param desc string
 ---@param progress? string
----@param value? number|true
+---@param value? number | true
 function task.add(P,id,title,desc,progress,value)
     table.insert(P.modeData.task,{
         id=id,
@@ -42,7 +42,7 @@ end
 
 ---@param P Techmino.Player
 ---@param id string
----@param value number|true
+---@param value number | true
 ---@param progress? string
 function task.set(P,id,value,progress)
     ---@type Techmino.PlayerModeData.TaskObj

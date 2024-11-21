@@ -12,13 +12,13 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 ---@field isMain boolean
 ---@field sound boolean
 ---@field remote boolean
----@field settings Techmino.Mode.Setting.Brik|Techmino.Mode.Setting.Gela|Techmino.Mode.Setting.Acry
+---@field settings Techmino.Mode.Setting.Brik | Techmino.Mode.Setting.Gela | Techmino.Mode.Setting.Acry
 ---@field buffedKey table
 ---@field modeData Techmino.PlayerModeData Warning: may contain anything, choose variable name carefully, suggested to be >=6 characters in total & multiple words (eg. `tspinCount`)
 ---@field soundTimeHistory table
 ---@field RND love.RandomGenerator
 ---@field pos {x:number, y:number, k:number, a:number, dx:number, dy:number, dk:number, da:number, vx:number, vy:number, vk:number, va:number}
----@field finished Techmino.EndReason|boolean Did game finish
+---@field finished Techmino.EndReason | boolean Did game finish
 ---@field realTime number Real time, [float] s
 ---@field time number Inside timer for player, [int] ms
 ---@field gameTime number Game time of player, [int] ms
@@ -31,7 +31,7 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 ---@field decodeScript function
 ---@field checkScriptSyntax function
 ---
----@field hand Techmino.Piece|false Current controlling piece object
+---@field hand Techmino.Piece | false Current controlling piece object
 ---@field handX number
 ---@field handY number
 ---@field event table<string, Techmino.Event[]>
@@ -113,7 +113,7 @@ function P:movePosition(dx,dy,k,da)
     pos.k=pos.k*(k  or 1)
     pos.a=pos.a+(da or 0)
 end
----@param method 'init'|'drop'|string
+---@param method 'init' | 'drop' | string
 function P:atkEvent(method,...)
     local sys=mechLib[self.gameMode].attackSys[self.settings.atkSys]
     assert(sys and sys[method],"Invalid attackSys / method")
@@ -240,7 +240,7 @@ end
 ---- Music: 1e62
 ---- Default: 0
 ---@param name Techmino.EventName
----@param E Techmino.Event|Techmino.Event[]
+---@param E Techmino.Event | Techmino.Event[]
 function P:addEvent(name,E)
     local L=self.event[name]
     assert(L,"Wrong event key: '"..tostring(name).."'")
@@ -272,7 +272,7 @@ function P:addEvent(name,E)
 end
 local function _scrap() return true end
 ---Mark an event as scrapped, it will destroy itself after next update
----@param E number|function|Techmino.Event
+---@param E number | function | Techmino.Event
 function P:delEvent(name,E)
     local L=self.event[name]
     assert(L,"Wrong event key: '"..tostring(name).."'")

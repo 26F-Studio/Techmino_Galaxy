@@ -94,9 +94,9 @@ studio.CommandReplay={}
 
 ---@class FMOD.Studio.UserProperty
 ---@field name string
----@field type 0|1|2|3 int, bool, float, string
+---@field type 0 | 1 | 2 | 3 int, bool, float, string
 ---@field intvalue integer
----@field boolvalue 0|1
+---@field boolvalue 0 | 1
 ---@field floatvalue number
 ---@field stringvalue string
 

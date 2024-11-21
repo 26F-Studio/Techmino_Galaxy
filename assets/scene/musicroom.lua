@@ -11,7 +11,7 @@ local totalBgmCount
 local selected,fullband,section
 local collectCount=0
 local noProgress=false
-local autoplay=false ---@type number|false
+local autoplay=false ---@type number | false
 local autoplayLastRec
 local fakeProgress=0
 local searchStr,searchTimer

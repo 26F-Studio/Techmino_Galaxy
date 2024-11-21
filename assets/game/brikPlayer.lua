@@ -22,7 +22,7 @@ local BP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 --------------------------------------------------------------
 -- Function tables
 
----@type Map<fun(P:Techmino.Player.Brik):any>
+---@type Map<fun(P:Techmino.Player.Brik): any>
 BP.scriptCmd={
     clearHold=function(P) P:clearHold() end,
     clearNext=function(P) P:clearNext() end,
@@ -212,7 +212,7 @@ end
 --------------------------------------------------------------
 -- Game methods
 
----@param action 'moveX'|'moveY'|'drop'|'rotate'|'reset'
+---@param action 'moveX' | 'moveY' | 'drop' | 'rotate' | 'reset'
 function BP:moveHand(action,A,B,C,D)
     --[[
         moveX:  dx,noShade,byAutoShift
@@ -530,7 +530,7 @@ local freshRuleMap={-- Normal: cost 1 chance, F: free, S: step (fall only) R: re
     drop=  {any='F',fall='S',never='_'},
     spawn= {any='R',fall='R',never='R'},
 }
----@param reason 'move'|'rotate'|'moving'|'drop'|'spawn'
+---@param reason 'move' | 'rotate' | 'moving' | 'drop' | 'spawn'
 function BP:freshDelay(reason)
     local fell=self.handY<self.minY
     if fell then self.minY=self.handY end
@@ -556,7 +556,7 @@ function BP:freshDelay(reason)
         error("WTF why settings.freshCondition is "..tostring(self.settings.freshCondition))
     end
 end
----@param seqData string|Techmino.Mech.Brik.SequenceName|fun(P:Techmino.Player.Brik, d:table, init:boolean):Techmino.Brik.ID?
+---@param seqData string | Techmino.Mech.Brik.SequenceName | fun(P:Techmino.Player.Brik, d:table, init:boolean): Techmino.Brik.ID?
 ---@param args? string Can include '-clearData' and '-clearNext'
 function BP:setSequenceGen(seqData,args)
     if type(args)~='string' then args='' end
@@ -567,7 +567,7 @@ function BP:setSequenceGen(seqData,args)
     assert(self:seqGen(self.seqData,true)==nil,"First call of sequence generator must return nil")
     self:freshNextQueue()
 end
----@param atkSys string|Techmino.Mech.Brik.AttackSysName
+---@param atkSys string | Techmino.Mech.Brik.AttackSysName
 function BP:setAttackSystem(atkSys)
     self.atkSysData={}
     self.settings.spin_immobile=false
@@ -600,7 +600,7 @@ end
 function BP:clearNext()
     TABLE.clear(self.nextQueue)
 end
----@param piece string|number|table
+---@param piece string | number | table
 function BP:pushNext(piece)
     if type(piece)=='number' then
         ins(self.nextQueue,self:getBrik(Brik.get(piece)))
@@ -673,7 +673,7 @@ function BP:newCell(color,id)
         conn={},
     }
 end
----@param shapeData Techmino.Brik|Techmino.Brik.Name|Techmino.Brik.ID
+---@param shapeData Techmino.Brik | Techmino.Brik.Name | Techmino.Brik.ID
 function BP:getBrik(shapeData)
     local shapeID,shapeName,shapeMat,shapeColor
     if type(shapeData)=='table' then
@@ -682,7 +682,7 @@ function BP:getBrik(shapeData)
         shapeMat=TABLE.copy(shapeData.shape)
         shapeColor=shapeData.color or defaultBrikColor[shapeID] or self:random(64)
     else
-        ---@cast shapeData Techmino.Brik.Name|Techmino.Brik.ID
+        ---@cast shapeData Techmino.Brik.Name | Techmino.Brik.ID
         local brik=Brik.get(shapeData)
         if not brik then errorf("invalid shapeData %s",tostring(shapeData)) end
         shapeID=brik.id
@@ -1321,7 +1321,7 @@ end
     {4,6,6,3,0,0,2,2,5,5},
     {4,4,3,3,0,0,0,2,2,5},
 }]]
----@param arg {color:'template'|'absolute'|nil, resetHand?:boolean, sudden?:boolean, [number]:number[]}
+---@param arg {color:'template' | 'absolute' | nil, resetHand?:boolean, sudden?:boolean, [number]:number[]}
 function BP:setField(arg)
     local F=self.field
     local w=self.settings.fieldW
@@ -1343,7 +1343,7 @@ function BP:setField(arg)
     for y=1,#arg do
         f[y]={}
         for x=1,w do
-            local c=arg[y][x] ---@type number|false
+            local c=arg[y][x] ---@type number | false
             if type(c)=='number' then
                 if color=='template' then
                     if c%1==0 and c>=1 and c<=7 then
@@ -1956,8 +1956,8 @@ end
 -- Builder
 
 ---@class Techmino.Mode.Setting.Brik
----@field seqType string|Techmino.Mech.Brik.SequenceName|fun(P:Techmino.Player.Brik, d:table, init:boolean):Techmino.Brik.ID?
----@field event table<Techmino.EventName,Map<Techmino.Event.Brik>|Techmino.Event.Brik>
+---@field seqType string | Techmino.Mech.Brik.SequenceName | fun(P:Techmino.Player.Brik, d:table, init:boolean): Techmino.Brik.ID?
+---@field event table<Techmino.EventName, Map<Techmino.Event.Brik> | Techmino.Event.Brik>
 local baseEnv={
     -- Size
     fieldW=10, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
@@ -1994,7 +1994,7 @@ local baseEnv={
     maxFreshTime=6200,
 
     -- Hidden by Time
-    pieceVisTime=false, ---@type number|false When enabled, blocks will become transparent after this value
+    pieceVisTime=false, ---@type number | false When enabled, blocks will become transparent after this value
     pieceFadeTime=1000, -- Start fading out below this value
 
     -- Garbage
@@ -2007,7 +2007,7 @@ local baseEnv={
     -- Attack
     rotSys='TRS',             ---@type Techmino.Mech.Brik.RotationSysName
     spin_immobile=false,      ---@type boolean
-    spin_corners=false,       ---@type false|number
+    spin_corners=false,       ---@type false | number
     combo_sound=false,        ---@type boolean
     atkSys='none',            ---@type Techmino.Mech.Brik.AttackSysName
     allowCancel=true,         ---@type boolean
@@ -2145,7 +2145,7 @@ function BP:initialize()
     self.freshChance=self.settings.maxFreshChance
     self.freshTime=0
 
-    ---@type Techmino.Piece|false
+    ---@type Techmino.Piece | false
     self.hand=false
     self.handX=false
     self.handY=false

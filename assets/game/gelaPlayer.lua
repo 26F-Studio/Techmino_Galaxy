@@ -20,7 +20,7 @@ local GP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 --------------------------------------------------------------
 -- Function tables
 
----@type Map<fun(P:Techmino.Player.Gela):any>
+---@type Map<fun(P:Techmino.Player.Gela): any>
 GP.scriptCmd={
 }
 
@@ -115,7 +115,7 @@ end
 --------------------------------------------------------------
 -- Game methods
 
----@param action 'moveX'|'moveY'|'drop'|'rotate'|'reset'
+---@param action 'moveX' | 'moveY' | 'drop' | 'rotate' | 'reset'
 function GP:moveHand(action,A,B,C)
     --[[
         moveX:  dx,noShade
@@ -362,7 +362,7 @@ local freshRuleMap={
     drop=  {any='F',fall='S',never='_'},
     spawn= {any='R',fall='R',never='R'},
 }
----@param reason 'move'|'rotate'|'moving'|'drop'|'spawn'
+---@param reason 'move' | 'rotate' | 'moving' | 'drop' | 'spawn'
 function GP:freshDelay(reason)
     local fell=self.handY<self.minY
     if fell then self.minY=self.handY end
@@ -1388,7 +1388,7 @@ end
 -- Builder
 
 ---@class Techmino.Mode.Setting.Gela
----@field event table<Techmino.EventName,Techmino.Event.Gela[]|Techmino.Event.Gela>
+---@field event table<Techmino.EventName, Techmino.Event.Gela[] | Techmino.Event.Gela>
 local baseEnv={
     -- Size
     fieldW=6, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
@@ -1399,7 +1399,7 @@ local baseEnv={
     connH=12, -- Default to 12
 
     -- Color
-    colorSet='classic', ---@type string|table
+    colorSet='classic', ---@type string | table
     colorShuffleRange=5,
 
     -- Clear
@@ -1564,7 +1564,7 @@ function GP:initialize()
     self.freshChance=self.settings.maxFreshChance
     self.freshTime=0
 
-    ---@type Techmino.Piece|false
+    ---@type Techmino.Piece | false
     self.hand=false
     self.handX=false
     self.handY=false

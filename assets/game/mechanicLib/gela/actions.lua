@@ -77,7 +77,7 @@ local function releaseMove(P,dir)
     end
 end
 
----@type Map<Map<fun(P:Techmino.Player.Gela)>|function>
+---@type Map<Map<fun(P:Techmino.Player.Gela)> | function>
 local actions={}
 actions.moveLeft={
     press=function(P) pressMove(P,'L') end,

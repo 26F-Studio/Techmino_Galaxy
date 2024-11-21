@@ -107,7 +107,7 @@ local basicMap={
     {___,'go','zo','do',____,'bo','po'},
 }
 
----@type 'map'|'quest'
+---@type 'map' | 'quest'
 local mode
 local basic=false
 local cap=false
