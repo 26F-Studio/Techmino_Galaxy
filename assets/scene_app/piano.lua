@@ -411,10 +411,13 @@ local layout=layoutList[1]
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.load()
+local function stopAllSounds()
     for _,effect in next,activeEventMap do effect:stop(FMOD.FMOD_STUDIO_STOP_ALLOWFADEOUT) end
     TABLE.clearAll(activeEventMap)
     TABLE.clearAll(objPool)
+end
+function scene.load()
+    stopAllSounds()
     stopBgm()
     inst='square_wave'
     offset=0
@@ -434,48 +437,38 @@ local _param={
     param={'release',1},
 }
 function scene.keyDown(key,isRep,keyCode)
-    if not isRep and layout.keyMap[keyCode] then
+    if layout.keyMap[keyCode] then
+        if isRep then return end
         local note=layout.keyMap[keyCode]+offset
-        if isShiftDown() then note=note+1 end
-        if isCtrlDown() then note=note-1 end
+        if isKeyDown('lshift') then note=note+1 end
+        if isKeyDown('lctrl') then note=note-1 end
         _param.tune=note-26
         _param.volume=1
         _param.param[2]=release*1.0594630943592953^(note-26)
         activeEventMap[keyCode]=FMOD.effect(inst,_param)
-    elseif key=='tab' then
-        inst=TABLE.next(instList,inst) or instList[1]
-    elseif key=='lalt' then
-        local d=0
-        if isShiftDown() then d=d+12 end
-        if isCtrlDown() then d=d-12 end
-        if d==0 then
-            offset=MATH.clamp(offset-1,-12,24)
-        else
-            offset=MATH.clamp(offset+d,-12,24)
-        end
-    elseif key=='ralt' then
-        local d=0
-        if isShiftDown() then d=d+12 end
-        if isCtrlDown() then d=d-12 end
-        if d==0 then
-            offset=MATH.clamp(offset+1,-12,24)
-        else
-            offset=MATH.clamp(offset+d,-12,24)
-        end
-    elseif key=='f1' then
-        layout=layoutList[(TABLE.find(layoutList,layout)-2)%#layoutList+1]
-    elseif key=='f2' then
-        layout=layoutList[TABLE.find(layoutList,layout)%#layoutList+1]
     elseif key=='f3' then
-        release=math.max(release-100,0)
+        release=MATH.clamp(release-50,0,2600)
     elseif key=='f4' then
-        release=math.min(release+100,2600)
+        release=MATH.clamp(release+50,0,2600)
     elseif key=='f5' then
-        presets.rollNote.setSpeed(presets.rollNote.getSpeed()-100)
+        presets.rollNote.setSpeed(MATH.clamp(presets.rollNote.getSpeed()/1.2,100,1000))
     elseif key=='f6' then
-        presets.rollNote.setSpeed(presets.rollNote.getSpeed()+100)
-    elseif key=='escape' then
-        if sureCheck('back') then SCN.back() end
+        presets.rollNote.setSpeed(MATH.clamp(presets.rollNote.getSpeed()*1.2,100,1000))
+    elseif not isRep then
+        if key=='tab' then
+            stopAllSounds()
+            inst=TABLE.next(instList,inst) or instList[1]
+        elseif key=='rshift' then
+            offset=MATH.clamp(offset+(isKeyDown('ralt') and 12 or isKeyDown('rctrl') and 0.5 or 1),-12,24)
+        elseif key=='rctrl' then
+            offset=MATH.clamp(offset-(isKeyDown('ralt') and 12 or isKeyDown('rshift') and 0.5 or 1),-12,24)
+        elseif key=='f1' then
+            layout=layoutList[(TABLE.find(layoutList,layout)-2)%#layoutList+1]
+        elseif key=='f2' then
+            layout=layoutList[TABLE.find(layoutList,layout)%#layoutList+1]
+        elseif key=='escape' then
+            if sureCheck('back') then SCN.back() end
+        end
     end
     return true
 end
