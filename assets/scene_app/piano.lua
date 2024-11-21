@@ -1,10 +1,10 @@
+local ins,rem=table.insert,table.remove
+local clamp=MATH.clamp
 local gc=love.graphics
 local gc_setColor=GC.setColor
 local gc_rect=GC.rectangle
 local gc_mStr=GC.mStr
 local setFont=FONT.set
-
-local ins,rem=table.insert,table.remove
 
 local activeEventMap={} ---@type table<love.Scancode, FMOD.Studio.EventInstance>
 local objPool={} ---@type Techmino.Piano.Object[]
@@ -85,7 +85,7 @@ end
 ---@field _onRelease? function
 
 ---@type Techmino.Piano.Layout[]
-local layoutList={
+local layoutData={
     {name="Classic-C",
         pos_x=-70,
         pos_y=-25,
@@ -94,13 +94,15 @@ local layoutList={
         templates={
             {w=8,h=8,fillC='DS',actvC='dS',lineC='LD',textC='dL'}, -- Treble (black)
             {w=8,h=8,fillC='LS',actvC='S',lineC='LD',textC='D'},   -- Treble (white)
-            {w=8,h=8,fillC='DR',actvC='dR',lineC='LD',textC='dL'}, -- Bass (black)
-            {w=8,h=8,fillC='LR',actvC='R',lineC='LD',textC='D'},   -- Bass (white)
+            {w=8,h=8,fillC='DF',actvC='dF',lineC='LD',textC='dL'}, -- Bass (black)
+            {w=8,h=8,fillC='LF',actvC='F',lineC='LD',textC='D'},   -- Bass (white)
+            {w=8,h=8,fillC='DM',actvC='dM',lineC='LD',textC='dL'}, -- Cross (black)
+            {w=8,h=8,fillC='LM',actvC='M',lineC='LD',textC='D'},   -- Cross (white)
         },
         keyLayout={
             {x=0,y=0,w=140,h=50,fillC={1,1,1,.26},lineC='dL'}, -- Frame
-            {1,x=010,y=05,key='2'}, -- Line 1
-            {1,x=020,y=05,key='3'},
+            {5,x=010,y=05,key='2'}, -- Line 1
+            {5,x=020,y=05,key='3'},
             {1,x=040,y=05,key='5'},
             {1,x=050,y=05,key='6'},
             {1,x=060,y=05,key='7'},
@@ -108,9 +110,9 @@ local layoutList={
             {1,x=090,y=05,key='0'},
             {1,x=110,y=05,key='='},
             {1,x=120,y=05,w=13,key='backspace'},
-            {2,x=005,y=15,key='q'}, -- Line 2
-            {2,x=015,y=15,key='w'},
-            {2,x=025,y=15,key='e'},
+            {6,x=005,y=15,key='q'}, -- Line 2
+            {6,x=015,y=15,key='w'},
+            {6,x=025,y=15,key='e'},
             {2,x=035,y=15,key='r'},
             {2,x=045,y=15,key='t'},
             {2,x=055,y=15,key='y'},
@@ -126,8 +128,8 @@ local layoutList={
             {3,x=050,y=25,key='g'},
             {3,x=060,y=25,key='h'},
             {3,x=070,y=25,key='j'},
-            {3,x=090,y=25,key='l'},
-            {3,x=100,y=25,key=';'},
+            {5,x=090,y=25,key='l'},
+            {5,x=100,y=25,key=';'},
             {4,x=015,y=35,key='z'}, -- Line 4
             {4,x=025,y=35,key='x'},
             {4,x=035,y=35,key='c'},
@@ -135,9 +137,9 @@ local layoutList={
             {4,x=055,y=35,key='b'},
             {4,x=065,y=35,key='n'},
             {4,x=075,y=35,key='m'},
-            {4,x=085,y=35,key=','},
-            {4,x=095,y=35,key='.'},
-            {4,x=105,y=35,key='/'},
+            {6,x=085,y=35,key=','},
+            {6,x=095,y=35,key='.'},
+            {6,x=105,y=35,key='/'},
         },
         keyMap={
             ['2']=37,['3']=39,         ['5']=42,['6']=44,['7']=46,         ['9']=49,['0']=51,         ['=']=54,['backspace']=56,
@@ -380,7 +382,7 @@ local function checkColor(input)
     assert(type(input)=='table',"input should be an exist 'color string' or {R,G,B}, but got "..tostring(input))
     return input
 end
-for _,layout in next,layoutList do
+for _,layout in next,layoutData do
     for _,key in ipairs(layout.keyLayout) do
         if key[1] and layout.templates[key[1]] then
             TABLE.updateMissing(key,layout.templates[key[1]])
@@ -406,7 +408,7 @@ for _,layout in next,layoutList do
         key._onRelease=key._onRelease or NULL
     end
 end
-local layout=layoutList[1]
+local layout=layoutData[1]
 
 ---@type Zenitha.Scene
 local scene={}
@@ -444,28 +446,28 @@ function scene.keyDown(key,isRep,keyCode)
         if isKeyDown('lctrl') then note=note-1 end
         _param.tune=note-26
         _param.volume=1
-        _param.param[2]=release*1.0594630943592953^(note-26)
+        _param.param[2]=release*1.0594630943592953^(_param.tune)
         activeEventMap[keyCode]=FMOD.effect(inst,_param)
     elseif key=='f3' then
-        release=MATH.clamp(release-50,0,2600)
+        release=clamp(release-50,0,2600)
     elseif key=='f4' then
-        release=MATH.clamp(release+50,0,2600)
+        release=clamp(release+50,0,2600)
     elseif key=='f5' then
-        presets.rollNote.setSpeed(MATH.clamp(presets.rollNote.getSpeed()/1.2,100,1000))
+        presets.rollNote.setSpeed(clamp(presets.rollNote.getSpeed()/1.2,100,1000))
     elseif key=='f6' then
-        presets.rollNote.setSpeed(MATH.clamp(presets.rollNote.getSpeed()*1.2,100,1000))
+        presets.rollNote.setSpeed(clamp(presets.rollNote.getSpeed()*1.2,100,1000))
     elseif not isRep then
         if key=='tab' then
             stopAllSounds()
             inst=TABLE.next(instList,inst) or instList[1]
         elseif key=='rshift' then
-            offset=MATH.clamp(offset+(isKeyDown('ralt') and 12 or isKeyDown('rctrl') and 0.5 or 1),-12,24)
+            offset=clamp(offset+(isKeyDown('ralt') and 12 or isKeyDown('rctrl') and 0.5 or 1),-12,24)
         elseif key=='rctrl' then
-            offset=MATH.clamp(offset-(isKeyDown('ralt') and 12 or isKeyDown('rshift') and 0.5 or 1),-12,24)
+            offset=clamp(offset-(isKeyDown('ralt') and 12 or isKeyDown('rshift') and 0.5 or 1),-12,24)
         elseif key=='f1' then
-            layout=layoutList[(TABLE.find(layoutList,layout)-2)%#layoutList+1]
+            layout=layoutData[(TABLE.find(layoutData,layout)-2)%#layoutData+1]
         elseif key=='f2' then
-            layout=layoutList[TABLE.find(layoutList,layout)%#layoutList+1]
+            layout=layoutData[TABLE.find(layoutData,layout)%#layoutData+1]
         elseif key=='escape' then
             if sureCheck('back') then SCN.back() end
         end
