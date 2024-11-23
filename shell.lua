@@ -106,7 +106,7 @@ elseif rArg[1]=='-s' or rArg[1]=='--shell' then
     commands.shell()
 elseif rArg[1]=='-v' or rArg[1]=='--version' then
     commands.version()
-else
+elseif rArg[1] then
     commands.unknown()
 end
 
