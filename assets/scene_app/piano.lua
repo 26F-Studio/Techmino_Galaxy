@@ -96,13 +96,11 @@ local layoutData={
             {w=8,h=8,fillC='LS',actvC='S',lineC='LD',textC='D'},   -- Treble (white)
             {w=8,h=8,fillC='DF',actvC='dF',lineC='LD',textC='dL'}, -- Bass (black)
             {w=8,h=8,fillC='LF',actvC='F',lineC='LD',textC='D'},   -- Bass (white)
-            {w=8,h=8,fillC='DM',actvC='dM',lineC='LD',textC='dL'}, -- Cross (black)
-            {w=8,h=8,fillC='LM',actvC='M',lineC='LD',textC='D'},   -- Cross (white)
         },
         keyLayout={
             {x=0,y=0,w=140,h=50,fillC={1,1,1,.26},lineC='dL'}, -- Frame
-            {5,x=010,y=05,key='2'}, -- Line 1
-            {5,x=020,y=05,key='3'},
+            {1,x=010,y=05,key='2'}, -- Line 1
+            {1,x=020,y=05,key='3'},
             {1,x=040,y=05,key='5'},
             {1,x=050,y=05,key='6'},
             {1,x=060,y=05,key='7'},
@@ -110,9 +108,9 @@ local layoutData={
             {1,x=090,y=05,key='0'},
             {1,x=110,y=05,key='='},
             {1,x=120,y=05,w=13,key='backspace'},
-            {6,x=005,y=15,key='q'}, -- Line 2
-            {6,x=015,y=15,key='w'},
-            {6,x=025,y=15,key='e'},
+            {2,x=005,y=15,key='q'}, -- Line 2
+            {2,x=015,y=15,key='w'},
+            {2,x=025,y=15,key='e'},
             {2,x=035,y=15,key='r'},
             {2,x=045,y=15,key='t'},
             {2,x=055,y=15,key='y'},
@@ -128,8 +126,8 @@ local layoutData={
             {3,x=050,y=25,key='g'},
             {3,x=060,y=25,key='h'},
             {3,x=070,y=25,key='j'},
-            {5,x=090,y=25,key='l'},
-            {5,x=100,y=25,key=';'},
+            {3,x=090,y=25,key='l',fillC='DO'},
+            {3,x=100,y=25,key=';',fillC='DO'},
             {4,x=015,y=35,key='z'}, -- Line 4
             {4,x=025,y=35,key='x'},
             {4,x=035,y=35,key='c'},
@@ -137,9 +135,9 @@ local layoutData={
             {4,x=055,y=35,key='b'},
             {4,x=065,y=35,key='n'},
             {4,x=075,y=35,key='m'},
-            {6,x=085,y=35,key=','},
-            {6,x=095,y=35,key='.'},
-            {6,x=105,y=35,key='/'},
+            {4,x=085,y=35,key=',',fillC='LO'},
+            {4,x=095,y=35,key='.',fillC='LO'},
+            {4,x=105,y=35,key='/',fillC='LO'},
         },
         keyMap={
             ['2']=37,['3']=39,         ['5']=42,['6']=44,['7']=46,         ['9']=49,['0']=51,         ['=']=54,['backspace']=56,
