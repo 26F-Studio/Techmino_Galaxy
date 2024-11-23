@@ -97,10 +97,14 @@ local function freshTexts()
 end
 
 local codes={
+    '1379',
     '7126',
     '63232',
+    '6323',
+    '123456',
     '1155665',
     '1235789',
+    '22884646',
 }
 local function dial(n)
     rec,recTimer=(rec..n):sub(-26),2.6
@@ -108,7 +112,6 @@ local function dial(n)
         playSample(instrument,unpack(dialModeData[mode][n].notes))
         for _,sequence in next,codes do
             if rec:find(sequence) then
-                PROGRESS.setSecret('dial_password')
                 mode='chord'
                 scene.widgetList.musicroom:setVisible(true)
                 freshTexts()
