@@ -598,8 +598,8 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
         if bank then return bank end
         if not errorLogged then
             errorLogged=true
-            MSG.log('error',"FMOD bank load failed :"..errInfo)
-            MSG.log('error',"FMOD bank load failed :"..errInfo2)
+            MSG.log('error',"FMOD bank load failed :"..tostring(errInfo))
+            MSG.log('error',"FMOD bank load failed :"..tostring(errInfo2))
         end
     end
 
