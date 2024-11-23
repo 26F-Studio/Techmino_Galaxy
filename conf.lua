@@ -1,3 +1,16 @@
+ShellOption=require'shell'
+
+if ShellOption.bootDisabled then
+    function love.conf(t)
+        for k in next,t.modules do t.modules[k]=false end
+        t.window.vsync=0
+        t.window.msaa=0
+        t.window.depth=0
+        t.window.stencil=0
+    end
+    return
+end
+
 if love._os=='Web' then
     local oldRead=love.filesystem.read
     love.filesystem[('read')]=function(name,size)

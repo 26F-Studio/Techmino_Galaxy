@@ -22,6 +22,11 @@
 -- 5. Readability and Maintainability are not always put to the first place. Codes around hot spot could be optimized for better performance. sorry if it confused you;
 -- 6. 26
 
+if not love.window then
+    love[('run')]=function() return function() return true end end
+    return
+end
+
 -------------------------------------------------------------
 -- Load Zenitha
 
@@ -491,10 +496,19 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
         SCN.add(sceneName,FILE.load('assets/scene/'..v,'-lua'))
     end
 end
+local appletSceneSet={} ---@type Set<string>
 for _,v in next,love.filesystem.getDirectoryItems('assets/scene_app') do
     if FILE.isSafe('assets/scene_app/'..v) then
         local sceneName=v:sub(1,-5)
+        appletSceneSet[sceneName]=true
         SCN.add(sceneName,FILE.load('assets/scene_app/'..v,'-lua'))
+    end
+end
+if PROGRESS.get('main')>=3 and ShellOption.launchApplet then
+    if appletSceneSet[ShellOption.launchApplet] then
+        ZENITHA.setFirstScene(ShellOption.launchApplet)
+    else
+        MSG('error',"Applet scene '"..ShellOption.launchApplet.."' doesn't exist")
     end
 end
 
