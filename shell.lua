@@ -42,7 +42,7 @@ local function feed(...)
     end
 end
 
-local rArg=TABLE.sub(arg,(arg[-2]=='love' or arg[-1]=='love') and 2 or 1)
+local rArg=TABLE.sub(arg,((arg[1] or ""):sub(1,1)=='-') and 1 or 2)
 
 local option={}
 
