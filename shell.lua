@@ -74,12 +74,12 @@ function commands.shell(startArg)
         "|_   _|___ ___| |_ _____|_|___ ___  \n",
         "  | | | -_|  _|   |     | |   | . | \n",
         "  |_| |___|___|_|_|_|_|_|_|_|_|___| \n",
-        .42,AE[533].." The ultra-improved version of Techmino",
+        .26,AE[533].." The ultra-improved version of Techmino",
         AE._d..AE.U[4]..'\r'..AE.R[36],
         " _ "..AE.L[3]..AE.D,
         "|_|"..AE.L[3]..AE.D,
         " _ "..AE.L[3]..AE.D,
-        "|_|"..AE.D,.626,
+        "|_|"..AE.D,.42,
         AE.U[4]..AE[115]
     )
     speedWrite(.01,3,"  _____     _")              write(AE.L[13]..AE.D)
@@ -89,7 +89,7 @@ function commands.shell(startArg)
     speedWrite(.01,3,                     "|___|") write(AE.NL..AE.R[39])
     write(AE[533])
     speedWrite(.08,1,", for YOU")
-    feed(.42,AE.."\n\nWelcome to TechOS shell (tty1)")
+    feed(.26,AE.."\n\nWelcome to TechOS shell (tty1)\n")
 
     local input
     while true do
