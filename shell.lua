@@ -23,6 +23,12 @@ local function sleep(time)
         repeat until os.clock()>fin
     end
 end
+local function speedWrite(intvl,spd,text)
+    for i=1,#text,spd do
+        write(text:sub(i,i+spd-1))
+        sleep(intvl)
+    end
+end
 local function feed(...)
     local lastText=0
     local d={...}
@@ -49,34 +55,45 @@ local option={}
 local commands={}
 function commands.help()
     option.bootDisabled=true
-    feed(
-        "\n",
-        AE[533].."TechOS"..AE.." help page\n",
-        .260,
-        "[no args]        "..AE._d"Start default booting process\n",
-        "-h, --help       "..AE._d"Show this help message then exit\n",
-        "-v, --version    "..AE._d"Show version information then exit\n",
-        "-s, --shell      "..AE._d"Start the interactive shell\n",
-        .120
-    )
+    print(AE[533].."TechOS"..AE.." help page")
+    feed(AE.."[no args]        "..AE._d,.1) speedWrite(.01,3,"Start default booting process\n")
+    feed(AE.."-h, --help       "..AE._d,.1) speedWrite(.01,3,"Show this help message then exit\n")
+    feed(AE.."-v, --version    "..AE._d,.1) speedWrite(.01,3,"Show version information then exit\n")
+    feed(AE.."-s, --shell      "..AE._d,.1) speedWrite(.01,3,"Start the interactive shell\n")
 end
 function commands.version()
     option.bootDisabled=true
-    sleep(.1)
-    print(("TechOS %s (%s)"):format(_require'version'.appVer,_require'version'.verCode))
+    sleep(.26)
+    speedWrite(.02,1,("TechOS %s (%s)\n"):format(_require'version'.appVer,_require'version'.verCode))
 end
 function commands.shell(startArg)
+    startArg=startArg or {}
     feed(
-        .000,AE[425]..  " _____         _         _          "..AE._d"  _  "..AE[115].."  _____     _",
-        .260,AE[425].."\n|_   _|___ ___| |_ _____|_|___ ___  "..AE._d" |_| "..AE[115].." |   __|___| |___ _ _ _ _",
-        .120,AE[425].."\n  | | | -_|  _|   |     | |   | . | "..AE._d"  _  "..AE[115].." |  |  | .'| | .'|_'_| | |",
-        .120,AE[425].."\n  |_| |___|___|_|_|_|_|_|_|_|_|___| "..AE._d" |_| "..AE[115].." |_____|__,|_|__,|_,_|_  |",
-        .120,AE[533].."\n  The ultra-improved version of Techmino, for YOU."..AE[115]..         "            |___|",
-        .620,AE.."\n\nWelcome to TechOS shell!\n",.260
+        AE[425],
+        " _____         _         _          \n",
+        "|_   _|___ ___| |_ _____|_|___ ___  \n",
+        "  | | | -_|  _|   |     | |   | . | \n",
+        "  |_| |___|___|_|_|_|_|_|_|_|_|___| \n",
+        .42,AE[533].." The ultra-improved version of Techmino",
+        AE._d..AE.U[4]..'\r'..AE.R[36],
+        " _ "..AE.L[3]..AE.D,
+        "|_|"..AE.L[3]..AE.D,
+        " _ "..AE.L[3]..AE.D,
+        "|_|"..AE.D,.626,
+        AE.U[4]..AE[115]
     )
+    speedWrite(.01,3,"  _____     _")              write(AE.L[13]..AE.D)
+    speedWrite(.01,3," |   __|___| |___ _ _ _ _ ") write(AE.L[26]..AE.D)
+    speedWrite(.01,3," |  |  | .'| | .'|_'_| | |") write(AE.L[26]..AE.D)
+    speedWrite(.01,3," |_____|__,|_|__,|_,_|_  |") write(AE.L[26]..AE.D..(" "):rep(21))
+    speedWrite(.01,3,                     "|___|") write(AE.NL..AE.R[39])
+    write(AE[533])
+    speedWrite(.1,1,", for YOU")
+    feed(.42,AE.."\n\nWelcome to TechOS shell (tty1)")
+
     local input
     while true do
-        if startArg and startArg[1] then
+        if startArg[1] then
             input=table.concat(startArg," ")
             write("\n> "..input.."\n")
             startArg=nil
@@ -97,52 +114,52 @@ function commands.shell(startArg)
                 if args[2]=='app' then option.launchApplet=args[3] end
                 math.randomseed(os.time())
                 local function OK(n) return AE.U[n].."\r[ "..AE._G"OK"..AE.NL[n] end
-                feed(.1,
-                    "[    ] Finding boot device\n",          .1,
-                    ">zde0n1p1  zde0n1p2\n",.1,
-                    OK(2),.1,
-                    "[    ] Launching bootloader\n",         .1,
-                    ">Zeta_loader\n",.1,
-                    OK(2),.1,
-                    "[    ] Running bootloader\n",           rnd()*.2,OK(1),.1,
-                    "[    ] Initializing root-device\n",     rnd()*.2,OK(1),.1,
-                    "[    ] Mounting kernal config\n",       rnd()*.2,OK(1),.1,
-                    "[    ] Loading kernel variables\n",     rnd()*.2,OK(1),.1,
-                    "[    ] Initializing root-fs\n",         rnd()*.2,OK(1),.1,
-                    "[    ] Initializing user-fs\n",         rnd()*.2,OK(1),.1,
-                    "[    ] Initializing probes\n",          rnd()*.2,
-                    " "..        rnd(20,26).."/260 probes initialized\n",rnd()*.1,
-                    AE.PL..(" "..rnd(35,42)  )..AE.NL,rnd()*.1,
-                    AE.PL..(" "..rnd(62,94)  )..AE.NL,rnd()*.1,
-                    AE.PL..(     rnd(126,162))..AE.NL,rnd()*.1,
-                    AE.PL..(     rnd(200,226))..AE.NL,rnd()*.1,
-                    AE.PL..(     rnd(242,256))..AE.NL,rnd()*.1,
-                    AE.PL..(     260         )..AE.NL,.2,
-                    OK(2),.1,
-                    "[    ] Establishing direct neurolink\n",.1,
+                feed(.06,
+                    "[    ] Finding boot device\n",          .06,
+                    ">zde0n1p1  zde0n1p2\n",.06,
+                    OK(2),.06,
+                    "[    ] Launching bootloader\n",         .06,
+                    ">Zeta_loader\n",.06,
+                    OK(2),.06,
+                    "[    ] Running bootloader\n",           rnd()*.1,OK(1),.06,
+                    "[    ] Initializing root-device\n",     rnd()*.1,OK(1),.06,
+                    "[    ] Mounting kernal config\n",       rnd()*.1,OK(1),.06,
+                    "[    ] Loading kernel variables\n",     rnd()*.1,OK(1),.06,
+                    "[    ] Initializing root-fs\n",         rnd()*.1,OK(1),.06,
+                    "[    ] Initializing user-fs\n",         rnd()*.1,OK(1),.06,
+                    "[    ] Initializing probes\n",          rnd()*.1,
+                    " "..        rnd(20,26).."/260 probes initialized\n",rnd()*.05,
+                    AE.PL..(" "..rnd(35,42)  )..AE.NL,rnd()*.05,
+                    AE.PL..(" "..rnd(62,94)  )..AE.NL,rnd()*.05,
+                    AE.PL..(     rnd(126,162))..AE.NL,rnd()*.05,
+                    AE.PL..(     rnd(200,226))..AE.NL,rnd()*.05,
+                    AE.PL..(     rnd(242,256))..AE.NL,rnd()*.05,
+                    AE.PL..(     260         )..AE.NL,.06,
+                    OK(2),.06,
+                    "[    ] Establishing direct neurolink\n",.06,
                     "0/8 lobes connected\n",rnd(26,42)/100,
-                    AE.PL..(1)..AE.NL,rnd()*.1,
-                    AE.PL..(2)..AE.NL,rnd()*.1,
-                    AE.PL..(3)..AE.NL,rnd()*.1,
-                    AE.PL..(4)..AE.NL,rnd()*.1,
-                    AE.PL..(5)..AE.NL,rnd()*.1,
-                    AE.PL..(6)..AE.NL,rnd()*.1,
-                    AE.PL..(7)..AE.NL,rnd()*.1,
-                    AE.PL..(8)..AE.NL,rnd()*.1,
-                    OK(2),.1,
-                    "[    ] Get direct brain access\n",      .1,
+                    AE.PL..(1)..AE.NL,rnd()*.05,
+                    AE.PL..(2)..AE.NL,rnd()*.05,
+                    AE.PL..(3)..AE.NL,rnd()*.05,
+                    AE.PL..(4)..AE.NL,rnd()*.05,
+                    AE.PL..(5)..AE.NL,rnd()*.05,
+                    AE.PL..(6)..AE.NL,rnd()*.05,
+                    AE.PL..(7)..AE.NL,rnd()*.05,
+                    AE.PL..(8)..AE.NL,rnd()*.05,
+                    OK(2),.06,
+                    "[    ] Get direct brain access\n",      .06,
                     "Collecting base signal\n",              .06,
                     "Calibrating signal strength\n",         .04,
                     "Decoding signal pattern\n",             .12,
                     "Transfering authority\n",               .06,
                     "Creating middle layer\n",               .06,
-                    OK(6),.1,
-                    "[    ] Starting audio manager\n",       .1,
+                    OK(6),.06,
+                    "[    ] Starting audio manager\n",       .06,
                     "Building virtual audio mixing space\n", .02,
                     "Initializing sound simulating system\n",.04,
                     "Seting up objects in space\n",          .06,
-                    OK(4),.1,
-                    "[    ] Starting display manager\n",     .1,
+                    OK(4),.06,
+                    "[    ] Starting display manager\n",     .06,
                     OK(1),.2,"\n"
                 )
                 break
