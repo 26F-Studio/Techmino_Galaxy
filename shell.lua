@@ -88,7 +88,7 @@ function commands.shell(startArg)
     speedWrite(.01,3," |_____|__,|_|__,|_,_|_  |") write(AE.L[26]..AE.D..(" "):rep(21))
     speedWrite(.01,3,                     "|___|") write(AE.NL..AE.R[39])
     write(AE[533])
-    speedWrite(.1,1,", for YOU")
+    speedWrite(.08,1,", for YOU")
     feed(.42,AE.."\n\nWelcome to TechOS shell (tty1)")
 
     local input
@@ -111,56 +111,59 @@ function commands.shell(startArg)
                     "exit      Interrupt booting process and exit shell\n"
                 )
             elseif args[1]=='start' then
-                if args[2]=='app' then option.launchApplet=args[3] end
+                local t1,t2,t3=.03,.06,.12
+                if TABLE.find(args,"overclock") then t1,t2,t3=.01,.03,.05 end
+                if TABLE.find(args,"app") then option.launchApplet=args[TABLE.find(args,"app")+1] end
                 math.randomseed(os.time())
                 local function OK(n) return AE.U[n].."\r[ "..AE._G"OK"..AE.NL[n] end
-                feed(.06,
-                    "[    ] Finding boot device\n",          .06,
-                    ">zde0n1p1  zde0n1p2\n",.06,
-                    OK(2),.06,
-                    "[    ] Launching bootloader\n",         .06,
-                    ">Zeta_loader\n",.06,
-                    OK(2),.06,
-                    "[    ] Running bootloader\n",           rnd()*.1,OK(1),.06,
-                    "[    ] Initializing root-device\n",     rnd()*.1,OK(1),.06,
-                    "[    ] Mounting kernal config\n",       rnd()*.1,OK(1),.06,
-                    "[    ] Loading kernel variables\n",     rnd()*.1,OK(1),.06,
-                    "[    ] Initializing root-fs\n",         rnd()*.1,OK(1),.06,
-                    "[    ] Initializing user-fs\n",         rnd()*.1,OK(1),.06,
-                    "[    ] Initializing probes\n",          rnd()*.1,
-                    " "..        rnd(20,26).."/260 probes initialized\n",rnd()*.05,
-                    AE.PL..(" "..rnd(35,42)  )..AE.NL,rnd()*.05,
-                    AE.PL..(" "..rnd(62,94)  )..AE.NL,rnd()*.05,
-                    AE.PL..(     rnd(126,162))..AE.NL,rnd()*.05,
-                    AE.PL..(     rnd(200,226))..AE.NL,rnd()*.05,
-                    AE.PL..(     rnd(242,256))..AE.NL,rnd()*.05,
-                    AE.PL..(     260         )..AE.NL,.06,
-                    OK(2),.06,
-                    "[    ] Establishing direct neurolink\n",.06,
+
+                feed(t2,
+                    "[    ] Finding boot device\n",          t2,
+                    ">zde0n1p1  zde0n1p2\n",t2,
+                    OK(2),t2,
+                    "[    ] Launching bootloader\n",         t2,
+                    ">Zeta_loader\n",t2,
+                    OK(2),t2,
+                    "[    ] Running bootloader\n",           rnd()*t3,OK(1),t2,
+                    "[    ] Initializing root-device\n",     rnd()*t3,OK(1),t2,
+                    "[    ] Mounting kernal config\n",       rnd()*t3,OK(1),t2,
+                    "[    ] Loading kernel variables\n",     rnd()*t3,OK(1),t2,
+                    "[    ] Initializing root-fs\n",         rnd()*t3,OK(1),t2,
+                    "[    ] Initializing user-fs\n",         rnd()*t3,OK(1),t2,
+                    "[    ] Initializing probes\n",          rnd()*t3,
+                    " "..        rnd(20,26).."/260 probes initialized\n",rnd()*t2,
+                    AE.PL..(" "..rnd(35,42)  )..AE.NL,rnd()*t2,
+                    AE.PL..(" "..rnd(62,94)  )..AE.NL,rnd()*t2,
+                    AE.PL..(     rnd(126,162))..AE.NL,rnd()*t2,
+                    AE.PL..(     rnd(200,226))..AE.NL,rnd()*t2,
+                    AE.PL..(     rnd(242,256))..AE.NL,rnd()*t2,
+                    AE.PL..(             260 )..AE.NL,t2,
+                    OK(2),t2,
+                    "[    ] Establishing direct neurolink\n",t2,
                     "0/8 lobes connected\n",rnd(26,42)/100,
-                    AE.PL..(1)..AE.NL,rnd()*.05,
-                    AE.PL..(2)..AE.NL,rnd()*.05,
-                    AE.PL..(3)..AE.NL,rnd()*.05,
-                    AE.PL..(4)..AE.NL,rnd()*.05,
-                    AE.PL..(5)..AE.NL,rnd()*.05,
-                    AE.PL..(6)..AE.NL,rnd()*.05,
-                    AE.PL..(7)..AE.NL,rnd()*.05,
-                    AE.PL..(8)..AE.NL,rnd()*.05,
-                    OK(2),.06,
-                    "[    ] Get direct brain access\n",      .06,
-                    "Collecting base signal\n",              .06,
-                    "Calibrating signal strength\n",         .04,
-                    "Decoding signal pattern\n",             .12,
-                    "Transfering authority\n",               .06,
-                    "Creating middle layer\n",               .06,
-                    OK(6),.06,
-                    "[    ] Starting audio manager\n",       .06,
-                    "Building virtual audio mixing space\n", .02,
-                    "Initializing sound simulating system\n",.04,
-                    "Seting up objects in space\n",          .06,
-                    OK(4),.06,
-                    "[    ] Starting display manager\n",     .06,
-                    OK(1),.2,"\n"
+                    AE.PL..(1)..AE.NL,rnd()*t2,
+                    AE.PL..(2)..AE.NL,rnd()*t2,
+                    AE.PL..(3)..AE.NL,rnd()*t2,
+                    AE.PL..(4)..AE.NL,rnd()*t2,
+                    AE.PL..(5)..AE.NL,rnd()*t2,
+                    AE.PL..(6)..AE.NL,rnd()*t2,
+                    AE.PL..(7)..AE.NL,rnd()*t2,
+                    AE.PL..(8)..AE.NL,rnd()*t2,
+                    OK(2),t2,
+                    "[    ] Get direct brain access\n",      t2,
+                    "Collecting base signal\n",              t2,
+                    "Calibrating signal strength\n",         t1,
+                    "Decoding signal pattern\n",             t3,
+                    "Transfering authority\n",               t2,
+                    "Creating middle layer\n",               t2,
+                    OK(6),t2,
+                    "[    ] Starting audio manager\n",       t2,
+                    "Building virtual audio mixing space\n", t1,
+                    "Initializing sound simulating system\n",t1,
+                    "Seting up objects in space\n",          t2,
+                    OK(4),t2,
+                    "[    ] Starting display manager\n",     t2,
+                    OK(1),t3,"\n"
                 )
                 break
             elseif args[1]=='exit' then
