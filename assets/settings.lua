@@ -10,7 +10,7 @@ local settings={
         fmod_loadMemory=true,
         fmod_maxChannel=32,
         fmod_DSPBufferCount=4,
-        fmod_DSPBufferLength=8,
+        fmod_DSPBufferLength=256,
 
         -- Video
         hitWavePower=.6,
