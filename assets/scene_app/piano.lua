@@ -468,6 +468,10 @@ function scene.keyDown(key,isRep,keyCode)
         elseif key=='f2' then
             stopAllSounds()
             layout=layoutData[TABLE.find(layoutData,layout)%#layoutData+1]
+        elseif key=='rshift' then
+            offset=clamp(offset+.5,-12,24)
+        elseif key=='rctrl' then
+            offset=clamp(offset-.5,-12,24)
         elseif key=='right' then
             offset=clamp(offset+(isKeyDown('left') and 0.5 or 1),-12,24)
         elseif key=='left' then
