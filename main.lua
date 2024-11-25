@@ -508,7 +508,9 @@ if PROGRESS.get('main')>=3 and ShellOption.launchApplet then
     if appletSceneSet[ShellOption.launchApplet] then
         ZENITHA.setFirstScene(ShellOption.launchApplet)
     else
-        MSG('error',"Applet scene '"..ShellOption.launchApplet.."' doesn't exist")
+        ZENITHA.setFirstScene('_quit')
+        LOG('error',"Applet scene '"..ShellOption.launchApplet.."' doesn't exist")
+        return
     end
 end
 

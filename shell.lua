@@ -16,6 +16,7 @@ function write(text)
     stdout:flush()
 end
 local function sleep(time)
+    if time<=0 then return end
     if love._os=='Linux' then
         os.execute('sleep '..time)
     else
@@ -112,8 +113,11 @@ function commands.shell(startArg)
                 )
             elseif args[1]=='start' then
                 local t1,t2,t3=.03,.06,.12
+                if TABLE.find(args,"app") then
+                    option.launchApplet=args[TABLE.find(args,"app")+1]
+                    break
+                end
                 if TABLE.find(args,"overclock") then t1,t2,t3=.01,.03,.05 end
-                if TABLE.find(args,"app") then option.launchApplet=args[TABLE.find(args,"app")+1] end
                 math.randomseed(os.time())
                 local function OK(n) return AE.U[n].."\r[ "..AE._G"OK"..AE.NL[n] end
 
