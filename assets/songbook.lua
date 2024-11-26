@@ -106,8 +106,6 @@ local songbook={
     ['gelly space']              ={author="SlientSnow"},
 
     ['caprice']                               ={inside=true,redirect='rectification'},
-    ['fruit dance_ex']                        ={inside=true,redirect='fruit dance'},
-    ['fruit dance_mix']                       ={inside=true,redirect='fruit dance'},
     ['race_old']                              ={inside=true,redirect='race'},
     ['secret7th_hypersonic_hidden']           ={inside=true,redirect={'secret7th_old','super7th'}},
     ['accelerator']                           ={inside=true,author="Trebor",},
