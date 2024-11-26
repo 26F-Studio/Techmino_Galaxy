@@ -312,9 +312,8 @@ local L={
         interior_console="这是什么？",
         language_japanese="あ?",
         musicroom_recollection="Recollection不是一首曲子",
-        musicroom_piano="无人钢琴",
+        musicroom_piano="无人钢琴", -- 原梗出处为“人人钢琴”软件
         dial_enter="乐器？",
-        dial_password="密码正确",
         menu_fastype="看起来你很喜欢打字",
     },
 

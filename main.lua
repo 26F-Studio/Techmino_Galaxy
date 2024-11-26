@@ -752,7 +752,7 @@ else
             data.intensity=select(2,ED:getParameterDescriptionByName('intensity'))==FMOD.FMOD_OK
             data.section=select(2,ED:getParameterDescriptionByName('section'))==FMOD.FMOD_OK
             data.multitrack=select(2,ED:getUserProperty('multitrack'))==FMOD.FMOD_OK
-            data.looppoint=select(2,ED:getUserProperty('looppoint'))==FMOD.FMOD_OK
+            data.hasloop=select(2,ED:getParameterDescriptionByName('loop'))==FMOD.FMOD_OK
             if data.section then
                 local param,res=ED:getUserProperty('maxsection')
                 if res==FMOD.FMOD_OK then
@@ -766,7 +766,7 @@ else
             -- print('itst',data.intensity)
             -- print('sect',data.section)
             -- print('mult',data.multitrack)
-            -- print('loop',data.looppoint)
+            -- print('loop',data.hasloop)
         else
             data.notFound=true
             MSG.log('warn',"Music '"..name.."' not found in FMOD",0)

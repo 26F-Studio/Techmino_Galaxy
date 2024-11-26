@@ -314,9 +314,7 @@ local L={
         language_japanese="あ?",
         musicroom_recollection="Il ricordo non è una canzone",
         musicroom_piano="Il Pianoforte di Nessuno",
-        -- musicroom_piano="Nobody Piano",
         dial_enter="Strumento?",
-        dial_password="Password corretta",
         menu_fastype="Sembra che ti diverti a scrivere",
     },
 

@@ -10,7 +10,7 @@
 ---@field section? boolean
 ---@field maxsection? integer
 ---@field multitrack? boolean
----@field looppoint? boolean
+---@field hasloop? boolean
 
 -- Ordering rule of music with multiple authors:
 -- 1. Prepare seats equal to the number of all authors, then choose one by one.
@@ -103,22 +103,17 @@ local songbook={
     ['invisible mode']           ={author="DJ Asriel"},
     ['invisible mode 2']         ={author="DJ Asriel"},
     ['total mayhem']             ={author="DJ Asriel"},
+    ['gelly space']              ={author="SlientSnow"},
 
     ['caprice']                               ={inside=true,redirect='rectification'},
     ['fruit dance_ex']                        ={inside=true,redirect='fruit dance'},
     ['fruit dance_mix']                       ={inside=true,redirect='fruit dance'},
     ['race_old']                              ={inside=true,redirect='race'},
     ['secret7th_hypersonic_hidden']           ={inside=true,redirect={'secret7th_old','super7th'}},
-    ['jazz nihilism_mix']                     ={inside=true,author="Trebor",redirect='jazz nihilism'},
     ['accelerator']                           ={inside=true,author="Trebor",},
     ['secret7th overdrive remix_mix']         ={inside=true,author="Yunokawa",redirect='secret7th overdrive remix'},
     ['secret7th remix_hypersonic_titanium']   ={inside=true,author="柒栎流星",redirect='secret7th remix'},
-    ['race remix_mix']                        ={inside=true,author="柒栎流星",redirect='race remix'},
     ['propel_marathon']                       ={inside=true,author="TetraCepra",redirect='propel'},
-    ['infinite remix_mix']                    ={inside=true,author="TetraCepra",redirect='infinite remix'},
-    ['reason remix_mix']                      ={inside=true,author="TetraCepra",redirect='reason remix'},
-    ['sakura_noloop']                         ={inside=true,author="C₂₉H₂₅N₃O₅",redirect='sakura'},
-    ['shibamata_noloop']                      ={inside=true,author="C₂₉H₂₅N₃O₅",redirect='shibamata'},
     ['invisible']                             ={inside=true,author="DJ Asriel"},
 }
 

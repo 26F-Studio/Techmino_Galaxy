@@ -314,7 +314,6 @@ local L={
         musicroom_recollection="La memoro ne estas kanto",
         musicroom_piano="La piano de Neniu",
         dial_enter="Instrumento?",
-        dial_password="Ĝusta pasvorto",
         menu_fastype="Ŝajnas, ke vi amuzas skribi",
     },
 

@@ -1391,7 +1391,7 @@ end
 ---@field event table<Techmino.EventName, Techmino.Event.Gela[] | Techmino.Event.Gela>
 local baseEnv={
     -- Size
-    fieldW=6, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
+    fieldW=6, -- [WARNING] This is read-only field width. Change real field size with 'self:changeFieldWidth'
     spawnH=11,
     lockoutH=1e99,
     deathH=1e99,

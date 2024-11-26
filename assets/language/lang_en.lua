@@ -312,9 +312,8 @@ local L={
         interior_console="What's this?",
         language_japanese="あ?",
         musicroom_recollection="Recollection is not a song",
-        musicroom_piano="Nobody Piano",
+        musicroom_piano="Nobody Piano", -- Neta of "Everyone Piano" Software
         dial_enter="Instrument?",
-        dial_password="Password correct",
         menu_fastype="You seems enjoy typing",
     },
 

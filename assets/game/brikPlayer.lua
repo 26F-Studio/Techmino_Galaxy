@@ -1960,7 +1960,7 @@ end
 ---@field event table<Techmino.EventName, Map<Techmino.Event.Brik> | Techmino.Event.Brik>
 local baseEnv={
     -- Size
-    fieldW=10, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
+    fieldW=10, -- [WARNING] This is read-only field width. Change real field size with 'self:changeFieldWidth'
     spawnH=20,
     extraSpawnH=1,
     lockoutH=1e99,
