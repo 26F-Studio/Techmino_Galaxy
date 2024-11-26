@@ -20,7 +20,6 @@ return {
                 T.install(P)
                 T.add(P,'backfire_break','modeTask_backfire_break_title','modeTask_backfire_break_desc','(0/8)')
                 T.add(P,'backfire_normal','modeTask_backfire_normal_title','modeTask_backfire_normal_desc','(0/6)')
-
                 if PROGRESS.getExteriorModeScore('backfire','showAmplify') then
                     T.add(P,'backfire_amplify','modeTask_backfire_amplify_title','modeTask_backfire_amplify_desc','(0/8)')
                 end

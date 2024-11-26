@@ -123,7 +123,6 @@ return {
         event={
             playerInit=function(P)
                 P.modeData.target.line=100
-
                 local T=mechLib.common.task
                 T.install(P)
                 T.add(P,'invis_haunted','modeTask_invis_haunted_title','modeTask_invis_haunted_desc','(0/4)')

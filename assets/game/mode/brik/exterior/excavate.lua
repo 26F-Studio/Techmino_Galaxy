@@ -20,7 +20,6 @@ return {
                 T.install(P)
                 T.add(P,'excavate_shale',     'modeTask_excavate_shale_title',     'modeTask_excavate_shale_desc')
                 T.add(P,'excavate_volcanics', 'modeTask_excavate_volcanics_title', 'modeTask_excavate_volcanics_desc')
-
                 if PROGRESS.getExteriorModeScore('excavate','showChecker') then
                     T.add(P,'excavate_checker','modeTask_excavate_checker_title','modeTask_excavate_checker_desc')
                 else

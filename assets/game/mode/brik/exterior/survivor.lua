@@ -36,7 +36,6 @@ return {
                     T.install(P)
                     T.add(P,'survivor_scattered','modeTask_survivor_scattered_title','modeTask_survivor_scattered_desc')
                     T.add(P,'survivor_power','modeTask_survivor_power_title','modeTask_survivor_power_desc')
-
                     if PROGRESS.getExteriorModeScore('survivor','showSpike') then
                         T.add(P,'survivor_spike','modeTask_survivor_spike_title','modeTask_survivor_spike_desc')
                     end

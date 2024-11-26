@@ -15,10 +15,10 @@ return {
                 P.settings.dropDelay=0
                 P.settings.lockDelay=1e99
                 P.settings.spawnDelay=260
+
                 local T=mechLib.common.task
                 T.install(P)
                 T.add(P,'hypersonic_low','modeTask_hypersonic_low_title','modeTask_hypersonic_low_desc','(0/4)')
-
                 if PROGRESS.getExteriorModeScore('hypersonic','showHigh') then
                     T.add(P,'hypersonic_high','modeTask_hypersonic_high_title','modeTask_hypersonic_high_desc')
                 end

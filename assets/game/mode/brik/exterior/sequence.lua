@@ -88,7 +88,6 @@ return {
                 T.add(P,'sequence_saw',     'modeTask_sequence_saw_title',     'modeTask_sequence_saw_desc')
                 T.add(P,'sequence_rect',    'modeTask_sequence_rect_title',    'modeTask_sequence_rect_desc')
                 T.add(P,'sequence_rain',    'modeTask_sequence_rain_title',    'modeTask_sequence_rain_desc')
-
                 if PROGRESS.getExteriorModeScore('sequence','showPento') then
                     T.add(P,'sequence_pento','modeTask_sequence_pento_title','modeTask_sequence_pento_desc')
                 else
