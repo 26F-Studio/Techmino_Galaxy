@@ -213,6 +213,7 @@ local L={
     main_out_multi="联机",
 
     musicroom_title="音乐室",
+    musicroom_richloop="富循环",
     musicroom_fullband='全频带',
     musicroom_section='副歌',
     musicroom_autoplay="自动切换",

@@ -213,6 +213,7 @@ local L={
     main_out_multi="Multigiocatore",
 
     musicroom_title="Stanza musicale",
+    -- musicroom_richloop="Rich Loop",
     musicroom_fullband="Banda Piena",
     musicroom_section='Coro',
     musicroom_autoplay="Cambio automatico",

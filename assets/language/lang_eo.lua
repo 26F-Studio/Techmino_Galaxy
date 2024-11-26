@@ -213,6 +213,7 @@ local L={
     main_out_multi="Multoblaj",
 
     musicroom_title="Muzika ĉambro",
+    -- musicroom_richloop="Rich Loop",
     musicroom_fullband="Plena Bando",
     musicroom_section='Koruso',
     musicroom_autoplay="Aŭtomata kantoŝanĝo",

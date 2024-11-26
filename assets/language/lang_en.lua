@@ -213,6 +213,7 @@ local L={
     main_out_multi="Multiple",
 
     musicroom_title="Musicroom",
+    musicroom_richloop="Rich Loop",
     musicroom_fullband="Full Band",
     musicroom_section='Chorus',
     musicroom_autoplay="Auto Change",

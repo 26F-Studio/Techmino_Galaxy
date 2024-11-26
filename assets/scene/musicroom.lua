@@ -8,7 +8,7 @@ local sin=math.sin
 
 local totalBgmCount
 
-local selected,fullband,section
+local selected,richloop,fullband,section
 local collectCount=0
 local noProgress=false
 local autoplay=false ---@type number | false
@@ -53,11 +53,13 @@ local musicListBox do
             selected=musicListBox:getItem()
             local fullbandMode=SONGBOOK[selected].intensity and (noProgress or PROGRESS.getBgmUnlocked(selected)==2)
             local sectionMode=SONGBOOK[selected].section and (noProgress or PROGRESS.getBgmUnlocked(selected)==2)
+            local loopMode=SONGBOOK[selected].hasloop
             scene.widgetList.fullband:setVisible(fullbandMode)
             scene.widgetList.section:setVisible(sectionMode)
-            scene.widgetList.progressBar.fillColor=SONGBOOK[selected].looppoint and COLOR.LD or COLOR.L
+            scene.widgetList.progressBar.fillColor=SONGBOOK[selected].hasloop and COLOR.LD or COLOR.L
             if fullbandMode then fullband=fullband==true else fullband=nil end
             if sectionMode then section=section==true else section=nil end
+            if loopMode then richloop=true else richloop=nil end
             playBgm(selected,fullband,noProgress)
         end
     end
@@ -366,7 +368,8 @@ scene.widgetList={
     {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return FMOD.music.getPlaying() end},
 
     -- Auto Switching Switch
-    {type='switch',pos={.5,.5},x=-650,y=150,h=50,widthLimit=260,labelPos='right',disp=function() return autoplay end,
+    {type='switch',pos={.5,.5},x=-650,y=90,h=50,widthLimit=260,labelPos='right',
+        disp=function() return autoplay end,
         name='autoplay',text=LANG'musicroom_autoplay',
         sound_on=false,sound_off=false,
         code=function()
@@ -379,8 +382,24 @@ scene.widgetList={
         end,
     },
 
+    -- Richloop Switch
+    {type='switch',pos={.5,.5},x=-650,y=150,h=50,widthLimit=260,labelPos='right',
+        disp=function() return richloop end,
+        name='autoplay',text=LANG'musicroom_richloop',
+        sound_on=false,sound_off=false,
+        code=function()
+            richloop=not richloop
+            if FMOD.music.getPlaying() then
+                FMOD.music.setParam('loop',richloop and 1 or 0)
+            end
+            scene.widgetList.progressBar.fillColor=(SONGBOOK[selected].hasloop and richloop) and COLOR.LD or COLOR.L
+        end,
+        visibleTick=function() return richloop~=nil end,
+    },
+
     -- Fullband Switch
-    {type='switch',pos={.5,.5},x=-650,y=360,h=50,widthLimit=260,labelPos='right',disp=function() return fullband end,
+    {type='switch',pos={.5,.5},x=-650,y=360,h=50,widthLimit=260,labelPos='right',
+        disp=function() return fullband end,
         name='fullband',text=LANG'musicroom_fullband',
         sound_on=false,sound_off=false,
         code=function()
@@ -392,13 +411,12 @@ scene.widgetList={
                 scene.load()
             end
         end,
-        visibleTick=function()
-            return fullband~=nil
-        end,
+        visibleTick=function() return fullband~=nil end,
     },
 
     -- Section Switch
-    {type='switch',pos={.5,.5},x=-650,y=430,h=50,widthLimit=260,labelPos='right',disp=function() return section end,
+    {type='switch',pos={.5,.5},x=-650,y=430,h=50,widthLimit=260,labelPos='right',
+        disp=function() return section end,
         name='section',text=LANG'musicroom_section',
         sound_on=false,sound_off=false,
         code=function()
