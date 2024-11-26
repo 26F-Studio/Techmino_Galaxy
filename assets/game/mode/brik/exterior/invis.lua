@@ -8,6 +8,7 @@ local round,cItp=MATH.round,MATH.clampInterpolate
 -- Phase 2: 143 BPM (419.58 ms/Beat) 6=F#
 -- Phase 3: 160 BPM (375.00 ms/Beat) 6=G
 local beatItvl={476.19,419.58,375.00}
+local torikanScore,secretScore=2600,4000
 
 local haunted={}
 function haunted.dropSound1(vol)
@@ -66,16 +67,13 @@ function haunted.afterLock(P)
                     playSample('complex',{'A#2',1,62})
                 end
             end
-            P.modeData.energy=P.modeData.energy+acc -- 285 pieces if all Techrashes
+            P.modeData.energy=P.modeData.energy+acc
+            if P.modeData.energy>secretScore then
+                PROGRESS.setSecret('exterior_invis_rhythmMaster')
+            end
         end
     else
         P.modeData.beatChain=0
-    end
-end
-function haunted.beforeDiscard(P)
-    if P.modeData.energy>5200 then
-        PROGRESS.setSecret('exterior_invis_rhythmMaster')
-        return true
     end
 end
 function haunted.p2_afterSpawn(P)
@@ -184,9 +182,9 @@ return {
                 function(P,clear)
                     ---@cast P Techmino.Player.Brik
                     if P.modeData.subMode=='haunted' then
-                        if clear.line>=4 then
+                        if clear.line>=4 and P.modeData.energy<torikanScore then
                             -- Gain energy with Techrashes
-                            P.modeData.energy=P.modeData.energy+clear.line/4*100 -- 28.5 techrash
+                            P.modeData.energy=min(P.modeData.energy+clear.line/4*100,torikanScore)
                         end
                         P.modeData.linePoint=P.modeData.linePoint+clear.line*2-1
                         local LP=P.modeData.linePoint
@@ -227,7 +225,7 @@ return {
                                 )
                             else
                                 local passTimeTorikan=P.gameTime<=260e3
-                                local passEnergyTorikan=P.modeData.energy>=2600
+                                local passEnergyTorikan=P.modeData.energy>=torikanScore
                                 if passTimeTorikan or passEnergyTorikan then
                                     -- Haunted Phase 3 init
                                     P.modeData.phase=3
@@ -247,7 +245,6 @@ return {
                                     end
                                     P:delEvent('afterSpawn',haunted.p2_afterSpawn)
                                     P:addEvent('afterSpawn',haunted.p3_afterSpawn)
-                                    P:addEvent('beforeDiscard',haunted.beforeDiscard)
                                     mechLib.brik.misc.haunted_turnOn(P,62,120,600,1000)
                                     P:addSoundEvent('drop',haunted.dropSound3)
                                     P:playSound('beep_rise')
@@ -298,10 +295,10 @@ return {
                     GC.mStr(P.modeData.linePoint,-300,-90)
                     GC.mStr(P.modeData.target.line,-300,-5)
                     FONT.set(30)
-                    GC.setColor(1,1,P.modeData.energy>=5200 and .62 or 1,P.modeData.phase<3 and P.gameTime>260e3 and .42 or 1)
+                    GC.setColor(1,1,P.modeData.energy>=secretScore and .62 or 1,P.modeData.phase<3 and P.gameTime>260e3 and .42 or 1)
                     GC.setLineWidth(1)
                     GC.rectangle('line',-375,-2,150,4)
-                    GC.rectangle('fill',-375,-2,150*min(P.modeData.energy/2600,1),4)
+                    GC.rectangle('fill',-375,-2,150*min(P.modeData.energy/torikanScore,1),4)
                 else
                     GC.mStr(P.stat.line,-300,-90)
                     GC.rectangle('fill',-375,-2,150,4)
