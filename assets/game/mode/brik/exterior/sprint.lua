@@ -33,7 +33,7 @@ return {
                 if not PROGRESS.getExteriorUnlock('combo') then
                     P.settings.combo_sound=true
                 end
-                if PROGRESS.getExteriorUnlock('tspin') then
+                if PROGRESS.getExteriorUnlock('spin') then
                     P.settings.spin_immobile=false
                     P.settings.spin_corners=false
                 end
@@ -56,10 +56,10 @@ return {
                 P.modeData.curKeyCount=0
             end,
             afterPress=function(P)
-                if PROGRESS.getExteriorUnlock('tspin') then return true end
+                if PROGRESS.getExteriorUnlock('spin') then return true end
                 local move=P.lastMovement
                 if move and (move.immobile or move.corners) then
-                    PROGRESS.setExteriorUnlock('tspin')
+                    PROGRESS.setExteriorUnlock('spin')
                     P.settings.spin_immobile=false
                     P.settings.spin_corners=false
                     return true

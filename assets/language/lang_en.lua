@@ -228,7 +228,7 @@ local L={
         sprint=           {"Sprint","Speed is all we need"},
         sequence=         {"Sequence","Face strange piece sequences"},
         invis=            {"Invis","Pieces go invisible after falling"},
-        tspin=            {"T-Spin","Build special terrains"},
+        spin=             {"Spin","Build special terrains"},
         marathon=         {"Marathon","Fight against increasing gravity"},
         allclear=         {"All Clear","Controllable All-Clear is possible"},
         combo=            {"Combo","Everyone loves combo"},
@@ -246,6 +246,11 @@ local L={
     -- Submode Task Texts
     modeTask_unknown_title="???",
     modeTask_unknown_desc="??????",
+
+    modeTask_spin_piece_title="Piece",
+    modeTask_spin_piece_desc="Clear a Spin Single",
+    modeTask_spin_column_title="Column",
+    modeTask_spin_column_desc="Clear a Spin Double",
 
     modeTask_sequence_flood_title="Flood",
     modeTask_sequence_flood_desc="Clear with S or Z",
@@ -304,11 +309,11 @@ local L={
     achievementMessage={ -- TRASLATING NOTE: The tone can be lighter
         dict_shortcut="Hotkey Expert",
         exterior_sprint_gunJumping="Gun jumping detected",
+        exterior_spin_destructor="Destructor",
+        exterior_spin_howDareYou="How dare you",
         exterior_excavate_notDig="What are you doing?",
-        exterior_invis_superBrain="COOL",
-        exterior_invis_rhythmMaster="To the beat!", -- Keep this as it is. Original from "osu!" title music
-        exterior_tspin_10TSS="What's this?",
-        exterior_tspin_10TST="EZ.",
+        exterior_invis_superBrain="Super Brain",
+        exterior_invis_rhythmMaster="To the beat", -- Keep this as it is. Original from "osu!" title music
         exterior_hypersonic_holdlessTitan="You can hold",
         interior_console="What's this?",
         language_japanese="あ?",

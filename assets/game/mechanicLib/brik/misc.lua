@@ -580,9 +580,9 @@ do -- Haunted
         local powID=P.modeData.ghostLight_powerID+1
         P.modeData.ghostLight_powerID=powID
         local bx,by=P.handX-1,P.handY-1
-        local B=P.hand.matrix
-        for y=1,#B do for x=1,#B[1] do
-            if B[y][x] then newLight(P,bx+x,by+y,powID) end
+        local CB=P.hand.matrix
+        for y=1,#CB do for x=1,#CB[1] do
+            if CB[y][x] then newLight(P,bx+x,by+y,powID) end
         end end
     end
     function misc.haunted_drawInField(P)

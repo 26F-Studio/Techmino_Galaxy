@@ -228,7 +228,7 @@ local L={
         sprint=           {"竞速","速度即一切"},
         sequence=         {"序列","面对奇异的方块序列"},
         invis=            {"隐形","方块落下后将不可见"},
-        tspin=            {"T旋","构建特殊的地形"},
+        spin=             {"卡块","构建特殊的地形"},
         marathon=         {"马拉松","对抗逐渐增加的重力"},
         allclear=         {"全消","可控的全消并非不可能"},
         combo=            {"连击","开局送楼连到爽"},
@@ -246,6 +246,11 @@ local L={
     -- Submode Task Texts
     modeTask_unknown_title="???",
     modeTask_unknown_desc="??????",
+
+    modeTask_spin_piece_title="Piece",
+    modeTask_spin_piece_desc="卡块消一",
+    modeTask_spin_column_title="Column",
+    modeTask_spin_column_desc="卡块消二",
 
     modeTask_sequence_flood_title="Flood",
     modeTask_sequence_flood_desc="用S/Z消除",
@@ -304,11 +309,11 @@ local L={
     achievementMessage={ -- TRASLATING NOTE: 语气可以更轻松
         dict_shortcut="快捷键高手",
         exterior_sprint_gunJumping="检测到抢跑",
+        exterior_spin_destructor="破坏王",
+        exterior_spin_howDareYou="你怎么敢的",
         exterior_excavate_notDig="你在干什么？",
-        exterior_invis_superBrain="COOL",
-        exterior_invis_rhythmMaster="To the beat!", -- 保持原样。 出处为游戏 osu! 标题曲
-        exterior_tspin_10TSS="这是什么？",
-        exterior_tspin_10TST="轻松。",
+        exterior_invis_superBrain="最强大脑",
+        exterior_invis_rhythmMaster="To the beat", -- 保持原样。 出处为游戏 osu! 标题曲
         exterior_hypersonic_holdlessTitan="你可以暂存的",
         interior_console="这是什么？",
         language_japanese="あ?",

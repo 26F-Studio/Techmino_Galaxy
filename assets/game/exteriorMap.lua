@@ -15,7 +15,7 @@ local tau=MATH.tau
 ---| 'sprint'
 ---| 'sequence'
 ---| 'invis'
----| 'tspin'
+---| 'spin'
 ---| 'marathon'
 ---| 'allclear'
 ---| 'combo'
@@ -35,7 +35,7 @@ local modes={
     {pos={25,35,00},selColor=COLOR.lP,name='sprint'},
     {pos={25,50,00},selColor=COLOR.lP,name='sequence'},
     {pos={25,65,15},selColor=COLOR.lP,name='invis'},
-    {pos={25,50,15},selColor=COLOR.lP,name='tspin'},
+    {pos={25,50,15},selColor=COLOR.lP,name='spin'},
 
     {pos={45,45,00},selColor=COLOR.lP,name='marathon'},
     {pos={45,60,00},selColor=COLOR.lP,name='allclear'},
@@ -67,7 +67,7 @@ local modes_str={} for i=1,#modes do modes_str[modes[i].name]=modes[i] end
 
 local bridgeLinks={
     'marathon - dig - sprint - marathon',
-    'sprint - tspin',
+    'sprint - spin',
     'sprint - invis',
     'sprint - sequence',
     'marathon - hypersonic',
@@ -75,7 +75,7 @@ local bridgeLinks={
     'marathon - allclear',
     'dig - excavate - backfire',
     'dig - drill - survivor',
-    'tspin - chain',
+    'spin - chain',
     'drill - action',
 }
 local bridges={}

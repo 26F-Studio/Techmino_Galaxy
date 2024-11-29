@@ -172,6 +172,13 @@ function PROGRESS.fix()
     prgs.tuto7_score,prgs.tuto7_time=nil,nil
     prgs.tuto8_keys=nil
     prgs.brik_stdMap=nil
+    prgs.secretFound.exterior_tspin_10TSS=nil
+    prgs.secretFound.exterior_tspin_10TST=nil
+    prgs.secretFound.dial_password=nil
+    if prgs.exteriorMap.tspin then
+        prgs.exteriorMap.tspin=nil
+        prgs.exteriorMap.spin={}
+    end
 end
 
 --------------------------------------------------------------
