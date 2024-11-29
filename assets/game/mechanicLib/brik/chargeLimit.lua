@@ -189,6 +189,7 @@ do -- spin
         P:addEvent('always',chargeLimit.spin_piece_event_always)
         P:addEvent('beforeClear',{-1,chargeLimit.spin_piece_event_beforeClear})
         P:addEvent('drawOnPlayer',chargeLimit.spin_piece_event_drawOnPlayer)
+        P:addEvent('drawBelowMarks',chargeLimit.spin_piece_event_drawBelowMarks)
     end
     function chargeLimit.spin_piece_event_always(P)
         ---@type Techmino.Mech.Brik.PieceDevice[]
@@ -231,12 +232,12 @@ do -- spin
             end
         end
 
-        local F=P.field
+        local mat=P.field._matrix
         local lines=#fullLines
         for i=1,lines do
             local y=fullLines[i]
             for x=1,P.settings.fieldW do
-                local C=F:getCell(x,y)
+                local C=mat[y][x]
                 if C and C.spin_charge then
                     local id=colorToID[C.color]
                     if id then
@@ -257,6 +258,16 @@ do -- spin
             mainDev.display=false
         end
     end
+    function chargeLimit.spin_piece_event_drawBelowMarks(P)
+        gc_setColor(1,1,1,.42)
+        local mat=P.field._matrix
+        for y=1,#mat do for x=1,#mat[1] do
+            local C=mat[y][x]
+            if C and C.spin_charge then
+                gc_rectangle('fill',40*(x-1)+10,-40*(y-1)-10,20,-20)
+            end
+        end end
+    end
     function chargeLimit.spin_piece_event_drawOnPlayer(P)
         ---@type Techmino.Mech.Brik.PieceDevice[]
         local devices=P.modeData.spin_powDevice
@@ -274,7 +285,7 @@ do -- spin
                         mRect('line',x,y,w,h)
                     else
                         gc_setColor(styles[i].color)
-                        mRect('fill',x,y,w,h*.26)
+                        mRect('fill',x,y,w,h*.2)
                         gc_setColor(.42,.42,.42,styles[i].color[4])
                         mRect('line',x,y,w,h)
                     end
