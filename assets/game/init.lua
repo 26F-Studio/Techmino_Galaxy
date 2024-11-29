@@ -471,9 +471,11 @@ function GAME.update(dt)
     end
 end
 
+local _canvasSetting={stencil=true}
 function GAME.render()
     if not GAME.playerList then return end
-    gc.setCanvas({ZENITHA.getBigCanvas('player'),stencil=true})
+    _canvasSetting[1]=ZENITHA.getBigCanvas('player')
+    gc.setCanvas(_canvasSetting)
     gc.replaceTransform(SCR.xOy_m)
     gc.applyTransform(GAME.camera.transform)
     gc.clear(0,0,0,0)
