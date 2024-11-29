@@ -126,12 +126,44 @@ end
 do -- spin
     function chargeLimit.spin_event_playerInit(P)
         P.modeData.spinClear=0
+        P:addEvent('afterDrop',chargeLimit.spin_event_afterDrop)
         P:addEvent('afterClear',{-1e99,chargeLimit.spin_event_afterClear})
+        P:addEvent('drawBelowMarks',chargeLimit.spin_event_drawBelowMarks)
+    end
+    function chargeLimit.spin_event_afterDrop(P)
+        local F=P.field
+        if P.lastMovement.immobile then
+            local CB=P.hand.matrix
+            for y=1,#CB do for x=1,#CB[1] do
+                local C=CB[y][x]
+                if C then
+                    local cx,cy=x+P.handX-1,y+P.handY-1
+                    if
+                        F:getCell(cx-1,cy) or
+                        F:getCell(cx+1,cy) or
+                        F:getCell(cx,cy-1) or
+                        F:getCell(cx,cy+1)
+                    then
+                        C.spin_charge=true
+                    end
+                end
+            end end
+        end
     end
     function chargeLimit.spin_event_afterClear(P,clear)
         if P.lastMovement.immobile then
             P.modeData.spinClear=P.modeData.spinClear+clear.line
         end
+    end
+    function chargeLimit.spin_event_drawBelowMarks(P)
+        gc_setColor(1,1,1,.62)
+        local mat=P.field._matrix
+        for y=1,#mat do for x=1,#mat[1] do
+            local C=mat[y][x]
+            if C and C.spin_charge then
+                gc_rectangle('fill',40*(x-1)+10,-40*(y-1)-10,20,-20)
+            end
+        end end
     end
 
     local styles={
@@ -189,7 +221,6 @@ do -- spin
         P:addEvent('always',chargeLimit.spin_piece_event_always)
         P:addEvent('beforeClear',{-1,chargeLimit.spin_piece_event_beforeClear})
         P:addEvent('drawOnPlayer',chargeLimit.spin_piece_event_drawOnPlayer)
-        P:addEvent('drawBelowMarks',chargeLimit.spin_piece_event_drawBelowMarks)
     end
     function chargeLimit.spin_piece_event_always(P)
         ---@type Techmino.Mech.Brik.PieceDevice[]
@@ -209,15 +240,6 @@ do -- spin
         end
     end
     function chargeLimit.spin_piece_event_beforeClear(P,fullLines)
-        if P.lastMovement.immobile then
-            local CB=P.hand.matrix
-            for y=1,#CB do for x=1,#CB[1] do
-                local C=CB[y][x]
-                if C then
-                    C.spin_charge=true
-                end
-            end end
-        end
         ---@type Techmino.Mech.Brik.PieceDevice[]
         local devices=P.modeData.spin_powDevice
         local mainDev=devices[Brik.getID(P.hand.name)]
@@ -257,16 +279,6 @@ do -- spin
             mainDev.pow=0
             mainDev.display=false
         end
-    end
-    function chargeLimit.spin_piece_event_drawBelowMarks(P)
-        gc_setColor(1,1,1,.42)
-        local mat=P.field._matrix
-        for y=1,#mat do for x=1,#mat[1] do
-            local C=mat[y][x]
-            if C and C.spin_charge then
-                gc_rectangle('fill',40*(x-1)+10,-40*(y-1)-10,20,-20)
-            end
-        end end
     end
     function chargeLimit.spin_piece_event_drawOnPlayer(P)
         ---@type Techmino.Mech.Brik.PieceDevice[]
