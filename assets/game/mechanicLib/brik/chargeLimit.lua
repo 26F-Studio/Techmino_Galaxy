@@ -1,6 +1,6 @@
 local gc=love.graphics
 local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
-local gc_rectangle=gc.rectangle
+local gc_rectangle,gc_line=gc.rectangle,gc.line
 
 local mRect=GC.mRect
 
@@ -123,56 +123,25 @@ do -- techrash
 end
 
 do -- spin
-    function chargeLimit.spin_event_playerInit(P)
-        P.modeData.spinClear=0
-        P:addEvent('afterDrop',chargeLimit.spin_event_afterDrop)
-        P:addEvent('afterClear',{-1e99,chargeLimit.spin_event_afterClear})
-        P:addEvent('drawBelowMarks',chargeLimit.spin_event_drawBelowMarks)
-    end
-    function chargeLimit.spin_event_afterDrop(P)
-        local F=P.field
-        if P.lastMovement.immobile then
-            local CB=P.hand.matrix
-            for y=1,#CB do for x=1,#CB[1] do
-                local C=CB[y][x]
-                if C then
-                    local cx,cy=x+P.handX-1,y+P.handY-1
-                    if
-                        F:getCell(cx-1,cy) or
-                        F:getCell(cx+1,cy) or
-                        F:getCell(cx,cy-1) or
-                        F:getCell(cx,cy+1)
-                    then
-                        C.spin_charge=true
-                    end
-                end
-            end end
-        end
-    end
-    function chargeLimit.spin_event_afterClear(P,clear)
-        if P.lastMovement.immobile then
-            P.modeData.spinClear=P.modeData.spinClear+clear.line
-        end
-    end
-    function chargeLimit.spin_event_drawBelowMarks(P)
-        gc_setColor(1,1,1,.62)
-        local mat=P.field._matrix
-        for y=1,#mat do for x=1,#mat[1] do
-            local C=mat[y][x]
-            if C and C.spin_charge then
-                gc_rectangle('fill',40*(x-1)+10,-40*(y-1)-10,20,-20)
-            end
-        end end
-    end
+    ---@class Techmino.Mech.Brik.PieceDevice
+    ---@field pow number power
+    ---@field _pow number show power
+    ---@field visible boolean show the whole device or not
+    ---@field doom boolean exploded
+
+    ---@class Techmino.Mech.Brik.ColumnDevice
+    ---@field pow number power
+    ---@field _pow number show power
+    ---@field doom boolean exploded
 
     local styles={
-        {name='I',id=7,x=-300,y=-60-40*3,w=160,h=30,color=RGB9 [488], colorDanger=RGB9 [233]},
-        {name='L',id=4,x=-300,y=-60-40*2,w=160,h=30,color=RGB9 [864], colorDanger=RGB9 [332]},
-        {name='J',id=3,x=-300,y=-60-40*1,w=160,h=30,color=RGB9 [448], colorDanger=RGB9 [223]},
-        {name='O',id=6,x=-300,y= 00+00*0,w=160,h=60,color=RGBA9[8843],colorDanger=RGBA9[3323]},
-        {name='Z',id=1,x=-300,y= 60+40*1,w=160,h=30,color=RGB9 [844], colorDanger=RGB9 [322]},
-        {name='S',id=2,x=-300,y= 60+40*2,w=160,h=30,color=RGB9 [484], colorDanger=RGB9 [232]},
-        {name='T',id=5,x=-300,y= 60+40*3,w=160,h=30,color=RGB9 [748], colorDanger=RGB9 [423]},
+        {name='I',id=7,x=-300-80,y=-60-40*3-15,w=160,h=30,color=RGB9 [488], colorD=RGB9 [233], colorL=RGB9 [699] },
+        {name='L',id=4,x=-300-80,y=-60-40*2-15,w=160,h=30,color=RGB9 [864], colorD=RGB9 [332], colorL=RGB9 [976] },
+        {name='J',id=3,x=-300-80,y=-60-40*1-15,w=160,h=30,color=RGB9 [448], colorD=RGB9 [223], colorL=RGB9 [669] },
+        {name='O',id=6,x=-300-80,y= 00+00*0-30,w=160,h=60,color=RGBA9[8843],colorD=RGBA9[3323],colorL=RGBA9[9963]},
+        {name='Z',id=1,x=-300-80,y= 60+40*1-15,w=160,h=30,color=RGB9 [844], colorD=RGB9 [322], colorL=RGB9 [966] },
+        {name='S',id=2,x=-300-80,y= 60+40*2-15,w=160,h=30,color=RGB9 [484], colorD=RGB9 [232], colorL=RGB9 [696] },
+        {name='T',id=5,x=-300-80,y= 60+40*3-15,w=160,h=30,color=RGB9 [748], colorD=RGB9 [423], colorL=RGB9 [869] },
     }
     local colorToID={
         [defaultBrikColor[1]]=1,
@@ -193,14 +162,77 @@ do -- spin
         RGB9[699],
     }
 
-    ---@class Techmino.Mech.Brik.PieceDevice
-    ---@field pow number power
-    ---@field _pow number show power
-    ---@field service boolean
-    ---@field display boolean show power correctly or not
-    ---@field visible boolean show the whole device or not
+    local pieceDev_init=20
+    local pieceDev_max=26
+    local pieceDev_cost=5
+    local pieceDev_punish=10
+    local columnDev_init=20
+    local columnDev_max=20
+    local columnDev_cost=5
+    local columnDev_punish=10
 
-    local safeThres=4
+    local function shutdown(P)
+        if not P.modeData.spin_explodeTimer then
+            P.modeData.spin_explodeTimer=26
+            P:addEvent('always',chargeLimit.spin_death_event_always)
+        end
+    end
+    function chargeLimit.spin_death_event_always(P)
+        P.modeData.spin_explodeTimer=P.modeData.spin_explodeTimer-1
+        if P.modeData.spin_explodeTimer<=0 then
+            P:finish('rule')
+            return true
+        end
+    end
+    function chargeLimit.spin_event_playerInit(P)
+        P.modeData.spinClear=0
+        P:addEvent('afterDrop',chargeLimit.spin_event_afterDrop)
+        P:addEvent('afterClear',{-1e99,chargeLimit.spin_event_afterClear})
+        P:addEvent('drawBelowMarks',chargeLimit.spin_event_drawBelowMarks)
+    end
+    function chargeLimit.spin_event_afterDrop(P)
+        local F=P.field
+        if not P.lastMovement.immobile then return end
+        local CB=P.hand.matrix
+        for y=1,#CB do for x=1,#CB[1] do
+            local C=CB[y][x]
+            if C then
+                local cx,cy=x+P.handX-1,y+P.handY-1
+                if
+                    F:getCell(cx-1,cy) or
+                    F:getCell(cx+1,cy) or
+                    F:getCell(cx,cy-1) or
+                    F:getCell(cx,cy+1)
+                then
+                    C.spin_charge=true
+                end
+            end
+        end end
+    end
+    function chargeLimit.spin_event_afterClear(P,clear)
+        if P.lastMovement.immobile then
+            P.modeData.spinClear=P.modeData.spinClear+clear.line
+        end
+    end
+    function chargeLimit.spin_event_drawBelowMarks(P)
+        gc_setColor(1,1,1,.62)
+        local mat=P.field._matrix
+        for y=1,#mat do for x=1,#mat[1] do
+            local C=mat[y][x]
+            if C and C.spin_charge then
+                gc_rectangle('fill',40*(x-1)+10,-40*(y-1)-10,20,-20)
+            end
+        end end
+    end
+    function chargeLimit.spin_event_drawOnPlayer(P)
+        P:drawInfoPanel(-380,-60,160,120)
+        FONT.set(30) GC.mStr(Text.target_line,-300,15)
+        if P.modeData.spin_column_pure then
+            gc_setColor(columnPureTextColor[P.modeData.spin_column_pure])
+        end
+        FONT.set(80) GC.mStr(P.modeData.spinClear,-300,-70)
+    end
+
     function chargeLimit.spin_piece_event_init(P)
         if not P.modeData.spinClear then
             chargeLimit.spin_event_playerInit(P)
@@ -208,11 +240,10 @@ do -- spin
         local devices={}
         for i=1,7 do
             devices[i]={
-                pow=20,
-                _pow=20,
-                service=true,
-                display=true,
+                pow=pieceDev_init,
+                _pow=0,
                 visible=true,
+                doom=false
             }
         end
         devices[6].visible=false
@@ -241,21 +272,22 @@ do -- spin
     function chargeLimit.spin_piece_event_beforeClear(P,fullLines)
         ---@type Techmino.Mech.Brik.PieceDevice[]
         local devices=P.modeData.spin_powDevice
-        local mainDev=devices[Brik.getID(P.hand.name)]
+        local mainDev=P.hand and devices[Brik.getID(P.hand.name)]
+
+        -- Death cheak
         if mainDev then
             if not mainDev.visible then
                 mainDev.visible=true
             end
-            if not mainDev.service then
-                P:finish('rule')
-            elseif math.max(mainDev._pow,mainDev.pow)<safeThres then
-                mainDev.service=false
+            if mainDev.pow<0 then
+                mainDev.doom=true
+                shutdown(P)
             end
         end
 
+        -- Clear charged cells
         local mat=P.field._matrix
         local lines=#fullLines
-        local cost=math.min(3+math.floor(P.modeData.spinClear-#fullLines/10),10)
         for i=1,lines do
             local y=fullLines[i]
             for x=1,P.settings.fieldW do
@@ -263,48 +295,47 @@ do -- spin
                 if C and C.spin_charge then
                     local id=colorToID[C.color]
                     if id then
-                        devices[id].pow=devices[id].pow-cost
+                        devices[id].pow=devices[id].pow-pieceDev_cost
                     end
                 end
             end
         end
+
+        -- Add power for colors
         for i=1,7 do
             local device=devices[i]
             if device~=mainDev then
                 device.pow=device.pow+math.max(3-lines,0)
             end
-            device.pow=MATH.clamp(device.pow,0,26)
+            device.pow=math.min(device.pow,pieceDev_max)
         end
+
+        -- Non-spin punishing
         if not P.lastMovement.immobile and mainDev then
-            mainDev.pow=0
-            mainDev.display=false
+            mainDev.pow=math.max(mainDev.pow-pieceDev_punish,-1)
         end
     end
     function chargeLimit.spin_piece_event_drawOnPlayer(P)
         ---@type Techmino.Mech.Brik.PieceDevice[]
         local devices=P.modeData.spin_powDevice
-        gc_setLineWidth(3)
+        gc_setLineWidth(2)
         for i=1,7 do
             local device=devices[styles[i].id]
             if device.visible then
                 local x,y,w,h=styles[i].x,styles[i].y,styles[i].w,styles[i].h
-                if device.service then
-                    if device.display then
-                        local safe=device.pow>=safeThres
-                        gc_setColor(safe and styles[i].color or styles[i].colorDanger)
-                        mRect('fill',x,y,w*device._pow/26,h)
-                        gc_setColor(1,1,1,styles[i].color[4])
-                        mRect('line',x,y,w,h)
-                    else
-                        gc_setColor(styles[i].color)
-                        mRect('fill',x,y,w,h*.2)
-                        gc_setColor(.42,.42,.42,styles[i].color[4])
-                        mRect('line',x,y,w,h)
-                    end
-                elseif love.timer.getTime()%.42<.26 then
-                    gc_setColor(styles[i].color)
-                    mRect('line',x,y,w,h)
+                if device.doom then
+                    gc_setColor(COLOR.lR)
+                    gc_line(x,y,x+w,y+h)
+                    gc_line(x+w,y,x,y+h)
+                elseif device.pow>=0 then
+                    gc_setColor(styles[i].colorL)
+                    mRect('fill',x+w*.5,y+h*.5,w*device._pow/pieceDev_max,h)
+                elseif P.time%420>=260 then
+                    gc_setColor(styles[i].colorD)
+                    gc_rectangle('fill',x,y,w,h)
                 end
+                gc_setColor(styles[i].color)
+                gc_rectangle('line',x,y,w,h)
             end
         end
     end
@@ -317,8 +348,9 @@ do -- spin
         P.modeData.spin_column_pure=shape
         for i=1,P.settings.fieldW do
             P.modeData.spin_powColumn[i]={
-                pow=20,
+                pow=columnDev_init,
                 _pow=0,
+                doom=false,
             }
         end
         P:addEvent('always',chargeLimit.spin_column_event_always)
@@ -326,42 +358,88 @@ do -- spin
         P:addEvent('drawBelowMarks',chargeLimit.spin_column_event_drawBelowMarks)
     end
     function chargeLimit.spin_column_event_always(P)
-        for _,v in next,P.modeData.spin_powColumn do
-            if v._pow~=v.pow then
-                if v._pow<v.pow then
-                    v._pow=MATH.expApproach(v._pow,v.pow,.026)
-                else
-                    v._pow=math.max(v._pow-.00626,v.pow)
-                end
-                if math.abs(v._pow-v.pow)<.01 then
-                    v._pow=v.pow
+        ---@type Techmino.Mech.Brik.ColumnDevice[]
+        local devices=P.modeData.spin_powColumn
+        for i=1,#devices do
+            local device=devices[i]
+            if device._pow~=device.pow then
+                device._pow=MATH.expApproach(device._pow,device.pow,.026)
+                if math.abs(device._pow-device.pow)<.01 then
+                    device._pow=device.pow
                 end
             end
         end
     end
-    function chargeLimit.spin_column_event_beforeClear(P)
-        if P.lastMovement.immobile then
-            if P.modeData.spin_column_pure~=P.hand.shape then
+    function chargeLimit.spin_column_event_beforeClear(P,fullLines)
+        ---@type Techmino.Mech.Brik.ColumnDevice[]
+        local devices=P.modeData.spin_powColumn
+
+        -- Clear charged cells
+        local mat=P.field._matrix
+        local lines=#fullLines
+        for i=1,lines do
+            local y=fullLines[i]
+            for x=1,P.settings.fieldW do
+                local C=mat[y][x]
+                if C and C.spin_charge then
+                    devices[x].pow=devices[x].pow-columnDev_cost
+                end
+            end
+        end
+
+        -- Add power for colors
+        for i=1,#devices do
+            devices[i].pow=devices[i].pow+lines
+        end
+
+        if P.hand then
+            -- Check pure
+            if P.lastMovement.immobile and P.modeData.spin_column_pure~=P.hand.shape then
                 P.modeData.spin_column_pure=false
             end
-            -- TODO
+
+            local CB=P.hand.matrix
+            for y=1,#CB do for x=1,#CB[1] do
+                local C=CB[y][x]
+                if C then
+                    local cy=y+P.handY-1
+                    if TABLE.find(fullLines,cy) then
+                        if devices[x].pow<0 then
+                            -- Death cheak
+                            devices[x].doom=true
+                            shutdown(P)
+                        elseif not P.lastMovement.immobile then
+                            -- Non-spin punishing
+                            local device=devices[x+P.handX-1]
+                            device.pow=math.max(device.pow-columnDev_punish,-1)
+                        end
+                    end
+                end
+            end end
+        end
+
+        -- Limit max power
+        for i=1,#devices do
+            devices[i].pow=math.min(devices[i].pow,columnDev_max)
         end
     end
     function chargeLimit.spin_column_event_drawBelowMarks(P)
-        gc_setColor(1,1,1,.26)
-        for k,v in next,P.modeData.spin_powColumn do
-            local x=40*k-20
-            gc_rectangle('fill',x-15,0,30,-v._pow*40)
+        ---@type Techmino.Mech.Brik.ColumnDevice[]
+        local devices=P.modeData.spin_powColumn
+        for i=1,#devices do
+            local device=devices[i]
+            local x=40*i-20
+            if device.doom then
+                gc_setColor(1,.26,.26,.42)
+                gc_rectangle('fill',x-15,0,30,-20*40)
+            elseif device.pow>=0 then
+                gc_setColor(1,1,1,.2)
+                gc_rectangle('fill',x-15,0,30,-device._pow*40-5)
+            elseif P.time%420<260 then
+                gc_setColor(1,.42,.42,.26)
+                gc_rectangle('fill',x-15,0,30,-20*40)
+            end
         end
-    end
-
-    function chargeLimit.spin_event_drawOnPlayer(P)
-        P:drawInfoPanel(-380,-60,160,120)
-        FONT.set(30) GC.mStr(Text.target_line,-300,15)
-        if P.modeData.spin_column_pure then
-            gc_setColor(columnPureTextColor[P.modeData.spin_column_pure])
-        end
-        FONT.set(80) GC.mStr(P.modeData.spinClear,-300,-70)
     end
 end
 

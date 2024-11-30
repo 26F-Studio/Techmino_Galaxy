@@ -304,7 +304,6 @@ local L={
     achievementMessage={
         dict_shortcut="Fakulo de Hotkeys",
         exterior_sprint_gunJumping="KANONPAFO!!!",
-        -- exterior_spin_destructor="Destructor",
         -- exterior_spin_howDareYou="How dare you",
         exterior_excavate_notDig="Kion vi faras?",
         -- exterior_invis_superBrain="Super Brain",

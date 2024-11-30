@@ -305,7 +305,6 @@ local L={
     achievementMessage={ -- TRASLATING NOTE: The tone can be lighter
         dict_shortcut="Esperto di Hotkeys",
         exterior_sprint_gunJumping="SCANNONATA!!!",
-        -- exterior_spin_destructor="Destructor",
         -- exterior_spin_howDareYou="How dare you",
         exterior_excavate_notDig="Che stai facendo?",
         -- exterior_invis_superBrain="Super Brain",

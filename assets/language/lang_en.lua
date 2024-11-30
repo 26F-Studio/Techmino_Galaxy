@@ -309,7 +309,6 @@ local L={
     achievementMessage={ -- TRASLATING NOTE: The tone can be lighter
         dict_shortcut="Hotkey Expert",
         exterior_sprint_gunJumping="Gun jumping detected",
-        exterior_spin_destructor="Destructor",
         exterior_spin_howDareYou="How dare you",
         exterior_excavate_notDig="What are you doing?",
         exterior_invis_superBrain="Super Brain",

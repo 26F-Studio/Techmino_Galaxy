@@ -40,13 +40,6 @@ return {
                     --     end
                     -- end
                 end,
-                function(P)
-                    if PROGRESS.getSecret('exterior_spin_destructor') or P.modeData.subMode=='column' then return true end
-                    if P.modeData.spin_powDevice then
-                        for i=1,7 do if P.modeData.spin_powDevice[i].service then return end end
-                        PROGRESS.setSecret('exterior_spin_destructor')
-                    end
-                end,
                 function(P,clear)
                     local T=mechLib.common.task
                     if not P.modeData.subMode and P.lastMovement.immobile then
