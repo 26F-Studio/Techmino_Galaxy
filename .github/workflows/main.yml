@@ -83,7 +83,7 @@ jobs:
       - name: Build core love package
         uses: 26F-Studio/love-actions-core@v1
         with:
-          build-list: ./Zenitha/ ./assets/ ./datatable/ ./soundbank ./conf.lua ./main.lua ./version.lua
+          build-list: ./Zenitha/ ./assets/ ./datatable/ ./soundbank ./conf.lua ./main.lua ./version.lua ./shell.lua
           package-path: ${{ env.CORE_LOVE_PACKAGE_PATH }}
       - name: Upload core love package
         uses: actions/upload-artifact@v4
