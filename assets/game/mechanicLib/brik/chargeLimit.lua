@@ -1,7 +1,6 @@
-local max=math.max
 local gc=love.graphics
 local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
-local gc_rectangle,gc_circle,gc_polygon=gc.rectangle,gc.circle,gc.polygon
+local gc_rectangle=gc.rectangle
 
 local mRect=GC.mRect
 
@@ -28,7 +27,7 @@ do -- techrash
                 if v._charge<v.charge then
                     v._charge=MATH.expApproach(v._charge,v.charge,.00626)
                 else
-                    v._charge=max(v._charge-.00626,v.charge)
+                    v._charge=math.max(v._charge-.00626,v.charge)
                 end
                 if math.abs(v._charge-v.charge)<.01 then
                     v._charge=v.charge
@@ -64,7 +63,7 @@ do -- techrash
             else
                 for k,v in next,list do
                     if k~=x then
-                        v.charge=max(v.charge-1,0)
+                        v.charge=math.max(v.charge-1,0)
                     end
                 end
             end
@@ -231,7 +230,7 @@ do -- spin
                 if device._pow<device.pow then
                     device._pow=MATH.expApproach(device._pow,device.pow,.00626)
                 else
-                    device._pow=max(device._pow-.026,device.pow)
+                    device._pow=math.max(device._pow-.026,device.pow)
                 end
                 if math.abs(device._pow-device.pow)<.01 then
                     device._pow=device.pow
@@ -249,13 +248,14 @@ do -- spin
             end
             if not mainDev.service then
                 P:finish('rule')
-            elseif max(mainDev._pow,mainDev.pow)<safeThres then
+            elseif math.max(mainDev._pow,mainDev.pow)<safeThres then
                 mainDev.service=false
             end
         end
 
         local mat=P.field._matrix
         local lines=#fullLines
+        local cost=math.min(3+math.floor(P.modeData.spinClear-#fullLines/10),10)
         for i=1,lines do
             local y=fullLines[i]
             for x=1,P.settings.fieldW do
@@ -263,7 +263,7 @@ do -- spin
                 if C and C.spin_charge then
                     local id=colorToID[C.color]
                     if id then
-                        devices[id].pow=devices[id].pow-3
+                        devices[id].pow=devices[id].pow-cost
                     end
                 end
             end
@@ -271,7 +271,7 @@ do -- spin
         for i=1,7 do
             local device=devices[i]
             if device~=mainDev then
-                device.pow=device.pow+max(3-lines,0)
+                device.pow=device.pow+math.max(3-lines,0)
             end
             device.pow=MATH.clamp(device.pow,0,26)
         end
@@ -331,7 +331,7 @@ do -- spin
                 if v._pow<v.pow then
                     v._pow=MATH.expApproach(v._pow,v.pow,.026)
                 else
-                    v._pow=max(v._pow-.00626,v.pow)
+                    v._pow=math.max(v._pow-.00626,v.pow)
                 end
                 if math.abs(v._pow-v.pow)<.01 then
                     v._pow=v.pow
@@ -380,7 +380,7 @@ do -- tspin (legacy)
                 if v._charge<v.charge then
                     v._charge=MATH.expApproach(v._charge,v.charge,.00626)
                 else
-                    v._charge=max(v._charge-.00626,v.charge)
+                    v._charge=math.max(v._charge-.00626,v.charge)
                 end
                 if math.abs(v._charge-v.charge)<.01 then
                     v._charge=v.charge
@@ -443,7 +443,7 @@ do -- tspin (legacy)
                         else
                             for k,v in next,list do
                                 if k~=x then
-                                    v.charge=max(v.charge-1,0)
+                                    v.charge=math.max(v.charge-1,0)
                                 end
                             end
                         end
