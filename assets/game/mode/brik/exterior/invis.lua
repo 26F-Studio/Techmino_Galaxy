@@ -308,12 +308,12 @@ return {
             gameOver=function(P,reason)
                 if P.modeData.subMode=='haunted' then
                     PROGRESS.setExteriorScore('invis','haunted',min(P.modeData.linePoint,260),'>')
-                    if reason=='AC' then
+                    if reason=='win' then
                         PROGRESS.setExteriorScore('invis','haunted_time',P.gameTime,'<')
                     end
                 elseif P.modeData.subMode=='hidden' then
                     PROGRESS.setExteriorScore('invis','line',min(P.stat.line,100),'>')
-                    if reason=='AC' then
+                    if reason=='win' then
                         PROGRESS.setExteriorScore('invis','easy',P.gameTime,'<')
                         if P.modeData.maxSimplicity<=12 then
                             PROGRESS.setExteriorScore('invis','hard',P.gameTime,'<')

@@ -175,7 +175,7 @@ return {
                 mechLib.brik.misc.lineClear_event_afterClear,
             },
             gameOver=function(P,reason)
-                if reason=='AC' then
+                if reason=='win' then
                     PROGRESS.setExteriorScore('sequence',P.modeData.subMode,P.gameTime,'<')
 
                     local count=0

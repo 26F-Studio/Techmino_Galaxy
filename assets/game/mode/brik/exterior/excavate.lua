@@ -85,7 +85,7 @@ return {
                 end,
             },
             gameOver=function(P,reason)
-                if reason=='AC' then
+                if reason=='win' then
                     PROGRESS.setExteriorScore('dig',P.modeData.digMode,P.gameTime,'<')
 
                     if PROGRESS.getExteriorModeScore('excavate','shale') and PROGRESS.getExteriorModeScore('excavate','volcanics') then

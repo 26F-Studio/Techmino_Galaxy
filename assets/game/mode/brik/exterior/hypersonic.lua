@@ -103,7 +103,7 @@ return {
                 end
             end,
             gameOver=function(P,reason)
-                if reason=='AC' then
+                if reason=='win' then
                     PROGRESS.setExteriorScore('hypersonic',P.modeData.subMode,1,'>')
                     if P.modeData.subMode=='low' then
                         PROGRESS.setExteriorScore('hypersonic','showHigh',1,'>')
