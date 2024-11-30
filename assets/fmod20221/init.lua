@@ -333,10 +333,8 @@ end
 
 local unhintedSFX={}
 
----priority: pitch>tune>fine
----
----pos:{x,y,z}
----
+---priority: pitch>tune>fine  
+---pos:{x,y,z}  
 ---param:{'paramName', 0, true?}
 ---@param name string
 ---@param args? number | {volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}

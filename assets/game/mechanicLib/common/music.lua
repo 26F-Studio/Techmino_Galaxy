@@ -1,9 +1,10 @@
 ---@type Map<Techmino.Event>
 local music={}
 
----Setup music-param-updating-event for FMOD music (Auto removing old event)
+---Setup music-param-updating-event for FMOD music (Auto removing old event)  
 ---
----Example: `mechLib.common.music.set(P,{path='stat.line',s=10,e=30},'afterClear')`
+---**Example:**  
+---`mechLib.common.music.set(P,{path='stat.line',s=10,e=30},'afterClear')`
 ---@param P Techmino.Player
 ---@param state Techmino.PlayerModeData.MusicTable
 ---@param eventName? Techmino.EventName Leave this empty to not add event automatically
