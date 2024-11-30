@@ -402,15 +402,15 @@ do -- spin
             for y=1,#CB do for x=1,#CB[1] do
                 local C=CB[y][x]
                 if C then
-                    local cy=y+P.handY-1
+                    local cx,cy=x+P.handX-1,y+P.handY-1
                     if TABLE.find(fullLines,cy) then
-                        if devices[x].pow<0 then
+                        if devices[cx].pow<0 then
                             -- Death cheak
-                            devices[x].doom=true
+                            devices[cx].doom=true
                             shutdown(P)
                         elseif not P.lastMovement.immobile then
                             -- Non-spin punishing
-                            local device=devices[x+P.handX-1]
+                            local device=devices[cx]
                             device.pow=math.max(device.pow-columnDev_punish,-1)
                         end
                     end
