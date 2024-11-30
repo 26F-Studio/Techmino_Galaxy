@@ -373,6 +373,20 @@ do -- spin
     function chargeLimit.spin_column_event_beforeClear(P,fullLines)
         ---@type Techmino.Mech.Brik.ColumnDevice[]
         local devices=P.modeData.spin_powColumn
+        local CB=P.hand.matrix
+
+        -- Death cheak
+        if P.hand then
+            for y=1,#CB do for x=1,#CB[1] do
+                if CB[y][x] then
+                    local cx,cy=x+P.handX-1,y+P.handY-1
+                    if TABLE.find(fullLines,cy) and devices[cx].pow<0 then
+                        devices[cx].doom=true
+                        shutdown(P)
+                    end
+                end
+            end end
+        end
 
         -- Clear charged cells
         local mat=P.field._matrix
@@ -398,24 +412,15 @@ do -- spin
                 P.modeData.spin_column_pure=false
             end
 
-            local CB=P.hand.matrix
-            for y=1,#CB do for x=1,#CB[1] do
-                local C=CB[y][x]
-                if C then
-                    local cx,cy=x+P.handX-1,y+P.handY-1
-                    if TABLE.find(fullLines,cy) then
-                        if devices[cx].pow<0 then
-                            -- Death cheak
-                            devices[cx].doom=true
-                            shutdown(P)
-                        elseif not P.lastMovement.immobile then
-                            -- Non-spin punishing
-                            local device=devices[cx]
-                            device.pow=math.max(device.pow-columnDev_punish,-1)
-                        end
+            -- Non-spin punishing
+            if not P.lastMovement.immobile then
+                for y=1,#CB do for x=1,#CB[1] do
+                    if CB[y][x] and TABLE.find(fullLines,y+P.handY-1) then
+                        local device=devices[x+P.handX-1]
+                        device.pow=math.max(device.pow-columnDev_punish,-1)
                     end
-                end
-            end end
+                end end
+            end
         end
 
         -- Limit max power
