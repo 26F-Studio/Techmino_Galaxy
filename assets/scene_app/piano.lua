@@ -440,8 +440,8 @@ function scene.keyDown(key,isRep,keyCode)
     if layout.keyMap[keyCode] then
         if isRep then return end
         local note=layout.keyMap[keyCode]+offset
-        if isShiftDown() then note=note+1 end
-        if isCtrlDown() then note=note-1 end
+        if isKeyDown('lshift') then note=note+1 end
+        if isKeyDown('lctrl') then note=note-1 end
         _param.tune=note-26
         _param.volume=isKeyDown('lalt') and .26 or 1
         _param.param[2]=(isKeyDown('space') and 4200 or release)*1.0594630943592953^(_param.tune)
