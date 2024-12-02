@@ -164,6 +164,7 @@ do -- spin
 
     local pieceDev_init=20
     local pieceDev_max=26
+    local pieceDev_cost_tax=7
     local pieceDev_cost=5
     local pieceDev_punish=10
     local columnDev_init=20
@@ -295,7 +296,10 @@ do -- spin
                 if C and C.spin_charge then
                     local id=colorToID[C.color]
                     if id then
-                        devices[id].pow=devices[id].pow-pieceDev_cost
+                        devices[id].pow=devices[id].pow-(
+                            P.hand and P.hand.shape~=colorToID[C.color] and
+                            pieceDev_cost_tax or pieceDev_cost
+                        )
                     end
                 end
             end
