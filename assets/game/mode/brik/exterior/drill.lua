@@ -52,7 +52,8 @@ return {
                     then PROGRESS.setExteriorUnlock('survivor') return true end
                 end,
                 function()
-                    if PROGRESS.getStyleUnlock('acry') then return true end
+                    -- Unlock Acry-action
+                    if PROGRESS.getStyleUnlock('acry') and PROGRESS.getStyleUnlock('acry') then return true end
                     if
                         0.3/PROGRESS.getExteriorModeScore('drill','ppl10')+
                         0.3/PROGRESS.getExteriorModeScore('drill','ppl20')+

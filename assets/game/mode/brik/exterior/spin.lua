@@ -31,15 +31,15 @@ return {
             beforePress=mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
             afterClear={
                 function(P)
-                    -- if P.modeData.subMode=='piece' or P.modeData.subMode=='hero' then
-                    --     PROGRESS.setExteriorScore('spin','piece',P.modeData.spinClear,'>')
-                    -- end
-                    -- if P.modeData.subMode=='column' or P.modeData.subMode=='hero' then
-                    --     PROGRESS.setExteriorScore('spin','column',P.modeData.spinClear,'>')
-                    --     if P.modeData.spin_column_pure then
-                    --         PROGRESS.setExteriorScore('spin','column_pure',P.modeData.spinClear,'>')
-                    --     end
-                    -- end
+                    if P.modeData.subMode=='piece' or P.modeData.subMode=='hero' then
+                        PROGRESS.setExteriorScore('spin','piece',P.modeData.spinClear,'>')
+                    end
+                    if P.modeData.subMode=='column' or P.modeData.subMode=='hero' then
+                        PROGRESS.setExteriorScore('spin','column',P.modeData.spinClear,'>')
+                        if P.modeData.spin_column_pure then
+                            PROGRESS.setExteriorScore('spin','column_pure_'..P.modeData.spin_column_pure,P.modeData.spinClear,'>')
+                        end
+                    end
                 end,
                 function(P,clear)
                     local T=mechLib.common.task
@@ -74,6 +74,29 @@ return {
                         return true
                     end
                 end,
+                function()
+                    -- Unlock Gela-chain
+                    if PROGRESS.getStyleUnlock('gela') and PROGRESS.getExteriorUnlock('chain') then return true end
+                    local data=PROGRESS.get('exteriorMap').spin
+                    local Z,S,J,L,T,O,I=
+                        0 or data.column_pure_Z,
+                        0 or data.column_pure_S,
+                        0 or data.column_pure_J,
+                        0 or data.column_pure_L,
+                        0 or data.column_pure_T,
+                        0 or data.column_pure_O,
+                        0 or data.column_pure_I
+                    if
+                        (0 or data.piece)+
+                        (0 or data.column)+
+                        math.max(Z,S,J,L,T,O,I)/2.6+
+                        (Z+S+J+L+T+O+I)/6.26
+                        >=70.23
+                    then
+                        PROGRESS.setStyleUnlock('gela')
+                        PROGRESS.setExteriorUnlock('chain')
+                    end
+                end
             },
             drawOnPlayer=mechLib.brik.chargeLimit.spin_event_drawOnPlayer,
         },
