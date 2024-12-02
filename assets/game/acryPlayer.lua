@@ -568,6 +568,7 @@ function AP:tickStep()
         local list=self.acryProcessQueue.explosion
         for i=1,#list do
             local acry=list[i]
+            -- TODO
         end
         TABLE.clear(list)
     end

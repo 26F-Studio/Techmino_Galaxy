@@ -413,8 +413,8 @@ local scene={}
 
 local function stopAllSounds()
     for _,effect in next,activeEventMap do effect:stop(FMOD.FMOD_STUDIO_STOP_ALLOWFADEOUT) end
-    TABLE.clearAll(activeEventMap)
-    TABLE.clearAll(objPool)
+    TABLE.clear(activeEventMap)
+    TABLE.clear(objPool)
 end
 function scene.load()
     stopAllSounds()

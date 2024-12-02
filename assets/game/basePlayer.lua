@@ -782,14 +782,10 @@ function P:initialize()
     end
 end
 local dumpIgnore={
-    'P.soundTimeHistory',
-    'P.particles',
-    'P.texts',
+    ['P.soundTimeHistory']=true,
+    ['P.particles']=true,
+    ['P.texts']=true,
 }
-for _,v in next,dumpIgnore do
-    dumpIgnore[v]=true
-end
-TABLE.clear(dumpIgnore)
 local function dump(self,L,t,path)
     local s='{'
     local count=1

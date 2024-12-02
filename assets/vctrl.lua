@@ -433,7 +433,7 @@ end
 
 function VCTRL.importSettings(data)
     if not data then return end
-    TABLE.clear(VCTRL)
+    TABLE.clearList(VCTRL)
     for i=1,#data do
         local w=data[i]
         VCTRL[i]=(
