@@ -364,7 +364,7 @@ for packName,set in next,L do
             end
         })
         for name,code in next,set do
-            set[name]=STRING.UTF8(tonumber(code,16))
+            set[name]=STRING.u8char(tonumber(code,16))
         end
     end
 end

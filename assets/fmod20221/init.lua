@@ -313,7 +313,7 @@ setmetatable(M.music,{__call=function(_,...) return M.music.play(...) end})
 --------------------------
 
 ---@class FMOD._Effect
----@overload fun(name:string, args?: number | {instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}): FMOD.Studio.EventInstance?
+---@overload fun(name:string, args?:number | {instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}): FMOD.Studio.EventInstance?
 M.effect={}
 
 ---@param v number
