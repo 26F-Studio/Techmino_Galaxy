@@ -126,10 +126,30 @@ C.肌肉疲劳反应和协调能力下降，需进行睡眠或体育运动。
 21行：Impossicrash
 
 # next_hold
-@ title 预览与暂存（Next / Hold）
+@ title 预览、暂存（Next & Hold）
 预览：即将生成的方块队列。提前思考未来的块可以怎么摆有助于优化当前控制块的选择。
 
 暂存：将当前控制块放入暂存槽位并取出槽位中的方块作为控制块。用于调整块序，优化摆放策略。
+
+# tuning
+@ title 控制系统（ASD & ASP）
+@ contentSize 25
+ASD：Auto Shift Delay, 重复移动延迟，别名DAS（Delayed Auto Shift）
+ASP：Auto Shift Period, 重复移动周期，别名ARR（Auto Repeat Rate)
+ADP：Auto Drop Period, 重复下落周期
+ASH：Auto Shift Halt, 重复移动阻止
+~~
+使用键盘输入文本时按住一个键，会出现一大串字符。注意字符出现的时机：第一个字符在按键时立刻出现，停了一小会后开始快速自动输入。
+其中“停了一小会”就是ASD长度，“快速自动输入”的间隔就是ASP长度。
+ADP含义同ASP，只是把水平移动换成软降。
+新的方块出现后即使ASD已充满，方块也会额外等待ASH的时长后再开始移动，优化手感。
+~~
+最佳调节方法：ASD越小越好，但小到依然能准确区分单点和长按两种动作为止；ASP能多小就多小，尽可能接近0；ADP通常都为0。
+
+# buffered_input
+@ title 预输入（Buffered Input）
+指在新的方块出现之前就进行的旋转、暂存、移动等指令的输入，能减少吃键现象，增加完美输入的窗口时间，优化手感，甚至避开死亡判定。
+别名IRS/IHS。
 
 # combo
 @ title 连击（Combo）
@@ -182,30 +202,10 @@ B2B：Back to Back, 连续
 从开局起，每七个块包含七种形状各一个，只随机打乱顺序。
 这种序列生成方式彻底避免了很久不出某种块和某种块来得特别多的情况。
 
-# tuning
-@ title 控制系统（ASD & ASP & ADP）
-@ contentSize 25
-ASD：Auto Shift Delay, 重复移动延迟，别名DAS（Delayed Auto Shift）
-ASP：Auto Shift Period, 重复移动周期，别名ARR（Auto Repeat Rate)
-ADP：Auto Drop Period, 重复下落周期
-ASH：Auto Shift Halt, 重复移动阻止
-~~
-使用键盘输入文本时按住一个键，会出现一大串字符。注意字符出现的时机：第一个字符在按键时立刻出现，停了一小会后开始快速自动输入。
-其中“停了一小会”就是ASD长度，“快速自动输入”的间隔就是ASP长度。
-ADP含义同ASP，只是把水平移动换成软降。
-新的方块出现后即使ASD已充满，方块也会额外等待ASH的时长后再开始移动，优化手感。
-~~
-最佳调节方法：ASD越小越好，但小到依然能准确区分单点和长按两种动作为止；ASP能多小就多小，尽可能接近0；ADP通常都为0。
-
-# buffered_input
-@ title 预输入（Buffered Input）
-指在新的方块出现之前就进行的旋转、暂存、移动等指令的输入，能减少吃键现象，增加完美输入的窗口时间，优化手感，甚至避开死亡判定。
-别名IRS/IHS。
-
 # gravity
 @ title 重力（Gravity）
-指在不操作的情况下，方块自然下落的速度。
-下落比较慢的时候一般用“x秒一格”和“一秒x格”，很快的时候一般以G为单位表示方块的下落速度，意思是每一帧方块往下移动多少格，默认60FPS的情况下1G就是每秒下落60格，半秒之内就能触底。
+指在不操作的情况下方块自然下落的速度。
+下落速度较慢时可以用“x秒一格”和“一秒x格”，很快的时候会改用G为单位，意思是每一帧向下移动多少格。帧一般以传统的60FPS计，也就是说1G为每秒下落60格，半秒之内就能触底。
 特别地，方块的下落速度可以为无穷大，方块将不再能悬空或飞跃深坑。
 
 # delays
@@ -245,7 +245,7 @@ ADP含义同ASP，只是把水平移动换成软降。
 指短时间内打出大量的攻击，得名于其在攻击-时间的曲线图表上的视觉外观为尖刺（Spike的本义）。
 
 # speeds
-@ title 速度和攻击
+@ title 速度、攻击
 表示按键速度的常用标准有KPS、KPM。
 KPS：Key per Second, 按键每秒
 KPM：Key per Minute, 按键每分
@@ -260,8 +260,8 @@ APM：Attack per Minute, 攻击每分
 APL：Attack per Line, 攻击每行（行的定义有两种，详见LPM词条），也叫效率
 
 # misaction
-@ title 误操作（Mis-action）
-误操作通常有误放（Mis-Drop）和误暂存（Mis-hold）。误放指因为操作问题无意中将方块锁定在了错误的地方，误暂存指本来不用暂存的时候按了暂存，导致需要的块进暂存拿不出来了（通常不允许连续暂存）。
+@ title 误操作
+误操作通常有误放（Mis-drop）和误暂存（Mis-hold）。误放指因为操作问题无意中将方块锁定在了错误的地方，误暂存指本来不用暂存的时候按了暂存，导致需要的块进暂存拿不出来了（通常不允许连续暂存）。
 
 # finesse
 @ title 极简（Finesse）
