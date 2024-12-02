@@ -1,13 +1,13 @@
 local gc=love.graphics
 local fieldW=5
 
-local matrix
+local matrix={}
 local score,target
 local pieceWeights
 local curPiece
 local pieceSpawnTimer
 local noControl
-local choices
+local choices={}
 local texts=TEXT.new()
 
 local pieces={} -- Different orientations of all needed pieces
@@ -101,7 +101,7 @@ local function reset()
     autoBack_interior(true)
     noControl=false
 
-    matrix={}
+    TABLE.clear(matrix)
     score=0
     target=40
     pieceWeights={1,1,1,1,1,1,1}
@@ -124,7 +124,7 @@ local function reset()
         duration=6.26,
     }
 
-    choices={}
+    TABLE.clear(choices)
     for i=1,7 do
         local p=TABLE.copyAll((Brik.get(i)))
         p.color=RGB9[defaultBrikColor[p.id]]

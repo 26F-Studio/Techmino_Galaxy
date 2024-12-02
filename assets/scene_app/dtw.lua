@@ -16,7 +16,8 @@ local targets={
 
 local B={x=400,y=20,w=800,h=960,cw=200,ch=160}
 
-local state,progress
+local state
+local progress={}
 local startTime,time
 local keyTime
 local speed,maxSpeed
@@ -73,7 +74,8 @@ local function freshSelectors()
 end
 
 local score
-local pos,height
+local pos={}
+local height
 local diePos
 
 local function get1(prev)
@@ -192,7 +194,7 @@ local generator={
 function reset()
     keyTime={} for i=1,40 do keyTime[i]=-1e99 end
     speed,maxSpeed=0,0
-    progress={}
+    TABLE.clear(progress)
     state=0
     freshSelectors()
     time=0
@@ -207,7 +209,7 @@ function reset()
     rollSpeed=rollSpeed or 620
     rollAcc=rollAcc or 26
 
-    pos={}
+    TABLE.clear(pos)
     while #pos<7 do generator[mode]() end
     height=0
     diePos=false

@@ -81,7 +81,7 @@ local voiceData={
         y=0,
     },
 }
-local voice
+local voice={}
 
 
 ---@type Zenitha.Scene
@@ -98,7 +98,7 @@ end
 
 function scene.load()
     love.mouse.setRelativeMode(true)
-    voice={}
+    TABLE.clear(voice)
     for k,v in next,voiceData do
         voice[k]=Voice.init(v)
         voice[k]:volumeChange(0)

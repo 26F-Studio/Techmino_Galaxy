@@ -23,7 +23,7 @@ local time,quiting
 local writing
 local database
 local inputs,cheat
-local results
+local results={}
 
 local charQueue={}
 local function selChar(i)
@@ -106,7 +106,7 @@ local function freshResult()
         p=p+1
     end
 
-    results={}
+    TABLE.clear(results)
     for i=1,#list do
         local state=list[i]
         if state.step==maxStep and state.node[1] then
@@ -145,8 +145,8 @@ function scene.load()
     time,quiting=0,false
     writing=false
     inputs,cheat={},false
-    results={}
-    charQueue={}
+    TABLE.clear(results)
+    TABLE.clear(charQueue)
 
     if not database then
         local data=FILE.load('datatable/stroke_data.txt'):split('\n')
@@ -241,7 +241,7 @@ function scene.keyDown(k)
     elseif k=='backspace' then -- Delete a char
         rem(charQueue)
     elseif k=='delete' then -- Clear chars
-        charQueue={}
+        TABLE.clear(charQueue)
     elseif k=='return' then -- Confirm text
         quiting=charQueue
     elseif k=='space' then -- Select first char

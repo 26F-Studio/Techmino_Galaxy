@@ -60,7 +60,8 @@ local cardText={
     z7={COLOR.R,CHAR.mahjong.z7},
 }
 
-local deck,hand,pool
+local deck
+local hand,pool={},{}
 local selected
 
 local function _getPoolCardArea(i)
@@ -79,8 +80,8 @@ end
 
 local function _newGame()
     deck=TABLE.copy(deck0)
-    hand={}
-    pool={}
+    TABLE.clear(hand)
+    TABLE.clear(pool)
     for _=1,14 do ins(hand,(TABLE.popRandom(deck))) end
     table.sort(hand)
 end

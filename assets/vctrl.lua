@@ -335,7 +335,7 @@ local VCTRL={
 VCTRL.focus=false
 
 function VCTRL.reset()
-    touches={}
+    TABLE.clear(touches)
     VCTRL.focus=false
     for i=1,#VCTRL do
         VCTRL[i]:reset()

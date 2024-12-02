@@ -1,28 +1,25 @@
---------------------------------------------------------------
---------------------------------------------------------------
---
---  <<SPOILER WARNING>>
---
---  This file contains spoilers for the game's mechanics
---  Read freely as you want, but could you not share them easily?
---  Ignorance can be a bliss.
---
---------------------------------------------------------------
---------------------------------------------------------------
-
 local max,min=math.max,math.min
 local ins,rem=table.insert,table.remove
+local copy,connect=TABLE.copy,TABLE.connect
 
 -- Fill list when empty, with source
 ---@return boolean #True when filled
 local function supply(list,src,rep)
     if not list[1] then
         for _=1,rep or 1 do
-            TABLE.connect(list,src)
+            connect(list,src)
         end
         return true
     end
     return false
+end
+
+-- Shuffle a list with specified random generator
+local function shuffle(L,P)
+    for i=#L,2,-1 do
+        local r=P.RND:random(i)
+        L[i],L[r]=L[r],L[i]
+    end
 end
 
 local Tetros={1,2,3,4,5,6,7}
@@ -33,7 +30,8 @@ local hardPentos={8,9,12,13,15,16,17,18,21,22} -- Z5 S5 F E U V W X R Y
 ---@enum (key) Techmino.Mech.Brik.SequenceName
 local sequence={
 
--- Bag +/-
+-- Bag Variants (in piece)
+
 bag7=function(P,d,init) -- The where we begin
     if init then d.bag={} return end
     supply(d.bag,Tetros)
@@ -59,7 +57,7 @@ end,
 bag7p7p2_power=function(P,d,init) -- bag7+7+TI
     if init then d.bag={} return end
     if supply(d.bag,Tetros,2) then
-        TABLE.connect(d.bag,{5,7})
+        connect(d.bag,{5,7})
     end
     return rem(d.bag,P:random(#d.bag))
 end,
@@ -67,7 +65,7 @@ end,
 bag7p7p7p5_power=function(P,d,init) -- bag7+7+7+TTOII
     if init then d.bag={} return end
     if supply(d.bag,Tetros,3) then
-        TABLE.connect(d.bag,{5,5,6,7,7})
+        connect(d.bag,{5,5,6,7,7})
     end
     return rem(d.bag,P:random(#d.bag))
 end,
@@ -81,7 +79,7 @@ end,
 bag7p6_flood=function(P,d,init) -- bag7+SSSZZZ
     if init then d.bag={} return end
     if supply(d.bag,Tetros) then
-        TABLE.connect(d.bag,{1,1,1,2,2,2})
+        connect(d.bag,{1,1,1,2,2,2})
     end
     return rem(d.bag,P:random(#d.bag))
 end,
@@ -110,7 +108,7 @@ bag3_sea=function(P,d,init) -- bag3(III)
     return rem(d.bag,P:random(#d.bag))
 end,
 
--- Bag Variants
+-- Bag Variants (in rule)
 
 bag7_p1fromBag7=function(P,d,init) -- bag7+1(from another bag7)
     if init then d.bag,d.extra={},{} return end
@@ -129,7 +127,7 @@ bag7_sprint=function(P,d,init) -- bag7, but no early S/Z/O and shuffling range s
         d.start={}
 
         -- First bag, try to prevent early S/Z/O
-        mixture=TABLE.copy(Tetros)
+        mixture=copy(Tetros)
         for i=7,2,-1 do ins(mixture,rem(mixture,P:random(1,i))) end
         local szo={[1]=0,[2]=0,[6]=0}
         for _=1,2 do
@@ -137,14 +135,14 @@ bag7_sprint=function(P,d,init) -- bag7, but no early S/Z/O and shuffling range s
                 ins(mixture,P:random(2,7),rem(mixture,1))
             end
         end
-        TABLE.connect(d.start,mixture)
+        connect(d.start,mixture)
 
         -- Gradually increase the shuffle range until full shuffle
         local rndRange=3
         repeat
             local mixer={}
             for _=1,7 do ins(mixer,rem(mixture,P:random(min(#mixture,rndRange)))) end
-            TABLE.connect(d.start,mixer)
+            connect(d.start,mixer)
             mixture=mixer
             rndRange=rndRange+1
         until rndRange==7
@@ -172,13 +170,10 @@ bag7_luckyT=function(P,d,init) -- bag7, but T piece is more likely to appear lat
         d.tSpikes={P:random(4,6),P:random(10,16)}
         return
     end
-    if #d.bag==0 then
+    if not d.bag[1] then
         d.bagCount=d.bagCount+1
         d.bag={1,2,3,4,6,7}
-        for i=#d.bag,2,-1 do
-            local r=P:random(i)
-            d.bag[i],d.bag[r]=d.bag[r],d.bag[i]
-        end
+        shuffle(d.bag,P)
 
         local r
         if d.bagCount==d.tSpikes[1] then
@@ -200,7 +195,7 @@ bag7_luckyT=function(P,d,init) -- bag7, but T piece is more likely to appear lat
 end,
 
 bag7_steal1=function(P,d,init) -- bag7, but each bag steals a piece from the next bag
-    if init then d.bag,d.victim={},TABLE.copy(Tetros) return end
+    if init then d.bag,d.victim={},copy(Tetros) return end
     if supply(d.bag,Tetros) then
         d.bag,d.victim=d.victim,d.bag
         ins(d.bag,rem(d.victim,P:random(#d.victim)))
@@ -211,7 +206,7 @@ end,
 bag7_1stSplit3211=function(P,d,init) -- bag7, but split first bag 3+2+1+1-ly into next four bags
     if init then
         d.bag={}
-        d.victim=TABLE.copy(Tetros)
+        d.victim=copy(Tetros)
         d.bagCount=0
         return
     end
@@ -254,7 +249,7 @@ his4_roll4=function(P,d,init)
 end,
 
 pool8_bag7=function(P,d,init)
-    if init then d.bag,d.pool={},TABLE.copy(Tetros) return end
+    if init then d.bag,d.pool={},copy(Tetros) return end
     supply(d.bag,Tetros)
     d.pool[8]=rem(d.bag,P:random(#d.bag))
     return rem(d.pool,P:random(7))

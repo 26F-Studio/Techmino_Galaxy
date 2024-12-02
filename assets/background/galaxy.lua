@@ -2,7 +2,7 @@
 local ins=table.insert
 local rnd=math.random
 local circle=GC.circle
-local stars={}
+local stars
 
 local t=0
 local camX,camY,camZ=0,0,0
@@ -10,6 +10,7 @@ local camX,camY,camZ=0,0,0
 local back={}
 
 function back.init()
+    stars={}
     for _=1,620 do
         ins(stars,{
             x=rnd()*2-1,y=rnd()*2-1,z=.26+rnd(),
@@ -36,6 +37,6 @@ function back.draw()
     end
 end
 function back.discard()
-    stars={}
+    stars=nil
 end
 return back

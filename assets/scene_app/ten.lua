@@ -31,11 +31,13 @@ local area={
     c=180,
 }
 
-local board,preview,cx,cy
+local board,cx,cy
+local preview
 local failPos
 local startTime,time
 local maxTile,maxNew
-local state,progress
+local state
+local progress
 local fallingTimer
 local score
 
@@ -51,7 +53,7 @@ local function setState(v)
 end
 local function reset()
     setState(0)
-    progress={}
+    TABLE.clear(progress)
     score,time=0,0
     maxTile,maxNew=2,2
     for i=1,5 do
@@ -66,7 +68,7 @@ local function reset()
 end
 function scene.load()
     BG.set('space')
-    preview={}
+    TABLE.clear(preview)
     board={{},{},{},{},{}}
     cx,cy=3,3
     startTime=0

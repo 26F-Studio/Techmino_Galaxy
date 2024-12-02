@@ -29,7 +29,7 @@ local function setState(v)
 end
 function scene.load()
     BG.set('space')
-    board={}
+    TABLE.clear(board)
     rank=3
     invis=false
     disappear=false
@@ -95,7 +95,7 @@ function scene.keyDown(key,isRep)
         love.mousepressed(x,y,1)
     elseif key=='space' then
         if state>0 then
-            board={}
+            TABLE.clear(board)
             time=0
             mistake=0
             setState(0)
