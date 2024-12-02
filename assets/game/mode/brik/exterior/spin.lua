@@ -14,7 +14,8 @@ return {
     end,
     settings={brik={
         spin_immobile=true,
-        seqType='bag7_luckyT',
+        seqType='bag7_stable',
+        deathDelay=1260,
         event={
             playerInit=function(P)
                 mechLib.brik.chargeLimit.spin_event_playerInit(P)

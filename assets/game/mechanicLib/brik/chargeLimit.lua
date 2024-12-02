@@ -312,7 +312,7 @@ do -- spin
 
         -- Non-spin punishing
         if not P.lastMovement.immobile and mainDev then
-            mainDev.pow=math.max(mainDev.pow-pieceDev_punish,-1)
+            mainDev.pow=math.min(mainDev.pow-pieceDev_punish,-1)
         end
     end
     function chargeLimit.spin_piece_event_drawOnPlayer(P)

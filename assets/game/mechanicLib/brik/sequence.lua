@@ -119,6 +119,28 @@ bag7_p1fromBag7=function(P,d,init) -- bag7+1(from another bag7)
     return rem(d.bag,P:random(#d.bag))
 end,
 
+bag7_stable=function(P,d,init) -- bag7, but difference between adjacent bags is small
+    if init then
+        d.bag1={}
+        d.bag2=copy(Tetros)
+        shuffle(d.bag2,P)
+        return
+    end
+
+    if supply(d.bag1,d.bag2) then
+        local l=d.bag2
+        local i=#l-1
+        while i>=1 do
+            if P:roll(.42) then
+                l[i],l[i+1]=l[i+1],l[i]
+                i=i-1
+            end
+            i=i-1
+        end
+    end
+    return rem(d.bag1)
+end,
+
 bag7_sprint=function(P,d,init) -- bag7, but no early S/Z/O and shuffling range start from 3, +1 each bag
     if init then
         d.bag={}
