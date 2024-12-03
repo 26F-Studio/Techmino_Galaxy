@@ -1388,7 +1388,7 @@ end
 -- Builder
 
 ---@class Techmino.Mode.Setting.Gela
----@field event table<Techmino.EventName, Techmino.Event.Gela[] | Techmino.Event.Gela>
+---@field event? table<Techmino.EventName, Techmino.Event.Gela[] | Techmino.Event.Gela>
 local baseEnv={
     -- Size
     fieldW=6, -- [WARNING] This is read-only field width. Change real field size with 'self:changeFieldWidth'

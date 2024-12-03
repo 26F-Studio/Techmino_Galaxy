@@ -700,7 +700,7 @@ end
 -- Builder
 
 ---@class Techmino.Mode.Setting.Acry
----@field event table<Techmino.EventName, Techmino.Event.Acry[] | Techmino.Event.Acry>
+---@field event? table<Techmino.EventName, Techmino.Event.Acry[] | Techmino.Event.Acry>
 local baseEnv={
     -- Size
     fieldSize=8,
