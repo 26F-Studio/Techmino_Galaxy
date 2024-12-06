@@ -7,8 +7,8 @@ local task={}
 ---@field title string
 ---@field desc string?
 ---@field progress string? progress text, like "1/10"
----@field value number 0-1
----@field valueShow number 0-1
+---@field value number 0~1
+---@field valueShow number 0~1
 ---@field changing boolean
 ---@field achieved boolean
 ---@field achievedTimer integer

@@ -72,7 +72,6 @@ function scene.keyDown(key,isRep)
     sysAction(KEYMAP.sys:getAction(key))
     return true
 end
-
 function scene.keyUp(key)
     local action
 
