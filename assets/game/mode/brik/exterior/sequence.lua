@@ -44,12 +44,12 @@ local function sequence_pento_arc(P,d,init)
     if not d.bag1[1] then
         d.bagCount=d.bagCount+1
         if d.bagCount>=6 and d.bagCount<=9 then
-            TABLE.connect(d.bag1,Pentos)
+            TABLE.append(d.bag1,Pentos)
         else
-            TABLE.connect(d.bag1,easyPentos)
+            TABLE.append(d.bag1,easyPentos)
             for _=1,4 do
                 if not d.bag2[1] then
-                    TABLE.connect(d.bag2,hardPentos)
+                    TABLE.append(d.bag2,hardPentos)
                 end
                 table.insert(d.bag1,table.remove(d.bag2,P:random(#d.bag2)))
             end

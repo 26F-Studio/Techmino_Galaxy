@@ -1,13 +1,13 @@
 local max,min=math.max,math.min
 local ins,rem=table.insert,table.remove
-local copy,connect=TABLE.copy,TABLE.connect
+local copy,append=TABLE.copy,TABLE.append
 
 -- Fill list when empty, with source
 ---@return boolean #True when filled
 local function supply(list,src,rep)
     if not list[1] then
         for _=1,rep or 1 do
-            connect(list,src)
+            append(list,src)
         end
         return true
     end
@@ -57,7 +57,7 @@ end,
 bag7p7p2_power=function(P,d,init) -- bag7+7+TI
     if init then d.bag={} return end
     if supply(d.bag,Tetros,2) then
-        connect(d.bag,{5,7})
+        append(d.bag,{5,7})
     end
     return rem(d.bag,P:random(#d.bag))
 end,
@@ -65,7 +65,7 @@ end,
 bag7p7p7p5_power=function(P,d,init) -- bag7+7+7+TTOII
     if init then d.bag={} return end
     if supply(d.bag,Tetros,3) then
-        connect(d.bag,{5,5,6,7,7})
+        append(d.bag,{5,5,6,7,7})
     end
     return rem(d.bag,P:random(#d.bag))
 end,
@@ -79,7 +79,7 @@ end,
 bag7p6_flood=function(P,d,init) -- bag7+SSSZZZ
     if init then d.bag={} return end
     if supply(d.bag,Tetros) then
-        connect(d.bag,{1,1,1,2,2,2})
+        append(d.bag,{1,1,1,2,2,2})
     end
     return rem(d.bag,P:random(#d.bag))
 end,
@@ -157,14 +157,14 @@ bag7_sprint=function(P,d,init) -- bag7, but no early S/Z/O and shuffling range s
                 ins(mixture,P:random(2,7),rem(mixture,1))
             end
         end
-        connect(d.start,mixture)
+        append(d.start,mixture)
 
         -- Gradually increase the shuffle range until full shuffle
         local rndRange=3
         repeat
             local mixer={}
             for _=1,7 do ins(mixer,rem(mixture,P:random(min(#mixture,rndRange)))) end
-            connect(d.start,mixer)
+            append(d.start,mixer)
             mixture=mixer
             rndRange=rndRange+1
         until rndRange==7

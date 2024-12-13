@@ -38,23 +38,6 @@ local sims={
             )
         end,
     },
-    -- draw=function() -- Gela
-        -- GC.setColor(COLOR.R)
-        -- GC.setLineWidth(8)
-        -- GC.circle('line',-35,-60,70)
-        -- GC.circle('line',35,60,70)
-    -- end,
-    -- draw=function() -- Acry
-    --     GC.setColor(COLOR.B)
-    --     GC.setLineWidth(10)
-    --     GC.polygon('line',
-    --         0,112,
-    --         108,-32,
-    --         50,-100,
-    --         -50,-100,
-    --         -108 ,-32
-    --     )
-    -- end,
     { -- TTGM
         unlock=function()
             return PROGRESS.get('TTGM').stage>0
@@ -74,6 +57,24 @@ local sims={
         end,
     },
 }
+--[[
+    -- Gela
+    GC.setColor(COLOR.R)
+    GC.setLineWidth(8)
+    GC.circle('line',-35,-60,70)
+    GC.circle('line',35,60,70)
+
+    -- Acry
+    GC.setColor(COLOR.B)
+    GC.setLineWidth(10)
+    GC.polygon('line',
+        0,112,
+        108,-32,
+        50,-100,
+        -50,-100,
+        -108 ,-32
+    )
+]]
 
 ---@type integer | false
 local subjectFocused=false
