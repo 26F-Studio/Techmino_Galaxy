@@ -49,11 +49,9 @@ end
 function scene.update(dt)
     if time<5 then
         time=time+dt
-        if not img then
+        if not img and err.shot then
             img=err.shot
-            if img then
-                imgW,imgH=img:getWidth(),img:getHeight()
-            end
+            imgW,imgH=img:getWidth(),img:getHeight()
         end
     end
 end

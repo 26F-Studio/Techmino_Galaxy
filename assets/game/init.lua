@@ -474,7 +474,7 @@ end
 local _canvasSetting={stencil=true}
 function GAME.render()
     if not GAME.playerList then return end
-    _canvasSetting[1]=ZENITHA.getBigCanvas('player')
+    _canvasSetting[1]=ZENITHA.bigCanvas.player
     gc.setCanvas(_canvasSetting)
     gc.replaceTransform(SCR.xOy_m)
     gc.applyTransform(GAME.camera.transform)
@@ -499,7 +499,7 @@ function GAME.render()
     else
         gc.setShader(SHADER.none) -- Directly draw the content, don't consider color, for better performance(?)
     end
-    gc.draw(ZENITHA.getBigCanvas('player'))
+    gc.draw(ZENITHA.bigCanvas.player)
     gc.setShader()
 end
 
