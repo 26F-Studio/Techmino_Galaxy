@@ -363,11 +363,14 @@ DEBUG.checkLoadTime("Config Zenitha")
 --------------------------------------------------------------
 -- Load saving data
 
-TABLE.update(SETTINGS,FILE.load('conf/settings','-json -canskip') or {})
-for k,v in next,SETTINGS._system do
-    -- Gurantee triggering all setting-triggers
-    SETTINGS._system[k]=nil
-    SETTINGS.system[k]=v
+do -- Load setting file and trigger all setting-triggers only one time
+    local setFile=FILE.load('conf/settings','-json -canskip') or {}
+    setFile._system,setFile.system=setFile.system,nil
+    TABLE.update(SETTINGS,setFile)
+    for k,v in next,SETTINGS._system do
+        SETTINGS._system[k]=nil
+        SETTINGS.system[k]=v
+    end
 end
 if SETTINGS.system.portrait then -- Brute fullscreen config for mobile device
     SCR.setSize(1600,2560)
