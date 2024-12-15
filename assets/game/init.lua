@@ -1,10 +1,5 @@
 local require=simpRequire('assets.game.')
 Brik=require'briks'
-defaultBrikColor=setmetatable({
-    844,484,448,864,748,884,488,
-    844,484,845,485,468,854,748,684,488,847,884,448,864,468,854,846,486,884,
-    478,748,854,484,
-},{__index=function() return math.random(64) end})
 require'rotsys_brik'
 
 local gc=love.graphics

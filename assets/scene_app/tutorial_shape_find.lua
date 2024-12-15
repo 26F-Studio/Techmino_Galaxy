@@ -69,7 +69,7 @@ local function newQuestion()
         local piece=Brik.get(choices[i])
         choices[i]={
             shape=TABLE.copy(piece.shape),
-            color=RGB9[defaultBrikColor[piece.id]],
+            color=RGB9[SETTINGS.game_brik.palette[piece.id]],
             correct=i==1,
         }
         if level==2 then

@@ -680,7 +680,7 @@ function BP:getBrik(shapeData)
         shapeID=shapeData.id
         shapeName=shapeData.name or "?"
         shapeMat=TABLE.copy(shapeData.shape)
-        shapeColor=shapeData.color or defaultBrikColor[shapeID] or self:random(64)
+        shapeColor=shapeData.color or self.settings.palette[shapeID] or self:random(64)
     else
         ---@cast shapeData Techmino.Brik.Name | Techmino.Brik.ID
         local brik=Brik.get(shapeData)
@@ -688,7 +688,7 @@ function BP:getBrik(shapeData)
         shapeID=brik.id
         shapeName=brik.name
         shapeMat=TABLE.copy(brik.shape)
-        shapeColor=defaultBrikColor[shapeID]
+        shapeColor=self.settings.palette[shapeID]
     end
     self.pieceCount=self.pieceCount+1
 
@@ -1347,7 +1347,7 @@ function BP:setField(arg)
             if type(c)=='number' then
                 if color=='template' then
                     if c%1==0 and c>=1 and c<=7 then
-                        c=defaultBrikColor[c]
+                        c=self.settings.palette[c]
                     elseif c==8 then
                         c=777
                     else
@@ -2049,6 +2049,11 @@ local baseEnv={
     particles=true,
     shakeness=.26, -- *
     inputDelay=0,
+    palette={
+        844,484,448,864,748,884,488,
+        844,484,845,485,468,854,748,684,488,847,884,448,864,468,854,846,486,884,
+        478,748,854,484,
+    }
 }
 ---@return Techmino.Player.Brik
 function BP.new(remote)

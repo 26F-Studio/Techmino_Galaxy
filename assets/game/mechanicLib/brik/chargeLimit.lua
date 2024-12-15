@@ -144,13 +144,13 @@ do -- spin
         {name='T',id=5,x=-300-80,y= 60+40*3-15,w=160,h=30,color=RGB9 [748], colorD=RGB9 [423], colorL=RGB9 [869] },
     }
     local colorToID={
-        [defaultBrikColor[1]]=1,
-        [defaultBrikColor[2]]=2,
-        [defaultBrikColor[3]]=3,
-        [defaultBrikColor[4]]=4,
-        [defaultBrikColor[5]]=5,
-        [defaultBrikColor[6]]=6,
-        [defaultBrikColor[7]]=7,
+        [844]=1,
+        [484]=2,
+        [448]=3,
+        [864]=4,
+        [748]=5,
+        [884]=6,
+        [488]=7,
     }
     local columnPureTextColor={
         RGB9[966],

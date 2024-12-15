@@ -238,7 +238,7 @@ end
 local size=60
 function scene.draw()
     GC.replaceTransform(SCR.xOy_m)
-    GC.setColor(RGB9[defaultBrikColor[handID]])
+    GC.setColor(RGB9[SETTINGS.game_brik.palette[handID]])
 
     -- Hand shape
     GC.translate(-#handMat*size/2,-#handMat*size/2-250)

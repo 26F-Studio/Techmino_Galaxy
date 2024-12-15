@@ -27,7 +27,7 @@ for k,v in next,STRING.split('S0 SR Z0 ZR J0 JR JF JL L0 LR LF LL T0 TR TF TL O0
         id=p.id,
         name=p.name,
         shape=shape,
-        color=RGB9[defaultBrikColor[p.id]],
+        color=RGB9[SETTINGS.game_brik.palette[p.id]],
         dir=v:sub(2,2),
 
         width=#shape[1],
@@ -127,7 +127,7 @@ local function reset()
     TABLE.clear(choices)
     for i=1,7 do
         local p=TABLE.copyAll((Brik.get(i)))
-        p.color=RGB9[defaultBrikColor[p.id]]
+        p.color=RGB9[SETTINGS.game_brik.palette[p.id]]
         choices[i]=p
     end
 end
