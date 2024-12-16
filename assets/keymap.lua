@@ -1,5 +1,14 @@
+---@class Techmino.keymapAction
+---@field act string
+---@field keys string[]
+
 local Map={}
 Map.__index=Map
+
+---@param map Techmino.keymapAction[]
+function Map.new(map)
+    return setmetatable(map or {},Map)
+end
 
 function Map:import(data)
     if not data then return end
@@ -49,9 +58,9 @@ function Map:remKey(key)
         end
     end
 end
-function Map:addKey(act,key)
+function Map:addKey(action,key)
     for i=1,#self do
-        if self[i].act==act then
+        if self[i].act==action then
             table.insert(self[i].keys,key)
             while #self[i].keys>=5 do
                 table.remove(self[i].keys,1)
@@ -59,10 +68,6 @@ function Map:addKey(act,key)
             break
         end
     end
-end
-
-function Map.new(l)
-    return setmetatable(l or {},Map)
 end
 
 return Map
