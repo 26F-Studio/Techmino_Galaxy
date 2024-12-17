@@ -151,7 +151,7 @@ do -- Widgets
         scrollBarWidth=5,
         scrollBarDist=12,
         scrollBarColor=COLOR.lY,
-        activeColor={0,0,0,0},idleColor={0,0,0,0},
+        activeColor={0,0,0,0},
         stencilMode='single',
     }
     function listBox.drawFunc(obj,_,sel)

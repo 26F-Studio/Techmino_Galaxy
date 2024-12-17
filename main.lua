@@ -562,6 +562,11 @@ SCN.addSwapStyle('fastFadeHeader',{
         GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
     end,
 })
+SCN.addSwapStyle('blackStun',{
+    duration=.42,
+    timeChange=.1,
+    draw=function() GC.clear() end,
+})
 local _oldLoad=SCN.scenes._console.load
 function SCN.scenes._console.load(...)
     _oldLoad(...)

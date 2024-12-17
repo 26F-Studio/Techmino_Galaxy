@@ -16,7 +16,7 @@ local function B(t)
         type='button_fill',
         pos={.5,.52},
         w=620,h=140,
-        color='B',
+        fillColor='B',
         fontSize=50,
         cornerR=0,
     }
