@@ -221,6 +221,38 @@ FONT.load{
 FONT.setDefaultFallback('symbols')
 FONT.setDefaultFont('norm')
 SCR.setSize(1600,1000)
+local bFill=WIDGET.newClass('button_fill','button') do
+    local gc=love.graphics
+    function bFill:draw()
+        gc.push('transform')
+        gc.translate(self._x,self._y)
+
+        if self._pressTime>0 then
+            gc.scale(1-self._pressTime/self._pressTimeMax*.0626)
+        end
+
+        local w,h=self.w,self.h
+        local HOV=self._hoverTime/self._hoverTimeMax
+
+        local c=self.fillColor
+        local r,g,b=c[1],c[2],c[3]
+
+        -- Rectangle
+        gc.setColor(.15+r*.7*(1-HOV*.26),.15+g*.7*(1-HOV*.26),.15+b*.7*(1-HOV*.26),.9)
+        GC.mRect('fill',0,0,w,h,self.cornerR)
+
+        -- Drawable
+        if self._image then
+            gc.setColor(1,1,1)
+            WIDGET._alignDraw(self,self._image)
+        end
+        if self._text then
+            gc.setColor(self.textColor)
+            WIDGET._alignDraw(self,self._text)
+        end
+        gc.pop()
+    end
+end
 WIDGET.setDefaultOption{
     base={
         lineWidth=2,

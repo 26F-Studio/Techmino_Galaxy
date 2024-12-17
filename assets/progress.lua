@@ -241,7 +241,7 @@ function PROGRESS.applyEnv(env)
         PROGRESS.applyInteriorBGM()
         ZENITHA.globalEvent.touchClick=NULL
         ZENITHA.globalEvent.mouseDown=function(x,y) SYSFX.rectRipple(.26,x-10,y-10,20,20) end
-        function ZENITHA.globalEvent.drawCursor(_,x,y)
+        function ZENITHA.globalEvent.drawCursor(x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)
                 gc.setLineWidth(2)
@@ -265,7 +265,7 @@ function PROGRESS.applyEnv(env)
             else             SYSFX.ripple(.26,x,y,26,.62,1,1)
             end
         end
-        function ZENITHA.globalEvent.drawCursor(_,x,y)
+        function ZENITHA.globalEvent.drawCursor(x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)
                 gc.setLineWidth(2)
