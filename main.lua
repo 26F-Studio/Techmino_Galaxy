@@ -31,9 +31,9 @@ end
 -- Load Zenitha
 
 require'Zenitha'
-DEBUG.checkLoadTime("Load Zenitha")
--- DEBUG.runVarMonitor()
--- DEBUG.setCollectGarvageVisible()
+UTIL.time("Load Zenitha",true)
+-- UTIL.runVarMonitor()
+-- UTIL.setCollectGarvageVisible()
 -- if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then require("lldebugger").start() end
 
 --------------------------------------------------------------
@@ -44,7 +44,7 @@ math.randomseed(os.time()*626)
 love.setDeprecationOutput(false)
 love.keyboard.setTextInput(false)
 VERSION=require'version'
-DEBUG.checkLoadTime("System setting")
+UTIL.time("System setting",true)
 
 --------------------------------------------------------------
 -- Create directories
@@ -58,7 +58,7 @@ for _,v in next,{'conf','progress','replay','cache','lib','soundbank'} do
         love.filesystem.createDirectory(v)
     end
 end
-DEBUG.checkLoadTime("Create directories")
+UTIL.time("Create directories",true)
 
 --------------------------------------------------------------
 -- Misc modules
@@ -74,7 +74,7 @@ CHAR=require'assets.char'
 SETTINGS=require'assets.settings'
 SONGBOOK=require'assets.songbook'
 FMOD=require'assets.fmod20221'
-DEBUG.checkLoadTime("Load game modules")
+UTIL.time("Require game modules",true)
 
 --------------------------------------------------------------
 -- Config Zenitha and Fmod
@@ -313,6 +313,49 @@ MSG.addCategory('achievement',
     }
 )
 
+SCN.addSwapStyle('fadeHeader',{
+    duration=.5,
+    timeChange=.25,
+    draw=function(t)
+        local a=t>.25 and 2-t*4 or t*4
+        local h=120*SCR.k
+        GC.setColor(.26,.26,.26,a)
+        GC.rectangle('fill',0,0,SCR.w,h)
+        GC.setColor(1,1,1,a)
+        GC.rectangle('fill',0,h,SCR.w,1)
+        GC.setColor(.1,.1,.1,a)
+        GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
+    end,
+})
+SCN.addSwapStyle('fastFadeHeader',{
+    duration=.2,
+    timeChange=.1,
+    draw=function(t)
+        local a=t>.1 and 2-t*10 or t*10
+        local h=120*SCR.k
+        GC.setColor(.26,.26,.26,a)
+        GC.rectangle('fill',0,0,SCR.w,h)
+        GC.setColor(1,1,1,a)
+        GC.rectangle('fill',0,h,SCR.w,1)
+        GC.setColor(.1,.1,.1,a)
+        GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
+    end,
+})
+SCN.addSwapStyle('blackStun',{
+    duration=.42,
+    timeChange=.1,
+    draw=function() GC.clear() end,
+})
+local _oldLoad=SCN.scenes._console.load
+function SCN.scenes._console.load(...)
+    _oldLoad(...)
+    local l=SCN.scenes._console.widgetList
+    l[5].fontType='codepixel'
+    l[6].fontType='codepixel'
+    l[5]:reset()
+    l[6]:reset()
+end
+
 IMG.init{
     actionIcons={
         texture='assets/image/action_icon.png',
@@ -390,7 +433,7 @@ LANG.add{
 }
 LANG.setDefault('en')
 
-DEBUG.checkLoadTime("Config Zenitha")
+UTIL.time("Configure Zenitha",true)
 
 --------------------------------------------------------------
 -- Load saving data
@@ -482,7 +525,7 @@ if keys then
     KEYMAP.acry:import(keys['acry'])
     KEYMAP.sys:import(keys['sys'])
 end
-DEBUG.checkLoadTime("Load settings & data")
+UTIL.time("Load savedata",true)
 
 --------------------------------------------------------------
 -- Load SOURCE ONLY resources
@@ -518,12 +561,16 @@ for k,v in next,{
     slowPixelize={{'tileSize',0.01}},
 } do for i=1,#v do SHADER[k]:send(unpack(v[i])) end end
 
+UTIL.time("Load shaders",true)
+
 for _,v in next,love.filesystem.getDirectoryItems('assets/background') do
     if FILE.isSafe('assets/background/'..v) and v:sub(-3)=='lua' then
         local name=v:sub(1,-5)
         BG.add(name,FILE.load('assets/background/'..v,'-lua'))
     end
 end
+
+UTIL.time("Load backgrounds",true)
 
 for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
     if FILE.isSafe('assets/scene/'..v) then
@@ -549,6 +596,8 @@ if PROGRESS.get('main')>=3 and ShellOption.launchApplet then
     end
 end
 
+UTIL.time("Load scenes",true)
+
 for _,v in next,{
     'brik_template', -- Shouldn't be used
     'brik_plastic',
@@ -566,72 +615,7 @@ for _,v in next,{
     end
 end
 
-SCN.addSwapStyle('fadeHeader',{
-    duration=.5,
-    timeChange=.25,
-    draw=function(t)
-        local a=t>.25 and 2-t*4 or t*4
-        local h=120*SCR.k
-        GC.setColor(.26,.26,.26,a)
-        GC.rectangle('fill',0,0,SCR.w,h)
-        GC.setColor(1,1,1,a)
-        GC.rectangle('fill',0,h,SCR.w,1)
-        GC.setColor(.1,.1,.1,a)
-        GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
-    end,
-})
-SCN.addSwapStyle('fastFadeHeader',{
-    duration=.2,
-    timeChange=.1,
-    draw=function(t)
-        local a=t>.1 and 2-t*10 or t*10
-        local h=120*SCR.k
-        GC.setColor(.26,.26,.26,a)
-        GC.rectangle('fill',0,0,SCR.w,h)
-        GC.setColor(1,1,1,a)
-        GC.rectangle('fill',0,h,SCR.w,1)
-        GC.setColor(.1,.1,.1,a)
-        GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
-    end,
-})
-SCN.addSwapStyle('blackStun',{
-    duration=.42,
-    timeChange=.1,
-    draw=function() GC.clear() end,
-})
-local _oldLoad=SCN.scenes._console.load
-function SCN.scenes._console.load(...)
-    _oldLoad(...)
-    local l=SCN.scenes._console.widgetList
-    l[5].fontType='codepixel'
-    l[6].fontType='codepixel'
-    l[5]:reset()
-    l[6]:reset()
-end
-
-do -- Power Manager
-    local warnThres={-1,2.6,6.26,14.2,26}
-    local warnCheck=5
-    TASK.new(function()
-        while true do
-            local state,pow=love.system.getPowerInfo()
-            if not pow then return end
-            if state=='charging' or state=='charged' then
-                while warnCheck<5 and pow>warnThres[warnCheck] do
-                    warnCheck=warnCheck+1
-                end
-            else
-                if pow<=warnThres[warnCheck] then
-                    repeat
-                        warnCheck=warnCheck-1
-                    until warnCheck==1 or pow>warnThres[warnCheck]
-                    MSG(({'check','error','warn','info'})[warnCheck],Text.batteryWarn[warnCheck])
-                end
-            end
-            TASK.yieldT(6.26)
-        end
-    end)
-end
+UTIL.time("Load skins",true)
 
 function FMODLoadFunc() -- Will be called again when applying advanced options
     if not (FMOD.C and FMOD.C2) then
@@ -814,7 +798,7 @@ else
     end
 end
 
-love.joystick.loadGamepadMappings('datatable/gamecontrollerdb.txt')
+UTIL.time("Load FMOD",true)
 
 if SYSTEM=='Web' then
     _G[('DiscordRPC')]={update=NULL}
@@ -823,8 +807,36 @@ else
 end
 DiscordRPC.update("Online")
 
-DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins/FMOD/Managers")
+UTIL.time("Load DiscordRPC",true)
+
+do -- Power Manager
+    local warnThres={-1,2.6,6.26,14.2,26}
+    local warnCheck=5
+    TASK.new(function()
+        while true do
+            local state,pow=love.system.getPowerInfo()
+            if not pow then return end
+            if state=='charging' or state=='charged' then
+                while warnCheck<5 and pow>warnThres[warnCheck] do
+                    warnCheck=warnCheck+1
+                end
+            else
+                if pow<=warnThres[warnCheck] then
+                    repeat
+                        warnCheck=warnCheck-1
+                    until warnCheck==1 or pow>warnThres[warnCheck]
+                    MSG(({'check','error','warn','info'})[warnCheck],Text.batteryWarn[warnCheck])
+                end
+            end
+            TASK.yieldT(6.26)
+        end
+    end)
+end
+
+love.joystick.loadGamepadMappings('datatable/gamecontrollerdb.txt')
+
+UTIL.time("Load utils",true)
 
 --------------------------------------------------------------
 
-DEBUG.logLoadTime()
+UTIL.showTimeLog()
