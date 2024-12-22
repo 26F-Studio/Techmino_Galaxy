@@ -6,9 +6,10 @@ end
 local _require=require
 local require=simpRequire('Zenitha.')
 local rnd=math.random
+AE=require'escape'
+LOG=require'log'
 STRING=require'stringExtend'
 TABLE=require'tableExtend'
-AE=require'escape'
 
 local stdout=io.stdout
 function write(text)
@@ -17,7 +18,7 @@ function write(text)
 end
 local function sleep(time)
     if time<=0 then return end
-    if love._os=='Linux' then
+    if love['_os']=='Linux' then
         os.execute('sleep '..time)
     else
         local fin=os.clock()+time

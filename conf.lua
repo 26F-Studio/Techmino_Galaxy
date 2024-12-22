@@ -11,7 +11,7 @@ if ShellOption.bootDisabled then
     return
 end
 
-if love._os=='Web' then
+if love['_os']=='Web' then
     local oldRead=love.filesystem.read
     love.filesystem[('read')]=function(name,size)
         if love.filesystem.getInfo(name) then return oldRead(name,size) end
@@ -23,7 +23,7 @@ function love.conf(t)
     local mobile=love._os=='Android' or love._os=='iOS'
     local web=love._os=='Web'
     local msaa=4
-    local portrait=false
+    local portrait=false ---@type boolean|nil
 
     local fs=love.filesystem
     fs.setIdentity(identity)
