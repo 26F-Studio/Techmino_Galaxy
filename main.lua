@@ -221,14 +221,21 @@ FONT.load{
 FONT.setDefaultFallback('symbols')
 FONT.setDefaultFont('norm')
 SCR.setSize(1600,1000)
-local bFill=WIDGET.newClass('button_fill','button') do
+do -- WIDGET.newClass
+    local bFill=WIDGET.newClass('button_fill','button')
+    local bInvis=WIDGET.newClass('button_invis','button')
+
     local gc=love.graphics
+    local gc_push,gc_pop=gc.push,gc.pop
+    local gc_translate,gc_scale=gc.translate,gc.scale
+    local gc_setColor=gc.setColor
+    local alignDraw=WIDGET._alignDraw
     function bFill:draw()
-        gc.push('transform')
-        gc.translate(self._x,self._y)
+        gc_push('transform')
+        gc_translate(self._x,self._y)
 
         if self._pressTime>0 then
-            gc.scale(1-self._pressTime/self._pressTimeMax*.0626)
+            gc_scale(1-self._pressTime/self._pressTimeMax*.0626)
         end
 
         local w,h=self.w,self.h
@@ -238,19 +245,43 @@ local bFill=WIDGET.newClass('button_fill','button') do
         local r,g,b=c[1],c[2],c[3]
 
         -- Rectangle
-        gc.setColor(.15+r*.7*(1-HOV*.26),.15+g*.7*(1-HOV*.26),.15+b*.7*(1-HOV*.26),.9)
+        gc_setColor(.15+r*.7*(1-HOV*.26),.15+g*.7*(1-HOV*.26),.15+b*.7*(1-HOV*.26),.9)
         GC.mRect('fill',0,0,w,h,self.cornerR)
 
         -- Drawable
         if self._image then
-            gc.setColor(1,1,1)
-            WIDGET._alignDraw(self,self._image)
+            gc_setColor(1,1,1)
+            alignDraw(self,self._image)
         end
         if self._text then
-            gc.setColor(self.textColor)
-            WIDGET._alignDraw(self,self._text)
+            gc_setColor(self.textColor)
+            alignDraw(self,self._text)
         end
-        gc.pop()
+        gc_pop()
+    end
+    function bInvis:draw()
+        gc_push('transform')
+        gc_translate(self._x,self._y)
+
+        local w,h=self.w,self.h
+        local HOV=self._hoverTime/self._hoverTimeMax
+
+        local fillC=self.fillColor
+
+        -- Rectangle
+        gc_setColor(fillC[1],fillC[2],fillC[3],HOV*.16)
+        GC.mRect('fill',0,0,w,h,self.cornerR)
+
+        -- Drawable
+        if self._image then
+            gc_setColor(1,1,1)
+            alignDraw(self,self._image)
+        end
+        if self._text then
+            gc_setColor(self.textColor)
+            alignDraw(self,self._text)
+        end
+        gc_pop()
     end
 end
 WIDGET.setDefaultOption{

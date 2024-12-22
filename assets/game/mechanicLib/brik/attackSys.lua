@@ -103,22 +103,22 @@ modern={
             end
 
             do -- Text & Sound
-                local t=""
+                local t=STRING.newBuf()
 
                 -- Add CHG text & sound
                 if newCharge>oldCharge then
                     if newCharge>1 then
-                        t=t..Text.charge.." "
+                        t:put(Text.charge.." ")
                         P:playSound('charge',newCharge)
                     end
                 elseif oldCharge-newCharge>=2 then
-                    t=t..Text.charge.." "
+                    t:put(Text.charge.." ")
                     P:playSound('discharge')
                 end
 
                 -- Add spin text & sound
                 if tspin then
-                    t=t..Text.spin:repD(M.brik.name).." "
+                    t:put(Text.spin:repD(M.brik.name).." ")
                     P:playSound('spin',lines)
                 end
 

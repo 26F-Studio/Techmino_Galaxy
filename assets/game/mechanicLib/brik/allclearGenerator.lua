@@ -165,14 +165,14 @@ local function filterTop(field,pieces)
     end
 end
 local function printField(f)
-    print("--------------------------")
+    local s=STRING.newBuf()
+    s:put("--------------------------")
     for y=#f,1,-1 do
-        local s=""
         for x=1,#f[y] do
-            s=s..(f[y][x] and 'X' or '.')
+            s:put(f[y][x] and "X" or ".")
         end
-        print(s)
     end
+    print(s)
 end
 local function printSeq(s)
     s=TABLE.copy(s,0)
