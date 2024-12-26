@@ -69,10 +69,10 @@ function playSample(...)
             local len=l[i][3] or 420
             local rel=l[i][4] or 620
             local event=FMOD.effect(inst,{
-                tune=note>=0 and note-26 or nil,
+                tune=note>=0 and note-50 or nil,
                 pitch=note<0 and -note or nil,
                 volume=vol,
-                param={'release',rel*1.0594630943592953^(note-26)},
+                param={'release',rel*1.0594630943592953^(note-50)},
             })
             if not event then return end
             TASK.new(function()
@@ -208,10 +208,10 @@ gameSoundFunc.combo=setmetatable({__register=true,
     else
         playSample('complex',{'A4',.626-.01*combo,430-10*combo})
         local phase=(combo-21)%12
-        playSample('square',{40+phase,1-((11-phase)/12)^2,400-10*combo,700+20*combo}) -- E4+
-        playSample('square',{45+phase,1-((11-phase)/12)^2,400-10*combo,700+20*combo}) -- A4+
-        playSample('square',{52+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- E5+
-        playSample('square',{57+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- A5+
+        playSample('square',{16+phase,1-((11-phase)/12)^2,400-10*combo,700+20*combo}) -- E4+
+        playSample('square',{21+phase,1-((11-phase)/12)^2,400-10*combo,700+20*combo}) -- A4+
+        playSample('square',{28+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- E5+
+        playSample('square',{33+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- A5+
     end
 end,__metatable=true})
 gameSoundFunc.chain=gameSoundFunc.combo
