@@ -22,6 +22,7 @@ return {
         spin_immobile=true,
         spin_corners=3,
         seqType='bag7_sprint',
+        infHold=true,
         event={
             playerInit=function(P)
                 P.modeData.infSprint_switch=false

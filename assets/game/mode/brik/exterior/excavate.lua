@@ -11,6 +11,7 @@ return {
         maxFreshChance=1e99,
         maxFreshTime=1e99,
         readyDelay=0,
+        infHold=true,
         event={
             playerInit=function(P)
                 P.modeData.lineStay=0

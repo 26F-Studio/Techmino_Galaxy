@@ -11,6 +11,7 @@ return {
         readyDelay=0,
         maxFreshChance=1e99,
         maxFreshTime=1e99,
+        infHold=true,
         event={
             playerInit=function(P)
                 P.modeData.digMode='line'
