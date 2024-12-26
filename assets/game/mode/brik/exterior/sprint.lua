@@ -43,12 +43,6 @@ return {
             beforePress={
                 mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
                 function(P)
-                    if P.timing then return true end
-                    if P.settings.readyDelay%1000~=0 then
-                        PROGRESS.setSecret('exterior_sprint_gunJumping')
-                    end
-                end,
-                function(P)
                     P.modeData.curKeyCount=P.modeData.curKeyCount+1
                 end,
             },

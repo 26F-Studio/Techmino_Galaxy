@@ -308,7 +308,6 @@ local L={
     ---@enum (key) Techmino.Text.Achievement
     achievementMessage={ -- TRASLATING NOTE: 语气可以更轻松
         dict_shortcut="快捷键高手",
-        exterior_sprint_gunJumping="检测到抢跑",
         exterior_spin_howDareYou="你怎么敢的",
         exterior_excavate_notDig="你在干什么？",
         exterior_invis_superBrain="最强大脑",

@@ -175,6 +175,7 @@ function PROGRESS.fix()
     prgs.secretFound.exterior_tspin_10TSS=nil
     prgs.secretFound.exterior_tspin_10TST=nil
     prgs.secretFound.dial_password=nil
+    prgs.secretFound.exterior_sprint_gunJumping=nil
     if prgs.exteriorMap.tspin then
         prgs.exteriorMap.tspin=nil
         prgs.exteriorMap.spin={}
