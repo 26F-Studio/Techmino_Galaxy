@@ -24,6 +24,7 @@ local dialMode,transTimer
 local mode,instrument,octave_plus
 
 local jaClickCount
+local hasMessage
 
 ---@type Zenitha.Scene
 local scene={}
@@ -151,10 +152,14 @@ function scene.load()
     freshTexts()
 
     jaClickCount=0
+    hasMessage=false
 end
 function scene.unload()
     if changed and SCN.stackChange<0 then
         saveSettings()
+    end
+    if hasMessage then
+        MSG.clear()
     end
 end
 
@@ -257,6 +262,7 @@ local function _setLang(lid)
                 end
                 if anyMissing then
                     MSG.log('warn',"Some i18n strings missing",26)
+                    hasMessage=true
                 end
             else
                 SETTINGS.system.locale=lid
