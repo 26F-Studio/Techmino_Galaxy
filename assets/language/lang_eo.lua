@@ -301,7 +301,7 @@ local L={
 
     -- Achievement
     ---@enum (key) Techmino.Text.Achievement
-    achievementMessage={
+    achievementMessage={ -- TRASLATING NOTE: The tone can be lighter
         dict_shortcut="Fakulo de Hotkeys",
         -- exterior_spin_howDareYou="How dare you",
         exterior_excavate_notDig="Kion vi faras?",
