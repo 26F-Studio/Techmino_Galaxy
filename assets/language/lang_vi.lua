@@ -169,7 +169,7 @@ return {
 
     keyset_pressKey="Hãy nhấn một phím",
     keyset_deleted= "*XÓA PHÍM!*",
-    keyset_info=    "[Esc]: Huỷ\t[Backspace]: Xóa\nNhấn đúp [Esc]: gán phím Esc",
+    keyset_info=    "[Esc]: Huỷ\t[Backspace]: Xóa\nNhấn [ESC] hai lần: gán phím Esc",
 
     stick2_switch="Cần điều khiển\n2 hướng",
     stick4_switch="Cần điều khiển\n4 hướng",
@@ -195,7 +195,9 @@ return {
     main_out_multi="Chơi qua mạng", -- can be translated to "Nhiều người chơi"
 
     musicroom_title="Phòng nhạc",
+    musicroom_richloop="Rich Loop",
     musicroom_fullband="Chơi tất cả nhạc cụ", -- Alt: "Mở full beat", "Nghe full beat" (UPDATE: Don't need to make it shorter)
+    musicroom_section='Chế độ điệp khúc',
     musicroom_autoplay="Tự động đổi bài",
 
     about_title="Giới thiệu",
@@ -228,6 +230,11 @@ return {
     modeTask_question_title="???",
     modeTask_question_desc="??????",
 
+    modeTask_spin_piece_title="Piece",
+    modeTask_spin_piece_desc="Làm một T-spin Đơn",
+    modeTask_spin_column_title="Column",
+    modeTask_spin_column_desc="Làm hai T-spin Đôi",
+
     modeTask_sequence_flood_title="Flood",
     modeTask_sequence_flood_desc="Xóa hàng bằng\ncục Z hoặc cục S",
     modeTask_sequence_drought_title="Drought",
@@ -243,6 +250,11 @@ return {
     modeTask_sequence_pento_title="Pento",
     modeTask_sequence_pento_desc="Xóa hàng bằng\nmột Pento (gạch 5 ô)",
     modeTask_sequence_unknown_desc="Xóa hàng bằng ???",
+
+    modeTask_invis_haunted_title="Haunted",
+    modeTask_invis_haunted_desc="Xóa 4 hàng (riêng lẻ)",
+    modeTask_invis_hidden_title="Hidden",
+    modeTask_invis_hidden_desc="Làm một Techrash",
 
     modeTask_hypersonic_low_title="Low",
     modeTask_hypersonic_low_desc="Xóa 4 hàng",
@@ -261,14 +273,14 @@ return {
     modeTask_excavate_checker_desc="Đào khi Split",
     modeTask_excavate_unknown_desc="Đào khi ???",
 
-    modeTask_backfire_cheese_title="Cheese",
+    modeTask_backfire_break_title="Scattered",
     modeTask_backfire_cheese_desc="Xóa 8 hàng",
     modeTask_backfire_normal_title="Normal",
     modeTask_backfire_normal_desc="Gửi 7 hàng trong 6 hàng",
     modeTask_backfire_amplify_title="Amplify",
     modeTask_backfire_amplify_desc="Gửi 8 hàng trong 4 hàng",
 
-    modeTask_survivor_cheese_title="Cheese",
+    modeTask_survivor_cheese_title="Scattered",
     modeTask_survivor_cheese_desc="Gửi 8 hàng",
     modeTask_survivor_power_title="Power",
     modeTask_survivor_power_desc="Gửi 8 hàng với 1 Eff",
@@ -276,26 +288,32 @@ return {
     modeTask_survivor_spike_desc="Gửi 8 hàng với 2 Eff",
 
     -- Achievement
+    ---@enum (key) Techmino.Text.Achievement
     achievementMessage={
         dict_shortcut="Chuyên gia Phím tắt",
-        exterior_excavate_notDig="Bạn đang làm gì đấy?",
+        exterior_spin_howDareYou="Sao ngươi dám?",
+        exterior_invis_superBrain="Siêu Trí tuệ Việt Nam!",
+        exterior_excavate_notDig="Mày đang làm gì đấy?",
         exterior_hidden_superBrain="NGẦU QUÁ!",
         exterior_sprint_SZOpen="Bạn muốn mở màn bằng SZO à?",
         exterior_tspin_10TSS="Cái gì đây?",
+        language_japanese="あ? (a?)",
         exterior_tspin_10TST="EZ.",
-        exterior_hypersonic_titanium_holdless="You can hold",
+        exterior_hypersonic_titanium_holdless="Nút Giữ: \"Bạn đang quên sự tồn tại của mình à? (sob)\"",
         interior_console="Cái này là cái gì đây?",
         musicroom_recollection="Không có bài nhạc nào tên là \"Hồi tưởng\" cả!",
-        dial_enter="Điện thoại à?",
+        dial_enter="Nhạc... nhạc cụ?",
         dial_password="Mật khẩu đúng rồi đấy!",
     },
     -- Level
-    tutorial_basic="Những thứ cơ bản",
-    tutorial_sequence="Next & Hold",
-    tutorial_stackBasic="Xếp gạch sao cho đúng?",
-    tutorial_twoRotatingKey="Xoay cả 2 hướng",
-    tutorial_piece="Hình dạng viên gạch",
-    tutorial_rotating="Xoay gạch",
+    tutorial_basic="1. Những thứ cơ bản",
+    tutorial_sequence="2. Next & Hold",
+    tutorial_stackBasic="3. Cách xếp gạch cơ bản",
+    tutorial_finesseBasic="4. Cách đ.khiển gạch nhanh nhất",
+    tutorial_finessePractice="5. Luyện tập đ.khiển gạch",
+    tutorial_allclearPractice="6. Luyện tập làm All Clear",
+    tutorial_techrashPractice="7. Luyện tập làm Techrash",
+    tutorial_finessePlus="8. Cách đ.khiển gạch một cách thoăn thoắt",
 
     tutorial_pass="HOÀN THÀNH!", -- Completed (Pass)
     tutorial_notpass="Trượt rồi…",
@@ -310,27 +328,6 @@ return {
     tutorial_sequence_2="Trời ạ, cái gạch này không lọt khít với cái hố rồi…",
     tutorial_sequence_3="Bây giờ bạn có thể nhìn thấy những gạch nào chuẩn bị rơi theo lần lượt.",
     tutorial_sequence_4="Hãy dùng phím \"Giữ gạch\" để điều chỉnh thứ tự của các gạch.",
-
-    tutorial_shape_1="3. Hình dạng viên gạch",
-    tutorial_shape_2="Hãy chọn gạch vừa khít nhất.",
-    
-    tutorial_stackBasic_1="4. Xếp gạch sao cho đúng?",
-    tutorial_stackBasic_m1="Hãy tập trung vào màn hình và làm theo hướng dẫn.",
-    tutorial_stackBasic_m2="Lúc đầu, hãy giữ cho địa hình gạch phẳng nhất có thể",
-    tutorial_stackBasic_m3="Các cục gạch nên được đặt ở tư thế nằm, chứ không phải là tư thế đứng",
-    tutorial_stackBasic_m4="Nếu địa hình gạch bằng phẳng thì dễ dàng để đặt gạch hơn, và cố gắng đừng tạo ra bất kì cái hố nào",
-    tutorial_stackBasic_m5="Bạn thường được thưởng nhiều hơn khi xóa bốn hàng cùng một lúc, hãy thử làm một cái đi",
-    tutorial_stackBasic_m6="Thử làm Techrash bằng cách dùng những viên gạch cuối cùng này mà không cần hướng dẫn đi",
-
-    tutorial_twoRotatingKey_1="5. Xoay cả 2 hướng",
-    tutorial_twoRotatingKey_m1="Hãy tập trung và làm theo hướng dẫn, nhưng hãy cố gắng xoay gạch ít lần nhất có thể",
-    tutorial_twoRotatingKey_m2="Nếu bạn có thể xoay trái, thì đừng có xoay phải 3 lần!",
-    tutorial_twoRotatingKey_m3="Không những tốn công sức và t.gian, bạn còn dễ bị \"ngụm củ tỏi\"",
-    tutorial_twoRotatingKey_m4="Bây giờ bạn có thể tự quyết định vị trí đặt thả gạch rồi, không cần phải dựa vào gợi ý nữa",
-    tutorial_twoRotatingKey_unnecessaryRotation="XOAY QUÁ NHIỀU!",
-
-    tutorial_rotating_1="6. Xoay gạch",
-    tutorial_rotating_2="Hãy xoay gạch ở trên sao cho giống với gạch ở dưới.",
 }
 
 -- Moved the credit to the last for easier edit
