@@ -121,9 +121,9 @@ local L={
     setting_autoMute="Muta quando la finestra non è focalizzata",
     setting_showTouch="Mostra controlli touch",
 
-    setting_maxFPS="FPS Massimi",
-    setting_updRate="Indice di aggiornamento",
-    setting_drawRate="Velocità di aggiornamento",
+    setting_maxTPS="TPS Massimi",
+    setting_updateRate="Indice di aggiornamento",
+    setting_renderRate="Velocità di aggiornamento",
     setting_msaa="MSAA",
     setting_fmod_maxChannel="Canali massimi",
     setting_fmod_DSPBufferCount="DSPBufferCount",

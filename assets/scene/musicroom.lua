@@ -202,17 +202,17 @@ function scene.touchDown() scene.focus(true) end
 function scene.focus(f) -- Reduce carbon footprint for music lovers
     if f then
         if noResponseTimer<=0 then
-            ZENITHA.setMaxFPS(SETTINGS.system.maxFPS)
-            ZENITHA.setUpdateFreq(SETTINGS.system.updRate)
-            ZENITHA.setDrawFreq(SETTINGS.system.drawRate)
+            ZENITHA.setMaxFPS(SETTINGS.system.maxTPS)
+            ZENITHA.setUpdateRate(SETTINGS.system.updateRate)
+            ZENITHA.setRenderRate(SETTINGS.system.renderRate)
         end
         noResponseTimer=6.26
     else
-        ZENITHA.hideCursor()
+        ZENITHA.setCursorVis()
         noResponseTimer=-1
         ZENITHA.setMaxFPS(26)
-        ZENITHA.setUpdateFreq(26)
-        ZENITHA.setDrawFreq(26)
+        ZENITHA.setUpdateRate(26)
+        ZENITHA.setRenderRate(26)
     end
 end
 

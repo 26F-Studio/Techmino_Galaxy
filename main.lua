@@ -298,6 +298,7 @@ WIDGET.setDefaultOption{
         sound_drag='slider_drag',
         soundInterval=.042,
         soundPitchRange=7.02,
+        textAlwaysShow=true,
     },
     slider_fill={
         sound_drag='slider_fill_drag',

@@ -121,9 +121,9 @@ local L={
     setting_autoMute="Silentas kiam la fenestro ne estas fokusita",
     setting_showTouch="Montru tuŝajn kontrolojn",
 
-    setting_maxFPS=">Maksimuma FPS",
-    setting_updRate="Update Rate",
-    setting_drawRate="rapido de ĝisdatigo",
+    setting_maxTPS="Maksimuma TPS",
+    setting_updateRate="rapido de aggiornamento",
+    setting_renderRate="rapido de ĝisdatigo",
     setting_msaa="MSAA",
     setting_fmod_maxChannel="Maksimumaj kanaloj",
     setting_fmod_DSPBufferCount="DSPBufferCount",

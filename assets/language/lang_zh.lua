@@ -121,9 +121,9 @@ local L={
     setting_autoMute="闲时静音",
     setting_showTouch="显示触摸位置",
 
-    setting_maxFPS="最大帧数",
-    setting_updRate="更新比率",
-    setting_drawRate="绘制比率",
+    setting_maxTPS="最大刻数",
+    setting_updateRate="更新比率",
+    setting_renderRate="绘制比率",
     setting_msaa="抗锯齿",
     setting_fmod_maxChannel="最大音频数",
     setting_fmod_DSPBufferCount="DSP缓冲区数量",

@@ -121,9 +121,9 @@ local L={
     setting_autoMute="Mute when idle",
     setting_showTouch="Show touches",
 
-    setting_maxFPS="Max FPS",
-    setting_updRate="Update rate",
-    setting_drawRate="Draw rate",
+    setting_maxTPS="Max TPS",
+    setting_updateRate="Update rate",
+    setting_renderRate="Render rate",
     setting_msaa="MSAA",
     setting_fmod_maxChannel="Max Channel",
     setting_fmod_DSPBufferCount="DSPBufferCount",

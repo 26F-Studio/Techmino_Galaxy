@@ -16,9 +16,9 @@ local settings={
         hitWavePower=.6,
         fullscreen=true,
         portrait=false,
-        maxFPS=300,
-        updRate=100,
-        drawRate=30,
+        maxTPS=300,
+        updateRate=100,
+        renderRate=30,
         msaa=4,
 
         -- Gameplay
@@ -77,9 +77,9 @@ local settingTriggers={ -- Changing values in SETTINGS.system will trigger these
 
     -- Video
     fullscreen=     function(v) love.window.setFullscreen(v); love.resize(love.graphics.getWidth(),love.graphics.getHeight()) end,
-    maxFPS=         function(v) ZENITHA.setMaxFPS(v) end,
-    updRate=        function(v) ZENITHA.setUpdateFreq(v) end,
-    drawRate=       function(v) ZENITHA.setDrawFreq(v) end,
+    maxTPS=         function(v) ZENITHA.setMaxFPS(v) end,
+    updateRate=     function(v) ZENITHA.setUpdateRate(v) end,
+    renderRate=     function(v) ZENITHA.setRenderRate(v) end,
     sysCursor=      function(v) love.mouse.setVisible(v) end,
     clean=          function(v) ZENITHA.setCleanCanvas(v) end,
 
