@@ -1,3 +1,10 @@
+--[[
+    中文是本应用的原始语言之一，通常由MrZ维护，不需要修改
+    请尽量保持所有的语言文件行数一致，方便定位和补充
+    按住Ctrl再选语言来对比语言差异
+    注意"TRASLATING NOTE"标记，因为有故事背景
+    不能完全理解含义的时候请去问MrZ，不用怕打扰
+]]
 ---@class Techmino.I18N
 local L={
     -- Info
@@ -59,7 +66,10 @@ local L={
 
     target_piece="块数",
     target_line="行数",
+    target_key="按键数",
     target_time="时间",
+    target_score="分数",
+    target_combo="连击",
     target_ac="全消",
     target_hc="半全消",
     target_tss="TSS",
@@ -79,7 +89,7 @@ local L={
     button_back="返回",
 
     simulation_title="模拟",
-    graph_brik_title="M-图谱", -- 翻译注意：取自“知识图谱”(人工智能领域)
+    graph_brik_title="M-图谱", -- TRASLATING NOTE: 取自“知识图谱”(人工智能领域)
     settings_title="设置",
 
     setting_asd="重复移动延迟",
@@ -120,7 +130,7 @@ local L={
     setting_fmod_DSPBufferLength="DSP缓冲区长度",
     setting_apply="应用",
 
-    lang_note="中文是本游戏的原始语言\n翻译由志愿者贡献，不保证100%准确\n部分术语可能没有翻译，请查阅词典获取更多信息",
+    lang_note="原始语言只有中文和英文\n翻译由志愿者贡献，不保证100%准确\n部分术语可能没有翻译，请查阅词典获取更多信息",
 
     keyset_title="键位绑定",
     keyset_brik_moveLeft=   "左移",
@@ -203,6 +213,7 @@ local L={
     main_out_multi="联机",
 
     musicroom_title="音乐室",
+    musicroom_richloop="富循环",
     musicroom_fullband='全频带',
     musicroom_section='副歌',
     musicroom_autoplay="自动切换",
@@ -213,11 +224,11 @@ local L={
     about_peopleLost="你弄丢了 $1 !",
 
     -- Mode name
-    exteriorModeInfo={
+    exteriorModeInfo={ -- TRASLATING NOTE: 不需要完全准确，可以尝试引用你使用的语言中的俗语
         sprint=           {"竞速","速度即一切"},
         sequence=         {"序列","面对奇异的方块序列"},
-        hidden=           {"隐形","方块落下后将不可见"},
-        tspin=            {"T旋","构建特殊的地形"},
+        invis=            {"隐形","方块落下后将不可见"},
+        spin=             {"卡块","构建特殊的地形"},
         marathon=         {"马拉松","对抗逐渐增加的重力"},
         allclear=         {"全消","可控的全消并非不可能"},
         combo=            {"连击","开局送楼连到爽"},
@@ -236,6 +247,11 @@ local L={
     modeTask_unknown_title="???",
     modeTask_unknown_desc="??????",
 
+    modeTask_spin_piece_title="Piece",
+    modeTask_spin_piece_desc="卡块消一",
+    modeTask_spin_column_title="Column",
+    modeTask_spin_column_desc="卡块消二",
+
     modeTask_sequence_flood_title="Flood",
     modeTask_sequence_flood_desc="用S/Z消除",
     modeTask_sequence_drought_title="Drought",
@@ -251,6 +267,11 @@ local L={
     modeTask_sequence_pento_title="Pento",
     modeTask_sequence_pento_desc="用五连块消除",
     modeTask_sequence_unknown_desc="用？？？消除",
+
+    modeTask_invis_haunted_title="Haunted",
+    modeTask_invis_haunted_desc="消除四行",
+    modeTask_invis_hidden_title="Hidden",
+    modeTask_invis_hidden_desc="消四",
 
     modeTask_hypersonic_low_title="Low",
     modeTask_hypersonic_low_desc="消除四行",
@@ -284,61 +305,82 @@ local L={
     modeTask_survivor_spike_desc="打出8行攻击 且 效率达到2",
 
     -- Achievement
-    achievementMessage={
+    ---@enum (key) Techmino.Text.Achievement
+    achievementMessage={ -- TRASLATING NOTE: 语气可以更轻松
         dict_shortcut="快捷键高手",
+        exterior_spin_howDareYou="你怎么敢的",
         exterior_excavate_notDig="你在干什么？",
-        exterior_hidden_superBrain="COOL",
-        exterior_tspin_10TSS="这是什么？",
-        exterior_tspin_10TST="轻松。",
-        exterior_hypersonic_titanium_holdless="你可以暂存的",
+        exterior_invis_superBrain="最强大脑",
+        exterior_invis_rhythmMaster="To the beat", -- 保持原样。 出处为游戏 osu! 标题曲
+        exterior_hypersonic_holdlessTitan="你可以暂存的",
         interior_console="这是什么？",
+        language_japanese="あ?",
         musicroom_recollection="Recollection不是一首曲子",
+        musicroom_piano="无人钢琴", -- 原梗出处为“人人钢琴”软件
         dial_enter="乐器？",
-        dial_password="密码正确",
         menu_fastype="看起来你很喜欢打字",
     },
 
-    -- Level
-    tutorial_basic="基本规则",
-    tutorial_sequence="预览&暂存",
-    tutorial_piece="方块形状",
-    tutorial_stackBasic="堆叠(基础)",
-    tutorial_twoRotatingKey="双旋",
-    tutorial_rotating="旋转练习",
+    -- Tutorial levels
+    tutorial_basic="1.基本规则",
+    tutorial_sequence="2.预览&暂存",
+    tutorial_stackBasic="3.基础堆叠",
+    tutorial_finesseBasic="4.基础极简",
+    tutorial_finessePractice="5.极简练习",
+    tutorial_allclearPractice="6.全消练习",
+    tutorial_techrashPractice="7.消四练习",
+    tutorial_finessePlus="8.优雅操作",
 
     tutorial_notpass="Failed",
     tutorial_pass="PASS",
 
     tutorial_basic_1="欢迎来到Techmino",
-    tutorial_basic_2="1. 基本规则",
+    tutorial_basic_2="1.基本规则",
     tutorial_basic_3="用左/右键移动当前方块",
-    tutorial_basic_4="按下硬降键放置当前方块",
+    tutorial_basic_4="按下硬降键放置方块，满行消除",
     tutorial_basic_5="你也可以旋转当前方块",
 
-    tutorial_sequence_1="2. 预览&暂存",
+    tutorial_sequence_1="2.预览&暂存",
     tutorial_sequence_2="哎呀 这个块的形状和坑对不上",
     tutorial_sequence_3="现在你可以看到之后会来什么块了",
     tutorial_sequence_4="使用暂存键来调整方块的顺序",
 
-    tutorial_shape_1="3. 方块形状",
-    tutorial_shape_2="指出方块下部剪影对应的形状",
+    tutorial_stackBasic_1="3.基础堆叠",
+    tutorial_stackBasic_2="请尝试保持“地形平坦”，不要让左侧的危险度指示条过高",
+    tutorial_stackBasic_3="初学时一般都推荐以此为目标",
+    tutorial_stackBasic_4="所以方块通常会尽量摆成平躺的方向，很少竖着",
+    tutorial_stackBasic_5="这能保证后续的选择空间，实现可持续发展",
 
-    tutorial_stackBasic_1="4.堆叠(基础)",
-    tutorial_stackBasic_m1="请按照提示摆块",
-    tutorial_stackBasic_m2="刚开始学习时，一般都推荐尽量“让地形平坦”",
-    tutorial_stackBasic_m3="方块通常会尽量摆成平躺的方向，很少竖着",
-    tutorial_stackBasic_m4="保持地形的顶部平坦比较好持续，不容易出现空洞",
-    tutorial_stackBasic_m5="通常的规则里用棍子一次消四行往往会有较大的收益，再做一个消四试试看",
-    tutorial_stackBasic_m6="尝试不借助提示把消四最后几块补完整吧",
+    tutorial_finesseBasic_0="4.基础极简",
+    tutorial_finesseBasic_0_1="“极简”是一套减少按键数的操作方法，能节约时间和减少误操作",
+    tutorial_finesseBasic_1="①双旋",
+    tutorial_finesseBasic_1_1="逆时针转一次可以代替顺时针转三次，所以请绑定两个用来旋转的按键",
+    tutorial_finesseBasic_1_T="180°旋转在此不强制要求，仅供选用",
+    tutorial_finesseBasic_1_2="练习：请旋转每个方块一次，然后将其放到提示位置",
+    tutorial_finesseBasic_2="②折返",
+    tutorial_finesseBasic_2_1="因为场地的总宽度为10，方块的宽度在3格左右且生成在中间，所以将场地划为左/中/右三个区域",
+    tutorial_finesseBasic_2_2="落点在中间附近就只需要单点移动键微调，在两边就先长按移动键到墙然后微调",
+    tutorial_finesseBasic_2_3="所以只需要“移动一格”和“移动到底”两种操作，也就是单点/长按",
+    tutorial_finesseBasic_2_T="所以ASD调成能区分单点/长按的最小值，ASP尽量快（0）",
+    tutorial_finesseBasic_2_4="练习：请只移动两次，将方块放到提示位置",
+    tutorial_finesseBasic_3="③撞墙转",
+    tutorial_finesseBasic_3_1="方块的旋转是绕旋转中心（白点）进行的",
+    tutorial_finesseBasic_3_2="对于三种方块：Z(红)/S(绿)/I(青)，顺(逆)时针的旋转会让方块偏向右(左)侧",
+    tutorial_finesseBasic_3_3="练习：请只移动一次+旋转一次，将方块放到提示位置",
+    tutorial_finesseBasic_4_1="灵活组合双旋、折返、撞墙转三种方法",
+    tutorial_finesseBasic_4_2="三次左右按键就可以把块放到任何位置",
 
-    tutorial_twoRotatingKey_1="5. 双旋",
-    tutorial_twoRotatingKey_m1="如果可以逆时针旋转一次到位，那么就不需要顺时针转三次",
-    tutorial_twoRotatingKey_m2="不仅浪费力气，还会减慢操作速度",
-    tutorial_twoRotatingKey_m3="你需要先想好放在哪然后开始操作，而不是依赖影子去对地形",
-    tutorial_twoRotatingKey_m4="请按照提示摆块，但旋转的次数必须尽可能少",
-    tutorial_twoRotatingKey_unnecessaryRotation="多余旋转",
+    tutorial_finessePractice_1="5.极简练习",
+    tutorial_finessePractice_2="减少按键次数",
+    tutorial_finessePractice_par="标准步数",
 
-    tutorial_rotating_1="6. 旋转练习",
-    tutorial_rotating_2="请将上面的方块旋转成下面的朝向",
+    tutorial_allclearPractice_1="6.全消练习",
+    tutorial_allclearPractice_2="尽可能做全消",
+
+    tutorial_techrashPractice_1="7.消四练习",
+    tutorial_techrashPractice_2="尽可能做消四",
+
+    tutorial_finessePlus_1="8.优雅操作",
+    tutorial_finessePlus_2="尽可能少按键",
 }
 return L

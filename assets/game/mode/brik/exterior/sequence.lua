@@ -44,12 +44,12 @@ local function sequence_pento_arc(P,d,init)
     if not d.bag1[1] then
         d.bagCount=d.bagCount+1
         if d.bagCount>=6 and d.bagCount<=9 then
-            TABLE.connect(d.bag1,Pentos)
+            TABLE.append(d.bag1,Pentos)
         else
-            TABLE.connect(d.bag1,easyPentos)
+            TABLE.append(d.bag1,easyPentos)
             for _=1,4 do
                 if not d.bag2[1] then
-                    TABLE.connect(d.bag2,hardPentos)
+                    TABLE.append(d.bag2,hardPentos)
                 end
                 table.insert(d.bag1,table.remove(d.bag2,P:random(#d.bag2)))
             end
@@ -88,7 +88,6 @@ return {
                 T.add(P,'sequence_saw',     'modeTask_sequence_saw_title',     'modeTask_sequence_saw_desc')
                 T.add(P,'sequence_rect',    'modeTask_sequence_rect_title',    'modeTask_sequence_rect_desc')
                 T.add(P,'sequence_rain',    'modeTask_sequence_rain_title',    'modeTask_sequence_rain_desc')
-
                 if PROGRESS.getExteriorModeScore('sequence','showPento') then
                     T.add(P,'sequence_pento','modeTask_sequence_pento_title','modeTask_sequence_pento_desc')
                 else
@@ -109,7 +108,7 @@ return {
                             T.add(P,'sequence_mph','modeTask_sequence_mph_title','modeTask_sequence_mph_desc')
                         end
                         T.set(P,'sequence_mph',true)
-                        PROGRESS.setExteriorScore('sequence','showMPH',1)
+                        PROGRESS.setExteriorScore('sequence','showMPH',1,'>')
                         P.modeData.subMode='mph'
                         playBgm('blox')
                         P:setSequenceGen('messy','-clearData')
@@ -146,7 +145,7 @@ return {
                     elseif MATH.between(P.hand.shape,8,25) then
                         T.set(P,'sequence_pento',true)
                         T.setTitle(P,'sequence_pento','modeTask_sequence_pento_title','modeTask_sequence_pento_desc')
-                        PROGRESS.setExteriorScore('sequence','showPento',1)
+                        PROGRESS.setExteriorScore('sequence','showPento',1,'>')
                         P.modeData.subMode='pento'
                         playBgm('beat5th')
                         P:setSequenceGen(sequence_pento_arc,'-clearData -clearNext')
@@ -176,14 +175,14 @@ return {
                 mechLib.brik.misc.lineClear_event_afterClear,
             },
             gameOver=function(P,reason)
-                if reason=='AC' then
+                if reason=='win' then
                     PROGRESS.setExteriorScore('sequence',P.modeData.subMode,P.gameTime,'<')
 
                     local count=0
                     for _,v in next,{'mph','flood','drought','saw','rect','rain'} do
                         if PROGRESS.getExteriorModeScore('sequence',v) then count=count+1 end
                     end
-                    if count>=5 then PROGRESS.setExteriorScore('sequence','showPento',1) end
+                    if count>=5 then PROGRESS.setExteriorScore('sequence','showPento',1,'>') end
                 end
             end
         },

@@ -1,4 +1,4 @@
----@type MapTechmino.Event.Gela
+---@type Techmino.Event.Gela
 local misc={}
 
 return misc

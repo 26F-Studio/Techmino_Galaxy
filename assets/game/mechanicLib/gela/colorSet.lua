@@ -1,4 +1,4 @@
----@type Map<Techmino.Event.Gela|number[]>
+---@type Map<Techmino.Event.Gela | number[]>
 local colorSet={}
 
 -- R Y B G P C O M

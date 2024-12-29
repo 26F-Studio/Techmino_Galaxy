@@ -12,13 +12,13 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 ---@field isMain boolean
 ---@field sound boolean
 ---@field remote boolean
----@field settings Techmino.Mode.Setting.Brik|Techmino.Mode.Setting.Gela|Techmino.Mode.Setting.Acry
+---@field settings Techmino.Mode.Setting.Brik | Techmino.Mode.Setting.Gela | Techmino.Mode.Setting.Acry
 ---@field buffedKey table
 ---@field modeData Techmino.PlayerModeData Warning: may contain anything, choose variable name carefully, suggested to be >=6 characters in total & multiple words (eg. `tspinCount`)
 ---@field soundTimeHistory table
 ---@field RND love.RandomGenerator
 ---@field pos {x:number, y:number, k:number, a:number, dx:number, dy:number, dk:number, da:number, vx:number, vy:number, vk:number, va:number}
----@field finished Techmino.EndReason|boolean Did game finish
+---@field finished Techmino.EndReason | boolean Did game finish
 ---@field realTime number Real time, [float] s
 ---@field time number Inside timer for player, [int] ms
 ---@field gameTime number Game time of player, [int] ms
@@ -26,12 +26,12 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 ---@field texts Zenitha.Text
 ---@field particles Techmino.ParticleSystems
 ---
----@field updateFrame function
+---@field tickStep function
 ---@field scriptCmd function
 ---@field decodeScript function
 ---@field checkScriptSyntax function
 ---
----@field hand Techmino.Hand|false Current controlling piece object
+---@field hand Techmino.Piece | false Current controlling piece object
 ---@field handX number
 ---@field handY number
 ---@field event table<string, Techmino.Event[]>
@@ -41,6 +41,19 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 ---@field receive function
 ---@field render function
 local P={}
+
+---@class Techmino.Player.TextArg
+---@field text string "[TEXT]"
+---@field duration number 2.6s
+---@field style Zenitha.TextAnimStyle 'appear'
+---@field styleArg any nil
+---@field size number 60
+---@field type string 'norm'
+---@field x number 0
+---@field y number 0
+---@field i number 0.2
+---@field o number 0.5
+---@field c number[] {1,1,1,1}
 
 --------------------------------------------------------------
 -- Tools
@@ -82,7 +95,7 @@ function P:playSound(event,...)
         if self.soundEvent[event] then
             self.soundEvent[event](...)
         else
-            MSG.new('warn',"Unknown sound event: "..event)
+            MSG.log('warn',"Unknown sound event: "..event)
         end
     end
 end
@@ -100,7 +113,7 @@ function P:movePosition(dx,dy,k,da)
     pos.k=pos.k*(k  or 1)
     pos.a=pos.a+(da or 0)
 end
----@param method 'init'|'drop'|string
+---@param method 'init' | 'drop' | string
 function P:atkEvent(method,...)
     local sys=mechLib[self.gameMode].attackSys[self.settings.atkSys]
     assert(sys and sys[method],"Invalid attackSys / method")
@@ -113,17 +126,7 @@ local function parseTime(str)
         unit=='ms' and num or
         unit=='m'  and num*60000
 end
---[[arg:
-    text ("[TEXT]")
-    duration ('2.6s')
-    style ('appear')
-    styleArg (nil)
-    size (60)
-    type ('norm')
-    x,y (0,0)
-    i,o (0.2,0.5)
-    c ({1,1,1,1})
-]]
+---@param arg Techmino.Player.TextArg
 function P:say(arg)
     local str=arg.text
     if type(str)=='string' then
@@ -171,6 +174,14 @@ end
 ---Random Float
 function P:rand(a,b)
     return a+self.RND:random()*(b-a)
+end
+---Random value
+function P:coin(head,tail)
+    return self.RND:random()>.5 and head or tail
+end
+---Random boolean
+function P:roll(chance)
+    return self.RND:random()<(chance or .5)
 end
 function P:_getActionObj(a)
     if type(a)=='string' then
@@ -229,7 +240,7 @@ end
 ---- Music: 1e62
 ---- Default: 0
 ---@param name Techmino.EventName
----@param E Techmino.Event|Techmino.Event[]
+---@param E Techmino.Event | Techmino.Event[]
 function P:addEvent(name,E)
     local L=self.event[name]
     assert(L,"Wrong event key: '"..tostring(name).."'")
@@ -260,7 +271,8 @@ function P:addEvent(name,E)
     end
 end
 local function _scrap() return true end
----@param E number|function|Techmino.Event
+---Mark an event as scrapped, it will destroy itself after next update
+---@param E number | function | Techmino.Event
 function P:delEvent(name,E)
     local L=self.event[name]
     assert(L,"Wrong event key: '"..tostring(name).."'")
@@ -281,7 +293,7 @@ local finishTexts={
     topout='MLE',
     timeout='TLE',
     rule='OLE',
-    exahust='ILE',
+    exhaust='ILE',
     taskfail='PE',
     other='UKE',
 }
@@ -300,7 +312,7 @@ function P:finish(reason)
 
     -- TODO: Just for temporary use
     if self.isMain then
-        MSG.new(reason=='win' and 'check' or 'error',finishTexts[reason] or finishTexts.other,6.26)
+        MSG(reason=='win' and 'check' or 'error',finishTexts[reason] or finishTexts.other,6.26)
         self:playSound('finish_'..reason)
     end
 end
@@ -497,7 +509,7 @@ function P:update(dt)
             self.time=self.time+1
         end
 
-        self:updateFrame()
+        self:tickStep()
     end
     for _,v in next,self.particles do v:update(dt) end
     self.texts:update(dt)
@@ -553,7 +565,7 @@ local function decodeScript(str,errMsg) -- Translate some string commands to lua
         local arg=p and str:sub(p+1):split(',') or {}
         for i=1,#arg do arg[i]=arg[i]:trim() end
         if cmd=='wait' then
-            assert(#arg>0,errMsg.."Wait which var(s)?")
+            assert(arg[1],errMsg.."Wait which var(s)?")
             line.arg=arg
         elseif _jmpOP[cmd] then
             if #arg~=_jmpOP[cmd]+1 then error(errMsg.."Wrong arg count, "..cmd.." need "..(_jmpOP[cmd]+1).." args") end
@@ -673,7 +685,7 @@ function P:loadScript(script) -- Parse time stamps and labels, check syntax of l
                     assert(type(arg)=='string',errMsg.."arg must be string")
                 elseif cmd=='wait' then
                     assert(type(arg)=='table',errMsg.."arg must be table")
-                    assert(#arg>0,errMsg.."Wait which var(s)?")
+                    assert(arg[1],errMsg.."Wait which var(s)?")
                     if not line.t then line.t=1 end
                 elseif _jmpOP[cmd] then
                     assert(type(arg)=='table',errMsg.."arg must be table")
@@ -770,14 +782,10 @@ function P:initialize()
     end
 end
 local dumpIgnore={
-    'P.soundTimeHistory',
-    'P.particles',
-    'P.texts',
+    ['P.soundTimeHistory']=true,
+    ['P.particles']=true,
+    ['P.texts']=true,
 }
-for _,v in next,dumpIgnore do
-    dumpIgnore[v]=true
-end
-TABLE.clear(dumpIgnore)
 local function dump(self,L,t,path)
     local s='{'
     local count=1
@@ -808,7 +816,7 @@ local function dump(self,L,t,path)
                 k='["FUNC:'..regFuncToStr[k]..'"]='
             else
                 k='["*'..tostring(k)..'"]='
-                LOG("Wrong key type: "..T..", "..nPath)
+                LOG('warn',"Wrong key type: "..T..", "..nPath)
             end
 
             T=type(v)
@@ -819,7 +827,7 @@ local function dump(self,L,t,path)
             elseif T=='table' then
                 v=t<10 and dump(self,v,t+1,nPath)
             elseif T=='function' then
-                v='"FUNC:'..(regFuncToStr[v] or LOG("UNKNOWN_FUNCTION: "..nPath) or "unknown")..'"'
+                v='"FUNC:'..(regFuncToStr[v] or LOG('warn',"UNKNOWN_FUNCTION: "..nPath) or "unknown")..'"'
             elseif T=='userdata' then
                 T=v:type()
                 if T=='RandomGenerator' then
@@ -827,18 +835,18 @@ local function dump(self,L,t,path)
                 elseif T=='ParticleSystem' then
                     v=nil -- Skip
                 else
-                    LOG("Un-handled type:"..T..", "..nPath)
+                    LOG('warn',"Un-handled type:"..T..", "..nPath)
                 end
             else
                 v='["*'..tostring(v)..'"]='
-                LOG("Wrong value type: "..T..", "..nPath)
+                LOG('warn',"Wrong value type: "..T..", "..nPath)
             end
 
             if v~=nil then
                 s=s..(s=='{' and k or ','..k)..v
             end
         else
-            LOG("Filtered: "..nPath)
+            -- print("Filtered: "..nPath)
         end
     end
     return s..'}'
@@ -852,10 +860,10 @@ local function undump(self,L,t)
         if T=='number' or T=='boolean' then
         elseif T=='string' then
             if k:sub(1,5)=='FUNC:' then
-                k=regStrToFunc[k:sub(6)] or LOG("UNKNOWN_FUNCTION: "..k)
+                k=regStrToFunc[k:sub(6)] or LOG('warn',"UNKNOWN_FUNCTION: "..k)
             end
         else
-            LOG("Abnormal key type: "..T)
+            LOG('warn',"Abnormal key type: "..T)
         end
 
         T=type(v)
@@ -865,18 +873,18 @@ local function undump(self,L,t)
                     self[k]=love.math.newRandomGenerator()
                     self[k]:setState(v.state)
                 else
-                    LOG("Un-handled type:"..v.__type)
+                    LOG('warn',"Un-handled type:"..v.__type)
                 end
             elseif t<=10 then
                 self[k]={}
                 undump(self[k],v,t+1)
             else
-                LOG("WARNING: table depth over 10, skipped")
+                LOG('warn',"WARNING: table depth over 10, skipped")
             end
         else
             if T=='string' then
                 if v:sub(1,5)=='FUNC:' then
-                    v=regStrToFunc[v:sub(6)] or LOG("UNKNOWN_FUNCTION: "..v)
+                    v=regStrToFunc[v:sub(6)] or LOG('warn',"UNKNOWN_FUNCTION: "..v)
                 end
             end
             self[k]=v
@@ -886,10 +894,10 @@ end
 function P:unserialize(data)
     local f='return'..data
     f=loadstring(f)
-    if type(f)~='function' then return LOG("Cannot parse data as luaon") end
+    if type(f)~='function' then return LOG('warn',"Cannot parse data as luaon") end
     setfenv(f,{})
     local res=f()
-    if type(res)~='table' then return LOG("Cannot parse data as luaon") end
+    if type(res)~='table' then return LOG('warn',"Cannot parse data as luaon") end
     undump(self,res,0)
 
     self.soundTimeHistory=setmetatable({},soundTimeMeta)

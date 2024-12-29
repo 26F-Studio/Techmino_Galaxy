@@ -26,13 +26,15 @@ local function sysAction(action)
     end
 end
 function scene.keyDown(key,isRep)
-    if key=='1' then FMOD.effect('notice')
-    elseif key=='2' then FMOD.effect('solve')
+    -- Debug
+    if     key=='1' then
+    elseif key=='2' then
+    elseif key=='3' then
+    elseif key=='b' then playExterior('brik/exterior/test')() return true
+    elseif key=='g' then playExterior('gela/test')() return true
+    elseif key=='a' then playExterior('acry/test')() return true
     end
-    -- if     key=='b' then playExterior('brik/exterior/test')() return true
-    -- elseif key=='g' then playExterior('gela/test')() return true
-    -- elseif key=='a' then playExterior('acry/test')() return true
-    -- end
+
     if isRep then return true end
     if secretInput==0 then
         if key==secretString:sub(1,1) then
@@ -52,7 +54,6 @@ function scene.keyDown(key,isRep)
             secretInput=0
         end
     end
-    print(secretInput)
     return true
 end
 
@@ -82,9 +83,9 @@ function scene.draw()
 end
 
 scene.widgetList={
-    {type='button_fill',pos={0,0},x=60,y=60,w=80,color='R',cornerR=15,sound_trigger='button_back',fontSize=70,text=CHAR.icon.power,code=function() sysAction('back') end,visibleFunc=function() return SYSTEM~='iOS' end},
+    {type='button_fill',pos={0,0},x=60,y=60,w=80,fillColor='R',cornerR=15,sound_trigger='button_back',fontSize=70,text=CHAR.icon.power,code=function() sysAction('back') end,visibleFunc=function() return SYSTEM~='iOS' end},
 
-    {type='button_invis',pos={1,0},x=-200,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.video,     sound_trigger='button_soft',code=WIDGET.c_goScn('main_in','none')},
+    {type='button_invis',pos={1,0},x=-200,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.video,     sound_trigger='button_soft',code=WIDGET.c_goScn('main_in','blackStun')},
     {type='button_invis',pos={1,0},x=-400,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.info_circ, sound_trigger='button_soft',code=WIDGET.c_goScn('about_out','fadeHeader')},
     {type='button_invis',pos={1,0},x=-600,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.music,     sound_trigger='button_soft',code=WIDGET.c_goScn('musicroom','fadeHeader')},
     {type='button_invis',pos={1,0},x=-800,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.language,  sound_trigger='button_soft',code=WIDGET.c_goScn('lang_out','fadeHeader')},

@@ -1,3 +1,10 @@
+--[[
+    If you want to contribute translations, play and unlock "Exterior" chapter first
+    Try keeping all language files have same line count, will make translators easier to find what's missing
+    You can check if there are missing strings by "Ctrl + [Pick a Language]"
+    Don't ignore the "TRASLATING NOTE" mark, it's necessary to be accurate because there's lore
+    Ask MrZ for more information if you cannot fully understand the text, don't worry about disturbing me!
+]]
 ---@class Techmino.I18N
 local L={
     -- Info
@@ -59,7 +66,10 @@ local L={
 
     target_piece="Piece",
     target_line="Line",
+    target_key="Key",
     target_time="Time",
+    target_score="Score",
+    target_combo="Combo",
     target_ac="AC",
     target_hc="HC",
     target_tss="TSS",
@@ -120,7 +130,7 @@ local L={
     setting_fmod_DSPBufferLength="DSPBufferLength",
     setting_apply="Apply",
 
-    lang_note="Chinese is the original game language.\nAll translations are contributed by volunteers and it may not be 100% accurate\nThere are some terms not translated directly, please check Zictionary for more information.",
+    lang_note="The original languages are Chinese & English.\nAll translations are contributed by volunteers and it may not be 100% accurate\nThere are some terms not translated directly, please check Zictionary for more information",
 
     keyset_title="Keybinds",
     keyset_brik_moveLeft=   "Move Left",
@@ -203,6 +213,7 @@ local L={
     main_out_multi="Multiple",
 
     musicroom_title="Musicroom",
+    musicroom_richloop="Rich Loop",
     musicroom_fullband="Full Band",
     musicroom_section='Chorus',
     musicroom_autoplay="Auto Change",
@@ -216,8 +227,8 @@ local L={
     exteriorModeInfo={ -- TRASLATING NOTE: Unnecessary to be accurate, try to quote some short proverbs in your language
         sprint=           {"Sprint","Speed is all we need"},
         sequence=         {"Sequence","Face strange piece sequences"},
-        hidden=           {"Hidden","Pieces are invisible after falling"},
-        tspin=            {"T-Spin","Build special terrains"},
+        invis=            {"Invis","Pieces go invisible after falling"},
+        spin=             {"Spin","Build special terrains"},
         marathon=         {"Marathon","Fight against increasing gravity"},
         allclear=         {"All Clear","Controllable All-Clear is possible"},
         combo=            {"Combo","Everyone loves combo"},
@@ -236,6 +247,11 @@ local L={
     modeTask_unknown_title="???",
     modeTask_unknown_desc="??????",
 
+    modeTask_spin_piece_title="Piece",
+    modeTask_spin_piece_desc="Clear a Spin Single",
+    modeTask_spin_column_title="Column",
+    modeTask_spin_column_desc="Clear a Spin Double",
+
     modeTask_sequence_flood_title="Flood",
     modeTask_sequence_flood_desc="Clear with S or Z",
     modeTask_sequence_drought_title="Drought",
@@ -251,6 +267,11 @@ local L={
     modeTask_sequence_pento_title="Pento",
     modeTask_sequence_pento_desc="Clear with a Pento",
     modeTask_sequence_unknown_desc="Clear with a ???",
+
+    modeTask_invis_haunted_title="Haunted",
+    modeTask_invis_haunted_desc="Clear 4 lines",
+    modeTask_invis_hidden_title="Hidden",
+    modeTask_invis_hidden_desc="Clear a Techrash",
 
     modeTask_hypersonic_low_title="Low",
     modeTask_hypersonic_low_desc="Clear 4 lines",
@@ -285,61 +306,81 @@ local L={
 
     -- Achievement
     ---@enum (key) Techmino.Text.Achievement
-    achievementMessage={
+    achievementMessage={ -- TRASLATING NOTE: The tone can be lighter
         dict_shortcut="Hotkey Expert",
+        exterior_spin_howDareYou="How dare you",
         exterior_excavate_notDig="What are you doing?",
-        exterior_hidden_superBrain="COOL",
-        exterior_tspin_10TSS="What's this?",
-        exterior_tspin_10TST="EZ.",
-        exterior_hypersonic_titanium_holdless="You can hold",
+        exterior_invis_superBrain="Super Brain",
+        exterior_invis_rhythmMaster="To the beat", -- Keep this as it is. Original from "osu!" title music
+        exterior_hypersonic_holdlessTitan="You can hold",
         interior_console="What's this?",
+        language_japanese="あ?",
         musicroom_recollection="Recollection is not a song",
+        musicroom_piano="Nobody Piano", -- Neta of "Everyone Piano" Software
         dial_enter="Instrument?",
-        dial_password="Password correct",
         menu_fastype="You seems enjoy typing",
     },
 
-    -- Level
-    tutorial_basic="The Basics",
-    tutorial_sequence="Next & Hold",
-    tutorial_piece="Piece shapes",
-    tutorial_stackBasic="Basic Stacking",
-    tutorial_twoRotatingKey="Two-way Rotation",
-    tutorial_rotating="Rotating Practice",
+    -- Tutorial levels
+    tutorial_basic="1. The Basics",
+    tutorial_sequence="2. Next & Hold",
+    tutorial_stackBasic="3. Basic Stacking",
+    tutorial_finesseBasic="4. Basic Finesse",
+    tutorial_finessePractice="5. Finesse Practice",
+    tutorial_allclearPractice="6. All Clear Practice",
+    tutorial_techrashPractice="7. Techrash Practice",
+    tutorial_finessePlus="8. Elegant Moves",
 
     tutorial_notpass="Failed",
     tutorial_pass="PASS",
 
     tutorial_basic_1="Welcome to Techmino!",
     tutorial_basic_2="1. The Basics",
-    tutorial_basic_3="Use the left and right keys to move your current piece.",
-    tutorial_basic_4="Press the hard drop key to place the piece on the board.",
-    tutorial_basic_5="You can also rotate the piece with the rotation keys.",
+    tutorial_basic_3="Use the left and right keys to move your current piece",
+    tutorial_basic_4="Press the hard drop key to place piece, clearing filled lines",
+    tutorial_basic_5="You can also rotate the piece with the rotation keys",
 
     tutorial_sequence_1="2. Next & Hold",
     tutorial_sequence_2="Oops, this piece doesn't seem to fit into the hole…",
-    tutorial_sequence_3="…but now you can see what pieces are coming next.",
-    tutorial_sequence_4="Use the Hold key to adjust the order of the pieces.",
+    tutorial_sequence_3="…but now you can see what pieces are coming next",
+    tutorial_sequence_4="Use the Hold key to adjust the order of the pieces",
 
-    tutorial_shape_1="3. Piece shapes",
-    tutorial_shape_2="Select the shape corresponding to the bottom of block outline",
+    tutorial_stackBasic_1="3. Basic Stacking",
+    tutorial_stackBasic_2="Try to keep the top levels \"flat\", to make the danger meter on the left low",
+    tutorial_stackBasic_3="This is the usual goal for beginners",
+    tutorial_stackBasic_4="Pieces are often placed \"lying down\", not \"standing up\"",
+    tutorial_stackBasic_5="This ensures more choices for future pieces and avoiding making holes",
 
-    tutorial_stackBasic_1="4. Basic Stacking",
-    tutorial_stackBasic_m1="Please follow the follwing instructions:",
-    tutorial_stackBasic_m2="It's recommended to keep the top levels as flat as you can.",
-    tutorial_stackBasic_m3="Pieces are often placed \"lying down\", not \"standing up\".",
-    tutorial_stackBasic_m4="Flat tops are easier to keep, and you can also avoid making holes.",
-    tutorial_stackBasic_m5="You will usually be rewarded more for clearing four lines at once. Try to make another one.",
-    tutorial_stackBasic_m6="Try finishing the Techrash with the last piece without a guide!",
+    tutorial_finesseBasic_0="4. Basic Finesse",
+    tutorial_finesseBasic_0_1="“Finesse” is a way to simplify your key-pressing, which can speed you up and reduce misdrops",
+    tutorial_finesseBasic_1="①Double Rotation Keys",
+    tutorial_finesseBasic_1_1="Go binding both rotation keys, for 1×CCW is equivalent to 3×CW",
+    tutorial_finesseBasic_1_T="180° Rotation is not mandatory here",
+    tutorial_finesseBasic_1_2="Quest: Drop piece to target position with 1×rotate only",
+    tutorial_finesseBasic_2="②Backtrack",
+    tutorial_finesseBasic_2_1="Playfield has a width of 10, piece width is around 3 cells and spawns in the middle",
+    tutorial_finesseBasic_2_2="So divide the field to three parts: L/Mid/R, moving piece to the part at first, then finetune with tapping move",
+    tutorial_finesseBasic_2_3="And you only need two types of movement : \"move one cell\" (tap 1-2 times) and \"move to side\"",
+    tutorial_finesseBasic_2_T="Use as smallest ASD as you can, but make it still possible to use the 2 movements explained before",
+    tutorial_finesseBasic_2_4="Quest: Drop piece to target position with 2×move",
+    tutorial_finesseBasic_3="③Wall-turn",
+    tutorial_finesseBasic_3_1="You see, piece rotates around a specified center (white dot)",
+    tutorial_finesseBasic_3_2="For piece: Z(red)/S(green)/I(cyan), CW and CCW rotation will make piece lean aside",
+    tutorial_finesseBasic_3_3="Quest: Drop piece to target position with 1×move and 1×rotate",
+    tutorial_finesseBasic_4_1="By combining all three techniques above",
+    tutorial_finesseBasic_4_2="About 3 key-presses can move piece to any position",
 
-    tutorial_twoRotatingKey_1="5. Two-way Rotations",
-    tutorial_twoRotatingKey_m1="Follow the following guides, but try to use the least number of rotations as possible.",
-    tutorial_twoRotatingKey_m2="If you can rotate it using one CCW, try not to use three CWs.",
-    tutorial_twoRotatingKey_m3="This not only wastes your effort, but also slows you down.",
-    tutorial_twoRotatingKey_m4="You should decide in your mind where to put each piece and not rely on the shadow pieces alone.",
-    tutorial_twoRotatingKey_unnecessaryRotation="Redundant Rotation",
+    tutorial_finessePractice_1="5. Finesse Practice",
+    tutorial_finessePractice_2="Minimize the number of key presses",
+    tutorial_finessePractice_par="Par",
 
-    tutorial_rotating_1="6. Rotating Practice",
-    tutorial_rotating_2="Rotate the top piece to align the bottom one",
+    tutorial_allclearPractice_1="6. All Clear Practice",
+    tutorial_allclearPractice_2="Do as much All Clear as possible",
+
+    tutorial_techrashPractice_1="7. Techrash Practice",
+    tutorial_techrashPractice_2="Clear as much Techrashes as possible",
+
+    tutorial_finessePlus_1="8. Elegant Moves",
+    tutorial_finessePlus_2="Use as less key-pressing as possible",
 }
 return L

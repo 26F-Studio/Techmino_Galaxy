@@ -2,6 +2,8 @@
 
 extern highp float time;
 
+const float MAX_ITERATIONS = 100.0;
+
 float rand3d(vec3 co, float seed)
 {
     return sin(fract((sin(dot(co, vec3(30.233 * seed, 7.233 * seed, 20.2352 * seed)))) * 815150.5453) * 321.321);
@@ -45,8 +47,9 @@ float Noise3d(vec3 pos, float size, float seed)
 float perlinNoise3d(vec3 pos, float size, float seed, float iteration)
 {
     float r = 0.0;
-    for (float i = 0.0; i < iteration; i++)
+    for (float i = 0.0; i < MAX_ITERATIONS; i++)
     {
+        if (i >= iteration) break;
         float freq = pow(2.0, i);
         r += Noise3d(pos, size * freq, seed) * (1.0 / freq);
     }

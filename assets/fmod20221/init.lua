@@ -1,4 +1,23 @@
-local ffi=require'ffi'
+-- Skip FMOD on web for now
+if SYSTEM=='Web' then
+    local NOLL={}
+    local NOLLmeta={__call=NULL,__index=function() return NOLL end}
+    setmetatable(NOLL,NOLLmeta)
+    return setmetatable({
+        C=false,C2=false,
+        music=setmetatable({
+            getParam=function () return -1,-1 end,
+            getDuration=function () return 0 end,
+            tell=function () return 0 end,
+        },NOLLmeta),
+    },{
+        __index=function(t,k)
+            t[k]=NOLL
+            return NOLL
+        end,
+    })
+end
+
 local require=simpRequire(((...):gsub(".init$","").."."))
 
 require'cdef'
@@ -7,35 +26,24 @@ require'cdef'
 local M=require'master'
 M.banks={}
 
--- (Old method) search for fmod shared libraries in package.cpath
+-- --(Old method) search for fmod shared libraries in package.cpath
 -- local fmodPath=package.searchpath('fmod',package.cpath)
 -- local fmodstudioPath=package.searchpath('fmodstudio',package.cpath)
--- -- pretend to load libfmod through Lua (it's going to fail but not raise any errors) so that its location is known when loading libfmodstudio through ffi
--- -- package.loadlib(fmodPath,"")
+-- --pretend to load libfmod through Lua (it's going to fail but not raise any errors) so that its location is known when loading libfmodstudio through ffi
+-- package.loadlib(fmodPath,"")
 -- M.C=ffi.load(fmodPath)
 -- M.C2=ffi.load(fmodstudioPath)
 
-do -- Load library
-    local suc
-    suc,M.C=pcall(ffi.load,'fmod')
-    if not suc then
-        MSG.new('error',"Loading FMOD lib:"..M.C)
-    elseif not M.C then
-        MSG.new('error',"Error in Loading FMOD lib")
-    end
+M.C=LOADLIB.ffi('fmod')
+M.C2=LOADLIB.ffi('fmodstudio')
 
-    suc,M.C2=pcall(ffi.load,'fmodstudio')
-    if not suc then
-        MSG.new('error',"Loading FMODstudio lib:"..M.C2)
-    elseif not M.C2 then
-        MSG.new('error',"Error in Loading FMODstudio lib")
-    end
+if M.C and M.C2 then
+    require'enums'
+    require'constants'
+    require'wrap'
+    require'errors'
+    LOG('info',"FMOD loaded")
 end
-
-require'enums'
-require'constants'
-require'wrap'
-require'errors'
 
 --------------------------------------------------------------
 
@@ -50,11 +58,22 @@ function M.init(args)
         M.studio:release()
         firstTime=false
     end
-    M.studio=M.newStudio()
-    M.core=M.studio:getCoreSystem()
+
+    local res
+    M.studio,res=M.newStudio()
+    if res~=M.FMOD_OK then MSG.log('error',"fmod newStudio error: "..M.errorString[res]) return end
+
+    M.core,res=M.studio:getCoreSystem()
+    if res~=M.FMOD_OK then MSG.log('error',"fmod getCoreSystem error: "..M.errorString[res]) return end
+
     studio,core=M.studio,M.core
-    core:setDSPBufferSize(args.DSPBufferLength or 128,args.DSPBufferCount or 4)
-    studio:initialize(args.maxChannel,args.studioFlag,args.coreFlag)
+
+    res=core:setDSPBufferSize(args.DSPBufferLength or 128,args.DSPBufferCount or 4)
+    if res~=M.FMOD_OK then MSG.log('error',"fmod setDSPBufferSize error: "..M.errorString[res]) return end
+
+    res=studio:initialize(args.maxChannel,args.studioFlag,args.coreFlag)
+    if res~=M.FMOD_OK then MSG.log('error',"fmod initialize error: "..M.errorString[res]) return end
+
     if firstTime then
         TASK.new(function()
             while studio do
@@ -75,13 +94,13 @@ end
 ---This method can only load files visible to fmod
 ---@param path string
 ---@param flag? FMOD.Const
+---@return FMOD.Studio.Bank?, string? errInfo
 function M.loadBank(path,flag)
     if not studio then return end
     local bank,res=studio:loadBankFile(path,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
     if res~=M.FMOD_OK then
-        LOG("FMOD loadBank error: "..M.errorString[res])
-        MSG.new('warn',"FMOD loadBank error: "..M.errorString[res])
-        return
+        LOG('error',"fmodstudio:loadBankFile error: "..M.errorString[res])
+        return nil,M.errorString[res]
     end
     M.banks[path]=bank
     return bank
@@ -90,21 +109,20 @@ end
 ---This method uses 'loadBankMemory' instead of 'loadBankFile', which makes files visible to love2d's filesystem can be loaded
 ---@param path string
 ---@param flag? FMOD.Const
----@return FMOD.Studio.Bank?
+---@return FMOD.Studio.Bank?, string? errInfo
 function M.loadBank2(path,flag)
     if not studio then return end
     if not love.filesystem.getInfo(path) then
-        MSG.new('warn',"Bank file not found: "..path)
-        return
+        LOG('warn',"Bank file not found: "..path)
+        return nil,"Bank file not found: "..path
     end
     local file=love.filesystem.newFile(path)
     local data,size=file:read('data')
     local bank,res=studio:loadBankMemory(data:getPointer(),size,0,flag or M.FMOD_STUDIO_LOAD_BANK_NORMAL)
     file:close(); file:release(); data:release()
     if res~=M.FMOD_OK then
-        LOG("FMOD loadBankMemory error: "..M.errorString[res])
-        MSG.new('warn',"FMOD loadBankMemory error: "..M.errorString[res])
-        return
+        LOG('error',"FMOD loadBankMemory error: "..M.errorString[res])
+        return nil,M.errorString[res]
     end
     M.banks[path]=bank
     return bank
@@ -154,7 +172,7 @@ end
 --------------------------
 
 ---@class FMOD._Music
----@overload fun(name:string, args?:{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}):FMOD.Studio.EventInstance?
+---@overload fun(name:string, args?: {instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}): FMOD.Studio.EventInstance?
 M.music={}
 
 ---@param v number
@@ -187,13 +205,13 @@ function M.music.play(name,args)
     if not desc then
         if not unhintedBGM[name] then
             unhintedBGM[name]=true
-            MSG.new('warn',"No BGM named "..name)
+            MSG.log('warn',"No BGM named "..name)
         end
         return
     end
     local event,res=desc:createInstance()
     if res~=M.FMOD_OK then
-        MSG.new('warn',"Event named "..name.." created failed: "..M.errorString[res])
+        MSG.log('warn',"Event named "..name.." created failed: "..M.errorString[res])
         return
     end
     playing={
@@ -253,7 +271,7 @@ end
 ---@param param string
 ---@return number?,number?
 function M.music.getParam(param)
-    if not studio or not playing then return end
+    if not studio or not playing then return -1,-1 end
     local v,fv=playing.event:getParameterByName(param)
     return v,fv
 end
@@ -295,7 +313,7 @@ setmetatable(M.music,{__call=function(_,...) return M.music.play(...) end})
 --------------------------
 
 ---@class FMOD._Effect
----@overload fun(name:string, args?:number|{instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}):FMOD.Studio.EventInstance?
+---@overload fun(name:string, args?:number | {instant?:boolean, volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}): FMOD.Studio.EventInstance?
 M.effect={}
 
 ---@param v number
@@ -315,13 +333,11 @@ end
 
 local unhintedSFX={}
 
----priority: pitch>tune>fine
----
----pos:{x,y,z}
----
+---priority: pitch>tune>fine  
+---pos:{x,y,z}  
 ---param:{'paramName', 0, true?}
 ---@param name string
----@param args? number|{volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}
+---@param args? number | {volume?:number, pitch?:number, tune?:number, fine?:number, pos?:number[], param?:table}
 ---@return FMOD.Studio.EventInstance?
 function M.effect.play(name,args)
     if not studio then return end
@@ -329,13 +345,13 @@ function M.effect.play(name,args)
     if not desc then
         if not unhintedSFX[name] then
             unhintedSFX[name]=true
-            MSG.new('warn',"No SE named "..name)
+            MSG.log('warn',"No SE named "..name)
         end
         return
     end
     local event,res=desc:createInstance()
     if res~=M.FMOD_OK then
-        MSG.new('warn',"Play SE '"..name.."' failed: "..M.errorString[res])
+        MSG.log('warn',"Play SE '"..name.."' failed: "..M.errorString[res])
         return
     end
 

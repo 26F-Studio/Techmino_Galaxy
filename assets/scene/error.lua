@@ -15,6 +15,9 @@ local texts={
 local scene={}
 
 function scene.load()
+    ZENITHA.setMaxFPS(60)
+    ZENITHA.setUpdateFreq(62)
+    ZENITHA.setDrawFreq(26)
     FMOD.destroy()
     time=0
     err=ZENITHA.getErr('#') or {
@@ -46,11 +49,9 @@ end
 function scene.update(dt)
     if time<5 then
         time=time+dt
-        if not img then
+        if not img and err.shot then
             img=err.shot
-            if img then
-                imgW,imgH=img:getWidth(),img:getHeight()
-            end
+            imgW,imgH=img:getWidth(),img:getHeight()
         end
     end
 end

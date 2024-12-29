@@ -38,7 +38,7 @@ end
 function scene.mouseDown(_,_,k) if k==2 then SCN.back('fadeHeader') end end
 function scene.keyDown(key,isRep)
     if isRep then return true end
-    if key=='`' and isAltPressed then
+    if key=='\\' then
         scene.widgetList.Sacry._visible=true
         scene.widgetList.Sgela._visible=true
         scene.widgetList.Sbrik._visible=true
@@ -141,13 +141,13 @@ scene.widgetList={
     {type='button_invis',name='Ssys', pos={1,0},x=-200,y=60,w=150,h=100,cornerR=20,fontSize=60,text="S",fontType='bold',sound_trigger='button_soft',code=function() if keyMode~='sys'  then keyMode='sys';  scene.load() end end},
 
     {type='button',pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG"setting_test",fontSize=40,code=function()
-        if GAME.mode then return MSG.new('warn',Text.setting_tryTestInGame) end
+        if GAME.mode then return MSG('warn',Text.setting_tryTestInGame) end
         playExterior(
             keyMode=='brik' and 'brik/exterior/test' or
             keyMode..'/test'
         )()
     end,visibleFunc=function() return keyMode~='sys' end},
     {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'settings_title'},
-    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
 }
 return scene

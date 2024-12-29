@@ -3,9 +3,29 @@ local rem=table.remove
 local Util={}
 
 ---@param field Mat<boolean> Field (read)
+---@return number[]
+---@overload fun(field:Mat<boolean>, cx:number): number
+function Util.getColumnHeight(field,cx)
+    if cx then
+        local y=#field
+        while y>0 and not field[y][cx] do y=y-1 end
+        return y
+    else
+        local width=field[1] and #field[1] or 10
+        local fieldTop={}
+        for x=1,width do
+            local y=#field
+            while y>0 and not field[y][x] do y=y-1 end
+            fieldTop[x]=y
+        end
+        return fieldTop
+    end
+end
+
+---@param field Mat<boolean> Field (read)
 ---@param shape Mat<boolean>
 ---@param X number
----@return number Y, number[] delta
+---@return number Y, number[] colH the height of the piece if only check collision with this column
 function Util.simulateDrop(field,shape,X)
     local w=#shape[1]
     local shapeBottom,fieldTop={},{}
@@ -18,11 +38,11 @@ function Util.simulateDrop(field,shape,X)
         while y>0 and not field[y][X+x-1] do y=y-1 end
         fieldTop[x]=y
     end
-    local delta={}
+    local colH={}
     for i=1,w do
-        delta[i]=fieldTop[i]-shapeBottom[i]
+        colH[i]=fieldTop[i]-shapeBottom[i]
     end
-    return math.max(unpack(delta))+1,delta
+    return math.max(unpack(colH))+1,colH
 end
 
 ---@param field Mat<boolean> Field (write)

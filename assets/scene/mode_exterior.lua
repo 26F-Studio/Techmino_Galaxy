@@ -97,7 +97,7 @@ function scene.mouseClick(x,y,k)
 end
 function scene.wheelMove(dx,dy)
     exMap:hideCursor()
-    if isCtrlPressed() then
+    if isCtrlDown() then
         exMap:rotateCam(-(dx+dy)*.26)
     else
         exMap:scaleCam(1.1^(dx+dy))
@@ -128,8 +128,8 @@ function scene.mouseDown(_,_,k) if k==2 then sysAction('back') end end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='f6' then exMap:_printModePos() return true end
-    if key=='f5' then MSG.new('info',"Mode cache cleared") GAME._refresh() return true end
-    if key=='`' and isAltPressed() then exMap:_unlockall() end
+    if key=='f5' then MSG('info',"Mode cache cleared") GAME._refresh() return true end
+    if key=='\\' then exMap:_unlockall() end
     sysAction(KEYMAP.sys:getAction(key))
     return true
 end
@@ -147,7 +147,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=function() sysAction('back') end},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=function() sysAction('back') end},
     {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'graph_brik_title'},
 }
 return scene

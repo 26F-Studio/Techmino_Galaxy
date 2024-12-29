@@ -14,14 +14,15 @@ local clamp,expApproach=MATH.clamp,MATH.expApproach
 
 ---@class Techmino.Player.Brik: Techmino.Player
 ---@field stat Techmino.PlayerStatTable.Brik
----@field dropHistory {id:integer, x:integer, y:integer, direction:integer, time:integer, gameTime:integer}[]
----@field clearHistory {combo:integer, line:integer, linePos:integer[], time:integer, gameTime:integer}[]
+---@field lastMovement Techmino.BrikMovement
+---@field dropHistory Techmino.BrikDropHis[]
+---@field clearHistory Techmino.BrikClearHis[]
 local BP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 
 --------------------------------------------------------------
 -- Function tables
 
----@type Map<fun(P:Techmino.Player.Brik):any>
+---@type Map<fun(P:Techmino.Player.Brik): any>
 BP.scriptCmd={
     clearHold=function(P) P:clearHold() end,
     clearNext=function(P) P:clearNext() end,
@@ -35,6 +36,24 @@ BP.scriptCmd={
 
 BP._actions={}
 for k,v in next,mechLib.brik.actions do BP._actions[k]=BP:_getActionObj(v) end
+
+--------------------------------------------------------------
+-- Utils
+
+---@return Mat<boolean>?
+function BP:getBoolHandMatrix()
+    if not self.hand then return end
+    local m=self.hand.matrix
+    local w=#m[1]
+    local shape={}
+    for y=1,#m do
+        shape[y]={}
+        for x=1,w do
+            shape[y][x]=m[y][x] and true
+        end
+    end
+    return shape
+end
 
 --------------------------------------------------------------
 -- Effects
@@ -193,7 +212,7 @@ end
 --------------------------------------------------------------
 -- Game methods
 
----@param action 'moveX'|'moveY'|'drop'|'rotate'|'reset'
+---@param action 'moveX' | 'moveY' | 'drop' | 'rotate' | 'reset'
 function BP:moveHand(action,A,B,C,D)
     --[[
         moveX:  dx,noShade,byAutoShift
@@ -263,6 +282,7 @@ function BP:moveHand(action,A,B,C,D)
 
     if self.handX%1~=0 or self.handY%1~=0 then error("EUREKA! Decimal position") end
 
+    ---@type Techmino.BrikMovement
     local movement={
         action=action,
         brik=self.hand,
@@ -342,7 +362,7 @@ end
 function BP:resetPos() -- Move hand piece to the normal spawn position
     self:moveHand('reset',floor(self.settings.fieldW/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1+ceil(self.fieldDived/40))
 
-    self:triggerEvent('changeSpawnPos')
+    self:triggerEvent('beforeResetPos')
 
     self.deathTimer=false
     self.ghostState=false
@@ -380,14 +400,14 @@ function BP:resetPosCheck()
             end
 
             -- Suffocate IRS
-            if SET.initRotate then
-                if SET.initRotate=='hold' then
+            if SET.bufferRotate then
+                if SET.bufferRotate=='hold' then
                     if self.keyState.rotate180 then
                         self:rotate('F',true)
                     elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                         self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                     end
-                elseif SET.initRotate=='buffer' then
+                elseif SET.bufferRotate=='buffer' then
                     if self.keyBuffer.rotate then
                         self:rotate(self.keyBuffer.rotate,true)
                         if not self.keyBuffer.hold then
@@ -418,13 +438,13 @@ function BP:resetPosCheck()
         end
     else
         -- IMS
-        if SET.initMove then
-            if SET.initMove=='hold' then
+        if SET.bufferMove then
+            if SET.bufferMove=='hold' then
                 if self.keyState.softDrop then self:moveDown() end
                 if self.keyState.moveRight~=self.keyState.moveLeft then
                     if self.keyState.moveRight then self:moveRight(true) else self:moveLeft(true) end
                 end
-            elseif SET.initMove=='buffer' then
+            elseif SET.bufferMove=='buffer' then
                 if self.keyBuffer.move then
                     if self.keyBuffer.move=='L' then
                         self:moveLeft(true)
@@ -437,14 +457,14 @@ function BP:resetPosCheck()
         end
 
         -- IRS
-        if SET.initRotate then
-            if SET.initRotate=='hold' then
+        if SET.bufferRotate then
+            if SET.bufferRotate=='hold' then
                 if self.keyState.rotate180 then
                     self:rotate('F',true)
                 elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                     self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                 end
-            elseif SET.initRotate=='buffer' then
+            elseif SET.bufferRotate=='buffer' then
                 if self.keyBuffer.rotate then
                     self:rotate(self.keyBuffer.rotate,true)
                     if not self.keyBuffer.hold then
@@ -477,8 +497,8 @@ function BP:freshGhost()
                 self.ghostY=self.ghostY-1
             end
 
-            -- 20G check
-            if (self.settings.dropDelay<=0 or self.downCharge and self.settings.asp==0) and self.ghostY<self.handY then
+            -- infG check
+            if (self.settings.dropDelay<=0 or self.downCharge and self.settings.adp==0) and self.ghostY<self.handY then
                 local dY=self.ghostY-self.handY
                 self:moveHand('drop',dY)
                 self:freshDelay('drop')
@@ -510,7 +530,7 @@ local freshRuleMap={-- Normal: cost 1 chance, F: free, S: step (fall only) R: re
     drop=  {any='F',fall='S',never='_'},
     spawn= {any='R',fall='R',never='R'},
 }
----@param reason 'move'|'rotate'|'moving'|'drop'|'spawn'
+---@param reason 'move' | 'rotate' | 'moving' | 'drop' | 'spawn'
 function BP:freshDelay(reason)
     local fell=self.handY<self.minY
     if fell then self.minY=self.handY end
@@ -536,7 +556,7 @@ function BP:freshDelay(reason)
         error("WTF why settings.freshCondition is "..tostring(self.settings.freshCondition))
     end
 end
----@param seqData string|Techmino.Mech.Brik.SequenceName|fun(P:Techmino.Player.Brik, d:table, init:boolean):Techmino.Brik.ID?
+---@param seqData string | Techmino.Mech.Brik.SequenceName | fun(P:Techmino.Player.Brik, d:table, init:boolean): Techmino.Brik.ID?
 ---@param args? string Can include '-clearData' and '-clearNext'
 function BP:setSequenceGen(seqData,args)
     if type(args)~='string' then args='' end
@@ -547,7 +567,7 @@ function BP:setSequenceGen(seqData,args)
     assert(self:seqGen(self.seqData,true)==nil,"First call of sequence generator must return nil")
     self:freshNextQueue()
 end
----@param atkSys string|Techmino.Mech.Brik.AttackSysName
+---@param atkSys string | Techmino.Mech.Brik.AttackSysName
 function BP:setAttackSystem(atkSys)
     self.atkSysData={}
     self.settings.spin_immobile=false
@@ -580,7 +600,7 @@ end
 function BP:clearNext()
     TABLE.clear(self.nextQueue)
 end
----@param piece string|number|table
+---@param piece string | number | table
 function BP:pushNext(piece)
     if type(piece)=='number' then
         ins(self.nextQueue,self:getBrik(Brik.get(piece)))
@@ -610,20 +630,20 @@ function BP:popNext(ifHold)
             ins(self.nextQueue,rem(self.holdQueue,1))
             self:popNext()
         else -- No piece to use, game over
-            self:finish('exahust')
+            self:finish('exhaust')
         end
         return
     end
 
     -- IHS
     local IHStriggered
-    if not ifHold and self.settings.initHold then
-        if self.settings.initHold=='hold' then
+    if not ifHold and self.settings.bufferHold then
+        if self.settings.bufferHold=='hold' then
             if self.keyState.holdPiece then
                 self:hold(true)
                 IHStriggered=true
             end
-        elseif self.settings.initHold=='buffer' then
+        elseif self.settings.bufferHold=='buffer' then
             if self.keyBuffer.hold then
                 self.keyBuffer.hold=false
                 self:hold(true)
@@ -643,7 +663,7 @@ function BP:popNext(ifHold)
         self:brikDropped()
     end
 end
----@return Techmino.Cell
+---@return Techmino.Brik.Cell
 function BP:newCell(color,id)
     self.totalCellCount=self.totalCellCount+1
     return {
@@ -653,27 +673,27 @@ function BP:newCell(color,id)
         conn={},
     }
 end
----@param shapeData Techmino.Brik|Techmino.Brik.Name|Techmino.Brik.ID
+---@param shapeData Techmino.Brik | Techmino.Brik.Name | Techmino.Brik.ID
 function BP:getBrik(shapeData)
     local shapeID,shapeName,shapeMat,shapeColor
     if type(shapeData)=='table' then
         shapeID=shapeData.id
         shapeName=shapeData.name or "?"
         shapeMat=TABLE.copy(shapeData.shape)
-        shapeColor=shapeData.color or defaultBrikColor[shapeID] or self:random(64)
+        shapeColor=shapeData.color or self.settings.palette[shapeID] or self:random(64)
     else
-        ---@cast shapeData Techmino.Brik.Name|Techmino.Brik.ID
+        ---@cast shapeData Techmino.Brik.Name | Techmino.Brik.ID
         local brik=Brik.get(shapeData)
         if not brik then errorf("invalid shapeData %s",tostring(shapeData)) end
         shapeID=brik.id
         shapeName=brik.name
         shapeMat=TABLE.copy(brik.shape)
-        shapeColor=defaultBrikColor[shapeID]
+        shapeColor=self.settings.palette[shapeID]
     end
     self.pieceCount=self.pieceCount+1
 
     -- Generate cell matrix from bool matrix
-    ---@cast shapeMat Mat<Techmino.Cell>
+    ---@cast shapeMat Mat<Techmino.Brik.Cell>
     for y=1,#shapeMat do for x=1,#shapeMat[1] do
         shapeMat[y][x]=shapeMat[y][x] and self:newCell(shapeColor,self.pieceCount)
     end end
@@ -1301,7 +1321,7 @@ end
     {4,6,6,3,0,0,2,2,5,5},
     {4,4,3,3,0,0,0,2,2,5},
 }]]
----@param arg {color:'template'|'absolute'|nil, resetHand?:boolean, sudden?:boolean, [number]:number[]}
+---@param arg {color:'template' | 'absolute' | nil, resetHand?:boolean, sudden?:boolean, [number]:number[]}
 function BP:setField(arg)
     local F=self.field
     local w=self.settings.fieldW
@@ -1323,11 +1343,11 @@ function BP:setField(arg)
     for y=1,#arg do
         f[y]={}
         for x=1,w do
-            local c=arg[y][x] ---@type number|false
+            local c=arg[y][x] ---@type number | false
             if type(c)=='number' then
                 if color=='template' then
                     if c%1==0 and c>=1 and c<=7 then
-                        c=defaultBrikColor[c]
+                        c=self.settings.palette[c]
                     elseif c==8 then
                         c=777
                     else
@@ -1347,10 +1367,10 @@ function BP:setField(arg)
     for y=1,#arg do
         for x=1,w do
             if f[y][x] then
-                if f[y]   and f[y][x-1] then f[y][x].conn[f[y][x-1]]=0 end
-                if f[y]   and f[y][x+1] then f[y][x].conn[f[y][x+1]]=0 end
-                if f[y-1] and f[y-1][x] then f[y][x].conn[f[y-1][x]]=0 end
-                if f[y+1] and f[y+1][x] then f[y][x].conn[f[y+1][x]]=0 end
+                if f[y]   and f[y][x-1] then f[y][x].conn[f[y][x-1].cid]=0 end
+                if f[y]   and f[y][x+1] then f[y][x].conn[f[y][x+1].cid]=0 end
+                if f[y-1] and f[y-1][x] then f[y][x].conn[f[y-1][x].cid]=0 end
+                if f[y+1] and f[y+1][x] then f[y][x].conn[f[y+1][x].cid]=0 end
             end
         end
     end
@@ -1377,7 +1397,7 @@ function BP:changeFieldWidth(w,origPos)
         if not origPos then origPos=1 end
         local w0=self.settings.fieldW
         for y=1,#self.field:getHeight() do
-            local L=TABLE.new(false,w) ---@type Techmino.Cell[]
+            local L=TABLE.new(false,w) ---@type Techmino.Brik.Cell[]
             for x=1,w0 do
                 local newX=origPos+x-1
                 if newX>=1 and newX<=w then
@@ -1414,7 +1434,7 @@ end
 --------------------------------------------------------------
 -- Press & Release & Update & Render
 
-function BP:updateFrame()
+function BP:tickStep()
     local SET=self.settings
 
     -- Hard-drop lock
@@ -1545,7 +1565,7 @@ function BP:updateFrame()
                     if self.dropTimer<=0 then
                         self:moveHand('drop',-1,true)
                     end
-                elseif self.handY~=self.ghostY then -- If switch to 20G during game, brik won't dropped to bottom instantly so we force fresh it
+                elseif self.handY~=self.ghostY then -- If switch to infG during game, brik won't dropped to bottom instantly so we force fresh it
                     self:freshDelay('drop')
                 end
             end
@@ -1750,7 +1770,7 @@ function BP:render()
                 end
 
                 -- Float hold
-                if #self.floatHolds>0 then
+                if self.floatHolds[1] then
                     for n=1,#self.floatHolds do
                         local H=self.floatHolds[n]
                         local disabled=SET.holdMode=='float' and not SET.infHold and n<=self.holdTime
@@ -1936,11 +1956,11 @@ end
 -- Builder
 
 ---@class Techmino.Mode.Setting.Brik
----@field seqType string|Techmino.Mech.Brik.SequenceName|fun(P:Techmino.Player.Brik, d:table, init:boolean):Techmino.Brik.ID?
----@field event table<Techmino.EventName,Map<Techmino.Event.Brik>|Techmino.Event.Brik>
+---@field seqType? string | Techmino.Mech.Brik.SequenceName | fun(P:Techmino.Player.Brik, d:table, init:boolean): Techmino.Brik.ID?
+---@field event? table<Techmino.EventName, Map<Techmino.Event.Brik> | Techmino.Event.Brik>
 local baseEnv={
     -- Size
-    fieldW=10, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
+    fieldW=10, -- [WARNING] This is read-only field width. Change real field size with 'self:changeFieldWidth'
     spawnH=20,
     extraSpawnH=1,
     lockoutH=1e99,
@@ -1952,7 +1972,7 @@ local baseEnv={
     clearRule='line',
     clearMovement='lineBack',
 
-    -- Sequence
+    -- Generator
     seqType='bag7', ---@type Techmino.Mech.Brik.SequenceName
     nextSlot=6,
     holdSlot=1,
@@ -1973,8 +1993,8 @@ local baseEnv={
     maxFreshChance=15,
     maxFreshTime=6200,
 
-    -- Hidden
-    pieceVisTime=false, ---@type number|false When enabled, blocks will become transparent after this value
+    -- Hidden by Time
+    pieceVisTime=false, ---@type number | false When enabled, blocks will become transparent after this value
     pieceFadeTime=1000, -- Start fading out below this value
 
     -- Garbage
@@ -1987,7 +2007,7 @@ local baseEnv={
     -- Attack
     rotSys='TRS',             ---@type Techmino.Mech.Brik.RotationSysName
     spin_immobile=false,      ---@type boolean
-    spin_corners=false,       ---@type false|number
+    spin_corners=false,       ---@type false | number
     combo_sound=false,        ---@type boolean
     atkSys='none',            ---@type Techmino.Mech.Brik.AttackSysName
     allowCancel=true,         ---@type boolean
@@ -2012,9 +2032,9 @@ local baseEnv={
     dblMoveRelInvChrg='reset',    -- reset/keep/raw/full charge (Release 2)
     dblMoveRelInvStep=true,       -- Move (Release 2)
     dblMoveRelInvRedir=true,      -- Change direction (Release 2)
-    initMove='buffer',            -- buffer/hold to do initial move
-    initRotate='buffer',          -- buffer/hold to do initial rotate
-    initHold='buffer',            -- buffer/hold to do initial hold
+    bufferMove='buffer',          -- buffer/hold to do initial move
+    bufferRotate='buffer',        -- buffer/hold to do initial rotate
+    bufferHold='buffer',          -- buffer/hold to do initial hold
     aHdLock=60,                   -- Auto harddrop lock
     mHdLock=40,                   -- Manual harddrop lock
     freshLockInASD=true,          -- Fresh lockDelay in auto shift delay
@@ -2029,6 +2049,11 @@ local baseEnv={
     particles=true,
     shakeness=.26, -- *
     inputDelay=0,
+    palette={
+        844,484,448,864,748,884,488,
+        844,484,845,485,468,854,748,684,488,847,884,448,864,468,854,846,486,884,
+        478,748,854,484,
+    }
 }
 ---@return Techmino.Player.Brik
 function BP.new(remote)
@@ -2070,7 +2095,7 @@ function BP.new(remote)
 
         -- Other
         whenSuffocate={},
-        changeSpawnPos={},
+        beforeResetPos={},
 
         -- Special
         extraSolidCheck={}, -- Manually called
@@ -2125,11 +2150,11 @@ function BP:initialize()
     self.freshChance=self.settings.maxFreshChance
     self.freshTime=0
 
-    ---@type Techmino.Hand|false
+    ---@type Techmino.Piece | false
     self.hand=false
     self.handX=false
     self.handY=false
-    self.lastMovement=false -- Table contain last movement info of brik, for spin/... checking
+    self.lastMovement={} -- Table contain last movement info of brik, for spin/... checking
     self.ghostY=false
     self.minY=false
 
@@ -2158,7 +2183,7 @@ function BP:unserialize_custom()
     self.field._width=f._width
     self.field._matrix=f._matrix
 
-    self.soundEvent=setmetatable({},gameSoundFunc)
+    setmetatable(self.soundEvent,gameSoundFunc)
 end
 
 --------------------------------------------------------------

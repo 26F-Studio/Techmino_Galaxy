@@ -3,20 +3,25 @@
 ---@field author string
 ---@field title string
 ---@field inside? boolean
----@field redirect? string|table<string>
+---@field redirect? string | table<string>
 ---
 ---@field notFound? boolean
 ---@field intensity? boolean
 ---@field section? boolean
 ---@field maxsection? integer
 ---@field multitrack? boolean
----@field looppoint? boolean
+---@field hasloop? boolean
+
+-- Ordering rule of music with multiple authors:
+-- 1. Prepare seats equal to the number of all authors, then choose one by one.
+-- 2. Original Author(s) choose first, then Direct Author(s).
+-- 3. Default to choose the first seat available. Can also choose not to credit.
 
 ---@enum (key) Techmino.MusicName
 local songbook={
     ['8-bit happiness']          ={},
     ['8-bit sadness']            ={},
-    ['antispace']                ={message="Blank remix remix"},
+    ['antispace']                ={message="Blank remix^2"},
     ['battle']                   ={author="Aether & MrZ"},
     ['blank']                    ={message="The beginning"},
     ['blox']                     ={message="Recollection remix"},
@@ -95,27 +100,24 @@ local songbook={
     ['reason remix']             ={author="TetraCepra"},
     ['seeking star']             ={},
     ['space warp']               ={author="LR & MrZ"},
+    ['invisible mode']           ={author="DJ Asriel"},
+    ['invisible mode 2']         ={author="DJ Asriel"},
+    ['total mayhem']             ={author="DJ Asriel"},
+    ['gelly space']              ={author="SlientSnow"},
 
     ['caprice']                               ={inside=true,redirect='rectification'},
-    ['fruit dance_ex']                        ={inside=true,redirect='fruit dance'},
-    ['fruit dance_mix']                       ={inside=true,redirect='fruit dance'},
     ['race_old']                              ={inside=true,redirect='race'},
     ['secret7th_hypersonic_hidden']           ={inside=true,redirect={'secret7th_old','super7th'}},
-    ['jazz nihilism_mix']                     ={inside=true,author="Trebor",redirect='jazz nihilism'},
     ['accelerator']                           ={inside=true,author="Trebor",},
     ['secret7th overdrive remix_mix']         ={inside=true,author="Yunokawa",redirect='secret7th overdrive remix'},
     ['secret7th remix_hypersonic_titanium']   ={inside=true,author="柒栎流星",redirect='secret7th remix'},
-    ['race remix_mix']                        ={inside=true,author="柒栎流星",redirect='race remix'},
     ['propel_marathon']                       ={inside=true,author="TetraCepra",redirect='propel'},
-    ['infinite remix_mix']                    ={inside=true,author="TetraCepra",redirect='infinite remix'},
-    ['reason remix_mix']                      ={inside=true,author="TetraCepra",redirect='reason remix'},
-    ['sakura_noloop']                         ={inside=true,author="C₂₉H₂₅N₃O₅",redirect='sakura'},
-    ['shibamata_noloop']                      ={inside=true,author="C₂₉H₂₅N₃O₅",redirect='shibamata'},
+    ['invisible']                             ={inside=true,author="DJ Asriel"},
 }
 
 for name,data in next,songbook do
-    if not data.author then data.author="MrZ" end
-    local words=STRING.split(name,' ')
+    if not data.author then data.author="MrZ" end -- MrZ is fun!
+    local words=name:split(' ')
     for i=1,#words do
         words[i]=words[i]:sub(1,1):upper()..words[i]:sub(2)
     end
@@ -123,7 +125,7 @@ for name,data in next,songbook do
 end
 
 setmetatable(songbook,{__call=function(t,name)
-    MSG.new('warn',"Unlisted song: "..name)
+    MSG.log('warn',"Unlisted song: "..name)
     t[name]={
         title='['..name..']',
         author='',
@@ -132,5 +134,5 @@ setmetatable(songbook,{__call=function(t,name)
     }
 end})
 
----@cast songbook table<Techmino.MusicName,Techmino.MusicMeta>
+---@cast songbook table<Techmino.MusicName, Techmino.MusicMeta>
 return songbook

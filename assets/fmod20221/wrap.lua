@@ -94,9 +94,9 @@ studio.CommandReplay={}
 
 ---@class FMOD.Studio.UserProperty
 ---@field name string
----@field type 0|1|2|3 int, bool, float, string
+---@field type 0 | 1 | 2 | 3 int, bool, float, string
 ---@field intvalue integer
----@field boolvalue 0|1
+---@field boolvalue 0 | 1
 ---@field floatvalue number
 ---@field stringvalue string
 
@@ -898,7 +898,7 @@ function core.Sound:getSyncPoint(i1)
     return o1[0],result
 end
 
----Warning: string wrongly retrieved
+---**Warning:** string wrongly retrieved
 ---@return any,number,FMOD.Result
 function core.Sound:getSyncPointInfo(i1,i2,i3)
     local o1=ffi.new("char[1]")
@@ -2213,7 +2213,7 @@ function core.DSP:setParameterData(i1,i2,i3)
     return result
 end
 
----Warning: string wrongly retrieved
+---**Warning:** string wrongly retrieved
 ---@return number,any,FMOD.Result
 function core.DSP:getParameterFloat(i1,i2)
     local o1=ffi.new("float[1]")
@@ -2222,7 +2222,7 @@ function core.DSP:getParameterFloat(i1,i2)
     return o1[0],o2[0],result
 end
 
----Warning: string wrongly retrieved
+---**Warning:** string wrongly retrieved
 ---@return number,any,FMOD.Result
 function core.DSP:getParameterInt(i1,i2)
     local o1=ffi.new("int[1]")
@@ -2231,7 +2231,7 @@ function core.DSP:getParameterInt(i1,i2)
     return o1[0],o2[0],result
 end
 
----Warning: string wrongly retrieved
+---**Warning:** string wrongly retrieved
 ---@return number,any,FMOD.Result
 function core.DSP:getParameterBool(i1,i2)
     local o1=ffi.new("FMOD_BOOL[1]")
@@ -2240,7 +2240,7 @@ function core.DSP:getParameterBool(i1,i2)
     return o1[0],o2[0],result
 end
 
----Warning: string wrongly retrieved
+---**Warning:** string wrongly retrieved
 ---@return any,number,any,FMOD.Result
 function core.DSP:getParameterData(i1,i2)
     local o1=ffi.new("void*[1]")
@@ -2277,7 +2277,7 @@ function core.DSP:showConfigDialog(i1,i2)
     return result
 end
 
----Warning: string wrongly retrieved
+---**Warning:** string wrongly retrieved
 ---@return any,number,number,number,number,FMOD.Result
 function core.DSP:getInfo()
     local o1=ffi.new("char[1]")
@@ -2727,7 +2727,7 @@ function studio.System:getParameterDescriptionByID(i1)
     return o1[0],result
 end
 
----Warning: string wrongly retrieved
+---**Warning:** string wrongly retrieved
 ---@return any,number,FMOD.Result
 function studio.System:getParameterLabelByName(i1,i2,i3)
     local o1=ffi.new("char[1]")
@@ -2736,7 +2736,7 @@ function studio.System:getParameterLabelByName(i1,i2,i3)
     return o1[0],o2[0],result
 end
 
----Warning: string wrongly retrieved
+---**Warning:** string wrongly retrieved
 ---@return any,number,FMOD.Result
 function studio.System:getParameterLabelByID(i1,i2,i3)
     local o1=ffi.new("char[1]")
@@ -2799,7 +2799,7 @@ function studio.System:lookupID(i1)
     return o1[0],result
 end
 
----Warning: string wrongly retrieved
+---**Warning:** string wrongly retrieved
 ---@return any,number,FMOD.Result
 function studio.System:lookupPath(i1,i2)
     local o1=ffi.new("char[1]")
@@ -3049,7 +3049,7 @@ function studio.EventDescription:getParameterDescriptionByID(i1)
     return o1[0],result
 end
 
----Warning: string wrongly retrieved
+---**Warning:** string wrongly retrieved
 ---@return any,number,FMOD.Result
 function studio.EventDescription:getParameterLabelByIndex(i1,i2,i3)
     local o1=ffi.new("char[1]")
@@ -3058,7 +3058,7 @@ function studio.EventDescription:getParameterLabelByIndex(i1,i2,i3)
     return o1[0],o2[0],result
 end
 
----Warning: string wrongly retrieved
+---**Warning:** string wrongly retrieved
 ---@return any,number,FMOD.Result
 function studio.EventDescription:getParameterLabelByName(i1,i2,i3)
     local o1=ffi.new("char[1]")
@@ -3067,7 +3067,7 @@ function studio.EventDescription:getParameterLabelByName(i1,i2,i3)
     return o1[0],o2[0],result
 end
 
----Warning: string wrongly retrieved
+---**Warning:** string wrongly retrieved
 ---@return any,number,FMOD.Result
 function studio.EventDescription:getParameterLabelByID(i1,i2,i3)
     local o1=ffi.new("char[1]")
@@ -3700,7 +3700,7 @@ function studio.Bank:getStringCount()
     return o1[0],result
 end
 
----Warning: string wrongly retrieved
+---**Warning:** string wrongly retrieved
 ---@return any,any,number,FMOD.Result
 function studio.Bank:getStringInfo(i1,i2)
     local o1=ffi.new("FMOD_GUID[1]")

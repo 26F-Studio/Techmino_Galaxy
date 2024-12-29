@@ -1,24 +1,51 @@
 function sureCheck(event)
     if TASK.lock('sureCheck_'..event,1) then
-        MSG.new('info',Text.sureText[event],1)
+        MSG('info',Text.sureText[event],1)
     else
         return true
     end
 end
 
+function drawGlitch()
+    local setc,rect=GC.setColor,GC.rectangle
+    local t=love.timer.getTime()
+    local cellSize=math.min(SCR.w,SCR.h)/26
+    GC.replaceTransform(SCR.origin)
+    for x=0,SCR.w,cellSize do
+        for y=0,SCR.h,cellSize do
+            setc(1,1,1,(math.floor(t*2.6)*(x*26+62)*(y*42+24))/10%2.6%.042)
+            rect('fill',x,y,cellSize,cellSize)
+        end
+    end
+end
+function drawGlitch2()
+    local setc,rect=GC.setColor,GC.rectangle
+    local t=love.timer.getTime()
+    local a=1/26
+    GC.replaceTransform(SCR.origin)
+    GC.scale(1,SCR.h)
+    for i=0,26 do
+        setc(1,1,1,(math.floor(t*2.6+i/6)*(26+i))%0.0355)
+        rect('fill',0,a*(i-2.6*t%1),SCR.w,a*.355)
+    end
+end
+
 local _bgmPlaying ---@type string?
 ---@param name Techmino.MusicName
----@param full? boolean
+---@param full? boolean | table
 ---@param noProgress? boolean
 function playBgm(name,full,noProgress)
     if name==_bgmPlaying then return end
     if not noProgress and not SONGBOOK[name].inside then
         PROGRESS.setBgmUnlocked(SONGBOOK[name].redirect or name,full and 2 or 1)
     end
-    if full then
+    if full==true then
         FMOD.music(name)
-    else
+    elseif not full then
         FMOD.music(name,{param={'intensity',0,true}})
+    else
+        ---@cast full table
+        FMOD.music(name,full)
     end
     _bgmPlaying=name
 end
@@ -42,10 +69,10 @@ function playSample(...)
             local len=l[i][3] or 420
             local rel=l[i][4] or 620
             local event=FMOD.effect(inst,{
-                tune=note>=0 and note-33 or nil,
+                tune=note>=0 and note-50 or nil,
                 pitch=note<0 and -note or nil,
                 volume=vol,
-                param={'release',rel*1.0594630943592953^(note-33)},
+                param={'release',rel*1.0594630943592953^(note-50)},
             })
             if not event then return end
             TASK.new(function()
@@ -68,63 +95,70 @@ setmetatable(gameSoundFunc,{
         end
     end
 })
-
-gameSoundFunc.move                  =NULL
-gameSoundFunc.move_down             =NULL
-gameSoundFunc.move_failed           =NULL
-gameSoundFunc.touch                 =NULL
-gameSoundFunc.lock                  =NULL
-gameSoundFunc.tuck                  =NULL
-gameSoundFunc.rotate                =NULL
-gameSoundFunc.rotate_init           =NULL
-gameSoundFunc.rotate_locked         =NULL
-gameSoundFunc.rotate_corners        =NULL
-gameSoundFunc.rotate_failed         =NULL
-gameSoundFunc.rotate_special        =NULL
-gameSoundFunc.hold                  =NULL
-gameSoundFunc.hold_init             =NULL
-gameSoundFunc.drop                  =NULL
-gameSoundFunc.drop_old              =NULL
-gameSoundFunc.clear_all             =NULL
-gameSoundFunc.clear_half            =NULL
-gameSoundFunc.frenzy                =NULL
-gameSoundFunc.discharge             =NULL
-gameSoundFunc.suffocate             =NULL
-gameSoundFunc.desuffocate           =NULL
-gameSoundFunc.beep_rise             =NULL
-gameSoundFunc.beep_drop             =NULL
-gameSoundFunc.beep_notice           =NULL
-gameSoundFunc.finish_win            =NULL
-gameSoundFunc.finish_suffocate      =NULL
-gameSoundFunc.finish_lockout        =NULL
-gameSoundFunc.finish_topout         =NULL
-gameSoundFunc.finish_timeout        =NULL
-gameSoundFunc.finish_rule           =NULL
-gameSoundFunc.finish_exhaust        =NULL
-gameSoundFunc.finish_taskfail       =NULL
-gameSoundFunc.finish_other          =NULL
+do
+    local _someSFX=NULL
+    gameSoundFunc.move                  =_someSFX
+    gameSoundFunc.move_down             =_someSFX
+    gameSoundFunc.move_failed           =_someSFX
+    gameSoundFunc.touch                 =_someSFX
+    gameSoundFunc.lock                  =_someSFX
+    gameSoundFunc.tuck                  =_someSFX
+    gameSoundFunc.rotate                =_someSFX
+    gameSoundFunc.rotate_init           =_someSFX
+    gameSoundFunc.rotate_locked         =_someSFX
+    gameSoundFunc.rotate_corners        =_someSFX
+    gameSoundFunc.rotate_failed         =_someSFX
+    gameSoundFunc.rotate_special        =_someSFX
+    gameSoundFunc.hold                  =_someSFX
+    gameSoundFunc.hold_init             =_someSFX
+    gameSoundFunc.drop                  =_someSFX
+    gameSoundFunc.drop_old              =_someSFX
+    gameSoundFunc.clear_all             =_someSFX
+    gameSoundFunc.clear_half            =_someSFX
+    gameSoundFunc.frenzy                =_someSFX
+    gameSoundFunc.discharge             =_someSFX
+    gameSoundFunc.suffocate             =_someSFX
+    gameSoundFunc.desuffocate           =_someSFX
+    gameSoundFunc.beep_rise             =_someSFX
+    gameSoundFunc.beep_drop             =_someSFX
+    gameSoundFunc.beep_notice           =_someSFX
+    gameSoundFunc.finish_win            =_someSFX
+    gameSoundFunc.finish_suffocate      =_someSFX
+    gameSoundFunc.finish_lockout        =_someSFX
+    gameSoundFunc.finish_topout         =_someSFX
+    gameSoundFunc.finish_timeout        =_someSFX
+    gameSoundFunc.finish_rule           =_someSFX
+    gameSoundFunc.finish_exhaust        =_someSFX
+    gameSoundFunc.finish_taskfail       =_someSFX
+    gameSoundFunc.finish_other          =_someSFX
+    for k,v in next,gameSoundFunc do
+        if v==_someSFX then
+            gameSoundFunc[k]=function(vol) FMOD.effect(k,vol) end
+        end
+    end
+end
 
 function gameSoundFunc.countDown(num)
-    if num==0 then -- 6, 3+6+6
-        playSample('sine',{'A3',.8})
-        playSample('square',{'A4',.9},{'E5',.9},{'A5',.9})
-    elseif num==1 then -- 5, 3+7
-        playSample('sine',{'G3',.9})
-        playSample('square',{'B4',.9},{'E5',.9})
-    elseif num==2 then -- 4, 6+2
-        playSample('sine',{'F3'})
-        playSample('square',{'A4',.8},{'D5',.8})
-    elseif num==3 then -- 6+6
-        playSample('sine',{'A3',.9},{'E4',.9})
-        playSample('square',{'A4',.8})
-    elseif num==4 then -- 5+7, 5
-        playSample('sine',{'G3',.9},{'B3',.9})
-        playSample('square',{'G4',.6})
-    elseif num==5 then -- 4+6, 4
-        playSample('sine',{'F3',.8},{'A3',.8})
-        playSample('square',{'F4',.3})
-    elseif num<=10 then
-        playSample('sine',{'A2',2.2-num/5},{'E3',2.2-num/5})
+    if num==0 then -- 6 + 6 3 6
+        playSample('organ',{'A2',.5,420,1200})
+        playSample('complex',{'A3',.6,320,942},{'E4',.8,320,1100},{'A4',.9,320,2600})
+    elseif num==1 then -- 7 + 5 (7) 3
+        playSample('organ',{'B2',.45,460,520})
+        playSample('complex',{'G3',.7,360,768},{'B3',.5,360,872},{'E4',.85,360,942})
+    elseif num==2 then -- 2 + (4) 6 2
+        playSample('organ',{'D3',.4,450,580})
+        playSample('complex',{'F3',.4,390,662},{'A3',.7,390,662},{'D4',.8,390,872})
+    elseif num==3 then -- 1 + 3 (#5) 1
+        playSample('organ',{'C3',.4})
+        playSample('complex',{'E3',.6},{'A3',.4},{'C4',.75})
+    elseif num==4 then -- 2 + (3) #5 7
+        playSample('organ',{'D3',.4})
+        playSample('complex',{'E3',.3},{'G#3',.7},{'B3',.7})
+    elseif num==5 then -- 7 + 3 #5
+        playSample('organ',{'B2',.4})
+        playSample('complex',{'E3',.6},{'G#3',.8})
+    elseif num<=10 then -- 7 + 3
+        playSample('complex',{'B2',2.2-num/5},{'E3',2.2-num/5})
     end
 end
 function gameSoundFunc.clear(lines)
@@ -148,36 +182,36 @@ function gameSoundFunc.charge(lv)
     FMOD.effect('charge_'..MATH.clamp(math.floor(lv),1,11))
 end
 gameSoundFunc.combo=setmetatable({__register=true,
-    function() playSample('sine',{'A2',.70,420}) end, -- 1
-    function() playSample('sine',{'C3',.75,410}) end, -- 2
-    function() playSample('sine',{'D3',.80,400}) end, -- 3
-    function() playSample('sine',{'E3',.85,390}) end, -- 4
-    function() playSample('sine',{'G3',.90,380}) end, -- 5
-    function() playSample('sine',{'A3',.90,370},'square',{'A2',.20,420,620}) end, -- 6
-    function() playSample('sine',{'C4',.75,360},'square',{'C3',.40,400,620}) end, -- 7
-    function() playSample('sine',{'D4',.60,350},'square',{'D3',.60,380,620}) end, -- 8
-    function() playSample('sine',{'E4',.40,340},'square',{'E3',.75,360,620}) end, -- 9
-    function() playSample('sine',{'G4',.20,330},'square',{'G3',.90,340,620}) end, -- 10
-    function() playSample('sine',{'A4',.20,320},'square',{'A3',.85,320,620}) end, -- 11
-    function() playSample('sine',{'A4',.40,310},'square',{'C4',.80,300,620}) end, -- 12
-    function() playSample('sine',{'A4',.60,300},'square',{'D4',.75,280,620}) end, -- 13
-    function() playSample('sine',{'A4',.75,290},'square',{'E4',.70,270,620}) end, -- 14
-    function() playSample('sine',{'A4',.90,280},'square',{'G4',.65,260,640}) end, -- 15
-    function() playSample('sine',{'A4',.90,270},{'E5',.70},'square',{'A4',1,250,660}) end, -- 16
-    function() playSample('sine',{'A4',.85,260},{'E5',.75},'square',{'C5',1,240,680}) end, -- 17
-    function() playSample('sine',{'A4',.80,250},{'E5',.80},'square',{'D5',1,230,700}) end, -- 18
-    function() playSample('sine',{'A4',.75,240},{'E5',.85},'square',{'E5',1,220,720}) end, -- 19
-    function() playSample('sine',{'A4',.70,230},{'E5',.90},'square',{'G5',1,210,740}) end, -- 20
+    function() playSample('complex',{'A2',.70,420}) end, -- 1
+    function() playSample('complex',{'C3',.75,410}) end, -- 2
+    function() playSample('complex',{'D3',.80,400}) end, -- 3
+    function() playSample('complex',{'E3',.85,390}) end, -- 4
+    function() playSample('complex',{'G3',.90,380}) end, -- 5
+    function() playSample('complex',{'A3',.90,370},'square',{'A2',.20,420,620}) end, -- 6
+    function() playSample('complex',{'C4',.75,360},'square',{'C3',.40,400,620}) end, -- 7
+    function() playSample('complex',{'D4',.60,350},'square',{'D3',.60,380,620}) end, -- 8
+    function() playSample('complex',{'E4',.40,340},'square',{'E3',.75,360,620}) end, -- 9
+    function() playSample('complex',{'G4',.20,330},'square',{'G3',.90,340,620}) end, -- 10
+    function() playSample('complex',{'A4',.20,320},'square',{'A3',.85,320,620}) end, -- 11
+    function() playSample('complex',{'A4',.40,310},'square',{'C4',.80,300,620}) end, -- 12
+    function() playSample('complex',{'A4',.60,300},'square',{'D4',.75,280,620}) end, -- 13
+    function() playSample('complex',{'A4',.75,290},'square',{'E4',.70,270,620}) end, -- 14
+    function() playSample('complex',{'A4',.90,280},'square',{'G4',.65,260,640}) end, -- 15
+    function() playSample('complex',{'A4',.90,270},{'E5',.70},'square',{'A4',1,250,660}) end, -- 16
+    function() playSample('complex',{'A4',.85,260},{'E5',.75},'square',{'C5',1,240,680}) end, -- 17
+    function() playSample('complex',{'A4',.80,250},{'E5',.80},'square',{'D5',1,230,700}) end, -- 18
+    function() playSample('complex',{'A4',.75,240},{'E5',.85},'square',{'E5',1,220,720}) end, -- 19
+    function() playSample('complex',{'A4',.70,230},{'E5',.90},'square',{'G5',1,210,740}) end, -- 20
 },{__call=function(self,combo)
     if self[combo] then
         self[combo]()
     else
-        playSample('sine',{'A4',.626-.01*combo,430-10*combo})
+        playSample('complex',{'A4',.626-.01*combo,430-10*combo})
         local phase=(combo-21)%12
-        playSample('square',{40+phase,1-((11-phase)/12)^2,400-10*combo,700+20*combo}) -- E4+
-        playSample('square',{45+phase,1-((11-phase)/12)^2,400-10*combo,700+20*combo}) -- A4+
-        playSample('square',{52+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- E5+
-        playSample('square',{57+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- A5+
+        playSample('square',{16+phase,1-((11-phase)/12)^2,400-10*combo,700+20*combo}) -- E4+
+        playSample('square',{21+phase,1-((11-phase)/12)^2,400-10*combo,700+20*combo}) -- A4+
+        playSample('square',{28+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- E5+
+        playSample('square',{33+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- A5+
     end
 end,__metatable=true})
 gameSoundFunc.chain=gameSoundFunc.combo
@@ -189,11 +223,11 @@ gameSoundFunc.move_back=gameSoundFunc.rotate_failed
 
 local interiorModeMeta={
     __call=function(self)
-        local success,errInfo=pcall(GAME.getMode,self.name)
-        if success then
+        local suc,errInfo=pcall(GAME.getMode,self.name)
+        if suc then
             SCN.go('game_in','none',self.name)
         else
-            MSG.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+            MSG.log('warn',Text.noMode:repD(tostring(self.name):simplifyPath(),errInfo))
         end
     end
 }
@@ -203,11 +237,11 @@ end
 
 local exteriorModeMeta={
     __call=function(self)
-        local success,errInfo=pcall(GAME.getMode,self.name)
-        if success then
+        local suc,errInfo=pcall(GAME.getMode,self.name)
+        if suc then
             SCN.go('game_out','fade',self.name)
         else
-            MSG.new('warn',Text.noMode:repD(STRING.simplifyPath(tostring(self.name)),errInfo))
+            MSG.log('warn',Text.noMode:repD(tostring(self.name):simplifyPath(),errInfo))
         end
     end
 }
@@ -268,28 +302,6 @@ function showSaveIcon(str)
     TEXT:add{text=str,x=SCR.w0-15,y=SCR.h0+5,align='bottomright',a=.0626,duration=.62,fontSize=70}
 end
 
-local warnThres={-1,2.6,6.26,14.2,26}
-local warnCheck=5
-function task_powerManager()
-    while true do
-        local state,pow=love.system.getPowerInfo()
-        if not pow then return end
-        if state=='charging' or state=='charged' then
-            while warnCheck<5 and pow>warnThres[warnCheck] do
-                warnCheck=warnCheck+1
-            end
-        else
-            if pow<=warnThres[warnCheck] then
-                repeat
-                    warnCheck=warnCheck-1
-                until warnCheck==1 or pow>warnThres[warnCheck]
-                MSG.new(({'check','error','warn','info'})[warnCheck],Text.batteryWarn[warnCheck])
-            end
-        end
-        TASK.yieldT(6.26)
-    end
-end
-
 function backText()
     return CHAR.icon.back_chevron..' '..Text.button_back
 end
@@ -305,13 +317,22 @@ function task_unloadGame()
     collectgarbage()
 end
 
+function _getLatestBank(dt)
+    TASK.new(function()
+        MSG('info',"Opening URL to bank files...")
+        TASK.yieldT(dt or 0.626)
+        love.system.openURL("https://kyzj-my.sharepoint.com/:f:/g/personal/noreply_studio26f_org/ElmKJZYcNpFDhGks9nekrUYBoyr1ZJZgpx1lCyFu6tHXQg?e=vJnaQX")
+    end)
+end
+
 getTouches=love.touch.getTouches
 isMouseDown=love.mouse.isDown
 isKeyDown=love.keyboard.isDown
+isSCDown=love.keyboard.isScancodeDown
 local isKeyDown=isKeyDown
-function isCtrlPressed() return isKeyDown('lctrl','rctrl') end
-function isShiftPressed() return isKeyDown('lshift','rshift') end
-function isAltPressed() return isKeyDown('lalt','ralt') end
+function isCtrlDown() return isKeyDown('lctrl','rctrl') end
+function isShiftDown() return isKeyDown('lshift','rshift') end
+function isAltDown() return isKeyDown('lalt','ralt') end
 
 local function _getActMode(mode,key)
     local act=KEYMAP[mode]:getAction(key)
@@ -387,7 +408,7 @@ end
 
 regFuncToStr,regStrToFunc={},{}
 ---Flatten a table of functions into string-to-function and function-to-string maps
----@param obj table|function
+---@param obj table | function
 ---@param path string
 function regFuncLib(obj,path)
     if type(obj)=='function' or type(obj)=='table' and rawget(obj,'__register') then
@@ -401,6 +422,8 @@ function regFuncLib(obj,path)
         end
     end
 end
+
+regFuncLib(gameSoundFunc,'gameSoundFunc')
 
 love_logo=GC.load{w=128,h=128,
     {'clear',0,0,0,0},
@@ -424,5 +447,3 @@ for x=0,127 do
     table.insert(transition_image,{'fRect',x,0,1,1})
 end
 transition_image=GC.load(transition_image)
-
-regFuncLib(gameSoundFunc,'gameSoundFunc')

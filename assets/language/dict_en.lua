@@ -59,18 +59,9 @@ Set C is more flexible, and you can adjust the difficulties based on your own co
 
 When you finish all the tasks in set C, keep practicing A1. This is the fundamental skill in any stacker game, and you can master practically any mode when you can just scan through the Next sequence easily.
 
-# 20g
-@ title 20G
-The fastest falling speed of modern stacker. In 20G modes, pieces appear instantly on the bottom of the field without the actual process of falling. This sometimes also limits a piece’s sideways movements, as it is not always possible to make a piece climb over a bump or out of a well in 20G. You can learn more at the unit “G” at the “falling speed” entry.
-
-# hypertap
-@ title Hypertap
-Refers to the technique of vibrating your finger on the controller to achieve faster sideways movement speed than holding it.
-It is most commonly used on classic stacker where ASD is relatively slow. In most cases, you do not need to hypertap in modern stacker games because their ASD is usually fast enough.
-
 # 26f_studio
 @ title 26F Studio
 @ contentSize 26
 @ link http://studio26f.org
-A group
+A team
 ]]

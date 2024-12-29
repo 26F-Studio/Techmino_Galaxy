@@ -60,7 +60,8 @@ local cardText={
     z7={COLOR.R,CHAR.mahjong.z7},
 }
 
-local deck,hand,pool
+local deck
+local hand,pool={},{}
 local selected
 
 local function _getPoolCardArea(i)
@@ -79,15 +80,15 @@ end
 
 local function _newGame()
     deck=TABLE.copy(deck0)
-    hand={}
-    pool={}
+    TABLE.clear(hand)
+    TABLE.clear(pool)
     for _=1,14 do ins(hand,(TABLE.popRandom(deck))) end
     table.sort(hand)
 end
 
 local function _checkWin()
     if #hand==14 then
-        MSG.new('info',"Coming soon!")
+        MSG('info',"Coming soon!")
     end
 end
 
@@ -197,7 +198,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=160, y=100,w=180,h=100,color='lR',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
+    WIDGET.new{type='button_fill',pos={0,0},x=160, y=100,w=180,h=100,fillColor='lR',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
     WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-180,w=160,h=80,fontSize=45,sound_trigger=false,text='自摸',code=WIDGET.c_pressKey'return'},
     WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }

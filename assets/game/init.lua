@@ -1,10 +1,5 @@
 local require=simpRequire('assets.game.')
 Brik=require'briks'
-defaultBrikColor=setmetatable({
-    844,484,448,864,748,884,488,
-    844,484,845,485,468,854,748,684,488,847,884,448,864,468,854,846,486,884,
-    478,748,854,484,
-},{__index=function() return math.random(64) end})
 require'rotsys_brik'
 
 local gc=love.graphics
@@ -149,14 +144,14 @@ end
 
 ---@class Techmino.Game
 ---@field playing boolean
----@field playerList Techmino.Player[]|false
----@field playerMap Map<Techmino.Player>|false
+---@field playerList Techmino.Player[] | false
+---@field playerMap Map<Techmino.Player> | false
 ---@field camera Zenitha.Camera
 ---@field hitWaves table
----@field seed number|false
----@field mode Techmino.Mode|false
----@field mainID number|false
----@field mainPlayer Techmino.Player|false
+---@field seed number | false
+---@field mode Techmino.Mode | false
+---@field mainID number | false
+---@field mainPlayer Techmino.Player | false
 local GAME={
     playing=false,
 
@@ -175,11 +170,11 @@ local GAME={
 
 GAME.camera.moveSpeed=12
 
+mechLib={}
 function GAME._refresh()
-    mechLib=TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end)
+    TABLE.clear(modeLib)
+    TABLE.update(mechLib,TABLE.newResourceTable(require'mechanicLib',function(path) return FILE.load(path,'-lua') end))
     regFuncLib(mechLib,'mechLib')
-    regFuncToStr,regStrToFunc={},{}
-    modeLib={}
 end
 GAME._refresh()
 
@@ -215,7 +210,7 @@ end
 function GAME.load(mode,seed)
     -- print("Game Loaded: "..mode.."-"..seed)
     if GAME.mode then
-        MSG.new('warn',"Game is running")
+        MSG.log('warn',"Game is running")
         return
     end
     GAME.playing=true
@@ -232,7 +227,7 @@ function GAME.load(mode,seed)
     TASK.removeTask_code(task_unloadGame)
 
     if #GAME.playerList==0 then
-        MSG.new('warn',"No players created in this mode")
+        MSG.log('warn',"No players created in this mode")
     else
         if GAME.mainPlayer then
             local conf=SETTINGS['game_'..GAME.mainPlayer.gameMode]
@@ -272,11 +267,11 @@ function GAME.unload()
 end
 
 ---@param id integer
----@param pType 'brik'|'gela'|'acry'
+---@param pType 'brik' | 'gela' | 'acry'
 ---@param remote? boolean
 function GAME.newPlayer(id,pType,remote)
     if not (type(id)=='number' and math.floor(id)==id and id>=1 and id<=1000) then
-        MSG.new('error',"player id must be 1~1000 integer")
+        MSG.log('error',"player id must be 1~1000 integer")
         return
     end
 
@@ -288,7 +283,7 @@ function GAME.newPlayer(id,pType,remote)
     elseif pType=='acry' then
         P=require'acryPlayer'.new(remote)
     else
-        MSG.new('error',"invalid player type :'"..tostring(pType).."'")
+        MSG.log('error',"invalid player type :'"..tostring(pType).."'")
         return
     end
 
@@ -321,18 +316,47 @@ function GAME.setTeam(id,teamID)
 end
 
 function GAME.press(action,id)
-    if id then
-        GAME.playerMap[id]:pressKey(action)
-    elseif GAME.mainPlayer then
-        GAME.mainPlayer:pressKey(action)
-    end
+    local p=id and GAME.playerMap[id] or GAME.mainPlayer
+    p:pressKey(action)
 end
 
 function GAME.release(action,id)
-    if id then
-        GAME.playerMap[id]:releaseKey(action)
-    elseif GAME.mainPlayer then
-        GAME.mainPlayer:releaseKey(action)
+    local p=id and GAME.playerMap[id] or GAME.mainPlayer
+    p:releaseKey(action)
+end
+
+function GAME.cursorDown(x,y,tid,id)
+    local p=id and GAME.playerMap[id] or GAME.mainPlayer
+    if p.gameMode=='acry' then
+    x,y=GAME.camera.transform:inverseTransformPoint(SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y)))
+        p:mouseDown(x,y,tid)
+    elseif SETTINGS.system.touchControl then
+        VCTRL.press(x,y,tid)
+    end
+end
+
+function GAME.cursorMove(x,y,dx,dy,tid,id)
+    local p=id and GAME.playerMap[id] or GAME.mainPlayer
+    if p.gameMode=='acry' then
+        x,y=GAME.camera.transform:inverseTransformPoint(SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y)))
+        p:mouseMove(x,y,dx,dy,
+            tid or
+            love.mouse.isDown(1) and 1 or
+            love.mouse.isDown(2) and 2 or
+            3
+        )
+    elseif SETTINGS.system.touchControl then
+        VCTRL.move(x,y,tid)
+    end
+end
+
+function GAME.cursorUp(x,y,tid,id)
+    local p=id and GAME.playerMap[id] or GAME.mainPlayer
+    if p.gameMode=='acry' then
+        x,y=GAME.camera.transform:inverseTransformPoint(SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y)))
+        p:mouseUp(x,y,tid)
+    elseif SETTINGS.system.touchControl then
+        VCTRL.release(tid)
     end
 end
 
@@ -341,11 +365,11 @@ end
 ---@field power number -∞~∞, no default
 ---@field sharpness number 0~∞, default to 1, how strong the attack can cancel the others
 ---@field hardness number 0~∞, default to 1, how strong the attack can defend the others
----@field mode number 0|1, default to 0, 0: trigger by time, 1:trigger by step
+---@field mode number 0 | 1, default to 0, 0: trigger by time, 1:trigger by step
 ---@field time number 0~∞, default to 0, ms / step
 ---@field fatal number 0~100, default to 30, percentage
 ---@field speed number 0~100, default to 30, percentage
----@field target number|Techmino.Player|nil default to nil
+---@field target number | Techmino.Player | nil default to nil
 
 local atkTemplate={
     sharpness=1,
@@ -376,7 +400,7 @@ function GAME.initAtk(atk) -- Normalize the attack object
     return atk
 end
 
----@param sender Techmino.Player|number|false
+---@param sender Techmino.Player | number | false
 ---@param atk Techmino.Game.Attack?
 function GAME.send(sender,atk)
     if not atk then return end
@@ -442,9 +466,11 @@ function GAME.update(dt)
     end
 end
 
+local _canvasSetting={stencil=true}
 function GAME.render()
     if not GAME.playerList then return end
-    gc.setCanvas({ZENITHA.getBigCanvas('player'),stencil=true})
+    _canvasSetting[1]=ZENITHA.bigCanvas.player
+    gc.setCanvas(_canvasSetting)
     gc.replaceTransform(SCR.xOy_m)
     gc.applyTransform(GAME.camera.transform)
     gc.clear(0,0,0,0)
@@ -452,7 +478,7 @@ function GAME.render()
     gc.setCanvas()
 
     gc.replaceTransform(SCR.origin)
-    if #GAME.hitWaves>0 then
+    if GAME.hitWaves[1] then
         local L=GAME.hitWaves
         for i=1,#L do
             local timeK=1/(400*L[i].time+50)-.0026
@@ -468,7 +494,7 @@ function GAME.render()
     else
         gc.setShader(SHADER.none) -- Directly draw the content, don't consider color, for better performance(?)
     end
-    gc.draw(ZENITHA.getBigCanvas('player'))
+    gc.draw(ZENITHA.bigCanvas.player)
     gc.setShader()
 end
 

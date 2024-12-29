@@ -11,8 +11,9 @@ local scene={}
 local categoryColor={
     intro= {index=COLOR.F, content=COLOR.lF}, -- Instruction for current scene
     guide= {index=COLOR.Y, content=COLOR.lY}, -- Practice methods
-    term=  {index=COLOR.lB,content=COLOR.LB}, -- Concept in game
-    tech=  {index=COLOR.G, content=COLOR.lG}, -- General technics
+    term1= {index=COLOR.lC,content=COLOR.LC}, -- Basic concepts in game
+    term2= {index=COLOR.lS,content=COLOR.LS}, -- Secondary concepts
+    term3= {index=COLOR.lB,content=COLOR.LB}, -- Popular concepts
     other= {index=COLOR.M, content=COLOR.lM}, -- Other
 }
 local mainW,mainH=900,700
@@ -24,8 +25,12 @@ local aboveScene
 local searchTimer,lastSearchText
 local time,quiting
 local selected
+---@class Techmino.DictContent
 local contents={
     _width=0,
+    maxScroll=0,
+    scroll=0,
+    scroll1=0,
     title=GC.newText(FONT.get(30),''),
     texts={},
 }
@@ -39,7 +44,7 @@ local baseDict do
         end
     end}
     for _,obj in next,baseDict do
-        local list=STRING.split(obj[1],':')
+        local list=obj[1]:split(':')
         obj[1]=nil
         obj.cat,obj.id=list[1]:trim(),list[2]:trim()
         setmetatable(obj,dictObjMeta)
@@ -69,6 +74,7 @@ local function selectItem(item)
         contents.title=selected.titleText
         contents._width,contents.texts=FONT.get(item.contentSize):getWrap(item.content,mainW-30)
         contents.scroll=0
+        contents.scroll1=0
         contents.maxScroll=126+(contents.title:getHeight()+5)-(mainH-searchH)
         for i=1,#contents.texts do
             local str=contents.texts[i]
@@ -85,15 +91,15 @@ local function selectItem(item)
             contents.texts[i]=line
         end
         contents.maxScroll=math.max(contents.maxScroll,0)
-        table.insert(contents.texts,1,{divider=4,height=10})
+        table.insert(contents.texts,1,{divider=3,height=10})
         copyButton:setVisible(true)
     else
         contents.title="x"
         contents.texts=NONE
-        contents.scroll=0
         contents.maxScroll=0
     end
     contents.scroll=0
+    contents.scroll1=0
 end
 local function openLink()
     if selected.link then
@@ -145,7 +151,7 @@ do -- Widgets
         scrollBarWidth=5,
         scrollBarDist=12,
         scrollBarColor=COLOR.lY,
-        activeColor={0,0,0,0},idleColor={0,0,0,0},
+        activeColor={0,0,0,0},
         stencilMode='single',
     }
     function listBox.drawFunc(obj,_,sel)
@@ -279,7 +285,7 @@ function scene.load(prev)
             else
                 currentDict=nil
                 ---@cast data string
-                MSG.new('error',data,10)
+                MSG.log('error',data)
             end
         end
         if not currentDict then currentDict={} end
@@ -343,7 +349,7 @@ function scene.keyDown(key,isRep)
     if WIDGET.isFocus(inputBox) and #key==1 then return true end
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
-        if not (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
+        if not (isCtrlDown() or isShiftDown() or isAltDown()) then
             local sel=listBox:getItem()
             listBox:arrowKey(key)
             if listBox:getItem()~=sel then
@@ -357,7 +363,7 @@ function scene.keyDown(key,isRep)
     elseif key=='pagedown' then
         listBox:scroll(15)
     elseif #key==1 and key:find'[0-9a-z]' then
-        if key=='c' and isCtrlPressed() then
+        if key=='c' and isCtrlDown() then
             copyText()
         else
             if not WIDGET.isFocus(inputBox) then
@@ -413,6 +419,7 @@ function scene.wheelMove(_,y)
 end
 
 function scene.update(dt)
+    contents.scroll1=MATH.expApproach(contents.scroll1,contents.scroll,dt*26)
     if aboveScene.update then
         aboveScene.update(dt)
     end
@@ -435,7 +442,7 @@ function scene.update(dt)
         end
         searchTimer=0
     end
-    if kbIsDown('up','down') and (isCtrlPressed() or isShiftPressed() or isAltPressed()) then
+    if kbIsDown('up','down') and (isCtrlDown() or isShiftDown() or isAltDown()) then
         scroll(260*dt*(kbIsDown('up') and 1 or -1))
     end
 end
@@ -484,7 +491,7 @@ function scene.draw()
     gc_stc_reset()
     gc_stc_rect(0,-mainH/2,mainW,mainH-searchH-5,5)
     gc_setColor(categoryColor[selected.cat].content)
-        gc_translate(0,-contents.scroll)
+        gc_translate(0,-contents.scroll1)
         -- Title
         gc_draw(contents.title,15,-mainH/2+5,nil,math.min(1,(mainW-25)/contents.title:getWidth()),1)
         gc_translate(0,contents.title:getHeight())

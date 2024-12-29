@@ -1,13 +1,13 @@
 local gc=love.graphics
 local fieldW=5
 
-local matrix
+local matrix={}
 local score,target
 local pieceWeights
 local curPiece
 local pieceSpawnTimer
 local noControl
-local choices
+local choices={}
 local texts=TEXT.new()
 
 local pieces={} -- Different orientations of all needed pieces
@@ -27,7 +27,7 @@ for k,v in next,STRING.split('S0 SR Z0 ZR J0 JR JF JL L0 LR LF LL T0 TR TF TL O0
         id=p.id,
         name=p.name,
         shape=shape,
-        color=RGB9[defaultBrikColor[p.id]],
+        color=RGB9[SETTINGS.game_brik.palette[p.id]],
         dir=v:sub(2,2),
 
         width=#shape[1],
@@ -75,7 +75,7 @@ local function newPiece()
     end
 
     pieceSpawnTimer=.42
-    if #solutions>0 then
+    if solutions[1] then
         local sum=0
         for i=1,#solutions do
             sum=sum+solutions[i].point
@@ -93,7 +93,7 @@ local function newPiece()
             end
         end
     else
-        MSG.new('warn','No solution found')
+        MSG.log('warn','No solution found')
     end
 end
 
@@ -101,7 +101,7 @@ local function reset()
     autoBack_interior(true)
     noControl=false
 
-    matrix={}
+    TABLE.clear(matrix)
     score=0
     target=40
     pieceWeights={1,1,1,1,1,1,1}
@@ -124,10 +124,10 @@ local function reset()
         duration=6.26,
     }
 
-    choices={}
+    TABLE.clear(choices)
     for i=1,7 do
         local p=TABLE.copyAll((Brik.get(i)))
-        p.color=RGB9[defaultBrikColor[p.id]]
+        p.color=RGB9[SETTINGS.game_brik.palette[p.id]]
         choices[i]=p
     end
 end

@@ -8,4 +8,4 @@
 
 ### Changed
 
-- Every thing
+- Everything

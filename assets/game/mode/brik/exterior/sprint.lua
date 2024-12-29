@@ -18,10 +18,11 @@ return {
         playBgm('race')
     end,
     settings={brik={
-        -- clearRule='float',
+        -- clearRule='line_float',
         spin_immobile=true,
         spin_corners=3,
         seqType='bag7_sprint',
+        infHold=true,
         event={
             playerInit=function(P)
                 P.modeData.infSprint_switch=false
@@ -33,24 +34,27 @@ return {
                 if not PROGRESS.getExteriorUnlock('combo') then
                     P.settings.combo_sound=true
                 end
-                if PROGRESS.getExteriorUnlock('tspin') then
+                if PROGRESS.getExteriorUnlock('spin') then
                     P.settings.spin_immobile=false
                     P.settings.spin_corners=false
                 end
                 P:setAction('func1',infSprint_turnOn)
             end,
-            beforePress=function(P)
-                P.modeData.curKeyCount=P.modeData.curKeyCount+1
-            end,
+            beforePress={
+                mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
+                function(P)
+                    P.modeData.curKeyCount=P.modeData.curKeyCount+1
+                end,
+            },
             afterLock=function(P)
                 table.insert(P.modeData.keyCount,P.modeData.curKeyCount)
                 P.modeData.curKeyCount=0
             end,
             afterPress=function(P)
-                if PROGRESS.getExteriorUnlock('tspin') then return true end
+                if PROGRESS.getExteriorUnlock('spin') then return true end
                 local move=P.lastMovement
                 if move and (move.immobile or move.corners) then
-                    PROGRESS.setExteriorUnlock('tspin')
+                    PROGRESS.setExteriorUnlock('spin')
                     P.settings.spin_immobile=false
                     P.settings.spin_corners=false
                     return true
@@ -59,7 +63,7 @@ return {
             beforeClear={
                 function(P,lines) -- Infinite Sprint Core
                     local CLEAR=P.modeData.infSprint_clears
-                    ---@type Techmino.Cell[][]
+                    ---@type Techmino.Brik.Cell[][]
                     local mat=P.field._matrix
                     for i=1,#lines do
                         local l={[0]=P.time}
@@ -132,7 +136,7 @@ return {
                 end,
             },
             afterClear={
-                -- mechLib.brik.misc.cascade_event_afterClear,
+                -- mechLib.brik.misc.chain_event_afterClear,
                 function(P)
                     if P.stat.line>=P.modeData.target.line then
                         P.modeData.target.line=TABLE.next(recordedLines,P.modeData.target.line)
@@ -157,10 +161,10 @@ return {
                     end
                 end,
                 function(P)
-                    if PROGRESS.getExteriorUnlock('hidden') then return true end
+                    if PROGRESS.getExteriorUnlock('invis') then return true end
                     if P.stat.line>=40 then
                         if P.stat.clears[1]+P.stat.clears[2]+P.stat.clears[3]==0 then
-                            PROGRESS.setExteriorUnlock('hidden')
+                            PROGRESS.setExteriorUnlock('invis')
                         end
                         return true
                     end
@@ -171,9 +175,14 @@ return {
                         if P.stat.piece<102.6 then
                             PROGRESS.setExteriorUnlock('sequence')
                         end
+                        return true
+                    end
+                end,
+                function(P)
+                    if P.stat.line>=40 then
                         P:delEvent('drawInField',mechLib.brik.misc.lineClear_event_drawInField)
                         if not P.modeData.infSprint_switch then
-                            P:finish('other')
+                            P:finish('win')
                         end
                         return true
                     end

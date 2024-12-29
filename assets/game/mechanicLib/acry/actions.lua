@@ -1,37 +1,37 @@
 local actions={}
 function actions.swapLeft(P)
     if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
-        P:swap('action',P.swapX,P.swapY,-1,0)
+        P:swap(P.swapX,P.swapY,-1,0)
     end
 end
 function actions.swapRight(P)
     if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
-        P:swap('action',P.swapX,P.swapY,1,0)
+        P:swap(P.swapX,P.swapY,1,0)
     end
 end
 function actions.swapUp(P)
     if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
-        P:swap('action',P.swapX,P.swapY,0,1)
+        P:swap(P.swapX,P.swapY,0,1)
     end
 end
 function actions.swapDown(P)
     if (P.settings.multiMove or #P.movingGroups==0) and P.settings.swap then
-        P:swap('action',P.swapX,P.swapY,0,-1)
+        P:swap(P.swapX,P.swapY,0,-1)
     end
 end
 function actions.twistCW(P)
     if (P.settings.multiMove or #P.movingGroups==0) and P.settings.twistR then
-        P:twist('action',P.twistX,P.twistY,'R')
+        P:twist(P.twistX,P.twistY,'R')
     end
 end
 function actions.twistCCW(P)
     if (P.settings.multiMove or #P.movingGroups==0) and P.settings.twistL then
-        P:twist('action',P.twistX,P.twistY,'L')
+        P:twist(P.twistX,P.twistY,'L')
     end
 end
 function actions.twist180(P)
     if (P.settings.multiMove or #P.movingGroups==0) and P.settings.twistF then
-        P:twist('action',P.twistX,P.twistY,'F')
+        P:twist(P.twistX,P.twistY,'F')
     end
 end
 function actions.moveLeft(P)

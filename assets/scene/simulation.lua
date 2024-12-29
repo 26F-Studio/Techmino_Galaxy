@@ -8,11 +8,14 @@
 ---@field x number
 ---@field y number
 ---@field size number
----@field trigTimer number|false
+---@field trigTimer number | false
 
 ---@type Techmino.simulation[]
 local sims={
     { -- Exterior 1
+        unlock=function()
+            return PROGRESS.get('styles').brik
+        end,
         trigger=function()
             TASK.yieldUntilNextScene()
             if SCN.cur=='simulation' then
@@ -35,26 +38,45 @@ local sims={
             )
         end,
     },
-    -- draw=function() -- Gela
-        -- GC.setColor(COLOR.R)
-        -- GC.setLineWidth(8)
-        -- GC.circle('line',-35,-60,70)
-        -- GC.circle('line',35,60,70)
-    -- end,
-    -- draw=function() -- Acry
-    --     GC.setColor(COLOR.B)
-    --     GC.setLineWidth(10)
-    --     GC.polygon('line',
-    --         0,112,
-    --         108,-32,
-    --         50,-100,
-    --         -50,-100,
-    --         -108 ,-32
-    --     )
-    -- end,
+    { -- TTGM
+        unlock=function()
+            return PROGRESS.get('TTGM').stage>0
+        end,
+        trigger=function()
+            TASK.yieldUntilNextScene()
+            if SCN.cur=='simulation' then
+                -- SCN.go('tetra_galaxy_machine','flash')
+                MSG('warn',"Coming soon?")
+            end
+        end,
+        draw=function()
+            GC.setColor(COLOR.DL)
+            GC.translate(-150,-100)
+            GC.rectangle('fill',0,0,300,100)
+            GC.rectangle('fill',100,100,100,100)
+        end,
+    },
 }
+--[[
+    -- Gela
+    GC.setColor(COLOR.R)
+    GC.setLineWidth(8)
+    GC.circle('line',-35,-60,70)
+    GC.circle('line',35,60,70)
 
----@type integer|false
+    -- Acry
+    GC.setColor(COLOR.B)
+    GC.setLineWidth(10)
+    GC.polygon('line',
+        0,112,
+        108,-32,
+        50,-100,
+        -50,-100,
+        -108 ,-32
+    )
+]]
+
+---@type integer | false
 local subjectFocused=false
 
 ---@type Zenitha.Scene
@@ -63,14 +85,15 @@ local scene={}
 function scene.load(prev)
     for _,s in next,sims do
         s.valid=false
+        if type(s.unlock)=='function' then
+            s.valid=s.unlock() or s.valid
+        end
         s.active=0
         s.x,s.y=nil
         s.size=nil
         s.trigTimer=false
     end
     subjectFocused=false
-    sims[1].valid=true -- TODO
-    -- sims[2].valid=false -- TODO
     scene.update(0)
     PROGRESS.applyExteriorBG()
     PROGRESS.applyExteriorBGM()
@@ -197,7 +220,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
     {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'simulation_title'},
 }
 return scene

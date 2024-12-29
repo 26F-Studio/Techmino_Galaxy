@@ -49,6 +49,13 @@ function scene.mouseUp(x,y,k) if k==1 then scene.touchUp(x,y,1) end end
 
 function scene.draw() VCTRL.draw(true) end
 
+function scene.overDraw()
+    -- Glitch effect after III
+    if PROGRESS.get('main')>=3 then
+        drawGlitch()
+    end
+end
+
 scene.widgetList={
     {type='button',                pos={0,.5}, x=210, y=-360,w=200,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none'),lineWidth=4,cornerR=0},
 

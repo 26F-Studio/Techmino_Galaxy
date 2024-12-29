@@ -14,7 +14,6 @@ return {
         spawnDelay=260,
         dropDelay=1e99,
         lockDelay=1e99,
-        deathDelay=0,
         nextSlot=0,
         holdSlot=0,
         seqType='none',
@@ -23,6 +22,9 @@ return {
             drop=gameSoundFunc.drop_old,
         },
         event={
+            playerInit=function(P)
+                P.modeData.quest=false
+            end,
             gameStart=function(P)
                 P.spawnTimer=1800
             end,
@@ -148,7 +150,7 @@ return {
             end},
             "wait signal",
             "jeq quest2,signal,false",
-            "sfx finish_win",
+            "sfx beep_rise",
 
             {cmd=function(P)
                 P.settings.holdSlot=1
@@ -178,7 +180,7 @@ return {
             end},
             "wait signal",
             "jeq quest3,signal,false",
-            "sfx finish_win",
+            "sfx beep_rise",
 
             {cmd=function(P)
                 P.spawnTimer=1200
@@ -204,16 +206,18 @@ return {
             end},
             "wait signal",
             "jeq quest4,signal,false",
-            "sfx finish_win",
-
-            "jeq extra,extra,true",
-            {cmd='say',arg={duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}},
-            "j end",
-            "extra:",
-            {cmd='say',arg={duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lY,y=-30}},
-            "end:",
-            {cmd=function(P) if P.isMain then PROGRESS.setTutorialPassed(2) end end},
-            "finish win",
+            "sfx beep_rise",
+            {cmd=function(P)
+                P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='beat',c=COLOR.lG,y=-30}
+                if P.modeData.extra then
+                    P:say{duration='6.26s',text="@tutorial_pass",size=60,k=2,type='bold',style='flicker',c=COLOR.Y,y=-30}
+                    PROGRESS.setTutorialPassed(2,3)
+                else
+                    PROGRESS.setTutorialPassed(2,2)
+                end
+                PROGRESS.setTutorialPassed(3,1)
+                P:finish('win')
+            end},
         },
     }},
     result=autoBack_interior,

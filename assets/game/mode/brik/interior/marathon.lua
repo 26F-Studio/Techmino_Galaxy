@@ -27,6 +27,7 @@ return {
                 P.settings.dropDelay=dropSpeed[1]
                 P.modeData.lineTarget=10
             end,
+            beforePress=mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
             afterClear=function(P)
                 local md=P.modeData
                 while P.stat.line>=md.lineTarget do
@@ -57,14 +58,8 @@ return {
     result=function()
         local P=GAME.mainPlayer
         if not P then return end
-        PROGRESS.setInteriorScore('sprint',math.min(P.stat.line*4/3,40))
-        PROGRESS.setInteriorScore('marathon',
-            P.stat.line>=200 and 160 or
-            P.stat.line>=130 and MATH.interpolate(130,120,200,160,P.stat.line) or
-            P.stat.line>=80  and MATH.interpolate(80,90,130,120,P.stat.line) or
-            P.stat.line>=40  and MATH.interpolate(40,40,80,90,P.stat.line) or
-            MATH.interpolate(0,0,40,40,P.stat.line)
-        )
+        PROGRESS.setInteriorScore('sprint',MATH.clamp(P.stat.line*4/3,0,40))
+        PROGRESS.setInteriorScore('marathon',MATH.lLerp({0,40,90,120,160},MATH.ilLerp({0,40,80,130,200},P.stat.line)))
     end,
     resultPage=function(time)
         local P=GAME.mainPlayer

@@ -312,7 +312,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=160, y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'space'},
+    WIDGET.new{type='button_fill',pos={0,0},x=160, y=100,w=180,h=100,fillColor='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'space'},
     colorSelector,
     WIDGET.new{type='checkBox',   pos={0,.5},x=240, y=-150,text="Invis",widthLimit=200,fontSize=40,disp=function() return invis end,  code=WIDGET.c_pressKey'w',visibleTick=notGaming},
     WIDGET.new{type='checkBox',   pos={0,.5},x=240, y=-50, text="Slide",widthLimit=200,fontSize=40,disp=function() return slide end,  code=WIDGET.c_pressKey'e',visibleTick=notGaming},

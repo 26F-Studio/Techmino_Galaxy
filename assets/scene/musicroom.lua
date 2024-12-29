@@ -8,10 +8,10 @@ local sin=math.sin
 
 local totalBgmCount
 
-local selected,fullband,section
+local selected,richloop,fullband,section
 local collectCount=0
 local noProgress=false
-local autoplay=false ---@type number|false
+local autoplay=false ---@type number | false
 local autoplayLastRec
 local fakeProgress=0
 local searchStr,searchTimer
@@ -30,7 +30,7 @@ local musicListBox do
         scrollBarWidth=5,
         scrollBarDist=4,
         scrollBarColor='dL',
-        activeColor='L',idleColor='L',
+        activeColor='L',
     }
     function musicListBox.drawFunc(name,_,sel)
         if sel then
@@ -53,11 +53,13 @@ local musicListBox do
             selected=musicListBox:getItem()
             local fullbandMode=SONGBOOK[selected].intensity and (noProgress or PROGRESS.getBgmUnlocked(selected)==2)
             local sectionMode=SONGBOOK[selected].section and (noProgress or PROGRESS.getBgmUnlocked(selected)==2)
+            local loopMode=SONGBOOK[selected].hasloop
             scene.widgetList.fullband:setVisible(fullbandMode)
             scene.widgetList.section:setVisible(sectionMode)
-            scene.widgetList.progressBar.fillColor=SONGBOOK[selected].looppoint and COLOR.LD or COLOR.L
+            scene.widgetList.progressBar.fillColor=SONGBOOK[selected].hasloop and COLOR.LD or COLOR.L
             if fullbandMode then fullband=fullband==true else fullband=nil end
             if sectionMode then section=section==true else section=nil end
+            if loopMode then richloop=true else richloop=nil end
             playBgm(selected,fullband,noProgress)
         end
     end
@@ -111,7 +113,7 @@ function scene.load()
     musicListBox.code()
 
     if SETTINGS.system.bgmVol<.0626 then
-        MSG.new('warn',Text.musicroom_lowVolume)
+        MSG('warn',Text.musicroom_lowVolume)
     end
 end
 function scene.unload()
@@ -131,6 +133,13 @@ local function searchMusic(str)
         musicListBox:select(bestID)
     end
 end
+local function timeBomb()
+    TASK.yieldT(26)
+    if TASK.getLock('musicroom_glitchFX') then
+        FMOD.effect.keyOff('music_glitch')
+        TASK.unlock('musicroom_glitchFX')
+    end
+end
 function scene.keyDown(key,isRep)
     scene.focus(true)
     local act=KEYMAP.sys:getAction(key)
@@ -140,17 +149,11 @@ function scene.keyDown(key,isRep)
         if FMOD.music.getPlaying() then
             local now=FMOD.music.tell()
             local dur=FMOD.music.getDuration()
-            FMOD.music.seek(key=='left' and max(now-5,0) or (now+5)%dur)
+            FMOD.music.seek(act=='left' and max(now-5,0) or (now+5)%dur)
         end
     elseif key=='backspace' or key=='delete' then
         searchStr=""
     elseif #key==1 and key:find'[0-9a-z]' then
-        if searchTimer==0 then
-            if searchStr:sub(6)=='recoll' then
-                PROGRESS.setSecret('musicroom_recollection')
-            end
-            searchStr=""
-        end
         if #searchStr<26 then
             searchStr=searchStr..key
             searchTimer=1.26
@@ -165,9 +168,9 @@ function scene.keyDown(key,isRep)
             end
             progressBar:reset()
         elseif key=='tab' then
-            if isCtrlPressed() then
+            if isCtrlDown() then
                 scene.widgetList.autoplay.code()
-            elseif isShiftPressed() then
+            elseif isShiftDown() then
                 scene.widgetList.section.code()
             else
                 scene.widgetList.fullband.code()
@@ -180,9 +183,14 @@ function scene.keyDown(key,isRep)
             FMOD.music.seek(0)
         elseif act=='back' then
             SCN.back('fadeHeader')
-        elseif key=='`' and isAltPressed() then
+        elseif key=='\\' then
             noProgress=true
             scene.load()
+        elseif key=='f3' then
+            if TASK.lock('musicroom_glitchFX') then
+                FMOD.effect('music_glitch')
+                TASK.new(timeBomb)
+            end
         end
     end
     return true
@@ -218,6 +226,17 @@ function scene.update(dt)
     end
     if searchTimer>0 then
         searchTimer=max(searchTimer-dt,0)
+        if searchTimer<=0 then
+            if searchStr:sub(6)=='recoll' then
+                PROGRESS.setSecret('musicroom_recollection')
+            elseif searchStr=='piano' or searchStr=='liszt' then
+                PROGRESS.setSecret('musicroom_piano')
+                SCN.go('piano')
+            elseif searchStr=='chord' then
+                SCN.go('harmony4')
+            end
+            searchStr=""
+        end
     end
     if autoplay and FMOD.music.getPlaying() then
         if autoplay>0 then
@@ -331,8 +350,14 @@ function scene.draw()
     end
 end
 
+function scene.overDraw()
+    if TASK.getLock('musicroom_glitchFX') then
+        drawGlitch2()
+    end
+end
+
 scene.widgetList={
-    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
     {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'musicroom_title'},
 
     musicListBox,
@@ -343,7 +368,8 @@ scene.widgetList={
     {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return FMOD.music.getPlaying() end},
 
     -- Auto Switching Switch
-    {type='switch',pos={.5,.5},x=-650,y=150,h=50,widthLimit=260,labelPos='right',disp=function() return autoplay end,
+    {type='switch',pos={.5,.5},x=-650,y=90,h=50,widthLimit=260,labelPos='right',
+        disp=function() return autoplay end,
         name='autoplay',text=LANG'musicroom_autoplay',
         sound_on=false,sound_off=false,
         code=function()
@@ -356,8 +382,24 @@ scene.widgetList={
         end,
     },
 
+    -- Richloop Switch
+    {type='switch',pos={.5,.5},x=-650,y=150,h=50,widthLimit=260,labelPos='right',
+        disp=function() return richloop end,
+        name='autoplay',text=LANG'musicroom_richloop',
+        sound_on=false,sound_off=false,
+        code=function()
+            richloop=not richloop
+            if FMOD.music.getPlaying() then
+                FMOD.music.setParam('loop',richloop and 1 or 0)
+            end
+            scene.widgetList.progressBar.fillColor=(SONGBOOK[selected].hasloop and richloop) and COLOR.LD or COLOR.L
+        end,
+        visibleTick=function() return richloop~=nil end,
+    },
+
     -- Fullband Switch
-    {type='switch',pos={.5,.5},x=-650,y=360,h=50,widthLimit=260,labelPos='right',disp=function() return fullband end,
+    {type='switch',pos={.5,.5},x=-650,y=360,h=50,widthLimit=260,labelPos='right',
+        disp=function() return fullband end,
         name='fullband',text=LANG'musicroom_fullband',
         sound_on=false,sound_off=false,
         code=function()
@@ -369,13 +411,12 @@ scene.widgetList={
                 scene.load()
             end
         end,
-        visibleTick=function()
-            return fullband~=nil
-        end,
+        visibleTick=function() return fullband~=nil end,
     },
 
     -- Section Switch
-    {type='switch',pos={.5,.5},x=-650,y=430,h=50,widthLimit=260,labelPos='right',disp=function() return section end,
+    {type='switch',pos={.5,.5},x=-650,y=430,h=50,widthLimit=260,labelPos='right',
+        disp=function() return section end,
         name='section',text=LANG'musicroom_section',
         sound_on=false,sound_off=false,
         code=function()
@@ -392,6 +433,11 @@ scene.widgetList={
 
     -- Volume slider
     {type='slider_progress',pos={.5,.5},x=450,y=360,w=250,text=CHAR.icon.volUp,fontSize=60,disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
+
+    {type='button_invis',pos={1,0},x=-200,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_trigger='button_soft',code=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
+    -- {type='button_invis',pos={1,0},x=-400,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_trigger='button_soft',code=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
+    -- {type='button_invis',pos={1,0},x=-600,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_trigger='button_soft',code=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
+    -- {type='button_invis',pos={1,0},x=-800,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_trigger='button_soft',code=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
 }
 
 return scene

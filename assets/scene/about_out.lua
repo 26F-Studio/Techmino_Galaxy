@@ -7,6 +7,7 @@ local modules={
     {"Zenitha framework","MrZ"},
     {"json.lua","rxi"},
     {"profile.lua","itraykov"},
+    {"discord-rpc.lib","Discord Team"},
     {"sha2.lua","Egor Skriptunoff"},
     {"FMOD Studio","Firelight Technologies Pty Ltd"},
 }
@@ -14,10 +15,12 @@ local toolchain={
     "VS Code",
     "BeepBox",
     "GFIE",
+    "REAPER",
+    "GoldWave",
     "FL Studio",
     "FL Mobile",
-    "GoldWave",
     "FMOD Studio",
+    "Arch Linux",
 }
 
 local timer,score
@@ -86,7 +89,7 @@ function scene.update(dt)
             if o.name then
                 if score>=2600 then
                     score=math.max(score*.9,2600)
-                    MSG.new('warn',Text.about_peopleLost:repD(o.name),2)
+                    MSG('warn',Text.about_peopleLost:repD(o.name),2)
                 end
             end
             table.remove(obj,i)
@@ -144,7 +147,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,color='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
     {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'about_title'},
 }
 return scene

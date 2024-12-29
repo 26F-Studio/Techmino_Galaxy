@@ -33,15 +33,9 @@ return {
             afterResetPos=function(P)
                 if P.modeData.hint then
                     local field=P.field:export_table_simp()
-                    local m=P.hand.matrix
-                    local shape={}
-                    for y=1,#m do
-                        shape[y]={}
-                        for x=1,#m[y] do
-                            shape[y][x]=m[y][x] and true or false
-                        end
-                    end
-                    local x,y,dir=AI.paperArtist.findPosition(field,shape)
+                    local shape=P:getBoolHandMatrix()
+                    ---@cast shape -nil
+                    local x,y,dir=AI.paperArtist.getBestPosition(field,shape)
                     P.modeData.hint_x,P.modeData.hint_y=x,y
                     P.modeData.hint_matrix=TABLE.rotate(shape,dir)
                     P.modeData.waitTime=0
@@ -62,11 +56,11 @@ return {
             },
             afterClear=function(P)
                 if P.modeData.hint and P.modeData.hint_obey==0 and P.stat.line>=20 then
-                    -- Nice.
                     P.modeData.hint=false
                     P.modeData.hint_x,P.modeData.hint_y=false,false
                     P.modeData.hint_matrix=false
                 end
+                -- Nice.
             end,
             drawBelowMarks=function(P)
                 local m=P.modeData.hint_matrix
@@ -76,7 +70,7 @@ return {
                     for y=1,#m do for x=1,#m[1] do
                         local C=m[y][x]
                         if C then
-                            GC.rectangle('line',(P.modeData.hint_x+x-2)*40+7,-(P.modeData.hint_y+y-1)*40+7,26,26)
+                            GC.rectangle('line',(P.modeData.hint_x+x-2)*40+7,-(P.modeData.hint_y+y-1)*40+7,40-14,40-14)
                         end
                     end end
                 end

@@ -15,10 +15,10 @@ return {
                 P.settings.dropDelay=0
                 P.settings.lockDelay=1e99
                 P.settings.spawnDelay=260
+
                 local T=mechLib.common.task
                 T.install(P)
                 T.add(P,'hypersonic_low','modeTask_hypersonic_low_title','modeTask_hypersonic_low_desc','(0/4)')
-
                 if PROGRESS.getExteriorModeScore('hypersonic','showHigh') then
                     T.add(P,'hypersonic_high','modeTask_hypersonic_high_title','modeTask_hypersonic_high_desc')
                 end
@@ -29,6 +29,7 @@ return {
                     T.add(P,'hypersonic_titanium','modeTask_hypersonic_titanium_title','modeTask_hypersonic_titanium_desc')
                 end
             end,
+            beforePress=mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
             afterClear=function(P,clear)
                 local initFunc
                 local T=mechLib.common.task
@@ -43,7 +44,7 @@ return {
                             T.add(P,'hypersonic_titanium','modeTask_hypersonic_titanium_title','modeTask_hypersonic_titanium_desc')
                         end
                         T.set(P,'hypersonic_titanium',true)
-                        PROGRESS.setExteriorScore('hypersonic','showTitanium',1)
+                        PROGRESS.setExteriorScore('hypersonic','showTitanium',1,'>')
                         P.modeData.subMode='titanium'
                         initFunc=mechLib.brik.marathon.hypersonic_titanium_event_playerInit
                         playBgm('secret7th remix_hypersonic_titanium')
@@ -54,7 +55,7 @@ return {
                             T.add(P,'hypersonic_hidden','modeTask_hypersonic_hidden_title','modeTask_hypersonic_hidden_desc')
                         end
                         T.set(P,'hypersonic_hidden',true)
-                        PROGRESS.setExteriorScore('hypersonic','showHidden',1)
+                        PROGRESS.setExteriorScore('hypersonic','showHidden',1,'>')
                         P.modeData.subMode='hidden'
                         initFunc=mechLib.brik.marathon.hypersonic_hidden_event_playerInit
                         playBgm('secret7th_hypersonic_hidden')
@@ -66,7 +67,7 @@ return {
                         if not PROGRESS.getExteriorModeScore('hypersonic','showHigh') then
                             T.add(P,'hypersonic_high','modeTask_hypersonic_high_title','modeTask_hypersonic_high_desc')
                         end
-                        PROGRESS.setExteriorScore('hypersonic','showHigh',1)
+                        PROGRESS.setExteriorScore('hypersonic','showHigh',1,'>')
                         T.set(P,'hypersonic_high',true)
                         P.modeData.subMode='high'
                         initFunc=mechLib.brik.marathon.hypersonic_high_event_playerInit
@@ -96,19 +97,19 @@ return {
                 if P.modeData.point>=200 then
                     if #P.holdQueue==0 then
                         table.insert(P.holdQueue,P:getBrik('I5'))
-                        PROGRESS.setSecret('exterior_hypersonic_titanium_holdless')
+                        PROGRESS.setSecret('exterior_hypersonic_holdlessTitan')
                     end
                     return true
                 end
             end,
             gameOver=function(P,reason)
-                if reason=='AC' then
-                    PROGRESS.setExteriorScore('hypersonic',P.modeData.subMode,1)
+                if reason=='win' then
+                    PROGRESS.setExteriorScore('hypersonic',P.modeData.subMode,1,'>')
                     if P.modeData.subMode=='low' then
-                        PROGRESS.setExteriorScore('hypersonic','showHigh',1)
+                        PROGRESS.setExteriorScore('hypersonic','showHigh',1,'>')
                     elseif P.modeData.subMode=='high' then
-                        PROGRESS.setExteriorScore('hypersonic','showHidden',1)
-                        PROGRESS.setExteriorScore('hypersonic','showTitanium',1)
+                        PROGRESS.setExteriorScore('hypersonic','showHidden',1,'>')
+                        PROGRESS.setExteriorScore('hypersonic','showTitanium',1,'>')
                     end
                 end
             end,

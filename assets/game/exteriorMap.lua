@@ -14,8 +14,8 @@ local tau=MATH.tau
 ---@alias Techmino.ModeName
 ---| 'sprint'
 ---| 'sequence'
----| 'hidden'
----| 'tspin'
+---| 'invis'
+---| 'spin'
 ---| 'marathon'
 ---| 'allclear'
 ---| 'combo'
@@ -32,25 +32,25 @@ local tau=MATH.tau
 --   *
 --   Z
 local modes={
-    {pos={25,35,00},name='sprint'},
-    {pos={25,50,00},name='sequence'},
-    {pos={25,65,15},name='hidden'},
-    {pos={25,50,15},name='tspin'},
+    {pos={25,35,00},selColor=COLOR.lP,name='sprint'},
+    {pos={25,50,00},selColor=COLOR.lP,name='sequence'},
+    {pos={25,65,15},selColor=COLOR.lP,name='invis'},
+    {pos={25,50,15},selColor=COLOR.lP,name='spin'},
 
-    {pos={45,45,00},name='marathon'},
-    {pos={45,60,00},name='allclear'},
-    {pos={60,60,00},name='combo'},
-    {pos={60,45,00},name='hypersonic'},
+    {pos={45,45,00},selColor=COLOR.lP,name='marathon'},
+    {pos={45,60,00},selColor=COLOR.lP,name='allclear'},
+    {pos={60,60,00},selColor=COLOR.lP,name='combo'},
+    {pos={60,45,00},selColor=COLOR.lP,name='hypersonic'},
 
-    {pos={35,25,00},name='dig'},
-    {pos={50,25,00},name='excavate'},
-    {pos={65,25,00},name='backfire'},
-    {pos={35,10,00},name='drill'},
-    {pos={50,10,00},name='survivor'},
+    {pos={35,25,00},selColor=COLOR.lP,name='dig'},
+    {pos={50,25,00},selColor=COLOR.lP,name='excavate'},
+    {pos={65,25,00},selColor=COLOR.lP,name='backfire'},
+    {pos={35,10,00},selColor=COLOR.lP,name='drill'},
+    {pos={50,10,00},selColor=COLOR.lP,name='survivor'},
 
-    {pos={00,35,10},name='chain'},
+    {pos={00,35,10},selColor=COLOR.LR,name='chain'},
 
-    {pos={35,00,10},name='action'},
+    {pos={35,00,10},selColor=COLOR.lS,name='action'},
 }
 -- Initialize modes' graphic values
 for _,m in next,modes do
@@ -67,15 +67,15 @@ local modes_str={} for i=1,#modes do modes_str[modes[i].name]=modes[i] end
 
 local bridgeLinks={
     'marathon - dig - sprint - marathon',
-    'sprint - tspin',
-    'sprint - hidden',
+    'sprint - spin',
+    'sprint - invis',
     'sprint - sequence',
     'marathon - hypersonic',
     'marathon - combo',
     'marathon - allclear',
     'dig - excavate - backfire',
     'dig - drill - survivor',
-    'tspin - chain',
+    'spin - chain',
     'drill - action',
 }
 local bridges={}
@@ -104,7 +104,7 @@ local function _newBridge(m1,m2)
     })
 end
 for _,link in next,bridgeLinks do
-    local b=STRING.split(link,' - ')
+    local b=link:split(' - ')
     for i=1,#b-1 do
         _newBridge(
             assert(modes_str[b[i]],"Mode "..b[i].." doesn't exist"),
@@ -139,10 +139,10 @@ cam.swing=.00626
 cam.maxDist=2600
 cam.minK,cam.maxK=.4--[[.2]],1.26
 
----@type table|false
+---@type table | false
 local focused=false
 
----@type table|false
+---@type table | false
 local selected=false
 
 ---@type boolean
@@ -243,7 +243,7 @@ local function _enterMode(m)
             FMOD.effect('map_enter')
             SCN.go('game_out','fade','brik/exterior/'..m.name)
         else
-            MSG.new('warn',"No mode file")
+            MSG.log('warn',"No mode file")
         end
     end
 end
@@ -328,7 +328,7 @@ function map:update(dt)
     if full then
         if love.keyboard.isDown('up','down','left','right') then
             self:showCursor()
-            if isCtrlPressed() then
+            if isCtrlDown() then
                 if love.keyboard.isDown('up')    then cam:scale(2.6^dt) end
                 if love.keyboard.isDown('down')  then cam:scale(1/2.6^dt) end
                 if love.keyboard.isDown('right') then cam:rotate(dt*3.55) end
@@ -409,9 +409,12 @@ function map:draw()
 
             -- Selecting frame
             if m==selected or m.active>.001 then
-                local rb=m==selected and .42 or 1
                 gc_setLineWidth(8)
-                gc_setColor(rb,1,rb,m==selected and 1 or m.active*.26)
+                if m==selected then
+                    gc_setColor(m.selColor)
+                else
+                    gc_setColor(1,1,1,m.active*.26)
+                end
                 GC.regPolygon('line',0,0,m.r+16,6,tau/12)
             end
             gc_pop()

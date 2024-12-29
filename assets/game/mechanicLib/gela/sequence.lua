@@ -5,14 +5,14 @@ local ins,rem=table.insert,table.remove
 local function supply(list,src,rep)
     if not list[1] then
         for _=1,rep or 1 do
-            TABLE.connect(list,src)
+            TABLE.append(list,src)
         end
         return true
     end
     return false
 end
 
----@type MapTechmino.Event.Gela
+---@type Techmino.Event.Gela
 local sequence={}
 
 ---@param P Techmino.Player.Gela

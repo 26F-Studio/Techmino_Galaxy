@@ -1,4 +1,4 @@
-local state ---@type 'stop'|'press'|'release'
+local state ---@type 'stop' | 'press' | 'release'
 local pressTime,releaseTime
 local time1,time2
 local history={}

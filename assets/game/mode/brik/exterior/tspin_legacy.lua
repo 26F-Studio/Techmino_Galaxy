@@ -25,6 +25,7 @@ return {
                 mechLib.common.music.set(P,{path='.tsd',s=3,e=12},'afterClear')
             end,
             always=mechLib.brik.chargeLimit.tspin_event_always,
+            beforePress=mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
             afterClear={
                 mechLib.brik.chargeLimit.tspin_event_afterClear,
                 function(P) -- Switch to easy mode when TS not D
@@ -66,21 +67,13 @@ return {
                             end
                         end
                         local goSecretApp
-                        if P.modeData.tspin==4 and P.modeData.tspinText=='target_tss' and PROGRESS.getSecret('exterior_tspin_10TSS') then
+                        if P.modeData.tspin==4 and P.modeData.tspinText=='target_tss' then
                             goSecretApp='polyforge'
-                        elseif P.modeData.tspin==3 and P.modeData.tspinText=='target_tst' and PROGRESS.getSecret('exterior_tspin_10TST') then
+                        elseif P.modeData.tspin==3 and P.modeData.tspinText=='target_tst' then
                             goSecretApp='uttt'
                         elseif P.modeData.tspin>=10 then
-                            PROGRESS.setExteriorScore('tspin','any',P.modeData.tspin)
-                            if P.modeData.tspinText=='target_tss' then
-                                PROGRESS.setSecret('exterior_tspin_10TSS')
-                                goSecretApp='polyforge'
-                            elseif P.modeData.tspinText=='target_tst' then
-                                PROGRESS.setSecret('exterior_tspin_10TST')
-                                goSecretApp='uttt'
-                            else
-                                P:finish('win')
-                            end
+                            PROGRESS.setExteriorScore('tspin','any',P.modeData.tspin,'>')
+                            P:finish('win')
                         end
                         if goSecretApp then
                             TASK.new(task_unloadGame)
@@ -88,17 +81,17 @@ return {
                             SCN.go(goSecretApp)
                         end
                     else
-                        PROGRESS.setExteriorScore('tspin','any',P.modeData.tsd)
-                        PROGRESS.setExteriorScore('tspin','tsd',P.modeData.tsd)
+                        PROGRESS.setExteriorScore('tspin','any',P.modeData.tsd,'>')
+                        PROGRESS.setExteriorScore('tspin','tsd',P.modeData.tsd,'>')
                         if P.modeData.hardModeFlag then
-                            PROGRESS.setExteriorScore('tspin','tsd_hard',P.modeData.tsd)
+                            PROGRESS.setExteriorScore('tspin','tsd_hard',P.modeData.tsd,'>')
                         end
                     end
 
                     -- Unlock Gela
                     if
                         not (PROGRESS.getStyleUnlock('gela') and PROGRESS.getExteriorUnlock('chain')) and
-                        (PROGRESS.getExteriorModeScore('tspin','tsd_hard') or 0)+(PROGRESS.getExteriorModeScore('tspin','tsd') or 0)>=26
+                        (PROGRESS.getExteriorModeScore('tspin','tsd_hard') or 0)+(PROGRESS.getExteriorModeScore('tspin','tsd') or 0)>=12
                     then
                         PROGRESS.setStyleUnlock('gela')
                         PROGRESS.setExteriorUnlock('chain')

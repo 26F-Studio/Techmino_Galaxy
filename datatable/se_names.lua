@@ -24,7 +24,7 @@ return {
 
     -- Game UI
     'pause_pause','pause_unpause','pause_restart','pause_setting','pause_quit',
-    'music_highcut','music_pause',
+    'music_highcut','music_pause','music_glitch',
     'notice_up','notice_down','unlock_secret',
     'simulation_select','map_select','map_enter',
     'map_pass_1','map_pass_2','map_pass_3','map_pass_4','map_pass_5',
@@ -40,5 +40,13 @@ return {
     'inputbox_input','inputbox_bksp','inputbox_clear',
 
     -- Other
-    'triangle_wave','sine_wave','square_wave',
+    'organ_wave',
+    'square_wave',
+    'saw_wave',
+    'complex_wave',
+    'stairs_wave',
+    'spectral_wave',
+    'death_wave',
+
+    'ibm_noise',
 }

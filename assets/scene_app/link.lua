@@ -52,7 +52,8 @@ gc.setDefaultFilter('linear','linear')
 local invis
 local state
 local startTime,time
-local progress,level
+local progress={}
+local level
 local score,score1
 local combo,comboTime,maxCombo,noComboBreak
 local field={
@@ -78,7 +79,7 @@ local function resetBoard()
     field.full=true
     total=total*2
 
-    TABLE.clear(field)
+    TABLE.clearList(field)
     for y=1,field.r do
         field[y]={}
         for x=1,field.c do
@@ -101,7 +102,7 @@ end
 local function newGame()
     state=0
     level=1
-    progress={}
+    TABLE.clear(progress)
     time=0
     startTime=love.timer.getTime()
     score,score1,combo,comboTime,maxCombo=0,0,0,0,0

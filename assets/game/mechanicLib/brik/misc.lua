@@ -1,8 +1,19 @@
+local max,min=math.max,math.min
+local abs,floor,ceil=math.abs,math.floor,math.ceil
 local ins,rem=table.insert,table.remove
 local gc=love.graphics
 
 ---@type Map<Techmino.Event.Brik>
 local misc={}
+
+function misc.skipReadyWithHardDrop_beforePress(P,act)
+    if P.timing then return true end
+    if act=='hardDrop' and P.spawnTimer>1000 and P.finished==false then
+        P.settings.readyDelay=P.time+1000
+        P.spawnTimer=1000
+        return true
+    end
+end
 
 function misc.interior_soundEvent_countDown(num)
     playSample('square',{num>0 and 'E4' or 'E5'})
@@ -145,7 +156,7 @@ do -- Board Transition
         if dx>=P.settings.fieldW/2 then dx=dx-P.settings.fieldW end
         local ip=dx>0 and 1 or P.settings.fieldW
         local rp=dx>0 and P.settings.fieldW or 1
-        for _=1,math.abs(dx) do
+        for _=1,abs(dx) do
             for y=1,P.field:getHeight() do
                 local line=P.field._matrix[y]
                 ins(line,ip,rem(line,rp))
@@ -169,7 +180,7 @@ do -- Random Press
     function misc.randomPress_event_always(P)
         if not P.timing then return end
         P.modeData.randomPressTimer=P.modeData.randomPressTimer-1
-        if P.modeData.randomPressTimer==0 then
+        if P.modeData.randomPressTimer<=0 then
             local r=P:random(P.holdTime==0 and 5 or 4)
             if r==1 then
                 P:moveLeft()
@@ -243,7 +254,7 @@ do -- Wind
         if not P.timing then return end
         local md=P.modeData
         md._windStrength=md._windStrength+MATH.sign(md.windStrength-md._windStrength)
-        md.windCounter=md.windCounter+math.abs(md._windStrength)
+        md.windCounter=md.windCounter+abs(md._windStrength)
         if md.windCounter>=62e3 then
             if P.hand then
                 P[md._windStrength<0 and 'moveLeft' or 'moveRight'](P)
@@ -253,8 +264,8 @@ do -- Wind
     end
     function misc.wind_event_afterClear(P)
         local md=P.modeData
-        if #md.invertPoints>0 and P.stat.line>md.invertPoints[1] then
-            while #md.invertPoints>0 and P.stat.line>md.invertPoints[1] do
+        if md.invertPoints[1] and P.stat.line>md.invertPoints[1] then
+            while md.invertPoints[1] and P.stat.line>md.invertPoints[1] do
                 rem(md.invertPoints,1)
             end
             md.windStrength=-MATH.sign(md.windStrength)*P:random(1260,1600)
@@ -284,7 +295,7 @@ do -- Obstacle
             F._matrix[y]=TABLE.new(false,w)
             repeat
                 r1=P:random(1,w)
-            until math.abs(r1-r0)>=minDist;
+            until abs(r1-r0)>=minDist;
             F._matrix[y][r1]=P:newCell(777)
             r0=r1
         end
@@ -292,7 +303,7 @@ do -- Obstacle
             local x,y
             repeat
                 x=P:random(1,w)
-                y=math.floor(P:random()^2.6*(maxHeight-1))+1
+                y=floor(P:random()^2.6*(maxHeight-1))+1
             until not F._matrix[y][x]
             F._matrix[y][x]=P:newCell(777)
         end
@@ -309,8 +320,8 @@ do -- Obstacle
     end
 
     function misc.obstacle_event_afterClear(P,clear)
-        local score=math.ceil((clear.line+1)/2)
-        P.modeData.score=math.min(P.modeData.score+score,P.modeData.target.line)
+        local score=ceil((clear.line+1)/2)
+        P.modeData.score=min(P.modeData.score+score,P.modeData.target.line)
         P.texts:add{
             text="+"..score,
             fontSize=80,
@@ -332,7 +343,7 @@ do -- Obstacle
     end
 end
 
-do -- Cascade
+do -- Chain
     local function getSolidMat(P)
         local F=P.field
         local visitedMat={}
@@ -363,7 +374,7 @@ do -- Cascade
         return visitedMat
     end
     ---Check floating blocks
-    function misc.cascade_check(P)
+    function misc.chain_check(P)
         local F=P.field
         local solidMat=getSolidMat(P)
 
@@ -377,7 +388,7 @@ do -- Cascade
 
         return false
     end
-    function misc.cascade_fall(P)
+    function misc.chain_fall(P)
         local F=P.field
         local solidMat=getSolidMat(P)
 
@@ -387,20 +398,20 @@ do -- Cascade
                     local C=F:getCell(x,y)
                     F:setCell(false,x,y)
                     F:setCell(C,x,y-1)
-                    P:setCellBias(x,y-1,{y=1,lineBack=40/P.modeData.cascadeDelay})
+                    P:setCellBias(x,y-1,{y=1,lineBack=40/P.modeData.chainDelay})
                 end
             end
         end
         F:fresh()
     end
     ---Will be automatically added
-    function misc.cascade_autoEvent_always(P)
-        P.modeData.cascadeTimer=P.modeData.cascadeTimer-1
-        if P.modeData.cascadeTimer>0 then return end
+    function misc.chain_autoEvent_always(P)
+        P.modeData.chainTimer=P.modeData.chainTimer-1
+        if P.modeData.chainTimer>0 then return end
 
-        if misc.cascade_check(P) then
-            misc.cascade_fall(P)
-            P.modeData.cascadeTimer=P.modeData.cascadeDelay
+        if misc.chain_check(P) then
+            misc.chain_fall(P)
+            P.modeData.chainTimer=P.modeData.chainDelay
         else
             local fullLines=mechLib.brik.clearRule[P.settings.clearRule].getFill(P)
             if fullLines then
@@ -412,22 +423,22 @@ do -- Cascade
                 end
 
                 P.modeData.cascading=false
-                P.modeData.cascadeTimer=false
-                P.modeData.cascadeDelay=false
+                P.modeData.chainTimer=false
+                P.modeData.chainDelay=false
                 P.modeData.storedClearDelay=nil
                 return true
             end
         end
     end
-    ---Add this to enabled cascade, clearRule='line_float' needed
-    function misc.cascade_event_afterClear(P)
-        if misc.cascade_check(P) and not P.modeData.cascading then
+    ---Add this to enabled chain, clearRule='line_float' needed
+    function misc.chain_event_afterClear(P)
+        if misc.chain_check(P) and not P.modeData.cascading then
             P.modeData.cascading=true
-            P.modeData.cascadeDelay=math.max(math.floor(P.settings.clearDelay^.9),62)
-            P.modeData.cascadeTimer=0
+            P.modeData.chainDelay=max(floor(P.settings.clearDelay^.9),62)
+            P.modeData.chainTimer=0
             P.modeData.storedClearDelay=P.settings.clearDelay
             P.settings.clearDelay=1e99
-            P:addEvent('always',misc.cascade_autoEvent_always)
+            P:addEvent('always',misc.chain_autoEvent_always)
         end
     end
 end
@@ -437,9 +448,9 @@ do -- Variabal Next
         if not P.modeData.storedNextSlot then
             P.modeData.storedNextSlot=P.settings.nextSlot
         end
-        P.settings.nextSlot=math.floor(
+        P.settings.nextSlot=floor(
             P.modeData.storedNextSlot/6*(
-                math.min(P.field:getHeight()/P.settings.spawnH,1.5)
+                min(P.field:getHeight()/P.settings.spawnH,1.5)
                 ^2*7+.62
             )
         )
@@ -448,12 +459,144 @@ do -- Variabal Next
         if not P.modeData.storedNextSlot then
             P.modeData.storedNextSlot=P.settings.nextSlot
         end
-        P.settings.nextSlot=math.floor(
+        P.settings.nextSlot=floor(
             P.modeData.storedNextSlot/6*(
-                math.max(1-P.field:getHeight()/P.settings.spawnH,0)
+                max(1-P.field:getHeight()/P.settings.spawnH,0)
                 ^2*7+.62
             )
         )
+    end
+end
+
+do -- Haunted
+    local default_spreadTime=26
+    local default_lifeTime=260
+    local default_lightVisTimer=1000
+    local default_lightFadeTime=800
+
+    ---@class Techmino.Mech.Brik.HauntedLight
+    ---@field x integer
+    ---@field y integer
+    ---@field power integer
+    ---@field spreadTimer number
+    ---@field lifeTimer number
+    ---@field listKey number
+    ---@field mapKey string
+
+    local function delLight(P,c0)
+        local md=P.modeData
+        ---@type Techmino.Mech.Brik.HauntedLight[]
+        local list=md.ghostLight_List
+        ---@type Map<Techmino.Mech.Brik.HauntedLight>
+        local map=md.ghostLight_Map
+
+        map[c0.mapKey]=nil
+        if c0.listKey==#list then
+            list[c0.listKey]=nil
+        else
+            list[#list].listKey=c0.listKey
+            list[c0.listKey],list[#list]=list[#list],nil
+        end
+    end
+    local function newLight(P,x,y,power)
+        local md=P.modeData
+        if not (x>=1 and x<=P.settings.fieldW and y>=1 and y<=P.field:getHeight()) then return end
+        ---@type Techmino.Mech.Brik.HauntedLight[]
+        local list=md.ghostLight_List
+        ---@type Map<Techmino.Mech.Brik.HauntedLight>
+        local map=md.ghostLight_Map
+        local c0=map[x..','..y]
+        if c0 then
+            -- print("detected",x,y,power..">"..c0.power)
+            if power<=c0.power then return end
+            -- print("override",x,y)
+            delLight(P,c0)
+        end
+        ---@type Techmino.Brik.Cell
+        local c=P.field:getCell(x,y)
+        if not c then return end
+
+        c.visTimer=md.ghostLight_lightVisTimer
+        c.fadeTime=md.ghostLight_lightFadeTime
+
+        ---@type Techmino.Mech.Brik.HauntedLight
+        local l={
+            x=x,y=y,
+            power=power,
+            spreadTimer=md.ghostLight_spreadTime,
+            lifeTimer=md.ghostLight_lifeTime,
+            listKey=#list+1,
+            mapKey=x..','..y,
+        }
+        list[l.listKey],map[x..','..y]=l,l
+    end
+    misc.haunted_delLight=delLight
+    misc.haunted_newLight=newLight
+    ---@type fun(P:Techmino.Player.Brik,spreadTime:number,lifeTime:number,visTime:number,fadeTime:number)
+    function misc.haunted_turnOn(P,spreadTime,lifeTime,visTime,fadeTime)
+        if not P.modeData.ghostLight_powerID then
+            P.modeData.ghostLight_powerID=0
+            P.modeData.ghostLight_List={}
+            P.modeData.ghostLight_Map={}
+            P:addEvent('always',mechLib.brik.misc.haunted_always)
+            P:addEvent('afterLock',mechLib.brik.misc.haunted_afterLock)
+            -- P:addEvent('drawInField',mechLib.brik.misc.haunted_drawInField)
+        end
+        P.modeData.ghostLight_spreadTime=spreadTime or P.modeData.ghostLight_spreadTime or default_spreadTime
+        P.modeData.ghostLight_lifeTime=lifeTime or P.modeData.ghostLight_lifeTime or default_lifeTime
+        P.modeData.ghostLight_lightVisTimer=visTime or P.modeData.ghostLight_lightVisTimer or default_lightVisTimer
+        P.modeData.ghostLight_lightFadeTime=fadeTime or P.modeData.ghostLight_lightFadeTime or default_lightFadeTime
+    end
+    function misc.haunted_always(P)
+        local list=P.modeData.ghostLight_List
+        for i=#list,1,-1 do
+            ---@type Techmino.Mech.Brik.HauntedLight
+            local c=list[i]
+            local x,y=c.x,c.y
+            local discard
+            if c.spreadTimer then
+                c.spreadTimer=c.spreadTimer-1
+                if c.spreadTimer<=0 then
+                    newLight(P,x-1,y,c.power)
+                    newLight(P,x+1,y,c.power)
+                    newLight(P,x,y-1,c.power)
+                    newLight(P,x,y+1,c.power)
+                    c.spreadTimer=nil
+                end
+            elseif not P.field:getCell(x,y) then
+                discard=true
+            else
+                c.lifeTimer=c.lifeTimer-1
+                if c.lifeTimer<=0 then
+                    discard=true
+                end
+            end
+            if discard then
+                delLight(P,c)
+            end
+        end
+    end
+    function misc.haunted_afterLock(P)
+        local powID=P.modeData.ghostLight_powerID+1
+        P.modeData.ghostLight_powerID=powID
+        local bx,by=P.handX-1,P.handY-1
+        local CB=P.hand.matrix
+        for y=1,#CB do for x=1,#CB[1] do
+            if CB[y][x] then newLight(P,bx+x,by+y,powID) end
+        end end
+    end
+    function misc.haunted_drawInField(P)
+        -- Debugging use
+        local list=P.modeData.ghostLight_List
+        gc.setColor(1,1,1,.26)
+        for i=1,#list do
+            ---@type Techmino.Mech.Brik.HauntedLight
+            local c=list[i]
+            gc.print(c.lifeTimer,40*(c.x-1),-40*c.y+15)
+            if c.spreadTimer then
+                gc.rectangle('fill',40*(c.x-1),-40*c.y,10,10)
+            end
+        end
     end
 end
 

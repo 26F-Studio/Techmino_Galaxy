@@ -15,20 +15,25 @@
 -- Creating issues on GitHub is welcomed if you also love stacking/matching game
 
 -- Developer's note
--- 1. I made a framework called Zenitha, the code in Zenitha are not directly relevant to the game;
--- 2. This project use Emmylua for better IDE support, recommend to use it if you can;
--- 3. Check file ".editorconfig" for detailed formatting rule (but not exactly, don't change large amount of code with it);
--- 4. "xxx" are texts for reading by the player/developer, 'xxx' are string values used only in code;
--- 5. Most codes are focusing on efficiency, then maintainability and readability, excuse me for some mess;
+-- 1. A front-end framework Zenitha which also by me is used;
+-- 2. It's recommened to install Emmylua/LuaLS extension for better support;
+-- 3. Check file `.editorconfig` for detailed formatting rule (but not exactly, don't use it to format code on large scale);
+-- 4. Double quotes ("abc") are texts for reading; Single quotes ('abc') are string values used only in code;
+-- 5. Readability and Maintainability are not always put to the first place. Codes around hot spot could be optimized for better performance. sorry if it confused you;
 -- 6. 26
+
+if not love.window then
+    love[('run')]=function() return function() return true end end
+    return
+end
 
 -------------------------------------------------------------
 -- Load Zenitha
 
 require'Zenitha'
-DEBUG.checkLoadTime("Load Zenitha")
--- DEBUG.runVarMonitor()
--- DEBUG.setCollectGarvageVisible()
+UTIL.time("Load Zenitha",true)
+-- UTIL.runVarMonitor()
+-- UTIL.setCollectGarvageVisible()
 -- if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then require("lldebugger").start() end
 
 --------------------------------------------------------------
@@ -39,6 +44,7 @@ math.randomseed(os.time()*626)
 love.setDeprecationOutput(false)
 love.keyboard.setTextInput(false)
 VERSION=require'version'
+UTIL.time("System setting",true)
 
 --------------------------------------------------------------
 -- Create directories
@@ -52,6 +58,7 @@ for _,v in next,{'conf','progress','replay','cache','lib','soundbank'} do
         love.filesystem.createDirectory(v)
     end
 end
+UTIL.time("Create directories",true)
 
 --------------------------------------------------------------
 -- Misc modules
@@ -67,7 +74,7 @@ CHAR=require'assets.char'
 SETTINGS=require'assets.settings'
 SONGBOOK=require'assets.songbook'
 FMOD=require'assets.fmod20221'
-DEBUG.checkLoadTime("Load game modules")
+UTIL.time("Require game modules",true)
 
 --------------------------------------------------------------
 -- Config Zenitha and Fmod
@@ -99,8 +106,7 @@ ZENITHA.addConsoleCommand('regurl',{
                 end
                 local exeN=f:read('*a'); f:close()
 
-                exeN=exeN:gsub('\r','')
-                exeN=STRING.split(exeN,'\n')
+                exeN=exeN:gsub('\r',''):split('\n')
                 if #exeN==0 then
                     _CL{COLOR.R,"Error: No .exe file found in working directory"}
                     return
@@ -127,13 +133,14 @@ ZENITHA.addConsoleCommand('regurl',{
                     [HKEY_CLASSES_ROOT\techmino\shell\open],
                     [HKEY_CLASSES_ROOT\techmino\shell\open\command],
                     @="\"EXEPATH\" %1",
-                ]=]
-                regCode=regCode:gsub('EXEPATH',path)
+                ]=]:gsub('EXEPATH',path)
                 love.filesystem.write('RegisterURL.reg',regCode)
-                love.system.openURL(love.filesystem.getSaveDirectory())
+                _CL{COLOR.G,".reg script generated, check it carefully then run it"}
+                _CL("Check the file with command 'explorer'.")
             elseif bool=="off" then
                 love.filesystem.write('UnregisterURL.reg',[=[Windows Registry Editor Version 5.00\n[-HKEY_CLASSES_ROOT\techmino]]=])
-                love.system.openURL(love.filesystem.getSaveDirectory())
+                _CL{COLOR.G,".reg script generated, check it carefully then run it"}
+                _CL("Check the file with command 'explorer'.")
             end
         else
             _CL{COLOR.lR,"Only",COLOR.lS,"available",COLOR.lY,"on",COLOR.lG,"Windows"}
@@ -153,8 +160,8 @@ ZENITHA.addConsoleCommand('supernova',{
         if not PROGRESS.getStyleUnlock('acry') then
             PROGRESS.setStyleUnlock('acry')
             PROGRESS.setExteriorUnlock('action')
-            _CL("Extraordinary!")
         end
+        _CL("Extraordinary!")
     end,
 },true)
 ZENITHA.addConsoleCommand('chain',{
@@ -162,8 +169,8 @@ ZENITHA.addConsoleCommand('chain',{
         if not PROGRESS.getStyleUnlock('gela') then
             PROGRESS.setStyleUnlock('gela')
             PROGRESS.setExteriorUnlock('chain')
-            _CL("Ice storm!")
         end
+        _CL("Fever!")
     end,
 },true)
 
@@ -188,13 +195,15 @@ end
 local autoGCcount=0
 function ZENITHA.globalEvent.lowMemory()
     collectgarbage()
-    if autoGCcount<6 then
-        autoGCcount=autoGCcount+1
-        MSG.new('check',Text.autoGC..('.'):rep(4-autoGCcount))
+    autoGCcount=autoGCcount+1
+    LOG('debug',"Auto GC "..autoGCcount)
+    if autoGCcount<=6 then
+        MSG('check',Text.autoGC..('.'):rep(4-autoGCcount))
     end
 end
 function ZENITHA.globalEvent.quit()
     PROGRESS.save('save')
+    FMOD.destroy()
 end
 
 FONT.load{
@@ -212,6 +221,69 @@ FONT.load{
 FONT.setDefaultFallback('symbols')
 FONT.setDefaultFont('norm')
 SCR.setSize(1600,1000)
+do -- WIDGET.newClass
+    local bFill=WIDGET.newClass('button_fill','button')
+    local bInvis=WIDGET.newClass('button_invis','button')
+
+    local gc=love.graphics
+    local gc_push,gc_pop=gc.push,gc.pop
+    local gc_translate,gc_scale=gc.translate,gc.scale
+    local gc_setColor=gc.setColor
+    local alignDraw=WIDGET._alignDraw
+    function bFill:draw()
+        gc_push('transform')
+        gc_translate(self._x,self._y)
+
+        if self._pressTime>0 then
+            gc_scale(1-self._pressTime/self._pressTimeMax*.0626)
+        end
+
+        local w,h=self.w,self.h
+        local HOV=self._hoverTime/self._hoverTimeMax
+
+        local c=self.fillColor
+        local r,g,b=c[1],c[2],c[3]
+
+        -- Rectangle
+        gc_setColor(.15+r*.7*(1-HOV*.26),.15+g*.7*(1-HOV*.26),.15+b*.7*(1-HOV*.26),.9)
+        GC.mRect('fill',0,0,w,h,self.cornerR)
+
+        -- Drawable
+        if self._image then
+            gc_setColor(1,1,1)
+            alignDraw(self,self._image)
+        end
+        if self._text then
+            gc_setColor(self.textColor)
+            alignDraw(self,self._text)
+        end
+        gc_pop()
+    end
+    function bInvis:draw()
+        gc_push('transform')
+        gc_translate(self._x,self._y)
+
+        local w,h=self.w,self.h
+        local HOV=self._hoverTime/self._hoverTimeMax
+
+        local fillC=self.fillColor
+
+        -- Rectangle
+        gc_setColor(fillC[1],fillC[2],fillC[3],HOV*.16)
+        GC.mRect('fill',0,0,w,h,self.cornerR)
+
+        -- Drawable
+        if self._image then
+            gc_setColor(1,1,1)
+            alignDraw(self,self._image)
+        end
+        if self._text then
+            gc_setColor(self.textColor)
+            alignDraw(self,self._text)
+        end
+        gc_pop()
+    end
+end
 WIDGET.setDefaultOption{
     base={
         lineWidth=2,
@@ -271,6 +343,49 @@ MSG.addCategory('achievement',
         {'fRect',6,17,28,6},
     }
 )
+
+SCN.addSwapStyle('fadeHeader',{
+    duration=.5,
+    timeChange=.25,
+    draw=function(t)
+        local a=t>.25 and 2-t*4 or t*4
+        local h=120*SCR.k
+        GC.setColor(.26,.26,.26,a)
+        GC.rectangle('fill',0,0,SCR.w,h)
+        GC.setColor(1,1,1,a)
+        GC.rectangle('fill',0,h,SCR.w,1)
+        GC.setColor(.1,.1,.1,a)
+        GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
+    end,
+})
+SCN.addSwapStyle('fastFadeHeader',{
+    duration=.2,
+    timeChange=.1,
+    draw=function(t)
+        local a=t>.1 and 2-t*10 or t*10
+        local h=120*SCR.k
+        GC.setColor(.26,.26,.26,a)
+        GC.rectangle('fill',0,0,SCR.w,h)
+        GC.setColor(1,1,1,a)
+        GC.rectangle('fill',0,h,SCR.w,1)
+        GC.setColor(.1,.1,.1,a)
+        GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
+    end,
+})
+SCN.addSwapStyle('blackStun',{
+    duration=.42,
+    timeChange=.1,
+    draw=function() GC.clear() end,
+})
+local _oldLoad=SCN.scenes._console.load
+function SCN.scenes._console.load(...)
+    _oldLoad(...)
+    local l=SCN.scenes._console.widgetList
+    l[5].fontType='codepixel'
+    l[6].fontType='codepixel'
+    l[5]:reset()
+    l[6]:reset()
+end
 
 IMG.init{
     actionIcons={
@@ -343,148 +458,26 @@ IMG.init{
 Text=nil ---@type Techmino.I18N
 LANG.add{
     en='assets/language/lang_en.lua',
+    eo='assets/language/lang_eo.lua',
+    it='assets/language/lang_it.lua',
     zh='assets/language/lang_zh.lua',
-    vi='assets/language/lang_vi.lua'
+    vi='assets/language/lang_vi.lua',
 }
 LANG.setDefault('en')
 
-function FMODLoadFunc() -- Will be called again when applying advanced options
-    local memLoad=SETTINGS.system.fmod_loadMemory
-    local function loadBank(path)
-        if memLoad then
-            local bank=FMOD.loadBank2(path)
-            if bank then return bank end
-            memLoad=false
-            SETTINGS.system.fmod_loadMemory=false
-            MSG.new('other',"Switched to another bank loading mode")
-        end
-        return FMOD.loadBank(love.filesystem.getSaveDirectory()..'/'..path)
-    end
-    if not (FMOD.C and FMOD.C2) then
-        MSG.new('error',"FMOD library loaded failed")
-        return
-    end
-
-    FMOD.init{
-        maxChannel=math.min(SETTINGS.system.fmod_maxChannel,256),
-        DSPBufferCount=math.min(SETTINGS.system.fmod_DSPBufferCount,16),
-        DSPBufferLength=math.min(SETTINGS.system.fmod_DSPBufferLength,65536),
-        studioFlag=bit.bxor(FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,FMOD.FMOD_INIT_STREAM_FROM_UPDATE,FMOD.FMOD_INIT_MIX_FROM_UPDATE),
-        coreFlag=FMOD.FMOD_INIT_NORMAL,
-    }
-
-    if not loadBank('soundbank/Master.strings.bank') then
-        MSG.new('warn',"Strings bank file load failed")
-    end
-    if not loadBank('soundbank/Master.bank') then
-        MSG.new('warn',"Master bank file load failed")
-    end
-    FMOD.registerMusic((function()
-        if not love.filesystem.getInfo('soundbank/Master.bank') then
-            MSG.new('warn',"Music bank not found")
-            return {}
-        end
-        local L={}
-        for _,bankName in next,{'Music_Beepbox','Music_FL','Music_Community','Music_Extra'} do
-            if not love.filesystem.getInfo('soundbank/'..bankName..'.bank') then
-                MSG.new('warn',bankName.." bank file not found")
-            else
-                local bankMusic=loadBank('soundbank/'..bankName..'.bank')
-                if not bankMusic then
-                    MSG.new('warn',"bank "..bankName.." load failed")
-                else
-                    local l,c=bankMusic:getEventList()
-                    for i=1,c do
-                        local path=l[i-1]:getPath()
-                        if path then
-                            local name=path:match('/([^/]+)$'):lower()
-                            L[name]=path
-                            if not SONGBOOK[name] then SONGBOOK(name) end
-                            -- print(name,path)
-                        end
-                    end
-                end
-            end
-        end
-        -- print("--------------------------")
-        -- print("Musics")
-        -- for k,v in next,L do print(k,v)end
-
-        -- Music check
-        local regMore={}
-        for name in next,SONGBOOK do
-            if not L[name] then
-                table.insert(regMore,name)
-            end
-        end
-        if #regMore>0 then
-            MSG.new('warn',"Music not found in Bank:")
-            for i=1,#regMore do MSG.new('info',regMore[i]) end
-        end
-        return L
-    end)())
-    FMOD.registerEffect((function()
-        if not love.filesystem.getInfo('soundbank/Effect.bank') then
-            MSG.new('warn',"Effect bank not found")
-            return {}
-        end
-        local bankEffect=loadBank('soundbank/Effect.bank')
-        if not bankEffect then
-            MSG.new('warn',"Effect bank file load failed")
-            return {}
-        end
-        local L={}
-        local nameList={}
-        local l,c=bankEffect:getEventList()
-        for i=1,c do
-            local path=l[i-1]:getPath()
-            if path then
-                local name=path:match('/([^/]+)$'):lower()
-                L[name]=path
-                if path:find('event:') then
-                    table.insert(nameList,name)
-                end
-                -- print(name,path)
-            end
-        end
-        -- print("--------------------------")
-        -- print("Effects")
-        -- for k,v in next,L do print(k,v)end
-
-        -- SE check
-        local regList=require'datatable.se_names'
-        local existMore,regMore=TABLE.copy(nameList),TABLE.copy(regList)
-        TABLE.subtract(existMore,regList)
-        TABLE.subtract(regMore,nameList)
-        if #existMore>0 then
-            MSG.new('warn',"SE not registered:")
-            for i=1,#existMore do MSG.new('info',existMore[i]) end
-        end
-        if #regMore>0 then
-            MSG.new('warn',"SE not found in Bank:")
-            for i=1,#regMore do MSG.new('info',regMore[i]) end
-        end
-
-        return L
-    end)())
-end
--- Hijack the original SFX module, use FMOD instead
-SFX[('play')]=function(name,vol,pos,tune)
-    FMOD.effect(name,{
-        volume=vol,
-        tune=tune,
-    })
-end
-DEBUG.checkLoadTime("Config Zenitha and Fmod")
+UTIL.time("Configure Zenitha",true)
 
 --------------------------------------------------------------
 -- Load saving data
 
-TABLE.update(SETTINGS,FILE.load('conf/settings','-json -canskip') or {})
-for k,v in next,SETTINGS._system do
-    -- Gurantee triggering all setting-triggers
-    SETTINGS._system[k]=nil
-    SETTINGS.system[k]=v
+do -- Load setting file and trigger all setting-triggers only one time
+    local setFile=FILE.load('conf/settings','-json -canskip') or {}
+    setFile._system,setFile.system=setFile.system,nil
+    TABLE.update(SETTINGS,setFile)
+    for k,v in next,SETTINGS._system do
+        SETTINGS._system[k]=nil
+        SETTINGS.system[k]=v
+    end
 end
 if SETTINGS.system.portrait then -- Brute fullscreen config for mobile device
     SCR.setSize(1600,2560)
@@ -564,7 +557,7 @@ if keys then
     KEYMAP.acry:import(keys['acry'])
     KEYMAP.sys:import(keys['sys'])
 end
-DEBUG.checkLoadTime("Load settings & data")
+UTIL.time("Load savedata",true)
 
 --------------------------------------------------------------
 -- Load SOURCE ONLY resources
@@ -575,7 +568,7 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/shader') do
     if FILE.isSafe('assets/shader/'..v) then
         local name=v:sub(1,-6)
         local suc,res=pcall(love.graphics.newShader,'assets/shader/'..name..'.hlsl')
-        SHADER[name]=suc and res or error("Error in Shader '"..name.."': "..res)
+        SHADER[name]=suc and res or error("Err in compiling Shader '"..name.."': "..tostring(res))
     end
 end
 -- Initialize shader parameters
@@ -600,6 +593,8 @@ for k,v in next,{
     slowPixelize={{'tileSize',0.01}},
 } do for i=1,#v do SHADER[k]:send(unpack(v[i])) end end
 
+UTIL.time("Load shaders",true)
+
 for _,v in next,love.filesystem.getDirectoryItems('assets/background') do
     if FILE.isSafe('assets/background/'..v) and v:sub(-3)=='lua' then
         local name=v:sub(1,-5)
@@ -607,18 +602,33 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/background') do
     end
 end
 
+UTIL.time("Load backgrounds",true)
+
 for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
     if FILE.isSafe('assets/scene/'..v) then
         local sceneName=v:sub(1,-5)
         SCN.add(sceneName,FILE.load('assets/scene/'..v,'-lua'))
     end
 end
+local appletSceneSet={} ---@type Set<string>
 for _,v in next,love.filesystem.getDirectoryItems('assets/scene_app') do
     if FILE.isSafe('assets/scene_app/'..v) then
         local sceneName=v:sub(1,-5)
+        appletSceneSet[sceneName]=true
         SCN.add(sceneName,FILE.load('assets/scene_app/'..v,'-lua'))
     end
 end
+if PROGRESS.get('main')>=3 and ShellOption.launchApplet then
+    if appletSceneSet[ShellOption.launchApplet] then
+        ZENITHA.setFirstScene(ShellOption.launchApplet)
+    else
+        ZENITHA.setFirstScene('_quit')
+        LOG('error',"Applet scene '"..ShellOption.launchApplet.."' doesn't exist")
+        return
+    end
+end
+
+UTIL.time("Load scenes",true)
 
 for _,v in next,{
     'brik_template', -- Shouldn't be used
@@ -637,79 +647,228 @@ for _,v in next,{
     end
 end
 
-SCN.addSwapStyle('fadeHeader',{
-    duration=.5,
-    timeChange=.25,
-    draw=function(t)
-        local a=t>.25 and 2-t*4 or t*4
-        local h=120*SCR.k
-        GC.setColor(.26,.26,.26,a)
-        GC.rectangle('fill',0,0,SCR.w,h)
-        GC.setColor(1,1,1,a)
-        GC.rectangle('fill',0,h,SCR.w,1)
-        GC.setColor(.1,.1,.1,a)
-        GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
-    end,
-})
-SCN.addSwapStyle('fastFadeHeader',{
-    duration=.2,
-    timeChange=.1,
-    draw=function(t)
-        local a=t>.1 and 2-t*10 or t*10
-        local h=120*SCR.k
-        GC.setColor(.26,.26,.26,a)
-        GC.rectangle('fill',0,0,SCR.w,h)
-        GC.setColor(1,1,1,a)
-        GC.rectangle('fill',0,h,SCR.w,1)
-        GC.setColor(.1,.1,.1,a)
-        GC.rectangle('fill',0,h+1,SCR.w,SCR.h-h)
-    end,
-})
-SCN.scenes._console.widgetList.output.fontType='codepixel'
-SCN.scenes._console.widgetList.input.fontType='codepixel'
+UTIL.time("Load skins",true)
 
+function FMODLoadFunc() -- Will be called again when applying advanced options
+    if not (FMOD.C and FMOD.C2) then
+        MSG.log('error',"FMOD library loaded failed")
+        return
+    end
+
+    LOG('debug',"Will loading FMOD banks from "..(SETTINGS.system.fmod_loadMemory and "memory" or "file"))
+    local errorLogged=false
+    local function loadBank(path)
+        local bank,errInfo,errInfo2
+        if SETTINGS.system.fmod_loadMemory then
+            bank,errInfo=FMOD.loadBank2(path)
+            if bank then return bank end
+            SETTINGS.system.fmod_loadMemory=false
+            LOG('debug',"Will load FMOD banks from file")
+            MSG('other',"Switched to another bank loading mode to file")
+        end
+        bank,errInfo2=FMOD.loadBank(love.filesystem.getSaveDirectory()..'/'..path)
+        if bank then return bank end
+        if not errorLogged then
+            errorLogged=true
+            MSG.log('error',"FMOD bank load failed :"..tostring(errInfo))
+            MSG.log('error',"FMOD bank load failed :"..tostring(errInfo2))
+        end
+    end
+
+    LOG('debug',"Ready to init FMOD")
+    FMOD.init{
+        maxChannel=math.min(SETTINGS.system.fmod_maxChannel,256),
+        DSPBufferCount=math.min(SETTINGS.system.fmod_DSPBufferCount,16),
+        DSPBufferLength=math.min(SETTINGS.system.fmod_DSPBufferLength,65536),
+        studioFlag=bit.bxor(FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,FMOD.FMOD_INIT_STREAM_FROM_UPDATE,FMOD.FMOD_INIT_MIX_FROM_UPDATE),
+        coreFlag=FMOD.FMOD_INIT_NORMAL,
+    }
+
+    local noFile
+    if not loadBank('soundbank/Master.strings.bank') then
+        MSG.log('warn',"Strings bank file load failed")
+        noFile=true
+    end
+    if not loadBank('soundbank/Master.bank') then
+        MSG.log('warn',"Master bank file load failed")
+        noFile=true
+    end
+    FMOD.registerMusic((function()
+        if not love.filesystem.getInfo('soundbank/Master.bank') then
+            MSG.log('warn',"Music bank not found")
+            return {}
+        end
+        local L={}
+        for _,bankName in next,{'Music_Beepbox','Music_FL','Music_Community','Music_Extra'} do
+            if not love.filesystem.getInfo('soundbank/'..bankName..'.bank') then
+                MSG.log('warn',bankName.." bank file not found")
+                noFile=true
+            else
+                local bankMusic=loadBank('soundbank/'..bankName..'.bank')
+                if not bankMusic then
+                    MSG.log('warn',"bank "..bankName.." load failed")
+                else
+                    local l,c=bankMusic:getEventList()
+                    for i=1,c do
+                        local path=l[i-1]:getPath()
+                        if path then
+                            local name=path:match('/([^/]+)$'):lower()
+                            L[name]=path
+                            if not SONGBOOK[name] then SONGBOOK(name) end
+                            -- print(name,path)
+                        end
+                    end
+                end
+            end
+        end
+        if noFile then _getLatestBank(2.6) end
+
+        -- print("--------------------------")
+        -- print("Musics")
+        -- for k,v in next,L do print(k,v)end
+
+        -- Music check
+        local regMore={}
+        for name in next,SONGBOOK do
+            if not L[name] then
+                table.insert(regMore,name)
+            end
+        end
+        if #regMore>0 then
+            MSG.log('warn',"Music not found in Bank:")
+            for i=1,#regMore do MSG.log('warn',regMore[i]) end
+        end
+        return L
+    end)())
+    FMOD.registerEffect((function()
+        if not love.filesystem.getInfo('soundbank/Effect.bank') then
+            MSG.log('warn',"Effect bank not found")
+            return {}
+        end
+        local bankEffect=loadBank('soundbank/Effect.bank')
+        if not bankEffect then
+            MSG.log('warn',"Effect bank file load failed")
+            return {}
+        end
+        local L={}
+        local nameList={}
+        local l,c=bankEffect:getEventList()
+        for i=1,c do
+            local path=l[i-1]:getPath()
+            if path then
+                local name=path:match('/([^/]+)$'):lower()
+                L[name]=path
+                if path:find('event:') then
+                    table.insert(nameList,name)
+                end
+                -- print(name,path)
+            end
+        end
+        -- print("--------------------------")
+        -- print("Effects")
+        -- for k,v in next,L do print(k,v)end
+
+        -- SE check
+        local regList=require'datatable.se_names'
+        local existMore,regMore=TABLE.copy(nameList),TABLE.copy(regList)
+        TABLE.subtract(existMore,regList)
+        TABLE.subtract(regMore,nameList)
+        if #existMore>0 then
+            MSG.log('warn',"SE not registered:")
+            for i=1,#existMore do MSG.log('warn',existMore[i]) end
+        end
+        if #regMore>0 then
+            MSG.log('warn',"SE not found in Bank:")
+            for i=1,#regMore do MSG.log('warn',regMore[i]) end
+        end
+
+        return L
+    end)())
+end
+-- Hijack the original SFX module, use FMOD instead
+SFX[('play')]=function(name,vol,pos,tune)
+    FMOD.effect(name,{
+        volume=vol,
+        tune=tune,
+    })
+end
 FMODLoadFunc()
 if tostring(FMOD.studio):find('NULL') then
-    MSG.new('error',"FMOD initialization failed")
+    MSG.log('error',"FMOD initialization failed")
 elseif TABLE.getSize(FMOD.banks)==0 then
-    MSG.new('error',"no FMOD bank files found")
+    MSG.log('error',"no FMOD bank files found")
 else
     FMOD.setMainVolume(SETTINGS.system.mainVol,true)
     for name,data in next,SONGBOOK do
         local ED=FMOD.music.getDesc(name)
         if ED then
             if select(2,ED:getParameterDescriptionByName('fade'))~=FMOD.FMOD_OK then
-                MSG.new('warn',"Missing 'fade' parameter in music '"..name.."'")
+                MSG.log('warn',"Missing 'fade' parameter in music '"..name.."'")
             end
             data.intensity=select(2,ED:getParameterDescriptionByName('intensity'))==FMOD.FMOD_OK
             data.section=select(2,ED:getParameterDescriptionByName('section'))==FMOD.FMOD_OK
             data.multitrack=select(2,ED:getUserProperty('multitrack'))==FMOD.FMOD_OK
-            data.looppoint=select(2,ED:getUserProperty('looppoint'))==FMOD.FMOD_OK
+            data.hasloop=select(2,ED:getParameterDescriptionByName('loop'))==FMOD.FMOD_OK
             if data.section then
                 local param,res=ED:getUserProperty('maxsection')
                 if res==FMOD.FMOD_OK then
                     ---@cast param FMOD.Studio.UserProperty
                     data.maxsection=param.intvalue
                 else
-                    MSG.new('warn',"Missing 'maxsection' property in music '"..name.."'")
+                    MSG.log('warn',"Missing 'maxsection' property in music '"..name.."'")
                 end
             end
             -- print(name..":")
             -- print('itst',data.intensity)
             -- print('sect',data.section)
             -- print('mult',data.multitrack)
-            -- print('loop',data.looppoint)
+            -- print('loop',data.hasloop)
         else
             data.notFound=true
-            MSG.new('warn',"Music '"..name.."' not found in FMOD",0)
+            MSG.log('warn',"Music '"..name.."' not found in FMOD",0)
         end
     end
 end
 
-TASK.new(task_powerManager)
+UTIL.time("Load FMOD",true)
 
-DEBUG.checkLoadTime("Load shaders/BGs/SCNs/skins/FMOD/Managers")
+if SYSTEM=='Web' then
+    _G[('DiscordRPC')]={update=NULL}
+else
+    DiscordRPC=require'assets.discordRPC'
+end
+DiscordRPC.update("Online")
+
+UTIL.time("Load DiscordRPC",true)
+
+do -- Power Manager
+    local warnThres={-1,2.6,6.26,14.2,26}
+    local warnCheck=5
+    TASK.new(function()
+        while true do
+            local state,pow=love.system.getPowerInfo()
+            if not pow then return end
+            if state=='charging' or state=='charged' then
+                while warnCheck<5 and pow>warnThres[warnCheck] do
+                    warnCheck=warnCheck+1
+                end
+            else
+                if pow<=warnThres[warnCheck] then
+                    repeat
+                        warnCheck=warnCheck-1
+                    until warnCheck==1 or pow>warnThres[warnCheck]
+                    MSG(({'check','error','warn','info'})[warnCheck],Text.batteryWarn[warnCheck])
+                end
+            end
+            TASK.yieldT(6.26)
+        end
+    end)
+end
+
+love.joystick.loadGamepadMappings('datatable/gamecontrollerdb.txt')
+
+UTIL.time("Load utils",true)
 
 --------------------------------------------------------------
 
-DEBUG.logLoadTime()
+UTIL.showTimeLog()

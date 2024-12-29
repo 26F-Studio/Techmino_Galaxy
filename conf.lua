@@ -1,8 +1,29 @@
+ShellOption=require'shell'
+
+if ShellOption.bootDisabled then
+    function love.conf(t)
+        for k in next,t.modules do t.modules[k]=false end
+        t.window.vsync=0
+        t.window.msaa=0
+        t.window.depth=0
+        t.window.stencil=0
+    end
+    return
+end
+
+if love['_os']=='Web' then
+    local oldRead=love.filesystem.read
+    love.filesystem[('read')]=function(name,size)
+        if love.filesystem.getInfo(name) then return oldRead(name,size) end
+    end
+end
+
 function love.conf(t)
     local identity='Techmino_Galaxy'
     local mobile=love._os=='Android' or love._os=='iOS'
+    local web=love._os=='Web'
     local msaa=4
-    local portrait=false
+    local portrait=false ---@type boolean|nil
 
     local fs=love.filesystem
     fs.setIdentity(identity)
@@ -28,7 +49,7 @@ function love.conf(t)
     local M=t.modules
     M.window,M.system,M.event,M.thread=true,true,true,true
     M.timer,M.math,M.data=true,true,true
-    M.video,M.audio,M.sound=true,false,false
+    M.video,M.audio,M.sound=true,web,false
     M.graphics,M.font,M.image=true,true,true
     M.mouse,M.touch,M.keyboard,M.joystick=true,true,true,true
     M.physics=false
@@ -53,7 +74,7 @@ function love.conf(t)
     end
     W.title=require'version'.appName..'  '..require'version'.appVer
 
-    if fs.getInfo('assets/image/icon.png') then
+    if love._os=='Linux' and fs.getInfo('assets/image/icon.png') then
         W.icon='assets/image/icon.png'
     end
 end

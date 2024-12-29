@@ -1,14 +1,13 @@
 local Brik={}
 
 ---@alias Techmino.Brik.Shape Mat<boolean>
----@alias Techmino.Brik.Name 'Z'|'S'|'J'|'L'|'T'|'O'|'I'|'Z5'|'S5'|'P'|'Q'|'F'|'E'|'T5'|'U'|'V'|'W'|'X'|'J5'|'L5'|'R'|'Y'|'N'|'H'|'I5'|'I3'|'C'|'I2'|'O1'|string
+---@alias Techmino.Brik.Name 'Z' | 'S' | 'J' | 'L' | 'T' | 'O' | 'I' | 'Z5' | 'S5' | 'P' | 'Q' | 'F' | 'E' | 'T5' | 'U' | 'V' | 'W' | 'X' | 'J5' | 'L5' | 'R' | 'Y' | 'N' | 'H' | 'I5' | 'I3' | 'C' | 'I2' | 'O1' | string
 ---@alias Techmino.Brik.ID integer
 
 ---@class Techmino.Brik
 ---@field name Techmino.Brik.Name
 ---@field id Techmino.Brik.ID
 ---@field shape Techmino.Brik.Shape
----@field color? number RGB9
 
 ---@type Map<Techmino.Brik>
 local briks={}
@@ -64,14 +63,14 @@ do
     reg('O1', 29, {{O}})
 end
 
----@param id Techmino.Brik.ID|Techmino.Brik.Name
+---@param id Techmino.Brik.ID | Techmino.Brik.Name
 ---@return Techmino.Brik
 function Brik.get(id) return assert(briks[id],("Brik '$1' not found"):repD(id)) end
----@param id Techmino.Brik.Name|Techmino.Brik.ID
+---@param id Techmino.Brik.Name | Techmino.Brik.ID
 function Brik.getName(id) return Brik.get(id).name end
----@param id Techmino.Brik.Name|Techmino.Brik.ID
+---@param id Techmino.Brik.Name | Techmino.Brik.ID
 function Brik.getID(id) return Brik.get(id).id end
----@param id Techmino.Brik.Name|Techmino.Brik.ID
+---@param id Techmino.Brik.Name | Techmino.Brik.ID
 function Brik.getShape(id) return Brik.get(id).shape end
 
 ---@param shape Techmino.Brik.Shape
@@ -112,7 +111,6 @@ function Brik._binarize(shape)
     end
     if byte>0 then
         pStr=string.char(byte)..pStr
-        print(pStr:byte())
     end
     return pNum,pStr
 end

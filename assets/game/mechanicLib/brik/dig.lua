@@ -44,7 +44,6 @@ local garbageTypes={
                 d[x]=math.min(d[x]+3,12)
             end
         end
-        print(table.concat(d,' '))
     end,
     solid=function(P)
         P:riseGarbage({})

@@ -8,43 +8,19 @@ local gc_draw=gc.draw
 
 
 local max,min=math.max,math.min
-local floor=math.floor
+local abs=math.abs
+local ceil,floor=math.ceil,math.floor
 local ins,rem=table.insert,table.remove
 
 ---@class Techmino.Player.Acry: Techmino.Player
 ---@field stat Techmino.PlayerStatTable.Acry
----@field field Mat<Techmino.Acry.Cell|false>
+---@field field Mat<Techmino.Acry.Cell | false>
 local AP=setmetatable({},{__index=require'basePlayer',__metatable=true})
-
----@class Techmino.Acry.Cell
----@field color number 1~7
----@field type 'acry'|'cube'
----@field appearance 'flame'|'star'|'nova'
----@field destroyed {mode:'explosion'|'lightning'|'color', radius:number}
----@field movable boolean
----
----@field needCheck boolean
----@field clearTimer number
----@field clearDelay number Set when enter clearing state
----@field moveTimer number
----@field moveDelay number
----@field dx number
----@field dy number
----@field fall boolean
----
----@field lrCnt number Left/Right connecting length
----@field udCnt number Up/Down connecting length
----@field riseCnt number BL/UR (rising diagonal) connecting length (when enabled)
----@field dropCnt number UL/BR (dropping diagonal) connecting length (when enabled)
----
----@field moved function
----@field aftermove function
----@field generate? Techmino.Acry.Cell
 
 --------------------------------------------------------------
 -- Function tables
 
----@type Map<fun(P:Techmino.Player.Acry):any>
+---@type Map<fun(P:Techmino.Player.Acry): any>
 AP.scriptCmd={
 }
 
@@ -66,330 +42,171 @@ function AP:printField() -- For debugging
     for y=self.settings.fieldSize,1,-1 do
         local s="|"
         for x=1,self.settings.fieldSize do
-            s=s..(F[y][x] and 'X' or '.')
+            s=s..(F[y][x] and F[y][x].color or '.')
         end
         print(s.."|")
     end
-end
-function AP:isMovable(x,y)
-    if x>=1 and x<=self.settings.fieldSize and y>=1 and y<=self.settings.fieldSize then
-        local F=self.field
-        if F[y][x] then
-            return F[y][x].movable
-        else
-            return true
-        end
-    else
-        return false
-    end
+    print("----------")
 end
 function AP:getAcry(data)
-    local G={
-        type='acry',
-        movable=true,
+    self.totalCellCount=self.totalCellCount+1
+    ---@cast data Techmino.Acry.Cell
+    ---@type Techmino.Acry.Cell
+    local acry={
+        id='_'..STRING.toHex(self.totalCellCount),
+        createTime=self.time,
+
+        color=math.random(7),
+        prop={},propData={},
+        gridX=1,gridY=9,
+        biasX=0,biasY=0,
+
+        state='idle',
+        stableTime=self.time,
     }
-    if data then TABLE.update(G,data) end
-    return G
+    if data then TABLE.update(acry,data) end
+    return acry
 end
-function AP:setMoveBias(mode,C,dx,dy)
-    if not C then return end
-    C.needCheck=nil
-    C.movable=false
-    C.dx=(C.dx or 0)+dx
-    C.dy=(C.dy or 0)+dy
-    if mode=='fall' then
-        C.fall=true
-        C.moveTimer=(C.moveTimer or 0)+floor(self.settings.fallDelay*dy^.5)
-        C.moveDelay=(C.moveDelay or 0)+floor(self.settings.fallDelay*dy^.5)
+function AP:_moveToward(acry1,acry2,dx,dy,force)
+    if not (acry1 and acry1.state=='idle') then return false end
+    acry1.state='moveAhead'
+    acry1.active=true
+    local canMove
+    if force==nil then
+        canMove=not (acry2==nil or acry2 and acry2.state~='idle')
     else
-        C.moveTimer=self.settings.moveDelay
-        C.moveDelay=self.settings.moveDelay
+        canMove=force
     end
-end
-function AP:erasePosition(x,y,src)
-    local F=self.field
-    if F[y] then
-        local g=F[y][x]
-        if g then
-            F[y][x]=false
-            if g.destroyed then
-                local D=g.destroyed
-                if D.mode=='explosion' then
-                    for ey=y-D.radius,y+D.radius do for ex=x-D.radius,x+D.radius do
-                        self:erasePosition(ex,ey,g)
-                    end end
-                elseif D.mode=='lightning' then
-                    for ey=y-D.radius,y+D.radius do for ex=1,self.settings.fieldSize do
-                        self:erasePosition(ex,ey,g)
-                    end end
-                    for ey=1,self.settings.fieldSize do for ex=x-D.radius,x+D.radius do
-                        self:erasePosition(ex,ey,g)
-                    end end
-                elseif D.mode=='color' then
-                    for ey=1,self.settings.fieldSize do for ex=1,self.settings.fieldSize do
-                        if not src.color or F[ey][ex] and F[ey][ex].color==src.color then
-                            self:erasePosition(ex,ey,g)
-                        end
-                    end end
-                else
-                    error("Wrong destroy event mode")
-                end
-            end
-            if g.generate then
-                ins(self.generateBuffer,{
-                    x=x,y=y,
-                    acry=g.generate,
-                })
-            end
-        end
-    end
-end
-function AP:swap(mode,x,y,dx,dy)
-    local F=self.field
-    if
-        self:isMovable(x,y) and self:isMovable(x+dx,y+dy)
-    then
-        self:setMoveBias('swap',F[y][x],-dx,-dy)
-        self:setMoveBias('swap',F[y+dy][x+dx],dx,dy)
-        F[y][x],F[y+dy][x+dx]=F[y+dy][x+dx],F[y][x]
-        if mode=='action' then
-            ins(self.movingGroups,{
-                mode='swap',
-                force=self.settings.swapForce,
-                args={x,y,dx,dy},
-                positions={x,y,x+dx,y+dy},
-            })
-
-            self:triggerEvent('legalMove','swap')
-
-            self:playSound('swap')
-        elseif mode=='auto' then
-            self:playSound('move_back')
-        end
+    if canMove then
+        -- Active Move
+        acry1.moveDirection={dx,dy}
+        acry1.wallHit=false
+        acry1.moveDelay=self.settings.moveAheadDelay
+        acry1.moveReadyDelay=0
     else
-        self:playSound('swap_failed')
+        -- Wall Hit
+        acry1.moveDirection={dx*.26,dy*.26}
+        acry1.wallHit=true
+        acry1.moveDelay=self.settings.moveAheadWallDelay
+        acry1.moveReadyDelay=0
+    end
+    acry1.moveTimer=acry1.moveDelay
+    return true
+end
+function AP:swap(x,y,dx,dy)
+    local F=self.field
+    local acry1=F[y][x]
+    local acry2=F[y+dy] and F[y+dy][x+dx]
+    if self:_moveToward(acry1,acry2,dx,dy) and acry2 and acry2.state=='idle' then
+        -- Passive Move
+        self:_moveToward(acry2,acry1,-dx,-dy,true)
+        acry2.active=false
     end
     self:freshSwapCursor()
 end
-function AP:twist(mode,x,y,dir)
+function AP:twist(x,y,dir)
     local F=self.field
-    if
-        self:isMovable(x,y) and
-        self:isMovable(x,y+1) and
-        self:isMovable(x+1,y+1) and
-        self:isMovable(x+1,y)
-    then
-        if dir=='R' then
-            self:setMoveBias('twist',F[y][x],0,-1)
-            self:setMoveBias('twist',F[y][x+1],1,0)
-            self:setMoveBias('twist',F[y+1][x+1],0,1)
-            self:setMoveBias('twist',F[y+1][x],-1,0)
-            F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y][x+1],F[y+1][x+1],F[y+1][x],F[y][x]
-        elseif dir=='L' then
-            self:setMoveBias('twist',F[y][x],-1,0)
-            self:setMoveBias('twist',F[y][x+1],0,-1)
-            self:setMoveBias('twist',F[y+1][x+1],1,0)
-            self:setMoveBias('twist',F[y+1][x],0,1)
-            F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y+1][x],F[y][x],F[y][x+1],F[y+1][x+1]
-        elseif dir=='F' then
-            self:setMoveBias('twist',F[y][x],-1,-1)
-            self:setMoveBias('twist',F[y][x+1],1,-1)
-            self:setMoveBias('twist',F[y+1][x+1],1,1)
-            self:setMoveBias('twist',F[y+1][x],-1,1)
-            F[y][x],F[y][x+1],F[y+1][x+1],F[y+1][x]=F[y+1][x+1],F[y+1][x],F[y][x],F[y][x+1]
-        end
-        if mode=='action' then
-            ins(self.movingGroups,{
-                mode='twist',
-                force=self.settings.twistForce,
-                args={x,y,dir=='R' and 'L' or dir=='L' and 'R' or 'F'},
-                positions={x,y,x+1,y,x+1,y+1,x,y+1},
-            })
-            self:playSound('twist')
-
-            self:triggerEvent('legalMove','twist')
-
-        elseif mode=='auto' then
-            self:playSound('move_back')
-        end
-    else
-        self:playSound('twist_failed')
+    local a1,a2,a3,a4=F[y][x],F[y+1][x],F[y+1][x+1],F[y][x+1]
+    local i1,i2,i3,i4=a1 and a1.state=='idle',a2 and a2.state=='idle',a3 and a3.state=='idle',a4 and a4.state=='idle'
+    if dir=='R' then
+        local canMove=i1 and i2 and i3 and i4
+        self:_moveToward(a1,a2,00,01,canMove)
+        self:_moveToward(a2,a3,01,00,canMove)
+        self:_moveToward(a3,a4,00,-1,canMove)
+        self:_moveToward(a4,a1,-1,00,canMove)
+    elseif dir=='L' then
+        local canMove=i1 and i2 and i3 and i4
+        self:_moveToward(a4,a3,00,01,canMove)
+        self:_moveToward(a3,a2,-1,00,canMove)
+        self:_moveToward(a2,a1,00,-1,canMove)
+        self:_moveToward(a1,a4,01,00,canMove)
+    elseif dir=='F' then
+        self:_moveToward(a1,a3,01,01,i1 and i3)
+        self:_moveToward(a3,a1,-1,-1,i1 and i3)
+        self:_moveToward(a2,a4,01,-1,i2 and i4)
+        self:_moveToward(a4,a2,-1,01,i2 and i4)
     end
 end
-local function linkLen(F,color,x,y,dx,dy)
-    local cnt=0
-    x,y=x+dx,y+dy
+function AP:triggerAcryEvent(acry,name)
+    ---@cast acry Techmino.Acry.Cell
+    local propList=acry.prop
+    local propSys=mechLib.acry.propSys
+    for i=1,#propList do
+        local eventFunc=propSys[propList[i]][name]
+        if eventFunc then
+            eventFunc(self,acry)
+        end
+    end
+end
+function AP:linkProbe(clr,x,y,dx,dy)
+    local F=self.field
+    local dist=0
     while true do
-        local G=F[y] and F[y][x]
-        if G and G.color and G.color==color and G.movable then
-            x,y=x+dx,y+dy
-            cnt=cnt+1
+        x,y=x+dx,y+dy
+        local acry=(F[y] or NONE)[x]
+        if acry and acry.color==clr then
+            dist=dist+1
         else
             break
         end
     end
-    return cnt
+    return dist
 end
----Check if a position can be activated
-function AP:psedoCheckPos(x,y)
-    local F=self.field
-    if not F[y][x] then return end
-    local color=F[y][x].color
-    if not F[y][x].lrCnt   and 1+linkLen(F,color,x,y,-1,0)+ linkLen(F,color,x,y,1,0) >=self.settings.linkLen then return true end
-    if not F[y][x].udCnt   and 1+linkLen(F,color,x,y,0,-1)+ linkLen(F,color,x,y,0,1) >=self.settings.linkLen then return true end
-    if not self.settings.diagonalLinkLen then return false end
-    if not F[y][x].riseCnt and 1+linkLen(F,color,x,y,-1,-1)+linkLen(F,color,x,y,1,1) >=self.settings.diagonalLinkLen then return true end
-    if not F[y][x].dropCnt and 1+linkLen(F,color,x,y,-1,1)+ linkLen(F,color,x,y,1,-1)>=self.settings.diagonalLinkLen then return true end
+-- Acry at F[y][x] requests starting a match
+function AP:requestMatch(acry)
+    ---@cast acry Techmino.Acry.Cell
+
+    -- print("Check at:",acry.gridX,acry.gridY)
+    -- self:printField()
+
+    local clr=acry.color
+    if clr==0 then return end
+    local matchSet={}
+    local scanStream={acry.gridX,acry.gridY}
+
+    local probe=1
+    while scanStream[probe] do
+        local x,y=scanStream[probe],scanStream[probe+1]
+        if not matchSet[x..'LR'..y] then
+            matchSet[x..'LR'..y]=true
+            local linkL=self:linkProbe(clr,x,y,-1,0)
+            local linkR=self:linkProbe(clr,x,y,1,0)
+            if linkL+linkR>=2 then
+                for _x=x-linkL,x+linkR do
+                    matchSet[_x..'LR'..y]=true
+                    ins(scanStream,_x)
+                    ins(scanStream,y)
+                end
+            end
+        end
+        if not matchSet[x..'UD'..y] then
+            matchSet[x..'UD'..y]=true
+            local linkU=self:linkProbe(clr,x,y,0,1)
+            local linkD=self:linkProbe(clr,x,y,0,-1)
+            if linkU+linkD>=2 then
+                for _y=y-linkD,y+linkU do
+                    matchSet[x..'UD'.._y]=true
+                    ins(scanStream,x)
+                    ins(scanStream,_y)
+                end
+            end
+        end
+        probe=probe+2
+    end
+
+    if #scanStream>=6 then
+        local F=self.field
+        for i=1,#scanStream,2 do
+            local x,y=scanStream[i],scanStream[i+1]
+            ins(self.acryProcessQueue.match,F[y][x])
+        end
+    elseif acry.state=='moveWait' then
+        acry._newState='idle'
+    end
+end
+function AP:matchExist()
+    -- TODO
     return false
-end
-function AP:setClear(g,linkMode,len)
-    g.movable=false
-    g.clearTimer=self.settings.clearDelay
-    g.clearDelay=self.settings.clearDelay
-    g[linkMode]=len
-end
-function AP:setGenerate(g,gen)
-    g.clearTimer=0
-    g.generate=self:getAcry(gen)
-end
-function AP:checkPosition(x,y)
-    local F=self.field
-    local g=F[y][x]
-    if not g then return end
-
-    local color=g.color
-    local line=0
-
-    if not g.lrCnt then
-        local stepX,stepY=1,0
-        local l=linkLen(F,color,x,y,-stepX,-stepY)
-        local r=linkLen(F,color,x,y,stepX,stepY)
-        local len=1+l+r
-        if len>=self.settings.linkLen then
-            for i=-l,r do
-                local cx,cy=x+stepX*i,y+stepY*i
-                local gi=F[cy] and F[cy][cx]
-                if gi then
-                    self:setClear(gi,'lrCnt',len)
-                end
-            end
-            line=line+1
-        end
-    end
-    if not g.udCnt then
-        local stepX,stepY=0,1
-        local l=linkLen(F,color,x,y,-stepX,-stepY)
-        local r=linkLen(F,color,x,y,stepX,stepY)
-        local len=1+l+r
-        if len>=self.settings.linkLen then
-            for i=-l,r do
-                local cx,cy=x+stepX*i,y+stepY*i
-                local gi=F[cy] and F[cy][cx]
-                if gi then
-                    self:setClear(gi,'udCnt',len)
-                end
-            end
-            line=line+1
-        end
-    end
-    if self.settings.diagonalLinkLen then
-        if not g.riseCnt then
-            local stepX,stepY=1,1
-            local l=linkLen(F,color,x,y,-stepX,-stepY)
-            local r=linkLen(F,color,x,y,stepX,stepY)
-            local len=1+l+r
-            if len>=self.settings.diagonalLinkLen then
-                for i=-l,r do
-                    local cx,cy=x+stepX*i,y+stepY*i
-                    local gi=F[cy] and F[cy][cx]
-                    if gi then
-                        self:setClear(gi,'riseCnt',len)
-                    end
-                end
-                line=line+1
-            end
-        end
-        if not g.dropCnt then
-            local stepX,stepY=1,-1
-            local l=linkLen(F,color,x,y,-stepX,-stepY)
-            local r=linkLen(F,color,x,y,stepX,stepY)
-            local len=1+l+r
-            if len>=self.settings.diagonalLinkLen then
-                for i=-l,r do
-                    local cx,cy=x+stepX*i,y+stepY*i
-                    local gi=F[cy] and F[cy][cx]
-                    if gi then
-                        self:setClear(gi,'dropCnt',len)
-                    end
-                end
-                line=line+1
-            end
-        end
-    end
-
-    if g.clearTimer then
-        local lineCount=0
-        local maxLen=0
-        if g.lrCnt   then lineCount=lineCount+1 maxLen=max(maxLen,g.lrCnt)   end
-        if g.udCnt   then lineCount=lineCount+1 maxLen=max(maxLen,g.udCnt)   end
-        if g.riseCnt then lineCount=lineCount+1 maxLen=max(maxLen,g.riseCnt) end
-        if g.dropCnt then lineCount=lineCount+1 maxLen=max(maxLen,g.dropCnt) end
-        local genData=mechLib.acry.mergeSys[self.settings.mergeSys](self,g,maxLen,lineCount)
-        if genData then self:setGenerate(g,genData) end
-    end
-
-    if line>0 then
-        self:playSound('clear',line)
-    end
-end
-function AP:freshAcry()
-    local newAcry={}
-    local F=self.field
-    for x=1,self.settings.fieldSize do
-        -- Drag acry down
-        for y=1,self.settings.fieldSize do
-            -- F[y][x] is a hole
-            if not F[y][x] then
-                -- Find a acry above the hole
-                for gY=y+1,self.settings.fieldSize do
-                    if F[gY][x] then
-                        -- Move it if it's movable
-                        if self:isMovable(x,gY) then
-                            F[y][x],F[gY][x]=F[gY][x],false
-                            self:setMoveBias('fall',F[y][x],0,gY-y)
-                        end
-                        break
-                    end
-                end
-            end
-        end
-
-        -- Fill holes with new acry
-        local lowestHole=9
-        for y=1,self.settings.fieldSize do
-            if not F[y][x] then
-                lowestHole=y
-                break
-            end
-        end
-        for y=lowestHole,self.settings.fieldSize do
-            local g=self:getAcry()
-            self:setMoveBias('fall',g,0,9-lowestHole)
-            ins(newAcry,g)
-            F[y][x]=g
-        end
-    end
-    local freshTimes=0
-    repeat
-        for i=1,#newAcry do
-            local g=newAcry[i]
-            g.color=self:random(self.settings.colors)
-        end
-        freshTimes=freshTimes+1
-    until freshTimes>=self.settings.refreshCount or self:hasMove()
-end
-function AP:hasMove()
-    return true
 end
 function AP:changeFieldSize(w,h,origX,origY)
 end
@@ -463,9 +280,9 @@ function AP:mouseDown(x,y,id)
             local mx,my=self:getMousePos(x,y)
             if mx then
                 local sx,sy=self:getSwapPos(mx,my)
-                if sx==self.swapX and math.abs(sy-self.swapY)==1 or sy==self.swapY and math.abs(sx-self.swapX)==1 then
+                if sx==self.swapX and abs(sy-self.swapY)==1 or sy==self.swapY and abs(sx-self.swapX)==1 then
                     if self.settings.multiMove or #self.movingGroups==0 then
-                        self:swap('action',self.swapX,self.swapY,sx-self.swapX,sy-self.swapY)
+                        self:swap(self.swapX,self.swapY,sx-self.swapX,sy-self.swapY)
                     end
                 else
                     if sx==self.swapX and sy==self.swapY then
@@ -490,10 +307,10 @@ function AP:mouseMove(x,y,_,_,_)
                 if not (sx==self.swapX and sy==self.swapY) then
                     if
                         (
-                            sx==self.swapX and math.abs(sy-self.swapY)==1 or
-                            sy==self.swapY and math.abs(sx-self.swapX)==1
+                            sx==self.swapX and abs(sy-self.swapY)==1 or
+                            sy==self.swapY and abs(sx-self.swapX)==1
                         ) and (self.settings.multiMove or #self.movingGroups==0) then
-                        self:swap('action',self.swapX,self.swapY,sx-self.swapX,sy-self.swapY)
+                        self:swap(self.swapX,self.swapY,sx-self.swapX,sy-self.swapY)
                     else
                         self:freshSwapCursor()
                     end
@@ -508,165 +325,252 @@ end
 function AP:mouseUp(_,_,_)
     self.mousePressed=false
 end
-function AP:updateFrame()
+function AP:acryStateSwitch(acry,newS)
+    ---@cast acry Techmino.Acry.Cell
+    if newS then acry._newState=newS end
+    while acry._newState do
+        acry.state,acry._newState=acry._newState,nil
+        if acry.state=='idle' then
+            acry.biasX,acry.biasY=0,0
+            acry.fallSpeed=0
+            acry.stableTime=self.time
+            self:requestMatch(acry)
+        elseif acry.state=='fall' then
+            local y=acry.gridY
+            while y>1 and not self.field[y-1][acry.gridX] do
+                y=y-1
+            end
+            local dy=acry.gridY-y
+            if dy>0 then
+                self.field[acry.gridY][acry.gridX]=false
+                acry.gridY=y
+                self.field[acry.gridY][acry.gridX]=acry
+                acry.biasY=dy
+                acry.fallSpeed=0
+            else
+                acry._newState='idle'
+            end
+        elseif acry.state=='moveAhead' then
+            -- Done in AP:swap() & AP:twist()
+        elseif acry.state=='moveWait' then
+            acry.waitDelay=self.settings.waitDelay
+            acry.waitTimer=acry.waitDelay
+            ins(self.acryProcessQueue.movement,acry)
+        elseif acry.state=='moveBack' then
+            acry.moveDelay=acry.wallHit and self.settings.moveBackWallDelay or self.settings.moveBackDelay
+            acry.moveReadyDelay=acry.wallHit and 0 or self.settings.moveBackReadyDelay
+            acry.moveTimer=acry.moveDelay
+            ins(self.acryProcessQueue.backMovement,acry)
+        elseif acry.state=='clear' then
+            acry.clearDelay=self.settings.clearDelay
+            acry.clearTimer=acry.clearDelay
+        elseif acry.state=='_discard' then
+            self.field[acry.gridY][acry.gridX]=false
+        end
+        self:triggerAcryEvent(acry,acry.state)
+    end
+end
+function AP:tickStep()
     local SET=self.settings
 
-    -- Auto shift
-    if self.moveDirH and (self.moveDirH==-1 and self.keyState.moveLeft or self.moveDirH==1 and self.keyState.moveRight) then
-        if self.swapX~=MATH.clamp(self.swapX+self.moveDirH,1,self.settings.fieldSize) then
-            self.moveChargeH=self.moveChargeH+1
-            local dist=0
-            if self.moveChargeH>=SET.asd then
-                if SET.asp==0 then
-                    dist=1e99
-                elseif (self.moveChargeH-SET.asd)%SET.asp==0 then
-                    dist=1
-                end
-            end
-            if dist>0 then
-                local moved
-                local x0=self.swapX
-                self.swapX=MATH.clamp(self.swapX+self.moveDirH*dist,1,self.settings.fieldSize)
-                if self.swapX~=x0 then moved=true end
-                x0=self.twistX
-                self.twistX=MATH.clamp(self.twistX+self.moveDirH*dist,1,self.settings.fieldSize-1)
-                if self.twistX~=x0 then moved=true end
-                if moved then self:playSound('move') end
-            end
-        else
-            self.moveChargeH=SET.asd
-            self:shakeBoard(self.moveDirH>0 and '-right' or '-left')
-        end
-    else
-        self.moveDirH=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
-        self.moveChargeH=0
-    end
-    if self.moveDirV and (self.moveDirV==-1 and self.keyState.moveDown or self.moveDirV==1 and self.keyState.moveUp) then
-        if self.swapY~=MATH.clamp(self.swapY+self.moveDirV,1,self.settings.fieldSize) then
-            self.moveChargeV=self.moveChargeV+1
-            local dist=0
-            if self.moveChargeV>=SET.asd then
-                if SET.asp==0 then
-                    dist=1e99
-                elseif (self.moveChargeV-SET.asd)%SET.asp==0 then
-                    dist=1
-                end
-            end
-            if dist>0 then
-                local moved
-                local x0=self.swapY
-                self.swapY=MATH.clamp(self.swapY+self.moveDirV*dist,1,self.settings.fieldSize)
-                if self.swapY~=x0 then moved=true end
-                x0=self.twistY
-                self.twistY=MATH.clamp(self.twistY+self.moveDirV*dist,1,self.settings.fieldSize-1)
-                if self.twistY~=x0 then moved=true end
-                if moved then self:playSound('move') end
-            end
-        else
-            self.moveChargeV=SET.asd
-            self:shakeBoard(self.moveDirV>0 and '-up' or '-down')
-        end
-    else
-        self.moveDirV=self.keyState.moveDown and -1 or self.keyState.moveUp and 1 or false
-        self.moveChargeV=0
-    end
-
-    local F=self.field
-    local size=self.settings.fieldSize
-    local needFresh=false
-    local touch
-
-    -- Update moveTimer
-    for y=1,size do for x=1,size do local g=F[y][x] if g and g.moveTimer then
-        g.moveTimer=g.moveTimer-1
-        if g.moveTimer<=0 then
-            g.moveTimer,g.moveDelay=nil
-            g.dx,g.dy=nil
-            g.movable=true
-            g.needCheck=true
-            needFresh=true
-            if g.fall then
-                g.fall=nil
-                touch=true
-            end
-        end
-    end end end
-
-    -- Update movingGroups (check auto-move-back)
-    for i=#self.movingGroups,1,-1 do
-        local group=self.movingGroups[i]
-        local fin
-        local leagl=false
-        local posList=group.positions
-        for n=1,#posList,2 do
-            ---@type Techmino.Acry.Cell
-            local g=F[posList[n+1]][posList[n]]
-            if g.movable then
-                fin=true
-                if self:psedoCheckPos(posList[n],posList[n+1]) then
-                    leagl=true
-                end
-            end
-        end
-        if fin then
-            if group.force and not leagl then
-                self[group.mode](self,'auto',unpack(group.args))
-
-                self:triggerEvent('illegalMove',group.mode)
-
-            elseif leagl then
-
-                self:triggerEvent('legalMove',group.mode)
-
-            end
-            rem(self.movingGroups,i)
-        end
-    end
-
-    if touch then self:playSound('lock') end
-
-    -- Update needCheck
-    for y=1,size do for x=1,size do local g=F[y][x] if g and g.needCheck then
-        g.needCheck=nil
-        self:checkPosition(x,y)
-    end end end
-
-    -- Update clearTimer
-    for y=1,size do for x=1,size do local g=F[y][x] if g and g.clearTimer then
-        g.clearTimer=g.clearTimer-1
-        if g.clearTimer<=0 then
-            g.clearTimer=nil
-            self:erasePosition(x,y,g)
-            needFresh=true
-        end
-    end end end
-
-    -- Update movingGroups (check deestroyed)
-    for i=#self.movingGroups,1,-1 do
-        local group=self.movingGroups[i]
-        local posList=group.positions
-        for n=1,#posList,2 do
-            local g=F[posList[n+1]][posList[n]]
-            if not g then
-                for n2=1,#posList,2 do
-                    local g2=F[posList[n2+1]][posList[n2]]
-                    if g2 then
-                        g2.moveTimer=0
+    do -- Auto shift
+        if self.moveDirH and (self.moveDirH==-1 and self.keyState.moveLeft or self.moveDirH==1 and self.keyState.moveRight) then
+            if self.swapX~=MATH.clamp(self.swapX+self.moveDirH,1,self.settings.fieldSize) then
+                self.moveChargeH=self.moveChargeH+1
+                local dist=0
+                if self.moveChargeH>=SET.asd then
+                    if SET.asp==0 then
+                        dist=1e99
+                    elseif (self.moveChargeH-SET.asd)%SET.asp==0 then
+                        dist=1
                     end
                 end
-                break
+                if dist>0 then
+                    local moved
+                    local x0=self.swapX
+                    self.swapX=MATH.clamp(self.swapX+self.moveDirH*dist,1,self.settings.fieldSize)
+                    if self.swapX~=x0 then moved=true end
+                    x0=self.twistX
+                    self.twistX=MATH.clamp(self.twistX+self.moveDirH*dist,1,self.settings.fieldSize-1)
+                    if self.twistX~=x0 then moved=true end
+                    if moved then self:playSound('move') end
+                end
+            else
+                self.moveChargeH=SET.asd
+                self:shakeBoard(self.moveDirH>0 and '-right' or '-left')
+            end
+        else
+            self.moveDirH=self.keyState.moveLeft and -1 or self.keyState.moveRight and 1 or false
+            self.moveChargeH=0
+        end
+        if self.moveDirV and (self.moveDirV==-1 and self.keyState.moveDown or self.moveDirV==1 and self.keyState.moveUp) then
+            if self.swapY~=MATH.clamp(self.swapY+self.moveDirV,1,self.settings.fieldSize) then
+                self.moveChargeV=self.moveChargeV+1
+                local dist=0
+                if self.moveChargeV>=SET.asd then
+                    if SET.asp==0 then
+                        dist=1e99
+                    elseif (self.moveChargeV-SET.asd)%SET.asp==0 then
+                        dist=1
+                    end
+                end
+                if dist>0 then
+                    local moved
+                    local x0=self.swapY
+                    self.swapY=MATH.clamp(self.swapY+self.moveDirV*dist,1,self.settings.fieldSize)
+                    if self.swapY~=x0 then moved=true end
+                    x0=self.twistY
+                    self.twistY=MATH.clamp(self.twistY+self.moveDirV*dist,1,self.settings.fieldSize-1)
+                    if self.twistY~=x0 then moved=true end
+                    if moved then self:playSound('move') end
+                end
+            else
+                self.moveChargeV=SET.asd
+                self:shakeBoard(self.moveDirV>0 and '-up' or '-down')
+            end
+        else
+            self.moveDirV=self.keyState.moveDown and -1 or self.keyState.moveUp and 1 or false
+            self.moveChargeV=0
+        end
+    end
+
+    -- Update acries (Phase 1)
+    local F=self.field
+    local size=self.settings.fieldSize
+    for y=1,size do
+        for x=1,size do
+            ---@type Techmino.Acry.Cell
+            local acry=F[y][x]
+            if acry then
+                if acry.state=='idle' then
+                    -- Attempt to fall & match every tick
+                    if acry.gridY>1 then
+                        local under=F[acry.gridY-1][acry.gridX]
+                        if not under then
+                            acry._newState='fall'
+                        end
+                    -- else
+                    --     self:requestMatch(acry)
+                    end
+                elseif acry.state=='fall' then
+                    -- Fall animation (until biasY back to 0)
+                    acry.fallSpeed=acry.fallSpeed-self.settings.fallAcceleration
+                    acry.biasY=acry.biasY+acry.fallSpeed
+                    if acry.biasY<=0 then
+                        acry._newState='idle'
+                    end
+                elseif acry.state=='moveAhead' then
+                    -- The move ahead animation
+                    acry.moveTimer=acry.moveTimer-1
+                    local t=1-min(acry.moveTimer/(acry.moveDelay-acry.moveReadyDelay),1)
+                    acry.biasX=acry.moveDirection[1]*t
+                    acry.biasY=acry.moveDirection[2]*t
+                    if acry.moveTimer<=0 then
+                        if acry.wallHit then
+                            acry._newState='moveBack'
+                        else
+                            acry._newState='moveWait'
+                        end
+                    end
+                elseif acry.state=='moveBack' then
+                    -- The move back animation
+                    acry.moveTimer=acry.moveTimer-1
+                    local t=min(acry.moveTimer/(acry.moveDelay-acry.moveReadyDelay),1)
+                    acry.biasX=acry.moveDirection[1]*t
+                    acry.biasY=acry.moveDirection[2]*t
+                    if acry.moveTimer<=0 then
+                        acry._newState='idle'
+                    end
+                elseif acry.state=='moveWait' then
+                    -- Request match if stuck in 'moveWait' state, normally happen when doing BET
+                    -- state changing handled in :requestMatch
+                    self:requestMatch(acry)
+                elseif acry.state=='clear' then
+                    -- The clear animation
+                    acry.clearTimer=acry.clearTimer-1
+                    if acry.clearTimer<=0 then
+                        acry._newState='_discard'
+                    end
+                end
+                self:triggerAcryEvent(acry,'always')
+                if acry._newState then
+                    self:acryStateSwitch(acry)
+                end
             end
         end
     end
 
-    -- Check generations
-    while #self.generateBuffer>0 do
-        local gen=rem(self.generateBuffer,1)
-        F[gen.y][gen.x]=gen.acry
+    -- Update acries (Phase 2, process movement)
+    if self.acryProcessQueue.movement[1] then
+        local list=self.acryProcessQueue.movement
+        -- 1: Move
+        for i=1,#list do
+            local acry=list[i]
+            if acry.state=='moveWait' then
+                local oX,oY=acry.gridX,acry.gridY
+                local nX,nY=oX+acry.moveDirection[1],oY+acry.moveDirection[2]
+                acry.gridX,acry.gridY=nX,nY
+                acry.biasX,acry.biasY=0,0
+                if F[oY][oX]==acry then
+                    F[oY][oX]=false
+                end
+                F[nY][nX]=acry
+            else
+                error("Unexpected state in [movement]: "..acry.state)
+            end
+        end
+        -- 2: Check link
+        for i=1,#list do
+            local acry=list[i]
+            if acry.state=='moveWait' then
+                self:requestMatch(acry)
+                if acry._newState then
+                    self:acryStateSwitch(acry)
+                end
+            end
+        end
+        TABLE.clear(list)
     end
 
-    if needFresh then
-        self:freshAcry()
+    -- Update acries (Phase 3, process match)
+    if self.acryProcessQueue.match[1] then
+        local list=self.acryProcessQueue.match
+        for i=1,#list do
+            self:acryStateSwitch(list[i],'clear')
+        end
+        TABLE.clear(list)
+    end
+
+    -- Update acries (Phase 4, process backward movement for unmatched swaps)
+    if self.acryProcessQueue.backMovement[1] then
+        local list=self.acryProcessQueue.backMovement
+        for i=1,#list do
+            local acry=list[i]
+            if acry.state=='moveBack' then
+                if not acry.wallHit and acry.moveDirection[1]%1==0 and acry.moveDirection[2]%1==0 then
+                    local newX,newY=acry.gridX-acry.moveDirection[1],acry.gridY-acry.moveDirection[2]
+                    acry.gridX,acry.gridY=newX,newY
+                    acry.biasX,acry.biasY=acry.moveDirection[1],acry.moveDirection[2]
+                    F[newY][newX]=acry
+                end
+            else
+                error("Unexpected state in [movement]: "..acry.state)
+            end
+            if acry._newState then
+                self:acryStateSwitch(acry)
+            end
+        end
+        TABLE.clear(list)
+    end
+
+    -- Update acries (Phase 5, process explosion)
+    if self.acryProcessQueue.explosion[1] then
+        local list=self.acryProcessQueue.explosion
+        for i=1,#list do
+            local acry=list[i]
+            -- TODO
+        end
+        TABLE.clear(list)
     end
 
     -- Update garbage
@@ -674,6 +578,16 @@ function AP:updateFrame()
         local g=self.garbageBuffer[i]
         if g.mode==0 and g._time<g.time then
             g._time=g._time+1
+        end
+    end
+
+    if love.keyboard.isDown('f4') then
+        local acry=F[1][1]
+        if acry then
+            print("--------------------------")
+            print('state',acry.state)
+            print('gridX/Y',acry.gridX..','..acry.gridY)
+            print('biasX/Y',acry.biasX..','..acry.biasY)
         end
     end
 end
@@ -706,22 +620,27 @@ function AP:render()
             -- Grid & Cells
             skin.drawFieldBackground(SET.fieldSize)
 
-            do -- Field
-                local matrix=self.field
-                gc_push('transform')
+            FONT.set(10)
 
-                local width=SET.fieldSize
-                for y=1,#matrix do
-                    for x=1,#matrix[1] do
-                        local C=matrix[y][x]
-                        if C then
-                            skin.drawFieldCell(C,matrix,x,y)
-                        end
-                        gc_translate(45,0)
+            -- Field
+            local F=self.field
+            for y=1,#F do
+                for x=1,#F[1] do
+                    local acry=F[y][x]
+                    if acry then
+                        local ucsX,ucsY=45*(acry.gridX+acry.biasX-.5),-45*(acry.gridY+acry.biasY-.5)
+                        gc_translate(ucsX,ucsY)
+                        skin.drawFieldCell(acry,F)
+                        gc_translate(-ucsX,-ucsY)
+                        -- local txtX,txtY=45*(acry.gridX-.5),-45*(acry.gridY-.5)
+                        -- gc_setColor(1,1,1)
+                        -- gc.print(acry.id,txtX-20,txtY)
+                        -- gc.print(acry.state,txtX,txtY)
+                        -- if acry.moveTimer then
+                        --     gc.rectangle('fill',txtX-20,txtY-20,acry.moveTimer/20,5)
+                        -- end
                     end
-                    gc_translate(-45*width,-45) -- \r\n (Return + Newline)
                 end
-                gc_pop()
             end
 
             self:triggerEvent('drawInField') -- From frame's bottom-left, 45px a cell
@@ -781,22 +700,26 @@ end
 -- Builder
 
 ---@class Techmino.Mode.Setting.Acry
----@field event table<Techmino.EventName,Techmino.Event.Acry[]|Techmino.Event.Acry>
+---@field event? table<Techmino.EventName, Techmino.Event.Acry[] | Techmino.Event.Acry>
 local baseEnv={
     -- Size
     fieldSize=8,
 
-    -- "Sequence"
+    -- Generator
     colors=7,
+    clearRule='line',
     linkLen=3,
-    diagonalLinkLen=false,
-    refreshCount=0,
 
     -- Delay
     readyDelay=3000,
-    moveDelay=300,
-    clearDelay=500,
-    fallDelay=200,
+    moveAheadDelay=300,
+    moveBackDelay=450,
+    moveBackReadyDelay=100,
+    moveAheadWallDelay=60,
+    moveBackWallDelay=90,
+    waitDelay=5000,
+    clearDelay=250,
+    fallAcceleration=1/45000,
 
     -- Attack
     atkSys='none',
@@ -836,9 +759,7 @@ function AP.new(remote)
         gameStart={},
         gameOver={},
 
-        -- Drop
-        legalMove={},
-        illegalMove={},
+        -- Prop Event
 
         -- Update
         always={},
@@ -870,14 +791,14 @@ end
 function AP:initialize()
     require'basePlayer'.initialize(self)
 
-    self.field={}
-    for y=1,self.settings.fieldSize do
-        self.field[y]=TABLE.new(false,self.settings.fieldSize)
-    end
-    self:freshAcry()
-
     self.movingGroups={}
-    self.generateBuffer={}
+    ---@type Map<Techmino.Acry.Cell[]>
+    self.acryProcessQueue={
+        movement={},
+        match={},
+        backMovement={},
+        explosion={},
+    }
 
     self.mouseX,self.mouseY=false,false
     self.mousePressed=false
@@ -892,7 +813,19 @@ function AP:initialize()
 
     self.garbageBuffer={}
 
+    self.totalCellCount=0
+
+    local size=self.settings.fieldSize
+    local F=TABLE.newMat(false,size,size)
+    for y=1,size do for x=1,size do
+        F[y][x]=self:getAcry{gridX=x,gridY=y}
+    end end
+    self.field=F
+
     self:loadScript(self.settings.script)
+end
+function AP:unserialize_custom()
+    setmetatable(self.soundEvent,gameSoundFunc)
 end
 
 --------------------------------------------------------------

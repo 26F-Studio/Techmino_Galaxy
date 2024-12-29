@@ -11,6 +11,7 @@ return {
         maxFreshChance=1e99,
         maxFreshTime=1e99,
         readyDelay=0,
+        infHold=true,
         event={
             playerInit=function(P)
                 P.modeData.lineStay=0
@@ -20,7 +21,6 @@ return {
                 T.install(P)
                 T.add(P,'excavate_shale',     'modeTask_excavate_shale_title',     'modeTask_excavate_shale_desc')
                 T.add(P,'excavate_volcanics', 'modeTask_excavate_volcanics_title', 'modeTask_excavate_volcanics_desc')
-
                 if PROGRESS.getExteriorModeScore('excavate','showChecker') then
                     T.add(P,'excavate_checker','modeTask_excavate_checker_title','modeTask_excavate_checker_desc')
                 else
@@ -45,7 +45,7 @@ return {
                         if split then
                             T.set(P,'excavate_checker',true)
                             T.setTitle(P,'excavate_checker','modeTask_excavate_checker_title','modeTask_excavate_checker_desc')
-                            PROGRESS.setExteriorScore('excavate','showChecker',1)
+                            PROGRESS.setExteriorScore('excavate','showChecker',1,'>')
                             P.modeData.digMode='checker'
                             P.modeData.target.lineDig=8
                             P.modeData.lineStay=8
@@ -86,11 +86,11 @@ return {
                 end,
             },
             gameOver=function(P,reason)
-                if reason=='AC' then
+                if reason=='win' then
                     PROGRESS.setExteriorScore('dig',P.modeData.digMode,P.gameTime,'<')
 
                     if PROGRESS.getExteriorModeScore('excavate','shale') and PROGRESS.getExteriorModeScore('excavate','volcanics') then
-                        PROGRESS.setExteriorScore('excavate','showChecker',1)
+                        PROGRESS.setExteriorScore('excavate','showChecker',1,'>')
                     end
 
                     local playCount=PROGRESS.getExteriorModeScore('dig','playCount') or 0
@@ -101,7 +101,7 @@ return {
                     then
                         PROGRESS.setExteriorUnlock('backfire')
                     end
-                    PROGRESS.setExteriorScore('dig','playCount',playCount+1)
+                    PROGRESS.setExteriorScore('dig','playCount',playCount+1,'>')
                 end
             end,
         },

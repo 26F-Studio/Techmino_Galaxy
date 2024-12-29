@@ -2,6 +2,8 @@
 
 extern highp float time;
 
+const float MAX_ITERATIONS = 100.0;
+
 float hash(vec2 p)
 {
     float h = dot(p, vec2(127.1, 311.7));
@@ -33,8 +35,9 @@ float perlinNoise(vec2 p, float iteration)
 {
     float outValue = 0.0;
 
-    for (float i = 0.0; i < iteration; i += 1.0)
+    for (float i = 0.0; i < MAX_ITERATIONS; i += 1.0)
     {
+        if (i >= iteration) break;
         float freq = pow(2.0, i);
         float Amp = 1.0 / freq;
 

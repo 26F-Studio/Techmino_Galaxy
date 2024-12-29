@@ -221,7 +221,7 @@ local function _sunStencil()
     gc.rectangle('fill',-60,-440,120,120)
 end
 function scene.draw()
-    gc.scale(1600/1280)
+    gc.scale(SCR.w0/1280)
     gc.translate(0,80)
 
     -- Health bar

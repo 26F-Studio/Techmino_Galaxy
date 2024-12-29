@@ -55,7 +55,7 @@ function scene.keyDown(key,isRep)
             if hit[c]==0 then
                 hit[c]=1
                 count=count+1
-                comboSound(count+5)
+                gameSoundFunc.combo(count+5)
                 if count==side then
                     state=1
                     FMOD.effect('spin_0')

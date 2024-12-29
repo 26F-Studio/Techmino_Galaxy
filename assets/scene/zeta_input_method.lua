@@ -23,7 +23,7 @@ local time,quiting
 local writing
 local database
 local inputs,cheat
-local results
+local results={}
 
 local charQueue={}
 local function selChar(i)
@@ -106,7 +106,7 @@ local function freshResult()
         p=p+1
     end
 
-    results={}
+    TABLE.clear(results)
     for i=1,#list do
         local state=list[i]
         if state.step==maxStep and state.node[1] then
@@ -145,11 +145,11 @@ function scene.load()
     time,quiting=0,false
     writing=false
     inputs,cheat={},false
-    results={}
-    charQueue={}
+    TABLE.clear(results)
+    TABLE.clear(charQueue)
 
     if not database then
-        local data=STRING.split(FILE.load('datatable/stroke_data.txt'),'\n')
+        local data=FILE.load('datatable/stroke_data.txt'):split('\n')
         database={{},{},{},{},{},list={}}
         for i=1,#data do
             local char
@@ -158,7 +158,7 @@ function scene.load()
             local depth=0
             while true do
                 p.depth=depth
-                char,str=STRING.readChars(str,1)
+                char,str=str:readChars(1)
                 if char==' ' then
                     ins(p.list,str)
                     break
@@ -241,7 +241,7 @@ function scene.keyDown(k)
     elseif k=='backspace' then -- Delete a char
         rem(charQueue)
     elseif k=='delete' then -- Clear chars
-        charQueue={}
+        TABLE.clear(charQueue)
     elseif k=='return' then -- Confirm text
         quiting=charQueue
     elseif k=='space' then -- Select first char
@@ -347,6 +347,7 @@ function scene.draw()
     gc.replaceTransform(SCR.xOy)
     FONT.set(30,'bold')
     for i=1,#widgetList_ui do
+        ---@type Zenitha.Widget.button
         local w=widgetList_ui[i]
         gc.setColor(w.color)
         gc.print(uiKeyHint[i],w._x-w.w/2,w._y-w.h/2-40)
@@ -356,12 +357,12 @@ end
 scene.widgetList={}
 
 widgetList_ui={
-    WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-250,w=100, sound_trigger='button_soft',fontSize=80,color='LY',text=CHAR.key.backspace,code=WIDGET.c_pressKey'backspace'},
+    WIDGET.new{type='button',x=areaX+areaR+070,y=areaY+areaR-250,w=100, sound_trigger='button_soft',fontSize=80,color='LY',text=CHAR.key.backspace,code=WIDGET.c_pressKey'backspace'},
     WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-250,w=100,sound_trigger='button_soft',fontSize=80,color='LY',text=CHAR.key.mac_clear,code=WIDGET.c_pressKey'delete'},
     WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-250,w=100,sound_trigger='button_soft',fontSize=80,color='LY',text=CHAR.icon.check_circ,code=WIDGET.c_pressKey'return'},
-    WIDGET.new{type='button',x=areaX+areaR+70,y=areaY+areaR-50,w=100,  sound_trigger='button_soft',fontSize=80,text=CHAR.icon.back,code=WIDGET.c_pressKey'z'},
-    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-50,w=100, sound_trigger='button_soft',fontSize=80,text=CHAR.icon.delete,code=WIDGET.c_pressKey'x'},
-    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-50,w=100, sound_trigger='button_soft',fontSize=80,text=CHAR.icon.cross_big,code=WIDGET.c_pressKey'escape'},
+    WIDGET.new{type='button',x=areaX+areaR+070,y=areaY+areaR-50, w=100,  sound_trigger='button_soft',fontSize=80,text=CHAR.icon.back,code=WIDGET.c_pressKey'z'},
+    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-50, w=100, sound_trigger='button_soft',fontSize=80,text=CHAR.icon.delete,code=WIDGET.c_pressKey'x'},
+    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-50, w=100, sound_trigger='button_soft',fontSize=80,text=CHAR.icon.cross_big,code=WIDGET.c_pressKey'escape'},
 }
 local strokeSymbol={'一','丨','丿','丶','乚'}
 for i=1,#strokeSymbol do
@@ -376,7 +377,7 @@ for i=1,#strokeSymbol do
     ins(widgetList_ui,w)
 end
 
-TABLE.connect(scene.widgetList,widgetList_ui)
+TABLE.append(scene.widgetList,widgetList_ui)
 
 local fwSymbols={
     {'（','）','【','】','《','》'},

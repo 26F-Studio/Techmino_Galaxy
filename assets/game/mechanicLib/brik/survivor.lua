@@ -33,7 +33,7 @@ function survivor.scattered_event_always(P)
     if md.waveTimer>0 then
         md.waveTimer=min(md.waveTimer-1,(P.field:getHeight()+3*P.garbageSum)*260)
     end
-    if md.waveTimer==0 and P.garbageSum<=max(15-P.field:getHeight()/2,8) then
+    if md.waveTimer<=0 and P.garbageSum<=max(15-P.field:getHeight()/2,8) then
         md.wave=md.wave+1
 
         local wave=md.wave
@@ -67,7 +67,7 @@ function survivor.power_event_always(P)
     if md.waveTimer>0 then
         md.waveTimer=min(md.waveTimer-1,(P.field:getHeight()+3*P.garbageSum)*260)
     end
-    if md.waveTimer==0 and P.garbageSum<=max(20-P.field:getHeight(),12) then
+    if md.waveTimer<=0 and P.garbageSum<=max(20-P.field:getHeight(),12) then
         md.wave=md.wave+1
 
         local wave=md.wave
@@ -95,7 +95,7 @@ function survivor.spike_event_always(P)
     if md.waveTimer>0 then
         md.waveTimer=min(md.waveTimer-1,P.garbageSum*620)
     end
-    if md.waveTimer==0 and P.garbageSum<=10 then
+    if md.waveTimer<=0 and P.garbageSum<=10 then
         md.wave=md.wave+1
 
         local wave=md.wave

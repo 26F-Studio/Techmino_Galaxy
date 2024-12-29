@@ -124,9 +124,9 @@ do -- hypersonic (of course they are variations of marathon, aren't they?)
         P.modeData.maxHold=0
         P.modeData.storedAsd=P.settings.asd
         P.modeData.storedAsp=P.settings.asp
-        P.settings.initMove='hold'
-        P.settings.initRotate='hold'
-        P.settings.initHold='hold'
+        P.settings.bufferMove='hold'
+        P.settings.bufferRotate='hold'
+        P.settings.bufferHold='hold'
     end
 
     function marathon.hypersonic_event_afterSpawn(P)

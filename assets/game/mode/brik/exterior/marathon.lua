@@ -17,6 +17,7 @@ return {
                 end,
                 -- "P:setAction('func1',mechLib.brik.stack.switch_auto)",
             },
+            beforePress=mechLib.brik.misc.skipReadyWithHardDrop_beforePress,
             afterClear={
                 function(P)
                     if PROGRESS.getExteriorUnlock('allclear') then return true end
@@ -34,7 +35,7 @@ return {
                 end,
             },
             gameOver=function(P,reason)
-                if reason=='AC' then
+                if reason=='win' then
                     PROGRESS.setExteriorScore('marathon','main',P.gameTime,'<')
                     PROGRESS.setExteriorUnlock('hypersonic')
                 end

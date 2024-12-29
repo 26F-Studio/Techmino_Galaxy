@@ -335,7 +335,7 @@ local VCTRL={
 VCTRL.focus=false
 
 function VCTRL.reset()
-    touches={}
+    TABLE.clear(touches)
     VCTRL.focus=false
     for i=1,#VCTRL do
         VCTRL[i]:reset()
@@ -433,7 +433,7 @@ end
 
 function VCTRL.importSettings(data)
     if not data then return end
-    TABLE.clear(VCTRL)
+    TABLE.clearList(VCTRL)
     for i=1,#data do
         local w=data[i]
         VCTRL[i]=(

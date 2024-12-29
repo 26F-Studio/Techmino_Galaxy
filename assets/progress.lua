@@ -2,17 +2,24 @@ local gc=love.graphics
 
 --[[
     I/II:
-        Sum>=100 → II
+        Sum>=150 → II
         Single>=200 or Sum>=350 → III
 ]]
 local prgs=setmetatable({
     launchCount=0,
     main=1,
-    tutorial='000000',
     interiorScore={
         dig=0,
         sprint=0,
         marathon=0,
+        tutorial='1000', -- 0:Not Unlocked  1: Not Finished,  2: Passed,  3: Perfect Passed (unlock B side)
+        tuto5_score=0,
+        tuto5_time=2600e3,
+        tuto6_score=0,
+        tuto6_time=2600e3,
+        tuto7_score=0,
+        tuto7_time=2600e3,
+        tuto8_keys=260,
     },
     styles={
         brik=true,
@@ -29,9 +36,15 @@ local prgs=setmetatable({
 
     -- Utility
     musicTime=0,
+
+    -- Extra
+    TTGM={
+        stage=0,-- 0 = not unlocked, other = max level can start with
+        medal='00000000000000000000000000',
+    },
 },{
     __index=function(_,k)
-        LOG("Attempt to read undefined progress data: "..tostring(k))
+        LOG('warn',"Attempt to read undefined progress data: "..tostring(k))
     end,
 })
 
@@ -128,23 +141,45 @@ function PROGRESS.save(step)
     end
 end
 function PROGRESS.load()
-    local success,res=pcall(FILE.load,'conf/progress','-json -canskip')
-    if success then
-        if res then
-            TABLE.update(prgs,res)
-            -- if res.hash==getHash(res) then
-            --     TABLE.update(prgs,res)
-            -- else
-            --     MSG.new('info',"Hash not match")
-            -- end
-        end
-        prgs.launchCount=prgs.launchCount+1
-    else
-        MSG.new('info',"Load progress failed: "..res)
+    local suc,res=pcall(FILE.load,'conf/progress','-json -canskip')
+    if not suc then return MSG.log('info',"Load progress failed: "..tostring(res)) end
+    if res then
+        TABLE.update(prgs,res)
+        -- if res.hash==getHash(res) then
+        --     TABLE.update(prgs,res)
+        -- else
+        --     MSG('info',"Hash not match")
+        -- end
     end
+    prgs.launchCount=prgs.launchCount+1
 end
 function PROGRESS.fix()
+    if type(prgs.interiorScore.tutorial)=='table' then
+        prgs.interiorScore.tutorial='1000'
+        prgs.interiorScore.tuto5_score,prgs.interiorScore.tuto5_time=0,2600e3
+        prgs.interiorScore.tuto6_score,prgs.interiorScore.tuto6_time=0,2600e3
+        prgs.interiorScore.tuto7_score,prgs.interiorScore.tuto7_time=0,2600e3
+        prgs.interiorScore.tuto8_keys=260
+    end
+    for k in next,prgs.interiorScore do
+        if k:find("tuto_B") then
+            prgs.interiorScore[k]=nil
+        end
+    end
+    prgs.tutorial=nil
+    prgs.tuto5_score,prgs.tuto5_time=nil,nil
+    prgs.tuto6_score,prgs.tuto6_time=nil,nil
+    prgs.tuto7_score,prgs.tuto7_time=nil,nil
+    prgs.tuto8_keys=nil
     prgs.brik_stdMap=nil
+    prgs.secretFound.exterior_tspin_10TSS=nil
+    prgs.secretFound.exterior_tspin_10TST=nil
+    prgs.secretFound.dial_password=nil
+    prgs.secretFound.exterior_sprint_gunJumping=nil
+    if prgs.exteriorMap.tspin then
+        prgs.exteriorMap.tspin=nil
+        prgs.exteriorMap.spin={}
+    end
 end
 
 --------------------------------------------------------------
@@ -162,30 +197,42 @@ end
 function PROGRESS.applyCoolWaitTemplate()
     local list={}
     for i=1,52 do list[i]=('assets/image/loading/%d.png'):format(i) end
-    local success,z=pcall(gc.newArrayImage,list)
-    if success then
-        WAIT.setDefaultDraw(function(a,t)
-            GC.setBlendMode('add','alphamultiply')
-            GC.setColor(1,1,1,a)
-            GC.applyTransform(SCR.xOy_dr)
-            GC.mDrawL(z,
-                math.min(math.floor(t*60)%62,52)%52+1, -- floor(t*60)%62 → 0~61; min(ans) → 0~52~52; ans%52+1 → 1~52,1~1
-                -160,-150,nil,1.5*(1-(1-a)^2.6)
-            )
-            GC.setBlendMode('alpha')
-        end)
-    end
+    local suc,res=pcall(gc.newArrayImage,list)
+    if not suc then return LOG('warn',"Failed to create ArrayImage: "..tostring(res)) end
+    WAIT.setDefaultDraw(function(a,t)
+        GC.setBlendMode('add','alphamultiply')
+        GC.setColor(1,1,1,a)
+        GC.applyTransform(SCR.xOy_dr)
+        GC.mDrawL(res,
+            math.min(math.floor(t*60)%62,52)%52+1, -- floor(t*60)%62 → 0~61; min(ans) → 0~52~52; ans%52+1 → 1~52,1~1
+            -160,-150,nil,1.5*(1-(1-a)^2.6)
+        )
+        GC.setBlendMode('alpha')
+    end)
 end
 function PROGRESS.applyInteriorBG() BG.set('none') end
 function PROGRESS.applyExteriorBG() BG.set(prgs.main==3 and 'space' or 'galaxy') end
-function PROGRESS.applyInteriorBGM() playBgm('blank',prgs.main~=1) end
+
+local function fuse()
+    repeat TASK.yieldT(6.26) until SCN.cur~='main_in'
+    FMOD.effect.keyOff('music_glitch')
+    TASK.unlock('musicroom_glitchFX')
+end
+function PROGRESS.applyInteriorBGM()
+    playBgm('blank',prgs.main~=1)
+    if prgs.main>=3 then
+        FMOD.effect('music_glitch')
+        TASK.removeTask_code(fuse)
+        TASK.new(fuse)
+    end
+end
 function PROGRESS.applyExteriorBGM()
     if prgs.main==3 then
         playBgm('vacuum')
     else
         if love.timer.getTime()>3.55 and getBgm()~='singularity' then
             playBgm('singularity')
-            FMOD.music.seek(5.25)
+            FMOD.music.seek(3.9)
         end
     end
 end
@@ -195,7 +242,7 @@ function PROGRESS.applyEnv(env)
         PROGRESS.applyInteriorBGM()
         ZENITHA.globalEvent.touchClick=NULL
         ZENITHA.globalEvent.mouseDown=function(x,y) SYSFX.rectRipple(.26,x-10,y-10,20,20) end
-        function ZENITHA.globalEvent.drawCursor(_,x,y)
+        function ZENITHA.globalEvent.drawCursor(x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)
                 gc.setLineWidth(2)
@@ -219,7 +266,7 @@ function PROGRESS.applyEnv(env)
             else             SYSFX.ripple(.26,x,y,26,.62,1,1)
             end
         end
-        function ZENITHA.globalEvent.drawCursor(_,x,y)
+        function ZENITHA.globalEvent.drawCursor(x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)
                 gc.setLineWidth(2)
@@ -288,9 +335,9 @@ function PROGRESS.transcendTo(n)
                     PROGRESS.applyCoolWaitTemplate()
                     WAIT.interrupt()
                     TASK.new(function()
-                        MSG.new('warn',Text.interior_crash,10)
+                        MSG('warn',Text.interior_crash,10)
                         TASK.yieldT(3)
-                        MSG.new('info',Text.booting_changed,7)
+                        MSG('info',Text.booting_changed,7)
                     end)
                 end
             end,
@@ -396,9 +443,9 @@ function PROGRESS.getBgmUnlocked(name) return prgs.bgmUnlocked[name] end
 function PROGRESS.getStyleUnlock(style) return prgs.styles[style] end
 function PROGRESS.getTutorialPassed(n)
     if n then
-        return prgs.tutorial:sub(n,n)=='1'
+        return tonumber(prgs.interiorScore.tutorial:sub(n,n))
     else
-        return prgs.tutorial=='111111'
+        return not prgs.interiorScore.tutorial:find('[01]')
     end
 end
 function PROGRESS.getInteriorScore(mode) return prgs.interiorScore[mode] end
@@ -420,9 +467,13 @@ function PROGRESS.setMain(n)
         while prgs.main<n do
             prgs.main=prgs.main+1
             if prgs.main==2 then
-                prgs.tutorial='111'..prgs.tutorial:sub(4)
+                prgs.interiorScore.tutorial=prgs.interiorScore.tutorial:gsub('0','1')
             elseif prgs.main==3 then
-                prgs.tutorial='111111'
+                prgs.interiorScore.tutorial=prgs.interiorScore.tutorial:gsub('[01]','2')
+            elseif prgs.main==4 then
+                -- ?
+            elseif prgs.main==5 then
+                -- ?
             end
         end
         PROGRESS.save()
@@ -439,7 +490,7 @@ function PROGRESS.setBgmUnlocked(name,state)
     if newState>(prgs.bgmUnlocked[name] or 0) then
         prgs.bgmUnlocked[name]=newState
         if prgs.main>=3 then
-            MSG.new('collect',Text.bgm_collected:repD(SONGBOOK[name].title))
+            MSG('collect',Text.bgm_collected:repD(SONGBOOK[name].title))
         end
         PROGRESS.save()
     end
@@ -453,15 +504,18 @@ function PROGRESS.setStyleUnlock(style)
         PROGRESS.save()
     end
 end
-function PROGRESS.setTutorialPassed(n)
-    if prgs.tutorial:sub(n,n)=='0' then
-        prgs.tutorial=prgs.tutorial:sub(1,n-1)..'1'..prgs.tutorial:sub(n+1)
+function PROGRESS.setTutorialPassed(n,v)
+    local l=STRING.atomize(prgs.interiorScore.tutorial)
+    if v>tonumber(l[n]) then
+        l[n]=v
+        prgs.interiorScore.tutorial=table.concat(l)
         PROGRESS.save()
     end
 end
-function PROGRESS.setInteriorScore(mode,score)
-    score=MATH.clamp(math.floor(score),0,200)
-    if score>prgs.interiorScore[mode] then
+---@param sign? '<' | '>' #default to `'>'` bigger=better, `'<'` smaller=better
+function PROGRESS.setInteriorScore(mode,score,sign)
+    sign=sign or '>'
+    if not prgs.interiorScore[mode] or sign=='>' and score>prgs.interiorScore[mode] or sign=='<' and score<prgs.interiorScore[mode] then
         prgs.interiorScore[mode]=score
         PROGRESS.save()
     end
@@ -482,10 +536,10 @@ end
 ---@param mode Techmino.ModeName
 ---@param key string
 ---@param value number
----@param sign? '<'|'>' #default to `'>'` bigger=better, `'<'` smaller=better
+---@param sign? '>' | '<' `'>'` bigger=better, `'<'` smaller=better
 ---@return boolean success
 function PROGRESS.setExteriorScore(mode,key,value,sign)
-    sign=sign or '>'
+    assert(sign=='<' or sign=='>',"Saving condition required '<'|'>'")
     local data=prgs.exteriorMap[mode]
     if not data then
         data={}
@@ -511,7 +565,7 @@ function PROGRESS.setSecret(id)
         FMOD.effect('unlock_secret')
         prgs.secretFound[id]=1
         if rawget(Text.achievementMessage,id) then
-            MSG.new('achievement',Text.achievementMessage[id])
+            MSG('achievement',Text.achievementMessage[id])
         end
         PROGRESS.save()
         return true

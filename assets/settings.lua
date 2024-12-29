@@ -10,7 +10,7 @@ local settings={
         fmod_loadMemory=true,
         fmod_maxChannel=32,
         fmod_DSPBufferCount=4,
-        fmod_DSPBufferLength=8,
+        fmod_DSPBufferLength=256,
 
         -- Video
         hitWavePower=.6,
@@ -22,7 +22,7 @@ local settings={
         msaa=4,
 
         -- Gameplay
-        touchControl=false,
+        touchControl=MOBILE,
 
         -- Other
         powerInfo=true,
@@ -41,6 +41,11 @@ local settings={
 
         -- Video
         shakeness=.6,
+        palette={
+            844,484,448,864,748,884,488,
+            844,484,845,485,468,854,748,684,488,847,884,448,864,468,854,846,486,884,
+            478,748,854,484,
+        },
     },
     game_gela={
         -- Handling

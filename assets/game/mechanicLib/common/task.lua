@@ -7,8 +7,8 @@ local task={}
 ---@field title string
 ---@field desc string?
 ---@field progress string? progress text, like "1/10"
----@field value number 0-1
----@field valueShow number 0-1
+---@field value number 0~1
+---@field valueShow number 0~1
 ---@field changing boolean
 ---@field achieved boolean
 ---@field achievedTimer integer
@@ -22,10 +22,10 @@ end
 
 ---@param P Techmino.Player
 ---@param id string
----@param title string
----@param desc string
----@param progress? string
----@param value? number|true
+---@param title string title text
+---@param desc string description text
+---@param progress? string progress text
+---@param value? number | true bar value (true for finished)
 function task.add(P,id,title,desc,progress,value)
     table.insert(P.modeData.task,{
         id=id,
@@ -42,7 +42,7 @@ end
 
 ---@param P Techmino.Player
 ---@param id string
----@param value number|true
+---@param value number | true
 ---@param progress? string
 function task.set(P,id,value,progress)
     ---@type Techmino.PlayerModeData.TaskObj

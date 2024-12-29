@@ -20,7 +20,7 @@ local GP=setmetatable({},{__index=require'basePlayer',__metatable=true})
 --------------------------------------------------------------
 -- Function tables
 
----@type Map<fun(P:Techmino.Player.Gela):any>
+---@type Map<fun(P:Techmino.Player.Gela): any>
 GP.scriptCmd={
 }
 
@@ -115,7 +115,7 @@ end
 --------------------------------------------------------------
 -- Game methods
 
----@param action 'moveX'|'moveY'|'drop'|'rotate'|'reset'
+---@param action 'moveX' | 'moveY' | 'drop' | 'rotate' | 'reset'
 function GP:moveHand(action,A,B,C)
     --[[
         moveX:  dx,noShade
@@ -236,14 +236,14 @@ function GP:resetPosCheck()
             end
 
             -- Suffocate IRS
-            if SET.initRotate then
-                if SET.initRotate=='hold' then
+            if SET.bufferRotate then
+                if SET.bufferRotate=='hold' then
                     if self.keyState.rotate180 then
                         self:rotate('F',true)
                     elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                         self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                     end
-                elseif SET.initRotate=='buffer' then
+                elseif SET.bufferRotate=='buffer' then
                     if self.keyBuffer.rotate then
                         self:rotate(self.keyBuffer.rotate,true)
                         if not self.keyBuffer.hold then
@@ -272,17 +272,17 @@ function GP:resetPosCheck()
         end
     else
         -- IMS
-        if SET.initMove then
-            if SET.initMove=='hold' then
+        if SET.bufferMove then
+            if SET.bufferMove=='hold' then
                 if self.keyState.softDrop then self:moveDown() end
                 if self.keyState.moveRight~=self.keyState.moveLeft then
-                    local origY=self.handY -- For canceling 20G effect of IMS
+                    local origY=self.handY -- For canceling infG effect of IMS
                     if self.keyState.moveRight then self:moveRight() else self:moveLeft() end
                     self.handY=origY
                 end
-            elseif SET.initMove=='buffer' then
+            elseif SET.bufferMove=='buffer' then
                 if self.keyBuffer.move then
-                    local origY=self.handY -- For canceling 20G effect of IMS
+                    local origY=self.handY -- For canceling infG effect of IMS
                     if self.keyBuffer.move=='L' then
                         self:moveLeft()
                     elseif self.keyBuffer.move=='R' then
@@ -295,14 +295,14 @@ function GP:resetPosCheck()
         end
 
         -- IRS
-        if SET.initRotate then
-            if SET.initRotate=='hold' then
+        if SET.bufferRotate then
+            if SET.bufferRotate=='hold' then
                 if self.keyState.rotate180 then
                     self:rotate('F',true)
                 elseif self.keyState.rotateCW~=self.keyState.rotateCCW then
                     self:rotate(self.keyState.rotateCW and 'R' or 'L',true)
                 end
-            elseif SET.initRotate=='buffer' then
+            elseif SET.bufferRotate=='buffer' then
                 if self.keyBuffer.rotate then
                     self:rotate(self.keyBuffer.rotate,true)
                     if not self.keyBuffer.hold then
@@ -332,8 +332,8 @@ function GP:freshGhost()
             self.ghostY=self.ghostY-1
         end
 
-        -- 20G check
-        if (self.settings.dropDelay<=0 or self.downCharge and self.settings.asp==0) and self.ghostY<self.handY then -- if (temp) 20G on
+        -- infG check
+        if (self.settings.dropDelay<=0 or self.downCharge and self.settings.asp==0) and self.ghostY<self.handY then -- if (temp) infG on
             local dY=self.ghostY-self.handY
             self:moveHand('drop',dY)
             self:freshDelay('drop')
@@ -362,7 +362,7 @@ local freshRuleMap={
     drop=  {any='F',fall='S',never='_'},
     spawn= {any='R',fall='R',never='R'},
 }
----@param reason 'move'|'rotate'|'moving'|'drop'|'spawn'
+---@param reason 'move' | 'rotate' | 'moving' | 'drop' | 'spawn'
 function GP:freshDelay(reason)
     local fell=self.handY<self.minY
     if fell then self.minY=self.handY end
@@ -455,7 +455,7 @@ function GP:popNext()
         self.hand=rem(self.nextQueue,1)
         self:freshNextQueue()
     else -- If no piece to use, Next queue are empty, game over
-        self:finish('exahust')
+        self:finish('exhaust')
         return
     end
 
@@ -798,7 +798,7 @@ function GP:checkClear()
             self:checkPosition(x,y)
         end
     end end
-    if #self.clearingGroups>0 then
+    if self.clearingGroups[1] then
         self:playSound('desuffocate')
         if SET.clearDelay<=0 then
             self:doClear()
@@ -960,7 +960,7 @@ end
 --------------------------------------------------------------
 -- Press & Release & Update & Render
 
-function GP:updateFrame()
+function GP:tickStep()
     local SET=self.settings
 
     -- Hard-drop lock
@@ -1117,7 +1117,7 @@ function GP:updateFrame()
                     if self.dropTimer<=0 then
                         self:moveHand('drop',-1,true)
                     end
-                elseif self.handY~=self.ghostY then -- If switch to 20G during game, gela won't dropped to bottom instantly so we force fresh it
+                elseif self.handY~=self.ghostY then -- If switch to infG during game, gela won't dropped to bottom instantly so we force fresh it
                     self:freshDelay('drop')
                 end
             end
@@ -1388,10 +1388,10 @@ end
 -- Builder
 
 ---@class Techmino.Mode.Setting.Gela
----@field event table<Techmino.EventName,Techmino.Event.Gela[]|Techmino.Event.Gela>
+---@field event? table<Techmino.EventName, Techmino.Event.Gela[] | Techmino.Event.Gela>
 local baseEnv={
     -- Size
-    fieldW=6, -- [WARNING] This is not the real field width, just for generate field object. Change real field size with 'self:changeFieldWidth'
+    fieldW=6, -- [WARNING] This is read-only field width. Change real field size with 'self:changeFieldWidth'
     spawnH=11,
     lockoutH=1e99,
     deathH=1e99,
@@ -1399,13 +1399,13 @@ local baseEnv={
     connH=12, -- Default to 12
 
     -- Color
-    colorSet='classic', ---@type string|table
+    colorSet='classic', ---@type string | table
     colorShuffleRange=5,
 
     -- Clear
     clearGroupSize=4,
 
-    -- Sequence
+    -- Generator
     seqType='twin_2S4C',
     maxOpeningLength=2,
     maxOpeningColor=3,
@@ -1449,8 +1449,8 @@ local baseEnv={
     dblMoveRelInvChrg='reset',
     dblMoveRelInvStep=true,
     dblMoveRelInvRedir=true,
-    initMove='buffer',
-    initRotate='buffer',
+    bufferMove='buffer',
+    bufferRotate='buffer',
     aHdLock=60,
     mHdLock=40,
     freshLockInASD=true,
@@ -1564,7 +1564,7 @@ function GP:initialize()
     self.freshChance=self.settings.maxFreshChance
     self.freshTime=0
 
-    ---@type Techmino.Hand|false
+    ---@type Techmino.Piece | false
     self.hand=false
     self.handX=false
     self.handY=false
@@ -1587,6 +1587,9 @@ function GP:initialize()
     self.clearHistory={} -- TODO: not used
 
     self:loadScript(self.settings.script)
+end
+function GP:unserialize_custom()
+    setmetatable(self.soundEvent,gameSoundFunc)
 end
 
 --------------------------------------------------------------

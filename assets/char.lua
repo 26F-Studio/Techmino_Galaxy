@@ -360,11 +360,11 @@ for packName,set in next,L do
         setmetatable(set,{
             __index=function(t,k)
                 t[k]='?'
-                print("char set '"..packName.."' has no char '"..k.."'")
+                LOG('warn',"char set '"..packName.."' has no char '"..k.."'")
             end
         })
         for name,code in next,set do
-            set[name]=STRING.UTF8(tonumber(code,16))
+            set[name]=STRING.u8char(tonumber(code,16))
         end
     end
 end

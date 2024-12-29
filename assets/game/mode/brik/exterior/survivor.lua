@@ -36,7 +36,6 @@ return {
                     T.install(P)
                     T.add(P,'survivor_scattered','modeTask_survivor_scattered_title','modeTask_survivor_scattered_desc')
                     T.add(P,'survivor_power','modeTask_survivor_power_title','modeTask_survivor_power_desc')
-
                     if PROGRESS.getExteriorModeScore('survivor','showSpike') then
                         T.add(P,'survivor_spike','modeTask_survivor_spike_title','modeTask_survivor_spike_desc')
                     end
@@ -49,7 +48,7 @@ return {
                     table.remove(P.modeData.lastPieceWave,1)
                     table.insert(P.modeData.lastPieceWave,P.modeData.wave)
                     if P.modeData.lastPieceWave[1]%10==0 then
-                        PROGRESS.setExteriorScore('survivor',P.modeData.subMode,P.modeData.lastPieceWave[1])
+                        PROGRESS.setExteriorScore('survivor',P.modeData.subMode,P.modeData.lastPieceWave[1],'>')
                     end
                 end
             end,
@@ -67,7 +66,7 @@ return {
                             T.set(P,'survivor_spike',P.stat.atk/8,("($1/8)"):repD(P.stat.atk))
                         end
                         T.set(P,'survivor_spike',true)
-                        PROGRESS.setExteriorScore('survivor','showSpike',1)
+                        PROGRESS.setExteriorScore('survivor','showSpike',1,'>')
                         P.modeData.subMode='spike'
                         P.settings.dropDelay=260
                         P.settings.maxFreshChance=10
@@ -108,9 +107,9 @@ return {
             end,
             gameOver=function(P)
                 if P.modeData.subMode then
-                    PROGRESS.setExteriorScore('survivor',P.modeData.subMode,P.modeData.lastPieceWave[1])
+                    PROGRESS.setExteriorScore('survivor',P.modeData.subMode,P.modeData.lastPieceWave[1],'>')
                     if P.modeData.subMode=='power' then
-                        PROGRESS.setExteriorScore('survivor','showSpike',1)
+                        PROGRESS.setExteriorScore('survivor','showSpike',1,'>')
                     end
                 end
             end,
