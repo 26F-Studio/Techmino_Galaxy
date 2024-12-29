@@ -1,5 +1,4 @@
 local gc=love.graphics
-local buffer=require"string.buffer"
 
 ---@class Techmino.RectField
 ---@field _width number
@@ -33,7 +32,7 @@ function F:export_table_simp()
     return t
 end
 function F:export_string_simp()
-    local buf=buffer.new((self._width+1)*#self._matrix)
+    local buf=STRING.newBuf((self._width+1)*#self._matrix)
 
     for y=1,#self._matrix do
         for x=1,self._width do
@@ -45,7 +44,7 @@ function F:export_string_simp()
     return buf:get()
 end
 function F:export_string_color()
-    local buf=buffer.new((self._width*2+1)*#self._matrix)
+    local buf=STRING.newBuf((self._width*2+1)*#self._matrix)
 
     for y=1,#self._matrix do
         for x=1,self._width do
