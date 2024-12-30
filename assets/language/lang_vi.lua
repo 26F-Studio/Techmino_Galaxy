@@ -1,3 +1,10 @@
+--[[
+    If you want to contribute translations, play and unlock "Exterior" chapter first
+    Try keeping all language files have same line count, will make translators easier to find what's missing
+    You can check if there are missing strings by "Ctrl + [Pick a Language]"
+    Don't ignore the "TRASLATING NOTE" mark, it's necessary to be accurate because there's lore and memes
+    Ask MrZ for more information if you cannot fully understand the text, don't worry about disturbing me!
+]]
 return {
     -- Info
     sureText={
@@ -12,7 +19,13 @@ return {
     booting_changed="Phát hiện tệp boot hiện tại bị hỏng, đã thay thế bằng file dự phòng!",
     musicroom_lowVolume="Vặn âm lượng nhạc nền lên đi! (Ở dưới góc phải màn hình đấy!)",
     bgm_collected="Nhạc nền mới: $1",
-    autoGC="[TRÌNH DỌN RÁC TỰ ĐỘNG] RAM đang gần đầy!",
+    autoGC="[TRÌNH DỌN RÁC TỰ ĐỘNG] Thanh RAM đang đầy!",
+    batteryWarn={
+        "Gặp lại bạn sau nhé!",
+        "Sắp hết pin rồi, coi chừng popup nó nhảy tùm lum kìa!",
+        "Ựa, pin gần cạn rồi, bạn nên đi sạc đi!",
+        "Pin cạn rồi trời ơi! Máy sẽ sập nguồn trong vài giây nữa!"
+    },
 
     -- In-Game
     clearName={
@@ -53,16 +66,19 @@ return {
 
     target_piece="Gạch",
     target_line="Hàng",
+    target_key="Lần bấm nút",
     target_time="T.gian",
+    target_score="Điểm",
+    target_combo="Combo",
     target_ac="AC",
     target_hc="HC",
     target_tss="TSS",
     target_tsd="TSD",
     target_tst="TST",
     target_tsq="TS?",
+    target_tspin="T-Spin",
     target_techrash="Techrash",
     target_wave="Đợt tấn công",
-    target_score="Điểm",
 
     -- About-Game
     pause="Đã tạm dừng",
@@ -73,13 +89,14 @@ return {
     button_back="Trở về",
 
     simulation_title="Trình giả lập",
-    graph_mino_title="M-Graph",   -- from "Knowledge Graph" (AI domain), it used to be translated to "M-Graph (Bản đồ Mino)" and "M-Graph (Đồ thị Mino)"
+    graph_brik_title="M-Graph",   -- from "Knowledge Graph" (AI domain), it used to be translated to "M-Graph (Bản đồ Mino)" and "M-Graph (Đồ thị Mino)"
     settings_title="Cài đặt",
 
-    setting_asd="ASD",
-    setting_asp="ASP",
-    setting_ash="AS Halt",
-    setting_softdropSkipAsd="Bỏ qua Drop Delay",
+    setting_hint_asd="Auto Shift Delay\nThời gian gạch cần chờ để xác nhận có tự động di chuyển hay không",    -- Add translation with \n[second line]
+    setting_hint_asp="Auto Shift Period\nTốc độ tự di chuyển của gạch (tính bằng ms/ô)",   -- Add translation with \n[second line]
+    setting_hint_adp="Auto Drop Period\nTốc độ tự thả nhẹ của gạch (tính bằng ms/ô)",    -- Add translation with \n[second line]
+    setting_hint_ash="Auto Shift Halt\nNên hoãn IMS khoảng thời gian bao lâu\ntính từ khi gạch mới xuất hiện",     -- Add translation with \n[second line]
+    setting_softdropSkipAsd="Bỏ qua Drop Delay (thời gian gạch cần chờ\nđể xác nhận có tự thả rơi hay không)",
     setting_shakeness="Độ lắc bảng",
     setting_hitWavePower="Hitwave Power",
 
@@ -104,9 +121,9 @@ return {
     setting_autoMute="Tắt tiếng khi ở ngoài game",
     setting_showTouch="Hiện vị trí vừa chạm",
 
-    setting_maxFPS="FPS tối đa",
-    setting_updRate="Tần suất phản hồi",
-    setting_drawRate="Tần suất khung hình",
+    setting_maxTPS="FPS tối đa",
+    setting_updateRate="Tần suất chạy logic",
+    setting_renderRate="Tần suất vẽ khung hình",
     setting_msaa="MSAA - Khử răng cưa",
     setting_fmod_maxChannel="Số kênh âm thanh tối đa",
     setting_fmod_DSPBufferCount="Số lượng bộ đệm âm thanh",
@@ -116,7 +133,7 @@ return {
     lang_note="Tiếng Trung giản thể là ngôn ngữ gốc của game này. Bản dịch này được dịch từ bản tiếng Anh\nCác bản dịch được các tình nguyện viên đóng góp và chúng có thể không chính xác 100%\nCó một số thuật ngữ không được dịch trực tiếp trong game. Vui lòng tra Zictionary để tìm hiểu thêm",
 
     -- GHI CHÚ: Viết hoa các từ chỉ hướng!
-    title_keyset="Bố cục phím",
+    keyset_title=           "Bố cục phím",
     keyset_brik_moveLeft=   "Sang Trái",
     keyset_brik_moveRight=  "Sang Phải",
     keyset_brik_rotateCW=   "Xoay Phải",
@@ -147,6 +164,7 @@ return {
     keyset_acry_moveRight=   "Sang phải",
     keyset_acry_moveUp=      "Đi Lên",
     keyset_acry_moveDown=    "Đi Xuống",
+    keyset_acry_skip=       "Bỏ qua",
 
     keyset_func1= "Chức năng 1",
     keyset_func2= "Chức năng 2",
@@ -175,7 +193,8 @@ return {
     stick4_switch="Cần điều khiển\n4 hướng",
     setting_touch_button="Thêm/Xóa phím",
     setting_touch_buttonSize="Kích thước phím",
-    settinh_touch_buttonShape="Đổi hình dạng phím",
+    setting_touch_iconSize="Kích thước biểu tượng",
+    setting_touch_buttonShape="Đổi hình dạng phím",
     setting_touch_stickSize="Chiều dài",
     setting_touch_ballSize="Kích thước",
 
@@ -201,7 +220,6 @@ return {
     musicroom_autoplay="Tự động đổi bài",
 
     about_title="Giới thiệu",
-    about_love="Z-UI được chạy bằng LÖVE",
     about_module="Module:",
     about_toolchain="Toolchain:",
     about_peopleLost="Bạn vừa bỏ qua $1!",
@@ -210,8 +228,8 @@ return {
     exteriorModeInfo={ -- TRASLATING NOTE: Unnecessary to be accurate, try to quote some short proverbs in your language
         sprint=           {"Sprint"    ,"Tốc độ là TRÊN HẾT!"},
         sequence=         {"Sequence"  ,"Sẵn sàng cho những chuỗi gạch quái gở chưa nào?"},
-        hidden=           {"Hidden"    ,"Như biến mất trong hư vô..."},
-        tspin=            {"T-Spin"    ,"Bạn sẽ làm được bao nhiêu T-spin đây?"},
+        invis=            {"Invis"     ,"Như biến mất trong hư vô..."},
+        spin=             {"Spin"      ,"Quay đều, quay đều, quay đều..."},
         marathon=         {"Marathon"  ,"Đối đầu với tốc độ tăng dần"},
         allclear=         {"All Clear" ,"\"Thuốc nổ\" trong game nào đó vẫn chưa bằng cái này đâu!"},
         combo=            {"Combo"     ,"Ai ai cũng thích combo,\nnhà nhà đều yêu combo!"},
@@ -227,8 +245,8 @@ return {
     },
 
     -- Submode Task Texts
-    modeTask_question_title="???",
-    modeTask_question_desc="??????",
+    modeTask_unknown_title="???",
+    modeTask_unknown_desc="??????",
 
     modeTask_spin_piece_title="Piece",
     modeTask_spin_piece_desc="Làm một T-spin Đơn",
@@ -274,14 +292,14 @@ return {
     modeTask_excavate_unknown_desc="Đào khi ???",
 
     modeTask_backfire_break_title="Scattered",
-    modeTask_backfire_cheese_desc="Xóa 8 hàng",
+    modeTask_backfire_break_desc="Xóa 8 hàng",
     modeTask_backfire_normal_title="Normal",
     modeTask_backfire_normal_desc="Gửi 7 hàng trong 6 hàng",
     modeTask_backfire_amplify_title="Amplify",
     modeTask_backfire_amplify_desc="Gửi 8 hàng trong 4 hàng",
 
-    modeTask_survivor_cheese_title="Scattered",
-    modeTask_survivor_cheese_desc="Gửi 8 hàng",
+    modeTask_survivor_scattered_title="Scattered",
+    modeTask_survivor_scattered_desc="Gửi 8 hàng",
     modeTask_survivor_power_title="Power",
     modeTask_survivor_power_desc="Gửi 8 hàng với 1 Eff",
     modeTask_survivor_spike_title="Spike",
@@ -292,18 +310,16 @@ return {
     achievementMessage={
         dict_shortcut="Chuyên gia Phím tắt",
         exterior_spin_howDareYou="Sao ngươi dám?",
-        exterior_invis_superBrain="Siêu Trí tuệ Việt Nam!",
         exterior_excavate_notDig="Mày đang làm gì đấy?",
-        exterior_hidden_superBrain="NGẦU QUÁ!",
-        exterior_sprint_SZOpen="Bạn muốn mở màn bằng SZO à?",
-        exterior_tspin_10TSS="Cái gì đây?",
+        exterior_invis_superBrain="Siêu Trí tuệ Việt Nam!",
+        exterior_invis_rhythmMaster="To the beat!", -- Keep this as it is. Original from "osu!" title music
+        exterior_hypersonic_holdlessTitan="Nút Giữ: \"Bạn đang quên sự tồn tại của mình à? (sob)\"",
         language_japanese="あ? (a?)",
-        exterior_tspin_10TST="EZ.",
-        exterior_hypersonic_titanium_holdless="Nút Giữ: \"Bạn đang quên sự tồn tại của mình à? (sob)\"",
-        interior_console="Cái này là cái gì đây?",
-        musicroom_recollection="Không có bài nhạc nào tên là \"Hồi tưởng\" cả!",
+        interior_console="Cái thứ quái đản này là gì thế?",
+        musicroom_recollection="Không có bài hát nào tên là \"Hồi tưởng\" cả!",
+        musicroom_piano="Anh hẹn em piano\nChúng ta cùng piano!", -- Pickleball troll? XD
         dial_enter="Nhạc... nhạc cụ?",
-        dial_password="Mật khẩu đúng rồi đấy!",
+        menu_fastype="Ông thích đánh máy lắm à?",
     },
     -- Level
     tutorial_basic="1. Những thứ cơ bản",
@@ -328,6 +344,44 @@ return {
     tutorial_sequence_2="Trời ạ, cái gạch này không lọt khít với cái hố rồi…",
     tutorial_sequence_3="Bây giờ bạn có thể nhìn thấy những gạch nào chuẩn bị rơi theo lần lượt.",
     tutorial_sequence_4="Hãy dùng phím \"Giữ gạch\" để điều chỉnh thứ tự của các gạch.",
+
+    tutorial_stackBasic_1="3. Cách xếp gạch cơ bản",
+    tutorial_stackBasic_2="Hãy xếp gạch làm sao để tầng trên cùng \"phẳng\", để giữ cho đồng hồ nguy hiểm ở bên trái ở mức thấp",
+    tutorial_stackBasic_3="Đây thường là mục tiêu của những người mới chơi",
+    tutorial_stackBasic_4="Gạch nên được để \"nằm xuống\", chứ đừng \"đứng lên\"",
+    tutorial_stackBasic_5="Để đảm bảo bạn có nhiều lựa chọn cho những gạch sau đó và tránh tạo ra lỗ",
+
+    tutorial_finesseBasic_0="4. Cách điều khiển gạch nhanh nhất",
+    tutorial_finesseBasic_0_1="“Finesse” là một phương pháp điều khiển gạch nhanh nhất nhưng vẫn cho phép giảm khả năng misdrop.",
+    tutorial_finesseBasic_1="① 2 phím xoay",
+    tutorial_finesseBasic_1_1="Hãy đi gán 2 phím cho xoay trái và xoay phải đã, bởi [Xoay Trái] × 1 = [Xoay Phải] × 3",
+    tutorial_finesseBasic_1_T="Tạm thời ở đây bạn chưa cần phải gán phím cho xoay 180°",
+    tutorial_finesseBasic_1_2="NHIỆM VỤ: Thả gạch vào vị trí yêu cầu CHỈ VỚI 1 LẦN XOAY!",
+    tutorial_finesseBasic_2="② Backtrack (Đi rồi quay về)",
+    tutorial_finesseBasic_2_1="Bảng rộng 10 ô, gạch rộng khoảng 3 ô và luôn xuất hiện ở giữa, nên chia bảng thành 3 phần: Trái - Giữa - Phải",
+    tutorial_finesseBasic_2_2="Di chuyển gạch tới phần bảng của nơi cần đặt trước, sau đó điều chỉnh lại bằng cách di chuyển theo từng ô lẻ",
+    tutorial_finesseBasic_2_3="Và bạn chỉ cần 2 kiểu di chuyển: \"bước 1 ô\" (nhấn 1-2 lần) and \"dịch chuyển tới mặt bên\"",
+    tutorial_finesseBasic_2_T="Hãy cài ASD nhỏ nhất có thể, nhưng hãy đảm bảo BẠN VẪN DÙNG ĐƯỢC cả 2 kiểu di chuyển trên",
+    tutorial_finesseBasic_2_4="NHIỆM VỤ: Thả gạch vào vị trí yêu cầu CHỈ VỚI 2 LẦN DI CHUYỂN",
+    tutorial_finesseBasic_3="③ Wall-turn (Đạp vào tường)",
+    tutorial_finesseBasic_3_1="Bạn thấy đấy, gạch luôn luôn xoay quanh một cái chấm tròn trắng",
+    tutorial_finesseBasic_3_2="Với gạch Z (đỏ), S (xanh) và I (lam), xoay trái hay phải cũng sẽ làm cho gạch \"nghiêng\" theo một bên",
+    tutorial_finesseBasic_3_3="NHIỆM VỤ: Thả gạch vào vị trí yêu cầu CHỈ VỚI 1 LẦN XOAY VÀ 1 LẦN DI CHUYỂN",
+    tutorial_finesseBasic_4_1="Bằng cách kết hợp cả 3 kĩ thuật trên",
+    tutorial_finesseBasic_4_2="Bất kì chuỗi phím với 3 lần bấm tối đa cũng có thể di chuyển gạch theo ý bạn muốn.",
+
+    tutorial_finessePractice_1="5. Luyện tập điều khiển gạch",
+    tutorial_finessePractice_2="Hãy dùng ít lần bấm nhất có thể",
+    tutorial_finessePractice_par="Lần bấm tối đa",
+
+    tutorial_allclearPractice_1="6. Luyện tập All Clear",
+    tutorial_allclearPractice_2="Làm càng nhiều All Clear càng tốt",
+
+    tutorial_techrashPractice_1="7. Techrash Practice",
+    tutorial_techrashPractice_2="Làm càng nhiều Techrash càng tốt",
+
+    tutorial_finessePlus_1="8. Elegant Moves",
+    tutorial_finessePlus_2="Hãy chơi mà dùng ít lần bấm nhất có thể",
 }
 
 -- Moved the credit to the last for easier edit
