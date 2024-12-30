@@ -294,10 +294,22 @@ WIDGET.setDefaultOption{
     button={
         sound_trigger='button_norm',
     },
+    hint={
+        w=40,
+        lineWidth=3,
+        text="?",
+        labelPos='topRight',
+        -- textColor='lD',
+        -- floatFrameColor='X',
+        -- floatFillColor={.8,.8,.8,.8},
+        -- floatTextColor='D',
+        -- floatBox={-20,-120,300,100,10},
+    },
     slider={
         sound_drag='slider_drag',
         soundInterval=.042,
         soundPitchRange=7.02,
+        textAlwaysShow=true,
     },
     slider_fill={
         sound_drag='slider_fill_drag',

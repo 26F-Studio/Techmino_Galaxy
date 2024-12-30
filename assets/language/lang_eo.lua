@@ -92,10 +92,10 @@ local L={
     graph_brik_title="M-Grafiko", -- TRASLATING NOTE: from "Knowledge Graph" (AI domain)
     settings_title="Agordoj",
 
-    setting_asd="ASD",
-    setting_asp="ASP",
-    setting_adp="ADP",
-    setting_ash="AS Halt",
+    -- setting_hint_asd="Auto Shift Delay",-- Add translation with \n[second line]
+    -- setting_hint_asp="Auto Shift Period",-- Add translation with \n[second line]
+    -- setting_hint_adp="Auto Drop Period",-- Add translation with \n[second line]
+    -- setting_hint_ash="Auto Shift Halt",-- Add translation with \n[second line]
     setting_softdropSkipAsd="Skip Drop Prokrasto",
     setting_shakeness="Tremo",
     setting_hitWavePower="Hitwave Potenco",
@@ -121,9 +121,9 @@ local L={
     setting_autoMute="Silentas kiam la fenestro ne estas fokusita",
     setting_showTouch="Montru tuŝajn kontrolojn",
 
-    setting_maxFPS=">Maksimuma FPS",
-    setting_updRate="Update Rate",
-    setting_drawRate="rapido de ĝisdatigo",
+    setting_maxTPS="Maksimuma TPS",
+    setting_updateRate="rapido de aggiornamento",
+    setting_renderRate="rapido de ĝisdatigo",
     setting_msaa="MSAA",
     setting_fmod_maxChannel="Maksimumaj kanaloj",
     setting_fmod_DSPBufferCount="DSPBufferCount",
@@ -301,7 +301,7 @@ local L={
 
     -- Achievement
     ---@enum (key) Techmino.Text.Achievement
-    achievementMessage={
+    achievementMessage={ -- TRASLATING NOTE: The tone can be lighter
         dict_shortcut="Fakulo de Hotkeys",
         -- exterior_spin_howDareYou="How dare you",
         exterior_excavate_notDig="Kion vi faras?",

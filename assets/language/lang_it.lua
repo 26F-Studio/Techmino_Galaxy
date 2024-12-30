@@ -92,10 +92,10 @@ local L={
     graph_brik_title="M-Graph", -- TRASLATING NOTE: from "Knowledge Graph" (AI domain)
     settings_title="Impostazioni",
 
-    setting_asd="ASD",
-    setting_asp="ASP",
-    setting_adp="ADP",
-    setting_ash="AS Halt",
+    -- setting_hint_asd="Auto Shift Delay",-- Add translation with \n[second line]
+    -- setting_hint_asp="Auto Shift Period",-- Add translation with \n[second line]
+    -- setting_hint_adp="Auto Drop Period",-- Add translation with \n[second line]
+    -- setting_hint_ash="Auto Shift Halt",-- Add translation with \n[second line]
     setting_softdropSkipAsd="Skip Drop Delay",
     setting_shakeness="Shakiness",
     setting_hitWavePower="Hitwave Power",
@@ -121,9 +121,9 @@ local L={
     setting_autoMute="Muta quando la finestra non è focalizzata",
     setting_showTouch="Mostra controlli touch",
 
-    setting_maxFPS="FPS Massimi",
-    setting_updRate="Indice di aggiornamento",
-    setting_drawRate="Velocità di aggiornamento",
+    setting_maxTPS="TPS Massimi",
+    setting_updateRate="Indice di aggiornamento",
+    setting_renderRate="Velocità di aggiornamento",
     setting_msaa="MSAA",
     setting_fmod_maxChannel="Canali massimi",
     setting_fmod_DSPBufferCount="DSPBufferCount",

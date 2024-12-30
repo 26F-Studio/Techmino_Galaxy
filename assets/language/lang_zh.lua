@@ -2,7 +2,7 @@
     中文是本应用的原始语言之一，通常由MrZ维护，不需要修改
     请尽量保持所有的语言文件行数一致，方便定位和补充
     按住Ctrl再选语言来对比语言差异
-    注意"TRASLATING NOTE"标记，因为有故事背景
+    注意"TRASLATING NOTE"标记，因为有故事背景和梗
     不能完全理解含义的时候请去问MrZ，不用怕打扰
 ]]
 ---@class Techmino.I18N
@@ -92,10 +92,10 @@ local L={
     graph_brik_title="M-图谱", -- TRASLATING NOTE: 取自“知识图谱”(人工智能领域)
     settings_title="设置",
 
-    setting_asd="重复移动延迟",
-    setting_asp="重复移动周期",
-    setting_adp="重复下落周期",
-    setting_ash="重复移动阻止",
+    setting_hint_asd="Auto Shift Delay\n重复移动延迟",
+    setting_hint_asp="Auto Shift Period\n重复移动周期",
+    setting_hint_adp="Auto Drop Period\n重复下落周期",
+    setting_hint_ash="Auto Shift Halt\n重复移动阻止",
     setting_softdropSkipAsd="跳过软降延迟",
     setting_shakeness="场地晃动",
     setting_hitWavePower="冲击波强度",
@@ -121,9 +121,9 @@ local L={
     setting_autoMute="闲时静音",
     setting_showTouch="显示触摸位置",
 
-    setting_maxFPS="最大帧数",
-    setting_updRate="更新比率",
-    setting_drawRate="绘制比率",
+    setting_maxTPS="最大刻数",
+    setting_updateRate="更新比率",
+    setting_renderRate="绘制比率",
     setting_msaa="抗锯齿",
     setting_fmod_maxChannel="最大音频数",
     setting_fmod_DSPBufferCount="DSP缓冲区数量",

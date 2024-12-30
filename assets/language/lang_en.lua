@@ -2,7 +2,7 @@
     If you want to contribute translations, play and unlock "Exterior" chapter first
     Try keeping all language files have same line count, will make translators easier to find what's missing
     You can check if there are missing strings by "Ctrl + [Pick a Language]"
-    Don't ignore the "TRASLATING NOTE" mark, it's necessary to be accurate because there's lore
+    Don't ignore the "TRASLATING NOTE" mark, it's necessary to be accurate because there's lore and memes
     Ask MrZ for more information if you cannot fully understand the text, don't worry about disturbing me!
 ]]
 ---@class Techmino.I18N
@@ -92,10 +92,10 @@ local L={
     graph_brik_title="M-Graph", -- TRASLATING NOTE: from "Knowledge Graph" (AI domain)
     settings_title="Settings",
 
-    setting_asd="ASD",
-    setting_asp="ASP",
-    setting_adp="ADP",
-    setting_ash="AS Halt",
+    setting_hint_asd="Auto Shift Delay",-- Add translation with \n[second line]
+    setting_hint_asp="Auto Shift Period",-- Add translation with \n[second line]
+    setting_hint_adp="Auto Drop Period",-- Add translation with \n[second line]
+    setting_hint_ash="Auto Shift Halt",-- Add translation with \n[second line]
     setting_softdropSkipAsd="Skip Drop Delay",
     setting_shakeness="Shakiness",
     setting_hitWavePower="Hitwave Power",
@@ -121,9 +121,9 @@ local L={
     setting_autoMute="Mute when idle",
     setting_showTouch="Show touches",
 
-    setting_maxFPS="Max FPS",
-    setting_updRate="Update rate",
-    setting_drawRate="Draw rate",
+    setting_maxTPS="Max TPS",
+    setting_updateRate="Update rate",
+    setting_renderRate="Render rate",
     setting_msaa="MSAA",
     setting_fmod_maxChannel="Max Channel",
     setting_fmod_DSPBufferCount="DSPBufferCount",
