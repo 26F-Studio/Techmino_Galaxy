@@ -2,13 +2,14 @@ local langList={
     zh="简体中文",
     zh_trad="繁體中文",
     en="English",
+    eo="Esperanto",
     it="Italiano",
     fr="Français",
     es="　Español\n(Castellano)",
     pt="Português",
     id="Bahasa Indonesia",
     ja="日本語",
-    eo="Esperanto"
+    vi="Tiếng Việt",
 }
 local languages={
     "Language  语言  Idioma",
@@ -94,7 +95,7 @@ scene.widgetList={
     {type='button',      x=350,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=35, text='',          fillColor='G'},
 
     {type='button_fill', x=800,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.it, fillColor='O', sound_trigger='check_on',code=function() _setLang('it') end},
-    {type='button',      x=800,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          fillColor='A'},
+    {type='button_fill', x=800,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.vi, fillColor='A', sound_trigger='check_on',code=function() _setLang('vi') end},
     {type='button',      x=800,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          fillColor='J'},
     {type='button',      x=800,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          fillColor='P'},
 
