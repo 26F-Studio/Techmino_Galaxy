@@ -19,6 +19,7 @@ local settings={
         maxTPS=300,
         updateRate=100,
         renderRate=30,
+        stability=0,
         msaa=4,
 
         -- Gameplay
@@ -77,9 +78,10 @@ local settingTriggers={ -- Changing values in SETTINGS.system will trigger these
 
     -- Video
     fullscreen=     function(v) love.window.setFullscreen(v); love.resize(love.graphics.getWidth(),love.graphics.getHeight()) end,
-    maxTPS=         function(v) ZENITHA.setMaxFPS(v) end,
+    maxTPS=         function(v) ZENITHA.setMainLoopSpeed(v) end,
     updateRate=     function(v) ZENITHA.setUpdateRate(v) end,
     renderRate=     function(v) ZENITHA.setRenderRate(v) end,
+    stability=      function(v) ZENITHA.setSleepDurationError(v) end,
     sysCursor=      function(v) love.mouse.setVisible(v) end,
     clean=          function(v) ZENITHA.setCleanCanvas(v) end,
 

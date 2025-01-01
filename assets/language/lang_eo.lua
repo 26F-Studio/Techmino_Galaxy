@@ -92,10 +92,6 @@ local L={
     graph_brik_title="M-Grafiko", -- TRASLATING NOTE: from "Knowledge Graph" (AI domain)
     settings_title="Agordoj",
 
-    -- setting_hint_asd="Auto Shift Delay",-- Add translation with \n[second line]
-    -- setting_hint_asp="Auto Shift Period",-- Add translation with \n[second line]
-    -- setting_hint_adp="Auto Drop Period",-- Add translation with \n[second line]
-    -- setting_hint_ash="Auto Shift Halt",-- Add translation with \n[second line]
     setting_softdropSkipAsd="Skip Drop Prokrasto",
     setting_shakeness="Tremo",
     setting_hitWavePower="Hitwave Potenco",

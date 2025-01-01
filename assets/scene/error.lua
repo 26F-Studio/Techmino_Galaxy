@@ -15,7 +15,7 @@ local texts={
 local scene={}
 
 function scene.load()
-    ZENITHA.setMaxFPS(60)
+    ZENITHA.setMainLoopSpeed(60)
     ZENITHA.setUpdateRate(62)
     ZENITHA.setRenderRate(26)
     FMOD.destroy()

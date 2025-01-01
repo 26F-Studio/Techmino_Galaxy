@@ -92,10 +92,6 @@ local L={
     graph_brik_title="M-Graph", -- TRASLATING NOTE: from "Knowledge Graph" (AI domain)
     settings_title="Settings",
 
-    setting_hint_asd="Auto Shift Delay",-- Add translation with \n[second line]
-    setting_hint_asp="Auto Shift Period",-- Add translation with \n[second line]
-    setting_hint_adp="Auto Drop Period",-- Add translation with \n[second line]
-    setting_hint_ash="Auto Shift Halt",-- Add translation with \n[second line]
     setting_softdropSkipAsd="Skip Drop Delay",
     setting_shakeness="Shakiness",
     setting_hitWavePower="Hitwave Power",
@@ -122,13 +118,20 @@ local L={
     setting_showTouch="Show touches",
 
     setting_maxTPS="Max TPS",
-    setting_updateRate="Update rate",
-    setting_renderRate="Render rate",
+    setting_updateRate="Update Rate",
+    setting_renderRate="Render Rate",
+    setting_stability="Tick Stability",
     setting_msaa="MSAA",
     setting_fmod_maxChannel="Max Channel",
     setting_fmod_DSPBufferCount="DSPBufferCount",
     setting_fmod_DSPBufferLength="DSPBufferLength",
     setting_apply="Apply",
+
+    setting_hint_asd="Auto Shift Delay",-- Add translation with \n[second line]
+    setting_hint_asp="Auto Shift Period",-- Add translation with \n[second line]
+    setting_hint_adp="Auto Drop Period",-- Add translation with \n[second line]
+    setting_hint_ash="Auto Shift Halt",-- Add translation with \n[second line]
+    setting_hint_stability="Stabler tick interval but higher CPU usage\nUse minimal value that can keep TPS stable",
 
     lang_note="The original languages are Chinese & English.\nAll translations are contributed by volunteers and it may not be 100% accurate\nThere are some terms not translated directly, please check Zictionary for more information",
 

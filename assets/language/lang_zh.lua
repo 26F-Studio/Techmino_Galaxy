@@ -92,10 +92,6 @@ local L={
     graph_brik_title="M-图谱", -- TRASLATING NOTE: 取自“知识图谱”(人工智能领域)
     settings_title="设置",
 
-    setting_hint_asd="Auto Shift Delay\n重复移动延迟",
-    setting_hint_asp="Auto Shift Period\n重复移动周期",
-    setting_hint_adp="Auto Drop Period\n重复下落周期",
-    setting_hint_ash="Auto Shift Halt\n重复移动阻止",
     setting_softdropSkipAsd="跳过软降延迟",
     setting_shakeness="场地晃动",
     setting_hitWavePower="冲击波强度",
@@ -124,11 +120,18 @@ local L={
     setting_maxTPS="最大刻数",
     setting_updateRate="更新比率",
     setting_renderRate="绘制比率",
+    setting_stability="刻数稳定性",
     setting_msaa="抗锯齿",
     setting_fmod_maxChannel="最大音频数",
     setting_fmod_DSPBufferCount="DSP缓冲区数量",
     setting_fmod_DSPBufferLength="DSP缓冲区长度",
     setting_apply="应用",
+
+    setting_hint_asd="Auto Shift Delay\n重复移动延迟",
+    setting_hint_asp="Auto Shift Period\n重复移动周期",
+    setting_hint_adp="Auto Drop Period\n重复下落周期",
+    setting_hint_ash="Auto Shift Halt\n重复移动阻止",
+    setting_hint_stability="占用更多系统资源来稳定帧率\n推荐调节至帧率足够稳定时尽可能小的值",
 
     lang_note="原始语言只有中文和英文\n翻译由志愿者贡献，不保证100%准确\n部分术语可能没有翻译，请查阅词典获取更多信息",
 

@@ -108,11 +108,12 @@ scene.widgetList={
     end},
 
     -- Video
-    {name='3', type='slider_fill',pos={0,0},x=340, y=220,w=500,h=30,text=LANG'setting_hitWavePower',widthLimit=260,axis={0,1},                   disp=TABLE.func_getVal(SETTINGS.system,'hitWavePower'),                           code=TABLE.func_setVal(SETTINGS.system,'hitWavePower')},
-    {name='3', type='slider',     pos={0,0},x=340, y=300,w=500,     text=LANG'setting_maxTPS',      widthLimit=260,axis={120,400,10},smooth=true,disp=TABLE.func_getVal(SETTINGS.system,'maxTPS'),    valueShow=sliderShow_maxTPS, code=TABLE.func_setVal(SETTINGS.system,'maxTPS')},
-    {name='3', type='slider',     pos={0,0},x=340, y=380,w=500,     text=LANG'setting_updateRate',  widthLimit=260,axis={20,100,10},             disp=TABLE.func_getVal(SETTINGS.system,'updateRate'),valueShow=sliderShow_update, code=TABLE.func_setVal(SETTINGS.system,'updateRate')},
-    {name='3', type='slider',     pos={0,0},x=340, y=460,w=500,     text=LANG'setting_renderRate',  widthLimit=260,axis={20,100,10},             disp=TABLE.func_getVal(SETTINGS.system,'renderRate'),valueShow=sliderShow_render, code=TABLE.func_setVal(SETTINGS.system,'renderRate')},
-    {name='3', type='slider',     pos={0,0},x=340, y=540,w=250,     text=LANG'setting_msaa',        widthLimit=260,axis={0,4,1},                 disp=function() return SETTINGS.system.msaa==0 and 0 or math.log(SETTINGS.system.msaa,2) end, valueShow=function(S) return (S.disp()==0 and 0 or 2^S.disp()).."x" end, code=function(v) SETTINGS.system.msaa=v==0 and 0 or 2^v; saveSettings(); if TASK.lock('warnMessage',6.26) then MSG('warn',Text.setting_needRestart,6.26) end end},
+    {name='3', type='slider_fill',pos={0,0},x=340, y=220,w=500,h=30,text=LANG'setting_hitWavePower',widthLimit=260,axis={0,1},                   disp=TABLE.func_getVal(SETTINGS.system,'hitWavePower'),                          code=TABLE.func_setVal(SETTINGS.system,'hitWavePower')},
+    {name='3', type='slider',     pos={0,0},x=340, y=300,w=500,     text=LANG'setting_maxTPS',      widthLimit=260,axis={120,400,10},smooth=true,disp=TABLE.func_getVal(SETTINGS.system,'maxTPS'),    valueShow=sliderShow_maxTPS,code=TABLE.func_setVal(SETTINGS.system,'maxTPS')},
+    {name='3', type='slider',     pos={0,0},x=340, y=380,w=500,     text=LANG'setting_updateRate',  widthLimit=260,axis={20,100,10},             disp=TABLE.func_getVal(SETTINGS.system,'updateRate'),valueShow=sliderShow_update,code=TABLE.func_setVal(SETTINGS.system,'updateRate')},
+    {name='3', type='slider',     pos={0,0},x=340, y=460,w=500,     text=LANG'setting_renderRate',  widthLimit=260,axis={20,100,10},             disp=TABLE.func_getVal(SETTINGS.system,'renderRate'),valueShow=sliderShow_render,code=TABLE.func_setVal(SETTINGS.system,'renderRate')},
+    {name='3', type='slider',     pos={0,0},x=340, y=540,w=500,     text=LANG'setting_stability',   widthLimit=260,axis={-1,1,0.1},              disp=TABLE.func_getVal(SETTINGS.system,'stability'), valueShow=sliderShow_time,  code=TABLE.func_setVal(SETTINGS.system,'stability')},
+    {name='3', type='slider',     pos={0,0},x=340, y=620,w=250,     text=LANG'setting_msaa',        widthLimit=260,axis={0,4,1},                 disp=function() return SETTINGS.system.msaa==0 and 0 or math.log(SETTINGS.system.msaa,2) end, valueShow=function(S) return (S.disp()==0 and 0 or 2^S.disp()).."x" end, code=function(v) SETTINGS.system.msaa=v==0 and 0 or 2^v; saveSettings(); if TASK.lock('warnMessage',6.26) then MSG('warn',Text.setting_needRestart,6.26) end end},
     {name='3', type='switch',     pos={1,0},x=-500,y=220,h=45,      text=LANG'setting_sysCursor',   widthLimit=260,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'sysCursor'),   code=TABLE.func_revVal(SETTINGS.system,'sysCursor')},
     {name='3', type='switch',     pos={1,0},x=-500,y=290,h=45,      text=LANG'setting_power',       widthLimit=260,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'powerInfo'),   code=TABLE.func_revVal(SETTINGS.system,'powerInfo')},
     {name='3', type='switch',     pos={1,0},x=-500,y=360,h=45,      text=LANG'setting_clean',       widthLimit=260,labelPos='right', disp=TABLE.func_getVal(SETTINGS.system,'cleanCanvas'), code=TABLE.func_revVal(SETTINGS.system,'cleanCanvas')},
@@ -136,5 +137,6 @@ scene.widgetList={
     {name='1',type='hint',pos={0,0},x=210,y=300,floatText=LANG'setting_hint_asp'},
     {name='1',type='hint',pos={0,0},x=210,y=380,floatText=LANG'setting_hint_adp'},
     {name='1',type='hint',pos={0,0},x=210,y=460,floatText=LANG'setting_hint_ash'},
+    {name='3',type='hint',pos={0,0},x=100,y=540,floatText=LANG'setting_hint_stability'},
 }
 return scene

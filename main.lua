@@ -82,7 +82,6 @@ UTIL.time("Require game modules",true)
 ZENITHA.setAppName('Techmino')
 ZENITHA.setVersionText(VERSION.appVer)
 ZENITHA.setFirstScene('hello')
-ZENITHA.setMaxFPS(260)
 ZENITHA.setDebugInfo{
     {"Cache",gcinfo},
     {"Tasks",TASK.getCount},
@@ -190,6 +189,11 @@ function ZENITHA.globalEvent.focus(f)
         elseif SCN.cur~='musicroom' then
             FMOD.setMainVolume(0)
         end
+    end
+    if f then
+        ZENITHA.setSleepDurationError(SETTINGS.system.stability)
+    else
+        ZENITHA.setSleepDurationError(-1)
     end
 end
 local autoGCcount=0

@@ -92,10 +92,6 @@ local L={
     graph_brik_title="M-Graph", -- TRASLATING NOTE: from "Knowledge Graph" (AI domain)
     settings_title="Impostazioni",
 
-    -- setting_hint_asd="Auto Shift Delay",-- Add translation with \n[second line]
-    -- setting_hint_asp="Auto Shift Period",-- Add translation with \n[second line]
-    -- setting_hint_adp="Auto Drop Period",-- Add translation with \n[second line]
-    -- setting_hint_ash="Auto Shift Halt",-- Add translation with \n[second line]
     setting_softdropSkipAsd="Skip Drop Delay",
     setting_shakeness="Shakiness",
     setting_hitWavePower="Hitwave Power",
