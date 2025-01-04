@@ -6,12 +6,14 @@ on:
     tags: [pre*, v*]
   pull_request:
     branches: [main]
+
 env:
   BUILD_ASSETS_FOLDER: ./.github/build
   BUILD_TYPE: ${{ fromJSON('["dev", "release"]')[startsWith(github.ref, 'refs/tags/v')] }}
-  CORE_LOVE_PACKAGE_PATH: ./core.love
   CORE_LOVE_ARTIFACT_NAME: core_love_package
+  CORE_LOVE_PACKAGE_PATH: ./core.love
   SOUNDBANK_DOWNLOAD_URL: https://kyzj-my.sharepoint.com/personal/noreply_studio26f_org/_layouts/15/download.aspx
+
 jobs:
   get-info:
     runs-on: ubuntu-latest
@@ -48,6 +50,7 @@ jobs:
         run: |
           BASE_NAME=Techmino_Galaxy_${{ steps.app-info.outputs.version-string }}_${{ steps.git-info.outputs.commit-hash }}_#${{ GITHUB.RUN_NUMBER }}
           echo "base-name=$BASE_NAME" >> $GITHUB_OUTPUT
+
   build-core:
     runs-on: ubuntu-latest
     needs: get-info
@@ -83,7 +86,7 @@ jobs:
       - name: Build core love package
         uses: 26F-Studio/love-actions-core@v1
         with:
-          build-list: ./Zenitha/ ./assets/ ./datatable/ ./soundbank ./conf.lua ./main.lua ./version.lua ./shell.lua
+          build-list: ./assets/ ./datatable/ ./soundbank/ ./Zenitha/ ./conf.lua ./main.lua ./shell.lua ./version.lua
           package-path: ${{ env.CORE_LOVE_PACKAGE_PATH }}
       - name: Upload core love package
         uses: actions/upload-artifact@v4
@@ -288,7 +291,10 @@ jobs:
           LOVEJS_API_PLAYER_BASE_URL: https://raw.githubusercontent.com/MrcSnm/Love.js-Api-Player/refs/heads/master
         run: |
           pushd ${{ env.OUTPUT_FOLDER }}
-          sed -i 's|</head>|  <script src="consolewrapper.js"></script>\n  <script src="webdb.js"></script>\n</head>|' index.html
+          sed -i 's|</head>|  <link rel="icon" type="image/x-icon" href="favicon.ico">\n  </head>|' index.html
+          sed -i 's|</head>|  <script src="consolewrapper.js"></script>\n  </head>|' index.html
+          sed -i 's|</head>|  <script src="webdb.js"></script>\n  </head>|' index.html
+          sed -i 's|[32, 37, 38, 39, 40]|[37, 38, 39, 40]|' index.html
           wget ${{ env.LOVEJS_API_PLAYER_BASE_URL }}/consolewrapper.js
           wget ${{ env.LOVEJS_API_PLAYER_BASE_URL }}/globalizeFS.js
           wget ${{ env.LOVEJS_API_PLAYER_BASE_URL }}/webdb.js
