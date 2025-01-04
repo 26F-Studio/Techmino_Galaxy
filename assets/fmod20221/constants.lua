@@ -1,4 +1,4 @@
-local bit=require'bit'
+local bit=bit or require'bit'
 local ffi=require'ffi'
 local require=simpRequire(((...):match(".+%.")))
 
