@@ -16,6 +16,13 @@ if love['_os']=='Web' then
     love.filesystem[('read')]=function(name,size)
         if love.filesystem.getInfo(name) then return oldRead(name,size) end
     end
+    if math.log(8,2)~=3 then
+        -- Fix log function if it doesn't support base
+        local log=math.log
+        math[('log')]=function(x,base)
+            return base and log(x)/log(base) or log(x)
+        end
+    end
 end
 
 function love.conf(t)
