@@ -195,6 +195,7 @@ function PROGRESS.swapMainScene()
     end
 end
 function PROGRESS.applyCoolWaitTemplate()
+    if not GC.getTextureTypes().array then return LOG('warn',"System doesn't support ArrayImage") end
     local list={}
     for i=1,52 do list[i]=('assets/image/loading/%d.png'):format(i) end
     local suc,res=pcall(gc.newArrayImage,list)
