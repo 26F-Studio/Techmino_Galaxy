@@ -10,7 +10,7 @@ local activeEventMap={} ---@type table<love.Scancode, FMOD.Studio.EventInstance>
 local objPool={} ---@type Techmino.Piano.Object[]
 local inst,offset,release
 
-local instList={'organ_wave','square_wave','saw_wave','complex_wave','stairs_wave','spectral_wave','obscure_wave','death_wave'}
+local instList={'organ_wave','square_wave','saw_wave','complex_wave','stairs_wave','spectral_wave','obscure_wave','death_wave','crash_wave'}
 local presets={}
 
 do -- rollNote
@@ -419,7 +419,7 @@ end
 function scene.load()
     stopAllSounds()
     stopBgm()
-    inst='square_wave'
+    inst='organ_wave'
     offset=0
     release=500
 end

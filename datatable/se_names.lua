@@ -48,6 +48,7 @@ return {
     'spectral_wave',
     'obscure_wave',
     'death_wave',
+    'crash_wave',
 
     'ibm_noise',
 }
