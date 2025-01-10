@@ -403,7 +403,8 @@ function SCN.scenes._console.load(...)
     l[6]:reset()
 end
 
-IMG.init{
+---@type Map<any>
+TEX=IMG.init({
     actionIcons={
         texture='assets/image/action_icon.png',
         brik=(function()
@@ -469,7 +470,31 @@ IMG.init{
     touhou={
         orb='assets/image/touhou/orb.png',
     },
-}
+
+    love_logo=GC.load{w=128,h=128,
+        {'clear',0,0,0,0},
+        {'move',64,64},
+        {'setCL',COLOR.D},
+        {'fCirc',0,0,64},
+        {'setCL',.9,.3,.6},
+        {'fCirc',0,0,60},
+        {'setCL',.16,.66,.88},
+        {'fBow',0,0,60,0,3.141593},
+        {'move',-4,4},
+        {'setCL',COLOR.L},
+        {'fRect',-20,-20,40,40},
+        {'fCirc',0,-20,20},
+        {'fCirc',20,0,20},
+    },
+    transition_image=(function()
+        local l={w=128,h=1}
+        for x=0,127 do
+            table.insert(l,{'setCL',1,1,1,1-x/128})
+            table.insert(l,{'fRect',x,0,1,1})
+        end
+        return GC.load(l)
+    end)(),
+},true)
 
 Text=nil ---@type Techmino.I18N
 LANG.add{

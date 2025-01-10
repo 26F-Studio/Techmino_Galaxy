@@ -130,7 +130,7 @@ function scene.draw()
     PROGRESS.drawExteriorHeader()
     GC.replaceTransform(SCR.xOy)
 
-    GC.mDraw(love_logo,160,300,-.785398+t*4.2-math.sin(t*4.2),.7033)
+    GC.mDraw(TEX.love_logo,160,300,-.785398+t*4.2-math.sin(t*4.2),.7033)
 
     FONT.set(35)
     GC.strokePrint('side',2,COLOR.D,COLOR.L,Text.about_module,300,230,'left')

@@ -342,7 +342,7 @@ local function _getActMode(mode,key)
     end
 end
 local function _getActImg(mode,act)
-    return IMG.actionIcons[mode][act]
+    return TEX.actionIcons[mode][act]
 end
 function ResetVirtualKeyMode(mode)
     VCTRL.reset()
@@ -423,26 +423,3 @@ function RegFuncLib(obj,path)
 end
 
 RegFuncLib(GameSndFunc,'gameSndFunc')
-
-love_logo=GC.load{w=128,h=128,
-    {'clear',0,0,0,0},
-    {'move',64,64},
-    {'setCL',COLOR.D},
-    {'fCirc',0,0,64},
-    {'setCL',.9,.3,.6},
-    {'fCirc',0,0,60},
-    {'setCL',.16,.66,.88},
-    {'fBow',0,0,60,0,3.141593},
-    {'move',-4,4},
-    {'setCL',COLOR.L},
-    {'fRect',-20,-20,40,40},
-    {'fCirc',0,-20,20},
-    {'fCirc',20,0,20},
-}
-
-transition_image={w=128,h=1}
-for x=0,127 do
-    table.insert(transition_image,{'setCL',1,1,1,1-x/128})
-    table.insert(transition_image,{'fRect',x,0,1,1})
-end
-transition_image=GC.load(transition_image)

@@ -64,7 +64,7 @@ function scene.draw()
 
         GC.replaceTransform(SCR.xOy_dr)
         GC.setColor(1,1,1,math.min(-t*(t-2.6),.626))
-        GC.draw(IMG.logo_fmod,-15,-20,nil,.26,nil,IMG.logo_fmod:getWidth(),IMG.logo_fmod:getHeight())
+        GC.draw(TEX.logo_fmod,-15,-20,nil,.26,nil,TEX.logo_fmod:getWidth(),TEX.logo_fmod:getHeight())
     end
 end
 

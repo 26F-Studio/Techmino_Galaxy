@@ -72,7 +72,7 @@ function scene.draw()
     GC.draw(terminalName,60+versionText:getWidth(),190)
 
     -- Title with animation
-    GC.draw(IMG.title_techmino,-textOffset,0,nil,.55)
+    GC.draw(TEX.title_techmino,-textOffset,0,nil,.55)
     FONT.set(190,'galaxy_thin')
     GC.setColor(.08,.08,.084)
     for a=0,MATH.tau,MATH.tau/20 do

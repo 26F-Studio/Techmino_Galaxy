@@ -225,8 +225,8 @@ function scene.draw()
         -- Matrix
         gc.setColor(COLOR.DL)
         gc.rectangle('fill',-2,0,fieldW*cell+4,2)
-        gc.draw(transition_image,-2,0,-math.pi/2,cell*4/127,2)
-        gc.draw(transition_image,fieldW*cell,0,-math.pi/2,cell*4/127,2)
+        gc.draw(TEX.transition_image,-2,0,-math.pi/2,cell*4/127,2)
+        gc.draw(TEX.transition_image,fieldW*cell,0,-math.pi/2,cell*4/127,2)
         for y=1,#matrix do
             for x=1,fieldW do
                 if matrix[y][x] then

@@ -76,7 +76,7 @@ function button:draw(setting)
         gc_setColor(1,1,1,setting and 1 or .4)
         local _,_,w,h=self.quad:getViewport()
         mDrawQ(
-            IMG.actionIcons.texture,
+            TEX.actionIcons.texture,
             self.quad,
             self.x,self.y,0,
             self.iconSize/100*min(self.r*2/w,self.r*2/h)
@@ -179,11 +179,11 @@ function stick2way:draw(setting)
         local quad=self.quad
         if quad[1] then
             local _,_,w,h=quad[1]:getViewport()
-            mDrawQ(IMG.actionIcons.texture,quad[1],self.x-self.len/2,self.y,0,self.iconSize/100*min(self.h/w,self.h/h))
+            mDrawQ(TEX.actionIcons.texture,quad[1],self.x-self.len/2,self.y,0,self.iconSize/100*min(self.h/w,self.h/h))
         end
         if quad[2] then
             local _,_,w,h=quad[2]:getViewport()
-            mDrawQ(IMG.actionIcons.texture,quad[2],self.x+self.len/2,self.y,0,self.iconSize/100*min(self.h/w,self.h/h))
+            mDrawQ(TEX.actionIcons.texture,quad[2],self.x+self.len/2,self.y,0,self.iconSize/100*min(self.h/w,self.h/h))
         end
     end
 end
@@ -304,7 +304,7 @@ function stick4way:draw(setting)
             local d=(bigR+ballR)*.5
             local angle=i*tau/4
             local _,_,w,h=quad[i]:getViewport()
-            mDrawQ(IMG.actionIcons.texture,quad[i],self.x+d*cos(angle),self.y+d*sin(angle),0,self.iconSize/100*min((bigR-ballR)/w,(bigR-ballR)/h))
+            mDrawQ(TEX.actionIcons.texture,quad[i],self.x+d*cos(angle),self.y+d*sin(angle),0,self.iconSize/100*min((bigR-ballR)/w,(bigR-ballR)/h))
         end end
     end
 end

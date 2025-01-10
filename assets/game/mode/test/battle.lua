@@ -18,7 +18,7 @@ return {
                     -- mechLib.brik.squeeze.turnOn_auto(P,4)
                     -- P:setAction('func1',function(P) mechLib.brik.stack.turnOn_auto(P,true,60e3) end)
                     P.modeData.character={
-                        image=IMG.touhou.reimu,
+                        image=TEX.touhou.reimu,
                         effect=NULL,
                     }
                     P:setAction('func1',mechLib.common.characterAnim.start)

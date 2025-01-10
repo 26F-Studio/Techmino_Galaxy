@@ -116,7 +116,7 @@ end
 -- function S.drawGarbageBuffer(garbageBuffer)
 --     -- TODO
 -- end
-local batch=gc.newSpriteBatch(IMG.touhou.orb,15)
+local batch=gc.newSpriteBatch(TEX.touhou.orb,15)
 for i=1,15 do batch:add(-214+26*i,418) end
 local color2map={
     any=COLOR.L,
