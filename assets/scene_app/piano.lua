@@ -442,7 +442,7 @@ function scene.keyDown(key,isRep,keyCode)
         if IsKeyDown('lshift') then note=note+1 end
         if IsKeyDown('lctrl') then note=note-1 end
         _param.tune=note-26
-        _param.volume=IsKeyDown('lalt') and .26 or 1
+        _param.volume=IsKeyDown('lalt') and .26 or .9
         _param.param[2]=(IsKeyDown('space') and 4200 or release)*1.0594630943592953^(_param.tune)
         activeEventMap[keyCode]=FMOD.effect(inst..'_wave',_param)
     elseif key=='f3' then
