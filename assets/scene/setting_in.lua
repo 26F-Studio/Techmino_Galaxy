@@ -15,7 +15,7 @@ function scene.load()
 end
 function scene.unload()
     if SCN.stackChange<0 then
-        saveSettings()
+        SaveSettings()
     end
 end
 
@@ -39,7 +39,7 @@ function scene.overDraw()
 
     -- Glitch effect after III
     if PROGRESS.get('main')>=3 then
-        drawGlitch()
+        DrawGlitch()
     end
 end
 

@@ -170,11 +170,10 @@ local GAME={
 
 GAME.camera.moveSpeed=12
 
-mechLib={}
 function GAME._refresh()
     TABLE.clear(modeLib)
     TABLE.update(mechLib,TABLE.linkSource({},require'mechanicLib',function(path) return FILE.load(path,'-lua') end,true))
-    regFuncLib(mechLib,'mechLib')
+    RegFuncLib(mechLib,'mechLib')
 end
 GAME._refresh()
 
@@ -197,7 +196,7 @@ function GAME.getMode(name)
 
         for _,m in next,{'brik','gela','acry'} do
             if M.settings[m] then
-                regFuncLib(M.settings[m].event,name)
+                RegFuncLib(M.settings[m].event,name)
             end
         end
 

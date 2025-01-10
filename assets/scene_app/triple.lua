@@ -411,11 +411,11 @@ function scene.keyDown(key,isRep)
             P.selectY,P.selectX=y,x
         end
     elseif key=='r' then
-        if P.state~=1 or sureCheck('reset') then
+        if P.state~=1 or SureCheck('reset') then
             P:reset()
         end
     elseif key=='escape' then
-        if sureCheck('back') then SCN.back() end
+        if SureCheck('back') then SCN.back() end
     end
     return true
 end

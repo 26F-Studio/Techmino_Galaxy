@@ -60,7 +60,7 @@ local musicListBox do
             if fullbandMode then fullband=fullband==true else fullband=nil end
             if sectionMode then section=section==true else section=nil end
             if loopMode then richloop=true else richloop=nil end
-            playBgm(selected,fullband,noProgress)
+            PlayBGM(selected,fullband,noProgress)
         end
     end
     ---@type Zenitha.Widget.listBox
@@ -88,7 +88,7 @@ local progressBar=WIDGET.new{type='slider_progress',pos={.5,.5},x=-700,y=230,w=1
 function scene.load()
     noResponseTimer=-1
     scene.focus(true)
-    selected=getBgm()
+    selected=GetBGM()
     fakeProgress=0
     searchStr,searchTimer="",0
     if not selected then selected='blank' end
@@ -162,15 +162,15 @@ function scene.keyDown(key,isRep)
     elseif not isRep then
         if key=='space' then
             if FMOD.music.getPlaying() then
-                stopBgm()
+                StopBGM()
             else
-                playBgm(selected,fullband,noProgress)
+                PlayBGM(selected,fullband,noProgress)
             end
             progressBar:reset()
         elseif key=='tab' then
-            if isCtrlDown() then
+            if IsCtrlDown() then
                 scene.widgetList.autoplay.code()
-            elseif isShiftDown() then
+            elseif IsShiftDown() then
                 scene.widgetList.section.code()
             else
                 scene.widgetList.fullband.code()
@@ -354,12 +354,12 @@ end
 
 function scene.overDraw()
     if TASK.getLock('musicroom_glitchFX') then
-        drawGlitch2()
+        DrawGlitch2()
     end
 end
 
 scene.widgetList={
-    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=BackText,code=WIDGET.c_backScn'fadeHeader'},
     {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'musicroom_title'},
 
     musicListBox,

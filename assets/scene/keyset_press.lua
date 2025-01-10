@@ -14,7 +14,7 @@ function scene.load()
     result=false
     quitTimer=0
     escTimerWTF=false
-    if SETTINGS.system.touchControl then resetVirtualKeyMode(mode) end
+    if SETTINGS.system.touchControl then ResetVirtualKeyMode(mode) end
 end
 
 function scene.mouseDown(_,_,k) if k==2 then escTimerWTF=.26 end end

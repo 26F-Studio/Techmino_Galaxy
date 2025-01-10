@@ -3,7 +3,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'brik')
         GAME.setMain(1)
-        playBgm('echo')
+        PlayBGM('echo')
     end,
     settings={brik={
         dropDelay=1000,
@@ -56,7 +56,7 @@ return {
                     P.settings.maxFreshTime=2600
                     P:addEvent('beforeCancel',mechLib.brik.survivor.backfire_triplePower_event_beforeCancel)
                     P:addEvent('beforeSend',mechLib.brik.survivor.backfire_easy_event_beforeSend)
-                    playBgm('supercritical')
+                    PlayBGM('supercritical')
                 elseif P.stat.atk>=6 and P.stat.line<=6 then
                     -- Normal: 6 atk in 6 lines
                     T.set(P,'backfire_normal',true)
@@ -66,7 +66,7 @@ return {
                     P.settings.maxFreshTime=4200
                     P:addEvent('beforeCancel',mechLib.brik.survivor.backfire_storePower_event_beforeCancel)
                     P:addEvent('beforeSend',mechLib.brik.survivor.backfire_normal_event_beforeSend)
-                    playBgm('storm')
+                    PlayBGM('storm')
                 elseif P.stat.line>=8 then
                     -- Break: 8 lines
                     T.set(P,'backfire_break',true)
@@ -76,7 +76,7 @@ return {
                     P.settings.maxFreshTime=6200
                     P:addEvent('beforeCancel',mechLib.brik.survivor.backfire_storePower_event_beforeCancel)
                     P:addEvent('beforeSend',mechLib.brik.survivor.backfire_break_event_beforeSend)
-                    playBgm('shift')
+                    PlayBGM('shift')
                 end
 
                 if P.modeData.subMode then

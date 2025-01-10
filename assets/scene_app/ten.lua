@@ -168,7 +168,7 @@ function scene.keyDown(key,isRep)
             fast=not fast
         end
     elseif key=='escape' then
-        if sureCheck('back') then SCN.back() end
+        if SureCheck('back') then SCN.back() end
     end
     return true
 end
@@ -225,9 +225,9 @@ function scene.update(dt)
                 end
             end
         elseif fast and (
-            isMouseDown(1) or
-            getTouches()[1] or
-            isKeyDown('space')
+            IsMouseDown(1) or
+            GetTouches()[1] or
+            IsKeyDown('space')
         ) then
             merge()
         end

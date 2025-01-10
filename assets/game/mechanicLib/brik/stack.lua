@@ -167,8 +167,8 @@ function stack.event_afterLock(P)
             md.stack_highestLine=md.stack_highestLine+1
             md.stackTextHeight=400-(md.stack_highestLine+.5)*(400/P.settings.fieldW)/2
             if not md._stackTextHeight then md._stackTextHeight=md.stackTextHeight end
-            playSample('triangle',{scale[md.stack_lines],min((20-md.stack_lines)/10,1)})
-            playSample('square',{scale[md.stack_lines],min(md.stack_lines/10,1)})
+            PlaySamp('triangle',{scale[md.stack_lines],min((20-md.stack_lines)/10,1)})
+            PlaySamp('square',{scale[md.stack_lines],min(md.stack_lines/10,1)})
             -- or 9.5-tone scale
         end
     end
@@ -197,8 +197,8 @@ function stack.event_afterLock_noFall(P)
                 end
             end
             md.stack_lines=md.stack_lines+1
-            playSample('organ',{scale[md.stack_lines],(20-md.stack_lines)/10})
-            playSample('square',{scale[md.stack_lines],min(md.stack_lines/10,1)})
+            PlaySamp('organ',{scale[md.stack_lines],(20-md.stack_lines)/10})
+            PlaySamp('square',{scale[md.stack_lines],min(md.stack_lines/10,1)})
         end
     end
 end

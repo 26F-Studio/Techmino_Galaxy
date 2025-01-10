@@ -41,7 +41,7 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='escape' then
-        if sureCheck('back') then SCN.back() end
+        if SureCheck('back') then SCN.back() end
     elseif key=='r' then
         _reset()
         FMOD.effect('rotate')

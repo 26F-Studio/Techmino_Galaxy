@@ -328,7 +328,7 @@ function map:update(dt)
     if full then
         if love.keyboard.isDown('up','down','left','right') then
             self:showCursor()
-            if isCtrlDown() then
+            if IsCtrlDown() then
                 if love.keyboard.isDown('up')    then cam:scale(2.6^dt) end
                 if love.keyboard.isDown('down')  then cam:scale(1/2.6^dt) end
                 if love.keyboard.isDown('right') then cam:rotate(dt*3.55) end

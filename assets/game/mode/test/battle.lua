@@ -5,7 +5,7 @@ return {
         GAME.newPlayer(2,'brik')
         GAME.newPlayer(3,'gela')
         GAME.setMain(1)
-        playBgm('battle')
+        PlayBGM('battle')
     end,
     settings={
         brik={

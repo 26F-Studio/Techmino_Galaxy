@@ -58,7 +58,7 @@ local function sequence_pento_arc(P,d,init)
     return table.remove(d.bag1,P:random(#d.bag1))
 end
 
-regFuncLib({
+RegFuncLib({
     cutField_event_always=cutField_event_always,
     sequence_weird=sequence_weird,
     sequence_pento_arc=sequence_pento_arc,
@@ -70,7 +70,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'brik')
         GAME.setMain(1)
-        playBgm('reason')
+        PlayBGM('reason')
     end,
     settings={brik={
         dropDelay=1e99,
@@ -110,7 +110,7 @@ return {
                         T.set(P,'sequence_mph',true)
                         PROGRESS.setExteriorScore('sequence','showMPH',1,'>')
                         P.modeData.subMode='mph'
-                        playBgm('blox')
+                        PlayBGM('blox')
                         P:setSequenceGen('messy','-clearData')
                         P.settings.nextSlot=0
 
@@ -118,27 +118,27 @@ return {
                     elseif P.hand.name=='S' or P.hand.name=='Z' then
                         T.set(P,'sequence_flood',true)
                         P.modeData.subMode='flood'
-                        playBgm('reason')
+                        PlayBGM('reason')
                         P:setSequenceGen('bag7p6_flood','-clearData')
                     elseif P.hand.name=='J' or P.hand.name=='L' then
                         T.set(P,'sequence_drought',true)
                         P.modeData.subMode='drought'
-                        playBgm('reason')
+                        PlayBGM('reason')
                         P:setSequenceGen('bag7p7m2_drought','-clearData')
                     elseif P.hand.name=='T' then
                         T.set(P,'sequence_saw',true)
                         P.modeData.subMode='saw'
-                        playBgm('reason')
+                        PlayBGM('reason')
                         P:setSequenceGen('bag3_saw','-clearData')
                     elseif P.hand.name=='O' then
                         T.set(P,'sequence_rect',true)
                         P.modeData.subMode='rect'
-                        playBgm('reason')
+                        PlayBGM('reason')
                         P:setSequenceGen('bag4_rect','-clearData')
                     elseif P.hand.name=='I' then
                         T.set(P,'sequence_rain',true)
                         P.modeData.subMode='rain'
-                        playBgm('race')
+                        PlayBGM('race')
                         P:setSequenceGen('bag3_sea','-clearData')
 
                     -- Pento
@@ -147,7 +147,7 @@ return {
                         T.setTitle(P,'sequence_pento','modeTask_sequence_pento_title','modeTask_sequence_pento_desc')
                         PROGRESS.setExteriorScore('sequence','showPento',1,'>')
                         P.modeData.subMode='pento'
-                        playBgm('beat5th')
+                        PlayBGM('beat5th')
                         P:setSequenceGen(sequence_pento_arc,'-clearData -clearNext')
                         P.settings.holdSlot=1
                     end

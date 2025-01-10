@@ -12,8 +12,8 @@ function scene.load()
     if SCN.args[1] then
         startGame(SCN.args[1])
     end
-    resetVirtualKeyMode(GAME.mainPlayer and GAME.mainPlayer.gameMode)
-    scene.widgetList.pause.text=canPause() and CHAR.icon.pause or CHAR.icon.back
+    ResetVirtualKeyMode(GAME.mainPlayer and GAME.mainPlayer.gameMode)
+    scene.widgetList.pause.text=CanPause() and CHAR.icon.pause or CHAR.icon.back
     WIDGET._reset()
 end
 function scene.unload()
@@ -28,7 +28,7 @@ local function sysAction(action)
             startGame(GAME.mode.name)
         end
     elseif action=='back' then
-        if canPause() then
+        if CanPause() then
             SCN.swapTo('pause_in','none')
         else
             SCN.back('none')

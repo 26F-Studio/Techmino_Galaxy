@@ -17,12 +17,12 @@ end
 
 local function sysAction(action)
     if action=='help' then
-        callDict('aboutDict')
+        CallDict('aboutDict')
         PROGRESS.setSecret('dict_shortcut')
     elseif action=='setting' then
         SCN.go('setting_out','fadeHeader')
     elseif action=='back' then
-        if sureCheck('quit') then PROGRESS.quit() end
+        if SureCheck('quit') then PROGRESS.quit() end
     end
 end
 function scene.keyDown(key,isRep)
@@ -30,9 +30,9 @@ function scene.keyDown(key,isRep)
     if     key=='1' then
     elseif key=='2' then
     elseif key=='3' then
-    elseif key=='b' then playExterior('brik/exterior/test')() return true
-    elseif key=='g' then playExterior('gela/test')() return true
-    elseif key=='a' then playExterior('acry/test')() return true
+    elseif key=='b' then PlayExterior('brik/exterior/test')() return true
+    elseif key=='g' then PlayExterior('gela/test')() return true
+    elseif key=='a' then PlayExterior('acry/test')() return true
     end
 
     if isRep then return true end
@@ -95,6 +95,6 @@ scene.widgetList={
 
     {type='button', pos={.5,.5},x=-570,y=220,w=340,h=100,text=function() return CHAR.icon.settings  ..' '..Text.main_out_settings  end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('setting_out','fadeHeader')},
     {type='button', pos={.5,.5},x=-190,y=220,w=340,h=100,text=function() return CHAR.icon.statistics..' '..Text.main_out_stat      end, fontSize=40,cornerR=26,color='lD',sound_trigger=false},
-    {type='button', pos={.5,.5},x=190, y=220,w=340,h=100,text=function() return CHAR.icon.zictionary..' '..Text.main_out_dict      end, fontSize=40,cornerR=26,code=function() callDict('aboutDict') end},
+    {type='button', pos={.5,.5},x=190, y=220,w=340,h=100,text=function() return CHAR.icon.zictionary..' '..Text.main_out_dict      end, fontSize=40,cornerR=26,code=function() CallDict('aboutDict') end},
 }
 return scene

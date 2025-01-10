@@ -3,7 +3,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'brik')
         GAME.setMain(1)
-        playBgm('warped')
+        PlayBGM('warped')
     end,
     settings={brik={
         event={
@@ -47,7 +47,7 @@ return {
                         PROGRESS.setExteriorScore('hypersonic','showTitanium',1,'>')
                         P.modeData.subMode='titanium'
                         initFunc=mechLib.brik.marathon.hypersonic_titanium_event_playerInit
-                        playBgm('secret7th remix_hypersonic_titanium')
+                        PlayBGM('secret7th remix_hypersonic_titanium')
 
                     elseif P.gameTime<=6e3 then
                         -- Hidden: Techrash in 6s
@@ -58,7 +58,7 @@ return {
                         PROGRESS.setExteriorScore('hypersonic','showHidden',1,'>')
                         P.modeData.subMode='hidden'
                         initFunc=mechLib.brik.marathon.hypersonic_hidden_event_playerInit
-                        playBgm('secret7th_hypersonic_hidden')
+                        PlayBGM('secret7th_hypersonic_hidden')
                         mechLib.common.music.set(P,{id='point_hypersonic_hidden',path='.point'},'afterSpawn')
                         FMOD.music.seek(MATH.roundUnit(FMOD.music.tell(),60/130))
 
@@ -71,7 +71,7 @@ return {
                         T.set(P,'hypersonic_high',true)
                         P.modeData.subMode='high'
                         initFunc=mechLib.brik.marathon.hypersonic_high_event_playerInit
-                        playBgm('secret7th')
+                        PlayBGM('secret7th')
                         mechLib.common.music.set(P,{path='.point',s=100,e=500},'afterSpawn')
                     end
 
@@ -80,7 +80,7 @@ return {
                     P.modeData.subMode='low'
                     T.set(P,'hypersonic_low',true,'(4/4)')
                     initFunc=mechLib.brik.marathon.hypersonic_low_event_playerInit
-                    playBgm('secret8th')
+                    PlayBGM('secret8th')
                     mechLib.common.music.set(P,{path='.point',s=100,e=300},'afterSpawn')
                 end
                 if initFunc then

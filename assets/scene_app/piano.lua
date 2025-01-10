@@ -10,7 +10,6 @@ local activeEventMap={} ---@type table<love.Scancode, FMOD.Studio.EventInstance>
 local objPool={} ---@type Techmino.Piano.Object[]
 local inst,offset,release
 
-local instList={'organ_wave','square_wave','saw_wave','complex_wave','stairs_wave','spectral_wave','obscure_wave','death_wave','crash_wave','vasco_wave','random_wave'}
 local presets={}
 
 do -- rollNote
@@ -418,8 +417,8 @@ local function stopAllSounds()
 end
 function scene.load()
     stopAllSounds()
-    stopBgm()
-    inst='organ_wave'
+    StopBGM()
+    inst='organ'
     offset=0
     release=500
 end
@@ -440,12 +439,12 @@ function scene.keyDown(key,isRep,keyCode)
     if layout.keyMap[keyCode] then
         if isRep then return end
         local note=layout.keyMap[keyCode]+offset
-        if isKeyDown('lshift') then note=note+1 end
-        if isKeyDown('lctrl') then note=note-1 end
+        if IsKeyDown('lshift') then note=note+1 end
+        if IsKeyDown('lctrl') then note=note-1 end
         _param.tune=note-26
-        _param.volume=isKeyDown('lalt') and .26 or 1
-        _param.param[2]=(isKeyDown('space') and 4200 or release)*1.0594630943592953^(_param.tune)
-        activeEventMap[keyCode]=FMOD.effect(inst,_param)
+        _param.volume=IsKeyDown('lalt') and .26 or 1
+        _param.param[2]=(IsKeyDown('space') and 4200 or release)*1.0594630943592953^(_param.tune)
+        activeEventMap[keyCode]=FMOD.effect(inst..'_wave',_param)
     elseif key=='f3' then
         release=clamp(release-50,0,2600)
     elseif key=='f4' then
@@ -457,7 +456,7 @@ function scene.keyDown(key,isRep,keyCode)
     elseif not isRep then
         if key=='tab' then
             stopAllSounds()
-            inst=TABLE.next(instList,inst) or instList[1]
+            inst=TABLE.next(InstList,inst) or InstList[1]
         elseif key=='space' then
             -- TODO
         elseif key=='ralt' then
@@ -473,15 +472,15 @@ function scene.keyDown(key,isRep,keyCode)
         elseif key=='rctrl' then
             offset=clamp(offset-.5,-12,24)
         elseif key=='right' then
-            offset=clamp(offset+(isKeyDown('left') and 0.5 or 1),-12,24)
+            offset=clamp(offset+(IsKeyDown('left') and 0.5 or 1),-12,24)
         elseif key=='left' then
-            offset=clamp(offset-(isKeyDown('right') and 0.5 or 1),-12,24)
+            offset=clamp(offset-(IsKeyDown('right') and 0.5 or 1),-12,24)
         elseif key=='up' then
             offset=clamp(offset+12,-12,24)
         elseif key=='down' then
             offset=clamp(offset-12,-12,24)
         elseif key=='escape' then
-            if sureCheck('back') then SCN.back() end
+            if SureCheck('back') then SCN.back() end
         end
     end
     return true
@@ -493,7 +492,7 @@ function scene.keyUp(_,keyCode)
     end
 end
 
-local isSCDown=isSCDown
+local isSCDown=IsSCDown
 function scene.update(dt)
     local L=layout.keyLayout
     for i=1,#L do
@@ -521,10 +520,10 @@ end
 
 function scene.draw()
     setFont(30)
-    gc.print(layout.name,40,40)
-    gc.print(inst,40,80)
-    gc.print(offset,40,120)
-    gc.print(release,40,160)
+    gc.print("Dev. "..layout.name,40,40)
+    gc.print("Wav. "..inst,40,80)
+    gc.print("Tun. "..offset,40,120)
+    gc.print("Rel. "..release,40,160)
     gc.replaceTransform(SCR.xOy_m)
 
     for i=1,#objPool do

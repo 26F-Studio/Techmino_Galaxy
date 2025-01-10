@@ -6,7 +6,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'brik')
         GAME.setMain(1)
-        playBgm('push')
+        PlayBGM('push')
     end,
     settings={brik={
         skin='brik_interior',
@@ -17,7 +17,7 @@ return {
         deathDelay=0,
         soundEvent={
             countDown=mechLib.brik.misc.interior_soundEvent_countDown,
-            drop=gameSoundFunc.drop_old,
+            drop=GameSndFunc.drop_old,
         },
         event={
             playerInit=function(P)

@@ -22,11 +22,11 @@ end
 
 scene.mouseDown=NULL
 function scene.keyDown(key)
-    if isKeyDown('lshift','rshift') then
+    if IsKeyDown('lshift','rshift') then
         if key=='=' then
             scene.keyDown('+')
             return true
-        elseif isKeyDown('lshift','rshift') and key=='8' then
+        elseif IsKeyDown('lshift','rshift') and key=='8' then
             scene.keyDown('*')
             return true
         end
@@ -110,7 +110,7 @@ function scene.keyDown(key)
         if val~="0" then
             reg,sym=false,false
             val="0"
-        elseif sureCheck('back') then
+        elseif SureCheck('back') then
             SCN.back()
         end
     elseif key=='delete' then

@@ -116,7 +116,7 @@ end
 
 function scene.load()
     reset()
-    playBgm('space')
+    PlayBGM('space')
 end
 
 function scene.unload()
@@ -189,7 +189,7 @@ function scene.keyDown(key,isRep)
     if action=='restart' then
         reset()
     elseif action=='back' then
-        if sureCheck('back') then SCN.back('none') end
+        if SureCheck('back') then SCN.back('none') end
     end
     return true
 end

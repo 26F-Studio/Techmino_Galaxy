@@ -12,14 +12,14 @@ local function accelerate_event_always(P)
         end
     end
 end
-regFuncLib(accelerate_event_always,'exterior_survivor.accelerate_event_always')
+RegFuncLib(accelerate_event_always,'exterior_survivor.accelerate_event_always')
 
 ---@type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'brik')
         GAME.setMain(1)
-        playBgm('new era')
+        PlayBGM('new era')
     end,
     settings={brik={
         dropDelay=1000,
@@ -73,7 +73,7 @@ return {
                         P.settings.maxFreshTime=2600
                         P:setAttackSystem('nextgen')
                         P:addEvent('always',mechLib.brik.survivor.spike_event_always)
-                        playBgm('there')
+                        PlayBGM('there')
                         mechLib.common.music.set(P,{path='.wave',s=10,e=30},'afterClear')
                     elseif eff>=1 then
                         -- Power: 8 atk & 1 Eff
@@ -83,7 +83,7 @@ return {
                         P.settings.maxFreshChance=12
                         P.settings.maxFreshTime=4200
                         P:addEvent('always',mechLib.brik.survivor.power_event_always)
-                        playBgm('here')
+                        PlayBGM('here')
                         mechLib.common.music.set(P,{path='.wave',s=20,e=50},'afterClear')
                     else
                         -- Scattered: 8 atk
@@ -94,7 +94,7 @@ return {
                         P.settings.maxFreshTime=6200
                         P:setAttackSystem('basic')
                         P:addEvent('always',mechLib.brik.survivor.scattered_event_always)
-                        playBgm('shift')
+                        PlayBGM('shift')
                         mechLib.common.music.set(P,{path='.wave',s=30,e=80},'afterClear')
                     end
                     if P.modeData.subMode then

@@ -8,14 +8,14 @@ local function infSprint_turnOn(P)
     P.modeData.infSprint_switch=true
 end
 
-regFuncLib(infSprint_turnOn,'exterior_sprint.infSprint_turnOn')
+RegFuncLib(infSprint_turnOn,'exterior_sprint.infSprint_turnOn')
 
 ---@type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'brik')
         GAME.setMain(1)
-        playBgm('race')
+        PlayBGM('race')
     end,
     settings={brik={
         -- clearRule='line_float',

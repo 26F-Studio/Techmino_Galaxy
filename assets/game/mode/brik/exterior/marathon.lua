@@ -3,7 +3,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'brik')
         GAME.setMain(1)
-        playBgm('propel_marathon')
+        PlayBGM('propel_marathon')
     end,
     settings={brik={
         event={

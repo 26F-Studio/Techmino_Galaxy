@@ -137,7 +137,7 @@ function PROGRESS.save(step)
         prgs.rnd=math.random(26,2e6)
         prgs.hash=getHash(prgs)
         FILE.save(prgs,'conf/progress','-json')
-        showSaveIcon(CHAR.icon.save)
+        ShowSaveIcon(CHAR.icon.save)
     end
 end
 function PROGRESS.load()
@@ -220,7 +220,7 @@ local function fuse()
     TASK.unlock('musicroom_glitchFX')
 end
 function PROGRESS.applyInteriorBGM()
-    playBgm('blank',prgs.main~=1)
+    PlayBGM('blank',prgs.main~=1)
     if prgs.main>=3 then
         FMOD.effect('music_glitch')
         TASK.removeTask_code(fuse)
@@ -229,10 +229,10 @@ function PROGRESS.applyInteriorBGM()
 end
 function PROGRESS.applyExteriorBGM()
     if prgs.main==3 then
-        playBgm('vacuum')
+        PlayBGM('vacuum')
     else
-        if love.timer.getTime()>3.55 and getBgm()~='singularity' then
-            playBgm('singularity')
+        if love.timer.getTime()>3.55 and GetBGM()~='singularity' then
+            PlayBGM('singularity')
             FMOD.music.seek(3.9)
         end
     end
@@ -293,7 +293,7 @@ function PROGRESS.transcendTo(n)
         WAIT{
             coverAlpha=0,
             noDefaultDraw=true,
-            init=stopBgm,
+            init=StopBGM,
             update=function(_,t)
                 if WAIT.state=='wait' and t>=2.6 then
                     PROGRESS.setMain(2)
@@ -327,8 +327,8 @@ function PROGRESS.transcendTo(n)
                         FMOD.music.seek(FMOD.music.tell()-.1)
                         sumT=sumT-.1
                     end
-                elseif t<2 and getBgm() then
-                    stopBgm(true)
+                elseif t<2 and GetBGM() then
+                    StopBGM(true)
                 end
                 if WAIT.state=='wait' and t>=2.6 then
                     PROGRESS.setMain(3)
@@ -379,7 +379,7 @@ function PROGRESS.quit()
             end,
         }
     elseif prgs.main<=4 then
-        stopBgm()
+        StopBGM()
         local t=1
         WAIT.setDefaultDraw(NULL)
         WAIT{

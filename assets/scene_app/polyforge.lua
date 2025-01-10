@@ -44,7 +44,7 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='escape' then
-        if sureCheck('back') then SCN.back() end
+        if SureCheck('back') then SCN.back() end
     elseif key=='space' then
         if state==0 then -- main
             if zooming<=0 then
@@ -55,7 +55,7 @@ function scene.keyDown(key,isRep)
             if hit[c]==0 then
                 hit[c]=1
                 count=count+1
-                gameSoundFunc.combo(count+5)
+                GameSndFunc.combo(count+5)
                 if count==side then
                     state=1
                     FMOD.effect('spin_0')

@@ -9,7 +9,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'brik')
         GAME.setMain(1)
-        playBgm('space')
+        PlayBGM('space')
     end,
     settings={brik={
         skin='brik_interior',
@@ -30,7 +30,7 @@ return {
         seqType='none',
         soundEvent={
             countDown=NULL,
-            drop=gameSoundFunc.drop_old,
+            drop=GameSndFunc.drop_old,
         },
         event={
             playerInit=function(P)

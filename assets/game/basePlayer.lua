@@ -259,7 +259,7 @@ function P:addEvent(name,E)
         ---@type Techmino.Event
         E,errMsg=loadstring('local P=...;'..E)
         if E then
-            setSafeEnv(E)
+            SetSafeEnv(E)
             self:addEvent(name,E)
         else
             error("Error in code string: "..errMsg)

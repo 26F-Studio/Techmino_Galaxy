@@ -80,7 +80,7 @@ function scene.keyDown(key,isRep)
         time=0
         state=0
     elseif key=='escape' then
-        if sureCheck('back') then SCN.back() end
+        if SureCheck('back') then SCN.back() end
     end
     return true
 end

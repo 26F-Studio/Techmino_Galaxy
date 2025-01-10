@@ -1,5 +1,4 @@
 local gc=love.graphics
-local tc=love.touch
 
 ---@type Zenitha.Scene
 local scene={}
@@ -17,8 +16,8 @@ function scene.load()
     if SCN.args[1] then
         startGame(SCN.args[1])
     end
-    resetVirtualKeyMode(GAME.mainPlayer and GAME.mainPlayer.gameMode)
-    scene.widgetList.pause.text=canPause() and CHAR.icon.pause or CHAR.icon.back
+    ResetVirtualKeyMode(GAME.mainPlayer and GAME.mainPlayer.gameMode)
+    scene.widgetList.pause.text=CanPause() and CHAR.icon.pause or CHAR.icon.back
     WIDGET._reset()
 end
 function scene.unload()
@@ -40,7 +39,7 @@ local function sysAction(action)
             GAME.camera:scale(5/3)
         end
     elseif action=='back' then
-        if canPause() then
+        if CanPause() then
             FMOD.effect('pause_pause')
             SCN.swapTo('pause_out','none')
         else
@@ -116,6 +115,8 @@ function scene.update(dt)
     GAME.update(dt)
 end
 
+local getTC=love.touch.getTouches
+local getPos=love.touch.getPosition
 function scene.draw()
     GAME.render()
 
@@ -125,8 +126,8 @@ function scene.draw()
     if SETTINGS.system.showTouch then
         gc.setColor(1,1,1,.5)
         gc.setLineWidth(4)
-        for _,id in next,tc.getTouches() do
-            local x,y=tc.getPosition(id)
+        for _,id in next,getTC() do
+            local x,y=getPos(id)
             x,y=SCR.xOy:inverseTransformPoint(x,y)
             gc.circle('line',x,y,80)
         end

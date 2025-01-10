@@ -32,7 +32,7 @@ local function sysAction(action)
             SCN.swapTo('game_in','none',GAME.mode.name)
         end
     elseif action=='setting' then
-        if PROGRESS.get('main')<=2 or isCtrlDown() then
+        if PROGRESS.get('main')<=2 or IsCtrlDown() then
             SCN.go('setting_in','none')
         else
             FMOD.effect('move_failed')

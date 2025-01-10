@@ -15,7 +15,7 @@ function scene.load()
                 repeat
                     coroutine.yield()
                 until FMOD.studio
-                playBgm('singularity')
+                PlayBGM('singularity')
             end)
         end
     end

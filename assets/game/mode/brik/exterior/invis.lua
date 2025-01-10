@@ -48,23 +48,23 @@ function haunted.afterLock(P)
             if perfect then
                 acc=10
                 if phase==1 then
-                    playSample('saw',{'F2',1,62})
-                    playSample('organ',{'F2',.626,62})
+                    PlaySamp('saw',{'F2',1,62})
+                    PlaySamp('organ',{'F2',.626,62})
                 elseif phase==2 then
-                    playSample('saw',{'G#2',1,62})
-                    playSample('organ',{'G#2',.626,62})
+                    PlaySamp('saw',{'G#2',1,62})
+                    PlaySamp('organ',{'G#2',.626,62})
                 elseif phase==3 then
-                    playSample('saw',{'A#2',1,62})
-                    playSample('organ',{'A#2',.626,62})
+                    PlaySamp('saw',{'A#2',1,62})
+                    PlaySamp('organ',{'A#2',.626,62})
                 end
             else
                 acc=3
                 if phase==1 then
-                    playSample('complex',{'F2',1,62})
+                    PlaySamp('complex',{'F2',1,62})
                 elseif phase==2 then
-                    playSample('complex',{'G#2',1,62})
+                    PlaySamp('complex',{'G#2',1,62})
                 elseif phase==3 then
-                    playSample('complex',{'A#2',1,62})
+                    PlaySamp('complex',{'A#2',1,62})
                 end
             end
             P.modeData.energy=P.modeData.energy+acc
@@ -104,7 +104,7 @@ function haunted.p3_afterSpawn(P)
         end
     end
 end
-regFuncLib({
+RegFuncLib({
     haunted=haunted,
 },'exterior_invis')
 
@@ -113,7 +113,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'brik')
         GAME.setMain(1)
-        playBgm('sugar fairy')
+        PlayBGM('sugar fairy')
     end,
     settings={brik={
         pieceVisTime=1000,
@@ -161,7 +161,7 @@ return {
                             P.settings.clearDelay=round(beatItvl[1])
                             P.settings.lockDelay=round(beatItvl[1]*2.5)
                             P:addEvent('afterLock',haunted.afterLock)
-                            playBgm('invisible')
+                            PlayBGM('invisible')
                             P:addSoundEvent('drop',haunted.dropSound1)
                             PROGRESS.setBgmUnlocked('invisible mode',1)
                             if FMOD.music.getParam('section')>0 then

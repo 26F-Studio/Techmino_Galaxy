@@ -3,7 +3,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'brik')
         GAME.setMain(1)
-        playBgm('oxygen')
+        PlayBGM('oxygen')
     end,
     settings={brik={
         spawnDelay=60,

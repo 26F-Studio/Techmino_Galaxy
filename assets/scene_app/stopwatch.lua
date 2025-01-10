@@ -44,14 +44,14 @@ function scene.touchDown()
     press()
 end
 function scene.touchUp()
-    if #getTouches()==0 then
+    if #GetTouches()==0 then
         release()
     end
 end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='escape' then
-        if sureCheck('back') then SCN.back() end
+        if SureCheck('back') then SCN.back() end
     else
         press()
     end

@@ -267,14 +267,14 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='r' then
-        if state~=1 or sureCheck('reset') then
+        if state~=1 or SureCheck('reset') then
             newGame()
         end
     elseif key=='z' or key=='x' then
         love.mousepressed(love.mouse.getPosition())
     elseif key=='escape' then
         if state~=1 then
-            if sureCheck('back') then SCN.back() end
+            if SureCheck('back') then SCN.back() end
         end
     elseif state==0 then
         if key=='q' then
@@ -289,7 +289,7 @@ local function touch(x,y)
     tap(x,y)
 end
 function scene.mouseDown(x,y,k) if k==1 or k==2 or not k then touch(x,y) end end
-function scene.mouseMove(x,y) if (isMouseDown(1) or isKeyDown('z','x')) then touch(x,y) end end
+function scene.mouseMove(x,y) if (IsMouseDown(1) or IsKeyDown('z','x')) then touch(x,y) end end
 function scene.touchDown(x,y) touch(x,y) end
 function scene.touchMove(x,y) touch(x,y) end
 

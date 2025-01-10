@@ -16,7 +16,7 @@ function misc.skipReadyWithHardDrop_beforePress(P,act)
 end
 
 function misc.interior_soundEvent_countDown(num)
-    playSample('square',{num>0 and 'E4' or 'E5'})
+    PlaySamp('square',{num>0 and 'E4' or 'E5'})
 end
 
 function misc.invincible_event_afterLock(P)

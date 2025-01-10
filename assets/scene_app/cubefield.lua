@@ -72,7 +72,7 @@ function scene.touchDown(x)
 end
 function scene.touchUp(x)
     if play then
-        local L=getTouches()
+        local L=GetTouches()
         if x<640 then
             for i=1,#L do
                 if tc.getPosition(L[i])>640 then
@@ -96,7 +96,7 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='escape' then
-        if sureCheck('back') then SCN.back() end
+        if SureCheck('back') then SCN.back() end
     elseif play then
         if key=='left' or key=='a' then
             moveDir=-1
@@ -115,9 +115,9 @@ end
 function scene.keyUp(key)
     if play then
         if key=='left' or key=='a' then
-            moveDir=isKeyDown('right','d') and 1 or 0
+            moveDir=IsKeyDown('right','d') and 1 or 0
         elseif key=='right' or key=='d' then
-            moveDir=isKeyDown('left','a') and -1 or 0
+            moveDir=IsKeyDown('left','a') and -1 or 0
         end
     end
 end

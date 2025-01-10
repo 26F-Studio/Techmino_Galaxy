@@ -178,7 +178,7 @@ function ZENITHA.globalEvent.keyDown(key,isRep)
     if _keyDown_orig(key,isRep) then return true end
     if key=='f11' then
         SETTINGS.system.fullscreen=not SETTINGS.system.fullscreen
-        saveSettings()
+        SaveSettings()
         return true
     end
 end

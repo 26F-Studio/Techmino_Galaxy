@@ -2,8 +2,8 @@
 local scene={}
 
 function scene.load()
-    resetVirtualKeyMode('brik')
-    updateWidgetVisible(scene.widgetList)
+    ResetVirtualKeyMode('brik')
+    UpdateVKWidgetVisible(scene.widgetList)
 end
 
 function scene.unload(...)     SCN.scenes['keyset_touch_in'].unload(...)     end
@@ -11,7 +11,7 @@ function scene.keyDown(...)   SCN.scenes['keyset_touch_in'].keyDown(...)   end
 
 function scene.touchDown(x,y,id)
     VCTRL.press(x,y,id)
-    updateWidgetVisible(scene.widgetList)
+    UpdateVKWidgetVisible(scene.widgetList)
 end
 
 function scene.touchMove(...) SCN.scenes['keyset_touch_in'].touchMove(...) end

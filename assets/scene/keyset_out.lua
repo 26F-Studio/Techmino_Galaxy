@@ -31,7 +31,7 @@ function scene.load()
 end
 function scene.unload()
     if SCN.stackChange<0 then
-        saveKey()
+        SaveKey()
     end
 end
 
@@ -142,12 +142,12 @@ scene.widgetList={
 
     {type='button',pos={1,1},x=-300,y=-80,w=160,h=80,text=LANG"setting_test",fontSize=40,code=function()
         if GAME.mode then return MSG('warn',Text.setting_tryTestInGame) end
-        playExterior(
+        PlayExterior(
             keyMode=='brik' and 'brik/exterior/test' or
             keyMode..'/test'
         )()
     end,visibleFunc=function() return keyMode~='sys' end},
     {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'settings_title'},
-    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=BackText,code=WIDGET.c_backScn'fadeHeader'},
 }
 return scene

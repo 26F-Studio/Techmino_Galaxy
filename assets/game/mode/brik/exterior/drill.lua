@@ -3,7 +3,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'brik')
         GAME.setMain(1)
-        playBgm('shift')
+        PlayBGM('shift')
     end,
     settings={brik={
         dropDelay=1000,

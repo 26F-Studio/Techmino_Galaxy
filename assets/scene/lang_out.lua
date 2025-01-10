@@ -110,7 +110,7 @@ local codes={
 local function dial(n)
     rec,recTimer=(rec..n):sub(-26),2.6
     if mode=='dial' then
-        playSample(instrument,unpack(dialModeData[mode][n].notes))
+        PlaySamp(instrument,unpack(dialModeData[mode][n].notes))
         for _,sequence in next,codes do
             if rec:find(sequence) then
                 mode='chord'
@@ -121,7 +121,7 @@ local function dial(n)
         end
     else
         if n=='*' then
-            instrument=TABLE.next({'organ','square','saw','complex','stairs','spectral','obscure','death','crash','vasco','random'},instrument) or 'organ'
+            instrument=TABLE.next(InstList,instrument) or InstList[1]
         elseif n=='0' then
             octave_plus=not octave_plus
         elseif n=='#' then
@@ -133,9 +133,9 @@ local function dial(n)
                 for i=1,#notes do
                     notes[i][1]=notes[i][1]:sub(1,-2)..(notes[i][1]:sub(-1)+1)
                 end
-                playSample(instrument,unpack(notes))
+                PlaySamp(instrument,unpack(notes))
             else
-                playSample(instrument,unpack(dialModeData[mode][n].notes))
+                PlaySamp(instrument,unpack(dialModeData[mode][n].notes))
             end
         end
     end
@@ -157,7 +157,7 @@ function scene.load()
 end
 function scene.unload()
     if changed and SCN.stackChange<0 then
-        saveSettings()
+        SaveSettings()
     end
     if hasMessage then
         MSG.clear()
@@ -197,7 +197,7 @@ end
 function scene.draw()
     PROGRESS.drawExteriorHeader()
 
-    if isCtrlDown() then
+    if IsCtrlDown() then
         FONT.set(100)
         GC.setColor(1,1,1,.626)
         GC.mStr(CHAR.icon.eye,love.mouse.getX(),love.mouse.getY()-64)
@@ -240,7 +240,7 @@ local function _setLang(lid)
             duration=1.26,
         }
         if SETTINGS.system.locale~=lid then
-            if isCtrlDown() then
+            if IsCtrlDown() then
                 local oldText=TABLE.copyAll(Text)
                 local oldLocale=SETTINGS.system.locale:upper()
                 SETTINGS.system.locale=lid
@@ -275,7 +275,7 @@ local function _setLang(lid)
 end
 
 scene.widgetList={
-    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=WIDGET.c_backScn'fadeHeader'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=BackText,code=WIDGET.c_backScn'fadeHeader'},
     {type='text',x=800,y=900,fontSize=30,text=LANG'lang_note'},
 
     {type='button',    name='dial_1',x=350 ,y=310,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LV',sound_trigger=false,code=function() if dialMode then dial('1') else _setLang('en') end end},

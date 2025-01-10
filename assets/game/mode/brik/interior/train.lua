@@ -17,7 +17,7 @@ return {
         -- spawnDelay=26,
         soundEvent={
             countDown=mechLib.brik.misc.interior_soundEvent_countDown,
-            drop=gameSoundFunc.drop_old,
+            drop=GameSndFunc.drop_old,
         },
         event={ -- Display ghost at not-bad places to help new players learn stacking
             playerInit=function(P)

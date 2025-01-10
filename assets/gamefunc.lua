@@ -1,12 +1,9 @@
-function sureCheck(event)
-    if TASK.lock('sureCheck_'..event,1) then
-        MSG('info',Text.sureText[event],1)
-    else
-        return true
-    end
+function SureCheck(event)
+    if not TASK.lock('sureCheck_'..event,1) then return true end
+    MSG('info',Text.sureText[event],1)
 end
 
-function drawGlitch()
+function DrawGlitch()
     local setc,rect=GC.setColor,GC.rectangle
     local t=love.timer.getTime()
     local cellSize=math.min(SCR.w,SCR.h)/26
@@ -18,7 +15,7 @@ function drawGlitch()
         end
     end
 end
-function drawGlitch2()
+function DrawGlitch2()
     local setc,rect=GC.setColor,GC.rectangle
     local t=love.timer.getTime()
     local a=1/26
@@ -34,7 +31,7 @@ local _bgmPlaying ---@type string?
 ---@param name Techmino.MusicName
 ---@param full? boolean | table
 ---@param noProgress? boolean
-function playBgm(name,full,noProgress)
+function PlayBGM(name,full,noProgress)
     if name==_bgmPlaying then return end
     if not noProgress and not SONGBOOK[name].inside then
         PROGRESS.setBgmUnlocked(SONGBOOK[name].redirect or name,full and 2 or 1)
@@ -49,14 +46,14 @@ function playBgm(name,full,noProgress)
     end
     _bgmPlaying=name
 end
-function getBgm()
+function GetBGM()
     return _bgmPlaying
 end
-function stopBgm(instant)
+function StopBGM(instant)
     FMOD.music.stop(instant)
     _bgmPlaying=nil
 end
-function playSample(...)
+function PlaySamp(...)
     local l={...}
     local inst
     for i=1,#l do
@@ -83,10 +80,12 @@ function playSample(...)
     end
 end
 
-gameSoundFunc={}
-gameSoundFunc.__index=gameSoundFunc
-gameSoundFunc.__metatable=true
-setmetatable(gameSoundFunc,{
+InstList={'organ','square','saw','complex','stairs','spectral','obscure','death','crash','vasco','random'}
+
+GameSndFunc={}
+GameSndFunc.__index=GameSndFunc
+GameSndFunc.__metatable=true
+setmetatable(GameSndFunc,{
     __newindex=function(self,k,v)
         if v==NULL then
             rawset(self,k,function(vol) FMOD.effect(k,vol) end)
@@ -97,71 +96,71 @@ setmetatable(gameSoundFunc,{
 })
 do
     local _someSFX=NULL
-    gameSoundFunc.move                  =_someSFX
-    gameSoundFunc.move_down             =_someSFX
-    gameSoundFunc.move_failed           =_someSFX
-    gameSoundFunc.touch                 =_someSFX
-    gameSoundFunc.lock                  =_someSFX
-    gameSoundFunc.tuck                  =_someSFX
-    gameSoundFunc.rotate                =_someSFX
-    gameSoundFunc.rotate_init           =_someSFX
-    gameSoundFunc.rotate_locked         =_someSFX
-    gameSoundFunc.rotate_corners        =_someSFX
-    gameSoundFunc.rotate_failed         =_someSFX
-    gameSoundFunc.rotate_special        =_someSFX
-    gameSoundFunc.hold                  =_someSFX
-    gameSoundFunc.hold_init             =_someSFX
-    gameSoundFunc.drop                  =_someSFX
-    gameSoundFunc.drop_old              =_someSFX
-    gameSoundFunc.clear_all             =_someSFX
-    gameSoundFunc.clear_half            =_someSFX
-    gameSoundFunc.frenzy                =_someSFX
-    gameSoundFunc.discharge             =_someSFX
-    gameSoundFunc.suffocate             =_someSFX
-    gameSoundFunc.desuffocate           =_someSFX
-    gameSoundFunc.beep_rise             =_someSFX
-    gameSoundFunc.beep_drop             =_someSFX
-    gameSoundFunc.beep_notice           =_someSFX
-    gameSoundFunc.finish_win            =_someSFX
-    gameSoundFunc.finish_suffocate      =_someSFX
-    gameSoundFunc.finish_lockout        =_someSFX
-    gameSoundFunc.finish_topout         =_someSFX
-    gameSoundFunc.finish_timeout        =_someSFX
-    gameSoundFunc.finish_rule           =_someSFX
-    gameSoundFunc.finish_exhaust        =_someSFX
-    gameSoundFunc.finish_taskfail       =_someSFX
-    gameSoundFunc.finish_other          =_someSFX
-    for k,v in next,gameSoundFunc do
+    GameSndFunc.move                  =_someSFX
+    GameSndFunc.move_down             =_someSFX
+    GameSndFunc.move_failed           =_someSFX
+    GameSndFunc.touch                 =_someSFX
+    GameSndFunc.lock                  =_someSFX
+    GameSndFunc.tuck                  =_someSFX
+    GameSndFunc.rotate                =_someSFX
+    GameSndFunc.rotate_init           =_someSFX
+    GameSndFunc.rotate_locked         =_someSFX
+    GameSndFunc.rotate_corners        =_someSFX
+    GameSndFunc.rotate_failed         =_someSFX
+    GameSndFunc.rotate_special        =_someSFX
+    GameSndFunc.hold                  =_someSFX
+    GameSndFunc.hold_init             =_someSFX
+    GameSndFunc.drop                  =_someSFX
+    GameSndFunc.drop_old              =_someSFX
+    GameSndFunc.clear_all             =_someSFX
+    GameSndFunc.clear_half            =_someSFX
+    GameSndFunc.frenzy                =_someSFX
+    GameSndFunc.discharge             =_someSFX
+    GameSndFunc.suffocate             =_someSFX
+    GameSndFunc.desuffocate           =_someSFX
+    GameSndFunc.beep_rise             =_someSFX
+    GameSndFunc.beep_drop             =_someSFX
+    GameSndFunc.beep_notice           =_someSFX
+    GameSndFunc.finish_win            =_someSFX
+    GameSndFunc.finish_suffocate      =_someSFX
+    GameSndFunc.finish_lockout        =_someSFX
+    GameSndFunc.finish_topout         =_someSFX
+    GameSndFunc.finish_timeout        =_someSFX
+    GameSndFunc.finish_rule           =_someSFX
+    GameSndFunc.finish_exhaust        =_someSFX
+    GameSndFunc.finish_taskfail       =_someSFX
+    GameSndFunc.finish_other          =_someSFX
+    for k,v in next,GameSndFunc do
         if v==_someSFX then
-            gameSoundFunc[k]=function(vol) FMOD.effect(k,vol) end
+            GameSndFunc[k]=function(vol) FMOD.effect(k,vol) end
         end
     end
 end
 
-function gameSoundFunc.countDown(num)
+function GameSndFunc.countDown(num)
     if num==0 then -- 6 + 6 3 6
-        playSample('organ',{'A2',.5,420,1200})
-        playSample('complex',{'A3',.6,320,942},{'E4',.8,320,1100},{'A4',.9,320,2600})
+        PlaySamp('organ',{'A2',.5,420,1200})
+        PlaySamp('complex',{'A3',.6,320,942},{'E4',.8,320,1100},{'A4',.9,320,2600})
     elseif num==1 then -- 7 + 5 (7) 3
-        playSample('organ',{'B2',.45,460,520})
-        playSample('complex',{'G3',.7,360,768},{'B3',.5,360,872},{'E4',.85,360,942})
+        PlaySamp('organ',{'B2',.45,460,520})
+        PlaySamp('complex',{'G3',.7,360,768},{'B3',.5,360,872},{'E4',.85,360,942})
     elseif num==2 then -- 2 + (4) 6 2
-        playSample('organ',{'D3',.4,450,580})
-        playSample('complex',{'F3',.4,390,662},{'A3',.7,390,662},{'D4',.8,390,872})
+        PlaySamp('organ',{'D3',.4,450,580})
+        PlaySamp('complex',{'F3',.4,390,662},{'A3',.7,390,662},{'D4',.8,390,872})
     elseif num==3 then -- 1 + 3 (#5) 1
-        playSample('organ',{'C3',.4})
-        playSample('complex',{'E3',.6},{'A3',.4},{'C4',.75})
+        PlaySamp('organ',{'C3',.4})
+        PlaySamp('complex',{'E3',.6},{'A3',.4},{'C4',.75})
     elseif num==4 then -- 2 + (3) #5 7
-        playSample('organ',{'D3',.4})
-        playSample('complex',{'E3',.3},{'G#3',.7},{'B3',.7})
+        PlaySamp('organ',{'D3',.4})
+        PlaySamp('complex',{'E3',.3},{'G#3',.7},{'B3',.7})
     elseif num==5 then -- 7 + 3 #5
-        playSample('organ',{'B2',.4})
-        playSample('complex',{'E3',.6},{'G#3',.8})
+        PlaySamp('organ',{'B2',.4})
+        PlaySamp('complex',{'E3',.6},{'G#3',.8})
     elseif num<=10 then -- 7 + 3
-        playSample('complex',{'B2',2.2-num/5},{'E3',2.2-num/5})
+        PlaySamp('complex',{'B2',2.2-num/5},{'E3',2.2-num/5})
     end
 end
-function gameSoundFunc.clear(lines)
+function GameSndFunc.clear(lines)
     lines=math.floor(math.max(lines,1))
     FMOD.effect(
         lines<=6 and 'clear_'..lines or -- 1, 2, 3, 4, 5, 6
@@ -171,55 +170,55 @@ function gameSoundFunc.clear(lines)
         'clear_26'
     )
 end
-function gameSoundFunc.spin(lines)
+function GameSndFunc.spin(lines)
     lines=math.floor(math.max(lines,0))
     FMOD.effect(
         lines<=4 and 'spin_'..lines or
         'spin_mega'
     )
 end
-function gameSoundFunc.charge(lv)
+function GameSndFunc.charge(lv)
     FMOD.effect('charge_'..MATH.clamp(math.floor(lv),1,11))
 end
-gameSoundFunc.combo=setmetatable({__register=true,
-    function() playSample('complex',{'A2',.70,420}) end, -- 1
-    function() playSample('complex',{'C3',.75,410}) end, -- 2
-    function() playSample('complex',{'D3',.80,400}) end, -- 3
-    function() playSample('complex',{'E3',.85,390}) end, -- 4
-    function() playSample('complex',{'G3',.90,380}) end, -- 5
-    function() playSample('complex',{'A3',.90,370},'square',{'A2',.20,420,620}) end, -- 6
-    function() playSample('complex',{'C4',.75,360},'square',{'C3',.40,400,620}) end, -- 7
-    function() playSample('complex',{'D4',.60,350},'square',{'D3',.60,380,620}) end, -- 8
-    function() playSample('complex',{'E4',.40,340},'square',{'E3',.75,360,620}) end, -- 9
-    function() playSample('complex',{'G4',.20,330},'square',{'G3',.90,340,620}) end, -- 10
-    function() playSample('complex',{'A4',.20,320},'square',{'A3',.85,320,620}) end, -- 11
-    function() playSample('complex',{'A4',.40,310},'square',{'C4',.80,300,620}) end, -- 12
-    function() playSample('complex',{'A4',.60,300},'square',{'D4',.75,280,620}) end, -- 13
-    function() playSample('complex',{'A4',.75,290},'square',{'E4',.70,270,620}) end, -- 14
-    function() playSample('complex',{'A4',.90,280},'square',{'G4',.65,260,640}) end, -- 15
-    function() playSample('complex',{'A4',.90,270},{'E5',.70},'square',{'A4',1,250,660}) end, -- 16
-    function() playSample('complex',{'A4',.85,260},{'E5',.75},'square',{'C5',1,240,680}) end, -- 17
-    function() playSample('complex',{'A4',.80,250},{'E5',.80},'square',{'D5',1,230,700}) end, -- 18
-    function() playSample('complex',{'A4',.75,240},{'E5',.85},'square',{'E5',1,220,720}) end, -- 19
-    function() playSample('complex',{'A4',.70,230},{'E5',.90},'square',{'G5',1,210,740}) end, -- 20
+GameSndFunc.combo=setmetatable({__register=true,
+    function() PlaySamp('complex',{'A2',.70,420}) end, -- 1
+    function() PlaySamp('complex',{'C3',.75,410}) end, -- 2
+    function() PlaySamp('complex',{'D3',.80,400}) end, -- 3
+    function() PlaySamp('complex',{'E3',.85,390}) end, -- 4
+    function() PlaySamp('complex',{'G3',.90,380}) end, -- 5
+    function() PlaySamp('complex',{'A3',.90,370},'square',{'A2',.20,420,620}) end, -- 6
+    function() PlaySamp('complex',{'C4',.75,360},'square',{'C3',.40,400,620}) end, -- 7
+    function() PlaySamp('complex',{'D4',.60,350},'square',{'D3',.60,380,620}) end, -- 8
+    function() PlaySamp('complex',{'E4',.40,340},'square',{'E3',.75,360,620}) end, -- 9
+    function() PlaySamp('complex',{'G4',.20,330},'square',{'G3',.90,340,620}) end, -- 10
+    function() PlaySamp('complex',{'A4',.20,320},'square',{'A3',.85,320,620}) end, -- 11
+    function() PlaySamp('complex',{'A4',.40,310},'square',{'C4',.80,300,620}) end, -- 12
+    function() PlaySamp('complex',{'A4',.60,300},'square',{'D4',.75,280,620}) end, -- 13
+    function() PlaySamp('complex',{'A4',.75,290},'square',{'E4',.70,270,620}) end, -- 14
+    function() PlaySamp('complex',{'A4',.90,280},'square',{'G4',.65,260,640}) end, -- 15
+    function() PlaySamp('complex',{'A4',.90,270},{'E5',.70},'square',{'A4',1,250,660}) end, -- 16
+    function() PlaySamp('complex',{'A4',.85,260},{'E5',.75},'square',{'C5',1,240,680}) end, -- 17
+    function() PlaySamp('complex',{'A4',.80,250},{'E5',.80},'square',{'D5',1,230,700}) end, -- 18
+    function() PlaySamp('complex',{'A4',.75,240},{'E5',.85},'square',{'E5',1,220,720}) end, -- 19
+    function() PlaySamp('complex',{'A4',.70,230},{'E5',.90},'square',{'G5',1,210,740}) end, -- 20
 },{__call=function(self,combo)
     if self[combo] then
         self[combo]()
     else
-        playSample('complex',{'A4',.626-.01*combo,430-10*combo})
+        PlaySamp('complex',{'A4',.626-.01*combo,430-10*combo})
         local phase=(combo-21)%12
-        playSample('square',{16+phase,1-((11-phase)/12)^2,400-10*combo,700+20*combo}) -- E4+
-        playSample('square',{21+phase,1-((11-phase)/12)^2,400-10*combo,700+20*combo}) -- A4+
-        playSample('square',{28+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- E5+
-        playSample('square',{33+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- A5+
+        PlaySamp('square',{16+phase,1-((11-phase)/12)^2,400-10*combo,700+20*combo}) -- E4+
+        PlaySamp('square',{21+phase,1-((11-phase)/12)^2,400-10*combo,700+20*combo}) -- A4+
+        PlaySamp('square',{28+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- E5+
+        PlaySamp('square',{33+phase,1-(phase/12)^2,400-10*combo,700+20*combo}) -- A5+
     end
 end,__metatable=true})
-gameSoundFunc.chain=gameSoundFunc.combo
-gameSoundFunc.swap=gameSoundFunc.rotate
-gameSoundFunc.swap_failed=gameSoundFunc.tuck
-gameSoundFunc.twist=gameSoundFunc.rotate
-gameSoundFunc.twist_failed=gameSoundFunc.tuck
-gameSoundFunc.move_back=gameSoundFunc.rotate_failed
+GameSndFunc.chain=GameSndFunc.combo
+GameSndFunc.swap=GameSndFunc.rotate
+GameSndFunc.swap_failed=GameSndFunc.tuck
+GameSndFunc.twist=GameSndFunc.rotate
+GameSndFunc.twist_failed=GameSndFunc.tuck
+GameSndFunc.move_back=GameSndFunc.rotate_failed
 
 local interiorModeMeta={
     __call=function(self)
@@ -231,7 +230,7 @@ local interiorModeMeta={
         end
     end
 }
-function playInterior(name)
+function PlayInterior(name)
     return setmetatable({name=name},interiorModeMeta)
 end
 
@@ -245,11 +244,11 @@ local exteriorModeMeta={
         end
     end
 }
-function playExterior(name)
+function PlayExterior(name)
     return setmetatable({name=name},exteriorModeMeta)
 end
 
-function canPause()
+function CanPause()
     return GAME.playing and not GAME.mode.name:find('/test')
 end
 
@@ -278,35 +277,35 @@ local function _saveSettings()
         game_acry=SETTINGS.game_acry,
     },'conf/settings','-json')
     if PROGRESS.get('main')>=3 then
-        showSaveIcon(CHAR.icon.settings..CHAR.icon.save)
+        ShowSaveIcon(CHAR.icon.settings..CHAR.icon.save)
     end
 end
-function saveSettings()
+function SaveSettings()
     TASK.removeTask_code(_saveSettings)
     TASK.new(_saveSettings)
 end
-function saveKey()
+function SaveKey()
     FILE.save({
         brik=KEYMAP.brik:export(),
         gela=KEYMAP.gela:export(),
         acry=KEYMAP.acry:export(),
         sys=KEYMAP.sys:export(),
     },'conf/keymap','-json')
-    showSaveIcon(CHAR.icon.settings..CHAR.icon.save)
+    ShowSaveIcon(CHAR.icon.settings..CHAR.icon.save)
 end
-function saveTouch()
+function SaveTouch()
     FILE.save(VCTRL.exportSettings(),'conf/touch','-json')
-    showSaveIcon(CHAR.icon.settings..CHAR.icon.save)
+    ShowSaveIcon(CHAR.icon.settings..CHAR.icon.save)
 end
-function showSaveIcon(str)
+function ShowSaveIcon(str)
     TEXT:add{text=str,x=SCR.w0-15,y=SCR.h0+5,align='bottomright',a=.0626,duration=.62,fontSize=70}
 end
 
-function backText()
+function BackText()
     return CHAR.icon.back_chevron..' '..Text.button_back
 end
 
-function callDict(entry)
+function CallDict(entry)
     SCN.go('dictionary','none',entry)
 end
 
@@ -317,22 +316,22 @@ function task_unloadGame()
     collectgarbage()
 end
 
-function _getLatestBank(dt)
+function _getLatestBank(waitTime)
     TASK.new(function()
-        MSG('info',"Opening URL to bank files...")
-        TASK.yieldT(dt or 0.626)
+        MSG('info',"Opening URL of bank files...")
+        TASK.yieldT(waitTime or 0.626)
         love.system.openURL("https://kyzj-my.sharepoint.com/:f:/g/personal/noreply_studio26f_org/ElmKJZYcNpFDhGks9nekrUYBoyr1ZJZgpx1lCyFu6tHXQg?e=vJnaQX")
     end)
 end
 
-getTouches=love.touch.getTouches
-isMouseDown=love.mouse.isDown
-isKeyDown=love.keyboard.isDown
-isSCDown=love.keyboard.isScancodeDown
-local isKeyDown=isKeyDown
-function isCtrlDown() return isKeyDown('lctrl','rctrl') end
-function isShiftDown() return isKeyDown('lshift','rshift') end
-function isAltDown() return isKeyDown('lalt','ralt') end
+GetTouches=love.touch.getTouches
+IsMouseDown=love.mouse.isDown
+IsKeyDown=love.keyboard.isDown
+IsSCDown=love.keyboard.isScancodeDown
+local IsKeyDown=IsKeyDown
+function IsCtrlDown() return IsKeyDown('lctrl','rctrl') end
+function IsShiftDown() return IsKeyDown('lshift','rshift') end
+function isAltDown() return IsKeyDown('lalt','ralt') end
 
 local function _getActMode(mode,key)
     local act=KEYMAP[mode]:getAction(key)
@@ -345,7 +344,7 @@ end
 local function _getActImg(mode,act)
     return IMG.actionIcons[mode][act]
 end
-function resetVirtualKeyMode(mode)
+function ResetVirtualKeyMode(mode)
     VCTRL.reset()
     if not mode then return end
 
@@ -367,7 +366,7 @@ function resetVirtualKeyMode(mode)
         end
     end
 end
-function updateWidgetVisible(widgetList)
+function UpdateVKWidgetVisible(widgetList)
     if VCTRL.focus then
         widgetList.iconSize:setVisible(true)
         widgetList.button1:setVisible(VCTRL.focus.type=='button')
@@ -401,7 +400,7 @@ local sandBoxEnv={
     rawget=rawget,rawset=rawset,rawlen=rawlen,rawequal=rawequal,
     setmetatable=setmetatable,
 }
-function setSafeEnv(func)
+function SetSafeEnv(func)
     sandBoxEnv.mechLib=mechLib -- Update in case it changes during game
     setfenv(func,TABLE.copyAll(sandBoxEnv))
 end
@@ -410,20 +409,20 @@ regFuncToStr,regStrToFunc={},{}
 ---Flatten a table of functions into string-to-function and function-to-string maps
 ---@param obj table | function
 ---@param path string
-function regFuncLib(obj,path)
+function RegFuncLib(obj,path)
     if type(obj)=='function' or type(obj)=='table' and rawget(obj,'__register') then
         regFuncToStr[obj]=path
         regStrToFunc[path]=obj
     elseif type(obj)=='table' then
         for k,v in next,obj do
             if k~='__index' then
-                regFuncLib(v,path.."."..k)
+                RegFuncLib(v,path.."."..k)
             end
         end
     end
 end
 
-regFuncLib(gameSoundFunc,'gameSoundFunc')
+RegFuncLib(GameSndFunc,'gameSndFunc')
 
 love_logo=GC.load{w=128,h=128,
     {'clear',0,0,0,0},

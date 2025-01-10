@@ -3,14 +3,14 @@ local function degraded_tspin_event_drawOnPlayer(P)
     FONT.set(80) GC.mStr(P.modeData.tspin,-300,-70)
     FONT.set(30) GC.mStr(Text[P.modeData.tspinText],-300,15)
 end
-regFuncLib(degraded_tspin_event_drawOnPlayer,'exterior_tspin.degraded_tspin_event_drawOnPlayer')
+RegFuncLib(degraded_tspin_event_drawOnPlayer,'exterior_tspin.degraded_tspin_event_drawOnPlayer')
 
 ---@type Techmino.Mode
 return {
     initialize=function()
         GAME.newPlayer(1,'brik')
         GAME.setMain(1)
-        playBgm('way')
+        PlayBGM('way')
     end,
     settings={brik={
         spin_immobile=true,

@@ -26,7 +26,7 @@ end
 local function playTutorial(level)
     local unlock=PROGRESS.getTutorialPassed(level)
     if unlock==0 then
-    elseif unlock<=2 or isCtrlDown() then
+    elseif unlock<=2 or IsCtrlDown() then
         SCN.go('game_in','none','brik/interior/tutorial/'..(
             level==1 and '1.basic' or
             level==2 and '2.sequence' or
@@ -84,7 +84,7 @@ end
 function scene.overDraw()
     -- Glitch effect after III
     if PROGRESS.get('main')>=3 then
-        drawGlitch()
+        DrawGlitch()
     end
 end
 

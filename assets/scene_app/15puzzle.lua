@@ -145,7 +145,7 @@ function scene.keyDown(key,isRep)
         move,push=0,0
     elseif key=='q' then
         if state~=1 then
-            colorSelector:scroll(isKeyDown('lshift','rshift') and -1 or 1)
+            colorSelector:scroll(IsKeyDown('lshift','rshift') and -1 or 1)
         end
     elseif key=='w' then
         if state==0 then
@@ -167,7 +167,7 @@ function scene.keyDown(key,isRep)
             revKB=not revKB
         end
     elseif key=='escape' then
-        if sureCheck('back') then SCN.back() end
+        if SureCheck('back') then SCN.back() end
     end
     return true
 end

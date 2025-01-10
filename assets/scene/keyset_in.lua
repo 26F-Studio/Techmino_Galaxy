@@ -33,7 +33,7 @@ function scene.load()
 end
 function scene.unload()
     if SCN.stackChange<0 then
-        saveKey()
+        SaveKey()
     end
 end
 
@@ -63,7 +63,7 @@ end
 function scene.overDraw()
     -- Glitch effect after III
     if PROGRESS.get('main')>=3 then
-        drawGlitch()
+        DrawGlitch()
     end
 end
 
@@ -87,7 +87,7 @@ scene.widgetList={
     {type='button', x=600,y=800,w=200,h=70,cornerR=0,text=LANG"keyset_sys_back",       fontSize=20,color='lG',code=selAct('sys', 'back'     )},
     {type='button', x=600,y=880,w=200,h=70,cornerR=0,text=LANG"keyset_sys_quit",       fontSize=20,color='lG',code=selAct('sys', 'quit'     )},
 
-    {type='button',pos={1,1},x=-300,y=-80,w=160,h=80,cornerR=0,text=LANG"setting_test",fontSize=40,code=playInterior'brik/interior/test',visibleFunc=function() return not GAME.mode end},
+    {type='button',pos={1,1},x=-300,y=-80,w=160,h=80,cornerR=0,text=LANG"setting_test",fontSize=40,code=PlayInterior'brik/interior/test',visibleFunc=function() return not GAME.mode end},
     {type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',cornerR=0,fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
 }
 return scene

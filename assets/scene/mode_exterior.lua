@@ -97,7 +97,7 @@ function scene.mouseClick(x,y,k)
 end
 function scene.wheelMove(dx,dy)
     exMap:hideCursor()
-    if isCtrlDown() then
+    if IsCtrlDown() then
         exMap:rotateCam(-(dx+dy)*.26)
     else
         exMap:scaleCam(1.1^(dx+dy))
@@ -147,7 +147,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=backText,code=function() sysAction('back') end},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=BackText,code=function() sysAction('back') end},
     {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'graph_brik_title'},
 }
 return scene

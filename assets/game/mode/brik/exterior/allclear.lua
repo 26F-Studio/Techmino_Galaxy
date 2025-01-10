@@ -11,7 +11,7 @@ return {
     initialize=function()
         GAME.newPlayer(1,'brik')
         GAME.setMain(1)
-        playBgm('truth',true)
+        PlayBGM('truth',true)
     end,
     settings={brik={
         nextSlot=8,

@@ -102,7 +102,7 @@ function scene.keyDown(key,isRep)
             progress=0
         end
     elseif key=='escape' then
-        if sureCheck('back') then SCN.back() end
+        if SureCheck('back') then SCN.back() end
     elseif state==0 then
         if key=='q' then
                 invis=not invis

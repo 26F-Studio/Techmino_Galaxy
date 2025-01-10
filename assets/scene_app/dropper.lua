@@ -66,7 +66,7 @@ function scene.keyDown(key,isRep)
             state='move'
         end
     elseif key=='escape' then
-        if sureCheck('back') then SCN.back() end
+        if SureCheck('back') then SCN.back() end
     end
     return true
 end
@@ -95,7 +95,7 @@ function scene.update(dt)
                 state='die'
             else
                 move.y=SCR.h0-2*brickHeight
-                gameSoundFunc.combo(math.floor(floor/2)+1)
+                GameSndFunc.combo(math.floor(floor/2)+1)
                 FMOD.effect(move.x==base.x and 'clear_3' or 'clear_2',.6)
                 state='shorten'
             end

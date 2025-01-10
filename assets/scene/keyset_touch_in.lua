@@ -2,13 +2,13 @@
 local scene={}
 
 function scene.load()
-    resetVirtualKeyMode('brik')
-    updateWidgetVisible(scene.widgetList)
+    ResetVirtualKeyMode('brik')
+    UpdateVKWidgetVisible(scene.widgetList)
 end
 
 function scene.unload()
     if SCN.stackChange<0 then
-        saveTouch()
+        SaveTouch()
     end
 end
 
@@ -38,7 +38,7 @@ end
 
 function scene.touchDown(x,y,id)
     VCTRL.press(x,y,id)
-    updateWidgetVisible(scene.widgetList)
+    UpdateVKWidgetVisible(scene.widgetList)
 end
 function scene.touchMove(_,_,dx,dy,id) VCTRL.drag(dx,dy,id) end
 function scene.touchUp(_,_,id) VCTRL.release(id) end
@@ -52,7 +52,7 @@ function scene.draw() VCTRL.draw(true) end
 function scene.overDraw()
     -- Glitch effect after III
     if PROGRESS.get('main')>=3 then
-        drawGlitch()
+        DrawGlitch()
     end
 end
 
