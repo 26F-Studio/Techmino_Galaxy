@@ -121,7 +121,7 @@ local function dial(n)
         end
     else
         if n=='*' then
-            instrument=TABLE.next({'organ','square','saw','complex','stairs','spectral','obscure','death','crash'},instrument) or 'organ'
+            instrument=TABLE.next({'organ','square','saw','complex','stairs','spectral','obscure','death','crash','vasco','random'},instrument) or 'organ'
         elseif n=='0' then
             octave_plus=not octave_plus
         elseif n=='#' then

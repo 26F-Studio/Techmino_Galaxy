@@ -49,6 +49,8 @@ return {
     'obscure_wave',
     'death_wave',
     'crash_wave',
+    'vasco_wave',
+    'random_wave',
 
     'ibm_noise',
 }
