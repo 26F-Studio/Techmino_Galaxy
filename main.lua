@@ -291,6 +291,7 @@ end
 WIDGET.setDefaultOption{
     base={
         lineWidth=2,
+        sound_hover='any_hover',
     },
     button_fill={
         textColor='L',

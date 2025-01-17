@@ -32,6 +32,7 @@ return {
     'dict_open','dict_close','dict_copy','dict_link',
 
     -- Widgets
+    'any_hover',
     'button_back','button_norm','button_soft',
     'selector',
     'check_on','check_off',
