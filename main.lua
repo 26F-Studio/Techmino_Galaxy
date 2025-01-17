@@ -491,6 +491,7 @@ WIDGET.setDefaultOption{
         lineWidth=3,
         text="?",
         labelPos='topRight',
+        sound_hover='hint_hover',
         -- textColor='lD',
         -- floatFrameColor='X',
         -- floatFillColor={.8,.8,.8,.8},
