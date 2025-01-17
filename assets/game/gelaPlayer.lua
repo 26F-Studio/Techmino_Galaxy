@@ -1461,7 +1461,7 @@ local baseEnv={
     IRSpushUp=true,
     skin='gela_jelly',
     particles=true,
-    shakeness=.26,
+    shakeness=.26, -- *
     inputDelay=0,
 }
 ---@return Techmino.Player.Gela

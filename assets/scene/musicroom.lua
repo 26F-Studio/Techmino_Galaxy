@@ -370,7 +370,7 @@ scene.widgetList={
     {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,code=WIDGET.c_pressKey'space',visibleTick=function() return FMOD.music.getPlaying() end},
 
     -- Auto Switching Switch
-    {type='switch',pos={.5,.5},x=-650,y=90,h=50,widthLimit=260,labelPos='right',
+    {type='switch',pos={.5,.5},x=-650,y=90,h=50,widthLimit=260,
         disp=function() return autoplay end,
         name='autoplay',text=LANG'musicroom_autoplay',
         sound_on=false,sound_off=false,
@@ -385,7 +385,7 @@ scene.widgetList={
     },
 
     -- Richloop Switch
-    {type='switch',pos={.5,.5},x=-650,y=150,h=50,widthLimit=260,labelPos='right',
+    {type='switch',pos={.5,.5},x=-650,y=150,h=50,widthLimit=260,
         disp=function() return richloop end,
         name='autoplay',text=LANG'musicroom_richloop',
         sound_on=false,sound_off=false,
@@ -400,7 +400,7 @@ scene.widgetList={
     },
 
     -- Fullband Switch
-    {type='switch',pos={.5,.5},x=-650,y=360,h=50,widthLimit=260,labelPos='right',
+    {type='switch',pos={.5,.5},x=-650,y=360,h=50,widthLimit=260,
         disp=function() return fullband end,
         name='fullband',text=LANG'musicroom_fullband',
         sound_on=false,sound_off=false,
@@ -417,7 +417,7 @@ scene.widgetList={
     },
 
     -- Section Switch
-    {type='switch',pos={.5,.5},x=-650,y=430,h=50,widthLimit=260,labelPos='right',
+    {type='switch',pos={.5,.5},x=-650,y=430,h=50,widthLimit=260,
         disp=function() return section end,
         name='section',text=LANG'musicroom_section',
         sound_on=false,sound_off=false,

@@ -127,6 +127,8 @@ local L={
     setting_fmod_DSPBufferLength="DSP缓冲区长度",
     setting_apply="应用",
 
+    setting_discord="Discord Rich Presence",
+
     setting_hint_asd="Auto Shift Delay\n重复移动延迟",
     setting_hint_asp="Auto Shift Period\n重复移动周期",
     setting_hint_adp="Auto Drop Period\n重复下落周期",

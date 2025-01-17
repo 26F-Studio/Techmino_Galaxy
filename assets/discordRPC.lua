@@ -1,5 +1,6 @@
 local MyRPC={
     appId='1288524924042084523', ---@type string Register your own app at https://discord.com/developers/applications
+    enabled=false, ---@type boolean
     C=nil, ---@type ffi.namespace*
     RPC=nil, ---@type DiscordRPC.RPC
     presence={ --- @type DiscordRPC.presence
@@ -13,7 +14,19 @@ local MyRPC={
     },
 }
 
----@param state string
+---@param bool boolean
+function MyRPC.setEnable(bool)
+    if MyRPC.enabled==bool then return end
+    MyRPC.enabled=bool
+    if bool then
+        MyRPC.RPC.initialize(MyRPC.appId,true)
+        MyRPC.update()
+    else
+        MyRPC.RPC.shutdown()
+    end
+end
+
+---@param state? string
 ---@param details? string
 ---@overload fun(state:DiscordRPC.presence)
 function MyRPC.update(state,details)
@@ -26,7 +39,7 @@ function MyRPC.update(state,details)
             MyRPC.presence[k]=v
         end
     end
-    if MyRPC.RPC then MyRPC.RPC.updatePresence(MyRPC.presence) end
+    if MyRPC.enabled and MyRPC.RPC then MyRPC.RPC.updatePresence(MyRPC.presence) end
 end
 
 ---@class DiscordRPC.presence
@@ -325,6 +338,5 @@ function RPC.joinRequest(userId,username,discriminator,avatar)
     LOG('info',string.format("Discord: join request (%s,%s,%s,%s)",userId,username,discriminator,avatar))
     RPC.respond(userId,'yes')
 end
-RPC.initialize(MyRPC.appId,true)
 
 return MyRPC

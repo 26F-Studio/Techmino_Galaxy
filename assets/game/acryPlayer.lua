@@ -739,7 +739,7 @@ local baseEnv={
 
     -- May be overrode with user setting
     skin='acry_template',
-    shakeness=.26,
+    shakeness=.26, -- *
     inputDelay=0,
 }
 ---@return Techmino.Player.Acry

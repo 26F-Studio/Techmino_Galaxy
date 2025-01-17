@@ -127,6 +127,8 @@ local L={
     setting_fmod_DSPBufferLength="DSPBufferLength",
     setting_apply="Apply",
 
+    setting_discord="Discord Rich Presence",
+
     setting_hint_asd="Auto Shift Delay",-- Add translation with \n[second line]
     setting_hint_asp="Auto Shift Period",-- Add translation with \n[second line]
     setting_hint_adp="Auto Drop Period",-- Add translation with \n[second line]

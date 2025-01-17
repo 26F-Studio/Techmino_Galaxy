@@ -31,6 +31,7 @@ local settings={
         showTouch=true,
         clean=false,
         locale='en',
+        discordConnect=false,
     },
     game_brik={
         -- Handling
@@ -88,6 +89,16 @@ local settingTriggers={ -- Changing values in SETTINGS.system will trigger these
     -- Other
     locale=         function(v) Text=LANG.set(v) end,
 }
+
+local function updateDiscordRPC(v)
+    TASK.yieldT(2.6)
+    DiscordRPC.setEnable(v)
+end
+function settingTriggers.discordConnect(v)
+    TASK.removeTask_code(updateDiscordRPC)
+    TASK.new(updateDiscordRPC,v)
+end
+
 settings.system=setmetatable({},{
     __index=settings._system,
     __newindex=function(_,k,v)

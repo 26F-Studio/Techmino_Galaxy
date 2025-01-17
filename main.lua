@@ -74,10 +74,197 @@ CHAR=require'assets.char'
 SETTINGS=require'assets.settings'
 SONGBOOK=require'assets.songbook'
 FMOD=require'assets.fmod20221'
-UTIL.time("Require game modules",true)
+if SYSTEM=='Web' then
+    _G[('DiscordRPC')]={update=NULL}
+else
+    DiscordRPC=require'assets.discordRPC'
+end
+UTIL.time("Load game modules",true)
+
+function FMODLoadFunc() -- Will be called again when applying advanced options
+    if not (FMOD.C and FMOD.C2) then
+        MSG.log('error',"FMOD library loaded failed")
+        return
+    end
+
+    LOG('debug',"Will loading FMOD banks from "..(SETTINGS.system.fmod_loadMemory and "memory" or "file"))
+    local errorLogged=false
+    local function loadBank(path)
+        local bank,errInfo,errInfo2
+        if SETTINGS.system.fmod_loadMemory then
+            bank,errInfo=FMOD.loadBank2(path)
+            if bank then return bank end
+            SETTINGS.system.fmod_loadMemory=false
+            LOG('debug',"Will load FMOD banks from file")
+            MSG('other',"Switched to another bank loading mode to file")
+        end
+        bank,errInfo2=FMOD.loadBank(love.filesystem.getSaveDirectory()..'/'..path)
+        if bank then return bank end
+        if not errorLogged then
+            errorLogged=true
+            MSG.log('error',"FMOD bank load failed :"..tostring(errInfo))
+            MSG.log('error',"FMOD bank load failed :"..tostring(errInfo2))
+        end
+    end
+
+    LOG('debug',"Ready to init FMOD")
+    FMOD.init{
+        maxChannel=math.min(SETTINGS.system.fmod_maxChannel,256),
+        DSPBufferCount=math.min(SETTINGS.system.fmod_DSPBufferCount,16),
+        DSPBufferLength=math.min(SETTINGS.system.fmod_DSPBufferLength,65536),
+        studioFlag=bit.bxor(FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,FMOD.FMOD_INIT_STREAM_FROM_UPDATE,FMOD.FMOD_INIT_MIX_FROM_UPDATE),
+        coreFlag=FMOD.FMOD_INIT_NORMAL,
+    }
+
+    local noFile
+    if not loadBank('soundbank/Master.strings.bank') then
+        MSG.log('warn',"Strings bank file load failed")
+        noFile=true
+    end
+    if not loadBank('soundbank/Master.bank') then
+        MSG.log('warn',"Master bank file load failed")
+        noFile=true
+    end
+    FMOD.registerMusic((function()
+        if not love.filesystem.getInfo('soundbank/Master.bank') then
+            MSG.log('warn',"Music bank not found")
+            return {}
+        end
+        local L={}
+        for _,bankName in next,{'Music_Beepbox','Music_FL','Music_Community','Music_Extra'} do
+            if not love.filesystem.getInfo('soundbank/'..bankName..'.bank') then
+                MSG.log('warn',bankName.." bank file not found")
+                noFile=true
+            else
+                local bankMusic=loadBank('soundbank/'..bankName..'.bank')
+                if not bankMusic then
+                    MSG.log('warn',"bank "..bankName.." load failed")
+                else
+                    local l,c=bankMusic:getEventList()
+                    for i=1,c do
+                        local path=l[i-1]:getPath()
+                        if path then
+                            local name=path:match('/([^/]+)$'):lower()
+                            L[name]=path
+                            if not SONGBOOK[name] then SONGBOOK(name) end
+                            -- print(name,path)
+                        end
+                    end
+                end
+            end
+        end
+        if noFile then _getLatestBank(2.6) end
+
+        -- print("--------------------------")
+        -- print("Musics")
+        -- for k,v in next,L do print(k,v)end
+
+        -- Music check
+        local regMore={}
+        for name in next,SONGBOOK do
+            if not L[name] then
+                table.insert(regMore,name)
+            end
+        end
+        if #regMore>0 then
+            MSG.log('warn',"Music not found in Bank:")
+            for i=1,#regMore do MSG.log('warn',regMore[i]) end
+        end
+        return L
+    end)())
+    FMOD.registerEffect((function()
+        if not love.filesystem.getInfo('soundbank/Effect.bank') then
+            MSG.log('warn',"Effect bank not found")
+            return {}
+        end
+        local bankEffect=loadBank('soundbank/Effect.bank')
+        if not bankEffect then
+            MSG.log('warn',"Effect bank file load failed")
+            return {}
+        end
+        local L={}
+        local nameList={}
+        local l,c=bankEffect:getEventList()
+        for i=1,c do
+            local path=l[i-1]:getPath()
+            if path then
+                local name=path:match('/([^/]+)$'):lower()
+                L[name]=path
+                if path:find('event:') then
+                    table.insert(nameList,name)
+                end
+                -- print(name,path)
+            end
+        end
+        -- print("--------------------------")
+        -- print("Effects")
+        -- for k,v in next,L do print(k,v)end
+
+        -- SE check
+        local regList=require'datatable.se_names'
+        local existMore,regMore=TABLE.copy(nameList),TABLE.copy(regList)
+        TABLE.subtract(existMore,regList)
+        TABLE.subtract(regMore,nameList)
+        if #existMore>0 then
+            MSG.log('warn',"SE not registered:")
+            for i=1,#existMore do MSG.log('warn',existMore[i]) end
+        end
+        if #regMore>0 then
+            MSG.log('warn',"SE not found in Bank:")
+            for i=1,#regMore do MSG.log('warn',regMore[i]) end
+        end
+
+        return L
+    end)())
+end
+-- Hijack the original SFX module, use FMOD instead
+SFX[('play')]=function(name,vol,pos,tune)
+    FMOD.effect(name,{
+        volume=vol,
+        tune=tune,
+    })
+end
+FMODLoadFunc()
+if tostring(FMOD.studio):find('NULL') then
+    MSG.log('error',"FMOD initialization failed")
+elseif TABLE.getSize(FMOD.banks)==0 then
+    MSG.log('error',"no FMOD bank files found")
+else
+    FMOD.setMainVolume(SETTINGS.system.mainVol,true)
+    for name,data in next,SONGBOOK do
+        local ED=FMOD.music.getDesc(name)
+        if ED then
+            if select(2,ED:getParameterDescriptionByName('fade'))~=FMOD.FMOD_OK then
+                MSG.log('warn',"Missing 'fade' parameter in music '"..name.."'")
+            end
+            data.intensity=select(2,ED:getParameterDescriptionByName('intensity'))==FMOD.FMOD_OK
+            data.section=select(2,ED:getParameterDescriptionByName('section'))==FMOD.FMOD_OK
+            data.multitrack=select(2,ED:getUserProperty('multitrack'))==FMOD.FMOD_OK
+            data.hasloop=select(2,ED:getParameterDescriptionByName('loop'))==FMOD.FMOD_OK
+            if data.section then
+                local param,res=ED:getUserProperty('maxsection')
+                if res==FMOD.FMOD_OK then
+                    ---@cast param FMOD.Studio.UserProperty
+                    data.maxsection=param.intvalue
+                else
+                    MSG.log('warn',"Missing 'maxsection' property in music '"..name.."'")
+                end
+            end
+            -- print(name..":")
+            -- print('itst',data.intensity)
+            -- print('sect',data.section)
+            -- print('mult',data.multitrack)
+            -- print('loop',data.hasloop)
+        else
+            data.notFound=true
+            MSG.log('warn',"Music '"..name.."' not found in FMOD",0)
+        end
+    end
+end
+UTIL.time("Load FMOD",true)
 
 --------------------------------------------------------------
--- Config Zenitha and Fmod
+-- Config Zenitha
 
 ZENITHA.setAppName('Techmino')
 ZENITHA.setVersionText(VERSION.appVer)
@@ -325,6 +512,7 @@ WIDGET.setDefaultOption{
         w=40,
         sound_on='check_on',
         sound_off='check_off',
+        labelPos='right',
     },
     selector={
         sound_press='selector',
@@ -602,7 +790,7 @@ end
 UTIL.time("Load savedata",true)
 
 --------------------------------------------------------------
--- Load SOURCE ONLY resources
+-- Load SOURCE ONLY resources and utils
 
 ---@type table<string, love.Shader>
 SHADER={}
@@ -610,7 +798,7 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/shader') do
     if FILE.isSafe('assets/shader/'..v) then
         local name=v:sub(1,-6)
         local suc,res=pcall(love.graphics.newShader,'assets/shader/'..name..'.hlsl')
-        SHADER[name]=suc and res or error("Err in compiling Shader '"..name.."': "..tostring(res))
+        SHADER[name]=suc and res or error("Shader '"..name.."' compile error: "..tostring(res))
     end
 end
 -- Initialize shader parameters
@@ -691,198 +879,6 @@ end
 
 UTIL.time("Load skins",true)
 
-function FMODLoadFunc() -- Will be called again when applying advanced options
-    if not (FMOD.C and FMOD.C2) then
-        MSG.log('error',"FMOD library loaded failed")
-        return
-    end
-
-    LOG('debug',"Will loading FMOD banks from "..(SETTINGS.system.fmod_loadMemory and "memory" or "file"))
-    local errorLogged=false
-    local function loadBank(path)
-        local bank,errInfo,errInfo2
-        if SETTINGS.system.fmod_loadMemory then
-            bank,errInfo=FMOD.loadBank2(path)
-            if bank then return bank end
-            SETTINGS.system.fmod_loadMemory=false
-            LOG('debug',"Will load FMOD banks from file")
-            MSG('other',"Switched to another bank loading mode to file")
-        end
-        bank,errInfo2=FMOD.loadBank(love.filesystem.getSaveDirectory()..'/'..path)
-        if bank then return bank end
-        if not errorLogged then
-            errorLogged=true
-            MSG.log('error',"FMOD bank load failed :"..tostring(errInfo))
-            MSG.log('error',"FMOD bank load failed :"..tostring(errInfo2))
-        end
-    end
-
-    LOG('debug',"Ready to init FMOD")
-    FMOD.init{
-        maxChannel=math.min(SETTINGS.system.fmod_maxChannel,256),
-        DSPBufferCount=math.min(SETTINGS.system.fmod_DSPBufferCount,16),
-        DSPBufferLength=math.min(SETTINGS.system.fmod_DSPBufferLength,65536),
-        studioFlag=bit.bxor(FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,FMOD.FMOD_INIT_STREAM_FROM_UPDATE,FMOD.FMOD_INIT_MIX_FROM_UPDATE),
-        coreFlag=FMOD.FMOD_INIT_NORMAL,
-    }
-
-    local noFile
-    if not loadBank('soundbank/Master.strings.bank') then
-        MSG.log('warn',"Strings bank file load failed")
-        noFile=true
-    end
-    if not loadBank('soundbank/Master.bank') then
-        MSG.log('warn',"Master bank file load failed")
-        noFile=true
-    end
-    FMOD.registerMusic((function()
-        if not love.filesystem.getInfo('soundbank/Master.bank') then
-            MSG.log('warn',"Music bank not found")
-            return {}
-        end
-        local L={}
-        for _,bankName in next,{'Music_Beepbox','Music_FL','Music_Community','Music_Extra'} do
-            if not love.filesystem.getInfo('soundbank/'..bankName..'.bank') then
-                MSG.log('warn',bankName.." bank file not found")
-                noFile=true
-            else
-                local bankMusic=loadBank('soundbank/'..bankName..'.bank')
-                if not bankMusic then
-                    MSG.log('warn',"bank "..bankName.." load failed")
-                else
-                    local l,c=bankMusic:getEventList()
-                    for i=1,c do
-                        local path=l[i-1]:getPath()
-                        if path then
-                            local name=path:match('/([^/]+)$'):lower()
-                            L[name]=path
-                            if not SONGBOOK[name] then SONGBOOK(name) end
-                            -- print(name,path)
-                        end
-                    end
-                end
-            end
-        end
-        if noFile then _getLatestBank(2.6) end
-
-        -- print("--------------------------")
-        -- print("Musics")
-        -- for k,v in next,L do print(k,v)end
-
-        -- Music check
-        local regMore={}
-        for name in next,SONGBOOK do
-            if not L[name] then
-                table.insert(regMore,name)
-            end
-        end
-        if #regMore>0 then
-            MSG.log('warn',"Music not found in Bank:")
-            for i=1,#regMore do MSG.log('warn',regMore[i]) end
-        end
-        return L
-    end)())
-    FMOD.registerEffect((function()
-        if not love.filesystem.getInfo('soundbank/Effect.bank') then
-            MSG.log('warn',"Effect bank not found")
-            return {}
-        end
-        local bankEffect=loadBank('soundbank/Effect.bank')
-        if not bankEffect then
-            MSG.log('warn',"Effect bank file load failed")
-            return {}
-        end
-        local L={}
-        local nameList={}
-        local l,c=bankEffect:getEventList()
-        for i=1,c do
-            local path=l[i-1]:getPath()
-            if path then
-                local name=path:match('/([^/]+)$'):lower()
-                L[name]=path
-                if path:find('event:') then
-                    table.insert(nameList,name)
-                end
-                -- print(name,path)
-            end
-        end
-        -- print("--------------------------")
-        -- print("Effects")
-        -- for k,v in next,L do print(k,v)end
-
-        -- SE check
-        local regList=require'datatable.se_names'
-        local existMore,regMore=TABLE.copy(nameList),TABLE.copy(regList)
-        TABLE.subtract(existMore,regList)
-        TABLE.subtract(regMore,nameList)
-        if #existMore>0 then
-            MSG.log('warn',"SE not registered:")
-            for i=1,#existMore do MSG.log('warn',existMore[i]) end
-        end
-        if #regMore>0 then
-            MSG.log('warn',"SE not found in Bank:")
-            for i=1,#regMore do MSG.log('warn',regMore[i]) end
-        end
-
-        return L
-    end)())
-end
--- Hijack the original SFX module, use FMOD instead
-SFX[('play')]=function(name,vol,pos,tune)
-    FMOD.effect(name,{
-        volume=vol,
-        tune=tune,
-    })
-end
-FMODLoadFunc()
-if tostring(FMOD.studio):find('NULL') then
-    MSG.log('error',"FMOD initialization failed")
-elseif TABLE.getSize(FMOD.banks)==0 then
-    MSG.log('error',"no FMOD bank files found")
-else
-    FMOD.setMainVolume(SETTINGS.system.mainVol,true)
-    for name,data in next,SONGBOOK do
-        local ED=FMOD.music.getDesc(name)
-        if ED then
-            if select(2,ED:getParameterDescriptionByName('fade'))~=FMOD.FMOD_OK then
-                MSG.log('warn',"Missing 'fade' parameter in music '"..name.."'")
-            end
-            data.intensity=select(2,ED:getParameterDescriptionByName('intensity'))==FMOD.FMOD_OK
-            data.section=select(2,ED:getParameterDescriptionByName('section'))==FMOD.FMOD_OK
-            data.multitrack=select(2,ED:getUserProperty('multitrack'))==FMOD.FMOD_OK
-            data.hasloop=select(2,ED:getParameterDescriptionByName('loop'))==FMOD.FMOD_OK
-            if data.section then
-                local param,res=ED:getUserProperty('maxsection')
-                if res==FMOD.FMOD_OK then
-                    ---@cast param FMOD.Studio.UserProperty
-                    data.maxsection=param.intvalue
-                else
-                    MSG.log('warn',"Missing 'maxsection' property in music '"..name.."'")
-                end
-            end
-            -- print(name..":")
-            -- print('itst',data.intensity)
-            -- print('sect',data.section)
-            -- print('mult',data.multitrack)
-            -- print('loop',data.hasloop)
-        else
-            data.notFound=true
-            MSG.log('warn',"Music '"..name.."' not found in FMOD",0)
-        end
-    end
-end
-
-UTIL.time("Load FMOD",true)
-
-if SYSTEM=='Web' then
-    _G[('DiscordRPC')]={update=NULL}
-else
-    DiscordRPC=require'assets.discordRPC'
-end
-DiscordRPC.update("Online")
-
-UTIL.time("Load DiscordRPC",true)
-
 do -- Power Manager
     local warnThres={-1,2.6,6.26,14.2,26}
     local warnCheck=5
@@ -907,10 +903,14 @@ do -- Power Manager
     end)
 end
 
+DiscordRPC.update("Online")
+
 love.joystick.loadGamepadMappings('datatable/gamecontrollerdb.txt')
 
 UTIL.time("Load utils",true)
 
 --------------------------------------------------------------
+-- Finale
 
+print("--------------------------")
 UTIL.showTimeLog()
