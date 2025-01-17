@@ -849,6 +849,15 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/scene_app') do
         SCN.add(sceneName,FILE.load('assets/scene_app/'..v,'-lua'))
     end
 end
+-- No hover sound for all interior scenes
+for name,scn in next,SCN.scenes do
+    if name:match('^.*_in$') then
+        for _,W in next,scn.widgetList do
+            W.sound_hover=false
+        end
+    end
+end
+-- Special launch mode
 if PROGRESS.get('main')>=3 and ShellOption.launchApplet then
     if appletSceneSet[ShellOption.launchApplet] then
         ZENITHA.setFirstScene(ShellOption.launchApplet)
