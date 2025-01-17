@@ -80,7 +80,7 @@ function PlaySamp(...)
     end
 end
 
-InstList={'organ','square','saw','complex','stairs','spectral','obscure','death','crash','vasco','random'}
+InstList={'organ','square','saw','complex','stairs','spectral','obscure','death','crash','vasco','random','mcintosh','interference'}
 
 GameSndFunc={}
 GameSndFunc.__index=GameSndFunc

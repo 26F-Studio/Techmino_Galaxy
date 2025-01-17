@@ -52,6 +52,8 @@ return {
     'crash_wave',
     'vasco_wave',
     'random_wave',
+    'mcintosh_wave',
+    'interference_wave',
 
     'ibm_noise',
 }
