@@ -261,10 +261,10 @@ function PROGRESS.applyEnv(env)
         PROGRESS.applyExteriorBGM()
         ZENITHA.globalEvent.touchClick=function(x,y) SYSFX.tap(.26,x,y) end
         ZENITHA.globalEvent.mouseDown=function(x,y,k)
-            if k==1 then     SYSFX.ripple(.26,x,y,26,.62,.62,1)
-            elseif k==2 then SYSFX.ripple(.26,x,y,26,1,1,.62)
+            if     k==1 then SYSFX.ripple(.26,x,y,26,.62,.62,1)
+            elseif k==2 then SYSFX.ripple(.26,x,y,26,1,.62,1)
             elseif k==3 then SYSFX.ripple(.26,x,y,26,1,.62,.62)
-            else             SYSFX.ripple(.26,x,y,26,.62,1,1)
+            else             SYSFX.ripple(.26,x,y,26,9,.9,.9)
             end
         end
         function ZENITHA.globalEvent.drawCursor(x,y)
