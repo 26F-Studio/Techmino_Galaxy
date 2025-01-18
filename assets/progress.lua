@@ -242,7 +242,9 @@ function PROGRESS.applyEnv(env)
         PROGRESS.applyInteriorBG()
         PROGRESS.applyInteriorBGM()
         ZENITHA.globalEvent.touchClick=NULL
-        ZENITHA.globalEvent.mouseDown=function(x,y) SYSFX.rectRipple(.26,x-10,y-10,20,20) end
+        function ZENITHA.globalEvent.mouseDown(x,y) SYSFX.rectRipple(.26,x-10,y-10,20,20) end
+        ZENITHA.globalEvent.mouseMove=NULL
+        ZENITHA.globalEvent.mouseUp=NULL
         function ZENITHA.globalEvent.drawCursor(x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)
@@ -256,17 +258,21 @@ function PROGRESS.applyEnv(env)
                 gc.line(-15,0,15,0)
             end
         end
+        ZENITHA.globalEvent.sceneSwap=NULL
     elseif env=='exterior' then
         PROGRESS.applyExteriorBG()
         PROGRESS.applyExteriorBGM()
-        ZENITHA.globalEvent.touchClick=function(x,y) SYSFX.tap(.26,x,y) end
-        ZENITHA.globalEvent.mouseDown=function(x,y,k)
+        function ZENITHA.globalEvent.touchClick(x,y) SYSFX.tap(.26,x,y) end
+        function ZENITHA.globalEvent.mouseDown(x,y,k)
             if     k==1 then SYSFX.ripple(.26,x,y,26,.62,.62,1)
             elseif k==2 then SYSFX.ripple(.26,x,y,26,1,.62,1)
             elseif k==3 then SYSFX.ripple(.26,x,y,26,1,.62,.62)
             else             SYSFX.ripple(.26,x,y,26,9,.9,.9)
             end
+            SFX.play('mouse_down')
         end
+        ZENITHA.globalEvent.mouseMove=NULL
+        function ZENITHA.globalEvent.mouseUp(x,y,k) SFX.play('mouse_up') end
         function ZENITHA.globalEvent.drawCursor(x,y)
             if not SETTINGS.system.sysCursor then
                 gc.setColor(1,1,1)
@@ -283,6 +289,11 @@ function PROGRESS.applyEnv(env)
             end
         end
         ZENITHA.globalEvent.drawSysInfo=sysInfoFunc
+        function ZENITHA.globalEvent.sceneSwap(state)
+            if state=='swap' then
+                SFX.play(SCN.stackChange<0 and 'scene_backward' or 'scene_forward')
+            end
+        end
     else
         error("?")
     end

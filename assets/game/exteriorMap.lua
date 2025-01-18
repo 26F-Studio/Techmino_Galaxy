@@ -268,7 +268,7 @@ function map:mouseMove(x,y)
     local _f=focused
     focused=_onMode(x,y)
     if not _f and focused then
-        SFX.play('slider_fill_drag',nil,nil,-36)
+        SFX.play('map_hover')
     end
 end
 function map:mouseClick(x,y)

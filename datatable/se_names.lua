@@ -23,10 +23,12 @@ return {
     'finish_timeout','finish_rule','finish_exhaust','finish_taskfail','finish_other',
 
     -- Game UI
+    'mouse_down','mouse_up',
+    'scene_forward','scene_backward',
     'pause_pause','pause_unpause','pause_restart','pause_setting','pause_quit',
     'music_highcut','music_pause','music_glitch',
     'notice_up','notice_down','unlock_secret',
-    'simulation_select','map_select','map_enter',
+    'simulation_select','map_hover','map_select','map_enter',
     'map_pass_1','map_pass_2','map_pass_3','map_pass_4','map_pass_5',
     'map_unlock','map_unlock_bg',
     'dict_open','dict_close','dict_copy','dict_link',
