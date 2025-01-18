@@ -1,15 +1,12 @@
 -- [WARNING] Run before main.lua
 
-function simpRequire(path)
-    return function(module) return require(path..module) end
-end
-local _require=require
-local require=simpRequire('Zenitha.')
 local rnd=math.random
-AE=require'escape'
-LOG=require'log'
+local _require=require
+local function require(module) return _require('Zenitha.'..module) end
 STRING=require'stringExtend'
 TABLE=require'tableExtend'
+AE=require'escape'
+LOG=require'log'
 
 local stdout=io.stdout
 function write(text)
@@ -66,7 +63,7 @@ end
 function commands.version()
     option.bootDisabled=true
     sleep(.26)
-    speedWrite(.02,1,("TechOS %s (%s)\n"):format(_require'version'.appVer,_require'version'.verCode))
+    speedWrite(.02,1,("TechOS %s (%s)\n"):format(_G.require'version'.appVer,_G.require'version'.verCode))
 end
 function commands.shell(startArg)
     startArg=startArg or {}
