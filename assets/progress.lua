@@ -263,29 +263,70 @@ function PROGRESS.applyEnv(env)
         PROGRESS.applyExteriorBG()
         PROGRESS.applyExteriorBGM()
         function ZENITHA.globalEvent.touchClick(x,y) SYSFX.tap(.26,x,y) end
+
+        local rc=.8
+        local msWidth
+        local msColor={0,0,0,0}
+        local msCurve={}
+        local sin,cos=math.sin,math.cos
+        local function updateCursor(w)
+            msWidth=w
+            msCurve[1],msCurve[2],msCurve[3],msCurve[4],
+            msCurve[5],msCurve[6],msCurve[7],msCurve[8],
+            msCurve[9],msCurve[10],msCurve[11],msCurve[12],
+            msCurve[13],msCurve[14],msCurve[15],msCurve[16],
+            msCurve[17],msCurve[18],msCurve[19],msCurve[20]
+            =
+            00*cos(rc     ),00*sin(rc     ),
+            02*cos(rc-w*2.),02*sin(rc-w*2.),
+            45*cos(rc-w   ),45*sin(rc-w   ),
+            46*cos(rc-w*.9),46*sin(rc-w*.9),
+            45*cos(rc-w*.8),45*sin(rc-w*.8),
+            30*cos(rc     ),30*sin(rc     ),
+            45*cos(rc+w*.8),45*sin(rc+w*.8),
+            46*cos(rc+w*.9),46*sin(rc+w*.9),
+            45*cos(rc+w   ),45*sin(rc+w   ),
+            02*cos(rc+w*2.),02*sin(rc+w*2.)
+        end
+        updateCursor(.55)
         function ZENITHA.globalEvent.mouseDown(x,y,k)
-            if     k==1 then SYSFX.ripple(.26,x,y,26,.62,.62,1)
-            elseif k==2 then SYSFX.ripple(.26,x,y,26,1,.62,1)
+            msColor[1],msColor[2],msColor[3]=unpack(k==1 and COLOR.lP or k==2 and COLOR.lS or COLOR.lR)
+            msColor[4]=1
+
+            TWEEN.tag_kill('cursor_anim')
+            local _wid=msWidth
+            TWEEN.new(function(t) updateCursor(MATH.lerp(_wid,.4,t)) end):setTag('cursor_anim'):setDuration(.0626):run()
+            TWEEN.tag_kill('cursor_anim2')
+
+            if     k==1 then SYSFX.ripple(.26,x,y,26,.8,.62,1)
+            elseif k==2 then SYSFX.ripple(.26,x,y,26,.62,.8,1)
             elseif k==3 then SYSFX.ripple(.26,x,y,26,1,.62,.62)
             else             SYSFX.ripple(.26,x,y,26,9,.9,.9)
             end
             SFX.play('mouse_down')
         end
         ZENITHA.globalEvent.mouseMove=NULL
-        function ZENITHA.globalEvent.mouseUp(x,y,k) SFX.play('mouse_up') end
+        function ZENITHA.globalEvent.mouseUp(x,y,k)
+            if not love.mouse.isDown(1,2,3) then
+                TWEEN.tag_kill('cursor_anim')
+                local _wid=msWidth
+                TWEEN.new(function(t) updateCursor(MATH.lerp(_wid,.55,t)) end):setTag('cursor_anim'):setDuration(.0626):run()
+                TWEEN.new(function(t) msColor[4]=1-t end):setEase('Linear'):setTag('cursor_anim2'):setDuration(1):run()
+            end
+
+            SFX.play('mouse_up')
+        end
+
         function ZENITHA.globalEvent.drawCursor(x,y)
             if not SETTINGS.system.sysCursor then
-                gc.setColor(1,1,1)
-                gc.setLineWidth(2)
-                gc.translate(x,y)
-                gc.rotate(love.timer.getTime()%MATH.tau)
-                GC.mRect('line',0,0,20,20)
-                if love.mouse.isDown(1) then GC.mRect('fill',0,0,8,8) end
-                if love.mouse.isDown(2) then GC.mRect('line',0,0,12,12) end
-                if love.mouse.isDown(3) then gc.line(-8,-8,8,8) gc.line(-8,8,8,-8) end
-                gc.setColor(1,1,1,.626)
-                gc.line(0,-20,0,20)
-                gc.line(-20,0,20,0)
+                GC.translate(x,y)
+                -- GC.scale(10)
+                if msColor[4]>0 then
+                    GC.setColor(msColor)
+                    GC.polygon('fill',msCurve)
+                end
+                GC.setColor(COLOR.D) GC.setLineWidth(8) GC.polygon('line',msCurve)
+                GC.setColor(COLOR.L) GC.setLineWidth(2) GC.polygon('line',msCurve)
             end
         end
         ZENITHA.globalEvent.drawSysInfo=sysInfoFunc
