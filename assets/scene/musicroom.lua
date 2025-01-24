@@ -133,7 +133,9 @@ local function searchMusic(str)
         musicListBox:select(bestID)
     end
 end
-local function timeBomb()
+
+---@async
+local function task_timeBomb()
     TASK.yieldT(26)
     if TASK.getLock('musicroom_glitchFX') then
         FMOD.effect.keyOff('music_glitch')
@@ -189,7 +191,7 @@ function scene.keyDown(key,isRep)
         elseif key=='f3' then
             if TASK.lock('musicroom_glitchFX') then
                 FMOD.effect('music_glitch')
-                TASK.new(timeBomb)
+                TASK.new(task_timeBomb)
             end
         end
     end

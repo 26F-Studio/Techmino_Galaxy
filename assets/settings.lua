@@ -90,13 +90,14 @@ local settingTriggers={ -- Changing values in SETTINGS.system will trigger these
     locale=         function(v) Text=LANG.set(v) end,
 }
 
-local function updateDiscordRPC(v)
+---@async
+local function task_updateDiscordRPC(v)
     TASK.yieldT(2.6)
     DiscordRPC.setEnable(v)
 end
 function settingTriggers.discordConnect(v)
-    TASK.removeTask_code(updateDiscordRPC)
-    TASK.new(updateDiscordRPC,v)
+    TASK.removeTask_code(task_updateDiscordRPC)
+    TASK.new(task_updateDiscordRPC,v)
 end
 
 settings.system=setmetatable({},{

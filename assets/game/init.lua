@@ -129,6 +129,7 @@ do -- function layoutFuncs.default():
     end
 end
 
+---@async
 local function task_switchToResult()
     if SCN.cur=='game_in' then
         SCN.swapTo('result_in','none')

@@ -252,6 +252,7 @@ function CanPause()
     return GAME.playing and not GAME.mode.name:find('/test')
 end
 
+---@async
 local function task_interiorAutoBack()
     local time=love.timer.getTime()
     local startScene=SCN.cur
@@ -268,7 +269,8 @@ function autoBack_interior(disable)
     end
 end
 
-local function _saveSettings()
+---@async
+local function task_saveSettings()
     TASK.yieldT(.626)
     FILE.save({
         system=SETTINGS._system,
@@ -281,8 +283,8 @@ local function _saveSettings()
     end
 end
 function SaveSettings()
-    TASK.removeTask_code(_saveSettings)
-    TASK.new(_saveSettings)
+    TASK.removeTask_code(task_saveSettings)
+    TASK.new(task_saveSettings)
 end
 function SaveKey()
     FILE.save({
@@ -309,6 +311,7 @@ function CallDict(entry)
     SCN.go('dictionary','none',entry)
 end
 
+---@async
 function task_unloadGame()
     coroutine.yield()
     TASK.yieldUntilNextScene()

@@ -123,7 +123,8 @@ local PROGRESS={}
 --------------------------------------------------------------
 -- Save & Load
 
----@param step nil
+---@async
+---@param step nil | 'yield' | 'save'
 function PROGRESS.save(step)
     if step==nil then
         -- Wait 1 frame before saving
@@ -289,14 +290,17 @@ function PROGRESS.applyEnv(env)
             02*cos(rc+w*2.),02*sin(rc+w*2.)
         end
         updateCursor(.55)
+        local _wid1,_wid2
+        local function cursor_anim(t) updateCursor(MATH.lerp(_wid1,_wid2,t)) end
+        local function cursor_anim2(t) msColor[4]=1-t end
         function ZENITHA.globalEvent.mouseDown(x,y,k)
             msColor[1],msColor[2],msColor[3]=unpack(k==1 and COLOR.lP or k==2 and COLOR.lS or COLOR.lR)
             msColor[4]=1
 
             TWEEN.tag_kill('cursor_anim')
-            local _wid=msWidth
-            TWEEN.new(function(t) updateCursor(MATH.lerp(_wid,.4,t)) end):setTag('cursor_anim'):setDuration(.0626):run()
             TWEEN.tag_kill('cursor_anim2')
+            _wid1,_wid2=msWidth,.4
+            TWEEN.new(cursor_anim):setTag('cursor_anim'):setDuration(.0626):run()
 
             if     k==1 then SYSFX.ripple(.26,x,y,26,.8,.62,1)
             elseif k==2 then SYSFX.ripple(.26,x,y,26,.62,.8,1)
@@ -309,11 +313,10 @@ function PROGRESS.applyEnv(env)
         function ZENITHA.globalEvent.mouseUp(x,y,k)
             if not love.mouse.isDown(1,2,3) then
                 TWEEN.tag_kill('cursor_anim')
-                local _wid=msWidth
-                TWEEN.new(function(t) updateCursor(MATH.lerp(_wid,.55,t)) end):setTag('cursor_anim'):setDuration(.0626):run()
-                TWEEN.new(function(t) msColor[4]=1-t end):setEase('Linear'):setTag('cursor_anim2'):setDuration(1):run()
+                _wid1,_wid2=msWidth,.55
+                TWEEN.new(cursor_anim):setTag('cursor_anim'):setDuration(.0626):run()
+                TWEEN.new(cursor_anim2):setEase('Linear'):setTag('cursor_anim2'):setDuration(1):run()
             end
-
             SFX.play('mouse_up')
         end
 
