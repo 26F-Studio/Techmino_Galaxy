@@ -265,41 +265,44 @@ function PROGRESS.applyEnv(env)
         PROGRESS.applyExteriorBGM()
         function ZENITHA.globalEvent.touchClick(x,y) SYSFX.tap(.26,x,y) end
 
-        local rc=.8
-        local msWidth
-        local msColor={0,0,0,0}
-        local msCurve={}
+        local R,W=.8,.55 -- Rotation, Width
+        local C={0,0,0,0} -- Color
+        ---@type number | false, number | false
+        local pX,pY=false,false -- dragPoint position
+        local dragOn
+        local lastT=-1
+        local Crv={} -- Curve
         local sin,cos=math.sin,math.cos
         local function updateCursor(w)
-            msWidth=w
-            msCurve[1],msCurve[2],msCurve[3],msCurve[4],
-            msCurve[5],msCurve[6],msCurve[7],msCurve[8],
-            msCurve[9],msCurve[10],msCurve[11],msCurve[12],
-            msCurve[13],msCurve[14],msCurve[15],msCurve[16],
-            msCurve[17],msCurve[18],msCurve[19],msCurve[20]
+            W=w
+            Crv[01],Crv[02],Crv[03],Crv[04],
+            Crv[05],Crv[06],Crv[07],Crv[08],
+            Crv[09],Crv[10],Crv[11],Crv[12],
+            Crv[13],Crv[14],Crv[15],Crv[16],
+            Crv[17],Crv[18],Crv[19],Crv[20]
             =
-            00*cos(rc     ),00*sin(rc     ),
-            02*cos(rc-w*2.),02*sin(rc-w*2.),
-            45*cos(rc-w   ),45*sin(rc-w   ),
-            46*cos(rc-w*.9),46*sin(rc-w*.9),
-            45*cos(rc-w*.8),45*sin(rc-w*.8),
-            30*cos(rc     ),30*sin(rc     ),
-            45*cos(rc+w*.8),45*sin(rc+w*.8),
-            46*cos(rc+w*.9),46*sin(rc+w*.9),
-            45*cos(rc+w   ),45*sin(rc+w   ),
-            02*cos(rc+w*2.),02*sin(rc+w*2.)
+            00*cos(0     ),00*sin(0     ),
+            02*cos(0-w*2.),02*sin(0-w*2.),
+            45*cos(0-w   ),45*sin(0-w   ),
+            46*cos(0-w*.9),46*sin(0-w*.9),
+            45*cos(0-w*.8),45*sin(0-w*.8),
+            30*cos(0     ),30*sin(0     ),
+            45*cos(0+w*.8),45*sin(0+w*.8),
+            46*cos(0+w*.9),46*sin(0+w*.9),
+            45*cos(0+w   ),45*sin(0+w   ),
+            02*cos(0+w*2.),02*sin(0+w*2.)
         end
         updateCursor(.55)
         local _wid1,_wid2
         local function cursor_anim(t) updateCursor(MATH.lerp(_wid1,_wid2,t)) end
-        local function cursor_anim2(t) msColor[4]=1-t end
+        local function cursor_anim2(t) C[4]=1-t end
         function ZENITHA.globalEvent.mouseDown(x,y,k)
-            msColor[1],msColor[2],msColor[3]=unpack(k==1 and COLOR.lP or k==2 and COLOR.lS or COLOR.lR)
-            msColor[4]=1
+            C[1],C[2],C[3]=unpack(k==1 and COLOR.lP or k==2 and COLOR.lS or COLOR.lR)
+            C[4]=1
 
             TWEEN.tag_kill('cursor_anim')
             TWEEN.tag_kill('cursor_anim2')
-            _wid1,_wid2=msWidth,.4
+            _wid1,_wid2=W,.4
             TWEEN.new(cursor_anim):setTag('cursor_anim'):setDuration(.0626):run()
 
             if     k==1 then SYSFX.ripple(.26,x,y,26,.8,.62,1)
@@ -307,29 +310,85 @@ function PROGRESS.applyEnv(env)
             elseif k==3 then SYSFX.ripple(.26,x,y,26,1,.62,.62)
             else             SYSFX.ripple(.26,x,y,26,9,.9,.9)
             end
+
+            if not pX then
+                pX,pY=x,y
+            end
+
             SFX.play('mouse_down')
         end
-        ZENITHA.globalEvent.mouseMove=NULL
+        function ZENITHA.globalEvent.mouseMove(mx,my)
+            if pX then
+                local vX,vY=pX-mx,pY-my
+                local dist=(vX*vX+vY*vY)^.5
+                if dist>100 then
+                    pX,pY=mx+vX/dist*100,my+vY/dist*100
+                    dragOn=true
+                    lastT=love.timer.getTime()
+                end
+            end
+        end
         function ZENITHA.globalEvent.mouseUp(x,y,k)
             if not love.mouse.isDown(1,2,3) then
                 TWEEN.tag_kill('cursor_anim')
-                _wid1,_wid2=msWidth,.55
+                _wid1,_wid2=W,.55
                 TWEEN.new(cursor_anim):setTag('cursor_anim'):setDuration(.0626):run()
-                TWEEN.new(cursor_anim2):setEase('Linear'):setTag('cursor_anim2'):setDuration(1):run()
+                TWEEN.new(cursor_anim2):setEase('Linear'):setTag('cursor_anim2'):setDuration(.62):run()
+                pX,pY,dragOn=false,false,false
             end
             SFX.play('mouse_up')
         end
 
+        local abs,floor,atan2=math.abs,math.floor,math.atan2
+        local pi,tau=math.pi,math.pi*2
         function ZENITHA.globalEvent.drawCursor(x,y)
             if not SETTINGS.system.sysCursor then
-                GC.translate(x,y)
-                -- GC.scale(10)
-                if msColor[4]>0 then
-                    GC.setColor(msColor)
-                    GC.polygon('fill',msCurve)
+                -- if pX then
+                --     GC.setColor(1,1,1,.62)
+                --     GC.circle('fill',pX,pY,10)
+                --     GC.setColor(1,1,1)
+                --     GC.setLineWidth(1)
+                --     GC.circle('line',pX,pY,100)
+                -- end
+                if not pX or dragOn then
+                    local t=love.timer.getTime()
+                    if pX then
+                        local spd=math.min(((y-pY)^2+(x-pX)^2)/2600,1)*16
+
+                        -- Find closest new R on Riemann surface
+                        -- local r=atan2(y-pY,x-pX) -- The new R
+                        -- local R_cycle=floor((R+pi)/tau)
+                        -- r=r+tau*R_cycle
+                        -- local d1,d2,d3=
+                        --     abs(r-R),
+                        --     abs(r-R-tau),
+                        --     abs(r-R+tau)
+                        -- local d=(d1<d2 and d1<d3 and 0) or (d2<d3 and -tau) or tau
+                        -- r=r+d
+
+                        -- Optimized version
+                        local dR=atan2(y-pY,x-pX)+tau*floor((R+pi)/tau)-R
+                        local d1,d2,d3=abs(dR),abs(dR-tau),abs(dR+tau)
+                        R=MATH.expApproach(R,R+dR+((d1<d2 and d1<d3 and 0) or (d2<d3 and -1) or 1)*tau,(t-lastT)*spd)
+                        lastT=t
+                    elseif R~=.8 then
+                        if abs(R-.8)<.00626 then
+                            R=.8
+                        else
+                            R=MATH.expApproach(R,.8,(t-lastT)*16)
+                            lastT=t
+                        end
+                    end
                 end
-                GC.setColor(COLOR.D) GC.setLineWidth(8) GC.polygon('line',msCurve)
-                GC.setColor(COLOR.L) GC.setLineWidth(2) GC.polygon('line',msCurve)
+                GC.translate(x,y)
+                GC.rotate(R)
+                -- GC.scale(10)
+                if C[4]>0 then
+                    GC.setColor(C)
+                    GC.polygon('fill',Crv)
+                end
+                GC.setColor(COLOR.D) GC.setLineWidth(8) GC.polygon('line',Crv)
+                GC.setColor(COLOR.L) GC.setLineWidth(2) GC.polygon('line',Crv)
             end
         end
         ZENITHA.globalEvent.drawSysInfo=sysInfoFunc
