@@ -84,6 +84,7 @@ function scene.update(dt)
         o.x=o.x+o.vx*dt
         o.y=o.y+o.vy*dt
         o.a=o.a+o.va*dt
+        o.va=MATH.expApproach(o.va,0,dt*.42)
         o.vy=math.max(o.vy-1e3*dt,-620)
         if o.y<-260 then
             if o.name then
