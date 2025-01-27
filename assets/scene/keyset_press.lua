@@ -85,8 +85,8 @@ function scene.draw()
 end
 
 scene.widgetList={
-    {type='button',pos={1,0},x=-300,y=80,w=160,h=80,sound_trigger=false,fontSize=60,text=CHAR.key.backspace,code=WIDGET.c_pressKey('backspace')},
-    {type='button',pos={1,0},x=-120,y=80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=function() SCN.back('none',SCN.args[1]) end},
+    {type='button',pos={1,0},x=-300,y=80,w=160,h=80,sound_trigger=false,fontSize=60,text=CHAR.key.backspace,onPress=WIDGET.c_pressKey('backspace')},
+    {type='button',pos={1,0},x=-120,y=80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=function() SCN.back('none',SCN.args[1]) end},
 }
 
 return scene

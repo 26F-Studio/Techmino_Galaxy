@@ -493,19 +493,19 @@ end
 
 local function visFunc1() return not tapControl end
 scene.widgetList={
-    WIDGET.new{type='button',  pos={0,0}, x=160, y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
+    WIDGET.new{type='button',  pos={0,0}, x=160, y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,onPress=WIDGET.c_pressKey'r'},
     WIDGET.new{type='checkBox',pos={0,0}, x=300, y=220,text="Invis",widthLimit=270,fontSize=40,disp=function() return invis end,     code=WIDGET.c_pressKey'q',visibleTick=function() return state~=1 end},
     WIDGET.new{type='checkBox',pos={0,0}, x=300, y=300,text="Tap",  widthLimit=270,fontSize=40,disp=function() return tapControl end,code=WIDGET.c_pressKey'w',visibleTick=function() return state~=1 end},
 
-    WIDGET.new{type='button',  pos={0,1}, x=180, y=-280,w=100,     sound_trigger=false,text="↑",fontSize=50,color='Y', code=WIDGET.c_pressKey'up',   visibleTick=visFunc1},
-    WIDGET.new{type='button',  pos={0,1}, x=180, y=-80, w=100,     sound_trigger=false,text="↓",fontSize=50,color='Y', code=WIDGET.c_pressKey'down', visibleTick=visFunc1},
-    WIDGET.new{type='button',  pos={0,1}, x=80,  y=-180,w=100,     sound_trigger=false,text="←",fontSize=50,color='Y', code=WIDGET.c_pressKey'left', visibleTick=visFunc1},
-    WIDGET.new{type='button',  pos={0,1}, x=280, y=-180,w=100,     sound_trigger=false,text="→",fontSize=50,color='Y', code=WIDGET.c_pressKey'right',visibleTick=visFunc1},
-    WIDGET.new{type='button',  pos={0,1}, x=180, y=-390,w=100,     sound_trigger=false,text="S",fontSize=50,color='Y', code=WIDGET.c_pressKey'space',visibleTick=function() return state==1 and skipper.cd==0 end},
-    WIDGET.new{type='button',  pos={1,.5},x=-140,y=-30, w=250,h=50,sound_trigger=false,                     color='lT',code=WIDGET.c_pressKey'1',    visibleTick=function() return state~=2 end},
-    WIDGET.new{type='button',  pos={1,.5},x=-140,y=30,  w=250,h=50,sound_trigger=false,                     color='lT',code=WIDGET.c_pressKey'2',    visibleTick=function() return state~=2 end},
-    WIDGET.new{type='button',  pos={1,.5},x=-300,y=-30, w=50,      sound_trigger=false,text=">",fontSize=50,color='R', code=WIDGET.c_pressKey'c1',   visibleTick=function() return state~=2 and #repeater.seq[1]~=0 end},
-    WIDGET.new{type='button',  pos={1,.5},x=-300,y=30,  w=50,      sound_trigger=false,text=">",fontSize=50,color='R', code=WIDGET.c_pressKey'c2',   visibleTick=function() return state~=2 and #repeater.seq[2]~=0 end},
-    WIDGET.new{type='button',  pos={1,1}, x=-120,y=-80, w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',  pos={0,1}, x=180, y=-280,w=100,     sound_trigger=false,text="↑",fontSize=50,color='Y', onPress=WIDGET.c_pressKey'up',   visibleTick=visFunc1},
+    WIDGET.new{type='button',  pos={0,1}, x=180, y=-80, w=100,     sound_trigger=false,text="↓",fontSize=50,color='Y', onPress=WIDGET.c_pressKey'down', visibleTick=visFunc1},
+    WIDGET.new{type='button',  pos={0,1}, x=80,  y=-180,w=100,     sound_trigger=false,text="←",fontSize=50,color='Y', onPress=WIDGET.c_pressKey'left', visibleTick=visFunc1},
+    WIDGET.new{type='button',  pos={0,1}, x=280, y=-180,w=100,     sound_trigger=false,text="→",fontSize=50,color='Y', onPress=WIDGET.c_pressKey'right',visibleTick=visFunc1},
+    WIDGET.new{type='button',  pos={0,1}, x=180, y=-390,w=100,     sound_trigger=false,text="S",fontSize=50,color='Y', onPress=WIDGET.c_pressKey'space',visibleTick=function() return state==1 and skipper.cd==0 end},
+    WIDGET.new{type='button',  pos={1,.5},x=-140,y=-30, w=250,h=50,sound_trigger=false,                     color='lT',onPress=WIDGET.c_pressKey'1',    visibleTick=function() return state~=2 end},
+    WIDGET.new{type='button',  pos={1,.5},x=-140,y=30,  w=250,h=50,sound_trigger=false,                     color='lT',onPress=WIDGET.c_pressKey'2',    visibleTick=function() return state~=2 end},
+    WIDGET.new{type='button',  pos={1,.5},x=-300,y=-30, w=50,      sound_trigger=false,text=">",fontSize=50,color='R', onPress=WIDGET.c_pressKey'c1',   visibleTick=function() return state~=2 and #repeater.seq[1]~=0 end},
+    WIDGET.new{type='button',  pos={1,.5},x=-300,y=30,  w=50,      sound_trigger=false,text=">",fontSize=50,color='R', onPress=WIDGET.c_pressKey'c2',   visibleTick=function() return state~=2 and #repeater.seq[2]~=0 end},
+    WIDGET.new{type='button',  pos={1,1}, x=-120,y=-80, w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn()},
 }
 return scene

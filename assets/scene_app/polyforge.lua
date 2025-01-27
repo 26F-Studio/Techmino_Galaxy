@@ -151,7 +151,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',x=1140,y=60,w=170,h=80,color='D',sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',x=1140,y=60,w=170,h=80,color='D',sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn()},
 }
 
 return scene

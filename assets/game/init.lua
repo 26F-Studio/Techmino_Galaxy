@@ -451,6 +451,8 @@ function GAME.checkFinish()
         GAME.mode.result()
         if GAME.mode.resultPage~=NULL then
             TASK.new(task_switchToResult)
+        else
+            SCN.back()
         end
     end
 end

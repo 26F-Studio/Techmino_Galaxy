@@ -184,13 +184,13 @@ do -- Widgets
         type='button',pos={.5,.5},x=mainX+mainW-50,y=210,w=80,h=80,
         sound_trigger=false,lineWidth=4,
         fontSize=60,text=CHAR.icon.copy,
-        code=copyText,
+        onPress=copyText,
     }
     linkButton=WIDGET.new{
         type='button',pos={.5,.5},x=mainX+mainW-150,y=210,w=80,h=80,
         sound_trigger=false,lineWidth=4,
         fontSize=60,text=CHAR.icon.earth,
-        code=openLink,
+        onPress=openLink,
     }
 end
 
@@ -521,10 +521,10 @@ scene.widgetList={
     inputBox,
     copyButton,
     linkButton,
-    {type='button',pos={.5,.5},x=mainX+mainW+70,y=-310,w=80,h=80,sound_trigger=false,lineWidth=4,fontSize=60,text=CHAR.icon.cross_big,code=close},
+    {type='button',pos={.5,.5},x=mainX+mainW+70,y=-310,w=80,h=80,sound_trigger=false,lineWidth=4,fontSize=60,text=CHAR.icon.cross_big,onPress=close},
     {
         type='button',pos={.5,.5},x=mainX+mainW+70,y=320,w=80,h=80,sound_trigger='button_soft',lineWidth=4,fontSize=50,text="写",
-        code=WIDGET.c_goScn('zeta_input_method','none'),
+        onPress=WIDGET.c_goScn('zeta_input_method','none'),
         visibleFunc=function() return SETTINGS._system.locale=='zh' end,
     },
 }

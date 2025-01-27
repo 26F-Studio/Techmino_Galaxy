@@ -187,12 +187,12 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',                                    x=180,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'space',visibleTick=function() return state~=0 end},
+    WIDGET.new{type='button',                                    x=180,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,onPress=WIDGET.c_pressKey'space',visibleTick=function() return state~=0 end},
     WIDGET.new{type='slider'  ,name='rank',     text="Rank",     x=150,y=250,widthLimit=105,w=150,axis={3,6,1},valueShow=false,fontSize=40,disp=function() return rank end,code=function(v) rank=v end},
     WIDGET.new{type='checkBox',name='invis',    text="Invisible",x=280,y=330,widthLimit=200,fontSize=40,disp=function() return invis     end,code=WIDGET.c_pressKey'q'},
     WIDGET.new{type='checkBox',name='disappear',text="Disappear",x=280,y=420,widthLimit=200,fontSize=40,disp=function() return disappear end,code=WIDGET.c_pressKey'w'},
     WIDGET.new{type='checkBox',name='tapFX',    text="TapEffect",x=280,y=510,widthLimit=200,fontSize=40,disp=function() return tapFX     end,code=WIDGET.c_pressKey'e'},
-    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn()},
 }
 
 return scene

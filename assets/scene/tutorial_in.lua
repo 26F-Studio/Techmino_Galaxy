@@ -89,12 +89,12 @@ function scene.overDraw()
 end
 
 scene.widgetList={
-    {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
+    {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn('none')},
 
-    B{name='T1',x=-350,y=-180,text=LANG'tutorial_basic',        code=function() playTutorial(1) end},
-    B{name='T2',x=-350,y= 180,text=LANG'tutorial_sequence',     code=function() playTutorial(2) end},
+    B{name='T1',x=-350,y=-180,text=LANG'tutorial_basic',        onPress=function() playTutorial(1) end},
+    B{name='T2',x=-350,y= 180,text=LANG'tutorial_sequence',     onPress=function() playTutorial(2) end},
 
-    B{name='T3',x= 350,y=-180,text=LANG'tutorial_stackBasic',   code=function() playTutorial(3) end},
-    B{name='T4',x= 350,y= 180,text=LANG'tutorial_finesseBasic', code=function() playTutorial(4) end},
+    B{name='T3',x= 350,y=-180,text=LANG'tutorial_stackBasic',   onPress=function() playTutorial(3) end},
+    B{name='T4',x= 350,y= 180,text=LANG'tutorial_finesseBasic', onPress=function() playTutorial(4) end},
 }
 return scene

@@ -87,19 +87,19 @@ local function _setLang(lid)
 end
 
 scene.widgetList={
-    {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn('none')},
+    {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn('none')},
 
-    {type='button_fill', x=350,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.en, fillColor='R', sound_trigger='check_on',code=function() _setLang('en') end},
-    {type='button_fill', x=350,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.eo, fillColor='F', sound_trigger='check_on',code=function() _setLang('eo') end},
+    {type='button_fill', x=350,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.en, fillColor='R', sound_trigger='check_on',onPress=function() _setLang('en') end},
+    {type='button_fill', x=350,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.eo, fillColor='F', sound_trigger='check_on',onPress=function() _setLang('eo') end},
     {type='button',      x=350,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=35, text='',          fillColor='K'},
     {type='button',      x=350,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=35, text='',          fillColor='G'},
 
-    {type='button_fill', x=800,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.it, fillColor='O', sound_trigger='check_on',code=function() _setLang('it') end},
-    {type='button_fill', x=800,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.vi, fillColor='A', sound_trigger='check_on',code=function() _setLang('vi') end},
+    {type='button_fill', x=800,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.it, fillColor='O', sound_trigger='check_on',onPress=function() _setLang('it') end},
+    {type='button_fill', x=800,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text=langList.vi, fillColor='A', sound_trigger='check_on',onPress=function() _setLang('vi') end},
     {type='button',      x=800,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          fillColor='J'},
     {type='button',      x=800,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40, text='',          fillColor='P'},
 
-    {type='button_fill', x=1250,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text=langList.zh, fillColor='Y', sound_trigger='check_on',code=function() _setLang('zh') end},
+    {type='button_fill', x=1250,y=310,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text=langList.zh, fillColor='Y', sound_trigger='check_on',onPress=function() _setLang('zh') end},
     {type='button',      x=1250,y=460,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text='',          fillColor='I'},
     {type='button',      x=1250,y=610,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text='',          fillColor='B'},
     {type='button',      x=1250,y=760,w=390,h=100,lineWidth=4,cornerR=0,fontSize=40,text='',          fillColor='V'},

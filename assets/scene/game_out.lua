@@ -135,6 +135,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    {name='pause',type='button',pos={0,0},x=120,y=80,w=160,h=80,sound_trigger=false,fontSize=60,text=CHAR.icon.pause,code=function() sysAction('back') end},
+    {name='pause',type='button',pos={0,0},x=120,y=80,w=160,h=80,sound_trigger=false,fontSize=60,text=CHAR.icon.pause,onPress=function() sysAction('back') end},
 }
 return scene

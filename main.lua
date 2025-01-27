@@ -838,6 +838,7 @@ UTIL.time("Load backgrounds",true)
 for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
     if FILE.isSafe('assets/scene/'..v) then
         local sceneName=v:sub(1,-5)
+        print(sceneName)
         SCN.add(sceneName,FILE.load('assets/scene/'..v,'-lua'))
     end
 end

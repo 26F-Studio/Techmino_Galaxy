@@ -275,23 +275,23 @@ local function _setLang(lid)
 end
 
 scene.widgetList={
-    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=BackText,code=WIDGET.c_backScn'fadeHeader'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=BackText,onPress=WIDGET.c_backScn'fadeHeader'},
     {type='text',x=800,y=900,text=LANG'lang_note'},
 
-    {type='button',    name='dial_1',x=350 ,y=310,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LV',sound_trigger=false,code=function() if dialMode then dial('1') else _setLang('en') end end},
-    {type='button',    name='dial_2',x=800 ,y=310,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LP',sound_trigger=false,code=function() if dialMode then dial('2') else _setLang('it') end end},
-    {type='button',    name='dial_3',x=1250,y=310,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LG',sound_trigger=false,code=function() if dialMode then dial('3') else _setLang('zh') end end},
-    {type='button',    name='dial_4',x=350 ,y=460,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LB',sound_trigger=false,code=function() if dialMode then dial('4') else _setLang('eo') end end},
-    {type='button',    name='dial_5',x=800 ,y=460,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LJ',sound_trigger=false,code=function() if dialMode then dial('5') else _setLang('vi') end end},
-    {type='button',    name='dial_6',x=1250,y=460,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LK',sound_trigger=false,code=function() if dialMode then dial('6') else end end},
-    {type='button',    name='dial_7',x=350 ,y=610,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LI',sound_trigger=false,code=function() if dialMode then dial('7') else end end},
-    {type='button',    name='dial_8',x=800 ,y=610,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LA',sound_trigger=false,code=function() if dialMode then dial('8') else end end},
-    {type='button',    name='dial_9',x=1250,y=610,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LF',sound_trigger=false,code=function() if dialMode then dial('9') else end end},
-    {type='button',    name='dial_*',x=350, y=760,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LR',sound_trigger=false,code=function() if dialMode then dial('*') else end end},
-    {type='button',    name='dial_0',x=800, y=760,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LO',sound_trigger=false,code=function() if dialMode then dial('0') else end end},
-    {type='button',    name='dial_#',x=1250,y=760,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LY',sound_trigger=false,code=function() if dialMode then dial('#') else end end},
+    {type='button',    name='dial_1',x=350 ,y=310,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LV',sound_trigger=false,onPress=function() if dialMode then dial('1') else _setLang('en') end end},
+    {type='button',    name='dial_2',x=800 ,y=310,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LP',sound_trigger=false,onPress=function() if dialMode then dial('2') else _setLang('it') end end},
+    {type='button',    name='dial_3',x=1250,y=310,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LG',sound_trigger=false,onPress=function() if dialMode then dial('3') else _setLang('zh') end end},
+    {type='button',    name='dial_4',x=350 ,y=460,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LB',sound_trigger=false,onPress=function() if dialMode then dial('4') else _setLang('eo') end end},
+    {type='button',    name='dial_5',x=800 ,y=460,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LJ',sound_trigger=false,onPress=function() if dialMode then dial('5') else _setLang('vi') end end},
+    {type='button',    name='dial_6',x=1250,y=460,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LK',sound_trigger=false,onPress=function() if dialMode then dial('6') else end end},
+    {type='button',    name='dial_7',x=350 ,y=610,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LI',sound_trigger=false,onPress=function() if dialMode then dial('7') else end end},
+    {type='button',    name='dial_8',x=800 ,y=610,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LA',sound_trigger=false,onPress=function() if dialMode then dial('8') else end end},
+    {type='button',    name='dial_9',x=1250,y=610,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LF',sound_trigger=false,onPress=function() if dialMode then dial('9') else end end},
+    {type='button',    name='dial_*',x=350, y=760,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LR',sound_trigger=false,onPress=function() if dialMode then dial('*') else end end},
+    {type='button',    name='dial_0',x=800, y=760,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LO',sound_trigger=false,onPress=function() if dialMode then dial('0') else end end},
+    {type='button',    name='dial_#',x=1250,y=760,w=390,h=100,cornerR=26,fontSize=40,text='',fontType='bold',color='LY',sound_trigger=false,onPress=function() if dialMode then dial('#') else end end},
 
-    {type='button_invis',name='musicroom',pos={1,0},x=-200,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.music,sound_trigger='button_soft',code=WIDGET.c_goScn('musicroom','fadeHeader'),visibleFunc=NULL},
+    {type='button_invis',name='musicroom',pos={1,0},x=-200,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.music,sound_trigger='button_soft',onPress=WIDGET.c_goScn('musicroom','fadeHeader'),visibleFunc=NULL},
 }
 
 return scene

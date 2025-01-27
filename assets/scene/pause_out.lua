@@ -82,9 +82,9 @@ function scene.draw()
 end
 
 scene.widgetList={
-    {type='button',pos={0,0},  x= 120,y= 80, w=160,h=80,fontSize=60,sound_trigger=false,text=CHAR.icon.back,     code=function() sysAction('quit') end},
-    {type='button',pos={.5,.5},x= 0,  y=-160,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.retry,    code=function() sysAction('restart') end},
-    {type='button',pos={.5,.5},x=-110,y= 170,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.play,     code=function() sysAction('back') end},
-    {type='button',pos={.5,.5},x= 110,y= 170,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.settings, code=function() sysAction('setting') end},
+    {type='button',pos={0,0},  x= 120,y= 80, w=160,h=80,fontSize=60,sound_trigger=false,text=CHAR.icon.back,     onPress=function() sysAction('quit') end},
+    {type='button',pos={.5,.5},x= 0,  y=-160,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.retry,    onPress=function() sysAction('restart') end},
+    {type='button',pos={.5,.5},x=-110,y= 170,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.play,     onPress=function() sysAction('back') end},
+    {type='button',pos={.5,.5},x= 110,y= 170,w=180,h=90,fontSize=60,sound_trigger=false,text=CHAR.icon.settings, onPress=function() sysAction('setting') end},
 }
 return scene

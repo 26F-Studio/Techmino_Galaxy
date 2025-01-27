@@ -83,18 +83,18 @@ function scene.draw()
 end
 
 scene.widgetList={
-    {type='button_fill',pos={0,0},x=60,y=60,w=80,fillColor='R',cornerR=15,sound_trigger='button_back',fontSize=70,text=CHAR.icon.power,code=function() sysAction('back') end,visibleFunc=function() return SYSTEM~='iOS' end},
+    {type='button_fill',pos={0,0},x=60,y=60,w=80,fillColor='R',cornerR=15,sound_trigger='button_back',fontSize=70,text=CHAR.icon.power,onPress=function() sysAction('back') end,visibleFunc=function() return SYSTEM~='iOS' end},
 
-    {type='button_invis',pos={1,0},x=-200,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.ctrl_alt,  sound_trigger='button_soft',code=WIDGET.c_goScn('main_in','blackStun')},
-    {type='button_invis',pos={1,0},x=-400,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.info_circ, sound_trigger='button_soft',code=WIDGET.c_goScn('about_out','fadeHeader')},
-    {type='button_invis',pos={1,0},x=-600,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.music,     sound_trigger='button_soft',code=WIDGET.c_goScn('musicroom','fadeHeader')},
-    {type='button_invis',pos={1,0},x=-800,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.language,  sound_trigger='button_soft',code=WIDGET.c_goScn('lang_out','fadeHeader')},
+    {type='button_invis',pos={1,0},x=-200,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.ctrl_alt,  sound_trigger='button_soft',onPress=WIDGET.c_goScn('main_in','blackStun')},
+    {type='button_invis',pos={1,0},x=-400,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.info_circ, sound_trigger='button_soft',onPress=WIDGET.c_goScn('about_out','fadeHeader')},
+    {type='button_invis',pos={1,0},x=-600,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.music,     sound_trigger='button_soft',onPress=WIDGET.c_goScn('musicroom','fadeHeader')},
+    {type='button_invis',pos={1,0},x=-800,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.language,  sound_trigger='button_soft',onPress=WIDGET.c_goScn('lang_out','fadeHeader')},
 
-    {type='button', pos={.5,.5},x=-475,y=80, w=530,h=100,text=function() return CHAR.icon.person    ..' '..Text.main_out_single    end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('simulation','fadeHeader')},
+    {type='button', pos={.5,.5},x=-475,y=80, w=530,h=100,text=function() return CHAR.icon.person    ..' '..Text.main_out_single    end, fontSize=40,cornerR=26,onPress=WIDGET.c_goScn('simulation','fadeHeader')},
     {type='button', pos={.5,.5},x=95,  y=80, w=530,h=100,text=function() return CHAR.icon.people    ..' '..Text.main_out_multi     end, fontSize=40,cornerR=26,color='lD',sound_trigger=false},
 
-    {type='button', pos={.5,.5},x=-570,y=220,w=340,h=100,text=function() return CHAR.icon.settings  ..' '..Text.main_out_settings  end, fontSize=40,cornerR=26,code=WIDGET.c_goScn('setting_out','fadeHeader')},
+    {type='button', pos={.5,.5},x=-570,y=220,w=340,h=100,text=function() return CHAR.icon.settings  ..' '..Text.main_out_settings  end, fontSize=40,cornerR=26,onPress=WIDGET.c_goScn('setting_out','fadeHeader')},
     {type='button', pos={.5,.5},x=-190,y=220,w=340,h=100,text=function() return CHAR.icon.statistics..' '..Text.main_out_stat      end, fontSize=40,cornerR=26,color='lD',sound_trigger=false},
-    {type='button', pos={.5,.5},x=190, y=220,w=340,h=100,text=function() return CHAR.icon.zictionary..' '..Text.main_out_dict      end, fontSize=40,cornerR=26,code=function() CallDict('aboutDict') end},
+    {type='button', pos={.5,.5},x=190, y=220,w=340,h=100,text=function() return CHAR.icon.zictionary..' '..Text.main_out_dict      end, fontSize=40,cornerR=26,onPress=function() CallDict('aboutDict') end},
 }
 return scene

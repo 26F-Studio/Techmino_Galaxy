@@ -312,11 +312,11 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',                            x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'r'},
+    WIDGET.new{type='button',                            x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,onPress=WIDGET.c_pressKey'r'},
     WIDGET.new{type='checkBox',name='nexts',text="Nexts",x=280,y=235,widthLimit=200,fontSize=40,disp=function() return nexts end,code=WIDGET.c_pressKey'q'},
     WIDGET.new{type='checkBox',name='invis',text="Invis",x=280,y=305,widthLimit=200,fontSize=40,disp=function() return invis end,code=WIDGET.c_pressKey'w'},
     WIDGET.new{type='checkBox',name='fast', text="Fast", x=280,y=375,widthLimit=200,fontSize=40,disp=function() return fast  end,code=WIDGET.c_pressKey'e'},
-    WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn()},
 }
 
 return scene
