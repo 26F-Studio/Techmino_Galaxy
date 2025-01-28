@@ -134,17 +134,17 @@ function scene.draw()
     GC.mDraw(TEX.love_logo,160,300,-.785398+t*4.2-math.sin(t*4.2),.7033)
 
     FONT.set(35)
-    GC.strokePrint('side',2,COLOR.D,COLOR.L,Text.about_module,300,230,'left')
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,Text.about_module,300,230,nil,'left')
     local m=modules[math.floor(t)%#modules+1]
     FONT.set(50)
-    GC.strokePrint('side',2,COLOR.D,COLOR.L,m[1],300,270,'left')
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,m[1],300,270,nil,'left')
     FONT.set(30)
-    GC.strokePrint('side',2,COLOR.D,COLOR.L,m[2],300,330,'left')
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,m[2],300,330,nil,'left')
 
     FONT.set(35)
-    GC.strokePrint('side',2,COLOR.D,COLOR.L,Text.about_toolchain,942,230,'left')
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,Text.about_toolchain,942,230,nil,'left')
     FONT.set(50)
-    GC.strokePrint('side',2,COLOR.D,COLOR.L,toolchain[math.floor(t)%#toolchain+1],942,270,'left')
+    GC.strokePrint('side',2,COLOR.D,COLOR.L,toolchain[math.floor(t)%#toolchain+1],942,270,nil,'left')
 end
 
 scene.widgetList={

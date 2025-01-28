@@ -179,7 +179,7 @@ function scene.draw()
                 gc.setColor(COLOR.L)
                 gc.rectangle('line',area.x+(j-1)*width,area.y+(i-1)*width,width,width)
                 if not mono then
-                    GC.strokePrint('full',3,COLOR.D,COLOR.L,N,area.x+(j-.5)*width,area.y+(i-.5)*width-f*.67,'center')
+                    GC.strokePrint('full',3,COLOR.D,COLOR.L,N,area.x+(j-.5)*width,area.y+(i-.5)*width-f*.67,nil,'center')
                 end
             end
         end

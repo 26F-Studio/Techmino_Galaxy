@@ -217,7 +217,7 @@ function stack.event_drawOnPlayer(P)
         GC.scale(2)
         local fontSize=lineFont[min(md.stack_lines,26)]
         FONT.set(fontSize,'bold')
-        GC.strokePrint('full',2,COLOR.lD,COLOR.L,md.stack_lines,0,-fontSize*.5,'center')
+        GC.strokePrint('full',2,COLOR.lD,COLOR.L,md.stack_lines,0,-fontSize*.5,nil,'center')
         GC.pop()
     end
 end

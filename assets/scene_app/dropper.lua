@@ -190,7 +190,7 @@ function scene.draw()
 
     if state=='menu' or state=='dead' then
         setFont(100)
-        GC.strokePrint('full',4,COLOR.L,COLOR.L,"DROPPER",800,150,'center')
+        GC.strokePrint('full',4,COLOR.L,COLOR.L,"DROPPER",800,150,nil,'center')
         gc.setColor(COLOR.rainbow_light(love.timer.getTime()*2.6))
         mStr("DROPPER",800,150)
 
@@ -215,13 +215,13 @@ function scene.draw()
         gc.line(-overflowWidth,y,SCR.w0+overflowWidth,y)
 
         setFont(60)
-        GC.strokePrint('full',3,COLOR.L,COLOR.D,floor+1,move.x+move.w+10,move.y-15,'left')
-        GC.strokePrint('full',3,COLOR.L,COLOR.D,floor,base.x+base.w+10,base.y-15,'left')
+        GC.strokePrint('full',3,COLOR.L,COLOR.D,floor+1,move.x+move.w+10,move.y-15)
+        GC.strokePrint('full',3,COLOR.L,COLOR.D,floor,base.x+base.w+10,base.y-15)
 
-        GC.strokePrint('full',3,COLOR.L,COLOR.D,message,800,0,'center')
+        GC.strokePrint('full',3,COLOR.L,COLOR.D,message,800,0,nil,'center')
 
         setFont(70)
-        GC.strokePrint('full',3,COLOR.L,COLOR.D,score,100,40,'center')
+        GC.strokePrint('full',3,COLOR.L,COLOR.D,score,100,40,nil,'center')
 
         gc.setColor(COLOR.L)
         gc.rectangle('fill',move.x-brickStroke,move.y-brickStroke,move.w+2*brickStroke,brickHeight+2*brickStroke)
