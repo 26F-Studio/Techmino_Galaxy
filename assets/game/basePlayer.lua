@@ -183,6 +183,16 @@ end
 function P:roll(chance)
     return self.RND:random()<(chance or .5)
 end
+---Random int with custom weight
+function P:randFreq(fList)
+    local sum=MATH.sum(fList)
+    local r=self.RND:random()*sum
+    for i=1,#fList do
+        r=r-fList[i]
+        if r<0 then return i end
+    end
+    error("WTF why not all positive")
+end
 function P:_getActionObj(a)
     if type(a)=='string' then
         return self._actions[a]

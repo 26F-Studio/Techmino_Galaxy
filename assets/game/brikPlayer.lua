@@ -1999,10 +1999,10 @@ local baseEnv={
 
     -- Garbage
     initialRisingSpeed=1,
-    risingAcceleration=.001,
-    risingDeceleration=.003,
     maxRisingSpeed=1,
     minRisingSpeed=1,
+    risingAcceleration=.001,
+    risingDeceleration=.003,
 
     -- Attack
     rotSys='TRS',             ---@type Techmino.Mech.Brik.RotationSysName
