@@ -331,10 +331,9 @@ GetTouches=love.touch.getTouches
 IsMouseDown=love.mouse.isDown
 IsKeyDown=love.keyboard.isDown
 IsSCDown=love.keyboard.isScancodeDown
-local IsKeyDown=IsKeyDown
 function IsCtrlDown() return IsKeyDown('lctrl','rctrl') end
 function IsShiftDown() return IsKeyDown('lshift','rshift') end
-function isAltDown() return IsKeyDown('lalt','ralt') end
+function IsAltDown() return IsKeyDown('lalt','ralt') end
 
 local function _getActMode(mode,key)
     local act=KEYMAP[mode]:getAction(key)

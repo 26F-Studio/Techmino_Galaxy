@@ -105,9 +105,9 @@ function scene.mouseUp(x,y,button)
 end
 
 function scene.update(dt)
-    if love.keyboard.isDown('f1') then
+    if IsKeyDown('f1') then
         dt=dt*.1
-    elseif love.keyboard.isDown('f2') then
+    elseif IsKeyDown('f2') then
         dt=dt*2.6
     else
         dt=dt*timeScale

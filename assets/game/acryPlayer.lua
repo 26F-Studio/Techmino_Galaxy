@@ -581,7 +581,7 @@ function AP:tickStep()
         end
     end
 
-    if love.keyboard.isDown('f4') then
+    if IsKeyDown('f4') then
         local acry=F[1][1]
         if acry then
             print("--------------------------")

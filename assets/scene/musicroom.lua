@@ -266,7 +266,7 @@ function scene.update(dt)
             end
         end
     end
-    if WIDGET.sel~=progressBar or not love.mouse.isDown(1,2,3) and FMOD.music.getPlaying() then
+    if WIDGET.sel~=progressBar or not IsMouseDown(1,2,3) and FMOD.music.getPlaying() then
         local v=FMOD.music.tell()/FMOD.music.getDuration()%1
         if _glitchProtect then
             if math.abs(fakeProgress-v)<.0026 then

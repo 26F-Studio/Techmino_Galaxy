@@ -251,8 +251,8 @@ function PROGRESS.applyEnv(env)
                 gc.setColor(1,1,1)
                 gc.setLineWidth(2)
                 gc.translate(x,y)
-                if love.mouse.isDown(1) then GC.mRect('fill',0,0,10,10) end
-                if love.mouse.isDown(2) then GC.mRect('line',0,0,16,16) end
+                if IsMouseDown(1) then GC.mRect('fill',0,0,10,10) end
+                if IsMouseDown(2) then GC.mRect('line',0,0,16,16) end
                 gc.setColor(1,1,1,.626)
                 gc.setLineWidth(4)
                 gc.line(0,-15,0,15)
@@ -329,7 +329,7 @@ function PROGRESS.applyEnv(env)
             end
         end
         function ZENITHA.globalEvent.mouseUp(x,y,k)
-            if not love.mouse.isDown(1,2,3) then
+            if not IsMouseDown(1,2,3) then
                 TWEEN.tag_kill('cursor_anim')
                 _wid1,_wid2=W,.55
                 TWEEN.new(cursor_anim):setTag('cursor_anim'):setDuration(.0626):run()

@@ -297,9 +297,9 @@ end
 function map:update(dt)
     -- if selected then
     --     selected.pos={
-    --         selected.pos[1]+.026*((love.keyboard.isDown('w') and 1 or 0)-(love.keyboard.isDown('s') and 1 or 0)),
-    --         selected.pos[2]+.026*((love.keyboard.isDown('a') and 1 or 0)-(love.keyboard.isDown('d') and 1 or 0)),
-    --         selected.pos[3]+.026*((love.keyboard.isDown('q') and 1 or 0)-(love.keyboard.isDown('e') and 1 or 0)),
+    --         selected.pos[1]+.026*((IsKeyDown('w') and 1 or 0)-(IsKeyDown('s') and 1 or 0)),
+    --         selected.pos[2]+.026*((IsKeyDown('a') and 1 or 0)-(IsKeyDown('d') and 1 or 0)),
+    --         selected.pos[3]+.026*((IsKeyDown('q') and 1 or 0)-(IsKeyDown('e') and 1 or 0)),
     --     }
     --     selected.x=30*(selected.pos[1]-selected.pos[2])*(3^.5/2)
     --     selected.y=30*(selected.pos[3]-(selected.pos[1]+selected.pos[2])*.5)
@@ -330,19 +330,19 @@ function map:update(dt)
         end
     end
     if full then
-        if love.keyboard.isDown('up','down','left','right') then
+        if IsKeyDown('up','down','left','right') then
             self:showCursor()
             if IsCtrlDown() then
-                if love.keyboard.isDown('up')    then cam:scale(2.6^dt) end
-                if love.keyboard.isDown('down')  then cam:scale(1/2.6^dt) end
-                if love.keyboard.isDown('right') then cam:rotate(dt*3.55) end
-                if love.keyboard.isDown('left')  then cam:rotate(-dt*3.55) end
+                if IsKeyDown('up')    then cam:scale(2.6^dt) end
+                if IsKeyDown('down')  then cam:scale(1/2.6^dt) end
+                if IsKeyDown('right') then cam:rotate(dt*3.55) end
+                if IsKeyDown('left')  then cam:rotate(-dt*3.55) end
             else
                 local dx,dy=0,0
-                if love.keyboard.isDown('up')    then dy=dy+dt*1260 end
-                if love.keyboard.isDown('down')  then dy=dy-dt*1260 end
-                if love.keyboard.isDown('left')  then dx=dx+dt*1260 end
-                if love.keyboard.isDown('right') then dx=dx-dt*1260 end
+                if IsKeyDown('up')    then dy=dy+dt*1260 end
+                if IsKeyDown('down')  then dy=dy-dt*1260 end
+                if IsKeyDown('left')  then dx=dx+dt*1260 end
+                if IsKeyDown('right') then dx=dx-dt*1260 end
                 cam:move(dx,dy)
             end
         end

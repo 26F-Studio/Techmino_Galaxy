@@ -341,8 +341,8 @@ function GAME.cursorMove(x,y,dx,dy,tid,id)
         x,y=GAME.camera.transform:inverseTransformPoint(SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y)))
         p:mouseMove(x,y,dx,dy,
             tid or
-            love.mouse.isDown(1) and 1 or
-            love.mouse.isDown(2) and 2 or
+            IsMouseDown(1) and 1 or
+            IsMouseDown(2) and 2 or
             3
         )
     elseif SETTINGS.system.touchControl then

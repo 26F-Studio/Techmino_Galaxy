@@ -81,7 +81,7 @@ end
 
 function scene.mouseMove(x,y,dx,dy)
     exMap:hideCursor()
-    if love.mouse.isDown(1) then
+    if IsMouseDown(1) then
         exMap:moveCam(dx,dy)
     else
         x,y=SCR.xOy:transformPoint(x,y)

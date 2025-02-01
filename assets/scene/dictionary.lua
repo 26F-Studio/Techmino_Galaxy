@@ -4,7 +4,6 @@ local gc_stc_reset,gc_stc_rect,gc_stc_stop=GC.stc_reset,GC.stc_rect,GC.stc_stop
 local gc_translate,gc_replaceTransform=GC.translate,GC.replaceTransform
 
 local ins=table.insert
-local kbIsDown=love.keyboard.isDown
 ---@type Zenitha.Scene
 local scene={}
 
@@ -349,7 +348,7 @@ function scene.keyDown(key,isRep)
     if WIDGET.isFocus(inputBox) and #key==1 then return true end
     local act=KEYMAP.sys:getAction(key)
     if act=='up' or act=='down' then
-        if not (IsCtrlDown() or IsShiftDown() or isAltDown()) then
+        if not (IsCtrlDown() or IsShiftDown() or IsAltDown()) then
             local sel=listBox:getItem()
             listBox:arrowKey(key)
             if listBox:getItem()~=sel then
@@ -396,7 +395,7 @@ local function scroll(dy)
     contents.scroll=MATH.clamp(contents.scroll-dy,0,contents.maxScroll)
 end
 function scene.mouseMove(x,y,_,dy)
-    if not WIDGET.isFocus(listBox) and love.mouse.isDown(1) and x and y and inScreen(x,y) then
+    if not WIDGET.isFocus(listBox) and IsMouseDown(1) and x and y and inScreen(x,y) then
         scroll(dy)
     end
 end
@@ -442,8 +441,8 @@ function scene.update(dt)
         end
         searchTimer=0
     end
-    if kbIsDown('up','down') and (IsCtrlDown() or IsShiftDown() or isAltDown()) then
-        scroll(260*dt*(kbIsDown('up') and 1 or -1))
+    if IsKeyDown('up','down') and (IsCtrlDown() or IsShiftDown() or IsAltDown()) then
+        scroll(260*dt*(IsKeyDown('up') and 1 or -1))
     end
 end
 
@@ -501,7 +500,7 @@ function scene.draw()
         local fontH=FONT.get(selected.contentSize):getHeight()
         gc_translate(0,-mainH/2+5)
         for _,line in next,contents.texts do
-            if love.keyboard.isDown('f1') then
+            if IsKeyDown('f1') then
                 gc_setLineWidth(1)
                 gc_rectangle('line',15,0,mainW-25,line.height)
             end
