@@ -46,6 +46,7 @@ do -- marathon
         P.settings.dropDelay=levels[1].drop
         P.settings.lockDelay=levels[1].lock
         P.settings.spawnDelay=levels[1].spawn
+        P.settings.clearDelay=300
 
         P.modeData.transition1=1e99
         P.modeData.transition2=1e99
@@ -116,7 +117,7 @@ do -- marathon
     end
 end
 
-do -- hypersonic (of course they are variations of marathon, aren't they?)
+do -- hypersonic (they are variations of marathon, aren't they?)
     function marathon.hypersonic_event_playerInit(P)
         P.modeData.point=0
         P.modeData.level=1
