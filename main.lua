@@ -484,7 +484,7 @@ WIDGET.setDefaultOption{
         textColor='L',
     },
     button={
-        sound_trigger='button_norm',
+        sound_release='button_norm',
     },
     hint={
         w=40,
@@ -552,9 +552,8 @@ MSG.addCategory('achievement',
 
 SCN.addSwapStyle('fadeHeader',{
     duration=.5,
-    timeChange=.25,
     draw=function(t)
-        local a=t>.25 and 2-t*4 or t*4
+        local a=1-(t-.5)*(t-.5)*4
         local h=120*SCR.k
         GC.setColor(.26,.26,.26,a)
         GC.rectangle('fill',0,0,SCR.w,h)
@@ -566,9 +565,8 @@ SCN.addSwapStyle('fadeHeader',{
 })
 SCN.addSwapStyle('fastFadeHeader',{
     duration=.2,
-    timeChange=.1,
     draw=function(t)
-        local a=t>.1 and 2-t*10 or t*10
+        local a=1-(t-.5)*(t-.5)*4
         local h=120*SCR.k
         GC.setColor(.26,.26,.26,a)
         GC.rectangle('fill',0,0,SCR.w,h)
@@ -580,7 +578,7 @@ SCN.addSwapStyle('fastFadeHeader',{
 })
 SCN.addSwapStyle('blackStun',{
     duration=.42,
-    timeChange=.1,
+    switchTime=.26,
     draw=function() GC.clear() end,
 })
 local _oldLoad=SCN.scenes._console.load

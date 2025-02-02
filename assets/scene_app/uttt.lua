@@ -239,8 +239,8 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={1,1},x=-120,y=-180,w=160,h=80,fontSize=60,text=CHAR.icon.retry,color='lG',onPress=restart},
-    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={1,1},x=-120,y=-180,w=160,h=80,fontSize=60,text=CHAR.icon.retry,color='lG',onClick=restart},
+    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_release='button_back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
 }
 
 return scene

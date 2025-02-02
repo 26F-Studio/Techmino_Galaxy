@@ -284,13 +284,13 @@ function scene.draw()
 end
 
 scene.widgetList={
-    {type='button',pos={.5,.5},x=220*(0-3),y=300,w=210,sound_trigger=false,onPress=function() answer(1) end},
-    {type='button',pos={.5,.5},x=220*(1-3),y=300,w=210,sound_trigger=false,onPress=function() answer(2) end},
-    {type='button',pos={.5,.5},x=220*(2-3),y=300,w=210,sound_trigger=false,onPress=function() answer(3) end},
-    {type='button',pos={.5,.5},x=220*(3-3),y=300,w=210,sound_trigger=false,onPress=function() answer(4) end},
-    {type='button',pos={.5,.5},x=220*(4-3),y=300,w=210,sound_trigger=false,onPress=function() answer(5) end},
-    {type='button',pos={.5,.5},x=220*(5-3),y=300,w=210,sound_trigger=false,onPress=function() answer(6) end},
-    {type='button',pos={.5,.5},x=220*(6-3),y=300,w=210,sound_trigger=false,onPress=function() answer(7) end},
-    {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn('none')},
+    {type='button',pos={.5,.5},x=220*(0-3),y=300,w=210,sound_release=false,onClick=function() answer(1) end},
+    {type='button',pos={.5,.5},x=220*(1-3),y=300,w=210,sound_release=false,onClick=function() answer(2) end},
+    {type='button',pos={.5,.5},x=220*(2-3),y=300,w=210,sound_release=false,onClick=function() answer(3) end},
+    {type='button',pos={.5,.5},x=220*(3-3),y=300,w=210,sound_release=false,onClick=function() answer(4) end},
+    {type='button',pos={.5,.5},x=220*(4-3),y=300,w=210,sound_release=false,onClick=function() answer(5) end},
+    {type='button',pos={.5,.5},x=220*(5-3),y=300,w=210,sound_release=false,onClick=function() answer(6) end},
+    {type='button',pos={.5,.5},x=220*(6-3),y=300,w=210,sound_release=false,onClick=function() answer(7) end},
+    {type='button',pos={0,.5},x=210,y=-360,w=200,h=80,lineWidth=4,cornerR=0,sound_release='button_back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn('none')},
 }
 return scene

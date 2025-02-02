@@ -124,9 +124,9 @@ end
 
 scene.widgetList={
     WIDGET.new{type='selector',name='level',text="",x=220,y=640,w=200,list={'A_Z','Z_A','HELLO','TG1','TG2','KeyTest1','KeyTest2','Roll1','Roll2','Roll3','Stair1','Stair2','Stair3','Stair4','BPW'},disp=function() return levelName end,code=function(i) levelName=i; targetString=levels[i] end,visibleTick=function() return state==0 end},
-    WIDGET.new{type='button',  x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,onPress=WIDGET.c_pressKey'space'},
-    WIDGET.new{type='button',  name='keyboard',x=160,y=210,w=180,h=100,fontSize=60,text=CHAR.icon.keyboard,onPress=function() love.keyboard.setTextInput(true,0,select(2,SCR.xOy:transformPoint(0,500)),1,1) end},
-    WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn()},
+    WIDGET.new{type='button',  x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,onClick=WIDGET.c_pressKey'space'},
+    WIDGET.new{type='button',  name='keyboard',x=160,y=210,w=180,h=100,fontSize=60,text=CHAR.icon.keyboard,onClick=function() love.keyboard.setTextInput(true,0,select(2,SCR.xOy:transformPoint(0,500)),1,1) end},
+    WIDGET.new{type='button',  pos={1,1},x=-120,y=-80,w=160,h=80,sound_release='button_back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
 }
 
 return scene

@@ -73,8 +73,8 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={.5,.7},w=800,h=420,sound_trigger=false,text="TAP",color='L',fontSize=100,onPress=function(i) love.keypressed('b'..i) end},
-    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={.5,.7},w=800,h=420,sound_release=false,text="TAP",color='L',fontSize=100,onClick=function(i) love.keypressed('b'..i) end},
+    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_release='button_back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
 }
 
 return scene

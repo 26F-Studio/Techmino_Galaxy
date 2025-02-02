@@ -220,8 +220,8 @@ local layoutData={
         size=16,
         font=35,
         templates={
-            {y=0,w=4,h=15,show='',fillC='L',lineC='LD',actvC='lI',_onPress=presets.rollNote.press,_onRelease=presets.rollNote.release,rollNoteWidth=30,rollNoteColor=COLOR.L}, -- White key
-            {y=0,w=2.6,h=10,show='',fillC='lD',lineC='LD',actvC='LI',_onPress=presets.rollNote.press,_onRelease=presets.rollNote.release,rollNoteWidth=30,rollNoteColor=COLOR.DL}, -- Black key
+            {y=0,w=4,h=15,show='',fillC='L',lineC='LD',actvC='lI',_onClick=presets.rollNote.press,_onRelease=presets.rollNote.release,rollNoteWidth=30,rollNoteColor=COLOR.L}, -- White key
+            {y=0,w=2.6,h=10,show='',fillC='lD',lineC='LD',actvC='LI',_onClick=presets.rollNote.press,_onRelease=presets.rollNote.release,rollNoteWidth=30,rollNoteColor=COLOR.DL}, -- Black key
             {y=11.5,w=3,h=3,fillC='X',lineC='X',textC='lD'}, -- Tag
         },
         keyLayout={
@@ -275,8 +275,8 @@ local layoutData={
         size=16,
         font=35,
         templates={
-            {y=0,w=4,h=15,show='',fillC='L',lineC='LD',actvC='lI',_onPress=presets.rollNote.press,_onRelease=presets.rollNote.release,rollNoteWidth=30,rollNoteColor=COLOR.L}, -- White key
-            {y=0,w=2.6,h=10,show='',fillC='lD',lineC='LD',actvC='LI',_onPress=presets.rollNote.press,_onRelease=presets.rollNote.release,rollNoteWidth=30,rollNoteColor=COLOR.DL}, -- Black key
+            {y=0,w=4,h=15,show='',fillC='L',lineC='LD',actvC='lI',_onClick=presets.rollNote.press,_onRelease=presets.rollNote.release,rollNoteWidth=30,rollNoteColor=COLOR.L}, -- White key
+            {y=0,w=2.6,h=10,show='',fillC='lD',lineC='LD',actvC='LI',_onClick=presets.rollNote.press,_onRelease=presets.rollNote.release,rollNoteWidth=30,rollNoteColor=COLOR.DL}, -- Black key
             {y=11.5,w=3,h=3,fillC='X',lineC='X',textC='lD'}, -- Tag
         },
         keyLayout={
@@ -401,7 +401,7 @@ for _,layout in next,layoutData do
         key.textC=checkColor(key.textC or COLOR.M)
 
         key._pressed=false
-        key._onPress=key._onPress or NULL
+        key._onClick=key._onPress or NULL
         key._onRelease=key._onRelease or NULL
     end
 end
@@ -553,6 +553,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={1,1},x=-120,y=-80,w=160,h=80,sound_release='button_back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
 }
 return scene

@@ -361,15 +361,15 @@ function scene.overDraw()
 end
 
 scene.widgetList={
-    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=BackText,onPress=WIDGET.c_backScn'fadeHeader'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_release='button_back',fontSize=40,text=BackText,onClick=WIDGET.c_backScn'fadeHeader'},
     {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'musicroom_title'},
 
     musicListBox,
     progressBar,
 
     -- Play/Stop
-    {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,onPress=WIDGET.c_pressKey'space',visibleTick=function() return not FMOD.music.getPlaying() end},
-    {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,onPress=WIDGET.c_pressKey'space',visibleTick=function() return FMOD.music.getPlaying() end},
+    {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.play,fontSize=90,onClick=WIDGET.c_pressKey'space',visibleTick=function() return not FMOD.music.getPlaying() end},
+    {type='button_invis',pos={.5,.5},x=0,y=360,w=160,cornerR=80,text=CHAR.icon.stop,fontSize=90,onClick=WIDGET.c_pressKey'space',visibleTick=function() return FMOD.music.getPlaying() end},
 
     -- Auto Switching Switch
     {type='switch',pos={.5,.5},x=-650,y=90,h=50,widthLimit=260,
@@ -438,10 +438,10 @@ scene.widgetList={
     -- Volume slider
     {type='slider_progress',pos={.5,.5},x=450,y=360,w=250,text=CHAR.icon.volUp,fontSize=60,disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
 
-    {type='button_invis',pos={1,0},x=-200,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_trigger='button_soft',onPress=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
-    -- {type='button_invis',pos={1,0},x=-400,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_trigger='button_soft',onPress=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
-    -- {type='button_invis',pos={1,0},x=-600,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_trigger='button_soft',onPress=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
-    -- {type='button_invis',pos={1,0},x=-800,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_trigger='button_soft',onPress=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
+    {type='button_invis',pos={1,0},x=-200,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_release='button_soft',onClick=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
+    -- {type='button_invis',pos={1,0},x=-400,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_release='button_soft',onClick=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
+    -- {type='button_invis',pos={1,0},x=-600,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_release='button_soft',onClick=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
+    -- {type='button_invis',pos={1,0},x=-800,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_release='button_soft',onClick=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
 }
 
 return scene

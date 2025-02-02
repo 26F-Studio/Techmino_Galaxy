@@ -103,8 +103,8 @@ function scene.draw()
 end
 
 scene.widgetList={
-    {type='button',pos={.5,1},x=-130,y=-100,w=220,h=100,fontSize=75,text=CHAR.icon.console,onPress=WIDGET.c_goScn'_console',visibleTick=function() return time>1 end},
-    {type='button',pos={.5,1},x=130,y=-100,w=220,h=100,fontSize=70,text=CHAR.icon.cross_big,onPress=WIDGET.c_pressKey'escape',visibleTick=function() return time>1 end},
+    {type='button',pos={.5,1},x=-130,y=-100,w=220,h=100,fontSize=75,text=CHAR.icon.console,onClick=WIDGET.c_goScn'_console',visibleTick=function() return time>1 end},
+    {type='button',pos={.5,1},x=130,y=-100,w=220,h=100,fontSize=70,text=CHAR.icon.cross_big,onClick=WIDGET.c_pressKey'escape',visibleTick=function() return time>1 end},
 }
 
 return scene

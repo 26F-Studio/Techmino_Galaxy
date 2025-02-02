@@ -357,22 +357,22 @@ end
 scene.widgetList={}
 
 widgetList_ui={
-    WIDGET.new{type='button',x=areaX+areaR+070,y=areaY+areaR-250,w=100, sound_trigger='button_soft',fontSize=80,color='LY',text=CHAR.key.backspace,onPress=WIDGET.c_pressKey'backspace'},
-    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-250,w=100,sound_trigger='button_soft',fontSize=80,color='LY',text=CHAR.key.mac_clear,onPress=WIDGET.c_pressKey'delete'},
-    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-250,w=100,sound_trigger='button_soft',fontSize=80,color='LY',text=CHAR.icon.check_circ,onPress=WIDGET.c_pressKey'return'},
-    WIDGET.new{type='button',x=areaX+areaR+070,y=areaY+areaR-50, w=100,  sound_trigger='button_soft',fontSize=80,text=CHAR.icon.back,onPress=WIDGET.c_pressKey'z'},
-    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-50, w=100, sound_trigger='button_soft',fontSize=80,text=CHAR.icon.delete,onPress=WIDGET.c_pressKey'x'},
-    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-50, w=100, sound_trigger='button_soft',fontSize=80,text=CHAR.icon.cross_big,onPress=WIDGET.c_pressKey'escape'},
+    WIDGET.new{type='button',x=areaX+areaR+070,y=areaY+areaR-250,w=100, sound_release='button_soft',fontSize=80,color='LY',text=CHAR.key.backspace,onClick=WIDGET.c_pressKey'backspace'},
+    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-250,w=100,sound_release='button_soft',fontSize=80,color='LY',text=CHAR.key.mac_clear,onClick=WIDGET.c_pressKey'delete'},
+    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-250,w=100,sound_release='button_soft',fontSize=80,color='LY',text=CHAR.icon.check_circ,onClick=WIDGET.c_pressKey'return'},
+    WIDGET.new{type='button',x=areaX+areaR+070,y=areaY+areaR-50, w=100,  sound_release='button_soft',fontSize=80,text=CHAR.icon.back,onClick=WIDGET.c_pressKey'z'},
+    WIDGET.new{type='button',x=areaX+areaR+190,y=areaY+areaR-50, w=100, sound_release='button_soft',fontSize=80,text=CHAR.icon.delete,onClick=WIDGET.c_pressKey'x'},
+    WIDGET.new{type='button',x=areaX+areaR+340,y=areaY+areaR-50, w=100, sound_release='button_soft',fontSize=80,text=CHAR.icon.cross_big,onClick=WIDGET.c_pressKey'escape'},
 }
 local strokeSymbol={'一','丨','丿','丶','乚'}
 for i=1,#strokeSymbol do
     local w=WIDGET.new{
         type='button',
         x=areaX-areaR+30-90*(#strokeSymbol-i+1),
-        y=areaY+areaR-40,w=80,sound_trigger='button_soft',
+        y=areaY+areaR-40,w=80,sound_release='button_soft',
         fontSize=70,color='LB',
         text=strokeSymbol[i],
-        onPress=WIDGET.c_pressKey(('qwert'):sub(i,i))
+        onClick=WIDGET.c_pressKey(('qwert'):sub(i,i))
     }
     ins(widgetList_ui,w)
 end
@@ -390,10 +390,10 @@ for i=1,#fwSymbols do
             type='button',
             x=areaX-areaR+25-75*(#fwSymbols[i]-j+1),
             y=areaY+areaR-400+75*i,
-            w=70,sound_trigger='button_soft',
+            w=70,sound_release='button_soft',
             fontSize=60,color='LR',
             text=fwSymbols[i][j],
-            onPress=function() ins(charQueue,fwSymbols[i][j]) end
+            onClick=function() ins(charQueue,fwSymbols[i][j]) end
         })
     end
 end
@@ -401,8 +401,8 @@ end
 for i=1,15 do
     local w=WIDGET.new{
         type='button',
-        x=-2600,y=790,w=80,sound_trigger='button_soft',
-        fontSize=80,onPress=function() selChar(i) end
+        x=-2600,y=790,w=80,sound_release='button_soft',
+        fontSize=80,onClick=function() selChar(i) end
     }
     ins(scene.widgetList,w)
     ins(widgetList_result,w)

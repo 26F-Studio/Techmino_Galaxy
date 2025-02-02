@@ -110,19 +110,19 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,0},     x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,onPress=WIDGET.c_pressKey'r',sound_trigger=false},
-    WIDGET.new{type='button',pos={0.5,0.95},x=-100,y=-100,w=90,fontSize=60,text=CHAR.key.mac_clear,onPress=WIDGET.c_pressKey'backspace',sound_trigger=false},
-    WIDGET.new{type='button',pos={0.5,0.95},x=0,   y=-100,w=90,fontSize=60,text="0",onPress=WIDGET.c_pressKey'0',sound_trigger=false},
-    WIDGET.new{type='button',pos={0.5,0.95},x=-100,y=-200,w=90,fontSize=60,text="1",onPress=WIDGET.c_pressKey'1',sound_trigger=false},
-    WIDGET.new{type='button',pos={0.5,0.95},x=0,   y=-200,w=90,fontSize=60,text="2",onPress=WIDGET.c_pressKey'2',sound_trigger=false},
-    WIDGET.new{type='button',pos={0.5,0.95},x=100, y=-200,w=90,fontSize=60,text="3",onPress=WIDGET.c_pressKey'3',sound_trigger=false},
-    WIDGET.new{type='button',pos={0.5,0.95},x=-100,y=-300,w=90,fontSize=60,text="4",onPress=WIDGET.c_pressKey'4',sound_trigger=false},
-    WIDGET.new{type='button',pos={0.5,0.95},x=0,   y=-300,w=90,fontSize=60,text="5",onPress=WIDGET.c_pressKey'5',sound_trigger=false},
-    WIDGET.new{type='button',pos={0.5,0.95},x=100, y=-300,w=90,fontSize=60,text="6",onPress=WIDGET.c_pressKey'6',sound_trigger=false},
-    WIDGET.new{type='button',pos={0.5,0.95},x=-100,y=-400,w=90,fontSize=60,text="7",onPress=WIDGET.c_pressKey'7',sound_trigger=false},
-    WIDGET.new{type='button',pos={0.5,0.95},x=0,   y=-400,w=90,fontSize=60,text="8",onPress=WIDGET.c_pressKey'8',sound_trigger=false},
-    WIDGET.new{type='button',pos={0.5,0.95},x=100, y=-400,w=90,fontSize=60,text="9",onPress=WIDGET.c_pressKey'9',sound_trigger=false},
-    WIDGET.new{type='button',pos={1,1},     x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={0,0},     x=160,y=100,w=180,h=100,color='lG',fontSize=60,text=CHAR.icon.retry,onClick=WIDGET.c_pressKey'r',sound_release=false},
+    WIDGET.new{type='button',pos={0.5,0.95},x=-100,y=-100,w=90,fontSize=60,text=CHAR.key.mac_clear,onClick=WIDGET.c_pressKey'backspace',sound_release=false},
+    WIDGET.new{type='button',pos={0.5,0.95},x=0,   y=-100,w=90,fontSize=60,text="0",onClick=WIDGET.c_pressKey'0',sound_release=false},
+    WIDGET.new{type='button',pos={0.5,0.95},x=-100,y=-200,w=90,fontSize=60,text="1",onClick=WIDGET.c_pressKey'1',sound_release=false},
+    WIDGET.new{type='button',pos={0.5,0.95},x=0,   y=-200,w=90,fontSize=60,text="2",onClick=WIDGET.c_pressKey'2',sound_release=false},
+    WIDGET.new{type='button',pos={0.5,0.95},x=100, y=-200,w=90,fontSize=60,text="3",onClick=WIDGET.c_pressKey'3',sound_release=false},
+    WIDGET.new{type='button',pos={0.5,0.95},x=-100,y=-300,w=90,fontSize=60,text="4",onClick=WIDGET.c_pressKey'4',sound_release=false},
+    WIDGET.new{type='button',pos={0.5,0.95},x=0,   y=-300,w=90,fontSize=60,text="5",onClick=WIDGET.c_pressKey'5',sound_release=false},
+    WIDGET.new{type='button',pos={0.5,0.95},x=100, y=-300,w=90,fontSize=60,text="6",onClick=WIDGET.c_pressKey'6',sound_release=false},
+    WIDGET.new{type='button',pos={0.5,0.95},x=-100,y=-400,w=90,fontSize=60,text="7",onClick=WIDGET.c_pressKey'7',sound_release=false},
+    WIDGET.new{type='button',pos={0.5,0.95},x=0,   y=-400,w=90,fontSize=60,text="8",onClick=WIDGET.c_pressKey'8',sound_release=false},
+    WIDGET.new{type='button',pos={0.5,0.95},x=100, y=-400,w=90,fontSize=60,text="9",onClick=WIDGET.c_pressKey'9',sound_release=false},
+    WIDGET.new{type='button',pos={1,1},     x=-120,y=-80,w=160,h=80,sound_release='button_back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
 }
 
 return scene

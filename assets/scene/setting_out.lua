@@ -60,13 +60,13 @@ local function sliderShow_update(S)  return S.disp().."% "..(S.disp()*SETTINGS.s
 local function sliderShow_render(S)  return S.disp().."% "..(S.disp()*SETTINGS.system.maxTPS/100).."FPS"    end
 
 scene.widgetList={
-    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_trigger='button_back',fontSize=40,text=BackText,onPress=WIDGET.c_backScn'fadeHeader'},
+    {type='button_fill',pos={0,0},x=120,y=60,w=180,h=70,fillColor='B',cornerR=15,sound_release='button_back',fontSize=40,text=BackText,onClick=WIDGET.c_backScn'fadeHeader'},
 
     {type='text',pos={0,0},x=240,y=60,alignX='left',fontType='bold',fontSize=60,text=LANG'settings_title'},
-    {name='S1',type='button_invis',pos={1,0},x=-800,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.settings, sound_trigger='button_soft',onPress=function() if page~='1' then SCN.swapTo('setting_out','none',1) end end},
-    {name='S2',type='button_invis',pos={1,0},x=-600,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.volUp,    sound_trigger='button_soft',onPress=function() if page~='2' then SCN.swapTo('setting_out','none',2) end end},
-    {name='S3',type='button_invis',pos={1,0},x=-400,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.image,    sound_trigger='button_soft',onPress=function() if page~='3' then SCN.swapTo('setting_out','none',3) end end},
-    {name='S4',type='button_invis',pos={1,0},x=-200,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.bookmark, sound_trigger='button_soft',onPress=function() if page~='4' then SCN.swapTo('setting_out','none',4) end end},
+    {name='S1',type='button_invis',pos={1,0},x=-800,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.settings, sound_release='button_soft',onClick=function() if page~='1' then SCN.swapTo('setting_out','none',1) end end},
+    {name='S2',type='button_invis',pos={1,0},x=-600,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.volUp,    sound_release='button_soft',onClick=function() if page~='2' then SCN.swapTo('setting_out','none',2) end end},
+    {name='S3',type='button_invis',pos={1,0},x=-400,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.image,    sound_release='button_soft',onClick=function() if page~='3' then SCN.swapTo('setting_out','none',3) end end},
+    {name='S4',type='button_invis',pos={1,0},x=-200,y=60,w=150,h=100,cornerR=20,fontSize=70,text=CHAR.icon.bookmark, sound_release='button_soft',onClick=function() if page~='4' then SCN.swapTo('setting_out','none',4) end end},
 
     -- Controls
     {name='1',type='slider', pos={0,0},x=340, y=220,w=650, fontSize=35,text="ASD",widthLimit=260,axis={0,260,1},smooth=true,disp=TABLE.func_getVal(SETTINGS.game_brik,'asd'),  valueShow=sliderShow_time, code=function(v)
@@ -85,9 +85,9 @@ scene.widgetList={
     end},
     {name='1',type='switch', pos={0,0},x=750, y=380,h=40,                   fontSize=35,text=LANG'setting_softdropSkipAsd',disp=TABLE.func_getVal(SETTINGS.game_brik,'softdropSkipAsd'),code=TABLE.func_revVal(SETTINGS.game_brik,'softdropSkipAsd')}, -- visibleTick=function() return page=='1' and SETTINGS.game_brik.asp>0 end
     {name='1',type='slider', pos={0,0},x=340, y=460,w=650,                  fontSize=35,text="ASH",widthLimit=260,axis={0,260,1},smooth=true,disp=TABLE.func_getVal(SETTINGS.game_brik,'ash'),  valueShow=sliderShow_time, code=function(v) SETTINGS.game_brik.ash=v; SETTINGS.game_brik.asd=math.max(SETTINGS.game_brik.asd,SETTINGS.game_brik.ash) end},
-    {name='1',type='button', pos={0,0},x=500, y=560,w=360, h=80,cornerR=10, fontSize=40,text=LANG'setting_keymapping',     onPress=WIDGET.c_goScn('keyset_out','fadeHeader')},
+    {name='1',type='button', pos={0,0},x=500, y=560,w=360, h=80,cornerR=10, fontSize=40,text=LANG'setting_keymapping',     onClick=WIDGET.c_goScn('keyset_out','fadeHeader')},
     {name='1',type='switch', pos={0,0},x=360, y=700,h=40,                   fontSize=40,text=LANG'setting_enableTouching', disp=TABLE.func_getVal(SETTINGS.system,'touchControl'),code=TABLE.func_revVal(SETTINGS.system,'touchControl')},
-    {name='1',type='button', pos={0,0},x=500, y=780,w=360, h=80,cornerR=10, fontSize=40,text=LANG'setting_touching',       onPress=WIDGET.c_goScn'keyset_touch_out',visibleTick=function() return page=='1' and SETTINGS.system.touchControl end},
+    {name='1',type='button', pos={0,0},x=500, y=780,w=360, h=80,cornerR=10, fontSize=40,text=LANG'setting_touching',       onClick=WIDGET.c_goScn'keyset_touch_out',visibleTick=function() return page=='1' and SETTINGS.system.touchControl end},
 
     -- Audio
     {name='2',type='slider_fill',pos={0,0},x=340, y=220,w=650, fontSize=40,text=LANG'setting_mainVol', widthLimit=260, disp=TABLE.func_getVal(SETTINGS.system,'mainVol'), code=TABLE.func_setVal(SETTINGS.system,'mainVol')},
@@ -98,7 +98,7 @@ scene.widgetList={
     {name='2',type='slider',     pos={0,0},x=340, y=660,w=260,             text=LANG'setting_fmod_maxChannel',      widthLimit=260, axis={4,8,1}, valueShow=function(S) return 2^S.disp() end, disp=function() return MATH.roundLog(SETTINGS.system.fmod_maxChannel,2)      end, code=function(v) SETTINGS.system.fmod_maxChannel=2^v      end},
     {name='2',type='slider',     pos={0,0},x=340, y=730,w=390,             text=LANG'setting_fmod_DSPBufferCount',  widthLimit=260, axis={2,8,1},                                              disp=TABLE.func_getVal(SETTINGS.system,'fmod_DSPBufferCount'),                    code=TABLE.func_setVal(SETTINGS.system,'fmod_DSPBufferCount')},
     {name='2',type='slider',     pos={0,0},x=340, y=800,w=650,             text=LANG'setting_fmod_DSPBufferLength', widthLimit=260, axis={3,16,1},valueShow=function(S) return 2^S.disp() end, disp=function() return MATH.roundLog(SETTINGS.system.fmod_DSPBufferLength,2) end, code=function(v) SETTINGS.system.fmod_DSPBufferLength=2^v end},
-    {name='2',type='button',     pos={0,0},x=400, y=870,w=140, h=60,       text=LANG'setting_apply', onPress=function()
+    {name='2',type='button',     pos={0,0},x=400, y=870,w=140, h=60,       text=LANG'setting_apply', onClick=function()
         if GAME.mode then return MSG('warn',Text.setting_tryApplyAudioInGame) end
         FMODLoadFunc()
         FMOD.setMainVolume(SETTINGS.system.mainVol,true)
@@ -125,7 +125,7 @@ scene.widgetList={
     {name='4', type='switch',     pos={1,0},x=-500,y=220,h=45,      text=LANG'setting_discord',     widthLimit=260,disp=TABLE.func_getVal(SETTINGS.system,'discordConnect'),code=TABLE.func_revVal(SETTINGS.system,'discordConnect')},
 
     -- Test button
-    {name='test',type='button', pos={1,1},x=-300,y=-80,w=160, h=80,cornerR=10, fontSize=40,text=LANG'setting_test',onPress=function()
+    {name='test',type='button', pos={1,1},x=-300,y=-80,w=160, h=80,cornerR=10, fontSize=40,text=LANG'setting_test',onClick=function()
         if GAME.mode then return MSG('warn',Text.setting_tryTestInGame) end
         PlayExterior('brik/exterior/test')()
     end},

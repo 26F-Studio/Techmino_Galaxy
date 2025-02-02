@@ -198,8 +198,8 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=160, y=100,w=180,h=100,fillColor='lR',fontSize=60,text=CHAR.icon.retry,onPress=WIDGET.c_pressKey'r'},
-    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-180,w=160,h=80,fontSize=45,sound_trigger=false,text='自摸',onPress=WIDGET.c_pressKey'return'},
-    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn()},
+    WIDGET.new{type='button_fill',pos={0,0},x=160, y=100,w=180,h=100,fillColor='lR',fontSize=60,text=CHAR.icon.retry,onClick=WIDGET.c_pressKey'r'},
+    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-180,w=160,h=80,fontSize=45,sound_release=false,text='自摸',onClick=WIDGET.c_pressKey'return'},
+    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_release='button_back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
 }
 return scene

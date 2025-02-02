@@ -409,9 +409,9 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',x=80,y=60,w=110,h=60,color='lG',text=CHAR.icon.retry,onPress=WIDGET.c_pressKey'r',visibleTick=function() return state~=0 end},
+    WIDGET.new{type='button',x=80,y=60,w=110,h=60,color='lG',text=CHAR.icon.retry,onClick=WIDGET.c_pressKey'r',visibleTick=function() return state~=0 end},
     WIDGET.new{type='checkBox',x=100,y=140,widthLimit=80,disp=function() return invis end,code=WIDGET.c_pressKey'q',visibleTick=function() return state~=1 end},
-    WIDGET.new{type='button',pos={1,1},x=-60,y=-60,w=80,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={1,1},x=-60,y=-60,w=80,h=80,sound_release='button_back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
 }
 
 return scene

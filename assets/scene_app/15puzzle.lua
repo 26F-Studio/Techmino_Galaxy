@@ -312,13 +312,13 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={0,0},x=160, y=100,w=180,h=100,fillColor='lG',fontSize=60,text=CHAR.icon.retry,onPress=WIDGET.c_pressKey'space'},
+    WIDGET.new{type='button_fill',pos={0,0},x=160, y=100,w=180,h=100,fillColor='lG',fontSize=60,text=CHAR.icon.retry,onClick=WIDGET.c_pressKey'space'},
     colorSelector,
     WIDGET.new{type='checkBox',   pos={0,.5},x=240, y=-150,text="Invis",widthLimit=200,fontSize=40,disp=function() return invis end,  code=WIDGET.c_pressKey'w',visibleTick=notGaming},
     WIDGET.new{type='checkBox',   pos={0,.5},x=240, y=-50, text="Slide",widthLimit=200,fontSize=40,disp=function() return slide end,  code=WIDGET.c_pressKey'e',visibleTick=notGaming},
     WIDGET.new{type='checkBox',   pos={0,.5},x=240, y=50,  text="Path", widthLimit=200,fontSize=40,disp=function() return pathVis end,code=WIDGET.c_pressKey'r',visibleTick=function() return state~=1 and slide end},
     WIDGET.new{type='checkBox',   pos={0,.5},x=240, y=150, text="RevKB",widthLimit=200,fontSize=40,disp=function() return revKB end,  code=WIDGET.c_pressKey't',visibleTick=notGaming},
-    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_trigger='button_back',fontSize=60,text=CHAR.icon.back,onPress=WIDGET.c_backScn()},
+    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_release='button_back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
 }
 
 return scene
