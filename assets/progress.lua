@@ -333,7 +333,7 @@ function PROGRESS.applyEnv(env)
                 TWEEN.tag_kill('cursor_anim')
                 _wid1,_wid2=W,.55
                 TWEEN.new(cursor_anim):setTag('cursor_anim'):setDuration(.0626):run()
-                TWEEN.new(cursor_anim2):setEase('Linear'):setTag('cursor_anim2'):setDuration(.62):run()
+                TWEEN.new(cursor_anim2):setEase('OutQuad'):setTag('cursor_anim2'):setDuration(.26):run()
                 pX,pY,dragOn=false,false,false
             end
             SFX.play('mouse_up')
