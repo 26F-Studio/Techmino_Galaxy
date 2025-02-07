@@ -521,11 +521,16 @@ WIDGET.setDefaultOption{
     listBox={
         sound_select='listbox_select',
         sound_click='listbox_click',
+        sound_hover=false,
     },
     inputBox={
         sound_input='inputbox_input',
         sound_bksp='inputbox_bksp',
         sound_clear='inputbox_clear',
+        sound_hover=false,
+    },
+    textBox={
+        sound_hover=false,
     },
 }
 MSG.addCategory('collect',
