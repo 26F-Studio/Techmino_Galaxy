@@ -419,7 +419,7 @@ end
 function scene.load()
     stopAllSounds()
     StopBGM()
-    inst='organ'
+    inst='obscure'
     offset=0
     release=500
 end
