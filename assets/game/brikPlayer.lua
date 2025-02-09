@@ -871,9 +871,12 @@ function BP:calculateHolePos(count,splitRate,copyRate,sandwichRate)
     end
 
     -- Pick hole position
-    for _=1,count do
+    for n=1,count do
         local sum=0
         for i=1,#weights do sum=sum+weights[i] end
+        if sum<0 then
+            error("WTF why sum of weights is 0")
+        end
 
         -- local str=""
         -- for i=1,#weights do
@@ -882,21 +885,19 @@ function BP:calculateHolePos(count,splitRate,copyRate,sandwichRate)
         -- print(str)
 
         local r=sum*self:random()
-        if sum>0 then
-            for i=1,#weights do
-                r=r-weights[i]
-                if r<=0 then
-                    r=i
-                    break
-                end
+        for i=1,#weights do
+            r=r-weights[i]
+            if r<=0 then
+                r=i
+                break
             end
+        end
+        ins(holePos,r)
+        if n<count then
             weights[r]=.03
             if r>1        then weights[r-1]=clamp(weights[r-1]-splitRate,.03,1) end
             if r<#weights then weights[r+1]=clamp(weights[r+1]-splitRate,.03,1) end
-        else
-            error("WTF why sum of weights is 0")
         end
-        ins(holePos,r)
     end
     return holePos
 end
