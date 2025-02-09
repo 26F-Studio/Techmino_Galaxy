@@ -6,7 +6,7 @@ SKIN.time=0
 local function _getTime() return SKIN.time end
 
 ---@class Techmino.Skin
----@field base string
+---@field base? string
 ---@field getTime function
 ---@field drawFieldBackground fun(fieldW:number)
 ---@field drawFieldCell fun(C:Techmino.Brik.Cell, F:Techmino.RectField, x:number, y:number)
@@ -21,10 +21,15 @@ local function _getTime() return SKIN.time end
 ---@field drawDelayIndicator fun(color:Zenitha.Color, value:number)
 ---@field drawGarbageBuffer fun(garbageBuffer:table)
 ---@field drawLockDelayIndicator fun(freshCondition:string, freshChance:number, maxFreshTime:number, freshTime:number)
+---
+---@field drawNext boolean
 ---@field drawNextBorder fun(slot:number)
 ---@field drawNextCell fun(C:Techmino.Brik.Cell, disabled:boolean, B:Techmino.RectPiece, x:number, y:number)
+---
+---@field drawHold boolean
 ---@field drawHoldBorder fun(mode:string, slot:number)
 ---@field drawHoldCell fun(C:Techmino.Brik.Cell, disabled:boolean, B:Techmino.RectPiece, x:number, y:number)
+---
 ---@field drawTime fun(time:number)
 ---@field drawStartingCounter fun(readyDelay:number)
 ---@field drawInfoPanel fun(x:number, y:number, w:number, h:number) Only called by mode
@@ -41,19 +46,25 @@ local function _getTime() return SKIN.time end
 ---@param name string
 ---@param skin Techmino.Skin
 function SKIN.add(name,skin)
-    assert(type(name)=='string',"Skin name must be string")
+    assert(type(name)=='string',"Name of skin must be string")
     assert(not SKIN[name],"Skin "..name.." already exists")
     assert(type(skin)=='table',"Skin must be table")
     assert(getmetatable(skin)==nil,"Skin table must not have metatable")
 
-    assert(not skin.getTime,"Skin mustn't define 'getTime'")
+    setmetatable(skin,{__index=skin.base and assert(skinLib[skin.base],"no base skin named "..tostring(skin.base))})
+
+    assert(skin.getTime==nil,"Skin.getTime must be nil")
     skin.getTime=_getTime
 
-    setmetatable(skin,{__index=skin.base and assert(skinLib[skin.base],"no base skin named "..tostring(skin.base))})
+    if skin.drawNext==nil then skin.drawNext=true end
+    if skin.drawHold==nil then skin.drawHold=true end
+    assert(type(skin.drawNext)=='boolean',"Skin.drawNext must be boolean")
+    assert(type(skin.drawHold)=='boolean',"Skin.drawHold must be boolean")
 
     skinLib[name]=skin
 end
 
+---@return Techmino.Skin
 function SKIN.get(name)
     return assert(skinLib[name])
 end

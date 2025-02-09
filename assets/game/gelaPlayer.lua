@@ -1323,25 +1323,27 @@ function GP:render()
     skin.drawLockDelayIndicator(SET.freshCondition,self.freshChance,self.time<SET.readyDelay and (self.time/SET.readyDelay)^2.6 or self.freshTime/SET.maxFreshTime)
 
     -- Next
-    gc_push('transform')
-    gc_translate(200,-400)
-    skin.drawNextBorder(SET.nextSlot)
-    for n=1,min(#self.nextQueue,SET.nextSlot) do
-        local B=self.nextQueue[n].matrix
+    if skin.drawNext then
         gc_push('transform')
-            gc_translate(80+5*(-1)^n,100*n-50)
-            -- gc_scale(min(2.3/#B,3/#B[1],.86))
-            for y=1,#B do for x=1,#B[1] do
-                if B[y][x] then
-                    local dx,dy=(x-#B[1]/2-1)*40,(y-#B/2)*-40
-                    gc_translate(dx,dy)
-                    skin.drawNextCell(B[y][x],nil,B,x,y)
-                    gc_translate(-dx,-dy)
-                end
-            end end
+        gc_translate(200,-400)
+        skin.drawNextBorder(SET.nextSlot)
+        for n=1,min(#self.nextQueue,SET.nextSlot) do
+            local B=self.nextQueue[n].matrix
+            gc_push('transform')
+                gc_translate(80+5*(-1)^n,100*n-50)
+                -- gc_scale(min(2.3/#B,3/#B[1],.86))
+                for y=1,#B do for x=1,#B[1] do
+                    if B[y][x] then
+                        local dx,dy=(x-#B[1]/2-1)*40,(y-#B/2)*-40
+                        gc_translate(dx,dy)
+                        skin.drawNextCell(B[y][x],nil,B,x,y)
+                        gc_translate(-dx,-dy)
+                    end
+                end end
+            gc_pop()
+        end
         gc_pop()
     end
-    gc_pop()
 
     -- Timer
     skin.drawTime(self.gameTime)
