@@ -51,10 +51,10 @@ function SKIN.add(name,skin)
     assert(type(skin)=='table',"Skin must be table")
     assert(getmetatable(skin)==nil,"Skin table must not have metatable")
 
-    setmetatable(skin,{__index=skin.base and assert(skinLib[skin.base],"no base skin named "..tostring(skin.base))})
-
     assert(skin.getTime==nil,"Skin.getTime must be nil")
     skin.getTime=_getTime
+
+    setmetatable(skin,{__index=skin.base and assert(skinLib[skin.base],"no base skin named "..tostring(skin.base))})
 
     if skin.drawNext==nil then skin.drawNext=true end
     if skin.drawHold==nil then skin.drawHold=true end
