@@ -17,7 +17,6 @@ function scene.load()
     if SETTINGS.system.touchControl then ResetVirtualKeyMode(mode) end
 end
 
-function scene.mouseDown(_,_,k) if k==2 then escTimerWTF=.26 end end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if result then return true end
@@ -48,7 +47,13 @@ function scene.touchUp(_,_,id)
     if SETTINGS.system.touchControl then VCTRL.release(id) end
 end
 
-scene.mouseDown=scene.touchDown
+function scene.mouseDown(x,y,k)
+    if k==1 then
+        scene.touchDown(x,y,k)
+    elseif k==2 then
+        escTimerWTF=.26
+    end
+end
 function scene.mouseMove(x,y,dx,dy) scene.touchMove(x,y,dx,dy,1) end
 scene.mouseUp=scene.touchUp
 
