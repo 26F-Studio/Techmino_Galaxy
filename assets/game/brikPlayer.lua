@@ -992,7 +992,7 @@ function BP:rotate(dir,ifInit)
     end
 end
 function BP:hold(ifInit)
-    if self.holdTime>=self.settings.holdSlot and not self.settings.infHold then return end
+    if self.holdTime>=self.settings.holdSlot and not self.settings.infHold or self.settings.holdSlot==0 then return end
 
     if self.settings.particles then
         self:createHoldEffect(ifInit)
