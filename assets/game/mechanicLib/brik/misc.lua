@@ -344,34 +344,36 @@ do -- Obstacle
 end
 
 do -- Chain
+    -- Get matrix of fixed cells
     local function getSolidMat(P)
         local F=P.field
-        local visitedMat={}
-        for y=1,F:getHeight() do
-            visitedMat[y]=TABLE.new(false,F._width)
+        local w,h=F._width,F:getHeight()
+        local fixedMat={}
+        for y=1,h do
+            fixedMat[y]=TABLE.new(false,w)
         end
 
         local pointsToCheck={}
-        for x=1,F._width do
+        for x=1,w do
             ins(pointsToCheck,{x,1})
         end
         local ptr=#pointsToCheck
         while ptr>0 do
             local x,y=pointsToCheck[ptr][1],pointsToCheck[ptr][2]
             ptr=ptr-1
-            if F:getCell(x,y) and not visitedMat[y][x] then
+            if F:getCell(x,y) and not fixedMat[y][x] then
                 local L=P:getConnectedCells(x,y)
                 for i=1,#L do
                     local x2,y2=L[i][1],L[i][2]
-                    visitedMat[y2][x2]=true
-                    if visitedMat[y+1] then
-                        pointsToCheck[ptr+1]={x2,y2+1}
+                    fixedMat[y2][x2]=true
+                    if y2+1<=h then
                         ptr=ptr+1
+                        pointsToCheck[ptr]={x2,y2+1}
                     end
                 end
             end
         end
-        return visitedMat
+        return fixedMat
     end
     ---Check floating blocks
     function misc.chain_check(P)

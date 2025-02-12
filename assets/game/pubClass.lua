@@ -75,6 +75,8 @@
 ---@field visStep? number
 ---@field visMax? number
 ---
+---@field garbage? true Brik only
+---
 ---@field diggable boolean Gela only
 ---@field connClear boolean Gela only
 

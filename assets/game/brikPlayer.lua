@@ -1282,6 +1282,7 @@ function BP:riseGarbage(holePos,count)
         -- Generate line
         for x=1,w do
             L[x]=self:newCell(777)
+            L[x].garbage=true
         end
 
         -- Generate hole
