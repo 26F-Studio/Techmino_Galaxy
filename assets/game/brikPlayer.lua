@@ -658,9 +658,17 @@ function BP:popNext(ifHold)
 
     self:triggerEvent('afterSpawn')
 
-    if self.keyBuffer.hardDrop then -- IHdS
-        self.keyBuffer.hardDrop=false
-        self:brikDropped()
+    if self.settings.bufferDrop then -- IHdS
+        if self.settings.bufferDrop=='hold' then
+            if self.keyState.hardDrop then
+                self:brikDropped()
+            end
+        elseif self.settings.bufferDrop=='buffer' then
+            if self.keyBuffer.hardDrop then
+                self.keyBuffer.hardDrop=false
+                self:brikDropped()
+            end
+        end
     end
 end
 ---@return Techmino.Brik.Cell
@@ -2041,6 +2049,7 @@ local baseEnv={
     bufferMove='buffer',          -- buffer/hold to do initial move
     bufferRotate='buffer',        -- buffer/hold to do initial rotate
     bufferHold='buffer',          -- buffer/hold to do initial hold
+    bufferDrop='buffer',          -- buffer/hold to do harddrop
     aHdLock=60,                   -- Auto harddrop lock
     mHdLock=40,                   -- Manual harddrop lock
     freshLockInASD=true,          -- Fresh lockDelay in auto shift delay

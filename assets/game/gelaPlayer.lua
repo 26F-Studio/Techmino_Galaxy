@@ -463,9 +463,17 @@ function GP:popNext()
 
     self:triggerEvent('afterSpawn')
 
-    if self.keyBuffer.hardDrop then -- IHdS
-        self.keyBuffer.hardDrop=false
-        self:gelaDropped()
+    if self.settings.bufferDrop then -- IHdS
+        if self.settings.bufferDrop=='hold' then
+            if self.keyState.hardDrop then
+                self:gelaDropped()
+            end
+        elseif self.settings.bufferDrop=='buffer' then
+            if self.keyBuffer.hardDrop then
+                self.keyBuffer.hardDrop=false
+                self:gelaDropped()
+            end
+        end
     end
 end
 function GP:getGela(mat)
@@ -1453,6 +1461,7 @@ local baseEnv={
     dblMoveRelInvRedir=true,
     bufferMove='buffer',
     bufferRotate='buffer',
+    bufferDrop='buffer',
     aHdLock=60,
     mHdLock=40,
     freshLockInASD=true,
