@@ -1,3 +1,4 @@
+ZENITHA={path='Zenitha/'}
 ShellOption=require'shell'
 
 if ShellOption.bootDisabled then

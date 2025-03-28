@@ -146,7 +146,7 @@ end
 
 function S.drawGhostCell(C,B,x,y)
     local r,g,b=unpack(RGB9[C.color])
-    drawCell(B,x,y,r,g,b,.26)
+    drawCell(B,x,y,r,g,b,.42)
 end
 
 function S.drawHandCell(C,B,x,y)

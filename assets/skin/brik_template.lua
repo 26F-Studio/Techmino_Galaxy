@@ -155,7 +155,7 @@ function S.drawLockDelayIndicator(freshCondition,freshChance,timeRem)
 end
 
 function S.drawGhostCell()
-    gc_setColor(1,1,1,.162)
+    gc_setColor(1,1,1,.26)
     gc_rectangle('fill',0,0,40,40)
 end
 
