@@ -348,9 +348,9 @@ function scene.draw()
     if autoplay then
         gc_setColor(COLOR.L)
         gc.setLineWidth(2)
-        gc.circle('line',-670,95,20)
+        gc.circle('line',-670,26,20)
         gc_setColor(1,1,1,.26)
-        gc.arc('fill','pie',-670,95,20,-MATH.pi/2,-MATH.pi/2+autoplay/126*MATH.tau)
+        gc.arc('fill','pie',-670,26,20,-MATH.pi/2,-MATH.pi/2+autoplay/126*MATH.tau)
     end
 end
 
