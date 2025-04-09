@@ -270,11 +270,17 @@ his4_roll4=function(P,d,init)
     return r
 end,
 
-pool8_bag7=function(P,d,init)
-    if init then d.bag,d.pool={},copy(Tetros) return end
+pool4_bag7=function(P,d,init)
+    if init then
+        d.bag,d.pool=copy(Tetros),{}
+        for _=1,4-1 do
+            ins(d.pool,rem(d.bag,P:random(#d.bag)))
+        end
+        return
+    end
     supply(d.bag,Tetros)
-    d.pool[8]=rem(d.bag,P:random(#d.bag))
-    return rem(d.pool,P:random(7))
+    ins(d.pool,rem(d.bag,P:random(#d.bag)))
+    return rem(d.pool,P:random(#d.pool))
 end,
 
 c2=function(P,d,init)
