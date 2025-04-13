@@ -57,7 +57,7 @@ local filteredDict={}
 -- Dict data of current language
 local currentDict={locale=false}
 -- Dict data of English
-local enDict=FILE.load('assets/language/dict_en.lua','-lua -canskip')
+local enDict=FILE.load('assets/language/dict_en.lua','-lua')
 
 local listBox ---@type Zenitha.Widget.listBox
 local inputBox ---@type Zenitha.Widget.inputBox
@@ -275,7 +275,7 @@ function scene.load(prev)
 
     -- Initialize dictionary for current language (if need)
     if currentDict.locale~=SETTINGS.system.locale then
-        currentDict=FILE.load('assets/language/dict_'..SETTINGS.system.locale..'.lua','-lua -canskip')
+        currentDict=FILE.load('assets/language/dict_'..SETTINGS.system.locale..'.lua','-lua')
         if type(currentDict)=='string' then
             local res,data
             res,data=pcall(parseDict,currentDict)

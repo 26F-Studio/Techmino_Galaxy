@@ -106,7 +106,7 @@ return {
                             for id,num in next,CLEAR[j] do
                                 if id>=dropCheckPos then
                                     count=count+num
-                                    if count>=recordedLines[currentCheck]*10 then
+                                    if count>=recordedLines[currentCheck]*10 then -- TODO nil*10
                                         rClearBounds[currentCheck]=j
                                         currentCheck=currentCheck+1
                                         if currentCheck>4 then

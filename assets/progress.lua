@@ -142,7 +142,7 @@ function PROGRESS.save(step)
     end
 end
 function PROGRESS.load()
-    local suc,res=pcall(FILE.load,'conf/progress','-json -canskip')
+    local suc,res=pcall(FILE.load,'conf/progress','-json')
     if not suc then return MSG.log('info',"Load progress failed: "..tostring(res)) end
     if res then
         TABLE.update(prgs,res)

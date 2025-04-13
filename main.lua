@@ -705,7 +705,7 @@ UTIL.time("Configure Zenitha",true)
 -- Load saving data
 
 do -- Load setting file and trigger all setting-triggers only one time
-    local setFile=FILE.load('conf/settings','-json -canskip') or {}
+    local setFile=FILE.load('conf/settings','-json') or {}
     setFile._system,setFile.system=setFile.system,nil
     TABLE.update(SETTINGS,setFile)
     for k,v in next,SETTINGS._system do
@@ -719,7 +719,7 @@ if SETTINGS.system.portrait then -- Brute fullscreen config for mobile device
 end
 PROGRESS.load()
 PROGRESS.fix()
-VCTRL.importSettings(FILE.load('conf/touch','-json -canskip'))
+VCTRL.importSettings(FILE.load('conf/touch','-json'))
 KEYMAP.brik=KEYMAP.new{
     {act='moveLeft', keys={'left'}},
     {act='moveRight',keys={'right'}},
@@ -784,7 +784,7 @@ KEYMAP.sys=KEYMAP.new{
     {act='down',   keys={'down'}},
     {act='select', keys={'return'}},
 }
-local keys=FILE.load('conf/keymap','-json -canskip')
+local keys=FILE.load('conf/keymap','-json')
 if keys then
     KEYMAP.brik:import(keys['brik'])
     KEYMAP.gela:import(keys['gela'])
