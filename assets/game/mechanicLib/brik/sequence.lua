@@ -346,13 +346,9 @@ for variant,data in next,{
         pieces=Tetros,
         weights={64606156304596,131327514360144,203786783816133,287098623729448,390038487466665,531106246225509,762542509117884,896123925124349,1108610016824348,1476868735064520,2236067394570951,4591633945951618,1e99}, -- Data from Farter
     },
-    noDrought={
+    natural={
         pieces=Tetros,
-        weights={1,1,1,1,1,1,1,1,1,1,1,1,1e99},
-    },
-    hardDrought={
-        pieces=Tetros,
-        weights={1,1,1,1,2,3,4,5,6,7,8,9,26},
+        weights={0,0,1,1,1,2,3,4,6,8,10,26},
     },
     easyFlood={
         pieces=Tetros,
