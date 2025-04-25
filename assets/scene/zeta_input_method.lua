@@ -158,7 +158,7 @@ function scene.load()
             local depth=0
             while true do
                 p.depth=depth
-                char,str=str:readChars(1)
+                char,str=str:sub(1,1),str:sub(2)
                 if char==' ' then
                     ins(p.list,str)
                     break
@@ -178,9 +178,9 @@ function scene.load()
     freshResult()
 end
 function scene.unload()
-    inputs=nil
-    results=nil
-    charQueue=nil
+    TABLE.clear(inputs)
+    TABLE.clear(results)
+    TABLE.clear(charQueue)
 end
 
 function scene.mouseDown(x,y,k)
