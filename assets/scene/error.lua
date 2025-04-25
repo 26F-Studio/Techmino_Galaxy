@@ -17,7 +17,7 @@ local scene={}
 function scene.load()
     ZENITHA.setMainLoopSpeed(60)
     ZENITHA.setUpdateRate(62)
-    ZENITHA.setRenderRate(26)
+    ZENITHA.setRenderRate(62)
     FMOD.destroy()
     time=0
     err=ZENITHA.getErr('#') or {
