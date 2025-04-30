@@ -1,9 +1,9 @@
 local MyRPC={
-    appId='1288524924042084523', ---@type string Register your own app at https://discord.com/developers/applications
+    appId='1288524924042084523', -- Register your own app at https://discord.com/developers/applications
     enabled=false, ---@type boolean
     C=nil, ---@type ffi.namespace*
     RPC=nil, ---@type DiscordRPC.RPC
-    presence={ --- @type DiscordRPC.presence
+    presence={ ---@type DiscordRPC.presence
         startTimestamp=os.time(),
         state="Initializing...",
         details="",
@@ -16,7 +16,7 @@ local MyRPC={
 
 ---@param bool boolean
 function MyRPC.setEnable(bool)
-    if MyRPC.enabled==bool then return end
+    if MyRPC.enabled==bool or not MyRPC.RPC then return end
     MyRPC.enabled=bool
     if bool then
         MyRPC.RPC.initialize(MyRPC.appId,true)
@@ -30,16 +30,23 @@ end
 ---@param details? string
 ---@overload fun(state:DiscordRPC.presence)
 function MyRPC.update(state,details)
-    if state then
-        for k,v in next,
-            type(state)=='string'
-            and {state=state,details=details}
-            or state
-        do
-            MyRPC.presence[k]=v
+    local updated
+    if type(state)=='table' then
+        TABLE.updateType(MyRPC.presence,state)
+        updated=true
+    else
+        if type(state)=='string' and state~=MyRPC.presence.state then
+            MyRPC.presence.state=state
+            updated=true
+        end
+        if type(details)=='string' and details~=MyRPC.presence.details then
+            MyRPC.presence.details=details
+            updated=true
         end
     end
-    if MyRPC.enabled and MyRPC.RPC then MyRPC.RPC.updatePresence(MyRPC.presence) end
+    if updated and MyRPC.enabled and MyRPC.RPC then
+        MyRPC.RPC.updatePresence(MyRPC.presence)
+    end
 end
 
 ---@class DiscordRPC.presence
@@ -63,7 +70,7 @@ local ffi=require"ffi"
 
 local Cname
 if SYSTEM=='Windows' or SYSTEM=='Linux' then
-    Cname=LOADLIB.ffi('discord-rpc')
+    Cname=LOADLIB.ffi('discord-rpc',NULL)
 elseif MOBILE then
     LOG('warn',STRING.repD("No Discord-RPC for $1",SYSTEM))
 else
