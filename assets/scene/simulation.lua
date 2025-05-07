@@ -38,24 +38,6 @@ local sims={
             )
         end,
     },
-    { -- TTGM
-        unlock=function()
-            return PROGRESS.get('TTGM').stage>0
-        end,
-        trigger=function()
-            TASK.yieldUntilNextScene()
-            if SCN.cur=='simulation' then
-                -- SCN.go('tetra_galaxy_machine','flash')
-                MSG('warn',"Coming soon?")
-            end
-        end,
-        draw=function()
-            GC.setColor(COLOR.DL)
-            GC.translate(-150,-100)
-            GC.rectangle('fill',0,0,300,100)
-            GC.rectangle('fill',100,100,100,100)
-        end,
-    },
 }
 --[[
     -- Gela
