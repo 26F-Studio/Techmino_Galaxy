@@ -23,15 +23,14 @@ return {
         event={
             playerInit=function(P)
                 P.modeData.score=0
-                P.modeData.multiplier=1
                 P.modeData.protect=false
                 P.modeData.display=false
                 P.modeData.techrashTimer=0
 
-                if PROGRESS.getInteriorScore('tuto7_score')>=99 then
-                    P.modeData.display=PROGRESS.getInteriorScore('tuto7_score').."/99"
+                if PROGRESS.getInteriorScore('tuto7_score')<26 then
+                    P.modeData.display=PROGRESS.getInteriorScore('tuto7_score').."/26"
                 else
-                    P.modeData.display={COLOR.lY,PROGRESS.getInteriorScore('tuto7_time')/1000}
+                    P.modeData.display={COLOR.lY,(PROGRESS.getInteriorScore('tuto7_time')/1000).."s"}
                 end
             end,
             always=function(P)
@@ -44,43 +43,29 @@ return {
                     if not P.modeData.protect then
                         P.modeData.protect=true
                         PROGRESS.setInteriorScore('tuto7_score',P.modeData.score)
-                        P.modeData.display=PROGRESS.getInteriorScore('tuto7_score').."/99"
-                        P.modeData.score=math.max(P.modeData.score-10,0)
-                        P.settings.holdSlot=1
-                        P.modeData.multiplier=1
-                        if P.modeData.score==0 then
-                            P.holdQueue[1]=nil
-                        end
+                        P.modeData.display=PROGRESS.getInteriorScore('tuto7_score').."/26"
+                        P.modeData.score=math.max(P.modeData.score-4,0)
+                        P.holdQueue[1]=nil
                     end
                     P.combo=0
                 else
                     P.modeData.protect=false
                     local s1=P.modeData.score
-                    local s2=math.min(s1+P.modeData.multiplier*math.min(P.combo,10),99)
+                    local s2=math.min(s1+math.min(P.combo,10),26)
                     if s2-s1>1 then
                         P.modeData.techrashTimer=P.modeData.techrashTimer+260*(s2-s1-1)
                     end
                     P.modeData.score=s2
-                    if s2>=99 then
-                        PROGRESS.setInteriorScore('tuto7_score',99)
+                    if s2>=26 then
+                        PROGRESS.setInteriorScore('tuto7_score',26)
                         PROGRESS.setInteriorScore('tuto7_time',P.gameTime,'<')
                         P.modeData.display={COLOR.lY,PROGRESS.getInteriorScore('tuto7_time')/1000}
                         P:finish('win')
-                    else
-                        if s1<62 and s2>=62 then
-                            P.settings.holdSlot=0
-                            P.holdQueue[1]=nil
-                        elseif s1<10 and s2>=10 then
-                            if not P.holdQueue[1] then
-                                P.settings.holdSlot=0
-                                P.modeData.multiplier=2
-                            end
-                        end
                     end
                 end
             end,
             drawOnPlayer=function(P)
-                GC.setColor(1,P.modeData.multiplier==1 and 1 or 0.62,1.1-P.combo*.126,P.modeData.protect and .5 or 1)
+                GC.setColor(1,1,1.1-P.combo*.126,P.modeData.protect and .5 or 1)
                 FONT.set(80) GC.mStr(P.modeData.score,-300,-70)
                 FONT.set(30) GC.mStr(P.modeData.techrashTimer>0 and Text.target_score or Text.target_techrash,-300,20)
                 GC.setColor(1,1,1,.62)
