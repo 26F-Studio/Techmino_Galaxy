@@ -9,7 +9,7 @@ AE=require'escape'
 LOG=require'log'
 
 local stdout=io.stdout
-function write(text)
+local function write(text)
     stdout:write(text)
     stdout:flush()
 end

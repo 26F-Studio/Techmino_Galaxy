@@ -640,14 +640,12 @@ function BP:popNext(ifHold)
     if not ifHold and self.settings.bufferHold then
         if self.settings.bufferHold=='hold' then
             if self.keyState.holdPiece then
-                self:hold(true)
-                IHStriggered=true
+                IHStriggered=self:hold(true)
             end
         elseif self.settings.bufferHold=='buffer' then
             if self.keyBuffer.hold then
                 self.keyBuffer.hold=false
-                self:hold(true)
-                IHStriggered=true
+                IHStriggered=self:hold(true)
             end
         end
     end
@@ -999,6 +997,7 @@ function BP:rotate(dir,ifInit)
         end
     end
 end
+---@return boolean success
 function BP:hold(ifInit)
     if self.holdTime>=self.settings.holdSlot and not self.settings.infHold or self.settings.holdSlot==0 then return end
 
@@ -1019,6 +1018,7 @@ function BP:hold(ifInit)
 
     self.holdTime=self.holdTime+1
     self:playSound(ifInit and 'hold_init' or 'hold')
+    return true
 end
 function BP:hold_hold()
     if not self.settings.holdKeepState then
