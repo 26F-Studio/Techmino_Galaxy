@@ -131,6 +131,7 @@ actions.softDrop={
         end
     end,
     release=function(P)
+        P.downCharge=false
         if P.hand and P.deathTimer then P:moveUp() end
     end
 }
