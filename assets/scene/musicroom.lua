@@ -231,7 +231,7 @@ function scene.update(dt)
     if searchTimer>0 then
         searchTimer=max(searchTimer-dt,0)
         if searchTimer<=0 then
-            if searchStr:sub(6)=='recoll' then
+            if searchStr:sub(1,6)=='recoll' then
                 PROGRESS.setSecret('musicroom_recollection')
             elseif searchStr=='piano' or searchStr=='liszt' then
                 PROGRESS.setSecret('musicroom_piano')
