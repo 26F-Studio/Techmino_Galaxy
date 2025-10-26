@@ -266,15 +266,8 @@ UTIL.time("Load FMOD",true)
 --------------------------------------------------------------
 -- Config Zenitha
 
-ZENITHA.setAppName('Techmino')
-ZENITHA.setVersionText(VERSION.appVer)
+ZENITHA.setAppInfo('Techmino',VERSION.appVer)
 ZENITHA.setFirstScene('hello')
-ZENITHA.setDebugInfo{
-    {"Cache",gcinfo},
-    {"Tasks",TASK.getCount},
-    {"Mouse",function() return ("%d, %d"):format(SCR.xOy:inverseTransformPoint(love.mouse.getPosition())) end},
-    -- {"FMOD", function() local a,b,c=FMOD.studio:getMemoryUsage() return a..","..b..","..c end}, -- Only available in logging builds Fmod
-}
 ZENITHA.addConsoleCommand('regurl',{
     code=function(bool)
         if bool~="on" and bool~="off" then
@@ -396,6 +389,7 @@ function ZENITHA.globalEvent.quit()
     PROGRESS.save('save')
     FMOD.destroy()
 end
+table.remove(ZENITHA._debugInfo,4)
 
 FONT.load{
     norm='assets/fonts/RHDisplayGalaxy-Medium.otf',
@@ -409,8 +403,10 @@ FONT.load{
     galaxy_norm="assets/fonts/26FGalaxySans-Regular.otf",
     galaxy_thin="assets/fonts/26FGalaxySans-Thin.otf",
 }
-FONT.setDefaultFallback('symbols')
 FONT.setDefaultFont('norm')
+FONT.setOnInit(function(font,size)
+    font:setFallbacks(FONT.get(size,'symbols'))
+end)
 SCR.setSize(1600,1000)
 do -- WIDGET.newClass
     local bFill=WIDGET.newClass('button_fill','button')
@@ -841,7 +837,6 @@ UTIL.time("Load backgrounds",true)
 for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
     if FILE.isSafe('assets/scene/'..v) then
         local sceneName=v:sub(1,-5)
-        print(sceneName)
         SCN.add(sceneName,FILE.load('assets/scene/'..v,'-lua'))
     end
 end

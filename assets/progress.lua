@@ -385,7 +385,7 @@ function PROGRESS.applyEnv(env)
                 GC.setColor(COLOR.L) GC.setLineWidth(2) GC.polygon('line',Crv)
             end
         end
-        ZENITHA.globalEvent.drawSysInfo=sysInfoFunc
+        ZENITHA.globalEvent.drawExtra=sysInfoFunc
         function ZENITHA.globalEvent.sceneSwap(state)
             if state=='swap' then
                 SFX.play(SCN.stackChange<0 and 'scene_backward' or 'scene_forward')

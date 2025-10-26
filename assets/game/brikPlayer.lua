@@ -1283,13 +1283,14 @@ end
 function BP:riseGarbage(holePos,count)
     local w=self.settings.fieldW
     if not count then count=1 end
+    local clr=self.settings.garbageColor
 
     for _=1,count do
         local L={}
 
         -- Generate line
         for x=1,w do
-            L[x]=self:newCell(777)
+            L[x]=self:newCell(clr)
             L[x].garbage=true
         end
 
@@ -1359,7 +1360,7 @@ function BP:setField(arg)
                     if c%1==0 and c>=1 and c<=7 then
                         c=self.settings.palette[c]
                     elseif c==8 then
-                        c=777
+                        c=self.settings.garbageColor
                     else
                         c=false
                     end
@@ -2068,7 +2069,8 @@ local baseEnv={
         844,484,448,864,748,884,488,
         844,484,845,485,468,854,748,684,488,847,884,448,864,468,854,846,486,884,
         478,748,854,484,
-    }
+    },
+    garbageColor=777,
 }
 ---@return Techmino.Player.Brik
 function BP.new(remote)
