@@ -71,7 +71,7 @@ function scene.update(dt)
             vx=math.random(-200,200),vy=math.random(926,1260),
             r=math.random(25,45),
             a=math.random()*MATH.tau,va=10*math.random()-5,
-            brik=MATH.randFrom(CHAR.brik),
+            brik=TABLE.getRandomAll(CHAR.brik),
             brikColor=math.random()*MATH.tau,
         }
         if o.x*o.vx<0 and MATH.roll(.062) then
