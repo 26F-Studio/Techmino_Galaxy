@@ -82,7 +82,7 @@ return {
 
         -- Piece-time
         local dropData=P.modeData.dropInfo
-        lastX,lastY=0,0
+        local lastX,lastY=0,0
         for i=1,#dropData do
             local clr=i>P.modeData.transition2 and COLOR.R or i>P.modeData.transition1 and COLOR.Y or COLOR.G
             -- Fill

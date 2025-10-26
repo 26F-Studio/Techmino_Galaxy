@@ -19,7 +19,7 @@ local cubeColor={
 
 local cubesX,cubesY
 local lastCube
-local player,moveDir
+local player,moveDir,moveSpd
 local life,life1,inv
 local level,speed
 local menu,ct,play
