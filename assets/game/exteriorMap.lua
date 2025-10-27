@@ -281,8 +281,12 @@ function map:mouseClick(x,y)
     end
 end
 function map:keyboardMove(x,y)
+    local _f=focused
     if mapCursor then
         focused=_onMode(x,y)
+    end
+    if not _f and focused then
+        SFX.play('map_hover')
     end
 end
 function map:keyboardSelect()

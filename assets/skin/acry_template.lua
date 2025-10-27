@@ -154,7 +154,7 @@ function S.drawFieldCell(a,_,_,_)
     gc_setLineWidth(2)
     if a.clearTimer then
         local t=a.clearTimer/a.clearDelay
-        scale=-2*t^2+3*t
+        local scale=-2*t^2+3*t
         gc_scale(scale)
         drawAcry(a)
         gc_scale(1/scale)
