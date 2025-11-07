@@ -30,7 +30,7 @@ local hardPentos={8,9,12,13,15,16,17,18,21,22} -- Z5 S5 F E U V W X R Y
 ---@enum (key) Techmino.Mech.Brik.SequenceName
 local sequence={
 
--- Bag Variants (in piece)
+-- Strict Bag Variants
 
 bag7=function(P,d,init) -- The where we begin
     if init then d.bag={} return end
@@ -108,7 +108,7 @@ bag3_sea=function(P,d,init) -- bag3(III)
     return rem(d.bag,P:random(#d.bag))
 end,
 
--- Bag Variants (in rule)
+-- General Bag Variants
 
 bag7_p1fromBag7=function(P,d,init) -- bag7+1(from another bag7)
     if init then d.bag,d.extra={},{} return end
@@ -253,7 +253,45 @@ bag7_twin=function(P,d,init) -- bag7, but two bags work in turn
     return rem(d.bag1,P:random(#d.bag1))
 end,
 
--- Traditional
+bag7_pool4=function(P,d,init)
+    if init then
+        d.bag,d.pool=copy(Tetros),{}
+        for _=1,4-1 do
+            ins(d.pool,rem(d.bag,P:random(#d.bag)))
+        end
+        return
+    end
+    supply(d.bag,Tetros)
+    ins(d.pool,rem(d.bag,P:random(#d.bag)))
+    return rem(d.pool,P:random(#d.pool))
+end,
+
+-- Others
+
+balanced=function(P,d,init) -- TODO, now exactly same with bag7
+    if init then
+        d.weights=TABLE.new(1,7)
+        d.targetCount=TABLE.new(0,7)
+        d.realCount=TABLE.new(0,7)
+        d._cache={}
+        return
+    end
+    local totalWeight=MATH.sum(d.weights)
+    for i=1,#d.weights do
+        d.targetCount[i]=d.targetCount[i]+d.weights[i]/totalWeight
+        d._cache[i]=max(d.targetCount[i]-d.realCount[i],0)
+    end
+    local sum=MATH.sum(d._cache)
+    local r=P:random()*sum
+    for i=1,#d._cache do
+        r=r-d._cache[i]
+        if r<=0 then
+            d.realCount[i]=d.realCount[i]+1
+            return i
+        end
+    end
+    return #d.weights -- Fallback
+end,
 
 his4_roll4=function(P,d,init)
     if init then d.his=TABLE.new(0,4) return end
@@ -268,19 +306,6 @@ his4_roll4=function(P,d,init)
     rem(d.his,1)
     ins(d.his,r)
     return r
-end,
-
-pool4_bag7=function(P,d,init)
-    if init then
-        d.bag,d.pool=copy(Tetros),{}
-        for _=1,4-1 do
-            ins(d.pool,rem(d.bag,P:random(#d.bag)))
-        end
-        return
-    end
-    supply(d.bag,Tetros)
-    ins(d.pool,rem(d.bag,P:random(#d.bag)))
-    return rem(d.pool,P:random(#d.pool))
 end,
 
 c2=function(P,d,init)
@@ -328,6 +353,7 @@ bag8_pentoEZ_p4fromBag10_pentoHD=function(P,d,init)
     end
     return rem(d.bag1,P:random(#d.bag1))
 end,
+
 }
 
 ---@param P Techmino.Player.Brik
