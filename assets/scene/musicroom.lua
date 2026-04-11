@@ -211,7 +211,7 @@ function scene.focus(f) -- Reduce carbon footprint for music lovers
         end
         noResponseTimer=6.26
     else
-        ZENITHA.setCursorVis()
+        ZENITHA._cursor.active=false
         noResponseTimer=-1
         ZENITHA.setMainLoopSpeed(26)
         ZENITHA.setSleepDurationError(-1)

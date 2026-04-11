@@ -35,7 +35,7 @@ function scene.load()
     table.insert(err.msg,"")
     table.insert(err.msg,SYSTEM.."-"..VERSION.appVer)
     table.insert(err.msg,"Scene: "..err.scene)
-    ZENITHA.setVersionText("")
+    ZENITHA.setAppInfo("",select(2,ZENITHA.getAppInfo()))
 end
 
 function scene.keyDown(key,isRep)

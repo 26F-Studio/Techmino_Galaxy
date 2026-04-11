@@ -271,33 +271,33 @@ ZENITHA.setFirstScene('hello')
 ZENITHA.addConsoleCommand('regurl',{
     code=function(bool)
         if bool~="on" and bool~="off" then
-            _CL{COLOR.I,"Usage: regurl <on|off>"}
+            PRINT{COLOR.I,"Usage: regurl <on|off>"}
         elseif not love.filesystem.isFused() then
-            _CL{COLOR.Y,"Only available when running in fused mode"}
+            PRINT{COLOR.Y,"Only available when running in fused mode"}
         elseif SYSTEM=='Windows' then
             if bool=="on" then
                 local f
 
                 f=io.popen('dir /b *.exe')
                 if not f then
-                    _CL{COLOR.R,"Error: Failed to get .exe file in working directory"}
+                    PRINT{COLOR.R,"Error: Failed to get .exe file in working directory"}
                     return
                 end
                 local exeN=f:read('*a'); f:close()
 
                 exeN=exeN:gsub('\r',''):split('\n')
                 if #exeN==0 then
-                    _CL{COLOR.R,"Error: No .exe file found in working directory"}
+                    PRINT{COLOR.R,"Error: No .exe file found in working directory"}
                     return
                 elseif #exeN>=2 then
-                    _CL{COLOR.R,"Error: Multiple .exe files found in working directory:"}
-                    for i=1,#exeN do _CL{COLOR.R,exeN[i]} end
+                    PRINT{COLOR.R,"Error: Multiple .exe files found in working directory:"}
+                    for i=1,#exeN do PRINT{COLOR.R,exeN[i]} end
                     return
                 end
 
                 f=io.popen('cd')
                 if not f then
-                    _CL{COLOR.R,"Error: Failed to get working directory"}
+                    PRINT{COLOR.R,"Error: Failed to get working directory"}
                     return
                 end
                 local path=f:read('*l'); f:close()
@@ -314,15 +314,15 @@ ZENITHA.addConsoleCommand('regurl',{
                     @="\"EXEPATH\" %1",
                 ]=]:gsub('EXEPATH',path)
                 love.filesystem.write('RegisterURL.reg',regCode)
-                _CL{COLOR.G,".reg script generated, check it carefully then run it"}
-                _CL("Check the file with command 'explorer'.")
+                PRINT{COLOR.G,".reg script generated, check it carefully then run it"}
+                PRINT("Check the file with command 'explorer'.")
             elseif bool=="off" then
                 love.filesystem.write('UnregisterURL.reg',[=[Windows Registry Editor Version 5.00\n[-HKEY_CLASSES_ROOT\techmino]]=])
-                _CL{COLOR.G,".reg script generated, check it carefully then run it"}
-                _CL("Check the file with command 'explorer'.")
+                PRINT{COLOR.G,".reg script generated, check it carefully then run it"}
+                PRINT("Check the file with command 'explorer'.")
             end
         else
-            _CL{COLOR.lR,"Only",COLOR.lS,"available",COLOR.lY,"on",COLOR.lG,"Windows"}
+            PRINT{COLOR.lR,"Only",COLOR.lS,"available",COLOR.lY,"on",COLOR.lG,"Windows"}
         end
     end,
     description="Register/Unregister \"Techmino://...\" link",
@@ -340,7 +340,7 @@ ZENITHA.addConsoleCommand('supernova',{
             PROGRESS.setStyleUnlock('acry')
             PROGRESS.setExteriorUnlock('action')
         end
-        _CL("Extraordinary!")
+        PRINT("Extraordinary!")
     end,
 },true)
 ZENITHA.addConsoleCommand('chain',{
@@ -349,7 +349,7 @@ ZENITHA.addConsoleCommand('chain',{
             PROGRESS.setStyleUnlock('gela')
             PROGRESS.setExteriorUnlock('chain')
         end
-        _CL("Fever!")
+        PRINT("Fever!")
     end,
 },true)
 

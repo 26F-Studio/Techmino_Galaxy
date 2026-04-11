@@ -31,13 +31,12 @@ local area={
     c=180,
 }
 
+local preview,progress={},{}
 local board,cx,cy
-local preview
 local failPos
 local startTime,time
 local maxTile,maxNew
 local state
-local progress
 local fallingTimer
 local score
 

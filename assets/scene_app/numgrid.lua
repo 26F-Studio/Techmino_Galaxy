@@ -3,7 +3,9 @@ local gc=love.graphics
 ---@type Zenitha.Scene
 local scene={}
 
-local board,rank
+local board={}
+
+local rank
 local invis,disappear
 local startTime,time
 local state,progress=0
