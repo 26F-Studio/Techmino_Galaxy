@@ -119,23 +119,29 @@ TRS[6]={
     ---@param self Techmino.Player.Brik
     rotate=function(self,dir,ifInit)
         local C=self.hand
+        ---@cast C -false
         local baseX,baseY=self.handX,self.handY
         self:freshDelay('rotate')
         local transformed
         if not self.deathTimer then
+            local dx,dy=0,0
             if
                 self.settings.allowTransform and
-                (baseY==self.ghostY and
+                (
+                    baseY==self.ghostY and
                     self:ifoverlap(self.hand.matrix,baseX-1,self.handY) and
                     self:ifoverlap(self.hand.matrix,baseX+1,self.handY)
                 )
             then -- Try do perform O-spin
-                -- [Warning] ['spinSeq'] is a dirty data, TRS put this var into the block.
-                C.spinSeq=((C.spinSeq or '')..dir):sub(-3)
-                if #C.spinSeq==3 then
+                local r1=C.path[#C.path-1]
+                local r2=C.path[#C.path]
+                local d1=r1 and r1[1]=='rotate' and r1[4]
+                local d2=r2 and r2[1]=='rotate' and r2[4]
+                if d1 and d2 and dir then
+                    local seq=d1..d2..dir
                     for i=1,#OspinList do
                         local test=OspinList[i]
-                        if C.spinSeq==test.seq then
+                        if seq==test.seq then
                             local newMatrix=TABLE.copy(Brik.getShape(test.shape))
                             if test.direcion==2 then newMatrix=TABLE.rotate(newMatrix,'F') end
                             local c=0
@@ -159,7 +165,6 @@ TRS[6]={
                                 C.shape=Brik.getID(test.shape)
                                 C.matrix=newMatrix
                                 C.direction=test.direcion
-                                C.spinSeq=''
 
                                 -- Overwrite origin state (keep shape when hold)
                                 C._origin.shape=Brik.getID(test.shape)
@@ -186,23 +191,24 @@ TRS[6]={
                     end
                 end
             else -- No shape-changing spin
-                C.spinSeq=nil
                 C.matrix=TABLE.rotate(C.matrix,dir)
-                if dir=='R' or dir=='L' then
-                    local dx=dir=='R' and 1 or -1
-                    local dy=0
-                    while dy<=1 do
-                        if not self:ifoverlap(C.matrix,baseX+dx,baseY+dy) then
-                            self:moveHand('rotate',baseX+dx,baseY+dy,dir,ifInit)
-                            break
-                        else
-                            dy=dy+1
-                        end
+                if dir=='R' then
+                    if not self:ifoverlap(C.matrix,baseX+1,baseY) then
+                        dx,dy=1,0
+                    elseif not self:ifoverlap(C.matrix,baseX+1,baseY+1) then
+                        dx,dy=1,1
+                    end
+                elseif dir=='L' then
+                    if not self:ifoverlap(C.matrix,baseX-1,baseY) then
+                        dx,dy=-1,0
+                    elseif not self:ifoverlap(C.matrix,baseX-1,baseY+1) then
+                        dx,dy=-1,1
                     end
                 end
                 C.direction=(C.direction+(dir=='R' and 1 or dir=='L' and 3 or dir=='F' and 2))%4
             end
             if not transformed then
+                self:moveHand('rotate',baseX+dx,baseY+dy,dir,ifInit)
                 self:playSound(ifInit and 'rotate_init' or 'rotate')
                 if self.settings.particles then
                     self:createRotateEffect(dir,ifInit)

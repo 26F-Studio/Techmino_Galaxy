@@ -221,6 +221,7 @@ function BP:moveHand(action,A,B,C,D)
         rotate: x,y,dir,ifInit
         reset:  x,y
     ]]
+    ins(self.hand.path,{action,A,B,C,D}) -- Track movement
     local SET=self.settings
     if action=='moveX' then
         self.handX=self.handX+A
@@ -360,6 +361,11 @@ function BP:restoreBrikState(brik) -- Restore a brik object's state (only inside
     end
 end
 function BP:resetPos() -- Move hand piece to the normal spawn position
+    if self.hand.path then
+        TABLE.clear(self.hand.path)
+    else
+        self.hand.path={}
+    end
     self:moveHand('reset',floor(self.settings.fieldW/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1+ceil(self.fieldDived/40))
 
     self:triggerEvent('beforeResetPos')

@@ -89,6 +89,7 @@
 ---@field name Techmino.Brik.Name
 ---@field matrix Techmino.RectPiece
 ---@field _origin Techmino.Piece
+---@field path table[]
 ---
 ---@field size number Gela only
 
