@@ -38,7 +38,24 @@ return {
                     P.settings.spin_immobile=false
                     P.settings.spin_corners=false
                 end
-                P:setAction('func1',infSprint_turnOn)
+                P:setAction('func1',function(P)
+                    local m={
+                        [844]='Z',
+                        [484]='S',
+                        [448]='J',
+                        [864]='L',
+                        [748]='T',
+                        [884]='O',
+                        [488]='I',
+                    }
+                    for y=#P.field._matrix,1,-1 do
+                        local L=""
+                        for x=1,P.settings.fieldW do
+                            L=L..(P.field._matrix[y][x] and m[P.field._matrix[y][x].color] or '_')
+                        end
+                        print(L)
+                    end
+                end)
             end,
             beforePress={
                 mechLib.brik.misc.skipReadyWithHardDrop_beforePress,

@@ -352,12 +352,12 @@ function BP:moveHand(action,A,B,C,D)
     self:tryCancelSuffocate()
 end
 function BP:restoreBrikState(brik) -- Restore a brik object's state (only inside, like shape, name, direction)
+    if not brik then brik=self.hand end
     if brik._origin then
         for k,v in next,brik._origin do
             brik[k]=v
         end
     end
-    return brik
 end
 function BP:resetPos() -- Move hand piece to the normal spawn position
     self:moveHand('reset',floor(self.settings.fieldW/2-#self.hand.matrix[1]/2+1),self.settings.spawnH+1+ceil(self.fieldDived/40))
@@ -1022,7 +1022,7 @@ function BP:hold(ifInit)
 end
 function BP:hold_hold()
     if not self.settings.holdKeepState then
-        self.hand=self:restoreBrikState(self.hand)
+        self:restoreBrikState()
     end
 
     -- Swap hand and hold
@@ -1040,7 +1040,7 @@ function BP:hold_swap()
     local swapN=self.holdTime%self.settings.holdSlot+1
     if self.nextQueue[swapN] then
         if not self.settings.holdKeepState then
-            self.hand=self:restoreBrikState(self.hand)
+            self:restoreBrikState()
         end
         self.hand,self.nextQueue[swapN]=self.nextQueue[swapN],self.hand
         self:resetPos()

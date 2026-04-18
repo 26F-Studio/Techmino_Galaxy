@@ -169,7 +169,7 @@ return {
                     end
                 else
                     -- Wrong: restore piece
-                    P:restoreBrikState(P.hand)
+                    P:restoreBrikState()
                     table.insert(P.nextQueue,1,P.hand)
                     P.hand=nil
                     P:playSound(posSucc and 'rotate_failed' or 'move_failed',2)
