@@ -98,11 +98,11 @@ local OspinList={
     {seq='RRL',shape='J',direcion=2,bias={-1,-1},free='FIX',target={2,1,3,4}}, -- J(gun)
     {seq='LLR',shape='L',direcion=0,bias={-1, 0},free='FIX',target={3,1,2,4}}, -- L(shoe)
     {seq='LLR',shape='L',direcion=2,bias={ 0,-1},free='FIX',target={1,3,4,2}}, -- L(gun)
-    {seq='FFF',shape='I',direcion=0,bias={ 0, 1},free='MOV',target={3,1,2,4}}, -- I(high-R)
     {seq='FFF',shape='I',direcion=0,bias={-2, 1},free='MOV',target={3,1,2,4}}, -- I(high)
+    {seq='FFF',shape='I',direcion=0,bias={ 0, 1},free='MOV',target={3,1,2,4}}, -- I(high-R)
     {seq='FFF',shape='I',direcion=0,bias={-1, 1},free='MOV',target={3,1,2,4}}, -- I(high-L)
-    {seq='FFF',shape='I',direcion=2,bias={ 0, 0},free='ANY',target={1,3,4,2}}, -- I(low-R)
     {seq='FFF',shape='I',direcion=2,bias={-2, 0},free='ANY',target={1,3,4,2}}, -- I(low)
+    {seq='FFF',shape='I',direcion=2,bias={ 0, 0},free='ANY',target={1,3,4,2}}, -- I(low-R)
     {seq='FFF',shape='I',direcion=2,bias={-1, 0},free='ANY',target={1,3,4,2}}, -- I(low-L)
     {seq='RFR',shape='O',direcion=0,bias={ 1,-1},free='ANY',target={2,4,1,3}}, -- O(↘RD)
     {seq='RRF',shape='O',direcion=0,bias={ 2,-1},free='ANY',target={2,4,1,3}}, -- O(→↘RRD)
@@ -172,6 +172,7 @@ TRS[6]={
                                 C._origin.matrix=test.direcion==0 and newMatrix or test.direcion==2 and TABLE.rotate(newMatrix,'F') or error("Oh I forgot this")
 
                                 self:moveHand('rotate',x,y,dir,ifInit)
+                                self:moveHand('reset',x,y)
                                 self:playSound('rotate_special')
 
                                 -- Create particles
