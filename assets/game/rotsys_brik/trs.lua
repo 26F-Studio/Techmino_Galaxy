@@ -171,8 +171,7 @@ TRS[6]={
                                 C._origin.direction=0
                                 C._origin.matrix=test.direcion==0 and newMatrix or test.direcion==2 and TABLE.rotate(newMatrix,'F') or error("Oh I forgot this")
 
-                                self:moveHand('rotate',x,y,dir,ifInit)
-                                self:moveHand('reset',x,y)
+                                self:moveHand('rotate',x,y,'0',ifInit)
                                 self:playSound('rotate_special')
 
                                 -- Create particles
