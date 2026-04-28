@@ -152,6 +152,22 @@ TRS[6]={
                                 end
                             end end
 
+                            for y=1,#newMatrix do for x=1,#newMatrix[1] do
+                                if newMatrix[y][x] then
+                                    local L=newMatrix[y][x].conn
+                                    TABLE.clear(L)
+                                    local b
+                                    b=newMatrix[y]   if b and b[x-1] then L[b[x-1].cid]=0 end
+                                    b=newMatrix[y]   if b and b[x+1] then L[b[x+1].cid]=0 end
+                                    b=newMatrix[y-1] if b and b[x]   then L[b[x]  .cid]=0 end
+                                    b=newMatrix[y+1] if b and b[x]   then L[b[x]  .cid]=0 end
+                                    b=newMatrix[y-1] if b and b[x-1] then L[b[x-1].cid]=0 end
+                                    b=newMatrix[y-1] if b and b[x+1] then L[b[x+1].cid]=0 end
+                                    b=newMatrix[y+1] if b and b[x-1] then L[b[x-1].cid]=0 end
+                                    b=newMatrix[y+1] if b and b[x+1] then L[b[x+1].cid]=0 end
+                                end
+                            end end
+
                             local x,y=baseX+test.bias[1],baseY+test.bias[2]
                             if
                                 self.deathTimer or
