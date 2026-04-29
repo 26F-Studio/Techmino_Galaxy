@@ -60,15 +60,16 @@ do -- line (fill row to clear)
 
     function clearRule.line.clear(P,lines)
         local F=P.field
+        local SET=P.settings
         local sum=0
         local ptr=1
         for y=1,F:getHeight() do
             if y==lines[ptr] then
                 sum=sum+1
                 ptr=ptr+1
-            elseif sum>0 then
-                for x=1,P.settings.fieldW do
-                    setBias(P,x,y,0,sum,P.settings.clearMovement,P.settings.clearDelay)
+            elseif sum>0 and SET.clearDelay>0 then
+                for x=1,SET.fieldW do
+                    setBias(P,x,y,0,sum,SET.clearMovement,SET.clearDelay)
                 end
             end
         end
