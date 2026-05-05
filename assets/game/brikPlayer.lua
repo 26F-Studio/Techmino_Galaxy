@@ -84,7 +84,7 @@ function BP:createRotateEffect(dir,ifInit)
         p:setSpeed(80,120)
     end
     p:setTangentialAcceleration(dir=='L' and -2600 or 0,dir=='R' and 2600 or 0)
-    p:setPosition((cx-.5)*40,-(cy-.5)*40)
+    p:setPosition((cx-.5)*40,-(cy-.5)*40+self.fieldDived)
     p:emit(12)
 end
 function BP:createRotateCornerEffect(cx,cy)
