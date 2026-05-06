@@ -2,9 +2,7 @@
 local ps={}
 
 do -- Moving
-    local p=love.graphics.newParticleSystem(GC.load{w=1,h=1,
-        {'clear',1,1,1,1},
-    },260)
+    local p=GC.newParticleSystem(GC.initCanvas(1,1,function() GC.clear(1,1,1) end),260)
     p:setSizes(40)
     p:setColors(1,1,1,.26,1,1,1,0)
     p:setSpread(0)
@@ -53,12 +51,12 @@ do -- Hold
 end
 
 do -- Clearing
-    local p=love.graphics.newParticleSystem(GC.load{w=7,h=7,
-        {'setLW',1},
-        {'line',0,3.5,6.5,3.5},
-        {'line',3.5,0,3.5,6.5},
-        {'fRect',2,2,3,3},
-    },2260)
+    local p=GC.newParticleSystem(GC.initCanvas(7,7,function()
+        GC.setLineWidth(1)
+        GC.line(0,3.5,6.5,3.5)
+        GC.line(3.5,0,3.5,6.5)
+        GC.rectangle('fill',2,2,3,3)
+    end),2260)
     p:setSpread(MATH.tau)
     p:setSizes(.26,1,.8,.6,.4,.2,0)
     p:setSpeed(0,20)
@@ -66,9 +64,7 @@ do -- Clearing
 end
 
 do -- Fever State
-    local p=love.graphics.newParticleSystem(GC.load{w=1,h=1,
-        {'clear',1,1,1},
-    },2600)
+    local p=GC.newParticleSystem(GC.initCanvas(1,1,function() GC.clear(1,1,1) end),2600)
     p:setSpread(.26)
     p:setPosition(200,-400)
     p:setEmissionArea('borderrectangle',200,400,0,true)
@@ -81,9 +77,7 @@ do -- Fever State
 end
 
 do -- Rotate
-    local p=love.graphics.newParticleSystem(GC.load{w=10,h=3,
-        {'clear',1,1,1,1},
-    },2600)
+    local p=GC.newParticleSystem(GC.initCanvas(10,3,function() GC.clear(1,1,1) end),2600)
     p:setEmissionArea('uniform',40,40,MATH.tau,true)
     p:setSizes(.6,1,.5,.2,0)
     p:setRelativeRotation(true)
@@ -91,9 +85,7 @@ do -- Rotate
 end
 
 do -- Touching spark
-    local p=love.graphics.newParticleSystem(GC.load{w=4,h=4,
-        {'clear',1,1,1,1},
-    },260)
+    local p=GC.newParticleSystem(GC.initCanvas(4,4,function() GC.clear(1,1,1) end),260)
     p:setSizes(.6,.9,1,1)
     p:setColors(1,1,1,1,1,1,1,0)
     p:setDirection(math.pi/2)
@@ -105,9 +97,7 @@ do -- Touching spark
 end
 
 do -- Rotating corner check
-    local p=love.graphics.newParticleSystem(GC.load{w=1,h=1,
-        {'clear',1,1,1,1},
-    },26)
+    local p=GC.newParticleSystem(GC.initCanvas(1,1,function() GC.clear(1,1,1) end),26)
     p:setSizes(26)
     p:setColors(1,1,1,.62,1,1,1,0)
     p:setRotation(0)
@@ -117,9 +107,7 @@ do -- Rotating corner check
 end
 
 do -- Piece controlling effect
-    local p=love.graphics.newParticleSystem(GC.load{w=1,h=1,
-        {'clear',1,1,1},
-    },26)
+    local p=GC.newParticleSystem(GC.initCanvas(1,1,function() GC.clear(1,1,1) end),26)
     p:setSizes(60,50,25,0)
     p:setRotation(-.26,.26)
     p:setSpin(-2.6,2.6)
@@ -131,7 +119,7 @@ do -- Harddrop light
     local width=80
     local height=240
     local fadeLength=40
-    local p=love.graphics.newParticleSystem((function()
+    local p=GC.newParticleSystem((function()
         local L={w=width,h=height}
         for i=1,width/2 do
             table.insert(L,{'setCL',1,1,1,i/(width/2)})
@@ -165,9 +153,7 @@ do -- Harddrop light
 end
 
 do -- Piece lock effect
-    local p=love.graphics.newParticleSystem(GC.load{w=1,h=1,
-        {'clear',1,1,1},
-    },26)
+    local p=GC.newParticleSystem(GC.initCanvas(1,1,function() GC.clear(1,1,1) end),26)
     p:setSizes(40,30)
     p:setColors(.926,.926,.926,.42,1,1,1,0)
     p:setParticleLifetime(.16)
@@ -175,12 +161,12 @@ do -- Piece lock effect
 end
 
 do -- Background light of exterior map
-    local p=love.graphics.newParticleSystem(GC.load{w=10,h=10,
-        {'setCL',1,1,1,.5},
-        {'fRect',0,0,10,10},
-        {'fRect',1,1,8,8},
-        {'fRect',2,2,6,6},
-    },260)
+    local p=GC.newParticleSystem(GC.initCanvas(10,10,function()
+        GC.setColor(1,1,1,.5)
+        GC.rectangle('fill',0,0,10,10)
+        GC.rectangle('fill',1,1,8,8)
+        GC.rectangle('fill',2,2,6,6)
+    end),260)
     p:setSizes(26)
     p:setColors(1,1,1,0,1,1,1,.062,1,1,1,.162,1,1,1,.26,1,1,1,0)
     p:setRotation(0,MATH.tau)
