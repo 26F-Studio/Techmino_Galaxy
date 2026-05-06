@@ -237,7 +237,7 @@ local function _selectMode(m)
 end
 local function _enterMode(m)
     if m then
-        if love.filesystem.getInfo('assets/game/mode/brik/exterior/'..m.name..'.lua') then
+        if love.filesystem.getInfo('assets/mode/brik/exterior/'..m.name..'.lua') then
             enterFX.timer=0
             enterFX.x,enterFX.y,enterFX.r=m.x,m.y,m.r
             FMOD.effect('map_enter')

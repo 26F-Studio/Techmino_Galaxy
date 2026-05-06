@@ -183,7 +183,7 @@ function GAME.getMode(name)
     if modeLib[name] then
         return modeLib[name]
     else
-        local path='assets/game/mode/'..name..'.lua'
+        local path='assets/mode/'..name..'.lua'
         assert(love.filesystem.getInfo(path) and FILE.isSafe(path),"No mode named "..tostring(name))
         local M=FILE.load(path,'-lua')
         assert(type(M)=='table',"WTF")

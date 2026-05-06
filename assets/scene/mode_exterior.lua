@@ -67,7 +67,7 @@ local scene={}
 function scene.load()
     local firstLoad
     if not exMap then
-        exMap=require'assets.game.exteriorMap'
+        exMap=require'assets.exteriorMap'
         firstLoad=true
     end
     local modeStates=PROGRESS.getExteriorMapState()
