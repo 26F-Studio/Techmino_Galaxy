@@ -224,7 +224,7 @@ function GAME.load(mode,seed)
     GAME.mode=mode and GAME.getMode(mode) or NONE
     if GAME.mode.initialize then GAME.mode.initialize() end
     TASK.removeTask_code(task_switchToResult)
-    TASK.removeTask_code(task_unloadGame)
+    TASK.removeTask_code(Task_unloadGame)
 
     if #GAME.playerList==0 then
         MSG.log('warn',"No players created in this mode")

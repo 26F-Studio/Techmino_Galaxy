@@ -98,7 +98,7 @@ local function newPiece()
 end
 
 local function reset()
-    autoBack_interior(true)
+    AutoBack_interior(true)
     noControl=false
 
     TABLE.clear(matrix)
@@ -146,7 +146,7 @@ local function endGame(passLevel)
         inPoint=.1,
         outPoint=0,
     }
-    autoBack_interior()
+    AutoBack_interior()
 end
 
 local function answer(ansID)

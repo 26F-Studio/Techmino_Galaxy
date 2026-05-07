@@ -71,7 +71,7 @@ local function newQuestion()
 end
 
 local function reset()
-    autoBack_interior(true)
+    AutoBack_interior(true)
     level=1
     score=0
     time=parTime[1]
@@ -111,7 +111,7 @@ local function endGame(passLevel)
         outPoint=0,
     }
     if passLevel>0 then FMOD.effect('finish_win') end
-    autoBack_interior()
+    AutoBack_interior()
 end
 
 function scene.load()

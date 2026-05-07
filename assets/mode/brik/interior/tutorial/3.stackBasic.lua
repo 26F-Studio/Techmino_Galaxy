@@ -96,5 +96,5 @@ return {
             {cmd='say',arg={duration='10s',text="@tutorial_stackBasic_5",size=35,y=-60}},
         },
     }},
-    result=autoBack_interior,
+    result=AutoBack_interior,
 }

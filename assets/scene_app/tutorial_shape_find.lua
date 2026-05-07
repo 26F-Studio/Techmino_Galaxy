@@ -84,7 +84,7 @@ local function newQuestion()
 end
 
 local function reset()
-    autoBack_interior(true)
+    AutoBack_interior(true)
     level=1
     score=0
     time=passTime
@@ -123,7 +123,7 @@ local function endGame(passLevel)
         inPoint=.1,
         outPoint=0,
     }
-    autoBack_interior()
+    AutoBack_interior()
 end
 
 local function answer(option)

@@ -76,7 +76,7 @@ return {
                             P:finish('win')
                         end
                         if goSecretApp then
-                            TASK.new(task_unloadGame)
+                            TASK.new(Task_unloadGame)
                             SCN._pop()
                             SCN.go(goSecretApp)
                         end

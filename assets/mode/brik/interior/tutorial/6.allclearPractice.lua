@@ -114,5 +114,5 @@ return {
             {cmd='say',arg={duration='4.2s',text="@tutorial_allclearPractice_2",size=30,y=60}},
         },
     }},
-    result=autoBack_interior,
+    result=AutoBack_interior,
 }

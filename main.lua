@@ -153,7 +153,7 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
                 end
             end
         end
-        if noFile then _getLatestBank(2.6) end
+        if noFile then _GetLatestBank(2.6) end
 
         -- print("--------------------------")
         -- print("Musics")

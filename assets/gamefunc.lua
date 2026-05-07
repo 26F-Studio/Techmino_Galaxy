@@ -82,13 +82,13 @@ end
 
 InstList={'organ','square','saw','complex','stairs','spectral','obscure','death','crash','vasco','random','mcintosh','interference'}
 
-GameSndFunc=setmetatable({},{
+GameSndFunc={}
+GameSndFunc.__index=GameSndFunc
+GameSndFunc.__metatable=true
+setmetatable(GameSndFunc,{
     __newindex=function(self,k,v)
-        if v==NULL then
-            rawset(self,k,function(vol) SFX.play(k,vol) end)
-        else
-            rawset(self,k,v)
-        end
+        if v==NULL then v=function(vol) SFX.play(k,vol) end end
+        rawset(self,k,v)
     end,
     __metatable=true,
 })
@@ -208,6 +208,7 @@ GameSndFunc.swap_failed=GameSndFunc.tuck
 GameSndFunc.twist=GameSndFunc.rotate
 GameSndFunc.twist_failed=GameSndFunc.tuck
 GameSndFunc.move_back=GameSndFunc.rotate_failed
+for k,v in next,GameSndFunc do print(k,v)end
 
 local interiorModeMeta={
     __call=function(self)
@@ -251,7 +252,7 @@ local function task_interiorAutoBack()
     until love.timer.getTime()-time>1.26
     SCN.back('none')
 end
-function autoBack_interior(disable)
+function AutoBack_interior(disable)
     TASK.removeTask_code(task_interiorAutoBack)
     if not disable then
         TASK.new(task_interiorAutoBack)
@@ -301,14 +302,14 @@ function CallDict(entry)
 end
 
 ---@async
-function task_unloadGame()
+function Task_unloadGame()
     coroutine.yield()
     TASK.yieldUntilNextScene()
     GAME.unload()
     collectgarbage()
 end
 
-function _getLatestBank(waitTime)
+function _GetLatestBank(waitTime)
     TASK.new(function()
         MSG('info',"Opening URL of bank files...")
         TASK.yieldT(waitTime or 0.626)
@@ -397,6 +398,7 @@ function SetSafeEnv(func)
 end
 
 regFuncToStr,regStrToFunc={},{}
+
 ---Flatten a table of functions into string-to-function and function-to-string maps
 ---@param obj table | function
 ---@param path string
