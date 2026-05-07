@@ -95,46 +95,40 @@ setmetatable(GameSndFunc,{
     end
 })
 do
-    local _someSFX=NULL
-    GameSndFunc.move                  =_someSFX
-    GameSndFunc.move_down             =_someSFX
-    GameSndFunc.move_failed           =_someSFX
-    GameSndFunc.touch                 =_someSFX
-    GameSndFunc.lock                  =_someSFX
-    GameSndFunc.tuck                  =_someSFX
-    GameSndFunc.rotate                =_someSFX
-    GameSndFunc.rotate_init           =_someSFX
-    GameSndFunc.rotate_locked         =_someSFX
-    GameSndFunc.rotate_corners        =_someSFX
-    GameSndFunc.rotate_failed         =_someSFX
-    GameSndFunc.rotate_special        =_someSFX
-    GameSndFunc.hold                  =_someSFX
-    GameSndFunc.hold_init             =_someSFX
-    GameSndFunc.drop                  =_someSFX
-    GameSndFunc.drop_old              =_someSFX
-    GameSndFunc.clear_all             =_someSFX
-    GameSndFunc.clear_half            =_someSFX
-    GameSndFunc.frenzy                =_someSFX
-    GameSndFunc.discharge             =_someSFX
-    GameSndFunc.suffocate             =_someSFX
-    GameSndFunc.desuffocate           =_someSFX
-    GameSndFunc.beep_rise             =_someSFX
-    GameSndFunc.beep_drop             =_someSFX
-    GameSndFunc.beep_notice           =_someSFX
-    GameSndFunc.finish_win            =_someSFX
-    GameSndFunc.finish_suffocate      =_someSFX
-    GameSndFunc.finish_lockout        =_someSFX
-    GameSndFunc.finish_topout         =_someSFX
-    GameSndFunc.finish_timeout        =_someSFX
-    GameSndFunc.finish_rule           =_someSFX
-    GameSndFunc.finish_exhaust        =_someSFX
-    GameSndFunc.finish_taskfail       =_someSFX
-    GameSndFunc.finish_other          =_someSFX
-    for k,v in next,GameSndFunc do
-        if v==_someSFX then
-            GameSndFunc[k]=function(vol) FMOD.effect(k,vol) end
-        end
-    end
+    GameSndFunc.move                  =NULL
+    GameSndFunc.move_down             =NULL
+    GameSndFunc.move_failed           =NULL
+    GameSndFunc.touch                 =NULL
+    GameSndFunc.lock                  =NULL
+    GameSndFunc.tuck                  =NULL
+    GameSndFunc.rotate                =NULL
+    GameSndFunc.rotate_init           =NULL
+    GameSndFunc.rotate_locked         =NULL
+    GameSndFunc.rotate_corners        =NULL
+    GameSndFunc.rotate_failed         =NULL
+    GameSndFunc.rotate_special        =NULL
+    GameSndFunc.hold                  =NULL
+    GameSndFunc.hold_init             =NULL
+    GameSndFunc.drop                  =NULL
+    GameSndFunc.drop_old              =NULL
+    GameSndFunc.clear_all             =NULL
+    GameSndFunc.clear_half            =NULL
+    GameSndFunc.frenzy                =NULL
+    GameSndFunc.discharge             =NULL
+    GameSndFunc.suffocate             =NULL
+    GameSndFunc.desuffocate           =NULL
+    GameSndFunc.beep_rise             =NULL
+    GameSndFunc.beep_drop             =NULL
+    GameSndFunc.beep_notice           =NULL
+    GameSndFunc.finish_win            =NULL
+    GameSndFunc.finish_suffocate      =NULL
+    GameSndFunc.finish_lockout        =NULL
+    GameSndFunc.finish_topout         =NULL
+    GameSndFunc.finish_timeout        =NULL
+    GameSndFunc.finish_rule           =NULL
+    GameSndFunc.finish_exhaust        =NULL
+    GameSndFunc.finish_taskfail       =NULL
+    GameSndFunc.finish_other          =NULL
 end
 
 function GameSndFunc.countDown(num)
