@@ -82,55 +82,50 @@ end
 
 InstList={'organ','square','saw','complex','stairs','spectral','obscure','death','crash','vasco','random','mcintosh','interference'}
 
-GameSndFunc={}
-GameSndFunc.__index=GameSndFunc
-GameSndFunc.__metatable=true
-setmetatable(GameSndFunc,{
+GameSndFunc=setmetatable({},{
     __newindex=function(self,k,v)
         if v==NULL then
-            rawset(self,k,function(vol) FMOD.effect(k,vol) end)
+            rawset(self,k,function(vol) SFX.play(k,vol) end)
         else
             rawset(self,k,v)
         end
-    end
+    end,
+    __metatable=true,
 })
-do
-    GameSndFunc.move                  =NULL
-    GameSndFunc.move_down             =NULL
-    GameSndFunc.move_failed           =NULL
-    GameSndFunc.touch                 =NULL
-    GameSndFunc.lock                  =NULL
-    GameSndFunc.tuck                  =NULL
-    GameSndFunc.rotate                =NULL
-    GameSndFunc.rotate_init           =NULL
-    GameSndFunc.rotate_locked         =NULL
-    GameSndFunc.rotate_corners        =NULL
-    GameSndFunc.rotate_failed         =NULL
-    GameSndFunc.rotate_special        =NULL
-    GameSndFunc.hold                  =NULL
-    GameSndFunc.hold_init             =NULL
-    GameSndFunc.drop                  =NULL
-    GameSndFunc.drop_old              =NULL
-    GameSndFunc.clear_all             =NULL
-    GameSndFunc.clear_half            =NULL
-    GameSndFunc.frenzy                =NULL
-    GameSndFunc.discharge             =NULL
-    GameSndFunc.suffocate             =NULL
-    GameSndFunc.desuffocate           =NULL
-    GameSndFunc.beep_rise             =NULL
-    GameSndFunc.beep_drop             =NULL
-    GameSndFunc.beep_notice           =NULL
-    GameSndFunc.finish_win            =NULL
-    GameSndFunc.finish_suffocate      =NULL
-    GameSndFunc.finish_lockout        =NULL
-    GameSndFunc.finish_topout         =NULL
-    GameSndFunc.finish_timeout        =NULL
-    GameSndFunc.finish_rule           =NULL
-    GameSndFunc.finish_exhaust        =NULL
-    GameSndFunc.finish_taskfail       =NULL
-    GameSndFunc.finish_other          =NULL
-end
-
+GameSndFunc.move            =NULL
+GameSndFunc.move_down       =NULL
+GameSndFunc.move_failed     =NULL
+GameSndFunc.touch           =NULL
+GameSndFunc.lock            =NULL
+GameSndFunc.tuck            =NULL
+GameSndFunc.rotate          =NULL
+GameSndFunc.rotate_init     =NULL
+GameSndFunc.rotate_locked   =NULL
+GameSndFunc.rotate_corners  =NULL
+GameSndFunc.rotate_failed   =NULL
+GameSndFunc.rotate_special  =NULL
+GameSndFunc.hold            =NULL
+GameSndFunc.hold_init       =NULL
+GameSndFunc.drop            =NULL
+GameSndFunc.drop_old        =NULL
+GameSndFunc.clear_all       =NULL
+GameSndFunc.clear_half      =NULL
+GameSndFunc.frenzy          =NULL
+GameSndFunc.discharge       =NULL
+GameSndFunc.suffocate       =NULL
+GameSndFunc.desuffocate     =NULL
+GameSndFunc.beep_rise       =NULL
+GameSndFunc.beep_drop       =NULL
+GameSndFunc.beep_notice     =NULL
+GameSndFunc.finish_win      =NULL
+GameSndFunc.finish_suffocate=NULL
+GameSndFunc.finish_lockout  =NULL
+GameSndFunc.finish_topout   =NULL
+GameSndFunc.finish_timeout  =NULL
+GameSndFunc.finish_rule     =NULL
+GameSndFunc.finish_exhaust  =NULL
+GameSndFunc.finish_taskfail =NULL
+GameSndFunc.finish_other    =NULL
 function GameSndFunc.countDown(num)
     if num==0 then -- 6 + 6 3 6
         PlaySamp('organ',{'A2',.5,420,1200})
