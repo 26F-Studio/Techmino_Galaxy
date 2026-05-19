@@ -208,7 +208,6 @@ GameSndFunc.swap_failed=GameSndFunc.tuck
 GameSndFunc.twist=GameSndFunc.rotate
 GameSndFunc.twist_failed=GameSndFunc.tuck
 GameSndFunc.move_back=GameSndFunc.rotate_failed
-for k,v in next,GameSndFunc do print(k,v)end
 
 local interiorModeMeta={
     __call=function(self)
