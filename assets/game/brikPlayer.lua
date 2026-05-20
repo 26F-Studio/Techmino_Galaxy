@@ -692,7 +692,7 @@ function BP:getBrik(shapeData)
         shapeID=shapeData.id
         shapeName=shapeData.name or "?"
         shapeMat=TABLE.copy(shapeData.shape)
-        shapeColor=shapeData.color or self.settings.palette[shapeID] or self:random('color',999)
+        shapeColor=shapeData.color or self.settings.palette[shapeID] or self:random('color',0,999)
     else
         ---@cast shapeData Techmino.Brik.Name | Techmino.Brik.ID
         local brik=Brik.get(shapeData)
@@ -700,7 +700,7 @@ function BP:getBrik(shapeData)
         shapeID=brik.id
         shapeName=brik.name
         shapeMat=TABLE.copy(brik.shape)
-        shapeColor=self.settings.palette[shapeID] or self:random('color',999)
+        shapeColor=self.settings.palette[shapeID] or self:random('color',0,999)
     end
     self.pieceCount=self.pieceCount+1
 
