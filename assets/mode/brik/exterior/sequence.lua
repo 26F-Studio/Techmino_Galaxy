@@ -20,7 +20,7 @@ local function sequence_weird(P,d,init)
         d.bagCount=d.bagCount+1
         d.bag={1,2,3,4,5,6,7}
         if d.bagCount>2.6 then
-            local r=P:random(4)
+            local r=P:random('seq',4)
             if     r==1 then d.bag[3]=19 -- J5
             elseif r==2 then d.bag[4]=20 -- L5
             elseif r==3 then d.bag[5]=14 -- T5
@@ -28,7 +28,7 @@ local function sequence_weird(P,d,init)
             end
         end
     end
-    return table.remove(d.bag,P:random(#d.bag))
+    return table.remove(d.bag,P:random('seq',#d.bag))
 end
 local Pentos={8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}
 local easyPentos={10,11,14,19,20,23,24,25} -- P Q T5 J5 L5 N H I5
@@ -51,11 +51,11 @@ local function sequence_pento_arc(P,d,init)
                 if not d.bag2[1] then
                     TABLE.append(d.bag2,hardPentos)
                 end
-                table.insert(d.bag1,table.remove(d.bag2,P:random(#d.bag2)))
+                table.insert(d.bag1,table.remove(d.bag2,P:random('seq',#d.bag2)))
             end
         end
     end
-    return table.remove(d.bag1,P:random(#d.bag1))
+    return table.remove(d.bag1,P:random('seq',#d.bag1))
 end
 
 RegFuncLib({

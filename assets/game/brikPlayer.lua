@@ -692,7 +692,7 @@ function BP:getBrik(shapeData)
         shapeID=shapeData.id
         shapeName=shapeData.name or "?"
         shapeMat=TABLE.copy(shapeData.shape)
-        shapeColor=shapeData.color or self.settings.palette[shapeID] or self:random(64)
+        shapeColor=shapeData.color or self.settings.palette[shapeID] or self:random('color',999)
     else
         ---@cast shapeData Techmino.Brik.Name | Techmino.Brik.ID
         local brik=Brik.get(shapeData)
@@ -700,7 +700,7 @@ function BP:getBrik(shapeData)
         shapeID=brik.id
         shapeName=brik.name
         shapeMat=TABLE.copy(brik.shape)
-        shapeColor=self.settings.palette[shapeID]
+        shapeColor=self.settings.palette[shapeID] or self:random('color',999)
     end
     self.pieceCount=self.pieceCount+1
 
@@ -843,7 +843,7 @@ function BP:parseAtkInfo(g)
     local count=1+max((g.fatal-50)/20,0)
     local splitRate=0
     if count~=floor(count) then
-        if self:random()>count%1 then
+        if self:random('atkRound')>count%1 then
             splitRate=count%1/2
             count=floor(count)
         else
@@ -896,7 +896,7 @@ function BP:calculateHolePos(count,splitRate,copyRate,sandwichRate)
         -- end
         -- print(str)
 
-        local r=sum*self:random()
+        local r=sum*self:random('attackHoleGen')
         for i=1,#weights do
             r=r-weights[i]
             if r<=0 then
@@ -1308,7 +1308,7 @@ function BP:riseGarbage(holePos,count)
                 L[holePos[i]]=false
             end
         else
-            L[self:random(w)]=false
+            L[self:random('garbageHoleGen',w)]=false
         end
 
         -- Add connection

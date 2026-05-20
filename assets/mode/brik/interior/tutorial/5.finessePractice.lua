@@ -54,15 +54,15 @@ local function pushFinesseTarget(P,n)
     local piece=P.nextQueue[n]
     ---@cast piece Techmino.Piece
     local matrix=TABLE.copy(piece.matrix)
-    local dir=MATH.selectFreq(P:random()*15,{3,5,2,5})-1
-    if P:random()*62>P.modeData.finesseCombo then dir=(dir+1)%4 end
+    local dir=MATH.selectFreq(P:random('tut5')*15,{3,5,2,5})-1
+    if P:random('tut5')*62>P.modeData.finesseCombo then dir=(dir+1)%4 end
     for _=1,dir do matrix=TABLE.rotate(matrix,'R') end
     local xList=TABLE.copy(finesseData[piece.shape][dir+1])
     local freqFinetune=-math.min(unpack(xList))*0.626+math.max(10-P.modeData.finesseCombo/2.6,0)
     for i=1,#xList do
         xList[i]=xList[i]+freqFinetune
     end
-    local x=MATH.selectFreq(P:random()*MATH.sum(xList),xList)
+    local x=MATH.selectFreq(P:random('tut5')*MATH.sum(xList),xList)
     table.insert(P.modeData.targetPreview,{
         x=x,
         matrix=matrix,

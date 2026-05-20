@@ -98,7 +98,7 @@ return {
                     {8,8,8,8,8,8,8,8,8,8},
                     {8,8,8,8,8,8,8,8,8,8},
                 }
-                local r=P:random(4,6)
+                local r=P:random('tut1',4,6)
                 d[1][r],d[2][r],d[1][r+1],d[2][r+1]=0,0,0,0
                 P:setField(d)
             end},
@@ -117,7 +117,7 @@ return {
                     {8,8,8,8,8,8,8,8,8,8},
                     {8,8,8,8,8,8,8,8,8,8},
                 }
-                local r=P:coin(3,7)
+                local r=P:coin('tut1',3,7)
                 d[1][r],d[2][r],d[1][r+1],d[2][r+1]=0,0,0,0
                 P:setField(d)
             end},
@@ -141,7 +141,7 @@ return {
                     {8,8,8,8,8,8,8,8,8,8},
                     {8,8,8,8,8,8,8,8,8,8},
                 }
-                local r=P:coin(2,7)
+                local r=P:coin('tut1',2,7)
                 d[1][r],d[1][r+1],d[1][r+2],d[2][r+1]=0,0,0,0
                 P:setField(d)
             end},
@@ -161,7 +161,7 @@ return {
                     {8,8,8,8,8,8,8,8,8,8},
                     {8,8,8,8,8,8,8,8,8,8},
                 }
-                local r=P:coin(3,8)
+                local r=P:coin('tut1',3,8)
                 d[1][r+1],d[1][r],d[2][r],d[3][r]=0,0,0,0
                 P:setField(d)
             end},
@@ -182,7 +182,7 @@ return {
                     {8,8,8,8,8,8,8,8,8,8},
                     {8,8,8,8,8,8,8,8,8,8},
                 }
-                local r=2^P:random(3)
+                local r=2^P:random('tut1',3)
                 for i=1,4 do d[i][r]=0 end
                 P:setField(d)
             end},

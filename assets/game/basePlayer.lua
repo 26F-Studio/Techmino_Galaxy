@@ -12,11 +12,12 @@ local sign,expApproach=MATH.sign,MATH.expApproach
 ---@field isMain boolean
 ---@field sound boolean
 ---@field remote boolean
+---@field seed number
+---@field rngPool table<string, love.RandomGenerator>
 ---@field settings Techmino.Mode.Setting.Brik | Techmino.Mode.Setting.Gela | Techmino.Mode.Setting.Acry
 ---@field buffedKey table
 ---@field modeData Techmino.PlayerModeData Warning: may contain anything, choose variable name carefully, suggested to be >=6 characters in total & multiple words (eg. `tspinCount`)
 ---@field soundTimeHistory table
----@field RND love.RandomGenerator
 ---@field pos {x:number, y:number, k:number, a:number, dx:number, dy:number, dk:number, da:number, vx:number, vy:number, vk:number, va:number}
 ---@field finished Techmino.EndReason | boolean Did game finish
 ---@field realTime number Real time, [float] s
@@ -167,26 +168,30 @@ end
 --------------------------------------------------------------
 -- Game methods
 
+function P:getRNG(t)
+    if not self.rngPool[t] then self.rngPool[t]=love.math.newRandomGenerator(self.seed) end
+    return self.rngPool[t]
+end
 ---Random Int or 0~1
-function P:random(a,b)
-    return self.RND:random(a,b)
+function P:random(t,a,b)
+    return self:getRNG(t):random(a,b)
 end
 ---Random Float
-function P:rand(a,b)
-    return a+self.RND:random()*(b-a)
+function P:rand(t,a,b)
+    return a+self:getRNG(t):random()*(b-a)
 end
 ---Random value
-function P:coin(head,tail)
-    return self.RND:random()>.5 and head or tail
+function P:coin(t,head,tail)
+    return self:getRNG(t):random()>.5 and head or tail
 end
 ---Random boolean
-function P:roll(chance)
-    return self.RND:random()<(chance or .5)
+function P:roll(t,chance)
+    return self:getRNG(t):random()<(chance or .5)
 end
 ---Random int with custom weight
-function P:randFreq(fList)
+function P:randFreq(t,fList)
     local sum=MATH.sum(fList)
-    local r=self.RND:random()*sum
+    local r=self:getRNG(t):random()*sum
     for i=1,#fList do
         r=r-fList[i]
         if r<0 then return i end
@@ -753,12 +758,12 @@ function P.new(remote)
     self.isMain=false
     self.sound=false
     self.remote=not not remote
+    self.seed=GAME.seed
+    self.rngPool={}
 
     self.buffedKey={}
     self.modeData={target={},music={id='intensity'}}
     self.soundTimeHistory=setmetatable({},soundTimeMeta)
-
-    self.RND=love.math.newRandomGenerator(GAME.seed+626)
 
     self.pos={
         x=0,y=0,k=1,a=0,

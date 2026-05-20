@@ -582,6 +582,7 @@ function AP:tickStep()
     end
 
     if IsKeyDown('f4') then
+        -- TODO: debug
         local acry=F[1][1]
         if acry then
             print("--------------------------")

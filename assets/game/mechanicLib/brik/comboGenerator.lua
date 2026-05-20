@@ -4,17 +4,17 @@ local comboGenerator={}
 local function newMap(P)
     local F=P.field
     local w=P.settings.fieldW
-    local difficulty=MATH.clamp(P.modeData.levelsCleared+1+P:random(-1,1),1,10)
-    local height=10+math.floor((difficulty+1)/2)+P:random(-2,2)
+    local difficulty=MATH.clamp(P.modeData.levelsCleared+1+P:random('comboGen',-1,1),1,10)
+    local height=10+math.floor((difficulty+1)/2)+P:random('comboGen',-2,2)
     local wellWidth=MATH.clamp(2+math.floor(difficulty/4),2,4)
-    local widthExpandCounter=math.floor(15-difficulty)+P:random(-2,2)
+    local widthExpandCounter=math.floor(15-difficulty)+P:random('comboGen',-2,2)
     local wellL,wellR
 
     if wellWidth==3 then
         widthExpandCounter=widthExpandCounter+3-widthExpandCounter%3
     end
 
-    wellL=P:random(1,w+1-wellWidth)
+    wellL=P:random('comboGen',1,w+1-wellWidth)
     wellR=wellL+wellWidth-1
 
     TABLE.clear(F._matrix)
@@ -28,28 +28,28 @@ local function newMap(P)
         if wellR-wellL+1<4 then
             widthExpandCounter=widthExpandCounter-1
             if widthExpandCounter==0 then
-                if P:random()<.5 then wellL=wellL-1 else wellR=wellR+1 end
+                if P:random('comboGen')<.5 then wellL=wellL-1 else wellR=wellR+1 end
                 if wellL<1 then wellL,wellR=wellL+1,wellR+1 end
                 if wellR>w then wellL,wellR=wellL-1,wellR-1 end
                 wellL,wellR=MATH.clamp(wellL,1,10),MATH.clamp(wellR,1,10)
-                widthExpandCounter=math.floor(12-difficulty)+P:random(-1,2)
+                widthExpandCounter=math.floor(12-difficulty)+P:random('comboGen',-1,2)
             end
         end
     end
 
     -- 4w base
     if wellWidth==4 then
-        if P:random()<.626 then -- 6-res
+        if P:random('comboGen')<.626 then -- 6-res
             for x=wellL,wellR do
                 for y=1,2 do
                     F._matrix[y][x]=P:newCell(777)
                 end
             end
-            F._matrix[1][P:random(wellL,wellR)]=false
-            F._matrix[2][P:random(wellL,wellR)]=false
+            F._matrix[1][P:random('comboGen',wellL,wellR)]=false
+            F._matrix[2][P:random('comboGen',wellL,wellR)]=false
         else -- 3-res
-            if P:random()<.626 then -- Hook pattern
-                local L=P:random()<.5
+            if P:random('comboGen')<.626 then -- Hook pattern
+                local L=P:random('comboGen')<.5
                 F._matrix[1][L and wellL   or wellR  ]=P:newCell(777)
                 F._matrix[2][L and wellL   or wellR  ]=P:newCell(777)
                 F._matrix[2][L and wellL+1 or wellR-1]=P:newCell(777)
@@ -57,7 +57,7 @@ local function newMap(P)
                 for x=wellL,wellR do
                     F._matrix[1][x]=P:newCell(777)
                 end
-                F._matrix[1][P:random(wellL,wellR)]=false
+                F._matrix[1][P:random('comboGen',wellL,wellR)]=false
             end
         end
     end

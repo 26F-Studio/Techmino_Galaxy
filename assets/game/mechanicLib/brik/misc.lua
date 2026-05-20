@@ -152,7 +152,7 @@ do -- Board Transition
     end
     function misc.spinBoard(P,dx)
         if dx==0 then return end
-        dx=dx and dx%P.settings.fieldW or P:random(1,P.settings.fieldW-1)
+        dx=dx and dx%P.settings.fieldW or P:random('spinBoard',1,P.settings.fieldW-1)
         if dx>=P.settings.fieldW/2 then dx=dx-P.settings.fieldW end
         local ip=dx>0 and 1 or P.settings.fieldW
         local rp=dx>0 and P.settings.fieldW or 1
@@ -181,7 +181,7 @@ do -- Random Press
         if not P.timing then return end
         P.modeData.randomPressTimer=P.modeData.randomPressTimer-1
         if P.modeData.randomPressTimer<=0 then
-            local r=P:random(P.holdTime==0 and 5 or 4)
+            local r=P:random('randomPressKey',P.holdTime==0 and 5 or 4)
             if r==1 then
                 P:moveLeft()
             elseif r==2 then
@@ -193,7 +193,7 @@ do -- Random Press
             elseif r==5 then
                 P:hold()
             end
-            P.modeData.randomPressTimer=P:random(minInterval,maxInterval)
+            P.modeData.randomPressTimer=P:random('randomPressTimer',minInterval,maxInterval)
         end
     end
 end
@@ -235,13 +235,13 @@ do -- Wind
             md.invertPoints=false
         else
             md.wind_enabled=true
-            md.windStrength=(P:random()<.5 and -1 or 1)*P:random(1260,1600)
+            md.windStrength=(P:random('wind')<.5 and -1 or 1)*P:random('wind',1260,1600)
             md._windStrength=0
             md.windCounter=0
 
             md.invertPoints={}
-            for i=1,P:random(4,6) do
-                md.invertPoints[i]=P:random(2,38)
+            for i=1,P:random('wind',4,6) do
+                md.invertPoints[i]=P:random('wind',2,38)
             end
             table.sort(md.invertPoints)
         end
@@ -268,7 +268,7 @@ do -- Wind
             while md.invertPoints[1] and P.stat.line>md.invertPoints[1] do
                 rem(md.invertPoints,1)
             end
-            md.windStrength=-MATH.sign(md.windStrength)*P:random(1260,1600)
+            md.windStrength=-MATH.sign(md.windStrength)*P:random('wind',1260,1600)
         end
     end
     function misc.wind_event_drawInField(P)
@@ -294,7 +294,7 @@ do -- Obstacle
         for y=1,maxHeight do
             F._matrix[y]=TABLE.new(false,w)
             repeat
-                r1=P:random(1,w)
+                r1=P:random('obstacle',1,w)
             until abs(r1-r0)>=minDist;
             F._matrix[y][r1]=P:newCell(777)
             r0=r1
@@ -302,14 +302,14 @@ do -- Obstacle
         for _=1,extraCount do
             local x,y
             repeat
-                x=P:random(1,w)
-                y=floor(P:random()^2.6*(maxHeight-1))+1
+                x=P:random('obstacle',1,w)
+                y=floor(P:random('obstacle')^2.6*(maxHeight-1))+1
             until not F._matrix[y][x]
             F._matrix[y][x]=P:newCell(777)
         end
         for y=1,maxHeight do
             if TABLE.count(F._matrix[y],false)==w then
-                F._matrix[y][P:random(1,w)]=false
+                F._matrix[y][P:random('obstacle',1,w)]=false
             end
         end
     end

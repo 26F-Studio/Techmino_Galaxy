@@ -17,7 +17,7 @@ end
 -- Shuffle a list with specified random generator
 local function shuffle(L,P)
     for i=#L,2,-1 do
-        local r=P.RND:random(i)
+        local r=P:random('seq',i)
         L[i],L[r]=L[r],L[i]
     end
 end
@@ -35,23 +35,23 @@ local sequence={
 bag7=function(P,d,init) -- The where we begin
     if init then d.bag={} return end
     supply(d.bag,Tetros)
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 bag7p1=function(P,d,init) -- bag7+?
     if init then d.bag={} return end
     if supply(d.bag,Tetros) then
-        d.bag[8]=P:random(7)
+        d.bag[8]=P:random('seq',7)
     end
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 bag7m1p1=function(P,d,init) -- bag7-?+?
     if init then d.bag={} return end
     if supply(d.bag,Tetros) then
-        d.bag[P:random(7)]=P:random(7)
+        d.bag[P:random('seq',7)]=P:random('seq',7)
     end
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 bag7p7p2_power=function(P,d,init) -- bag7+7+TI
@@ -59,7 +59,7 @@ bag7p7p2_power=function(P,d,init) -- bag7+7+TI
     if supply(d.bag,Tetros,2) then
         append(d.bag,{5,7})
     end
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 bag7p7p7p5_power=function(P,d,init) -- bag7+7+7+TTOII
@@ -67,13 +67,13 @@ bag7p7p7p5_power=function(P,d,init) -- bag7+7+7+TTOII
     if supply(d.bag,Tetros,3) then
         append(d.bag,{5,5,6,7,7})
     end
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 bag7p7m2_drought=function(P,d,init) -- bag7+7-II
     if init then d.bag={} return end
     if supply(d.bag,Tetros) then rem(d.bag) rem(d.bag) end
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 bag7p6_flood=function(P,d,init) -- bag7+SSSZZZ
@@ -81,31 +81,31 @@ bag7p6_flood=function(P,d,init) -- bag7+SSSZZZ
     if supply(d.bag,Tetros) then
         append(d.bag,{1,1,1,2,2,2})
     end
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 bag4_tide=function(P,d,init) -- bag4(SZOI)
     if init then d.bag={} return end
     if not d.bag[1] then d.bag={1,2,6,7} end
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 bag4_rect=function(P,d,init) -- bag4(JLOI)
     if init then d.bag={} return end
     if not d.bag[1] then d.bag={3,4,6,7} end
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 bag3_saw=function(P,d,init) -- bag3(SZT)
     if init then d.bag={} return end
     if not d.bag[1] then d.bag={1,2,5} end
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 bag3_sea=function(P,d,init) -- bag3(III)
     if init then d.bag={} return end
     if not d.bag[1] then d.bag={7,7,7} end
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 -- General Bag Variants
@@ -114,9 +114,9 @@ bag7_p1fromBag7=function(P,d,init) -- bag7+1(from another bag7)
     if init then d.bag,d.extra={},{} return end
     if supply(d.bag) then
         supply(d.extra,Tetros)
-        d.bag[8]=rem(d.extra,P:random(#d.extra))
+        d.bag[8]=rem(d.extra,P:random('seq',#d.extra))
     end
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 bag7_stable=function(P,d,init) -- bag7, but difference between adjacent bags is small
@@ -131,7 +131,7 @@ bag7_stable=function(P,d,init) -- bag7, but difference between adjacent bags is 
         local l=d.bag2
         local i=#l-1
         while i>=1 do
-            if P:roll(.42) then
+            if P:roll('seq',.42) then
                 l[i],l[i+1]=l[i+1],l[i]
                 i=i-1
             end
@@ -150,11 +150,11 @@ bag7_sprint=function(P,d,init) -- bag7, but no early S/Z/O and shuffling range s
 
         -- First bag, try to prevent early S/Z/O
         mixture=copy(Tetros)
-        for i=7,2,-1 do ins(mixture,rem(mixture,P:random(1,i))) end
+        for i=7,2,-1 do ins(mixture,rem(mixture,P:random('seq',1,i))) end
         local szo={[1]=0,[2]=0,[6]=0}
         for _=1,2 do
             if szo[mixture[1]] then
-                ins(mixture,P:random(2,7),rem(mixture,1))
+                ins(mixture,P:random('seq',2,7),rem(mixture,1))
             end
         end
         append(d.start,mixture)
@@ -163,7 +163,7 @@ bag7_sprint=function(P,d,init) -- bag7, but no early S/Z/O and shuffling range s
         local rndRange=3
         repeat
             local mixer={}
-            for _=1,7 do ins(mixer,rem(mixture,P:random(min(#mixture,rndRange)))) end
+            for _=1,7 do ins(mixer,rem(mixture,P:random('seq',min(#mixture,rndRange)))) end
             append(d.start,mixer)
             mixture=mixer
             rndRange=rndRange+1
@@ -181,7 +181,7 @@ bag7_sprint=function(P,d,init) -- bag7, but no early S/Z/O and shuffling range s
     else
         -- Completely random from fifth bag
         supply(d.bag,Tetros)
-        return rem(d.bag,P:random(#d.bag))
+        return rem(d.bag,P:random('seq',#d.bag))
     end
 end,
 
@@ -189,7 +189,7 @@ bag7_luckyT=function(P,d,init) -- bag7, but T piece is more likely to appear lat
     if init then
         d.bag={}
         d.bagCount=0
-        d.tSpikes={P:random(4,6),P:random(10,16)}
+        d.tSpikes={P:random('seq',4,6),P:random('seq',10,16)}
         return
     end
     if not d.bag[1] then
@@ -200,14 +200,14 @@ bag7_luckyT=function(P,d,init) -- bag7, but T piece is more likely to appear lat
         local r
         if d.bagCount==d.tSpikes[1] then
             -- T Spike Double
-            r=P:random(5,7)
+            r=P:random('seq',5,7)
             rem(d.tSpikes,1)
         else
             -- Late 10▔\_20 Early
-            r=P:random(3,7)
-            r=r-P:random(0,math.floor(max(d.bagCount/2.6-4.2,0)))
-            r=r-P:random(0,math.floor(d.bagCount^0.42))
-            if d.bagCount>6.2 then r=r-P:random(1,3) end
+            r=P:random('seq',3,7)
+            r=r-P:random('seq',0,math.floor(max(d.bagCount/2.6-4.2,0)))
+            r=r-P:random('seq',0,math.floor(d.bagCount^0.42))
+            if d.bagCount>6.2 then r=r-P:random('seq',1,3) end
         end
 
         r=min(max(r,1),7)
@@ -220,9 +220,9 @@ bag7_steal1=function(P,d,init) -- bag7, but each bag steals a piece from the nex
     if init then d.bag,d.victim={},copy(Tetros) return end
     if supply(d.bag,Tetros) then
         d.bag,d.victim=d.victim,d.bag
-        ins(d.bag,rem(d.victim,P:random(#d.victim)))
+        ins(d.bag,rem(d.victim,P:random('seq',#d.victim)))
     end
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 bag7_1stSplit3211=function(P,d,init) -- bag7, but split first bag 3+2+1+1-ly into next four bags
@@ -239,31 +239,31 @@ bag7_1stSplit3211=function(P,d,init) -- bag7, but split first bag 3+2+1+1-ly int
                 d.bagCount==1 and 3 or
                 d.bagCount==2 and 2 or
                 1
-            do ins(d.bag,rem(d.victim,P:random(#d.victim))) end
+            do ins(d.bag,rem(d.victim,P:random('seq',#d.victim))) end
             if #d.victim==0 then d.bagCount=nil end
         end
     end
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 bag7_twin=function(P,d,init) -- bag7, but two bags work in turn
     if init then d.bag1,d.bag2={},{} return end
     d.bag1,d.bag2=d.bag2,d.bag1
     supply(d.bag1,Tetros)
-    return rem(d.bag1,P:random(#d.bag1))
+    return rem(d.bag1,P:random('seq',#d.bag1))
 end,
 
 bag7_pool4=function(P,d,init)
     if init then
         d.bag,d.pool=copy(Tetros),{}
         for _=1,4-1 do
-            ins(d.pool,rem(d.bag,P:random(#d.bag)))
+            ins(d.pool,rem(d.bag,P:random('seq',#d.bag)))
         end
         return
     end
     supply(d.bag,Tetros)
-    ins(d.pool,rem(d.bag,P:random(#d.bag)))
-    return rem(d.pool,P:random(#d.pool))
+    ins(d.pool,rem(d.bag,P:random('seq',#d.bag)))
+    return rem(d.pool,P:random('seq',#d.pool))
 end,
 
 -- Others
@@ -282,7 +282,7 @@ balanced=function(P,d,init) -- TODO, now exactly same with bag7
         d._cache[i]=max(d.targetCount[i]-d.realCount[i],0)
     end
     local sum=MATH.sum(d._cache)
-    local r=P:random()*sum
+    local r=P:random('seq')*sum
     for i=1,#d._cache do
         r=r-d._cache[i]
         if r<=0 then
@@ -295,10 +295,10 @@ end,
 
 his4_roll4=function(P,d,init)
     if init then d.his=TABLE.new(0,4) return end
-    local r=P:random(7)
+    local r=P:random('seq',7)
     for _=1,4 do
         if TABLE.find(d.his,r) then
-            r=P:random(7)
+            r=P:random('seq',7)
         else
             break
         end
@@ -312,7 +312,7 @@ c2=function(P,d,init)
     if init then d.weight=TABLE.new(0,7) return end
     local maxK=1
     for i=1,7 do
-        d.weight[i]=d.weight[i]*.5+P:random()
+        d.weight[i]=d.weight[i]*.5+P:random('seq')
         if d.weight[i]>d.weight[maxK] then
             maxK=i
         end
@@ -324,7 +324,7 @@ end,
 messy=function(P,d,init) -- no repeating random
     if init then return end
     repeat
-        d.recent=P:random(7)
+        d.recent=P:random('seq',7)
     until d.recent~=d.prev
     d.prev=d.recent
     return d.recent
@@ -332,7 +332,7 @@ end,
 
 random=function(P,d,init) -- pure random
     if init then d.flandre='cute' return end
-    return P:random(7)
+    return P:random('seq',7)
 end,
 
 -- Pento
@@ -340,7 +340,7 @@ end,
 bag18_pento=function(P,d,init)
     if init then d.bag={} return end
     supply(d.bag,Pentos)
-    return rem(d.bag,P:random(#d.bag))
+    return rem(d.bag,P:random('seq',#d.bag))
 end,
 
 bag8_pentoEZ_p4fromBag10_pentoHD=function(P,d,init)
@@ -348,10 +348,10 @@ bag8_pentoEZ_p4fromBag10_pentoHD=function(P,d,init)
     if supply(d.bag1,easyPentos) then
         for _=1,4 do
             supply(d.bag2,hardPentos)
-            ins(d.bag1,rem(d.bag2,P:random(#d.bag2)))
+            ins(d.bag1,rem(d.bag2,P:random('seq',#d.bag2)))
         end
     end
-    return rem(d.bag1,P:random(#d.bag1))
+    return rem(d.bag1,P:random('seq',#d.bag1))
 end,
 
 }
@@ -389,7 +389,7 @@ for variant,data in next,{
 
             d.distances={}
             for i=1,d.len do d.distances[i]=i end
-            for i=d.len,2,-1 do ins(d.distances,rem(d.distances,P:random(1,i))) end
+            for i=d.len,2,-1 do ins(d.distances,rem(d.distances,P:random('seq',1,i))) end
 
             d.tempWei=TABLE.new(0,d.len)
             return
@@ -400,7 +400,7 @@ for variant,data in next,{
             d.tempWei[i]=d.weights[d.distances[i]] or d.weights[#d.weights]
             sum=sum+d.tempWei[i]
         end
-        local r=P:random()*sum
+        local r=P:random('seq')*sum
         for i=1,d.len do
             r=r-d.tempWei[i]
             if r<=0 then

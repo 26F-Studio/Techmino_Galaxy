@@ -45,7 +45,7 @@ function survivor.scattered_event_always(P)
         md.waveTimer=md.curWaveTime
         GAME.send(false,GAME.initAtk{
             target=GAME.mainID,
-            power=P:random(0,10)+P:random(-5,5)>=P.field:getHeight() and 2 or 1,
+            power=P:random('survivor',0,10)+P:random('survivor',-5,5)>=P.field:getHeight() and 2 or 1,
             hardness=wave<60 and 2 or 3,
             mode=0,
             time=wave<50 and 100e3/(50+wave)-1000 or 0,
@@ -54,7 +54,7 @@ function survivor.scattered_event_always(P)
                     wave<100 and MATH.interpolate(0,20,100,60,wave) or
                     wave<200 and MATH.interpolate(100,60,200,100,wave) or
                     100
-                )+math.floor((P:random()*2-1)*min(wave,100)/5),
+                )+math.floor((P:random('survivor')*2-1)*min(wave,100)/5),
                 0,100
             ),
             -- speed=?,
@@ -79,7 +79,7 @@ function survivor.power_event_always(P)
         md.waveTimer=md.curWaveTime
         GAME.send(false,GAME.initAtk{
             target=GAME.mainID,
-            power=4+P:random(0,MATH.clamp(math.floor(wave/30-P.field:getHeight()/10),0,3)),
+            power=4+P:random('survivor',0,MATH.clamp(math.floor(wave/30-P.field:getHeight()/10),0,3)),
             mode=0,
             time=
                 (wave<50 and 100e3/(100+2*wave)+500 or 1000)+
@@ -148,7 +148,7 @@ function survivor.backfire_break_event_beforeSend(P,atk) -- Recover power Like "
     local section=0
     for i=1,P.modeData._currentPower do
         section=section+1
-        if P:random()<.5 or i==P.modeData._currentPower then
+        if P:random('survivor')<.5 or i==P.modeData._currentPower then
             table.insert(powerList,section)
             section=0
         end

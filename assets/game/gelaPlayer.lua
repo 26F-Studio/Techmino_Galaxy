@@ -446,7 +446,7 @@ end
 function GP:shuffleColor(n)
     local list=self.settings.colorSet
     for i=n,2,-1 do
-        local r=self:random(i)
+        local r=self:random('shuffleColor',i)
         list[i],list[r]=list[r],list[i]
     end
 end
@@ -922,7 +922,7 @@ function GP:dropGarbage(count)
             F:setCell({
                 color=555,
                 diggable=true,
-            },table.remove(pos,self:random(w+1-n)),curGenY)
+            },table.remove(pos,self:random('garbageGen',w+1-n)),curGenY)
         end
     end
 end

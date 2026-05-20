@@ -16,7 +16,7 @@ return {
             playerInit=function(P)
                 P.modeData.lineStay=0
                 mechLib.brik.dig.event_playerInit(P)
-                P:riseGarbage(math.floor(P.settings.fieldW*.5+1+P:rand(-2,2)))
+                P:riseGarbage(math.floor(P.settings.fieldW*.5+1+P:rand('mode_excavate',-2,2)))
                 local T=mechLib.common.task
                 T.install(P)
                 T.add(P,'excavate_shale',     'modeTask_excavate_shale_title',     'modeTask_excavate_shale_desc')

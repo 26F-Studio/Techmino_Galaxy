@@ -37,7 +37,7 @@ for _,bagCount in next,{2,4,8} do for colors=3,8 do
     sequence['twin_'..bagCount..'S'..colors..'C']=function(P,d,init)
         if init then d.bag={} return end
         supply(d.bag,TwinSet[colors],bagCount)
-        return rem(d.bag,P:random(#d.bag))
+        return rem(d.bag,P:random('seq',#d.bag))
     end
 end end
 
@@ -53,7 +53,7 @@ for _,bagCount in next,{2,4,8} do for colors=3,8 do
     sequence['twin_'..bagCount..'S'..colors..'NRC']=function(P,d,init)
         if init then d.bag={} return end
         supply(d.bag,NRTwinSet[colors],bagCount)
-        return rem(d.bag,P:random(#d.bag))
+        return rem(d.bag,P:random('seq',#d.bag))
     end
 end end
 

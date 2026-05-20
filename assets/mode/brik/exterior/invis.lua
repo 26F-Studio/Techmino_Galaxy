@@ -85,7 +85,7 @@ function haunted.p2_afterSpawn(P)
         ins(cellList,N[y][x])
     end end end
     for _,cell in next,cellList do
-        if P:roll(P.modeData.cyanizeRate/100) then
+        if P:roll('mode_invis',P.modeData.cyanizeRate/100) then
             cell.color=186
         end
     end
@@ -99,8 +99,8 @@ function haunted.p3_afterSpawn(P)
         ins(cellList,N[y][x])
     end end end
     for _,cell in next,cellList do
-        if P:roll(P.modeData.deColorRate/100) then
-            cell.color=P:roll(P.modeData.darkRate/100) and 222 or 444
+        if P:roll('mode_invis',P.modeData.deColorRate/100) then
+            cell.color=P:roll('mode_invis',P.modeData.darkRate/100) and 222 or 444
         end
     end
 end

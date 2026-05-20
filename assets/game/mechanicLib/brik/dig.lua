@@ -5,8 +5,8 @@ local garbageTypes={
     line=function(P)
         if not P.modeData.dig_line_init then
             P.modeData.dig_line_init=true
-            P.modeData.risePosition=math.floor((P.settings.fieldW+1)/2+P:random())
-            P.modeData.riseDirection=P:random(0,1)*2-1
+            P.modeData.risePosition=math.floor((P.settings.fieldW+1)/2+P:random('dig'))
+            P.modeData.riseDirection=P:random('dig',0,1)*2-1
         end
         P:riseGarbage(P.modeData.risePosition)
         if P.modeData.risePosition<=1 or P.modeData.risePosition>=P.settings.fieldW then
@@ -26,7 +26,7 @@ local garbageTypes={
         for i=1,#d do
             sum=sum+d[i]
         end
-        local r=P:random(sum)
+        local r=P:random('dig',sum)
         for x=1,#d do
             r=r-d[x]
             if r<=0 then
@@ -51,7 +51,7 @@ local garbageTypes={
     end,
     shale=function(P)
         P:riseGarbage(P:calculateHolePos(
-            P:random(2,3), -- count
+            P:random('dig',2,3), -- count
             -.2, -- splitRate
             -.1, -- copyRate
             -1   -- sandwichRate
@@ -60,7 +60,7 @@ local garbageTypes={
     end,
     volcanics=function(P)
         P:riseGarbage(P:calculateHolePos(
-            P:random(3,4), -- count
+            P:random('dig',3,4), -- count
             .2,  -- splitRate
             -.1, -- copyRate
             .1   -- sandwichRate

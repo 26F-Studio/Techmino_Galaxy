@@ -31,12 +31,12 @@ local pieceShapes do
     }
 end
 local function generateSolidGarbage(P,field,w,growRate,splitRate)
-    local count=math.floor(P:rand(#field<3 and 1 or 0,growRate+1)*2)
-    local pos=P:random(1,#field+1)
+    local count=math.floor(P:rand('acGen',#field<3 and 1 or 0,growRate+1)*2)
+    local pos=P:random('acGen',1,#field+1)
     while count>0 do
         table.insert(field,pos,TABLE.new(true,w))
-        if P:random()<splitRate then
-            pos=P:random()<.5 and pos-1 or pos+2
+        if P:random('acGen')<splitRate then
+            pos=P:random('acGen')<.5 and pos-1 or pos+2
         end
         pos=MATH.clamp(pos,1,#field+1)
         count=count-1
@@ -186,7 +186,7 @@ function allclearGenerator._shuffleSeq(P,seq,holdSlot)
     for i=1,pickArea do pointers[i]=i end
 
     for i=1,#backup do
-        local pick=P:random(#pointers)
+        local pick=P:random('acGen',#pointers)
         seq[pointers[pick]]=backup[i]
         pointers[pick]=i+#pointers
         if pointers[pick]>#backup then
@@ -256,7 +256,7 @@ function allclearGenerator._generateQuestion(P,args)
                 piece.score=(1+highRate*.62)^piece.y
                 totalScore=totalScore+piece.score
             end
-            local r=totalScore*P:random()
+            local r=totalScore*P:random('acGen')
             local piece
             for i=1,#pieces do
                 r=r-pieces[i].score
@@ -335,7 +335,7 @@ function allclearGenerator._getLibQuestion(P,args)
     local attempts=0
     local r
     while true do
-        r=P:random(#seqPool)
+        r=P:random('acGen',#seqPool)
         attempts=attempts+1
         if attempts>26 then break end
         if not args1.avoidRepeat then break end
@@ -349,7 +349,7 @@ function allclearGenerator._getLibQuestion(P,args)
 
     field=TABLE.copy(field)
     seq=STRING.atomize(seq)
-    if 1 or P:roll() then
+    if P:roll('acGen') then
         for i=1,#seq do
             seq[i]=
                 seq[i]=='Z' and 'S' or

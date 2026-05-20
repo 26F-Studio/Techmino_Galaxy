@@ -365,7 +365,7 @@ do -- hypersonic (they are variations of marathon, aren't they?)
                         for x=1,P.settings.fieldW do
                             local c=P.field:getCell(x,y)
                             if c then
-                                c.visTimer=P:random(endVisTime1,endVisTime2)
+                                c.visTimer=P:random('marathon',endVisTime1,endVisTime2)
                                 c.fadeTime=endFadeTime
                             end
                         end
@@ -392,10 +392,10 @@ do -- hypersonic (they are variations of marathon, aren't they?)
                 if md.flashTimer==0 then
                     for y=1,min(P.field:getHeight(),2*P.settings.fieldW) do
                         for x=1,P.settings.fieldW do
-                        if P:random()<flashProbability then
+                        if P:random('marathon')<flashProbability then
                                 local c=P.field:getCell(x,y)
                                 if c then
-                                    c.visTimer=max(c.visTimer or 0,P:random(flashVisTime1,flashVisTime2))
+                                    c.visTimer=max(c.visTimer or 0,P:random('marathon',flashVisTime1,flashVisTime2))
                                     c.fadeTime=max(c.fadeTime or 0,flashFadeTime)
                                 end
                             end
