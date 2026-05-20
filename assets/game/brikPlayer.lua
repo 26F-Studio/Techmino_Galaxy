@@ -2063,6 +2063,7 @@ local baseEnv={
     freshLockInASP=true,          -- Fresh lockDelay in auto shift period
 
     -- Other
+    maxActionHistory=260,
     IRSpushUp=true, -- Use bottom-align when IRS or suffocate
     strictLockout=false, -- Lockout causes game over
     script=false,

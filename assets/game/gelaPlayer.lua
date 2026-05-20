@@ -1468,6 +1468,7 @@ local baseEnv={
     freshLockInASP=true,
 
     -- Other
+    maxActionHistory=260,
     script=false,
     IRSpushUp=true,
     skin='gela_jelly',

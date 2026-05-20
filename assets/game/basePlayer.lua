@@ -354,6 +354,9 @@ function P:press(act)
 
     if self.actions[act] and not self.keyState[act] then
         self.keyState[act]=true
+        if #self.actionHistory>=self.settings.maxActionHistory then
+            rem(self.actionHistory,1)
+        end
         ins(self.actionHistory,{0,self.time,act})
         self.actions[act].press(self)
     end
@@ -367,6 +370,9 @@ function P:release(act)
 
     if self.actions[act] and self.keyState[act] then
         self.keyState[act]=false
+        if #self.actionHistory>=self.settings.maxActionHistory then
+            rem(self.actionHistory,1)
+        end
         ins(self.actionHistory,{1,self.time,act})
         self.actions[act].release(self)
     end

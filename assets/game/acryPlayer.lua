@@ -736,6 +736,7 @@ local baseEnv={
     asp=26,
 
     -- Other
+    maxActionHistory=260,
     script=false,
 
     -- May be overrode with user setting
