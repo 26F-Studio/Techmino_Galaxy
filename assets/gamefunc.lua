@@ -396,15 +396,15 @@ function SetSafeEnv(func)
     setfenv(func,TABLE.copyAll(sandBoxEnv))
 end
 
-regFuncToStr,regStrToFunc={},{}
+RegFuncToStr,RegStrToFunc={},{}
 
 ---Flatten a table of functions into string-to-function and function-to-string maps
 ---@param obj table | function
 ---@param path string
 function RegFuncLib(obj,path)
     if type(obj)=='function' or type(obj)=='table' and rawget(obj,'__register') then
-        regFuncToStr[obj]=path
-        regStrToFunc[path]=obj
+        RegFuncToStr[obj]=path
+        RegStrToFunc[path]=obj
     elseif type(obj)=='table' then
         for k,v in next,obj do
             if k~='__index' then

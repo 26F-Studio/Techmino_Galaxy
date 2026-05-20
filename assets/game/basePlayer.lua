@@ -828,7 +828,7 @@ local function dump(self,L,t,path)
             elseif T=='boolean' then
                 k='['..k..']='
             elseif T=='function' then
-                k='["FUNC:'..regFuncToStr[k]..'"]='
+                k='["FUNC:'..RegFuncToStr[k]..'"]='
             else
                 k='["*'..tostring(k)..'"]='
                 LOG('warn',"Wrong key type: "..T..", "..nPath)
@@ -842,7 +842,7 @@ local function dump(self,L,t,path)
             elseif T=='table' then
                 v=t<10 and dump(self,v,t+1,nPath)
             elseif T=='function' then
-                v='"FUNC:'..(regFuncToStr[v] or LOG('warn',"UNKNOWN_FUNCTION: "..nPath) or "unknown")..'"'
+                v='"FUNC:'..(RegFuncToStr[v] or LOG('warn',"UNKNOWN_FUNCTION: "..nPath) or "unknown")..'"'
             elseif T=='userdata' then
                 T=v:type()
                 if T=='RandomGenerator' then
@@ -875,7 +875,7 @@ local function undump(self,L,t)
         if T=='number' or T=='boolean' then
         elseif T=='string' then
             if k:sub(1,5)=='FUNC:' then
-                k=regStrToFunc[k:sub(6)] or LOG('warn',"UNKNOWN_FUNCTION: "..k)
+                k=RegStrToFunc[k:sub(6)] or LOG('warn',"UNKNOWN_FUNCTION: "..k)
             end
         else
             LOG('warn',"Abnormal key type: "..T)
@@ -899,7 +899,7 @@ local function undump(self,L,t)
         else
             if T=='string' then
                 if v:sub(1,5)=='FUNC:' then
-                    v=regStrToFunc[v:sub(6)] or LOG('warn',"UNKNOWN_FUNCTION: "..v)
+                    v=RegStrToFunc[v:sub(6)] or LOG('warn',"UNKNOWN_FUNCTION: "..v)
                 end
             end
             self[k]=v
