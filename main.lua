@@ -32,8 +32,10 @@ end
 
 require'Zenitha'
 UTIL.time("Load Zenitha",true)
+RGB9=CLR.installNumLiteral('RGB9',true)
+RGBA9=CLR.installNumLiteral('RGBA9',true)
 -- UTIL.runVarMonitor()
--- UTIL.setCollectGarvageVisible()
+-- UTIL.setCollectGarbageVisible()
 -- if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then require("lldebugger").start() end
 
 --------------------------------------------------------------
@@ -64,7 +66,7 @@ UTIL.time("Create directories",true)
 -- Misc modules
 
 require'assets.gamefunc'
-GAME=require'assets.game'
+GAME=require'ZTC'
 AI=require'assets.ai'
 PROGRESS=require'assets.progress'
 VCTRL=require'assets.vctrl'

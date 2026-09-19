@@ -61,6 +61,7 @@ return {
 
         P.modeData.finalTime=finalTime
         P.modeData.dropInfo=dropInfo
+        SCN.swapTo('result_out','none')
     end,
     resultPage=function(time)
         local P=GAME.mainPlayer

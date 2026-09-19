@@ -263,6 +263,7 @@ return {
         end
         table.insert(clearInfo,{x=1,y=1})
         P.modeData.clearInfo=clearInfo
+        SCN.swapTo('result_out','none')
     end,
     resultPage=function(time)
         local P=GAME.mainPlayer

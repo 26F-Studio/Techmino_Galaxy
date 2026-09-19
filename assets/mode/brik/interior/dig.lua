@@ -32,6 +32,7 @@ return {
         if P and P.finished=='win' then
             PROGRESS.setInteriorScore('dig',MATH.lLerp({160,120,90,40,0},MATH.ilLerp({30e3,60e3,120e3,200e3,260e3},P.gameTime)))
         end
+        SCN.swapTo('result_in','none')
     end,
     resultPage=function(time)
         local P=GAME.mainPlayer

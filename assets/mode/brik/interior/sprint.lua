@@ -37,6 +37,7 @@ return {
             PROGRESS.setInteriorScore('marathon',MATH.clamp(P.stat.line*0.75,0,200))
             PROGRESS.setInteriorScore('sprint',MATH.clamp(P.stat.line,0,200))
         end
+        SCN.swapTo('result_in','none')
     end,
     resultPage=function(time)
         local P=GAME.mainPlayer

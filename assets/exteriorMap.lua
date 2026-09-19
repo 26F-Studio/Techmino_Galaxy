@@ -115,7 +115,7 @@ end
 
 local animations={}
 
-local pSys={} for i=1,3 do pSys[i]=require'assets.game.particleSystemTemplate'.exMapBack:clone() end
+local pSys={} for i=1,3 do pSys[i]=require'ZTC.particleSystemTemplate'.exMapBack:clone() end
 local mapPoly={
     0,0,
     6200,10738.715,

@@ -1,3 +1,6 @@
 [submodule "Zenitha"]
 	path = Zenitha
 	url = https://github.com/26F-Studio/Zenitha.git
+[submodule "ZTC"]
+	path = ZTC
+	url = https://github.com/26F-Studio/ZTC.git
