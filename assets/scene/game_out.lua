@@ -121,9 +121,9 @@ function scene.draw()
     GAME.render()
 
     gc.replaceTransform(SCR.xOy)
-    if SETTINGS.system.touchControl then VCTRL.draw() end
+    if CONF.system.touchControl then VCTRL.draw() end
 
-    if SETTINGS.system.showTouch then
+    if CONF.system.showTouch then
         gc.setColor(1,1,1,.5)
         gc.setLineWidth(4)
         for _,id in next,getTC() do

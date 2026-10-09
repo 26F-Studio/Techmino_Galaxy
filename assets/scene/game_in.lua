@@ -67,7 +67,7 @@ end
 function scene.touchDown(x,y,id)
     if GAME.mainPlayer then
         if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
-            if SETTINGS.system.touchControl then VCTRL.press(x,y,id) end
+            if CONF.system.touchControl then VCTRL.press(x,y,id) end
         elseif GAME.mainPlayer.gameMode=='acry' then
             GAME.mainPlayer:mouseDown(x,y,id)
         end
@@ -76,7 +76,7 @@ end
 function scene.touchMove(x,y,dx,dy,id)
     if GAME.mainPlayer then
         if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
-            if SETTINGS.system.touchControl then VCTRL.move(x,y,id) end
+            if CONF.system.touchControl then VCTRL.move(x,y,id) end
         elseif GAME.mainPlayer.gameMode=='acry' then
             GAME.mainPlayer:mouseMove(x,y,dx,dy,id)
         end
@@ -85,7 +85,7 @@ end
 function scene.touchUp(x,y,id)
     if GAME.mainPlayer then
         if GAME.mainPlayer.gameMode=='brik' or GAME.mainPlayer.gameMode=='gela' then
-            if SETTINGS.system.touchControl then VCTRL.release(id) end
+            if CONF.system.touchControl then VCTRL.release(id) end
         elseif GAME.mainPlayer.gameMode=='acry' then
             GAME.mainPlayer:mouseUp(x,y,id)
         end
@@ -103,7 +103,7 @@ end
 function scene.draw()
     GAME.render()
 
-    if SETTINGS.system.touchControl then
+    if CONF.system.touchControl then
         gc.replaceTransform(SCR.xOy)
         VCTRL.draw()
     end

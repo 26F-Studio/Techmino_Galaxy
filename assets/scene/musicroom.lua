@@ -112,7 +112,7 @@ function scene.load()
     musicListBox:select(TABLE.find(l,selected) or 1)
     musicListBox.code()
 
-    if SETTINGS.system.bgmVol<.0626 then
+    if CONF.system.bgmVol<.0626 then
         MSG('warn',Text.musicroom_lowVolume)
     end
 end
@@ -204,10 +204,10 @@ function scene.touchDown() scene.focus(true) end
 function scene.focus(f) -- Reduce carbon footprint for music lovers
     if f then
         if noResponseTimer<=0 then
-            ZENITHA.setMainLoopSpeed(SETTINGS.system.maxTPS)
-            ZENITHA.setSleepDurationError(SETTINGS.system.stability)
-            ZENITHA.setUpdateRate(SETTINGS.system.updateRate)
-            ZENITHA.setRenderRate(SETTINGS.system.renderRate)
+            ZENITHA.setMainLoopSpeed(CONF.system.maxTPS)
+            ZENITHA.setSleepDurationError(CONF.system.stability)
+            ZENITHA.setUpdateRate(CONF.system.updateRate)
+            ZENITHA.setRenderRate(CONF.system.renderRate)
         end
         noResponseTimer=6.26
     else
@@ -410,7 +410,7 @@ scene.widgetList={
             fullband=not fullband
             if FMOD.music.getPlaying() then
                 FMOD.music.setParam('intensity',fullband and 1 or 0)
-            elseif SETTINGS.system.bgmVol==0 and MATH.roll(0.1) then
+            elseif CONF.system.bgmVol==0 and MATH.roll(0.1) then
                 noProgress=true
                 scene.load()
             end
@@ -436,7 +436,7 @@ scene.widgetList={
     },
 
     -- Volume slider
-    {type='slider_progress',pos={.5,.5},x=450,y=360,w=250,text=CHAR.icon.volUp,fontSize=60,disp=TABLE.func_getVal(SETTINGS.system,'bgmVol'),code=TABLE.func_setVal(SETTINGS.system,'bgmVol')},
+    {type='slider_progress',pos={.5,.5},x=450,y=360,w=250,text=CHAR.icon.volUp,fontSize=60,disp=TABLE.func_getVal(CONF.system,'bgmVol'),code=TABLE.func_setVal(CONF.system,'bgmVol')},
 
     {type='button_invis',pos={1,0},x=-200,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_release='button_soft',onClick=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
     -- {type='button_invis',pos={1,0},x=-400,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.note_circ, sound_release='button_soft',onClick=WIDGET.c_goScn('piano'),visibleFunc=function() return PROGRESS.getSecret('musicroom_piano') end},
