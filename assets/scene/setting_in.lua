@@ -47,6 +47,7 @@ local function sliderShow_time(S) return S.disp().." ms" end
 
 scene.widgetList={
     {type='button',  pos={0,.5},     x=210,     y=-360,w=200, h=80,       lineWidth=4,               cornerR=0,     sound_release='button_back',                      fontSize=60,                                           text=CHAR.icon.back,                                  onClick=WIDGET.c_backScn('none')},
+    {type='button',name='account',pos={0,.5},x=290,y=-280,w=360,h=80,lineWidth=4,cornerR=0,fontSize=28,text='Galaxy account / sessions',onClick=WIDGET.c_goScn('account','none')},
 
     {type='button',  name='setKey',  pos={0,.5},x=290, y=-180,w=360,      h=80,                      lineWidth=4,   cornerR=0,                                        fontSize=40,                                           text=LANG'setting_keymapping',                        onClick=WIDGET.c_goScn('keyset_in','none')},
     {type='checkBox',pos={0,.5},     x=130,     y=-60, w=40,  lineWidth=4,cornerR=0,                 fontSize=40,   text=LANG'setting_enableTouching',                disp=TABLE.func_getVal(SETTINGS.system,'touchControl'),code=TABLE.func_revVal(SETTINGS.system,'touchControl')},
