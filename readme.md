@@ -66,3 +66,6 @@ those checks but builds directly from source using the existing FMOD-disabled
 Web path. Missing original banks still block native packages; no placeholder
 audio or native fallback is supplied.
 
+Android packaging runs pinned `cargo-ndk` from the resolved transport crate,
+not the non-Rust client root, so its initial Cargo metadata lookup succeeds.
+
