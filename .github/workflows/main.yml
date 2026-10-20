@@ -183,7 +183,6 @@ jobs:
 
   auto-test:
     runs-on: ubuntu-latest
-    needs: build-core
     steps:
       - uses: actions/checkout@v4
         with:
@@ -406,7 +405,8 @@ jobs:
 
   build-web-compat:
     runs-on: ubuntu-latest
-    needs: [get-info, build-core, auto-test]
+    # Web packages its own sources and uses the existing FMOD-disabled Web path.
+    needs: [get-info, auto-test]
     env:
       MEMORY_LIMIT: 128000000
       OUTPUT_FOLDER: ./build

@@ -61,3 +61,8 @@ Pages deployment remains limited to `main` and release tags. Windows, Linux,
 Android and Web builds run for this validation branch; macOS and iOS retain
 their release-tag signing/distribution requirements and are not triggered here.
 
+Source checks run independently of native soundbank packaging. Web retains
+those checks but builds directly from source using the existing FMOD-disabled
+Web path. Missing original banks still block native packages; no placeholder
+audio or native fallback is supplied.
+
