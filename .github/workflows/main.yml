@@ -28,10 +28,10 @@ env:
   TRANSPORT_LOVE_ANDROID_REF: 55feb38fa144f4734c26742389f279fb07d955c0
   TRANSPORT_LOVE_IOS_REF: c35356c841976eb6f370347b81eec845d5520338
   TRANSPORT_LOVE_MACOS_REF: fc3f5ee6209a0aab9a4d381ed5cd99110f9ff2f2
-  PUBLIC_ORIGIN: ${{ github.ref == 'refs/heads/ci-local-online-validation-20261020' && 'https://localhost:17445' || vars.PUBLIC_ORIGIN }}
-  CADENCE_PUBLIC_ORIGIN: ${{ github.ref == 'refs/heads/ci-local-online-validation-20261020' && 'https://127.0.0.1:17446' || vars.CADENCE_PUBLIC_ORIGIN }}
-  TESSERA_PUBLIC_ORIGIN: ${{ github.ref == 'refs/heads/ci-local-online-validation-20261020' && 'https://localhost:17445' || vars.TESSERA_PUBLIC_ORIGIN }}
-  GAME_WEB_REDIRECT_URI: ${{ github.ref == 'refs/heads/ci-local-online-validation-20261020' && 'https://localhost:17445/play/techmino-galaxy/' || vars.GAME_WEB_REDIRECT_URI }}
+  PUBLIC_ORIGIN: ${{ github.ref == 'refs/heads/ci-public-online-validation-20261110' && 'https://studio26f.org' || vars.PUBLIC_ORIGIN }}
+  CADENCE_PUBLIC_ORIGIN: ${{ github.ref == 'refs/heads/ci-public-online-validation-20261110' && 'https://game.studio26f.org' || vars.CADENCE_PUBLIC_ORIGIN }}
+  TESSERA_PUBLIC_ORIGIN: ${{ github.ref == 'refs/heads/ci-public-online-validation-20261110' && 'https://studio26f.org' || vars.TESSERA_PUBLIC_ORIGIN }}
+  GAME_WEB_REDIRECT_URI: ${{ github.ref == 'refs/heads/ci-public-online-validation-20261110' && 'https://studio26f.org/play/techmino-galaxy/' || vars.GAME_WEB_REDIRECT_URI }}
 
 jobs:
   get-info:
@@ -92,16 +92,16 @@ jobs:
         run: |
           mkdir -p soundbank
           cd soundbank/
-          curl --output Master.strings.bank  "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=499108f8%2D5f08%2D45a9%2D84e6%2De6a75616dc3f"
-          curl --output Master.bank          "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=bdd4a636%2Df72f%2D469f%2Db1b9%2D65078a7e383f"
-          curl --output Effect.bank          "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=52f3f937%2D985b%2D40d6%2Da443%2Ded0152b9465b"
+          curl --fail --location --show-error --output Master.strings.bank  "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=499108f8%2D5f08%2D45a9%2D84e6%2De6a75616dc3f"
+          curl --fail --location --show-error --output Master.bank          "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=bdd4a636%2Df72f%2D469f%2Db1b9%2D65078a7e383f"
+          curl --fail --location --show-error --output Effect.bank          "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=52f3f937%2D985b%2D40d6%2Da443%2Ded0152b9465b"
       - name: Download release soundbank
         if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
         run: |
-          curl --output Music_Beepbox.bank   "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=40e4520f%2D2f26%2D4024%2D8d72%2Dc4fc544de6ea"
-          curl --output Music_Community.bank "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=3ef03599%2D8b6c%2D4253%2Db79b%2Df76dc07fdffb"
-          curl --output Music_Extra.bank     "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=e9fc37f1%2D6be5%2D4027%2Da735%2Db26682839df9"
-          curl --output Music_FL.bank        "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=cf8caef4%2D3698%2D447a%2Da4ce%2D37cbf44f1206"
+          curl --fail --location --show-error --output Music_Beepbox.bank   "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=40e4520f%2D2f26%2D4024%2D8d72%2Dc4fc544de6ea"
+          curl --fail --location --show-error --output Music_Community.bank "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=3ef03599%2D8b6c%2D4253%2Db79b%2Df76dc07fdffb"
+          curl --fail --location --show-error --output Music_Extra.bank     "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=e9fc37f1%2D6be5%2D4027%2Da735%2Db26682839df9"
+          curl --fail --location --show-error --output Music_FL.bank        "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=cf8caef4%2D3698%2D447a%2Da4ce%2D37cbf44f1206"
       - name: Configure public online endpoints
         run: python3 .github/build/transport/prepare_config.py techminoGalaxy
       - name: Build core love package

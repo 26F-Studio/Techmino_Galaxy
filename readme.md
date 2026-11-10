@@ -36,20 +36,18 @@ See the [deployment guide](../../WebstormProjects/Tessera/deploy/README.md) and 
 
 The Linux packaging workflow restores the original host library/search environment only in its packaged system-browser opener; game and FMOD libraries remain bundled. The corresponding Techmino AppImage path was exercised locally, but that result does not establish Galaxy native package execution, gameplay/audio or OS credential-store acceptance.
 
-### Local validation CI
+### Public validation CI
 
-The `ci-local-online-validation-20261020` branch packages the account/website
-origin `https://localhost:17445` and the separate game origin
-`https://127.0.0.1:17446`, with Web callback
-`https://localhost:17445/play/techmino-galaxy/`. The override applies only to
-that exact CI branch; repository-wide variables and release configuration are
-unchanged. Loopback endpoints require the client and Docker services to run on
-the same computer, not separate phones or PCs.
+The `ci-public-online-validation-20261110` branch packages the account/website
+origin `https://studio26f.org`, the game origin `https://game.studio26f.org`,
+and the exact Web callback `https://studio26f.org/play/techmino-galaxy/`.
+The override applies only to that exact CI branch; repository-wide variables
+and release configuration are unchanged.
 
-Trust the local fixture CA in the browser and add it to native desktop clients
-with `TECHMINO_TRANSPORT_CA_FILE=/absolute/path/to/ca.pem`. Do not disable
-certificate/hostname verification or share the CA private key. A saved
-`conf/online.json` can override the packaged endpoints.
+The public deployment uses publicly trusted certificates, so no local fixture
+CA or `TECHMINO_TRANSPORT_CA_FILE` is required. Certificate and hostname
+verification remain enabled. A saved `conf/online.json` takes precedence over
+package endpoints; update only its origin settings when leaving a local fixture.
 
 CI checks out the exact committed Zenitha submodule revision, including its
 transport adapter. The vendored source contains only the standalone native
@@ -65,6 +63,8 @@ Source checks run independently of native soundbank packaging. Web retains
 those checks but builds directly from source using the existing FMOD-disabled
 Web path. Missing original banks still block native packages; no placeholder
 audio or native fallback is supplied.
+Native soundbank downloads follow redirects and fail on HTTP errors, so HTTP
+error responses stop packaging instead of becoming apparent soundbank files.
 
 Android packaging runs pinned `cargo-ndk` from the resolved transport crate,
 not the non-Rust client root, so its initial Cargo metadata lookup succeeds.
