@@ -32,7 +32,7 @@ Native refresh credentials use the platform-protected store; unavailable or lock
 
 Ordinary website sign-out preserves product grants. Native logout ends its device grant; product withdrawal, account all-device logout, password reset and disable follow the independent-grant lifecycle. Profile and avatar requests remain separately correlated.
 
-See the [deployment guide](../../WebstormProjects/Tessera/deploy/README.md) and [transport/package guide](../Cadence/transport/README.md) for exact HTTPS origins, registered callbacks, platform artifact contents and outstanding real-device checks. A configured workflow or Web compilation does not prove a device package works.
+See the [deployment guide](../Tessera/deploy/README.md) and [transport/package guide](../Cadence/transport/README.md) for exact HTTPS origins, registered callbacks, platform artifact contents and outstanding real-device checks. A configured workflow or Web compilation does not prove a device package works.
 
 The Linux packaging workflow restores the original host library/search environment only in its packaged system-browser opener; game and FMOD libraries remain bundled. The corresponding Techmino AppImage path was exercised locally, but that result does not establish Galaxy native package execution, gameplay/audio or OS credential-store acceptance.
 
