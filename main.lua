@@ -704,6 +704,8 @@ do -- Load setting file and trigger all setting-triggers only one time
     local setFile=FILE.safeLoad('conf/settings','-json') or {}
     setFile._system,setFile.system=setFile.system,nil
     TABLE.update(SETTINGS,setFile)
+    -- A saved preference cannot provide the browser gesture required for fullscreen.
+    if SYSTEM=='Web' then SETTINGS._system.fullscreen=false end
     for k,v in next,SETTINGS._system do
         SETTINGS._system[k]=nil
         SETTINGS.system[k]=v

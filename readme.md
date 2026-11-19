@@ -66,7 +66,9 @@ Web path. Missing original banks still block native packages; no placeholder
 audio or native fallback is supplied.
 
 The Web runtime restores the windowed drawing buffer and viewport after
-fullscreen rejection or a quick exit. This does not change FMOD packaging.
+fullscreen rejection or a quick exit. Web always starts windowed; enter
+fullscreen from the game after it loads. Native window preferences and FMOD
+packaging are unchanged.
 
 Native soundbank downloads follow redirects and fail on HTTP errors, so HTTP
 error responses stop packaging instead of becoming apparent soundbank files.
