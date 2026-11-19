@@ -38,11 +38,12 @@ The Linux packaging workflow restores the original host library/search environme
 
 ### Public validation CI
 
-The `ci-public-online-validation-20261110` branch packages the account/website
+The `ci-public-online-validation-20261110`, `ci-public-web-canvas-fix`, and
+`ci-public-web-fullscreen-recovery` branches package the account/website
 origin `https://studio26f.org`, the game origin `https://game.studio26f.org`,
 and the exact Web callback `https://studio26f.org/play/techmino-galaxy/`.
-The override applies only to that exact CI branch; repository-wide variables
-and release configuration are unchanged.
+These overrides apply only to those exact CI branches; repository-wide
+variables and release configuration are unchanged.
 
 The public deployment uses publicly trusted certificates, so no local fixture
 CA or `TECHMINO_TRANSPORT_CA_FILE` is required. Certificate and hostname
@@ -63,6 +64,10 @@ Source checks run independently of native soundbank packaging. Web retains
 those checks but builds directly from source using the existing FMOD-disabled
 Web path. Missing original banks still block native packages; no placeholder
 audio or native fallback is supplied.
+
+The Web runtime restores the windowed drawing buffer and viewport after
+fullscreen rejection or a quick exit. This does not change FMOD packaging.
+
 Native soundbank downloads follow redirects and fail on HTTP errors, so HTTP
 error responses stop packaging instead of becoming apparent soundbank files.
 
