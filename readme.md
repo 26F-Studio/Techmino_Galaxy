@@ -74,6 +74,9 @@ packaging are unchanged.
 
 Native soundbank downloads follow redirects and fail on HTTP errors, so HTTP
 error responses stop packaging instead of becoming apparent soundbank files.
+Native CI branches require `Master.strings.bank`, `Master.bank`, and `Effect.bank`.
+Tags starting with `pre` or `v` also package `Music_Beepbox.bank`,
+`Music_Community.bank`, `Music_Extra.bank`, and `Music_FL.bank` under `soundbank/`.
 
 Android packaging runs pinned `cargo-ndk` from the resolved transport crate,
 not the non-Rust client root, so its initial Cargo metadata lookup succeeds.
