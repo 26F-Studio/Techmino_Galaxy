@@ -300,7 +300,8 @@ jobs:
           prerelease: ${{ startsWith(github.ref, 'refs/tags/pre') }}
 
   build-linux:
-    runs-on: ubuntu-latest
+    # Link the native transport against glibc 2.35, compatible with Debian 12.
+    runs-on: ubuntu-22.04
     needs: [get-info, build-core, auto-test, transport-source]
     env:
       OUTPUT_FOLDER: ./build
@@ -342,6 +343,9 @@ jobs:
           mkdir -p transport-libs-linux
           cp -r ${{ env.BUILD_ASSETS_FOLDER }}/extraLibs/Linux/. transport-libs-linux/
           cp "$TRANSPORT_ARTIFACTS/linux-x64/libtechmino_transport.so" transport-libs-linux/
+          docker run --rm --network none \
+            -v "$PWD/transport-libs-linux/libtechmino_transport.so:/transport.so:ro" \
+            python:3.11-slim-bookworm python -c 'import ctypes; ctypes.CDLL("/transport.so").tn_client_new'
           echo "-- staged lib payload:"
           ls -1 transport-libs-linux | sed 's/^/   /'
       - name: Build Linux packages

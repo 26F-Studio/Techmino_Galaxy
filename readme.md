@@ -64,6 +64,8 @@ Source checks run independently of native soundbank packaging. Web retains
 those checks but builds directly from source using the existing FMOD-disabled
 Web path. Missing original banks still block native packages; no placeholder
 audio or native fallback is supplied.
+Linux packaging builds the shared transport on Ubuntu 22.04 and checks it can
+load on Debian 12. This check does not replace the original native audio assets.
 
 The Web runtime restores the windowed drawing buffer and viewport after
 fullscreen rejection or a quick exit. Web always starts windowed; enter
