@@ -88,13 +88,6 @@ jobs:
           import re
           with open(os.getenv('GITHUB_OUTPUT'), 'a') as f:
             f.write('product-name=' + re.sub(r'[^A-Za-z0-9]+', '_', '${{ needs.get-info.outputs.app-name }}') + '\n')
-      - name: Download basic soundbank
-        run: |
-          mkdir -p soundbank
-          cd soundbank/
-          curl --fail --location --show-error --output Master.strings.bank  "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=499108f8%2D5f08%2D45a9%2D84e6%2De6a75616dc3f"
-          curl --fail --location --show-error --output Master.bank          "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=bdd4a636%2Df72f%2D469f%2Db1b9%2D65078a7e383f"
-          curl --fail --location --show-error --output Effect.bank          "${{ env.SOUNDBANK_DOWNLOAD_URL }}?UniqueId=52f3f937%2D985b%2D40d6%2Da443%2Ded0152b9465b"
       - name: Download release soundbank
         if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
         working-directory: soundbank

@@ -52,18 +52,16 @@ package endpoints; update only its origin settings when leaving a local fixture.
 
 CI checks out the exact committed Zenitha submodule revision, including its
 transport adapter. The vendored source contains only the standalone native
-transport crate and platform bridges. Original Galaxy soundbanks and platform
-signing/provisioning remain required; triggering CI does not prove those
-external prerequisites or actual device execution.
+transport crate and platform bridges. A completed CI build does not establish
+platform signing, provisioning or actual device execution.
 Validation branches upload CI artifacts without publishing GitHub Pages.
 Pages deployment remains limited to `main` and release tags. Windows, Linux,
 Android and Web builds run for this validation branch; macOS and iOS retain
 their release-tag signing/distribution requirements and are not triggered here.
 
 Source checks run independently of native soundbank packaging. Web retains
-those checks but builds directly from source using the existing FMOD-disabled
-Web path. Missing original banks still block native packages; no placeholder
-audio or native fallback is supplied.
+those checks but builds directly from source. Its runtime explicitly skips
+FMOD, so the Web package omits the native banks.
 Linux packaging builds the shared transport on Ubuntu 22.04 and checks it can
 load on Debian 12. This check does not replace the original native audio assets.
 
@@ -72,11 +70,10 @@ fullscreen rejection or a quick exit. Web always starts windowed; enter
 fullscreen from the game after it loads. Native window preferences and FMOD
 packaging are unchanged.
 
-Native soundbank downloads follow redirects and fail on HTTP errors, so HTTP
-error responses stop packaging instead of becoming apparent soundbank files.
-Native CI branches require `Master.strings.bank`, `Master.bank`, and `Effect.bank`.
-Tags starting with `pre` or `v` also package `Music_Beepbox.bank`,
-`Music_Community.bank`, `Music_Extra.bank`, and `Music_FL.bank` under `soundbank/`.
+Native development builds use the original `Master.strings.bank`, `Master.bank`,
+and `Effect.bank` from `soundbank/` in the repository, without a download.
+Tags starting with `pre` or `v` also download `Music_Beepbox.bank`,
+`Music_Community.bank`, `Music_Extra.bank`, and `Music_FL.bank` to that directory.
 
 Android packaging runs pinned `cargo-ndk` from the resolved transport crate,
 not the non-Rust client root, so its initial Cargo metadata lookup succeeds.

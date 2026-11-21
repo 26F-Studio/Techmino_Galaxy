@@ -158,15 +158,6 @@ def main():
                             archive.write(path, path.relative_to(root).as_posix())
                 else:
                     archive.write(source, relative)
-            if args.product == "techminoGalaxy":
-                banks = root / "soundbank"
-                if banks.is_dir():
-                    for path in sorted(banks.rglob("*")):
-                        if path.is_file():
-                            archive.write(path, path.relative_to(root).as_posix())
-                else:
-                    # The existing Galaxy Web source explicitly skips FMOD. Do not invent banks.
-                    print("-- Galaxy Web keeps its existing source-defined FMOD-disabled behavior; no soundbank was fabricated")
             archive.write(staging / "online-config.json", "online-config.json")
         if package.stat().st_size >= args.memory:
             fail("The real source package exceeds the configured Web heap; select an explicit larger --memory value")
