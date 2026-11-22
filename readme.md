@@ -79,5 +79,10 @@ Android packaging runs pinned `cargo-ndk` from the resolved transport crate,
 not the non-Rust client root, so its initial Cargo metadata lookup succeeds.
 The APK packages FMOD alongside the transport under `lib/arm64-v8a/` and
 `lib/armeabi-v7a/`. The final package check requires both FMOD libraries for
-each ABI; the soundbanks alone do not provide Android audio.
+each ABI. In the `4eb6a90e` APK on Redroid 14 (translated ARM64), the game
+reached the main menu after its external `files` directory was created.
+Both FMOD libraries loaded, but `FMOD_Studio_System_Create` returned an
+internal error before loading any banks. The APK lacks the `org.fmod.FMOD`
+Java component; the cause of the error is not confirmed. Android audio
+and clean first launch on a physical device remain unverified.
 
