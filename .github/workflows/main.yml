@@ -211,11 +211,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
-      # - name: Download fmod lib
-      # Two .so files are in ${{ env.BUILD_ASSETS_FOLDER }}/extraLibs/Android/
-      # Need to put them into the love package, besides the liblove.so (for each architecture)
-      # TODO: ??????????????????????????
-      # TODO: ??????????????????????????
       - name: Download transport source
         uses: actions/download-artifact@v4
         with:
@@ -240,11 +235,12 @@ jobs:
         run: |
           source .github/build/transport/env.sh
           bash .github/build/transport/prepare_mobile_patch.sh android
-      - name: Build Android transport libraries
+      - name: Stage Android native libraries
         shell: bash
         run: |
           source .github/build/transport/env.sh
           bash .github/build/transport/build_native.sh android
+          cp -R "$BUILD_ASSETS_FOLDER/extraLibs/Android/." "$TRANSPORT_ARTIFACTS/android/"
       - name: Verify Android transport libraries
         shell: bash
         run: |
@@ -271,6 +267,10 @@ jobs:
           output-folder: ${{ env.OUTPUT_FOLDER }}
       - name: Verify Android package
         shell: bash
+        env:
+          TRANSPORT_VERIFY_EXTRA: >-
+            lib/arm64-v8a/libfmod.so lib/arm64-v8a/libfmodstudio.so
+            lib/armeabi-v7a/libfmod.so lib/armeabi-v7a/libfmodstudio.so
         run: |
           bash .github/build/transport/verify_package.sh android-apk "${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}-release.apk"
       - name: Upload artifact

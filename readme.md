@@ -77,4 +77,7 @@ Tags starting with `pre` or `v` also download `Music_Beepbox.bank`,
 
 Android packaging runs pinned `cargo-ndk` from the resolved transport crate,
 not the non-Rust client root, so its initial Cargo metadata lookup succeeds.
+The APK packages FMOD alongside the transport under `lib/arm64-v8a/` and
+`lib/armeabi-v7a/`. The final package check requires both FMOD libraries for
+each ABI; the soundbanks alone do not provide Android audio.
 
