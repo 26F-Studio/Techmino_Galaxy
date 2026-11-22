@@ -3,10 +3,10 @@
 local rnd=math.random
 local _require=require
 local function require(module) return _require('Zenitha.'..module) end
-STRING=require'stringExtend'
-TABLE=require'tableExtend'
 AE=require'escape'
 LOG=require'log'
+STRING=require'stringExtend'
+TABLE=require'tableExtend'
 
 local stdout=io.stdout
 local function write(text)

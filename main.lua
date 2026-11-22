@@ -76,11 +76,8 @@ CHAR=require'assets.char'
 CONF=require'assets.config'
 SONGBOOK=require'assets.songbook'
 FMOD=require'assets.fmod20221'
-if SYSTEM=='Web' then
-    _G[('DiscordRPC')]={update=NULL}
-else
-    DiscordRPC=require'assets.discordRPC'
-end
+ACCOUNT=require'assets.account'
+DiscordRPC=require'assets.discordRPC'
 UTIL.time("Load game modules",true)
 
 function FMODLoadFunc() -- Will be called again when applying advanced options
@@ -388,6 +385,7 @@ function ZENITHA.globalEvent.lowMemory()
     end
 end
 function ZENITHA.globalEvent.quit()
+    ACCOUNT.close()
     PROGRESS.save('save')
     FMOD.destroy()
 end
@@ -704,6 +702,11 @@ UTIL.time("Configure Zenitha",true)
 
 do -- Load setting file and trigger all setting-triggers only one time
     local setFile=FILE.safeLoad('conf/settings','-json') or {}
+    if SYSTEM=='Web' then
+        -- A saved preference cannot provide the browser gesture required for fullscreen.
+        if type(setFile.system)~='table' then setFile.system={} end
+        setFile.system.fullscreen=false
+    end
     setFile._system,setFile.system=setFile.system,nil
     TABLE.update(CONF,setFile)
     for k,v in next,CONF._system do
@@ -790,6 +793,7 @@ if keys then
     KEYMAP.sys:import(keys['sys'])
 end
 UTIL.time("Load savedata",true)
+ACCOUNT.start()
 
 --------------------------------------------------------------
 -- Load SOURCE ONLY resources and utils

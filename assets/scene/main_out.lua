@@ -89,6 +89,7 @@ scene.widgetList={
     {type='button_invis',pos={1,0},x=-400,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.info_circ, sound_release='button_soft',onClick=WIDGET.c_goScn('about_out','fadeHeader')},
     {type='button_invis',pos={1,0},x=-600,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.music,     sound_release='button_soft',onClick=WIDGET.c_goScn('musicroom','fadeHeader')},
     {type='button_invis',pos={1,0},x=-800,y=60,w=80,cornerR=20,fontSize=70,text=CHAR.icon.language,  sound_release='button_soft',onClick=WIDGET.c_goScn('lang_out','fadeHeader')},
+    {type='button_invis',pos={1,0},x=-1000,y=60,w=150,cornerR=20,fontSize=26,text='Account',sound_release='button_soft',onClick=WIDGET.c_goScn('account','fadeHeader')},
 
     {type='button',pos={.5,.5},x=-475,y=80, w=530,h=100,text=function() return CHAR.icon.person    ..' '..Text.main_out_single    end, fontSize=40,cornerR=26,onClick=WIDGET.c_goScn('simulation','fadeHeader')},
     {type='button',pos={.5,.5},x=95,  y=80, w=530,h=100,text=function() return CHAR.icon.people    ..' '..Text.main_out_multi     end, fontSize=40,cornerR=26,color='lD',sound_release=false},

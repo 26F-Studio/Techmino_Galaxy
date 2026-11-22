@@ -66,8 +66,6 @@ end
 ---@field spectateSecret? string
 ---@field instance? number
 
-local ffi=require"ffi"
-
 local Cname
 if SYSTEM=='Windows' or SYSTEM=='Linux' then
     Cname=LOADLIB.ffi('discord-rpc',NULL)
@@ -78,6 +76,8 @@ else
 end
 
 if not Cname then return MyRPC end
+local ffi=require"ffi"
+
 
 LOG('info',"DiscordRPC loaded")
 
