@@ -43,7 +43,7 @@ local prgs=setmetatable({
 })
 
 local function sysInfoFunc()
-    if not SETTINGS.system.powerInfo then return end
+    if not CONF.system.powerInfo then return end
     gc.replaceTransform(SCR.xOy_ur)
     gc.translate(-130,0)
 
@@ -241,7 +241,7 @@ function PROGRESS.applyEnv(env)
         ZENITHA.globalEvent.mouseMove=NULL
         ZENITHA.globalEvent.mouseUp=NULL
         function ZENITHA.globalEvent.drawCursor(x,y)
-            if not SETTINGS.system.sysCursor then
+            if not CONF.system.sysCursor then
                 gc.setColor(1,1,1)
                 gc.setLineWidth(2)
                 gc.translate(x,y)
@@ -336,7 +336,7 @@ function PROGRESS.applyEnv(env)
         local abs,floor,atan2=math.abs,math.floor,math.atan2
         local pi,tau=math.pi,math.pi*2
         function ZENITHA.globalEvent.drawCursor(x,y)
-            if not SETTINGS.system.sysCursor then
+            if not CONF.system.sysCursor then
                 -- if pX then
                 --     GC.setColor(1,1,1,.62)
                 --     GC.circle('fill',pX,pY,10)

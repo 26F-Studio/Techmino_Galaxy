@@ -14,7 +14,7 @@ function scene.load()
     result=false
     quitTimer=0
     escTimerWTF=false
-    if SETTINGS.system.touchControl then ResetVirtualKeyMode(mode) end
+    if CONF.system.touchControl then ResetVirtualKeyMode(mode) end
 end
 
 function scene.keyDown(key,isRep)
@@ -38,13 +38,13 @@ function scene.keyDown(key,isRep)
 end
 
 function scene.touchDown(x,y,id)
-    if SETTINGS.system.touchControl and VCTRL.press(x,y,id) then return end
+    if CONF.system.touchControl and VCTRL.press(x,y,id) then return end
 end
 function scene.touchMove(x,y,_,_,id)
-    if SETTINGS.system.touchControl then VCTRL.move(x,y,id) end
+    if CONF.system.touchControl then VCTRL.move(x,y,id) end
 end
 function scene.touchUp(_,_,id)
-    if SETTINGS.system.touchControl then VCTRL.release(id) end
+    if CONF.system.touchControl then VCTRL.release(id) end
 end
 
 function scene.mouseDown(x,y,k)
@@ -86,7 +86,7 @@ function scene.draw()
     FONT.set(35)  GC.strokePrint('full',2,COLOR.D,COLOR.L,Text.keyset_info,0,80,nil,'center')
 
     GC.replaceTransform(SCR.xOy)
-    if SETTINGS.system.touchControl then VCTRL.draw() end
+    if CONF.system.touchControl then VCTRL.draw() end
 end
 
 scene.widgetList={

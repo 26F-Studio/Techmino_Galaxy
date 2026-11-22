@@ -78,8 +78,8 @@ local function _setLang(lid)
             style='appear',
             duration=1,inPoint=0,outPoint=0,
         }
-        if SETTINGS.system.locale~=lid then
-            SETTINGS.system.locale=lid
+        if CONF.system.locale~=lid then
+            CONF.system.locale=lid
             changed=true
             WIDGET._reset()
         end

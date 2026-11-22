@@ -73,7 +73,7 @@ VCTRL=require'assets.vctrl'
 KEYMAP=require'assets.keymap'
 SKIN=require'assets.skin'
 CHAR=require'assets.char'
-SETTINGS=require'assets.settings'
+CONF=require'assets.config'
 SONGBOOK=require'assets.songbook'
 FMOD=require'assets.fmod20221'
 ACCOUNT=require'assets.account'
@@ -86,14 +86,14 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
         return
     end
 
-    LOG('debug',"Will loading FMOD banks from "..(SETTINGS.system.fmod_loadMemory and "memory" or "file"))
+    LOG('debug',"Will loading FMOD banks from "..(CONF.system.fmod_loadMemory and "memory" or "file"))
     local errorLogged=false
     local function loadBank(path)
         local bank,errInfo,errInfo2
-        if SETTINGS.system.fmod_loadMemory then
+        if CONF.system.fmod_loadMemory then
             bank,errInfo=FMOD.loadBank2(path)
             if bank then return bank end
-            SETTINGS.system.fmod_loadMemory=false
+            CONF.system.fmod_loadMemory=false
             LOG('debug',"Will load FMOD banks from file")
             MSG('other',"Switched to another bank loading mode to file")
         end
@@ -108,9 +108,9 @@ function FMODLoadFunc() -- Will be called again when applying advanced options
 
     LOG('debug',"Ready to init FMOD")
     FMOD.init{
-        maxChannel=math.min(SETTINGS.system.fmod_maxChannel,256),
-        DSPBufferCount=math.min(SETTINGS.system.fmod_DSPBufferCount,16),
-        DSPBufferLength=math.min(SETTINGS.system.fmod_DSPBufferLength,65536),
+        maxChannel=math.min(CONF.system.fmod_maxChannel,256),
+        DSPBufferCount=math.min(CONF.system.fmod_DSPBufferCount,16),
+        DSPBufferLength=math.min(CONF.system.fmod_DSPBufferLength,65536),
         studioFlag=bit.bxor(FMOD.FMOD_STUDIO_INIT_SYNCHRONOUS_UPDATE,FMOD.FMOD_INIT_STREAM_FROM_UPDATE,FMOD.FMOD_INIT_MIX_FROM_UPDATE),
         coreFlag=FMOD.FMOD_INIT_NORMAL,
     }
@@ -229,7 +229,7 @@ if tostring(FMOD.studio):find('NULL') then
 elseif TABLE.getSize(FMOD.banks)==0 then
     MSG.log('error',"no FMOD bank files found")
 else
-    FMOD.setMainVolume(SETTINGS.system.mainVol,true)
+    FMOD.setMainVolume(CONF.system.mainVol,true)
     for name,data in next,SONGBOOK do
         local ED=FMOD.music.getDesc(name)
         if ED then
@@ -356,21 +356,21 @@ local _keyDown_orig=ZENITHA.globalEvent.keyDown
 function ZENITHA.globalEvent.keyDown(key,isRep)
     if _keyDown_orig(key,isRep) then return true end
     if key=='f11' then
-        SETTINGS.system.fullscreen=not SETTINGS.system.fullscreen
+        CONF.system.fullscreen=not CONF.system.fullscreen
         SaveSettings()
         return true
     end
 end
 function ZENITHA.globalEvent.focus(f)
-    if SETTINGS.system.autoMute then
+    if CONF.system.autoMute then
         if f then
-            FMOD.setMainVolume(SETTINGS.system.mainVol)
+            FMOD.setMainVolume(CONF.system.mainVol)
         elseif SCN.cur~='musicroom' then
             FMOD.setMainVolume(0)
         end
     end
     if f then
-        ZENITHA.setSleepDurationError(SETTINGS.system.stability)
+        ZENITHA.setSleepDurationError(CONF.system.stability)
     else
         ZENITHA.setSleepDurationError(-1)
     end
@@ -708,13 +708,13 @@ do -- Load setting file and trigger all setting-triggers only one time
         setFile.system.fullscreen=false
     end
     setFile._system,setFile.system=setFile.system,nil
-    TABLE.update(SETTINGS,setFile)
-    for k,v in next,SETTINGS._system do
-        SETTINGS._system[k]=nil
-        SETTINGS.system[k]=v
+    TABLE.update(CONF,setFile)
+    for k,v in next,CONF._system do
+        CONF._system[k]=nil
+        CONF.system[k]=v
     end
 end
-if SETTINGS.system.portrait then -- Brute fullscreen config for mobile device
+if CONF.system.portrait then -- Brute fullscreen config for mobile device
     SCR.setSize(1600,2560)
     SCR._resize(love.graphics.getWidth(),love.graphics.getHeight())
 end
@@ -853,6 +853,9 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/scene_app') do
         appletSceneSet[sceneName]=true
         SCN.add(sceneName,FILE.load('assets/scene_app/'..v,'-lua'))
     end
+end
+for _,path in next,FILE.listAll('assets/mode') do
+    GAME.addMode(path:match('assets/mode/(.+)%.lua'),path)
 end
 -- No hover sound for all interior scenes
 for name,scn in next,SCN.scenes do

@@ -49,9 +49,9 @@ function scene.keyDown(key,isRep)
     return true
 end
 
-function scene.touchDown(x,y,id) if SETTINGS.system.touchControl then VCTRL.press(x,y,id) end end
-function scene.touchMove(x,y,_,_,id) if SETTINGS.system.touchControl then VCTRL.move(x,y,id) end end
-function scene.touchUp(_,_,id) if SETTINGS.system.touchControl then VCTRL.release(id) end end
+function scene.touchDown(x,y,id) if CONF.system.touchControl then VCTRL.press(x,y,id) end end
+function scene.touchMove(x,y,_,_,id) if CONF.system.touchControl then VCTRL.move(x,y,id) end end
+function scene.touchUp(_,_,id) if CONF.system.touchControl then VCTRL.release(id) end end
 
 scene.mouseDown=scene.touchDown
 function scene.mouseMove(x,y,dx,dy) scene.touchMove(x,y,dx,dy,1) end
@@ -65,7 +65,7 @@ function scene.draw()
     GC.rectangle('fill',0,0,SCR.w,SCR.h)
 
     GC.replaceTransform(SCR.xOy)
-    if SETTINGS.system.touchControl then VCTRL.draw() end
+    if CONF.system.touchControl then VCTRL.draw() end
 
     GC.replaceTransform(SCR.xOy_m)
     GC.scale(textScale)

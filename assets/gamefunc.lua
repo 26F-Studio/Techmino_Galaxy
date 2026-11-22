@@ -262,10 +262,10 @@ end
 local function task_saveSettings()
     TASK.yieldT(.626)
     FILE.save({
-        system=SETTINGS._system,
-        game_brik=SETTINGS.game_brik,
-        game_gela=SETTINGS.game_gela,
-        game_acry=SETTINGS.game_acry,
+        system=CONF._system,
+        game_brik=CONF.game_brik,
+        game_gela=CONF.game_gela,
+        game_acry=CONF.game_acry,
     },'conf/settings','-json')
     if PROGRESS.get('main')>=3 then
         ShowSaveIcon(CHAR.icon.settings..CHAR.icon.save)

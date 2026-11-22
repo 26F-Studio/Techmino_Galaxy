@@ -274,8 +274,8 @@ function scene.load(prev)
     selectItem(false)
 
     -- Initialize dictionary for current language (if need)
-    if currentDict.locale~=SETTINGS.system.locale then
-        currentDict=FILE.load('assets/language/dict_'..SETTINGS.system.locale..'.lua','-lua')
+    if currentDict.locale~=CONF.system.locale then
+        currentDict=FILE.load('assets/language/dict_'..CONF.system.locale..'.lua','-lua')
         if type(currentDict)=='string' then
             local res,data
             res,data=pcall(parseDict,currentDict)
@@ -288,7 +288,7 @@ function scene.load(prev)
             end
         end
         if not currentDict then currentDict={} end
-        currentDict.locale=SETTINGS.system.locale
+        currentDict.locale=CONF.system.locale
     end
 
     -- Refresh items
@@ -524,7 +524,7 @@ scene.widgetList={
     {
         type='button',pos={.5,.5},x=mainX+mainW+70,y=320,w=80,h=80,sound_release='button_soft',lineWidth=4,fontSize=50,text="写",
         onClick=WIDGET.c_goScn('zeta_input_method','none'),
-        visibleFunc=function() return SETTINGS._system.locale=='zh' end,
+        visibleFunc=function() return CONF._system.locale=='zh' end,
     },
 }
 return scene

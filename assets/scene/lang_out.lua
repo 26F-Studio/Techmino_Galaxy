@@ -239,13 +239,13 @@ local function _setLang(lid)
             style='zoomout',
             duration=1.26,
         }
-        if SETTINGS.system.locale~=lid then
+        if CONF.system.locale~=lid then
             if IsCtrlDown() then
                 local oldText=TABLE.copyAll(Text)
-                local oldLocale=SETTINGS.system.locale:upper()
-                SETTINGS.system.locale=lid
+                local oldLocale=CONF.system.locale:upper()
+                CONF.system.locale=lid
                 local newText=TABLE.copyAll(Text)
-                local newLocale=SETTINGS.system.locale:upper()
+                local newLocale=CONF.system.locale:upper()
                 TABLE.flatten(oldText,6.26)
                 TABLE.flatten(newText,6.26)
                 local anyMissing
@@ -266,7 +266,7 @@ local function _setLang(lid)
                     hasMessage=true
                 end
             else
-                SETTINGS.system.locale=lid
+                CONF.system.locale=lid
             end
             changed=true
             WIDGET._reset()

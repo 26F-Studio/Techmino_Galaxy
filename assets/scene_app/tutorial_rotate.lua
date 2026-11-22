@@ -195,13 +195,13 @@ function scene.keyDown(key,isRep)
 end
 
 function scene.touchDown(x,y,id)
-    if SETTINGS.system.touchControl then VCTRL.press(x,y,id) end
+    if CONF.system.touchControl then VCTRL.press(x,y,id) end
 end
 function scene.touchMove(x,y,_,_,id)
-    if SETTINGS.system.touchControl then VCTRL.move(x,y,id) end
+    if CONF.system.touchControl then VCTRL.move(x,y,id) end
 end
 function scene.touchUp(_,_,id)
-    if SETTINGS.system.touchControl then VCTRL.release(id) end
+    if CONF.system.touchControl then VCTRL.release(id) end
 end
 
 scene.mouseDown=scene.touchDown
@@ -238,7 +238,7 @@ end
 local size=60
 function scene.draw()
     GC.replaceTransform(SCR.xOy_m)
-    GC.setColor(RGB9[SETTINGS.game_brik.palette[handID]])
+    GC.setColor(RGB9[CONF.game_brik.palette[handID]])
 
     -- Hand shape
     GC.translate(-#handMat*size/2,-#handMat*size/2-250)
@@ -289,7 +289,7 @@ function scene.draw()
     end
 
     -- Touch control
-    if SETTINGS.system.touchControl then
+    if CONF.system.touchControl then
         GC.replaceTransform(SCR.xOy)
         VCTRL.draw()
     end
