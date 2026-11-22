@@ -36,14 +36,14 @@ See the [deployment guide](../Tessera/deploy/README.md) and [transport/package g
 
 The Linux packaging workflow restores the original host library/search environment only in its packaged system-browser opener; game and FMOD libraries remain bundled. The corresponding Techmino AppImage path was exercised locally, but that result does not establish Galaxy native package execution, gameplay/audio or OS credential-store acceptance.
 
-### Public validation CI
+### Online packaging and CI
 
-The `ci-public-online-validation-20261110`, `ci-public-web-canvas-fix`, and
-`ci-public-web-fullscreen-recovery` branches package the account/website
-origin `https://studio26f.org`, the game origin `https://game.studio26f.org`,
-and the exact Web callback `https://studio26f.org/play/techmino-galaxy/`.
-These overrides apply only to those exact CI branches; repository-wide
-variables and release configuration are unchanged.
+Set the GitHub Actions repository variables `PUBLIC_ORIGIN` to
+`https://studio26f.org` and `CADENCE_PUBLIC_ORIGIN` to
+`https://game.studio26f.org`. Pull requests, CI branches, and release
+builds use the same settings. `TESSERA_PUBLIC_ORIGIN` defaults to
+`PUBLIC_ORIGIN`; `GAME_WEB_REDIRECT_URI` defaults to
+`https://studio26f.org/play/techmino-galaxy/` for this deployment.
 
 The public deployment uses publicly trusted certificates, so no local fixture
 CA or `TECHMINO_TRANSPORT_CA_FILE` is required. Certificate and hostname
@@ -54,10 +54,13 @@ CI checks out the exact committed Zenitha submodule revision, including its
 transport adapter. The vendored source contains only the standalone native
 transport crate and platform bridges. A completed CI build does not establish
 platform signing, provisioning or actual device execution.
+
 Validation branches upload CI artifacts without publishing GitHub Pages.
-Pages deployment remains limited to `main` and release tags. Windows, Linux,
-Android and Web builds run for this validation branch; macOS and iOS retain
-their release-tag signing/distribution requirements and are not triggered here.
+Pages deployment remains limited to `main` and release tags. The Pages build
+supports offline play; use [the registered game page](https://studio26f.org/play/techmino-galaxy/)
+for Web sign-in, which requires a same-origin callback. CI branches build
+Windows, Linux, Android, and Web packages; macOS and iOS retain their
+release-tag signing and distribution requirements.
 
 Source checks run independently of native soundbank packaging. Web retains
 those checks but builds directly from source. Its runtime explicitly skips

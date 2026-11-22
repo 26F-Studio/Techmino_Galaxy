@@ -702,10 +702,13 @@ UTIL.time("Configure Zenitha",true)
 
 do -- Load setting file and trigger all setting-triggers only one time
     local setFile=FILE.safeLoad('conf/settings','-json') or {}
+    if SYSTEM=='Web' then
+        -- A saved preference cannot provide the browser gesture required for fullscreen.
+        if type(setFile.system)~='table' then setFile.system={} end
+        setFile.system.fullscreen=false
+    end
     setFile._system,setFile.system=setFile.system,nil
     TABLE.update(SETTINGS,setFile)
-    -- A saved preference cannot provide the browser gesture required for fullscreen.
-    if SYSTEM=='Web' then SETTINGS._system.fullscreen=false end
     for k,v in next,SETTINGS._system do
         SETTINGS._system[k]=nil
         SETTINGS.system[k]=v
